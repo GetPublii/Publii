@@ -1,0 +1,46 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "{{siteName}}",
+    "description": "",
+    "home_page_url": "{{siteDomain}}",
+    "feed_url": "{{siteDomain}}/feed.json",
+    "user_comment": "",
+    {{#if siteLogo}}
+    "icon": "{{siteLogo}}",
+    {{/if}}
+    "author": {
+        {{#siteAuthor}}
+        "name": "{{name}}"
+        {{/siteAuthor}}
+    },
+    "items": [
+        {{#each posts}}
+        {
+            "id": "{{url}}",
+            "url": "{{url}}",
+            "title": "{{title}}",
+            {{#if excerpt}}
+            "summary": {{{jsonify excerpt}}},
+            {{/if}}
+            {{#if text}}
+            "content_html": {{{jsonify text}}},
+            {{/if}}
+            {{#if thumbnail}}
+            "image": "{{thumbnail.url}}",
+            {{/if}}
+            "author": {
+                {{#author}}
+                "name": "{{name}}"
+                {{/author}}
+            },
+            "tags": [
+                {{#each categories}}
+                   "{{name}}"{{#unless @last}},{{/unless}}
+                {{/each}}
+            ],
+            "date_published": "{{date createdAt "YYYY-MM-DDTHH:mm:ssZ"}}",
+            "date_modified": "{{date modifiedAt "YYYY-MM-DDTHH:mm:ssZ"}}"
+        }{{#unless @last}},{{/unless}}
+        {{/each}}
+    ]
+}

@@ -1,0 +1,36 @@
+{{> head}}
+    {{> top}}
+        <main>
+            <div class="hero u-wrapper">
+				<h1>
+					{{ translate 'search.title' }}
+				</h1>                
+			</div>	
+			
+			<div class="u-wrapper search-page">
+				<form action="{{@website.searchUrl}}">
+					<input
+						   type="search"
+						   name="{{@config.custom.searchParam}}"
+						   placeholder="{{ translate 'search.placeholder' }}"
+						   class="search-page__input"/>
+				</form>
+				<script>
+					(function () {
+						var cx = '{{@config.custom.searchId}}';
+						var gcse = document.createElement('script');
+						gcse.type  = 'text/javascript';
+						gcse.async = true;
+						gcse.src   = 'https://cse.google.com/cse.js?cx=' + cx;
+						var s = document.getElementsByTagName('script')[0];
+						s.parentNode.insertBefore(gcse, s);
+					})();
+				</script>
+				
+				<gcse:searchresults-only></gcse:searchresults-only>
+			</div>
+			
+			
+			
+        </main>
+{{> footer}}

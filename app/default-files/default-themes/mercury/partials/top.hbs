@@ -1,0 +1,23 @@
+<div class="container">
+    <header class="js-top">
+        <a class="logo" href="{{@website.url}}">
+            {{#if @website.logo}}
+                <img src="{{@website.logo}}" alt="{{@website.name}}">
+            {{else}}
+                {{@website.name}}
+            {{/if}}
+        </a>
+        <div class="top">
+            {{> menu menus.mainMenu}}
+            {{#if @config.custom.search}}
+                <div class="top__search">
+                    <form action="{{@website.searchUrl}}" class="search">
+                        <input
+                            type="search"
+                            name="{{@config.custom.searchParam}}"
+                            placeholder="{{ translate 'search.placeholder' }}"/>
+                    </form>
+                </div>
+            {{/if}}
+        </div>
+    </header>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>{{siteName}}</title>
+    <link href="{{siteDomain}}/feed.xml" rel="self" />
+    <link href="{{siteDomain}}" />
+    <updated>{{date siteLastUpdate "YYYY-MM-DDTHH:mm:ssZ"}}</updated>
+    <author>
+        {{#siteAuthor}}
+        <name>{{name}}</name>
+        {{/siteAuthor}}
+    </author>
+    <id>{{siteDomain}}</id>
+
+    {{#each posts}}
+    <entry>
+        <title>{{title}}</title>
+        <author>
+            {{#author}}
+            <name>{{name}}</name>
+            {{/author}}
+        </author>
+        <link href="{{url}}"/>
+        <id>{{url}}</id>
+        {{#each categories}}
+            <category term="{{name}}"/>
+        {{/each}}
+
+        <updated>{{date modifiedAt "YYYY-MM-DDTHH:mm:ssZ"}}</updated>
+        {{#if excerpt}}
+            <summary>
+                <![CDATA[
+                    {{#if thumbnail}}
+                        <img src="{{thumbnail.url}}" alt="{{thumbnail.alt}}" />
+                    {{/if}}
+                    {{{excerpt}}}
+                ]]>
+            </summary>
+        {{else}}
+            <summary></summary>
+        {{/if}}
+        {{#if text}}
+        <content type="html">
+            <![CDATA[
+                {{#if thumbnail}}
+                    <img src="{{thumbnail.url}}" alt="{{thumbnail.alt}}" />
+                {{/if}}
+                {{{text}}}
+            ]]>
+        </content>
+        {{else}}
+        <content></content>
+        {{/if}}
+    </entry>
+    {{/each}}
+</feed>

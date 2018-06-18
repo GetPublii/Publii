@@ -1,0 +1,63 @@
+{
+	"partials": {
+		"cookiebar": {
+			"close": "Close"
+		},
+		"disqus": {
+			"noscript1": "Please enable JavaScript to view the",
+			"noscript2": "comments powered by Disqus."
+		},
+		"menu": {
+			"label": "Menu"
+		},
+		"top": {			
+			"lastUpdated": "Last Updated: "
+		},
+		"pagination": {
+			"prev": "Previous",
+			"next": "Next"
+		},
+		"shareButtons": {
+			"shareWithFacebook": "Share with Facebook",
+			"shareWithTwitter": "Share with Twitter",
+			"shareWithGooglePlus": "Share with Google Plus",
+			"shareWithPinterest": "Share with Pinterest",
+			"shareWithStumbleUpon": "Share with StumbleUpon",
+			"shareWithLinkedIn": "Share with LinkedIn",
+			"shareWithBuffer": "Share with Buffer"
+		},
+		"sidebar": {
+			"featured": "Featured",
+			"follow": "Follow us",
+			"authors": "Authors",
+			"authorsPost": "Post: ",
+			"tags": "Tags",
+			"newsletter": "Newsletter",
+			"newsletterDesc": "Sign up to receive email updates and to hear what's going on with us!",
+			"newsletterSubscribe": "subscribe"
+		}
+	},
+	"listing": {
+		"advertisement": "Advertisement"
+	},
+	"post": {
+		"publishedBy": "By",
+		"relatedPosts": "Related posts",
+		"readMore": "Read more",
+		"lastUpdatedDate": "This article was updated on",
+		"comments": "Comments",
+		"previousPost": "Previous Post",
+		"nextPost": "Next Post"
+	},
+	"error": {
+		"404": "404",
+		"message1": "Ooops, something went wrong",
+		"message2": "Unfortunately, the page you've requested cannot be displayed"
+	},	
+    "search": {
+        "title": "Search",
+        "description": "This page uses Google Custom Search, to configure it read the following article: <a href=\"https://getpublii.com/docs/search-configuration.html\" target=\"_blank\">https://getpublii.com/docs/search-configuration.html</a>",
+        "placeholder": "search...",
+		"submit": "Submit"
+    }
+}

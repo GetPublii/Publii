@@ -1,0 +1,99 @@
+{{> head}}
+<body>
+	{{{@bodyCustomCode}}}
+    <div class="container">
+        <header class="js-top">            
+            <a class="logo" href="{{@website.url}}">
+                    {{#if @website.logo}}
+                        <img src="{{@website.logo}}" alt="{{@website.name}}">
+                    {{else}}
+                        {{@website.name}}
+                    {{/if}}
+             </a>
+			 <div class="top">
+                {{> menu menus.mainMenu}}
+                {{> search}}
+            </div>
+        </header>
+        <main>
+            {{#if @config.custom.heroTag}}
+                <section class="hero hero--normal">
+                    {{#tag}}
+                        <header>
+                            {{#if description}}
+                                <h1 class="hero__title">
+                                    {{description}}
+                                </h1>
+                            {{/if}}
+                            <p class="hero__desc">                              
+                                {{name}}
+                            </p>
+                        </header>
+                    {{/tag}}
+                </section>
+            {{else}}
+                <section class="hero hero--overlay">
+                    {{#tag}}
+                        <header>
+                            <h1 class="hero__title">
+                                {{name}}
+                            </h1>
+                            {{#if description}}
+                                <p class="hero__desc">
+                                    {{description}}
+                                </p>
+                            {{/if}}
+                        </header>
+                    {{/tag}}
+                </section>
+            {{/if}}
+            <div class="portfolio {{@config.custom.gridGutter}}">
+                {{#each posts}}
+                    <article>
+                        <a href="{{url}}" class="card">
+                            {{#featuredImage}}
+                                {{#if @config.custom.lazyLoad}}
+                                    <figure class="card__image">
+                                        <img
+                                            class="lazyload blur-up"
+                                            src="{{urlXs}}"
+                                            data-srcset="{{srcset.post}}"
+                                            data-sizes="auto"
+											height="{{height}}" 
+										    width="{{width}}"
+                                            data-expand="300"
+                                            alt="{{alt}}">
+                                    </figure>
+                                {{else}}
+                                    <figure class="card__image">
+                                        <img
+                                            src="{{url}}"
+                                            sizes="{{sizes.post}}"
+                                            srcset="{{srcset.post}}"
+											height="{{height}}" 
+										    width="{{width}}"
+                                            alt="{{alt}}">
+                                    </figure>
+                                {{/if}}
+                            {{/featuredImage}}
+                            <header class="card__header">
+                                <p>
+                                    <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                {{/checkIf}}
+                            </time>
+                                </p>
+                                <h2>
+                                    {{title}}
+                                </h2>
+                            </header>
+                        </a>
+                    </article>
+                {{/each}}
+            </div>
+            {{> pagination}}
+        </main>
+        {{> footer}}

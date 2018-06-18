@@ -1,0 +1,29 @@
+/* 
+ * Add your own CSS code for the WYSIWYG editor 
+ */
+
+.msg {
+	padding: 1.06667rem 1.6rem;
+}
+
+.msg--highlight {
+	background-color: #fff7e5;
+}
+
+.msg--info {
+	background-color: #d9edf7;
+}
+
+.msg--success {
+	background: #d5efc2;
+}
+
+.dropcap:first-letter {
+  float: left; 
+  font-size: 3.65324rem;
+  line-height: 0.6;
+  margin-right: 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+}
+
+

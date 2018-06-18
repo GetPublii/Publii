@@ -1,0 +1,35 @@
+.overlay {
+    background-color: rgba(0, 0, 0, 0.35);
+    bottom: 0;
+    display: block;
+    height: auto;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 100002;
+}
+
+
+h1,
+h2 {
+    color: $color-4;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 7rem 0;
+    text-align: center;
+    text-transform: none;
+}
+
+h1 {
+    margin: 1rem 0 3rem 0;
+}
+
+body[data-os="win"] {
+    .overlay {
+        height: calc(100% - 36px);
+        top: 36px;
+    }
+}

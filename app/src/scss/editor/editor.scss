@@ -1,0 +1,542 @@
+/*
+ * Basic files
+ */
+
+@import '../mixins';
+@import '../variables';
+@import 'scrollbar';
+
+/*
+ * Reset
+ */
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+figure,
+form,
+fieldset,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+/*
+ * Main rules
+ */
+html {
+    font-size: 1rem;
+}
+
+html {
+    height: 100%;
+    overflow-y: auto!important;
+}
+
+@media screen and (min-width: 62rem) {
+    html {
+        font-size: calc(1rem + 0.1 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    html {
+        font-size: 1.1rem;
+    }
+}
+
+body#tinymce {
+    -webkit-font-smoothing: antialiased;
+    font-size: inherit;
+    line-height: 1.6;
+    padding-top: 2.4rem;
+    max-width: 40rem;
+
+    & > :nth-child(1) {
+        margin-top: 0;
+    }
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+    -webkit-transition: all 0.12s linear 0s;
+    transition: all 0.12s linear 0s;
+}
+
+a:hover {
+    color: $link-color;
+    text-decoration: underline;
+}
+
+a:active {
+    color: $link-color;
+}
+
+a:focus {
+    outline: none;
+}
+
+blockquote,
+p,
+ul,
+ol,
+dl,
+table,
+hr {
+    margin-top: 1.6rem;
+}
+
+blockquote {
+    & > p:first-child {
+        margin-top: 0;
+    }
+}
+
+figure {
+    margin-top: 2.4rem;
+    margin-bottom: 2.4rem;
+}
+
+figcaption {
+    clear: both;
+    color: $color-6;
+    font-style: italic;
+    font-size: 0.7rem;
+    margin: 0.8rem 0 0;
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $color-4;
+    font-weight: 600;
+    letter-spacing: -0.03rem;
+    line-height: 1.2;
+    margin-top: 3.2rem;
+}
+
+h1 {
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.60181rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h1 {
+        font-size: calc(1.60181rem + 0.67889 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h1 {
+        font-size: 2.2807rem;
+    }
+}
+
+h2 {
+    font-size: 1.42383rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h2 {
+        font-size: calc(1.42383rem + 0.17798 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h2 {
+        font-size: 1.60181rem;
+    }
+}
+
+h3 {
+    font-size: 1.26563rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h3 {
+        font-size: calc(1.26563rem + 0.1582 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h3 {
+        font-size: 1.42383rem;
+    }
+}
+
+h4 {
+    font-size: 1.125rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h4 {
+        font-size: calc(1.125rem + 0.14063 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h4 {
+        font-size: 1.26563rem;
+    }
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h5 {
+        font-size: calc(1rem + 0.125 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h5 {
+        font-size: 1.125rem;
+    }
+}
+
+h6 {
+    font-size: 0.88889rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h6 {
+        font-size: calc(0.88889rem + 0.11111 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h6 {
+        font-size: 1rem;
+    }
+}
+
+p {
+    margin-top: 1.6rem;
+}
+
+b,
+strong {
+    font-weight: 700;
+}
+
+blockquote {
+    border-left: 0.3rem solid $color-1;
+    font-style: italic;
+    padding: 0.8rem 0 0.8rem 1.86667rem;
+}
+
+blockquote cite {
+    color: $color-4;
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
+}
+
+blockquote cite:before {
+    content: "- ";
+}
+
+ul,
+ol {
+    margin-left: 2rem;
+}
+
+ul > li,
+ol > li {
+    list-style-position: outside;
+    padding-left: 0.4rem;
+}
+
+dl dt {
+    font-weight: 700;
+}
+
+pre {
+    margin: 1.6rem 0 0;
+    padding: 1.6rem 3.2rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+code,
+pre {
+    background-color: $color-9;
+    font-family: "Monaco", "Courier New", monospace;
+    font-size: 0.8rem;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    vertical-align: top;
+    text-align: left;
+    white-space: normal;
+}
+
+table th {
+    border-bottom: 2px solid color-helper-8;
+    font-weight: 700;
+    padding: 0.8rem 1.33333rem;
+}
+
+table tr:nth-child(2n) {
+    background: $color-9;
+}
+
+table td {
+    padding: 0.8rem 1.33333rem;
+    word-wrap: break-word;
+}
+
+hr#read-more {
+    border: none;
+    border-top: 3px solid $color-helper-8;
+    margin: 1.6rem 0;
+    overflow: visible;
+    position: relative;
+
+    &:after {
+        background: #fff;
+        color: $color-7;
+        content: "Read more";
+        font-size: 10px;
+        left: 50%;
+        line-height: 1;
+        padding: 0 .5rem;
+        position: absolute;
+        top: -7px;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+}
+
+/*
+ * Alignment
+ */
+
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-justify {
+    text-align: justify;
+}
+
+/*
+ * Images
+ */
+
+.post__image--center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/*
+ * AMP conditional content tags
+ */
+
+publii-amp,
+publii-non-amp {
+    border: 1px dashed $color-8;
+    display: block;
+    margin: 30px 0;
+    padding: 20px;
+    position: relative;
+}
+
+publii-amp:before,
+publii-non-amp:before {
+    background: $color-10;
+    color: $color-6;
+    font-size: 12px;
+    left: 50%;
+    padding: .25rem .5rem;
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+publii-amp:before {
+    content: "This content will be visible only in the AMP version";
+}
+
+publii-non-amp:before {
+    content: "This content won't be visible in the AMP version";
+}
+
+.gallery {
+    background: $color-10;
+    border: 2px dashed $color-8;
+    cursor: pointer!important;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    outline: none!important;
+    padding: 20px;
+    position: relative;
+    -webkit-user-select: none;
+            user-select: none;
+
+    &[data-is-empty="true"]:after {
+        background: $color-2;
+        border-radius: 3px;
+        color: $color-10;
+        content: "Add images to gallery";
+        font-weight: bold;
+        left: 50%;
+        margin: 0;
+        padding: 0.5rem 2rem;
+        position: absolute;
+        pointer-events: none;
+        text-align: center;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        white-space: nowrap;
+        width: 40%!important;
+    }
+
+    &__item {
+        margin: 0;
+        padding: 1%;
+        pointer-events: none;
+
+        img {
+            height: auto;
+            max-width: 100%;
+        }
+    }
+
+    &:after {
+        content: "";
+    }
+
+    &[data-columns="1"] .gallery__item {
+        width: 100%;
+    }
+
+    &[data-columns="2"]:after,
+    &[data-columns="2"] .gallery__item {
+        width: 50%;
+    }
+
+    &[data-columns="3"]:after,
+    &[data-columns="3"] .gallery__item {
+        width: 33.333333%;
+    }
+
+    &[data-columns="4"]:after,
+    &[data-columns="4"] .gallery__item {
+        width: 25%;
+    }
+
+    &[data-columns="5"]:after,
+    &[data-columns="5"] .gallery__item {
+        width: 20%;
+    }
+
+    &[data-columns="6"]:after,
+    &[data-columns="6"] .gallery__item {
+        width: 16.666666%;
+    }
+
+    &[data-columns="7"]:after,
+    &[data-columns="7"] .gallery__item {
+        width: 14.285714%;
+    }
+
+    &[data-columns="8"]:after,
+    &[data-columns="8"] .gallery__item {
+        width: 12.5%;
+    }
+}
+
+/*
+ * Styling for obfuscated e-mails
+ */
+
+script {
+    background: $color-9;
+    border: 1px solid $color-8;
+    border-radius: 3px;
+    display: block;
+    font-size: .75rem;
+    height: 2rem;
+    margin: 1rem 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    &:before {
+        background: $color-9;
+        color: $color-7;
+        content: "<script>";
+        left: 0;
+        line-height: 2rem;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+    }
+}
+
+a script {
+    display: inline-block;
+    height: 1.5rem;
+    margin: 0;
+    vertical-align: middle;
+    width: 5rem;
+
+    &:before {
+        line-height: 1.5rem;
+    }
+}

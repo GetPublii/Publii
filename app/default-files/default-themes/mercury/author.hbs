@@ -1,0 +1,117 @@
+{{> head}}
+    {{> top}}
+    <main>
+        <div class="hero u-wrapper">
+            {{#author}}
+                {{#if avatar}}
+                    <img src="{{avatar}}" alt="{{name}}" class="author-page__avatar">
+                {{/if}}
+                <h1>{{name}}
+                    <sup>({{postsNumber}})</sup>
+                </h1>
+                {{#if description}}
+                    <p class="author-page__info">
+                        {{description}}
+                    </p>
+                {{/if}}
+            {{/author}}
+        </div>
+        {{#checkIf @config.custom.cardsLayout '==' "true" }}
+            <div
+                class="layout layout{{@config.custom.layoutAuthor}}">
+                {{#each posts}}
+                    <div class="card{{#isFeatured}} card--compact card--featured{{/isFeatured}}">
+                        <a href="{{url}}">
+                            {{#featuredImage}}
+                                {{#if @config.custom.lazyLoad}}
+                                    <div class="card__header">
+                                         <img data-sizes="auto"                                           
+                                            src="{{urlXs}}"
+                                            data-srcset="{{srcset.cards}}"											
+											width="{{width}}"
+											height="{{height}}"
+                                            alt="{{alt}}" 
+											class="lazyload blur-up">
+                                    </div>
+                                {{else}}
+                                    <header class="card__header">
+                                        <img
+                                            src="{{url}}"
+                                            sizes="{{sizes.cards}}"
+                                            srcset="{{srcset.cards}}"
+                                            alt="{{alt}}">
+                                    </header>
+                                {{/if}}
+                            {{/featuredImage}}
+                            <div class="card__body card__body--compact">
+                                <div class="card__body__wrap card__body__wrap--compact">
+                                    <h2>
+                                        {{title}}
+                                    </h2>
+                                    <p>
+                                         <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                            {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                                {{date createdAt @config.custom.formatDate}}
+                                            {{else}}
+                                                {{date createdAt @config.custom.formatDateCustom}}
+                                            {{/checkIf}}
+                                        </time>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div
+                class="layout layout{{@config.custom.layoutAuthor}}">
+                {{#each posts}}
+                    <div class="card{{#isFeatured}} card--featured{{/isFeatured}}">
+                        <a href="{{url}}">
+                            {{#featuredImage}}
+                                {{#if @config.custom.lazyLoad}}
+                                    <div class="card__header">
+                                        <img
+                                            data-sizes="auto"
+                                            src="{{urlXs}}"
+                                            data-srcset="{{srcset.cards}}" 
+											width="{{width}}"
+											height="{{height}}"
+                                            alt="{{alt}}" 
+											class="lazyload blur-up">
+                                    </div>
+                                {{else}}
+                                    <header class="card__header">
+                                        <img
+                                            src="{{url}}"
+                                            sizes="{{sizes.cards}}"
+                                            srcset="{{srcset.cards}}"
+                                            alt="{{alt}}">
+                                    </header>
+                                {{/if}}
+                            {{/featuredImage}}
+                            <div class="card__body">
+                                <div class="card__body__wrap">
+                                    <h2>
+                                        {{title}}
+                                    </h2>
+                                    <p>
+                                         <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                            {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                                {{date createdAt @config.custom.formatDate}}
+                                            {{else}}
+                                                {{date createdAt @config.custom.formatDateCustom}}
+                                            {{/checkIf}}
+                                        </time>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {{/each}}
+            </div>
+        {{/checkIf}}
+        {{> pagination}}
+    </main>
+    {{> footer}}

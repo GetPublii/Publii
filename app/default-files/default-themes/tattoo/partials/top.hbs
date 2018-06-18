@@ -1,0 +1,36 @@
+<div class="container">
+    <header class="js-top">
+        <div>
+            <a class="logo" href="{{@website.url}}">
+                {{#if @website.logo}}
+                    <img src="{{@website.logo}}" alt="{{@website.name}}">
+                {{else}}
+                    {{@website.name}}
+                {{/if}}
+            </a>
+
+            {{#if @config.custom.search}}
+                <div class="search">
+                    <div class="search__overlay">
+                        <button class="search__close" aria-label="{{ translate 'search.close' }}">{{ translate 'search.close' }}</button>
+                        <form action="{{@website.searchUrl}}">
+                            <input
+                                class="search__input"
+                                type="search"
+                                name="{{@config.custom.searchParam}}"
+                                placeholder="{{ translate 'search.placeholder' }}"
+                                autofocus="autofocus"/>
+                        </form>
+                    </div>
+                    <button class="search__btn" aria-label="{{ translate 'search.title' }}">
+                        <svg class="icon" role="presentation" focusable="false">
+                            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#search"/>
+                        </svg>
+                    </button>
+                </div>
+            {{/if}}
+
+            {{> menu menus.mainMenu}}
+			
+        </div>
+    </header>

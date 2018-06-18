@@ -1,0 +1,191 @@
+{{> head}}
+<body>
+    {{{@bodyCustomCode}}}
+    <div class="container">
+        <header class="js-top is-sticky">
+            <a class="logo" href="{{@website.url}}">
+                {{#if @website.logo}}
+                    <img src="{{@website.logo}}" alt="{{@website.name}}">
+                {{else}}
+                    {{@website.name}}
+                {{/if}}
+            </a>
+            <div class="top">
+                {{> menu menus.mainMenu}}
+                {{> search}}
+            </div>
+        </header>
+        <main class="u-cutting">
+            {{#post}}
+                <article class="post {{#if @config.custom.postAside}}post--with-aside{{/if}}">
+                    {{#featuredImage}}
+                        {{#if url}}
+                            {{#checkIfAny caption credits}}
+                                <figure class="post__featured-image post__image--full">
+                                    {{#if @config.custom.lazyLoad}}
+                                        <img
+                                            class="lazyload blur-up"
+                                            src="{{urlXs}}"                                           
+                                            data-srcset="{{srcset.post}}"
+                                            data-sizes="auto"
+                                            alt="{{alt}}">
+                                    {{else}}
+                                        <img
+                                            src="{{url}}"
+                                            sizes="{{sizes.post}}"
+                                            srcset="{{srcset.post}}"
+											height="{{height}}" 
+										    width="{{width}}"
+                                            alt="{{alt}}">
+                                    {{/if}}
+                                    <figcaption>{{caption}}
+                                        {{credits}}</figcaption>
+                                </figure>
+                            {{else}}
+                                <div class="post__featured-image post__image--full">
+                                    {{#if @config.custom.lazyLoad}}
+                                        <img
+                                            class="lazyload blur-up"
+                                            src="{{urlXs}}"
+                                            data-srcset="{{srcset.post}}"
+                                            data-sizes="auto"
+                                            alt="{{alt}}">
+                                    {{else}}
+                                        <img
+                                            src="{{url}}"
+                                            sizes="{{sizes.post}}"
+                                            srcset="{{srcset.post}}"
+											height="{{height}}" 
+										    width="{{width}}"
+                                            alt="{{alt}}">
+                                    {{/if}}
+                                </div>
+                            {{/checkIfAny}}
+                        {{/if}}
+                    {{/featuredImage}}
+                    <header class="post__header">
+                        <h1>{{title}}</h1>
+                        {{#checkIfAny @config.post.displayAuthor @config.post.displayDate}}
+                            <p class="post__meta">
+                                {{#if @config.post.displayAuthor}}
+                                    {{#author}}
+                                        {{ translate 'post.publishedBy' }}
+                                        <a href="{{url}}" rel="author" title="{{name}}">{{name}}</a>
+                                    {{/author}}
+                                {{/if}}
+                                {{#if @config.post.displayDate}}
+                                    <br/>{{ translate 'post.publishedOn' }}
+                                    <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                {{/checkIf}}
+                            </time>
+                                {{/if}}
+                            </p>
+                        {{/checkIfAny}}
+                    </header>
+                    <div class="post__entry">
+                        {{#if @config.custom.lazyLoad}}
+                            {{{lazyLoadForContentImages text}}}
+                        {{else}}
+                            {{{text}}}
+                        {{/if}}
+                    </div>
+                    {{#if @config.post.displayShareButtons}}
+                        <aside class="post__aside">
+
+                            <div class="post__share">
+
+                                {{> share-buttons}}
+                            </div>
+                        </aside>
+                    {{/if}}
+                    {{#checkIfAny @config.post.displayTags @config.post.displayAuthorBio}}
+                        <footer class="post__footer">
+                            {{#if @config.post.displayTags}}
+                                {{#if tags}}
+                                    <ul class="post__tag">
+                                        {{#each tags}}
+                                            <li>
+                                                <a href="{{url}}">{{name}}</a>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                {{/if}}
+                            {{/if}}
+                            {{#if @config.post.displayAuthorBio}}
+                                {{#author}}
+                                    <div class="post__bio">
+                                        {{#if avatar}}
+                                            <div class="post__bio-thumb">
+                                                <img src="{{avatar}}" alt="{{name}}"></div>
+                                        {{/if}}
+                                        <div class="post__bio-text">
+                                            {{#if name}}
+                                                <h3>
+                                                    <a href="{{url}}" title="{{name}}">{{name}}</a>
+                                                </h3>
+                                            {{/if}}
+
+                                            {{#if description}}
+                                                <p>{{description}}</p>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/author}}
+                            {{/if}}
+                        </footer>
+                    {{/checkIfAny}}
+                </article>
+                {{#if @config.post.displayPostNavigation}}
+                    {{#checkIfAny ../previousSimilarPost ../nextSimilarPost}}
+                        <nav class="post-nav">
+                            {{#../previousSimilarPost}}
+                                <div class="post-nav__prev">
+                                    <a
+                                        href="{{url}}"
+                                        rel="prev"
+                                        class="post-nav__link {{#if @config.post.navigationStyle}}post-nav__link--light{{/if}}">
+                                        {{ translate 'post.previousPost' }}
+                                        <h5>
+                                            {{title}}
+                                        </h5>
+                                    </a>
+                                </div>
+                            {{/../previousSimilarPost}}
+                            {{#../nextSimilarPost}}
+                                <div class="post-nav__next">
+                                    <a
+                                        href="{{url}}"
+                                        rel="next"
+                                        class="post-nav__link {{#if @config.post.navigationStyle}}post-nav__link--light{{/if}}">
+                                        {{ translate 'post.nextPost' }}
+                                        <h5>
+                                            {{title}}
+                                        </h5>
+                                    </a>
+                                </div>
+                            {{/../nextSimilarPost}}
+                        </nav>
+                    {{/checkIfAny}}
+                {{/if}}
+            {{/post}}
+            {{#checkIfAny @config.post.displayComments @customHTML.afterPost}}
+                <div class="tank">
+                    <div
+                        class="tank__inner {{#if @config.custom.postAside}}tank__inner--with-aside{{/if}}">
+                        {{#if @config.post.displayComments}}
+                            {{> disqus}}</div>
+                    {{/if}}
+                    {{#if @customHTML.afterPost}}
+                        <div class="banner banner--after-post">
+                            {{{@customHTML.afterPost}}}
+                        </div>
+                    {{/if}}
+                </div>
+            {{/checkIfAny}}
+
+        </main>
+        {{> footer}}

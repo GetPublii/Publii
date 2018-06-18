@@ -1,0 +1,206 @@
+<div class="sidebar">
+        {{#if @config.custom.featured}}
+            {{#if featuredPosts}}
+                <section class="box">
+                    <h3 class="box__title">{{ translate 'partials.sidebar.featured' }}</h3>
+                    <ul class="featured-posts">
+                        {{#each featuredPosts}}
+                            {{#checkIf @index '<' @config.custom.featuredAmount}}
+                                <li>
+                                    {{#if @config.custom.featuredImage}}
+                                        {{#featuredImage}}
+                                            {{#if @config.custom.lazyLoad}}
+                                                <a href="{{../url}}">
+                                                    <img
+                                                        class="lazyload blur-up featured-posts__img"
+                                                        src="{{urlXs}}"
+                                                        data-src="{{urlXs}}"
+                                                        alt="{{alt}}">
+                                                </a>
+                                            {{else}}
+                                                <a href="{{../url}}">
+                                                    <img class="featured-posts__img" src="{{urlXs}}" alt="{{alt}}">
+                                                </a>
+                                            {{/if}}
+                                        {{/featuredImage}}
+                                    {{/if}}
+                                    <div>
+                                        <a href="{{url}}" class="featured-posts__title">{{title}}</a>
+                                        {{#if @config.custom.featuredDate}}
+                                            <time class="u-small" datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                                {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                                    {{date createdAt @config.custom.formatDate}}
+                                                {{else}}
+                                                    {{date createdAt @config.custom.formatDateCustom}}
+                                                {{/checkIf}}
+                                            </time>
+                                        {{/if}}
+                                    </div>
+                                </li>
+                            {{/checkIf}}
+                        {{/each}}
+                    </ul>
+                </section>
+            {{/if}}
+        {{/if}}
+        {{#if @config.custom.sidebarAd}}
+            <section class="box u-ads">
+                <h3 class="u-ads__title">{{ translate 'listing.advertisement' }}</h3>
+                {{{@config.custom.sidebarAdCode}}}
+            </section>
+        {{/if}}
+        {{#if @config.custom.follow}}
+            <section class="box">
+                <h3 class="box__title">{{ translate 'partials.sidebar.follow' }}</h3>
+                <div class="follow">
+                    {{#if @config.custom.followSidebarFacebook}}
+                        {{#if @config.custom.socialFacebook}}
+                            <a
+                                href="{{@config.custom.socialFacebook}}"
+                                class="facebook"
+                                aria-label="Facebook">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook" />
+                                </svg>
+                                Facebook
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarTwitter}}
+                        {{#if @config.custom.socialTwitter}}
+                            <a href="{{@config.custom.socialTwitter}}" class="twitter" aria-label="Twitter">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter" />
+                                </svg>
+                                Twitter
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarGoogleplus}}
+                        {{#if @config.custom.socialGoogleplus}}
+                            <a
+                                href="{{@config.custom.social_googleplus}}"
+                                class="gplus"
+                                aria-label="Google +">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
+                                </svg>
+                                Google +
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarInstagram}}
+                        {{#if @config.custom.socialInstagram}}
+                            <a
+                                href="{{@config.custom.socialInstagram}}"
+                                class="instagram"
+                                aria-label="Instagram">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#instagram" />
+                                </svg>
+                                Instagram
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarLinkedin}}
+                        {{#if @config.custom.socialLinkedin}}
+                            <a
+                                href="{{@config.custom.socialLinkedin}}"
+                                class="linkedin"
+                                aria-label="LinkedIn">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin" />
+                                </svg>
+                                LinkedIn
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarVimeo}}
+                        {{#if @config.custom.socialVimeo}}
+                            <a href="{{@config.custom.socialVimeo}}" class="vimeo" aria-label="Vimeo">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#vimeo" />
+                                </svg>
+                                Vimeo
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarPinterest}}
+                        {{#if @config.custom.socialPinterest}}
+                            <a
+                                href="{{@config.custom.socialPinterest}}"
+                                class="pinterest"
+                                aria-label="Pinterest">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest" />
+                                </svg>
+                                Pinterest
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                    {{#if @config.custom.followSidebarYoutube}}
+                        {{#if @config.custom.socialYoutube}}
+                            <a href="{{@config.custom.socialYoutube}}" class="youtube" aria-label="Youtube">
+                                <svg class="u-icon">
+                                    <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#youtube" />
+                                </svg>
+                                Youtube
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </section>
+        {{/if}}
+        {{#if @config.custom.authors}}
+            <section class="box">
+                <h3 class="box__title">{{ translate 'partials.sidebar.authors' }}</h3>
+                <ul class="authors">
+                    {{#each authors}}
+                        {{#checkIf @index '<' @config.custom.authorsAmount}}
+                            <li>
+                                {{#if @config.custom.authorsAvatar}}
+                                    <a href="{{url}}">
+                                        <img src="{{avatar}}" class="authors__img" alt="{{name}}">
+                                    </a>
+                                {{/if}}
+                                <div>
+                                    <a href="{{url}}" class="authors__title">{{name}}</a>
+                                    {{#if @config.custom.authorsPostCount}}
+                                        <span class="u-small">{{ translate 'partials.sidebar.authorsPost' }}
+                                            {{postsNumber}}
+                                        </span>
+                                    {{/if}}
+                                </div>
+                            </li>
+                        {{/checkIf}}
+                    {{/each}}
+                </ul>
+            </section>
+        {{/if}}
+
+        {{#if @config.custom.newsletter}}
+            <section class="newsletter box box--gray">
+                <h3 class="box__title">{{ translate 'partials.sidebar.newsletter' }}</h3>
+                <p class="newsletter__description">{{ translate 'partials.sidebar.newsletterDesc' }}</p>
+                {{{@config.custom.newsletterFormCode}}}              
+            </section>
+        {{/if}}
+
+        {{#if @config.custom.tags}}
+            {{#if tags}}
+                <section class="box">
+                    <h3 class="box__title">{{ translate 'partials.sidebar.tags' }}</h3>
+                    <ul class="tags">
+                        {{#each tags}}
+                            {{#checkIf @index '<' @config.custom.tagsAmount}}
+                                <li>
+                                    <a href="{{url}}">{{name}}</a>
+                                    <span class="u-small">({{postsNumber}})</span>
+                                </li>
+                            {{/checkIf}}
+                        {{/each}}
+                    </ul>
+                </section>
+            {{/if}}
+        {{/if}}
+    </div>

@@ -1,0 +1,61 @@
+{{> head}}
+<div class="container">
+    {{> menu menus.mainMenu}}
+    <div class="content js-content">
+        <header>
+            <div class="top">
+                <a class="logo" href="{{@website.url}}">
+                    {{#if @website.logo}}
+                        <img src="{{@website.logo}}" alt="{{@website.name}}">
+                    {{else}}
+                        {{@website.name}}
+                    {{/if}}
+                </a>
+            </div>
+            <div class="top top--right is-sticky">
+                {{#if menus.mainMenu}}
+                    <button class="menu-toggle js-menu-toggle">
+                        {{ translate 'shared.menu' }}
+                    </button>
+                {{/if}}
+            </div>
+        </header>
+        <main class="main">
+            <section class="main__left">
+                {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+                    {{#if @config.custom.uploadHeroCaption}}
+                        <figure class="hero">
+                            <img
+                                class="lazyload"
+                                src="{{@config.custom.uploadHero}}"
+                                {{responsiveSrcSet @config.custom.uploadHero}}
+                                {{responsiveSizes}}
+                                alt="{{@config.custom.uploadHeroAlt}}">
+                            <figcaption class="hero__caption">
+                                {{@config.custom.uploadHeroCaption}}
+                            </figcaption>
+                        </figure>
+                    {{else}}
+                        <div class="hero">
+                            <img
+                                class="lazyload"
+                                src="{{@config.custom.uploadHero}}"
+                                {{responsiveSrcSet @config.custom.uploadHero}}
+                                {{responsiveSizes}}
+                                alt="{{@config.custom.uploadHeroAlt}}">
+                        </div>
+                    {{/if}}
+                {{/checkIfAll}}
+                <header>
+                    <h1>{{ translate 'error.404' }}</h1>
+                    <p>{{ translate 'error.pageNotFound' }}</p>
+                </header>
+            </section>
+            <div class="main__right">
+                <div>
+                    <h2>{{ translate 'error.message1' }}</h2>
+                    <p>{{ translate 'error.message2' }}</p>
+                </div>
+            </div>
+        </main>
+        {{> footer}}

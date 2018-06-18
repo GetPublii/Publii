@@ -1,0 +1,18 @@
+{{#if @pagination}}
+<nav class="pagination">	
+	{{#if @pagination.nextPage}}
+	    <a href="{{@pagination.nextPageUrl}}" aria-label="{{ translate 'partials.pagination.prev' }}">
+			<svg>
+				<use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev" />
+			</svg>
+	    </a> 
+	{{/if}}
+	{{#if @pagination.previousPage}}
+	    <a href="{{@pagination.previousPageUrl}}" aria-label="{{ translate 'partials.pagination.next' }}">
+			<svg>
+				<use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next" />
+			</svg>
+	    </a> 
+	{{/if}} 
+</nav>
+{{/if}}

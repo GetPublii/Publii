@@ -1,0 +1,110 @@
+{{> amp-head}}
+
+    <main class="wrap-page">
+        {{#post}}
+        <article class="post">
+            
+            {{#featuredImage}}
+                {{#if url}}
+                <figure class="post-featured-image">
+                    <amp-img
+                        src="{{url}}"
+                        alt="{{alt}}"
+                        {{#if srcset.amp}}
+                            srcset="{{srcset.amp}}"
+                        {{else}}
+                            {{#if srcset}}
+                            srcset="{{srcset}}"
+                            {{/if}}
+                        {{/if}}
+                        {{#if sizes.amp}}
+                            sizes="{{sizes.amp}}"
+                        {{else}}
+                            {{#if sizes}}
+                            sizes="{{sizes}}"
+                            {{/if}}
+                        {{/if}}
+                        height="{{height}}"
+                        layout="responsive"
+                        width="{{width}}">
+                    </amp-img>
+                    {{#checkIfAny caption credits}}
+                    <figcaption>
+                        {{caption}} {{credits}}
+                    </figcaption>
+                    {{/checkIfAny}}
+                    </figure>
+                {{/if}}
+            {{/featuredImage}}
+            
+             <div class="wrap-inner">
+                <header class="post-header">
+                    <h1>
+                        {{title}}
+                    </h1>
+                    {{#checkIfAny @config.post.displayDate @config.post.displayAuthor}}
+                        <p class="post-meta">
+                            {{#if @config.post.displayAuthor}}
+                                {{#author}}
+                                    {{ translate 'post.publishedBy' }}
+                                    <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                                {{/author}}
+                            {{/if}}
+                            {{#if @config.post.displayDate}}
+                                <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                    {{date createdAt @config.custom.formatDate}}
+                                </time>
+                            {{/if}}
+                        </p>
+                    {{/checkIfAny}}
+                </header>
+
+                {{{text}}}
+                 
+                {{#checkIfAny @config.post.displayTags @config.post.displayShareButtons}}
+                    <aside>
+                        {{#if @config.post.displayTags}}
+                            {{#if tags}}
+                                <ul class="post-tag">                   
+                                    {{#each tags}}
+                                       <li>
+                                           <a href="{{url}}">{{name}}</a>
+                                        </li>
+                                     {{/each}}
+                                </ul>
+                             {{/if}}
+                        {{/if}}
+                   
+                        {{#checkIf @config.post.displayShareButtons '&&' @amp.shareButtons}}
+                            <div class="post-share">
+                                 {{> amp-share-buttons}}
+                            </div>                  
+                         {{/checkIf}}                        
+                    </aside>
+                 {{/checkIfAny}}
+             
+            </div>
+        </article>
+        
+        {{/post}}
+        {{#if @config.post.displayPostNavigation}}
+            <nav class="post-pagination wrap-inner">
+                {{#previousPost}}           
+                    <div class="post-pagination-prev">               
+                        <span>{{ translate 'post.previousPost' }}</span>
+                        <a href="{{url}}">{{title}}</a>               
+                    </div>
+                {{/previousPost}}
+
+                {{#nextPost}}
+                    <div class="post-pagination-next">
+                        <span>{{ translate 'post.nextPost' }}</span>
+                        <a href="{{url}}">{{title}}</a>              
+                    </div>
+                {{/nextPost}}         
+            </nav>
+         {{/if}}
+       
+       
+    </main>
+{{> amp-footer}}

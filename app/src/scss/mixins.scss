@@ -1,0 +1,22 @@
+/*
+ * Clearfix placeholder
+ */
+@mixin clearfix {
+    &:after {
+        content: " ";
+        display: block;
+        clear: both;
+    }
+}
+
+/*
+ * Place for the common parts of the SCSS code
+ */
+@mixin logoColors() {
+    @for $i from 1 through 16 {
+        &[data-color="#{$i}"] {
+            background: #{map-get($logo-colors, #{'bg' + $i})};
+            color: #{map-get($logo-colors, #{'color' + $i})};
+        }
+    }
+}

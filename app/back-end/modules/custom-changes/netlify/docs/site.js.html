@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>Netlify Node</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/cayman.min.css">
+    <link rel="stylesheet" href="css/prism.min.css">
+    <link rel="stylesheet" href="css/index.min.css">
+    <link rel="stylesheet" href="css/docs.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>Netlify Node</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="index.html">Main</a></li>
+            <li><a href="access-token.js.html">access-token.js</a></li>
+            <li><a href="client.js.html">client.js</a></li>
+            <li><a href="deploy.js.html">deploy.js</a></li>
+            <li><a href="deploy_key.js.html">deploy_key.js</a></li>
+            <li><a href="dns-record.js.html">dns-record.js</a></li>
+            <li><a href="dns-zone.js.html">dns-zone.js</a></li>
+            <li><a href="file.js.html">file.js</a></li>
+            <li><a href="form.js.html">form.js</a></li>
+            <li><a href="model.js.html">model.js</a></li>
+            <li><a href="netlify.js.html">netlify.js</a></li>
+            <li class="active"><a href="site.js.html">site.js</a></li>
+            <li><a href="snippet.js.html">snippet.js</a></li>
+            <li><a href="submission.js.html">submission.js</a></li>
+            <li><a href="ticket.js.html">ticket.js</a></li>
+            <li><a href="user.js.html">user.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#path"><i class="alert alert-success"></i><span>path</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="path">
+            <h1>path</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>&nbsp;</span><span>path</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"></div>
+          <pre><code class="language-javascript">var path = require(&quot;path&quot;),
+    model = require(&quot;./model&quot;),
+    Form  = require(&quot;./form&quot;).Form,
+    Submission = require(&quot;./submission&quot;).Submission,
+    File = require(&quot;./file&quot;).File,
+    Snippet = require(&quot;./snippet&quot;).Snippet,
+    Deploy = require(&quot;./deploy&quot;).Deploy;
+
+if (typeof(require) !== 'undefined') {
+  var glob   = require(&quot;glob&quot;),
+      path   = require(&quot;path&quot;),
+      crypto = require(&quot;crypto&quot;),
+      fs     = require(&quot;graceful-fs&quot;);
+}
+
+var Site = model.constructor();
+Site.path = &quot;/sites&quot;;
+
+var globFiles = function(dir, cb) {
+  glob(&quot;**/*&quot;, {cwd: dir}, function(err, files) {
+    if (err) return cb(err);
+
+    var filtered = files.filter(function(file) {
+      return file.match(/(\/__MACOSX|\/\.)/) ? false : true;
+    }).map(function(file) { return {rel: file, abs: path.resolve(dir, file)}; });
+
+    filterFiles(filtered, cb);
+  });
+};
+
+var filterFiles = function(filesAndDirs, cb) {
+  var processed = [],
+      files     = [],
+      cbCalled  = false;
+  filesAndDirs.forEach(function(fileOrDir) {
+    fs.lstat(fileOrDir.abs, function(err, stat) {
+      if (cbCalled) return null;
+      if (err) { cbCalled = true; return cb(err); }
+      if (stat.isFile()) {
+        files.push(fileOrDir);
+      }
+      processed.push(fileOrDir);
+      if (processed.length == filesAndDirs.length) {
+        cb(null, files);
+      }
+    });
+  });
+};
+
+var calculateShas = function(files, cb) {
+  var shas = {},
+      cbCalled = false,
+      processed = [];
+
+  files.forEach(function(file) {
+    fs.readFile(file.abs, function(err, data) {
+      if (cbCalled) return null;
+      if (err) { cbCalled = true; return cb(err); }
+
+      var shasum = crypto.createHash('sha1');
+      shasum.update(data);
+      shas[file.rel] = shasum.digest('hex');
+      processed.push(file);
+      if (processed.length == files.length) {
+        cb(null, shas);
+      }
+    });
+  });
+};
+
+var deployFromDir = function(site, dir, draft, cb) {
+  var fullDir = path.resolve(dir);
+
+  fs.stat(fullDir, function(err, stat) {
+    if (err || stat.isFile()) return cb(&quot;No such dir &quot; + dir + &quot; (&quot; + fullDir + &quot;)&quot;);
+
+    globFiles(fullDir, function(err, files) {
+      calculateShas(files, function(err, filesWithShas) {
+        site.client.request({
+          url: site.apiPath + &quot;/deploys&quot;,
+          type: &quot;post&quot;,
+          body: JSON.stringify({
+            files: filesWithShas,
+            draft: draft
+          })
+        }, function(err, data) {
+          if (err) return cb(err);
+          var deploy = new Deploy(site.client, data);
+          var shas = {};
+          data.required.forEach(function(sha) { shas[sha] = true; });
+          var filtered = files.filter(function(file) { return shas[filesWithShas[file.rel]]; });
+          deploy.uploadFiles(filtered, function(err, deploy) {
+            cb(err, deploy);
+          });
+        });
+      });
+    });
+  });
+};
+
+var deployFromZip = function(site, zip, draft, cb) {
+  var fullPath = zip.match(/^\//) ? zip : process.cwd() + &quot;/&quot; + zip;
+
+  fs.readFile(fullPath, function(err, zipData) {
+    if (err) return cb(err);
+
+    var path = site.apiPath + &quot;/deploys&quot;;
+
+    if (draft) { path += &quot;?draft=true&quot;; }
+
+    site.client.request({
+      url: path,
+      type: &quot;post&quot;,
+      body: zipData,
+      contentType: &quot;application/zip&quot;
+    }, function(err, data) {
+      if (err) return cb(err);
+
+      return cb(null, new Deploy(site.client, data));
+    });
+  });
+};
+
+var attributesForUpdate = function(attributes) {
+  var mapping = {
+        name: &quot;name&quot;,
+        customDomain: &quot;custom_domain&quot;,
+        notificationEmail: &quot;notification_email&quot;,
+        password: &quot;password&quot;,
+        github: &quot;github&quot;,
+        repo: &quot;repo&quot;
+      },
+      result = {};
+
+  for (var key in attributes) {
+    if (mapping[key]) result[mapping[key]] = attributes[key];
+  }
+
+  return result;
+};
+
+Site.createFromDir = function(client, dir, cb) {
+  Site.create(client, {}, function(err, site) {
+    site.createDeploy({dir: dir}, function(err, deploy) {
+      site.deploy_id = deploy.id;
+      cb(null, site);
+    })
+  });
+};
+
+Site.createFromZip = function(client, zip, cb) {
+  Site.create(client, {}, function(err, site) {
+    site.createDeploy({zip: zip}, function(err, deploy) {
+      site.deploy_id = deploy.id;
+      cb(null, site);
+    })
+  });
+};
+
+Site.create = function(client, attributes, cb) {
+  client.create({model: Site, attributes: attributesForUpdate(attributes)}, cb);
+};
+
+Site.prototype = {
+  isReady: function() {
+    return this.state == &quot;current&quot;;
+  },
+  refresh: function(cb) {
+    var self = this;
+    this.client.request({
+      url: &quot;/sites/&quot; + this.id
+    }, function(err, data, client) {
+      if (err) return cb(err);
+      Site.call(self, client, data);
+      cb(null, self);
+    });
+  },
+
+  update: function(attributes, cb) {
+    attributes = attributes || {};
+
+    var self = this;
+
+    if (attributes.dir) {
+      createFromDir(this.client, attributes.dir, this.id, cb);
+    } else if (attributes.zip) {
+      createFromZip(this.client, attributes.zip, this.id, cb);
+    } else {
+      this.client.update({model: Site, element: this, attributes: attributesForUpdate(attributes)}, cb);
+    }
+  },
+
+  destroy: function(cb) {
+    this.client.destroy({element: this}, cb);
+  },
+
+  createDeploy: function(attributes, cb) {
+    if (attributes.dir) {
+      deployFromDir(this, attributes.dir, attributes.draft || false, cb);
+    } else if (attributes.zip) {
+      deployFromZip(this, attributes.zip, attributes.draft || false, cb);
+    } else {
+      cb(&quot;You must specify a 'dir' or a 'zip' to deploy&quot;);
+    }
+  },
+
+  createDraftDeploy: function(attributes, cb) {
+    attributes.draft = true;
+    this.createDeploy(attributes, cb);
+  },
+
+  waitForReady: function(cb) {
+    var self = this;
+
+    if (this.isReady()) {
+      process.nextTick(function() { cb(null, self); });
+    } else {
+      setTimeout(function() {
+        self.refresh(function(err) {
+          if (err) return cb(err);
+          self.waitForReady(cb);
+        });
+      }, 1000);
+    }
+  },
+
+  forms: function(options, cb) {
+    this.client.collection({prefix: this.apiPath, model: Form}, options, cb);
+  },
+
+  submissions: function(options, cb) {
+    this.client.collection({prefix: this.apiPath, model: Submission}, options, cb);
+  },
+
+  files: function(cb) {
+    this.client.collection({prefix: this.apiPath, model: File}, cb);
+  },
+
+  file: function(path, cb) {
+    this.client.element({prefix: this.apiPath, model: File, id: path}, cb);
+  },
+
+  snippets: function(cb) {
+    this.client.collection({prefix: this.apiPath, model: Snippet}, cb);
+  },
+
+  snippet: function(id, cb) {
+    this.client.element({prefix: this.apiPath, model: Snippet, id: id}, cb);
+  },
+
+  createSnippet: function(attributes, cb) {
+    this.client.create({prefix: this.apiPath, model: Snippet, attributes: attributes}, cb);
+  },
+
+  deploys: function(options, cb) {
+    this.client.collection({prefix: this.apiPath, model: Deploy}, options, cb);
+  },
+
+  deploy: function(id, cb) {
+    this.client.element({prefix: this.apiPath, model: Deploy, id: id}, cb);
+  }
+};
+
+exports.Site = Site;</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="js/twitter-widget.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-transition.min.js"></script>
+    <script src="js/bootstrap-scrollspy.min.js"></script>
+    <script src="js/bootstrap-dropdown.min.js"></script>
+    <script src="js/bootstrap-collapse.min.js"></script>
+    <script src="js/bootstrap-affix.min.js"></script>
+    <script src="js/prism.min.js"></script>
+    <script src="js/index.min.js"></script>
+  </body>
+</html>

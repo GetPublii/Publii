@@ -1,0 +1,42 @@
+
+/*
+ * Custom scrollbars for the app
+ */
+
+::-webkit-scrollbar {
+    background: transparent;
+    overflow: visible;
+    width: 5px;
+}
+
+::-webkit-scrollbar:horizontal {
+    background: transparent;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: $color-8;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $color-6;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    border-width: 0;
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    border-width: 0;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}

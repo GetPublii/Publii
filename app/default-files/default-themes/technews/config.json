@@ -1,0 +1,1669 @@
+{
+    "name": "Technews",
+    "version": "1.0.4.2",
+    "author": "TidyCustoms <https://tidycustoms.net/>",
+    "menus": {
+        "mainMenu": "Main menu",
+        "footerMenu": "Footer menu"
+    },
+    "renderer": {
+        "relatedPostsNumber": 3,
+        "renderRelatedPosts": true,
+        "renderSimilarPosts": false,
+        "renderPrevNextPosts": true,
+        "createContentStructure": false,
+        "create404page": true,
+        "nameFor404page": "404.html",
+        "createSearchPage": true,
+        "nameForSearchPage": "search.html",
+        "customHTML": {
+            "beforePost": "Before every post",
+            "afterPost": "After every post"
+        }
+    },
+    "postTemplates": {
+        "alternative": "Without sidebar"
+    },
+    "config": [
+
+        {
+            "name": "postsPerPage",
+            "label": "Posts per page",
+            "value": 10,
+            "type": "number"
+        },
+        {
+            "name": "tagsPostsPerPage",
+            "label": "Tags posts per page",
+            "value": 10,
+            "type": "number"
+        },
+        {
+            "name": "authorsPostsPerPage",
+            "label": "Authors posts per page",
+            "value": 10,
+            "type": "number"
+        },
+        {
+            "name": "excerptLength",
+            "label": "Excerpt length",
+            "value": 45,
+            "type": "number"
+        },
+        {
+            "name": "logo",
+            "label": "Website logo",
+            "value": "",
+            "type": "upload",
+            "upload": true
+        }
+    ],
+    "customConfig": [
+
+        {
+            "name": "mainWidth",
+            "label": "Main column width",
+            "group": "Layout",
+            "note": "Use of REM units recommended but you can also use others (px, vw, %)",
+            "value": "46rem",
+            "type": "text"
+        },
+        {
+            "name": "sidebarWidth",
+            "label": "Sidebar width",
+            "group": "Layout",
+            "note": "Use of REM units recommended but you can also use others (px, vw, %)",
+            "value": "17rem",
+            "type": "text"
+        },
+
+        {
+            "name": "topLatestSync",
+            "label": "Date of last website update",
+            "group": "Layout",
+            "value": true,
+            "type": "checkbox"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Frontpage",
+            "group": "Layout",
+            "size": "small"
+        },
+
+        {
+            "name": "layoutFrontpage",
+            "label": "Layout",
+            "group": "Layout",
+            "value": "cat--layout-2col-1-4",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "cat--layout-1col"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "cat--layout-2col"
+
+                },
+                {
+                    "label": "2 columns - 1 - 2",
+                    "value": "cat--layout-2col-1-2"
+                },
+                {
+                    "label": "2 columns - 2 - 1",
+                    "value": "cat--layout-2col-2-1"
+                },
+                {
+                    "label": "2 columns - 1 - 4",
+                    "value": "cat--layout-2col-1-4"
+                },
+                {
+                    "label": "2 columns - 4 - 1",
+                    "value": "cat--layout-2col-4-1"
+                }]
+        },
+
+        {
+            "name": "frontAuthorName",
+            "group": "Layout",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontAuthorAvatar",
+            "group": "Layout",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontDate",
+            "group": "Layout",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontTag",
+            "group": "Layout",
+            "label": "Show tag",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontCommentCount",
+            "group": "Layout",
+            "label": "Show comment count",
+            "note": "Set the options in the Comments tab before enabling this option. Comment count link text can be customized at your Disqus Admin > Settings > <a href='https://disqus.com/admin/settings/community/' target='_blank'>Community page</a>.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontAd",
+            "group": "Layout",
+            "label": "Show ad",
+            "note": "The ad position will be different depending on the chosen layout. To get the best visual effect, display 10 - 12 posts per page.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontAdCode",
+            "label": "Ad code",
+            "group": "Layout",
+            "note": "",
+            "value": "",
+            "type": "textarea",
+            "dependencies": [{
+                "field": "frontAd",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Tags page",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "layoutTags",
+            "label": "Layout",
+            "group": "Layout",
+            "value": "cat--layout-2col-1-4",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "cat--layout-1col"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "cat--layout-2col"
+
+                },
+                {
+                    "label": "2 columns - 1 - 2",
+                    "value": "cat--layout-2col-1-2"
+                },
+                {
+                    "label": "2 columns - 2 - 1",
+                    "value": "cat--layout-2col-2-1"
+                },
+                {
+                    "label": "2 columns - 1 - 4",
+                    "value": "cat--layout-2col-1-4"
+                },
+                {
+                    "label": "2 columns - 4 - 1",
+                    "value": "cat--layout-2col-4-1"
+                }]
+        },
+
+        {
+            "name": "tagAuthorName",
+            "group": "Layout",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagAuthorAvatar",
+            "group": "Layout",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagDate",
+            "group": "Layout",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagTag",
+            "group": "Layout",
+            "label": "Show tag",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagCommentCount",
+            "group": "Layout",
+            "label": "Show comment count",
+            "note": "Set the options in the Comments tab before enabling this option. Comment count link text can be customized at your Disqus Admin > Settings > <a href='https://disqus.com/admin/settings/community/' target='_blank'>Community page</a>.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagAd",
+            "group": "Layout",
+            "label": "Show ad",
+            "note": "The ad position will be different depending on the chosen layout. To get the best visual effect, display 10 - 12 posts per page.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagAdCode",
+            "label": "Ad code",
+            "group": "Layout",
+            "note": "",
+            "value": "",
+            "type": "textarea",
+            "dependencies": [{
+                "field": "tagAd",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Author Page",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "layoutAuthor",
+            "label": "Layout",
+            "group": "Layout",
+            "value": "cat--layout-2col-1-4",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "cat--layout-1col"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "cat--layout-2col"
+
+                },
+                {
+                    "label": "2 columns - 1 - 2",
+                    "value": "cat--layout-2col-1-2"
+                },
+                {
+                    "label": "2 columns - 2 - 1",
+                    "value": "cat--layout-2col-2-1"
+                },
+                {
+                    "label": "2 columns - 1 - 4",
+                    "value": "cat--layout-2col-1-4"
+                },
+                {
+                    "label": "2 columns - 4 - 1",
+                    "value": "cat--layout-2col-4-1"
+                }]
+        },
+        {
+            "name": "authorAuthorName",
+            "group": "Layout",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorAuthorAvatar",
+            "group": "Layout",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorDate",
+            "group": "Layout",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "authortTag",
+            "group": "Layout",
+            "label": "Show tag",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorCommentCount",
+            "group": "Layout",
+            "label": "Show comment count",
+            "note": "Set the options in the Comments tab before enabling this option. Comment count link text can be customized at your Disqus Admin > Settings > <a href='https://disqus.com/admin/settings/community/' target='_blank'>Community page</a>.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorAd",
+            "group": "Layout",
+            "label": "Show ad",
+            "note": "The ad position will be different depending on the chosen layout. To get the best visual effect, display 10 - 12 posts per page.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorAdCode",
+            "label": "Ad code",
+            "group": "Layout",
+            "note": "",
+            "value": "",
+            "type": "textarea",
+            "dependencies": [{
+                "field": "authorAd",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "featured",
+            "label": "Featured posts",
+            "group": "Sidebar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "featuredAmount",
+            "label": "Max featured posts",
+            "group": "Sidebar",
+            "value": "5",
+            "type": "text",
+            "dependencies": [{
+                "field": "featured",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "featuredImage",
+            "group": "Sidebar",
+            "label": "Show image",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "featured",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "featuredDate",
+            "group": "Sidebar",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "featured",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Sidebar",
+            "size": "small"
+        },
+        {
+            "name": "sidebarAd",
+            "label": "Ad",
+            "group": "Sidebar",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "sidebarAdCode",
+            "label": "Ad code",
+            "group": "Sidebar",
+            "note": "",
+            "value": "",
+            "type": "textarea",
+            "dependencies": [{
+                "field": "sidebarAd",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Sidebar",
+            "size": "small"
+        },
+        {
+            "name": "follow",
+            "label": "Follow us",
+            "group": "Sidebar",
+            "note": " Enter your Follow Us button URL in the Follow Us tab ",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "followSidebarFacebook",
+            "group": "Sidebar",
+            "label": "Facebook",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarTwitter",
+            "group": "Sidebar",
+            "label": "Twitter",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarGoogleplus",
+            "group": "Sidebar",
+            "label": "Google +",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarInstagram",
+            "group": "Sidebar",
+            "label": "Instagram",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarLinkedin",
+            "group": "Sidebar",
+            "label": "Linkedin",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarVimeo",
+            "group": "Sidebar",
+            "label": "Vimeo",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarPinterest",
+            "group": "Sidebar",
+            "label": "Pinterest",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "followSidebarYoutube",
+            "group": "Sidebar",
+            "label": "Youtube",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "follow",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Sidebar",
+            "size": "small"
+        },
+
+        {
+            "name": "authors",
+            "label": "Authors",
+            "group": "Sidebar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "authorsAmount",
+            "label": "Max authors",
+            "group": "Sidebar",
+            "value": "5",
+            "type": "text",
+            "dependencies": [{
+                "field": "authors",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "authorsAvatar",
+            "group": "Sidebar",
+            "label": "Show image",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "authors",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "authorsPostCount",
+            "group": "Sidebar",
+            "label": "Show post count",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "authors",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Sidebar",
+            "size": "small"
+        },
+
+        {
+            "name": "newsletter",
+            "label": "Newsletter",
+            "group": "Sidebar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "newsletterFormCode",
+            "group": "Sidebar",
+            "label": "",
+            "note": "Before pasting your code here, learn how to make your newsletter form as functional and visually-appealing as possible. <a href=\"https://getpublii.com/docs/make-newsletter-form-functional-and-visually-appealing.html\" target=\"_blank\">Learn more</a>",
+            "value": "<form>...",
+            "type": "textarea",
+            "dependencies": [{
+                "field": "newsletter",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Sidebar",
+            "size": "small"
+         },
+        {
+            "name": "tags",
+            "label": "Tags",
+            "group": "Sidebar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagsAmount",
+            "label": "Max tags",
+            "group": "Sidebar",
+            "value": "5",
+            "type": "text",
+            "dependencies": [{
+                "field": "tags",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "primaryColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#448aff",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Colors",
+            "size": "small"
+         },
+        {
+            "name": "headingColor",
+            "label": "Headings color",
+            "group": "Colors",
+            "value": "#2c2e35",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#2c2e35",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Colors",
+            "size": "small"
+         },
+        {
+            "name": "linkColor",
+            "label": "Link color",
+            "group": "Colors",
+            "value": "#2c2e35",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColor",
+            "label": "Link hover color",
+            "group": "Colors",
+            "value": "#448aff",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Colors",
+            "size": "small"
+         },
+        {
+            "name": "tagColors",
+            "label": "Tag colors",
+            "group": "Colors",
+            "value": "",
+            "type": "textarea",
+            "note": "You can define colors using the format 'tag-slug=X', where 'X' is a color number from 1-12. You can separate each setting using a comma without spaces. For example, 'test=2,example=3' will assign color 2 to the tag with the 'test' slug, and color 3 to the tag with the 'example' slug."
+        },
+
+        {
+            "name": "minFontSize",
+            "label": "Minimum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.1",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "maxFontSize",
+            "label": "Maximum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.3",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "linkColorMenu",
+            "label": "Menu link color",
+            "group": "Menu",
+            "value": "#ffffff",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColorMenu",
+            "label": "Menu link hover color",
+            "group": "Menu",
+            "value": "#ffffff",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Menu",
+            "size": "small"
+        },
+        {
+            "name": "submenu",
+            "label": "Submenu width",
+            "group": "Menu",
+            "value": "auto",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Auto",
+                    "value": "auto"
+
+                },
+                {
+                    "label": "Custom",
+                    "value": "custom"
+
+                }
+            ]
+        },
+        {
+            "name": "submenuWidth",
+            "group": "Menu",
+            "note": "The submenu width in REM unit",
+            "label": "",
+            "value": "15",
+            "type": "range",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "dependencies": [{
+                "field": "submenu",
+                "value": "custom"
+            }]
+        },
+
+        {
+            "name": "search",
+            "label": "Search",
+            "group": "Search",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "searchId",
+            "group": "Search",
+            "label": "Google Custom Search Id",
+            "note": "A search ID is required for search functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "searchParam",
+            "group": "Search",
+            "label": "Search parameter",
+            "note": "You can change the default \"q\" search parameter if desired; this is recommended only for advanced users.",
+            "value": "q",
+            "type": "text",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+
+
+        {
+            "name": "shareFacebook",
+            "group": "Share Buttons",
+            "label": "Facebook share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareTwitter",
+            "group": "Share Buttons",
+            "label": "Twitter share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareTwitterName",
+            "group": "Share Buttons",
+            "note": "Enter your Twitter account's handle here; it will be used when the Twitter share button is clicked on your site e.g. 'via @TwitterHandle'. If left blank, the default username of @SiteName will be used",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "shareTwitter",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "shareGoogleplus",
+            "group": "Share Buttons",
+            "label": "Google+ share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "sharePinterest",
+            "group": "Share Buttons",
+            "label": "Pinterest share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareStumbleupon",
+            "group": "Share Buttons",
+            "label": "StumbleUpon share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareLinkedin",
+            "group": "Share Buttons",
+            "label": "LinkedIn share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareBuffer",
+            "group": "Share Buttons",
+            "label": "Buffer share button",
+            "value": true,
+            "type": "checkbox"
+        },
+
+        {
+            "name": "commentDisqusShortname",
+            "label": "Disqus shortname",
+            "group": "Comments",
+            "placeholder": "Please enter your Disqus shortname",
+            "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
+            "value": "",
+            "type": "text"
+        },
+
+
+        {
+            "name": "copyrightText",
+            "label": "Copyright text",
+            "group": "Footer",
+            "value": "Powered by Publii",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "socialButtons",
+            "group": "Footer",
+            "label": "Follow us buttons",
+            "note": " Enter your Follow Us button URL in the Follow us tab ",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "socialFooterFacebook",
+            "group": "Footer",
+            "label": "Facebook",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterTwitter",
+            "group": "Footer",
+            "label": "Twitter",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterGoogleplus",
+            "group": "Footer",
+            "label": "Google +",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterInstagram",
+            "group": "Footer",
+            "label": "Instagram",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterLinkedin",
+            "group": "Footer",
+            "label": "Linkedin",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterVimeo",
+            "group": "Footer",
+            "label": "Vimeo",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterPinterest",
+            "group": "Footer",
+            "label": "Pinterest",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialFooterYoutube",
+            "group": "Footer",
+            "label": "Youtube",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "socialFacebook",
+            "label": "Facebook",
+            "group": "Follow us",
+            "placeholder": "Please enter your Facebook URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialTwitter",
+            "label": "Twitter",
+            "group": "Follow us",
+            "placeholder": "Please enter your Twitter URL",
+            "value": "",
+            "type": "text"
+        },
+
+        {
+            "name": "socialGoogleplus",
+            "label": "Google+",
+            "group": "Follow us",
+            "placeholder": "Please enter your Google+ URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialInstagram",
+            "label": "Instagram",
+            "group": "Follow us",
+            "placeholder": "Please enter your Instagram URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialLinkedin",
+            "label": "LinkedIn",
+            "group": "Follow us",
+            "placeholder": "Please enter your LinkedIn URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialVimeo",
+            "label": "Vimeo",
+            "group": "Follow us",
+            "placeholder": "Please enter your Vimeo URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialPinterest",
+            "label": "Pinterest",
+            "group": "Follow us",
+            "placeholder": "Please enter your Pinterest URL",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "socialYoutube",
+            "label": "Youtube",
+            "group": "Follow us",
+            "placeholder": "Please enter your Youtube URL",
+            "value": "",
+            "type": "text"
+        },
+
+        {
+            "name": "galleryItemGap",
+            "label": "Item spacing",
+            "group": "Gallery",
+            "note": "Use of REM units recommended but you can also use others (px, vw,)",
+            "value": "0.51429rem",
+            "type": "text"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Gallery",
+            "size": "smaller"
+         },
+        {
+            "name": "galleryLightboxStyle",
+            "label": "Lightbox style",
+            "group": "Gallery",
+            "note": "Set the lightbox slideshow style by choosing dark or light overlay",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Dark",
+                    "value": "pswp--dark"
+                },
+                {
+                    "label": "Light",
+                    "value": "pswp--light"
+                }
+            ]
+        },
+        {
+            "name": "galleryLightboxOpacity",
+            "label": "",
+            "group": "Gallery",
+            "note": "Adjust the lightbox overlay transparency",
+            "value": "0.7",
+            "type": "range",
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Gallery",
+            "size": "smaller"
+         },
+        {
+            "name": "galleryAdvanced",
+            "label": "Advanced lightbox settings",
+            "group": "Gallery",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "galleryCounter",
+            "label": "Current slide / total number",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryZoom",
+            "label": "Zoom in/out button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryFullscreen",
+            "label": "Toggle fullscreen button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryShare",
+            "label": "Share button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryClose",
+            "label": "Close button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryArrows",
+            "label": "Next / Previous arrows",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryPreloader",
+            "label": "Preloader",
+            "group": "Gallery",
+            "note": "Loading indicator is displayed with 1s delay, so if the photo loads faster it will be invisible.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryCloseOnScroll",
+            "label": "Close gallery on page scroll",
+            "group": "Gallery",
+            "note": "Option works just for devices without hardware touch support.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryArrowKeys",
+            "label": "Keyboard navigation",
+            "group": "Gallery",
+            "note": "Keyboard left or right arrow key navigation.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "formatDate",
+            "label": "Date format",
+            "group": "Additional",
+            "value": "MMMM D, YYYY",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Nov 1, 2016",
+                    "value": "MMM D, YYYY"
+
+            },
+                {
+                    "label": "1 Nov 2016",
+                    "value": "D MMM YYYY"
+
+            },
+                {
+                    "label": "November 1, 2016",
+                    "value": "MMMM D, YYYY"
+            },
+                {
+                    "label": "1 November 2016",
+                    "value": "D MMMM YYYY"
+            },
+                {
+                    "label": "Sunday, November 1, 2016",
+                    "value": "dddd, MMMM D, YYYY"
+            },
+                {
+                    "label": "Sunday, 1 November 2016",
+                    "value": "dddd, D MMMM YYYY"
+            },
+                {
+                    "label": "November 1, 2016 10:02:05",
+                    "value": "MMMM D, YYYY HH:mm:ss"
+
+            },
+                {
+                    "label": "1 November 2016 10:02:05",
+                    "value": "D MMMM YYYY HH:mm:ss"
+
+            },
+                {
+                    "label": "01/21/2016",
+                    "value": "MM/DD/YYYY"
+            },
+                {
+                    "label": "21/01/2016",
+                    "value": "DD/MM/YYYY"
+            },
+                {
+                    "label": "Custom - create your own date format",
+                    "value": "custom"
+            }
+            ]
+        },
+
+        {
+            "name": "formatDateCustom",
+            "group": "Additional",
+            "label": "Create a custom date format",
+            "note": "More details you can find <a href='https://github.com/taylorhakes/fecha' target='_blank'>here.</a>",
+            "value": "HH:mm:ss YY/MM/DD",
+            "type": "text",
+            "dependencies": [{
+                "field": "formatDate",
+                "value": "custom"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Additional",
+            "size": "small"
+         },
+        {
+            "name": "lazyLoad",
+            "group": "Additional",
+            "label": "Lazy Load",
+            "note": "The SEO-friendly high-performance lazy loader improves load times by deferring downloading of images until after the initial page load is complete.",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Additional",
+            "size": "small"
+         },
+        {
+            "name": "faviconUpload",
+            "label": "Upload favicon file",
+            "group": "Additional",
+            "note": "The ideal size of a favicon is 16x16 pixels. Save your favicon as either favicon.png or favicon.ico",
+            "value": "",
+            "type": "smallupload",
+            "upload": true
+        },
+        {
+            "name": "faviconExtension",
+            "label": "Favicon extension",
+            "group": "Additional",
+            "value": "image/x-icon",
+            "type": "select",
+            "options": [
+                {
+                    "label": ".ico",
+                    "value": "image/x-icon"
+                },
+                {
+                    "label": ".png",
+                    "value": "image/png"
+                }]
+        }
+    ],
+    "postConfig": [
+        {
+            "name": "displayAuthor",
+            "label": "Display author name",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayDate",
+            "label": "Display date",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayCategoryName",
+            "label": "Display tag name",
+            "note": "Enable/Disable tag name above post title",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayCommentCount",
+            "label": "Display comment count",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayLastUpdatedDate",
+            "label": "Display last updated date",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayShareButtons",
+            "label": "Display share buttons",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayTags",
+            "label": "Display tags",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayAuthorBio",
+            "label": "Display author bio",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostNavigation",
+            "label": "Display post navigation",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+
+        {
+            "name": "displayRelatedPosts",
+            "label": "Display related posts",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayComments",
+            "label": "Display comments",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        }
+    ],
+    "files": {
+        "ignoreAssets": ["scss", ".DS_Store"],
+        "assetsPath": "assets",
+        "partialsPath": "partials",
+        "responsiveImages": {
+            "contentImages": {
+                "sizes": "(max-width: 48em) 100vw, 768px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
+                    }
+                }
+            },
+
+            "featuredImages": {
+                "sizes": {
+                    "post": "(max-width: 1600px) 100vw, 1600px",
+                    "amp": "(max-width: 768px) 100vw, 768px",
+                    "listing": "(max-width: 1024) 100vw, 1024px"
+                },
+
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto",
+                        "group": "listing,post,amp"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto",
+                        "group": "listing,post,amp"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto",
+                        "group": "listing,post,amp"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto",
+                        "group": "listing,post"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto",
+                        "group": "post"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto",
+                        "group": "post"
+                    }
+                }
+            },
+
+            "optionImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 240,
+                        "height": 240,
+                        "crop": true
+                    }
+                }
+            }
+        }
+    },
+    "customElements": [
+        {
+            "label": "Info",
+            "cssClasses": "msg msg--info",
+            "selector": "p"
+        },
+        {
+            "label": "Highlight",
+            "cssClasses": "msg msg--highlight ",
+            "selector": "p"
+        },
+        {
+            "label": "Success",
+            "cssClasses": "msg msg--success",
+            "selector": "p"
+        },
+        {
+            "label": "Drop cap",
+            "cssClasses": "dropcap",
+            "selector": "p"
+        },
+        {
+            "label": "Lead",
+            "cssClasses": "post__lead",
+            "selector": "p"
+        }
+    ]
+}

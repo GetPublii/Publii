@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="{{ @website.language }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {{#if title}}
+            <title>{{title}}</title>
+        {{else}}
+            <title>{{@website.name}}</title>
+        {{/if}}
+        {{metaDescription}}
+        {{metaRobots}}
+        {{{publiiHead}}}
+        {{canonicalLink}}
+        {{ampLink}}
+        {{feedLink}}
+        {{socialMetaTags}}
+		{{#if @config.custom.faviconUpload}}
+	        <link rel="shortcut icon" href="{{@config.custom.faviconUpload}}" type="{{@config.custom.faviconExtension}}" />
+        {{/if}}
+        {{#if @pagination}}
+            {{#if @pagination.previousPage}}
+                <link rel="prev" href="{{@pagination.previousPageUrl }}">
+            {{/if}}
+            {{#if @pagination.nextPage}}
+                <link rel="next" href="{{@pagination.nextPageUrl }}">
+            {{/if}}
+        {{/if}}
+        {{#is "index"}}
+             <link rel="stylesheet" href="{{css "p-slider.css" }}">
+        {{/is}}
+         <link rel="stylesheet" href="{{css "style.css" }}">	
+		{{#is "post"}}
+           {{#post}}
+              {{#if hasGallery}}
+                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
+              {{/if}}
+           {{/post}}
+        {{/is}}	
+        {{jsonLD}}
+        {{#is "index"}}
+            <script>
+		        window.addEventListener(
+			        'load',
+			        function load() {
+				        window.removeEventListener('load', load, false);
+				         document.body.classList.remove('js-loading');
+			         },
+			         false);
+	          </script>
+        {{/is}}
+        {{#if @config.custom.lazyLoad}}
+            <script async src="{{js "lazysizes.min.js"}}"></script>
+        {{/if}}
+        {{#checkIfAny @config.custom.search @config.custom.galleryLightboxStyle}}
+		    <style>
+				{{#if @config.custom.search}}
+				    .top__search [type=search] {
+						background-image: url({{@website.assetsUrl}}/svg/search.svg);
+				    }
+				{{/if}}
+		        {{#is "post"}}
+                   {{#post}}
+                      {{#if hasGallery}}
+		                 {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+				            .pswp--svg .pswp__button,
+				            .pswp--svg .pswp__button--arrow--left:before,
+				            .pswp--svg .pswp__button--arrow--right:before {
+					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+			                }
+		                 {{else}}
+			                .pswp--svg .pswp__button,
+				            .pswp--svg .pswp__button--arrow--left:before,
+				            .pswp--svg .pswp__button--arrow--right:before {
+					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+			                }		
+		                 {{/checkIf}}
+                      {{/if}}
+                   {{/post}}
+				{{/is}}	
+		    </style>
+		{{/checkIfAny}}
+        {{{@headCustomCode}}}
+    </head>

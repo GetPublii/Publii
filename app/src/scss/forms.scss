@@ -1,0 +1,246 @@
+/*
+ * Form elements
+ */
+
+
+option {
+    font-weight: 400;
+}
+
+::-webkit-input-placeholder {
+    color: $color-5;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+input[type="colorpicker"],
+.small-image-upload {
+    background-color: $color-10;
+    border: none;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px $color-8;
+    color: $color-5;
+    font: 400 1.6rem/1.5 $secondary-font;
+    outline: none;
+    padding: 1.2rem 1.8rem;
+
+    &:focus {
+        box-shadow: inset 0 0 2px 1px $color-1;
+    }
+
+    &[disabled],
+    &[readonly] {
+        opacity: .5;
+        cursor: not-allowed;
+
+        &:focus {
+            box-shadow: inset 0 0 0 1px $color-8;
+        }
+    }
+}
+
+input[type="colorpicker"][readonly] {
+    opacity: 1;
+    cursor: auto;
+}
+
+input[type="search"] {
+    -webkit-appearance: none;
+}
+
+input[type="file"] {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+input {
+    &.invalid {
+        border: 1px solid $color-3;
+
+        &:focus {
+            border: none;
+        }
+    }
+}
+
+/* disabled input */
+input:disabled {
+    opacity: .6;
+}
+
+input:disabled + label {
+    opacity: .6;
+    cursor:default;
+    -webkit-user-select: none;
+}
+
+/* Range */
+input[type="range"] {
+    -webkit-appearance: none;
+    background: transparent;
+    float: left;
+    margin: 1rem 0;
+    position: relative;
+    top: 1.6rem;
+    width: 80%!important;
+
+    & + span {
+        float: right;
+        position: relative;
+        text-align: center;
+        top: 1.6rem;
+        width: 20%!important;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background: $color-1;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
+        cursor: pointer;
+        height: 2rem;
+        margin-top: -1rem;
+        outline: none;
+        width: 2rem;
+    }
+
+    &::-webkit-slider-runnable-track {
+        background: $color-8;
+        border: none;
+        cursor: pointer;
+        height: 2px;
+        outline: none;
+        width: 80%;
+    }
+
+    &:focus::-webkit-slider-runnable-track {
+        background: rgba($color-1, .5);
+        outline: none;
+    }
+}
+
+
+/*
+ * Password field UI
+ */
+.password-wrapper {
+    position: relative;
+
+    & > a {
+        font-size: 1.4rem;
+        position: absolute;
+        right: 2rem;
+        top: 1.4rem;
+        z-index: 1;
+    }
+}
+
+.custom-password-wrapper {
+    position: relative;
+
+    & > a {
+        font-size: 1.4rem;
+        position: absolute;
+        right: 2rem;
+        top: 73%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+}
+
+/* Fix for the colorpicker */
+.colorpicker input {
+    box-shadow: none;
+    font: 400 1.2rem/1.5 $secondary-font;
+    padding: 2px;
+}
+
+/*
+ * Small image uploader
+ */
+.small-upload-image {
+    min-height: 48px;
+    position: relative;
+
+    .small-upload-remove {
+        background: $color-3;
+        border-radius: 1.2rem;
+        color: transparent;
+        font-size: 1rem;
+        font-weight: 500;
+        height: 2rem;
+        line-height: 1rem;
+        padding: 0;
+        position: absolute;
+        right: 1.5rem;
+        text-align: center;
+        text-indent: 1px;
+        top: 1.4rem;
+        width: 2rem;
+
+        &:before,
+        &:after {
+            background: $color-10;
+            content: "";
+            display: block;
+            height: .2rem;
+            left: 4px;
+            position: absolute;
+            top: 9px;
+            transform: rotate(45deg);
+            width: 1.2rem;
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+
+        &:hover {
+            opacity: .75;
+        }
+    }
+
+    .small-upload-image-input {
+        display: block;
+        position: absolute;
+        right: .55rem;
+        top: .55rem;
+        width: 16rem!important;
+
+        &::-webkit-file-upload-button {
+            -webkit-appearance: none;
+            background: $color-7;
+            border: 1px solid $color-7;
+            border-radius: 3px;
+            color: $color-10;
+            font-weight: bold;
+            padding: .5rem;
+            text-align: center;
+            width: 16rem;
+
+            &:hover {
+                background: $color-6;
+                border-color: $color-6;
+            }
+        }
+    }
+}
+
+/**
+ * Multiselect
+ */
+
+.multiselect__tags {
+    padding: 1.2rem 4rem 1rem 1.8rem;
+}
+
+.multiselect__option--highlight {
+    background: $color-9;
+    color: $color-5;
+}

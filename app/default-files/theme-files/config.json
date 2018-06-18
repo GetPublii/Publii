@@ -1,0 +1,82 @@
+{
+    "postTemplates": {},
+    "tagTemplates": {},
+    "authorTemplates": {},
+    "menus": {},
+    "renderer": {
+        "relatedPostsNumber": 5,
+        "renderRelatedPosts": true,
+        "renderSimilarPosts": true,
+        "renderPrevNextPosts": true,
+        "createContentStructure": true,
+        "includeFeaturedInPosts": true,
+        "tagsIncludeFeaturedInPosts": true,
+        "authorsIncludeFeaturedInPosts": true,
+        "featuredPostsNumber": 0,
+        "tagsFeaturedPostsNumber": 0,
+        "authorsFeaturedPostsNumber": 0,
+        "create404page": false,
+        "createSearchPage": false,
+        "customHTML": false
+    },
+    "extensions": {
+        "postEditorConfigOverride": false,
+        "postEditorCustomScript": false
+    },
+    "config": [
+        {
+            "name": "logo",
+            "label": "Website logo",
+            "value": "",
+            "type": "media",
+            "upload": true
+        },
+        {
+            "name": "postsPerPage",
+            "label": "Posts per page",
+            "value": 5,
+            "type": "number"
+        },
+        {
+            "name": "tagsPostsPerPage",
+            "label": "Tags posts per page",
+            "value": 5,
+            "type": "number"
+        },
+        {
+            "name": "authorsPostsPerPage",
+            "label": "Authors posts per page",
+            "value": 5,
+            "type": "number"
+        },
+        {
+            "name": "excerptLength",
+            "label": "Excerpt length",
+            "value": 30,
+            "type": "number"
+        }
+    ],
+    "customConfig": [],
+    "postConfig": [],
+    "files": {
+        "ignoreAssets": [
+            "scss",
+            ".DS_Store"
+        ],
+        "assetsPath": "assets",
+        "partialsPath": "partials",
+        "responsiveImages": {
+            "galleryImages": {
+                "sizes": "",
+                "dimensions": {
+                    "thumbnail": {
+                        "width": 240,
+                        "height": 240,
+                        "crop": true
+                    }
+                }
+            }
+        }
+    },
+    "customElements": []
+}

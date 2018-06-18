@@ -1,0 +1,227 @@
+/**
+ * Error log in the popup
+ */
+.popup {
+    .error-log {
+        strong {
+            color: $color-3;
+            font-size: 1.6rem;
+            font-weight: normal;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, .025);
+            border: 1px solid $color-9;
+            color: $color-6;
+            font-size: 1.2rem;
+            padding: .5rem 1rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    }
+}
+
+/**
+ * Logo creator in settings
+ */
+.site-settings {
+    .logo-creator {
+        &-icon,
+        &-color {
+            padding-left: 12.5rem!important;
+        }
+    }
+}
+
+/**
+ * vue-multiselect in post editor
+ */
+.post-editor {
+    .multiselect__tags {
+        padding: 0 4rem .5rem 0.5rem;
+
+        &-wrap {
+            display: inline;
+        }
+    }
+
+    .multiselect__tag {
+        background: $color-helper-8;
+        border: none;
+        border-radius: 3px;
+        color: $color-4;
+        display: inline-block;
+        font-size: 1.4rem;
+        font-style: italic;
+        font-weight: 400;
+        margin: .5rem .5rem 0 0;
+        padding: 7px 10px;
+        vertical-align: middle;
+
+        & > span {
+            display: inline-block;
+            height: 2.4rem;
+            line-height: 2.4rem;
+        }
+
+        &-icon {
+            cursor: pointer;
+            display: inline-block;
+            float: left;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-left: 0;
+            margin-right: 5px;
+            position: static;
+            width: 10px;
+
+            &:after {
+                color: #999!important;
+            }
+
+            &:focus,
+            &:hover {
+                background: transparent;
+
+                &:after {
+                    color: #333!important;
+                }
+            }
+        }
+    }
+
+    .multiselect__input {
+        height: 45px;
+        line-height: 45px;
+        margin-top: .75rem;
+    }
+
+    .multiselect__select {
+        top: 1px;
+        padding: 4px 6px 4px 0;
+
+        &:before {
+            border-color: $color-4 transparent transparent;
+            border-width: 6px 5px;
+        }
+    }
+
+    .multiselect__option--selected {
+        color: $color-5;
+        font-weight: 600;
+    }
+}
+
+/**
+ * Number fields in theme settings
+ */
+.theme-settings {
+    fieldset:first-of-type {
+        .field {
+            .input-wrapper.is-number {
+                width: 100%!important;
+            }
+        }
+    }
+
+    .footer {
+        .buttons {
+            float: none;
+            width: 100%;
+
+            .button-outline {
+                float: left!important;
+                margin-left: 0!important;
+            }
+        }
+    }
+}
+
+/**
+ * Field TinyMCE
+ */
+
+.field {
+    .mce-tinymce {
+        border: 1px solid $color-8;
+        border-radius: 3px;
+    }
+
+    .mce-toolbar-grp {
+        padding: 1rem;
+    }
+
+    .mce-panel {
+        background: transparent;
+
+        .mce-btn {
+            background: transparent;
+            border: none;
+
+            button {
+                padding: .4rem .5rem;
+
+                &:hover {
+                    background: $color-9;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Source code editor
+ */
+
+.source-code-editor {
+    .CodeMirror {
+        height: 100%;
+    }
+}
+
+/**
+ * Link add/edit popup
+ */
+.popup-link-add {
+    .field {
+        label {
+            font-size: 1.6rem;
+            padding: 0;
+            text-align: left;
+            vertical-align: middle;
+            width: 16rem!important;
+        }
+    }
+
+    .multiselect__tags {
+        min-height: 5rem;
+        padding: 0 4rem 0 2rem;
+    }
+
+    .multiselect__single {
+        line-height: 4.8rem;
+    }
+}
+
+/**
+ * Improved layout of v-select on site settings
+ */
+.site-settings {
+    .multiselect__tags {
+        min-height: 48px;
+    }
+}
+
+/**
+ * Improved layout of v-select for long items
+ */
+.multiselect__single,
+.multiselect__option {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.multiselect__content {
+    width: 100%;
+}

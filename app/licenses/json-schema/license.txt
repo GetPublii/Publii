@@ -1,0 +1,2 @@
+Copyright (c) 2007 Kris Zyp SitePen (www.sitepen.com)
+Licensed under the MIT (MIT-LICENSE.txt) license.

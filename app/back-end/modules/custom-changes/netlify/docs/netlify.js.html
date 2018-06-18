@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>Netlify Node</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/cayman.min.css">
+    <link rel="stylesheet" href="css/prism.min.css">
+    <link rel="stylesheet" href="css/index.min.css">
+    <link rel="stylesheet" href="css/docs.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>Netlify Node</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="index.html">Main</a></li>
+            <li><a href="access-token.js.html">access-token.js</a></li>
+            <li><a href="client.js.html">client.js</a></li>
+            <li><a href="deploy.js.html">deploy.js</a></li>
+            <li><a href="deploy_key.js.html">deploy_key.js</a></li>
+            <li><a href="dns-record.js.html">dns-record.js</a></li>
+            <li><a href="dns-zone.js.html">dns-zone.js</a></li>
+            <li><a href="file.js.html">file.js</a></li>
+            <li><a href="form.js.html">form.js</a></li>
+            <li><a href="model.js.html">model.js</a></li>
+            <li class="active"><a href="netlify.js.html">netlify.js</a></li>
+            <li><a href="site.js.html">site.js</a></li>
+            <li><a href="snippet.js.html">snippet.js</a></li>
+            <li><a href="submission.js.html">submission.js</a></li>
+            <li><a href="ticket.js.html">ticket.js</a></li>
+            <li><a href="user.js.html">user.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#createClient"><i class="alert alert-info"></i><span>createClient</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="createClient">
+            <h1>createClient</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>exports.createClient()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>options</td>
+                <td>Object</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Object</td>
+                <td><p>a netlify API client</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Create a new netlify client</p><p>   var client = netlify.createClient({access_token: &quot;my-access-token&quot;});</p></div>
+          <pre><code class="language-javascript">exports.createClient = function(options) {
+  return new Client(options);
+};
+
+exports.deploy = function(options, cb) {
+  if (typeof options !== &quot;object&quot;) {
+    return cb(&quot;deploy needs an options object&quot;);
+  }
+
+  if (!options.access_token) {
+    return cb(&quot;deploy needs an access_token&quot;);
+  }
+
+  if (!options.site_id) {
+    return cb(&quot;deploy needs a site_id&quot;);
+  }
+
+  if (!(options.dir || options.zip)) {
+    return cb(&quot;deploy needs a dir or a zip to deploy&quot;);
+  }
+
+  this.createClient({access_token: options.access_token}).site(options.site_id, function(err, site) {
+    if (err) { return cb(err); }
+
+    site.createDeploy({dir: options.dir, zip: options.zip}, function(err, deploy) {
+      if (err) { return cb(err); }
+
+      deploy.waitForReady(function(err, deploy) {
+        return cb(err, deploy);
+      });
+    });
+  });
+};
+
+exports.Client = Client;
+
+if (typeof(window) !== 'undefined') {
+  window.netlify = exports;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="js/twitter-widget.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-transition.min.js"></script>
+    <script src="js/bootstrap-scrollspy.min.js"></script>
+    <script src="js/bootstrap-dropdown.min.js"></script>
+    <script src="js/bootstrap-collapse.min.js"></script>
+    <script src="js/bootstrap-affix.min.js"></script>
+    <script src="js/prism.min.js"></script>
+    <script src="js/index.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,518 @@
+/*
+ * Alignment styles for images, videos and iframes in editable regions
+ */
+
+/* Center (default) */
+[data-editable] iframe,
+[data-editable] image,
+[data-editable] [data-ce-tag=img],
+[data-editable] img,
+[data-editable] video {
+    clear: both;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+}
+
+/* Alignment styles for text in editable regions */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+ .mce-window * {
+    font-size: 1.6rem !important;
+}
+.mce-menu-item {
+    
+    &-normal {
+        &.mce-active {
+            background-color: $color-9 !important; 
+            
+            .mce-text {
+                color: $color-5 !important; 
+                font-weight: 600 !important; 
+            }
+        }
+    }
+    
+    &:hover,
+    &:focus,
+    &.mce-selected {
+        background-color: $color-9 !important;
+        color: $color-5 !important; 
+        
+        .mce-text {
+                color: $color-5 !important;                
+        }
+    }
+}
+
+.mce-tabs {
+    border: none !important;
+}
+
+.mce-tab {
+    border: none !important;
+    border-radius: 3px;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0.8rem 1.2rem !important;
+    text-shadow: none !important;
+    
+    &:hover {
+        background: rgba($color-helper-8, 0.4) !important;
+    }
+    
+    &.mce-active {
+        background: $color-1!important;
+        color: $color-10;
+       
+        
+       
+       
+    }
+}
+
+.post-editor {
+    .mce-tinymce {
+        border: none;
+
+        .tinymce-overlay {
+            background: $color-1;
+            color: $color-10;
+            display: none;
+            font-size: 2.4rem;
+            font-weight: 600;
+            height: 100%;
+            line-height: calc(100vh - 20rem);
+            left: 0;
+            opacity: .85;
+            position: absolute;
+            text-align: center;
+            top: 0;
+            width: 100%;
+            z-index: 10000;
+
+            .loader {
+                line-height: calc(100vh - 20rem);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                margin-top: -32px;
+            }
+        }
+
+        &.is-hovered {
+            .tinymce-overlay {
+                display: block;
+            }
+        }
+
+        .mce-btn,
+        .mce-panel {
+            background: $color-10;
+        }
+
+        .mce-btn {
+            &:active,
+            &:focus,
+            &:hover {
+                background: $color-9;
+                border: 1px solid $color-9;
+
+                & > button {
+                    background: transparent;
+                }
+            }
+        }
+
+        .mce-panel,
+        .mce-statusbar,
+        .mce-toolbar-grp {
+            border: none;
+        }
+
+        .mce-statusbar {
+            border-top: 1px solid $color-8;
+            position: relative;
+
+            &:before {
+                background: linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
+                linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+                content: "";
+                height: 40px;
+                left: 0;
+                pointer-events: none;
+                position: absolute;
+                right: 10px;
+                top: -41px;
+                z-index: 1;
+            }
+        }
+
+        .mce-toolbar-grp {
+            border-bottom: 1px solid $color-8;
+            padding-bottom: 1.2rem;
+            position: relative;
+
+            &:before {
+                background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
+                linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+                bottom: -41px;
+                content: "";
+                height: 40px;
+                left: 0;
+                pointer-events: none;
+                position: absolute;
+                right: 10px;
+                z-index: 1;
+            }
+        }
+    }
+
+
+    /*
+     * Inline toolbar
+     */
+
+    #link-toolbar,
+    #inline-toolbar {
+        background: $color-10;
+        border-radius: 3px;
+        box-shadow: 0 0 18px rgba(0, 0, 0, 0.2);
+        display: none;
+        padding: .25rem 1rem .75rem 1rem;
+        position: absolute;
+        user-select: none;
+        z-index: 10;
+
+        em {
+            cursor: pointer;
+            height: 24px;
+            padding: 4px;
+            width: 24px;
+        }
+
+        select {
+            -webkit-appearance: none;
+            background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+            background-size: 10px;
+            border: none;
+            border-radius: 3px;
+            box-shadow: none;
+            color: $color-5;
+            font: 400 1.6rem/1.5 $secondary-font;
+            margin-left: 10px;
+            max-width: 150px!important;
+            min-width: 125px;
+            min-height: 24px;
+            outline: none;
+            padding: 6px 18px 6px 6px;
+            position: relative;
+            top: 2px;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+
+    // Hacky way to achieve "images" icon ;)
+    .mce-i-images {
+        &:before,
+        &:after {
+            content: "\e014";
+        }
+
+        &:after {
+            background: $color-10;
+            line-height: 10px;
+            position: absolute;
+            left: 10px;
+            top: 11px;
+        }
+    }
+}
+
+/*
+ * Special rules for Windows
+ */
+
+body[data-os="win"] {
+    #inline-toolbar select {
+        height: 4.8rem;
+    }
+}
+
+.mce-label.mce-publii-text-stats {
+    float: right;
+    padding: 1rem 0;
+
+    svg {
+        fill: $color-7;
+        height: 1.6rem;
+        left: 0;
+        margin-right: .5rem;
+        position: relative;
+        top: -1px;
+        width: 1.6rem;
+    }
+
+    a {
+        border-bottom: 1px solid currentColor;
+        color: $link-color;
+        transition: all .25s ease-out;
+
+        &:active,
+        &:focus {
+            color: $color-1;
+        }
+        &:hover {
+            color: $color-4;
+        }
+        
+    }
+}
+
+.tinymce-iframe {
+    font-size: 1.6rem;
+    margin: 2rem auto;
+    max-width: 1024px;
+}
+
+#mce-modal-block.mce-in {
+    opacity: .35!important;
+}
+
+.mce-window {
+    border: none!important;
+    border-radius: .6rem!important;
+    padding: 4rem!important;
+
+    &[role="alertdialog"] {
+        padding: 4rem 4rem 1.6rem 4rem!important;
+    }
+
+    .mce-reset .mce-window-head {
+        border: none;
+        margin: 0 0 4rem 0;
+        padding: 0!important;
+        text-transform: none;
+
+        .mce-close {
+            right: -12px!important;
+            top: -8px!important;
+
+            &:active,
+            &:focus,
+            &:hover {
+                background: $color-10!important;
+                color: $color-5!important;
+            }
+            
+            i {
+                color: $color-3;
+                font-size: 1.4rem !important;
+            }
+        }
+
+        .mce-title {
+            color: $color-4;
+            font-family: $secondary-font!important;
+            font-size: 1.8rem!important;
+            font-weight: 600!important;
+            text-align: center;
+        }
+    }
+
+    .mce-textbox.mce-multiline {
+        box-sizing: border-box;
+        height: 100%!important;
+        left: 0!important;
+        padding: 1.2rem 1.8rem !important;
+        top: 0!important;
+        width: 100%!important;
+    }
+
+    .mce-foot {
+        border: none;
+        border-radius: 0 0 .6rem .6rem;
+        height: 4.8rem!important;
+        margin: 4rem -4rem 0 -4rem!important;
+        width: auto!important;
+
+        .mce-container-body {
+            border-radius: 0 0 .6rem .6rem;
+            height: 5.6rem!important;
+            width: 100%!important;
+
+            .mce-btn {
+                background: $color-1!important;
+                border-radius: 0 0 0 .6rem!important;
+                box-shadow: none!important;
+                color: $color-10!important;
+                font-size: 1.6rem;
+                height: 5.6rem;
+                left: 0!important;
+                line-height: 5.6rem;
+                top: 0!important;
+                width: 50%!important;
+
+                &:nth-child(2):last-child {
+                    width: 100%!important;
+                }
+
+                & > button {
+                    font-size: 1.6rem;
+                }
+
+                &.mce-disabled > button {
+                    color: $color-10!important;
+                }
+
+                &:active,
+                &:focus,
+                &:hover {
+                    background: lighten($color-1, 10%)!important;
+                    color: $color-10!important;
+                }
+
+                & + .mce-btn {
+                    background: $color-10!important;
+                    border-top: 1px solid $color-8!important;
+                    border-radius: 0 0 .6rem 0!important;
+                    color: $color-6!important;
+                    left: 50%!important;
+
+                    &.mce-disabled > button {
+                        color: $color-6!important;
+                    }
+
+                    &:active > button,
+                    &:focus > button,
+                    &:hover > button {
+                        background: $color-9!important;
+                        color: $color-6!important;
+                    }
+                }
+            }
+        }
+    }
+
+    &[aria-label="Find and replace"] {
+        .mce-foot {
+            .mce-container-body {
+                .mce-btn {
+                    background: $color-1!important;
+                    border-top: none!important;
+                    border-radius: 0 0 0 .6rem!important;
+                    box-shadow: none!important;
+                    color: $color-10!important;
+                    font-size: 1.6rem;
+                    height: 5.6rem;
+                    left: 0!important;
+                    line-height: 5.6rem;
+                    top: 0!important;
+                    width: 20%!important;
+
+                    & > button {
+                        color: $color-10!important;
+                    }
+
+                    &.mce-disabled > button {
+                        color: $color-10!important;
+                    }
+
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        background: lighten($color-1, 10%)!important;
+                        color: $color-10!important;
+                    }
+
+                    + .mce-btn {
+                        border-top: none!important;
+                        left: 20%!important;
+                        border-radius: 0!important;
+
+                        + .mce-btn {
+                            left: 40%!important;
+                            border-radius: 0 0 0 0!important;
+
+                            ~ .mce-btn {
+                                left: 60%!important;
+                                border-radius: 0 0 0 0!important;
+
+                                ~ .mce-btn {
+                                    left: 80%!important;
+                                    border-radius: 0 0 .6rem 0!important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .mce-textbox {
+        background-color: $color-10;
+        border: none;
+        border-radius: 3px;
+        box-shadow: inset 0 0 0 1px $color-8;
+        box-sizing: border-box;
+        color: $color-5;
+        font: 400 1.6rem/1.5 $secondary-font;
+        height: 4.8rem;
+        outline: none;
+        padding: 1.2rem 1.8rem;
+
+        &[size="3"] {
+            text-align: center;
+            width: 70px!important;
+        }
+    }
+
+    .mce-combobox .mce-btn {
+        & > button {
+            border-radius: 0;
+            line-height: 4.6rem;
+            padding: 0 .8rem;
+
+            &:active,
+            &:focus,
+            &:hover {
+                background: $color-8;
+            }
+        }
+    }
+
+    .mce-listbox {
+        border-radius: 3px;
+        height: 48px!important;
+        width: 360px!important;
+
+        button {
+            background: $color-10!important;
+            border-radius: 3px;
+            height: 48px!important;
+            line-height: 46px!important;
+            padding: 0 1.8rem!important;
+        }
+    }
+
+    label + input,
+    label + div > input {
+        width: 360px!important;
+    }
+}

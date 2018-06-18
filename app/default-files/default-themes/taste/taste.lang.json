@@ -1,0 +1,49 @@
+{
+	"partials": {
+		"cookiebar": {
+			"close": "Close"
+		},
+		"disqus": {
+			"noscript1": "Please enable JavaScript to view the",
+			"noscript2": "comments powered by Disqus."
+		},
+		"menu": {
+			"label": "Menu"
+		},
+		"pagination": {
+			"prev": "Previous",
+			"next": "Next"
+		},
+		"shareButtons": {
+			"shareWithFacebook": "Share with Facebook",
+			"shareWithTwitter": "Share with Twitter",
+			"shareWithGooglePlus": "Share with Google Plus",
+			"shareWithPinterest": "Share with Pinterest",
+			"shareWithStumbleUpon": "Share with StumbleUpon",
+			"shareWithLinkedIn": "Share with LinkedIn",
+			"shareWithBuffer": "Share with Buffer"
+		}
+	},
+	"frontpage": {
+		"publishedBy": "by",
+		"refreshed": "refreshed"
+	},
+	"post": {
+		"publishedBy": "by",
+		"publishedOn": "published on",
+		"relatedPosts": "Related posts",
+		"lastUpdatedDate": "This article was updated on",
+		"comments": "Comments",
+		"previousPost": "Previous Post",
+		"nextPost": "Next Post"
+	},
+	"error": {
+		"404": "404",
+		"message": "The page you were looking for appears to have been moved, deleted or does not exist. You could go back to where you were or head straight to our home page."
+	},
+	"search": {
+		"placeholder": "search...",
+        "title": "Search",
+		"close": "Close"
+    }
+}

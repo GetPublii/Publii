@@ -1,0 +1,71 @@
+{
+  "productName": "Publii",
+  "name": "Publii",
+  "version": "0.27.2",
+  "bundle": "test",
+  "description": "A simple static websites CMS application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "keywords": [],
+  "author": "Tidy Customs",
+  "license": "GPL-3.0",
+  "repository": {
+    "url": "https://github.com/GetPublii/Publii/"
+  },
+  "bugs": {
+    "url": "https://github.com/GetPublii/Publii/issues"
+  },
+  "homepage": "",
+  "dependencies": {
+    "@google-cloud/storage": "^1.1.1",
+    "archiver": "^1.3.0",
+    "aws-sdk": "^2.117.0",
+    "clean-css": "^4.1.9",
+    "codemirror": "^5.33.0",
+    "codemirror-revisedsearch": "^1.0.12",
+    "count-files": "^2.6.2",
+    "electron-load-devtool": "^1.0.0",
+    "fast-memoize": "^2.2.7",
+    "file-exists": "^1.0.0",
+    "fs-extra": "^5.0.0",
+    "ftp": "^0.3.10",
+    "github": "^9.2.0",
+    "glob-move": "^1.0.1",
+    "handlebars": "^4.0.5",
+    "html-minifier": "^3.0.2",
+    "image-downloader": "^3.3.0",
+    "image-size": "^0.5.0",
+    "isbinaryfile": "^3.0.2",
+    "jimp": "^0.2.27",
+    "keytar": "^3.0.2",
+    "ls-all": "^1.1.0",
+    "md5": "^2.1.0",
+    "mime": "^2.0.2",
+    "min.css": "^1.3.0",
+    "moment": "^2.18.1",
+    "netlify": "^1.2.0",
+    "node-version-compare": "^1.0.1",
+    "normalize-path": "^2.0.1",
+    "sharp": "^0.16.2",
+    "shuffle-array": "^1.0.1",
+    "slug": "^0.9.1",
+    "sqlstring": "^2.2.0",
+    "ssh2-sftp-client": "^1.0.5",
+    "tar": "^2.2.1",
+    "transliteration": "^1.6.2",
+    "unzipper": "^0.3.1",
+    "vue": "^2.5.16",
+    "vue-color": "^2.4.5",
+    "vue-multiselect": "^2.0.8",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.16.0",
+    "vuex": "^3.0.1",
+    "wpautop": "^1.0.0",
+    "xml2json": "^0.11.0"
+  },
+  "devDependencies": {
+    "devtron": "^1.4.0"
+  }
+}

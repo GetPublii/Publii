@@ -1,0 +1,56 @@
+{{#if @config.custom.shareFacebook}}
+     <a href="https://www.facebook.com/sharer/sharer.php?u={{encodeUrlFragment url}}" class="js-share facebook" title="{{ translate 'partials.shareButtons.shareWithFacebook' }}" rel="nofollow">
+        <svg class="u-icon">
+            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.shareTwitter}}
+    <a href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}" class="js-share twitter" title="{{ translate 'partials.shareButtons.shareWithTwitter' }}" rel="nofollow">
+        <svg class="u-icon">
+            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.shareGoogleplus}}
+    <a href="https://plus.google.com/share?url={{encodeUrlFragment url}}" class="js-share gplus" title="{{ translate 'partials.shareButtons.shareWithGooglePlus' }}" rel="nofollow">
+        <svg class="u-icon">
+             <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.sharePinterest}}
+    <a href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featured_image.url}}
+&amp;description={{encodeUrlFragment title}}" class="js-share pinterest" title="{{ translate 'partials.shareButtons.shareWithPinterest' }}" rel="nofollow">
+        <svg class="u-icon">
+            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.shareStumbleupon}}
+    <a href="http://www.stumbleupon.com/submit?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}" class="js-share stumbleupon" title="{{ translate 'partials.shareButtons.shareWithStumbleUpon' }}" rel="nofollow">
+        <svg class="u-icon">
+             <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#stumbleupon" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.shareLinkedin}}
+    <a href="http://www.linkedin.com/shareArticle?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}" class="js-share linkedin" title="{{ translate 'partials.shareButtons.shareWithLinkedIn' }}" rel="nofollow">
+        <svg class="u-icon">
+            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin" />
+        </svg>
+    </a>
+{{/if}}
+
+{{#if @config.custom.shareBuffer}}
+     <a href="https://buffer.com/add?text={{encodeUrlFragment title}}&amp;url={{encodeUrlFragment url}}" class="js-share buffer" title="{{ translate 'partials.shareButtons.shareWithBuffer' }}" rel="nofollow">
+        <svg class="u-icon">
+            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#buffer" />
+        </svg>
+    </a>
+{{/if}}

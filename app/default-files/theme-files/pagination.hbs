@@ -1,0 +1,33 @@
+{{#if @pagination}}
+    <ul>
+        {{#if @pagination.previousPage}}
+            <li>
+                <a href="{{@pagination.previousPageUrl}}">PREV</a>
+            </li>
+        {{/if}}
+
+        {{#each @pagination.pages}}
+            <li>
+                {{#isCurrentPage @pagination.currentPage this}}
+                    <strong>
+                        {{this}}
+                    </strong>
+                {{else}}
+                    <a href="{{pageUrl @pagination.context this}}">
+                        {{this}}
+                    </a>
+                {{/isCurrentPage}}
+            </li>
+        {{/each}}
+
+        {{#if @pagination.nextPage}}
+            <li>
+                <a href="{{@pagination.nextPageUrl}}">NEXT</a>
+            </li>
+        {{/if}}
+    </ul>
+
+    <small>
+        Page {{@pagination.currentPage}} of {{@pagination.totalPages}}
+    </small>
+{{/if}}

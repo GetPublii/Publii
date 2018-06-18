@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>Netlify Node</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/cayman.min.css">
+    <link rel="stylesheet" href="css/prism.min.css">
+    <link rel="stylesheet" href="css/index.min.css">
+    <link rel="stylesheet" href="css/docs.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>Netlify Node</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="index.html">Main</a></li>
+            <li><a href="access-token.js.html">access-token.js</a></li>
+            <li class="active"><a href="client.js.html">client.js</a></li>
+            <li><a href="deploy.js.html">deploy.js</a></li>
+            <li><a href="deploy_key.js.html">deploy_key.js</a></li>
+            <li><a href="dns-record.js.html">dns-record.js</a></li>
+            <li><a href="dns-zone.js.html">dns-zone.js</a></li>
+            <li><a href="file.js.html">file.js</a></li>
+            <li><a href="form.js.html">form.js</a></li>
+            <li><a href="model.js.html">model.js</a></li>
+            <li><a href="netlify.js.html">netlify.js</a></li>
+            <li><a href="site.js.html">site.js</a></li>
+            <li><a href="snippet.js.html">snippet.js</a></li>
+            <li><a href="submission.js.html">submission.js</a></li>
+            <li><a href="ticket.js.html">ticket.js</a></li>
+            <li><a href="user.js.html">user.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#base64"><i class="alert alert-success"></i><span>base64</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="base64">
+            <h1>base64</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>&nbsp;</span><span>base64</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"></div>
+          <pre><code class="language-javascript">var base64 = require('base64-js'),
+    http   = require('http'),
+    https  = require('https');
+
+var Client = function(options) {
+  options = options || {};
+  this.access_token  = options.access_token;
+  this.client_id     = options.client_id;
+  this.client_secret = options.client_secret;
+  this.redirect_uri  = options.redirect_uri;
+  this.ENDPOINT      = options.endpoint || 'https://api.netlify.com';
+  this.VERSION       = options.version  || 'v1';
+  this.hostname = this.ENDPOINT.match(/^https?:\/\/([^:]+)/)[1];
+  this.ssl = this.ENDPOINT.match(/^https:\/\//)
+  this.port = this.ssl ? 443 : (this.ENDPOINT.match(/:(\d+)$/) || [])[1] || 80;
+  this.http = options.http || (this.ssl ? https : http);
+};
+
+Client.models = {
+  Site: require(&quot;./site&quot;).Site,
+  Form: require(&quot;./form&quot;).Form,
+  Submission: require(&quot;./submission&quot;).Submission,
+  User: require(&quot;./user&quot;).User,
+  Snippet: require(&quot;./snippet&quot;).Snippet,
+  Deploy: require(&quot;./deploy&quot;).Deploy,
+  DeployKey: require(&quot;./deploy_key&quot;).DeployKey,
+  DnsZone: require(&quot;./dns-zone&quot;).DnsZone,
+  AccessToken: require(&quot;./access-token&quot;).AccessToken,
+  Ticket: require(&quot;./ticket&quot;).Ticket
+};
+
+var stringToByteArray = function(str) {
+  return Array.prototype.map.call(str, function (char) { return char.charCodeAt(0); });
+};
+
+var prepareBody = function(body, headers) {
+  return typeof(body) == &quot;string&quot; ? body : (headers['Content-Type'] == &quot;application/json&quot; ? JSON.stringify(body) : body);
+};
+
+Client.prototype = {
+  isAuthorized: function() { return !(this.access_token == null); },
+
+  authorizeFromCredentials: function(cb) {
+    var client = this;
+
+    if (!(this.client_id &amp;&amp; this.client_secret)) {
+      return cb(&quot;Instantiate the client with a client_id and client_secret to authorize from credentials&quot;);
+    }
+
+    this.request({
+      type: &quot;post&quot;,
+      url: &quot;/oauth/token&quot;,
+      raw_path: true,
+      contentType: &quot;application/x-www-form-urlencoded&quot;,
+      auth: {
+        user: this.client_id,
+        password: this.client_secret
+      },
+      body: &quot;grant_type=client_credentials&quot;
+    }, function(err, data) {
+      if (err) return cb(err);
+      client.access_token = data.access_token;
+      cb(null, data.access_token);
+    });
+  },
+
+  authorizeFromCode: function(code, cb) {
+    var client = this;
+
+    if (!(this.client_id &amp;&amp; this.client_secret &amp;&amp; this.redirect_uri)) {
+      return cb(&quot;Instantiate the client with a client_id, client_secret and redirect_uri to authorize from code&quot;);
+    }
+
+    this.request({
+      type: &quot;post&quot;,
+      url: &quot;/oath/token&quot;,
+      raw_path: true,
+      contentType: &quot;application/x-www-form-urlencoded&quot;,
+      auth: {
+        user: this.client_id,
+        password: this.client_secret
+      },
+      body: [
+        &quot;grant_type=authorization_code&quot;,
+        &quot;code=&quot; + code,
+        &quot;redirect_uri=&quot; + encodeURIComponent(this.redirect_uri)
+      ].join(&quot;&amp;&quot;)
+    }, function(err, data) {
+      if (err) return cb(err);
+      client.access_token = data.access_token;
+      cb(null, data.access_token);
+    });
+  },
+
+  authorizeUrl: function(options) {
+    if (!(this.client_id &amp;&amp; this.redirect_uri)) {
+      throw(&quot;Instantiate the client with a client_id and a redirect_uri to generate an authorizeUrl&quot;);
+    }
+    return this.ENDPOINT + &quot;/oauth/authorize?&quot; + [
+      &quot;response_type=code&quot;,
+      &quot;client_id=&quot; + this.client_id,
+      &quot;redirect_uri=&quot; + encodeURIComponent(this.redirect_uri)
+    ].join(&quot;&amp;&quot;);
+  },
+
+  sites: function(options, cb) { this.collection({model: Client.models.Site}, options, cb); },
+
+  site: function(id, cb) { this.element({model: Client.models.Site, id: id}, cb); },
+
+  createSite: function(options, cb) {
+    this.withAuthorization(cb, function() {
+      if (options.dir) {
+        Client.models.Site.createFromDir(this, options.dir, cb);
+      } else if (options.zip) {
+        Client.models.Site.createFromZip(this, options.zip, cb);
+      } else {
+        Client.models.Site.create(this, options, cb);
+      }
+    });
+  },
+
+  forms: function(cb) { this.collection({model: Client.models.Form}, cb); },
+
+  form: function(id, cb) { this.element({model: Client.models.Form, id: id}, cb); },
+
+  submissions: function(options, cb) { this.collection({model: Client.models.Submission}, options, cb); },
+
+  submission: function(id, cb) { this.element({model: Client.models.Submission, id: id}, cb); },
+
+  users: function(options, cb) { this.collection({model: Client.models.User}, options, cb); },
+
+  user: function(id, cb) { this.element({model: Client.models.User, id: id}, cb); },
+
+  createUser: function(attributes, cb) {
+    this.create({model: Client.models.User, attributes: attributes}, cb);
+  },
+
+  dnsZones: function(options, cb) { this.collection({model: Client.models.DnsZone}, options, cb); },
+
+  dnsZone: function(id, cb) { this.element({model: Client.models.DnsZone, id: id}, cb); },
+
+  createDnsZone: function(attributes, cb) {
+    this.create({model: Client.models.DnsZone, attributes: attributes}, cb);
+  },
+
+  accessToken: function(id, cb) { this.element({model: Client.models.AccessToken, id: id}, cb); },
+
+  createAccessToken: function(attributes, cb) {
+    this.create({model: Client.models.AccessToken, attributes: attributes}, cb);
+  },
+
+  createDeployKey: function(attributes, cb) {
+    this.create({model: Client.models.DeployKey, attributes: attributes}, cb);
+  },
+
+  ticket: function(id, cb) { this.element({model: Client.models.Ticket, id: id}, cb); },
+
+  createTicket: function(cb) {
+    this.request({
+      url: Client.models.Ticket.path,
+      type: &quot;post&quot;,
+      body: {client_id: this.client_id}
+    }, function(err, data, client) {
+      if (err) return cb(err);
+      cb(null, new Client.models.Ticket(client, data));
+    });
+  },
+
+  collection: function(options, pagination, cb) {
+    if (cb === undefined) { cb = pagination; pagination = {}}
+    var params = [];
+    if (pagination.page) { params.push([&quot;page&quot;, pagination.page].join(&quot;=&quot;)) }
+    if (pagination.per_page) { params.push([&quot;per_page&quot;, pagination.per_page].join(&quot;=&quot;)) }
+    this.withAuthorization(cb, function() {
+      this.request({
+        url: (options.prefix || &quot;&quot;) + options.model.path + (params.length ? &quot;?&quot; + params.join(&quot;&amp;&quot;) : &quot;&quot;)
+      }, function(err, collection, client, meta) {
+        if (err) return cb(err);
+        var result = collection.map(function(data) { return new options.model(client, data); });
+        result.meta = meta
+        cb(null, result);
+      })
+    });
+  },
+
+  element: function(options, cb) {
+    this.withAuthorization(cb, function() {
+      this.request({
+        url: (options.prefix || &quot;&quot; ) + options.model.path + &quot;/&quot; + options.id
+      }, function(err, data, client) {
+        if (err) return cb(err);
+        cb(null, new options.model(client, data));
+      });
+    });
+  },
+
+  create: function(options, cb) {
+    this.withAuthorization(cb, function() {
+      this.request({
+        url: (options.prefix || &quot;&quot;) + options.model.path,
+        type: &quot;post&quot;,
+        body: options.attributes
+      }, function(err, data, client) {
+        if (err) return cb(err);
+        cb(null, new options.model(client, data));
+      });
+    });
+  },
+
+  update: function(options, cb) {
+    this.withAuthorization(cb, function() {
+      this.request({
+        url: (options.prefix || &quot;&quot;) + options.element.apiPath,
+        type: &quot;put&quot;,
+        body: options.attributes
+      }, function(err, data, client) {
+        if (err) return cb(err);
+        options.model.call(options.element, client, data);
+        cb(null, options.element);
+      });
+    });
+  },
+
+  destroy: function(options, cb) {
+    this.withAuthorization(cb, function() {
+      this.request({
+        url: (options.prefix || &quot;&quot;) + options.element.apiPath,
+        type: &quot;delete&quot;,
+        ignoreResponse: true
+      }, function(err) {
+        return cb(err);
+      });
+    });
+  },
+
+  request: function(options, cb) {
+    var client  = this,
+        http    = this.http,
+        path    = options.raw_path ? options.url : &quot;/api/&quot; + this.VERSION + options.url,
+        headers = options.headers || {},
+        retries = options.retries ? options.retries : options.retries === 0 ? 0 : 3,
+        body    = null;
+
+    headers['Content-Type'] = options.contentType || &quot;application/json&quot;;
+
+    if (options.body) {
+      body = prepareBody(options.body, headers);
+    }
+
+    headers['Content-Length'] = body ? (typeof body == &quot;string&quot; ? Buffer.byteLength(body) : body.length) : 0;
+
+    if (this.access_token &amp;&amp; !options.auth) {
+      headers['Authorization'] = &quot;Bearer &quot; + this.access_token
+    }
+
+    var requestOptions = {
+      method: (options.type || &quot;get&quot;).toLowerCase(),
+      hostname: this.hostname,
+      path: path,
+      port: this.port,
+      headers: headers,
+      auth: options.auth ? options.auth.user + &quot;:&quot; + options.auth.password : null,
+    }
+
+    var request = http.request(requestOptions, function(res) {
+      var body = &quot;&quot;,
+          data = null;
+
+      res.on(&quot;data&quot;, function(chunk) {
+        body += chunk;
+      });
+      res.on(&quot;end&quot;, function() {
+        if (res.statusCode &gt;= 200 &amp;&amp; res.statusCode &lt; 300) {
+          if (body &amp;&amp; !options.ignoreResponse) {
+            data = JSON.parse(body);
+          }
+          cb(null, data, client, client.metadata(res));
+        } else if (res.statusCode == 401 || res.statusCode == 403) {
+          cb(&quot;Authentication failed&quot;, null, client, client.metadata(res));
+        } else {
+          if ((requestOptions.method === &quot;get&quot; ||
+               requestOptions.method === &quot;put&quot; ||
+               requestOptions.method === &quot;delete&quot;) &amp;&amp;
+              (retries &gt; 0 &amp;&amp; res.statusCode !== 422 &amp;&amp; res.statusCode !== 404)) {
+            options.retries = retries - 1;
+            setTimeout(function() { client.request(options, cb); }, 500);
+          } else {
+            cb(body, null, client, client.metadata(res));
+          }
+        }
+      });
+    });
+
+    request.setTimeout(300000, function() {
+      request.abort();
+    });
+
+    request.on(&quot;error&quot;, function(err) {
+      if ((requestOptions.method == &quot;get&quot; ||
+           requestOptions.method == &quot;put&quot; ||
+           requestOptions.method == &quot;delete&quot;) &amp;&amp;
+           retries &gt; 0) {
+        options.retries = retries - 1;
+        setTimeout(function() { client.request(options, cb); }, 500);
+      } else {
+        cb(err, null, client);
+      }
+    });
+
+    if (body) {
+      request.write(body);
+    }
+    request.end();
+  },
+
+  withAuthorization: function(cb, fn) {
+    if (!this.isAuthorized()) return cb(&quot;Not authorized: Instantiate client with access_token&quot;);
+    fn.call(this);
+  },
+
+  metadata: function(res) {
+    var meta = {},
+        links     = res.getHeader &amp;&amp; res.getHeader(&quot;Link&quot;),
+        limit     = res.getHeader &amp;&amp; res.getHeader(&quot;X-Ratelimit-Limit&quot;),
+        remaining = res.getHeader &amp;&amp; res.getHeader(&quot;X-Ratelimit-Remaining&quot;),
+        reset     = res.getHeader &amp;&amp; res.getHeader(&quot;X-Ratelimit-Reset&quot;);
+
+    if (links) {
+      meta.pagination = {}
+      for (var part in links.split(&quot;,&quot;)) {
+        var link = part.replace(/(^\s*|\s*$)/, '');
+        var segments = link.split(&quot;;&quot;);
+        var m = segments[0].match(/page=(\d+)/);
+        var page = m &amp;&amp; parseInt(m[1],10);
+        m = segments[0].match(/^\&lt;(.+)\&gt;\s*$/);
+
+        if (segments[1].match(/last/)) {
+          meta.pagination.last = page;
+        } else if (segments[1].match(/next/)) {
+          meta.pagination.next = page;
+        } else if (segments[1].match(/prev/)) {
+          meta.pagination.prev = page;
+        } else if (segments[1].match(/first/)) {
+          meta.pagination.first = page;
+        }
+      }
+    }
+    if (limit) {
+      meta.rateLimit = limit;
+    }
+    if (remaining) {
+      meta.rateRemaining = remaining;
+    }
+    if (reset) {
+      meta.rateReset = reset;
+    }
+    return meta;
+  }
+};
+
+exports.Client = Client;</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="js/twitter-widget.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-transition.min.js"></script>
+    <script src="js/bootstrap-scrollspy.min.js"></script>
+    <script src="js/bootstrap-dropdown.min.js"></script>
+    <script src="js/bootstrap-collapse.min.js"></script>
+    <script src="js/bootstrap-affix.min.js"></script>
+    <script src="js/prism.min.js"></script>
+    <script src="js/index.min.js"></script>
+  </body>
+</html>

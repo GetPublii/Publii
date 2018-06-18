@@ -1,0 +1,106 @@
+<template>
+    <div class="radio-buttons">
+        <template v-for="(item, index) in items">
+            <input
+                type="radio"
+                :name="name"
+                :id="name + '-' + item.value"
+                :value="item.value"
+                :key="'radio-item-' + index"
+                v-model="content" />
+            <label
+                class="radio"
+                :for="name + '-' + item.value"
+                :key="'radio-label-' + index">
+                {{ item.label }}
+            </label>
+        </template>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'radio-buttons',
+    props: {
+        name: {
+            default: '',
+            type: String
+        },
+        items: {
+            default: [],
+            type: Array
+        },
+        selected: {
+            default: '',
+            type: String
+        },
+        value: {
+            default: '',
+            type: [String, Number]
+        }
+    },
+    data: function() {
+        return {
+            content: ''
+        };
+    },
+    watch: {
+        value (newValue, oldValue) { 
+            this.content = newValue;
+        },
+        content: function(newValue) {
+            this.$emit('input', newValue);
+        }
+    },
+    mounted () {
+        if (this.value) {
+            this.content = this.value;
+        } else {
+            this.content = this.selected;
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../../scss/variables.scss';
+
+/*
+ * Radio buttons
+ */
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"] + label {
+    display: inline-block;
+    cursor: pointer;
+    top: 0;
+    margin-right: 1rem;
+}
+
+label.radio:before {
+    border: 1px solid $color-7;
+    border-radius: 2px;
+    content: "";
+    display: inline-block;
+    height: 1.8rem;
+    line-height: 1.8rem;
+    margin-right: .5rem;
+    vertical-align: sub;
+    text-align: center;
+    width: 1.8rem;
+}
+
+label.radio:before {
+    border-radius: 50%;
+}
+
+input[type="radio"]:checked + label.radio:before {
+    background: $color-1;
+    border: 1px solid $color-1;
+    box-shadow: inset 0 0 0 4px white;
+    content: "";
+}
+</style>

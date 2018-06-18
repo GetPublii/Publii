@@ -1,0 +1,10 @@
+{{#if @pagination}}
+<nav class="pagination">	
+	{{#if @pagination.nextPage}}
+	    <a href="{{@pagination.nextPageUrl}}" class="btn" title="{{ translate 'partials.pagination.prev' }}"> {{ translate 'partials.pagination.prev' }} </a> 
+	{{/if}}
+	{{#if @pagination.previousPage}}
+	    <a href="{{@pagination.previousPageUrl}}" class="btn" title="{{ translate 'partials.pagination.next' }}"> {{ translate 'partials.pagination.next' }} </a> 
+	{{/if}} 
+</nav>
+{{/if}}

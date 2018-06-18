@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>Netlify Node</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/cayman.min.css">
+    <link rel="stylesheet" href="css/prism.min.css">
+    <link rel="stylesheet" href="css/index.min.css">
+    <link rel="stylesheet" href="css/docs.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>Netlify Node</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li class="active"><a href="index.html">Main</a></li>
+            <li><a href="access-token.js.html">access-token.js</a></li>
+            <li><a href="client.js.html">client.js</a></li>
+            <li><a href="deploy.js.html">deploy.js</a></li>
+            <li><a href="deploy_key.js.html">deploy_key.js</a></li>
+            <li><a href="dns-record.js.html">dns-record.js</a></li>
+            <li><a href="dns-zone.js.html">dns-zone.js</a></li>
+            <li><a href="file.js.html">file.js</a></li>
+            <li><a href="form.js.html">form.js</a></li>
+            <li><a href="model.js.html">model.js</a></li>
+            <li><a href="netlify.js.html">netlify.js</a></li>
+            <li><a href="site.js.html">site.js</a></li>
+            <li><a href="snippet.js.html">snippet.js</a></li>
+            <li><a href="submission.js.html">submission.js</a></li>
+            <li><a href="ticket.js.html">ticket.js</a></li>
+            <li><a href="user.js.html">user.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="Main" class="readme"><h1>Netlify Node Client</h1>
+<p>Netlify is a hosting service for the programmable web. It understands your documents, processes forms and lets you do deploys, manage forms submissions, inject javascript snippets into sites and do intelligent updates of HTML documents through it's API.</p>
+<h1>Installation</h1>
+<p>Install by running</p>
+<pre><code>npm install netlify
+</code></pre>
+<h1>Authenticating</h1>
+<p>Register a new application at https://app.netlify.com/applications to get your Oauth2 secret and key.</p>
+<p>Once you have your credentials you can instantiate a Netlify client.</p>
+<pre><code class="language-js">var netlify = require(&quot;netlify&quot;),
+    client     = netlify.createClient(options);
+</code></pre>
+<p>Typically you'll have an <code>access_token</code> stored that you want to instantiate the client with:</p>
+<pre><code>var client = netlify.createClient({access_token: &quot;my-access-token&quot;});
+</code></pre>
+<p>A client need an access token before it can make requests to the Netlify API. Oauth2 gives you two ways to get an access token:</p>
+<ol>
+<li><strong>Authorize from credentials</strong>: Authenticate directly with your API credentials.</li>
+<li><strong>Authorize from a URL</strong>: send a user to a URL, where she can grant your access API access on her behalf.</li>
+</ol>
+<p>The first method is the simplest, and works when you don't need to authenticate on behalf of some other user:</p>
+<pre><code class="language-js">var client = netlify.createClient({client_id: CLIENT_ID, client_secret: CLIENT_SECRET});
+
+client.authorizeFromCredentials(function(err, access_token) {
+  if (err) return console.log(err);
+  // Client is now ready to do requests
+  // You can store the access_token to avoid authorizing in the future
+});
+
+</code></pre>
+<p>To authorize on behalf of a user, you first need to send the user to a Netlify url where she'll be asked to grant your application permission. Once the user has visited that URL, she'll be redirected back to a redirect URI you specify (this must match the redirect URI on file for your Application). When the user returns to your app, you'll be able to access a <code>code</code> query parameter, that you can use to obtain the final <code>access_token</code></p>
+<pre><code class="language-js">var client = netlify.createClient({
+  client_id: CLIENT_ID,
+  client_secret: CLIENT_SECRET,
+  redirect_uri: &quot;http://www.example.com/callback&quot;
+});
+
+var url = client.authorizeUrl();
+
+// Send the client to the url, they will be redirected back to the redirect_uri
+// Once they are back at your url, grab the code query param and use it to authorize
+
+client.authorizeFromCode(params.code, function(err, access_token) {
+  if (err) return console.log(err);
+  // Client is now ready to do requests
+  // You can store the access_token to avoid authorizing in the future  
+});
+</code></pre>
+<h1>Deploy a new version of a site</h1>
+<p>If you're just going to deploy a new version of a site from a script, the module exports a simple deploy method that will handle this:</p>
+<pre><code class="language-js">var netlify = require(&quot;netlify&quot;);
+
+netlify.deploy({access_token: &quot;some-token&quot;, site_id: &quot;some-site&quot;, dir: &quot;/path/to/site&quot;}, function(err, deploy) {
+  if (err) { return console.log(err); }
+  console.log(&quot;New deploy is live&quot;);
+});
+</code></pre>
+<h1>Sites</h1>
+<p>Getting a list of all sites you have access to:</p>
+<pre><code class="language-js">client.sites(function(err, sites) {
+  // do work
+});
+</code></pre>
+<p>Getting a specific site by id:</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  // do work
+})
+</code></pre>
+<p>Creating a new empty site:</p>
+<pre><code class="language-js">client.createSite({name: &quot;my-unique-site-name&quot;, domain: &quot;example.com&quot;, password: &quot;secret&quot;}, function(err, site) {
+  console.log(site);
+})
+
+To deploy a site from a dir and wait for the processing of the site to finish:
+
+```js
+client.createSite({}, function(err, site) {
+  site.createDeploy({dir: &quot;/tmp/my-site&quot;}, function(err, deploy) {
+    deploy.waitForReady(function(deploy) {
+      console.log(&quot;Deploy is done: &quot;, deploy);
+    });
+  });
+});
+</code></pre>
+<p>Creating a new deploy for a site from a zip file:</p>
+<pre><code class="language-ruby">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error finding site %o&quot;, err);
+  site.createDeploy({zip: &quot;/tmp/my-site.zip&quot;}, function(err, deploy) {
+    if (err) return console.log(&quot;Error updating site %o&quot;, err);
+    deploy.waitForReady(function(err, deploy) {
+      if (err) return console.log(&quot;Error updating site %o&quot;, err);
+      console.log(&quot;Site redeployed&quot;);
+    });
+  });
+})
+</code></pre>
+<p>Update the name of the site (its subdomain), the custom domain and the notification email for form submissions:</p>
+<pre><code class="language-js">site.update({name: &quot;my-site&quot;, customDomain: &quot;www.example.com&quot;, notificationEmail: &quot;me@example.com&quot;, password: &quot;secret&quot;}, function(err, site) {
+  if (err) return console.log(&quot;Error updating site %o&quot;, err);
+  console.log(&quot;Updated site&quot;);
+});
+</code></pre>
+<p>Deleting a site:</p>
+<pre><code class="language-js">site.destroy(function(err) {
+  if (err) return console.log(&quot;Error deleting site&quot;);
+  console.log(&quot;Site deleted&quot;);
+});
+</code></pre>
+<h1>Forms</h1>
+<p>Access all forms you have access to:</p>
+<pre><code class="language-js">client.forms(function(err, forms) {
+  // do work
+})
+</code></pre>
+<p>Access forms for a specific site:</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.forms(function(err, forms) {
+    // do work
+  });
+});
+</code></pre>
+<p>Access a specific form:</p>
+<pre><code class="language-js">client.form(id, function(err, form) {
+  if (err) return console.log(&quot;Error getting form %o&quot;, err);
+  // do work
+});
+</code></pre>
+<p>Access a list of all form submissions you have access to:</p>
+<pre><code class="language-js">client.submissions(function(err, submissions) {
+  if (err) return console.log(&quot;Error getting submissions %o&quot;, err);
+  // do work
+});
+</code></pre>
+<p>Access submissions from a specific site</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.submissions(function(err, submissions) {
+    if (err) return console.log(&quot;Error getting submissions %o&quot;, err);
+    // do work
+  })
+});
+</code></pre>
+<p>Access submissions from a specific form</p>
+<pre><code class="language-js">client.form(id, function(err, form) {
+  if (err) return console.log(&quot;Error getting form %o&quot;, err);
+  form.submissions(function(err, submissions) {
+    if (err) return console.log(&quot;Error getting submissions %o&quot;, err);
+    // do work
+  });
+});
+</code></pre>
+<p>Get a specific submission</p>
+<pre><code class="language-js">client.submission(id, function(err, submission) {
+  if (err) return console.log(&quot;Error getting submission %o&quot;, err);
+  // do work
+})
+</code></pre>
+<h1>Files</h1>
+<p>Access all files in a site:</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.files(function(err, files) {
+    if (err) return console.log(&quot;Error getting files %o&quot;, err);
+    // do work
+  });
+});
+</code></pre>
+<p>Get a specific file:</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.file(path, function(err, file) {
+    if (err) return console.log(&quot;Error getting file %o&quot;, err);
+
+    file.readFile(function(err, data) {
+      if (err) return console.log(&quot;Error reading file %o&quot;, err);
+      console.log(&quot;Got data %o&quot;, data);
+    });
+
+    file.writeFile(&quot;Hello, World!&quot;, function(err, file) {
+      if (err) return console.log(&quot;Error writing to file %o&quot;, err);
+      console.log(&quot;Wrote to file - site will now be processing&quot;);
+    });
+  });
+});
+</code></pre>
+<h1>Deploys</h1>
+<p>Access all deploys for a site</p>
+<pre><code class="language-js">site.deploys(function(err, deploys) {
+  // do work
+});
+</code></pre>
+<p>Access a specific deploy</p>
+<pre><code class="language-js">site.deploy(id, function(err, deploy) {
+  // do work
+});
+</code></pre>
+<p>Create a new deploy:</p>
+<pre><code class="language-js">site.createDeploy({dir: &quot;/path/to/folder&quot;}, function(err, deploy) {
+  console.log(deploy)
+})
+</code></pre>
+<p>Create a draft deploy (wont get published after processing):</p>
+<pre><code class="language-js">site.createDeploy({dir: &quot;/path/to/folder&quot;, draft: true}, function(err, deploy) {
+  console.log(deploy);
+})
+</code></pre>
+<p>Publish a deploy (makes it the current live version of the site)</p>
+<pre><code class="language-js">site.deploy(id, function(err, deploy) {
+  if (err) return console.log(err);
+  deploy.publish(function(err, deploy) {
+    // restored
+  });
+});
+</code></pre>
+<h1>Snippets</h1>
+<p>Snippets are small code snippets injected into all HTML pages of a site right before the closing head or body tag. To get all snippets for a site:</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.snippets(function(err, snippets) {
+    if (err) return console.log(&quot;Error getting snippets %o&quot;, err);
+    // do work
+  });
+});
+</code></pre>
+<p>Get a specific snippet</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.snippet(snippetId, function(err, snippet) {
+    if (err) return console.log(&quot;Error getting snippet %o&quot;, err);
+    // do work
+  });
+});
+</code></pre>
+<p>Add a snippet to a site</p>
+<p>You can specify a <code>general</code> snippet that will be inserted into all pages, and a <code>goal</code> snippet that will be injected into a page following a successful form submission. Each snippet must have a title. You can optionally set the position of both the general and the goal snippet to <code>head</code> or <code>footer</code> to determine if it gets injected into the head tag or at the end of the page.</p>
+<pre><code class="language-js">client.site(id, function(err, site) {
+  if (err) return console.log(&quot;Error getting site %o&quot;, err);
+  site.createSnippet({
+    general: &quot;&lt;script&gt;alert('Hello')&lt;/script&gt;&quot;,
+    general_position: &quot;head&quot;,
+    goal: &quot;&lt;script&gt;alert('Success')&lt;/script&gt;&quot;,
+    goal_position: &quot;footer&quot;,
+    title: &quot;Alerts&quot;
+  }, function(err, snippet) {
+    if (err) return console.log(&quot;Error creating snippet %o&quot;, err);
+    console.log(snippet);
+  });
+});
+</code></pre>
+<p>Update a snippet</p>
+<pre><code class="language-js">snippet.update({
+  general: &quot;&lt;script&gt;alert('Hello')&lt;/script&gt;&quot;,
+  general_position: &quot;head&quot;,
+  goal: &quot;&lt;script&gt;alert('Success')&lt;/script&gt;&quot;,
+  goal_position: &quot;footer&quot;,
+  title: &quot;Alerts&quot;
+}, function(err, snippet) {
+  if (err) return console.log(&quot;Error creating snippet %o&quot;, err);
+  console.log(snippet);
+});
+</code></pre>
+<p>Delete a snippet</p>
+<pre><code class="language-js">snippet.destroy(function(err) {
+  if (err) return console.log(&quot;Error deleting snippet&quot;);
+  console.log(&quot;Snippet deleted&quot;);
+});
+</code></pre>
+<h1>Users</h1>
+<p>The user methods are mainly useful for resellers. Creating, deleting and updating users are limited to resellers.</p>
+<p>Getting a list of users</p>
+<pre><code class="language-js">client.users(function(err, users) {
+  // do work
+});
+</code></pre>
+<p>Getting a specific user</p>
+<pre><code class="language-js">client.user(id, function(err, user) {
+  // do work
+});
+</code></pre>
+<p>Creating a new user (<code>email</code> is required, <code>uid</code> is optional. Both must be unique)</p>
+<pre><code class="language-js">client.createUser({email: &quot;user@example.com&quot;, uid: &quot;12345&quot;}, function(err, user) {
+  if (err) return console(&quot;Error creating user&quot;);
+  console.log(user);
+});
+</code></pre>
+<p>Updating a user</p>
+<pre><code class="language-js">client.user(id, function(err, user) {
+  if (err) return console.log(&quot;Error getting user&quot;);
+  user.update({email: &quot;user@example.com&quot;, uid: &quot;12345&quot;}, function(err, user) {
+    if (err) return console(&quot;Error updating user&quot;);
+    console.log(user);
+  });
+});
+</code></pre>
+<p>Deleting a user</p>
+<pre><code class="language-js">client.user(id, function(err, user) {
+  if (err) return console.log(&quot;Error getting user&quot;);
+  user.destroy(function(err) {
+    if (err) return console(&quot;Error deleting&quot;);
+  });
+});
+</code></pre>
+<p>Getting sites belonging to a user</p>
+<pre><code class="language-js">client.user(id, function(err, user) {
+  if (err) return console.log(&quot;Error getting user&quot;);
+  user.sites(function(err, sites) {
+    if (err) return console(&quot;Error getting sites&quot;);
+    console.log(sites);
+  });
+});
+</code></pre>
+<h1>DNS</h1>
+<p>Resellers can create and manage DNS Zones through the Netlify API.</p>
+<p>Getting a list of DNS Zones:</p>
+<pre><code class="language-js">client.dnsZones(function(err, zones) {
+  console.log(zones);
+});
+</code></pre>
+<p>Getting a specific DNS zone:</p>
+<pre><code class="language-js">client.dnsZone(id, function(err, zone) {
+  console.log(zone);
+});
+</code></pre>
+<p>Creating a new zone</p>
+<pre><code class="language-js">client.createDnsZone({name: &quot;example.com&quot;}, function(err, zone) {
+  console.log(zone);
+});
+</code></pre>
+<p>Deleting a zone</p>
+<pre><code class="language-js">client.dnsZone(id, function(err, zone) {
+  if (err) return console.log(err);
+  zone.destroy(function(err) {
+    // Deleted
+  });
+});
+</code></pre>
+<p>Getting records for a zone</p>
+<pre><code class="language-js">zone.records(function(err, records) {
+  console.log(records);
+});
+</code></pre>
+<p>Getting a specific record</p>
+<pre><code class="language-js">zone.record(id, function(err, record) {
+  console.log(record);
+});
+</code></pre>
+<p>Adding a new record (supported types: A, CNAME, TXT, MX)</p>
+<pre><code class="language-js">zone.createRecord({
+  hostname: &quot;www&quot;,
+  type: &quot;CNAME&quot;,
+  value: &quot;netlify.com&quot;,
+  ttl: 3600
+}, function(err, record) {
+  console.log(record);
+});
+</code></pre>
+<p>Deleting a record</p>
+<pre><code class="language-js">record.destroy(function(err) {
+  // deleted
+});
+</code></pre>
+<h1>Access Tokens</h1>
+<p>Resellers can use the node client to create and revoke access tokens on behalf of their users. To use any of these methods your OAuth access token must belong to a reseller admin user.</p>
+<p>Creating an access token:</p>
+<pre><code class="language-js">client.createAccessToken({user: {email: &quot;test@example.com&quot;, uid: &quot;1234&quot;}}, function(err, accessToken) {
+  // accessToken.access_token
+});
+</code></pre>
+<p>The user must have either an email or a uid (or both) as a unique identifier. If the user doesn't exist, a new user will be created on the fly.</p>
+<p>Deleting an access token:</p>
+<pre><code class="language-js">client.accessToken(&quot;token-string&quot;, function(err, accessToken) {
+  accessToken.destroy(function(err) {
+    console.log(&quot;Access token revoked&quot;);
+  });
+});
+</code></pre>
+</section>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="js/twitter-widget.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-transition.min.js"></script>
+    <script src="js/bootstrap-scrollspy.min.js"></script>
+    <script src="js/bootstrap-dropdown.min.js"></script>
+    <script src="js/bootstrap-collapse.min.js"></script>
+    <script src="js/bootstrap-affix.min.js"></script>
+    <script src="js/prism.min.js"></script>
+    <script src="js/index.min.js"></script>
+  </body>
+</html>

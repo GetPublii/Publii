@@ -1,0 +1,69 @@
+{{> head}}
+    {{> top}}
+    <main>
+        {{#if @config.custom.textHero}}
+            <section class="hero">
+                <header>
+                    {{{@config.custom.textHero}}}
+                    <address>
+                        {{ translate 'frontpage.publishedBy' }}
+                        {{siteOwner.name}}
+                    </address>
+                    {{ translate 'frontpage.refreshed' }}
+                    <time datetime="{{date @website.lastUpdate 'YYYY-MM-DDTHH:mm'}}">
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                            {{date @website.lastUpdate @config.custom.formatDate}}
+                        {{else}}
+                            {{date @website.lastUpdate @config.custom.formatDateCustom}}
+                        {{/checkIf}}
+                    </time>
+                </header>
+            </section>
+        {{/if}}
+        <div class="category {{@config.custom.layoutFrontpage}}">
+            {{#each posts}}
+                <article>
+                    {{#featuredImage}}
+                        {{#if url}}
+                            <div class="card__image">
+                                {{#if @config.custom.lazyLoad}}
+                                    <a href="{{../url}}" class="card__image-link" style="padding-bottom: calc({{height}}/{{width}} * 100%)">
+										<img
+                                        class="lazyload blur-up"
+                                        src="{{urlXs}}"
+                                        data-srcset="{{srcset}}"
+                                        data-sizes="auto"
+                                        alt="{{alt}}"></a>
+                                {{else}}
+                                    <a href="{{../url}}" class="card__image-link" style="padding-bottom: calc({{height}}/{{width}} * 100%)">
+										<img src="{{url}}" sizes="{{sizes}}" srcset="{{srcset}}" alt="{{alt}}">
+								    </a>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                    {{/featuredImage}}
+                    <header class="card__header">
+                        <p>
+                            <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                {{/checkIf}}
+                            </time>
+                        </p>
+                        <h2>
+                            <a href="{{url}}" class="inverse">
+                                {{title}}
+                            </a>
+                        </h2>
+                    </header>
+                    {{#if excerpt}}
+                        <p>{{{excerpt}}}</p>
+                    {{/if}}
+                </article>
+            {{/each}}
+        </div>
+        {{> pagination}}
+    </main>
+    {{> footer}}

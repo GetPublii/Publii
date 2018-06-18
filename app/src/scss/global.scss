@@ -1,0 +1,195 @@
+/*
+ * Common HTML elements
+ */
+
+@import url('../assets/vendor/css/normalize.css');
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    outline: none;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    color: $color-5;
+    font: 400 1rem/1.5 $secondary-font;
+    -webkit-font-smoothing: antialiased;
+    line-height: $baseline;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+    transition: all .25s ease-out;
+
+    &:active,
+    &:focus,
+    &:hover {
+        color: $link-hover-color;
+    }
+
+    svg {
+        pointer-events: none;
+    }
+
+    &[disabled] {
+        pointer-events: none;
+    }
+}
+
+h1,
+h2 {
+    font-family: $secondary-font;
+}
+
+h1 {
+    color: $color-helper-7;
+    font-size: 2.2rem;
+    font-weight: 400;
+}
+
+h2 {
+    font-weight: 500;
+    color: $color-4;
+    text-transform: uppercase;
+    margin: 0 0 2rem;
+}
+
+p {
+    a {
+        color: $color-1;
+        text-decoration: none;
+        &:hover {
+            color: $color-4
+        }
+    }
+}
+
+b {
+    font-weight: 400;
+}
+
+table {
+    width: 100%;
+
+    td {
+        padding: 0 0 12 * $spacing;
+        vertical-align: top;
+    }
+}
+
+form p {
+    margin-bottom: 6 * $spacing;
+}
+
+
+
+/*
+ * Screens
+ */
+
+.screen {
+    background: $color-10;
+
+    &.screen-splashscreen {
+        -webkit-app-region: drag; // necessary for making window draggable
+        -webkit-user-select: none; // remove conflict with the text selection
+        height: 100vh;
+        width: 100vw;
+    }
+}
+
+/*
+ * States
+ */
+
+.is-hidden-dependency {
+    display: none;
+}
+
+.is-hidden {
+    display: none!important;
+}
+
+.is-validation-message,
+.is-required {
+    color: $color-3;
+}
+
+.is-rotating {
+    animation:spin 2s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+/*
+ * Custom scrollbars for the app
+ */
+
+::-webkit-scrollbar {
+    background: transparent;
+    overflow: visible;
+    width: 5px;
+}
+
+::-webkit-scrollbar:horizontal {
+    background: transparent;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: $color-8;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $color-6;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    border-width: 0;
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    border-width: 0;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+.use-wide-scrollbars {
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar:horizontal {
+        height: 12px;
+    }
+
+    .collection {
+        &:after {
+            right: 12px!important;
+        }
+    }
+}

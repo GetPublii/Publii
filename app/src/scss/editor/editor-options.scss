@@ -1,0 +1,367 @@
+/*
+ * Basic files
+ */
+
+@import '../mixins';
+@import '../variables';
+@import 'scrollbar';
+
+/*
+ * Reset
+ */
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: $primary-font;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+figure,
+form,
+fieldset,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+/*
+ * Main rules
+ */
+html {
+    font-size: 1rem;
+}
+
+html {
+    height: 100%;
+    overflow-y: auto!important;
+}
+
+@media screen and (min-width: 62rem) {
+    html {
+        font-size: calc(1rem + 0.1 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    html {
+        font-size: 1.1rem;
+    }
+}
+
+body#tinymce {
+    -webkit-font-smoothing: antialiased;
+    font-size: inherit;
+    line-height: 1.6;
+    padding: 1.8rem 1rem 0 1rem;
+    max-width: 40rem;
+
+    & > :nth-child(1) {
+        margin-top: 0;
+    }
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+    -webkit-transition: all 0.12s linear 0s;
+    transition: all 0.12s linear 0s;
+}
+
+a:hover {
+    color: $link-color;
+    text-decoration: underline;
+}
+
+a:active {
+    color: $link-color;
+}
+
+a:focus {
+    outline: none;
+}
+
+blockquote,
+p,
+ul,
+ol,
+dl,
+table,
+hr {
+    margin-top: 1.6rem;
+}
+
+figure {
+    margin-top: 2.4rem;
+    margin-bottom: 2.4rem;
+}
+
+figcaption {
+    clear: both;
+    color: $color-6;
+    font-style: italic;
+    font-size: 0.7rem;
+    margin: 0.8rem 0 0;
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $color-4;
+    font-weight: 600;
+    letter-spacing: -0.03rem;
+    line-height: 1.2;
+    margin-top: 3.2rem;
+}
+
+h1 {
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.60181rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h1 {
+        font-size: calc(1.60181rem + 0.67889 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h1 {
+        font-size: 2.2807rem;
+    }
+}
+
+h2 {
+    font-size: 1.42383rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h2 {
+        font-size: calc(1.42383rem + 0.17798 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h2 {
+        font-size: 1.60181rem;
+    }
+}
+
+h3 {
+    font-size: 1.26563rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h3 {
+        font-size: calc(1.26563rem + 0.1582 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h3 {
+        font-size: 1.42383rem;
+    }
+}
+
+h4 {
+    font-size: 1.125rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h4 {
+        font-size: calc(1.125rem + 0.14063 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h4 {
+        font-size: 1.26563rem;
+    }
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h5 {
+        font-size: calc(1rem + 0.125 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h5 {
+        font-size: 1.125rem;
+    }
+}
+
+h6 {
+    font-size: 0.88889rem;
+}
+
+@media screen and (min-width: 62rem) {
+    h6 {
+        font-size: calc(0.88889rem + 0.11111 * ((100vw - 62rem) / 47));
+    }
+}
+
+@media screen and (min-width: 109rem) {
+    h6 {
+        font-size: 1rem;
+    }
+}
+
+p {
+    margin-top: 1.6rem;
+}
+
+b,
+strong {
+    font-weight: 700;
+}
+
+blockquote {
+    border-left: 0.3rem solid $color-1;
+    font-style: italic;
+    padding: 0.8rem 0 0.8rem 1.86667rem;
+}
+
+blockquote cite {
+    color: $color-4;
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
+}
+
+blockquote cite:before {
+    content: "- ";
+}
+
+ul,
+ol {
+    margin-left: 2rem;
+}
+
+ul > li,
+ol > li {
+    list-style-position: outside;
+    padding-left: 0.4rem;
+}
+
+dl dt {
+    font-weight: 700;
+}
+
+pre {
+    margin: 1.6rem 0 0;
+    padding: 1.6rem 3.2rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+code,
+pre {
+    background-color: $color-9;
+    font-family: "Monaco", "Courier New", monospace;
+    font-size: 0.8rem;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    vertical-align: top;
+    text-align: left;
+    white-space: nowrap;
+}
+
+table th {
+    border-bottom: 2px solid $color-helper-8;
+    font-weight: 700;
+    padding: 0.8rem 1.33333rem;
+}
+
+table tr:nth-child(2n) {
+    background: $color-9;
+}
+
+table td {
+    padding: 0.8rem 1.33333rem;
+}
+
+hr#read-more {
+    border: none;
+    border-top: 3px solid $color-helper-8;
+    margin: 1.6rem 0;
+    position: relative;
+
+    &:after {
+        background: #fff;
+        color: $color-7;
+        content: "Read more";
+        font-size: 1rem;
+        left: 50%;
+        line-height: 1;
+        padding: 0 .5rem;
+        position: absolute;
+        top: -0.8rem;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+}
+
+/*
+ * Alignment
+ */
+
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-justify {
+    text-align: justify;
+}

@@ -1,0 +1,19 @@
+{{#unless level}}
+<nav>	
+{{/unless}}
+    <ul class="footer__nav">
+        {{#each items}}
+            <li class="footer__nav-item">
+            {{#if link}}
+            <a href="{{menuUrl}}" {{#if title}} title="{{title}}"{{/if}}>{{label}}</a>
+            {{else}}
+            <span{{#if title}} title="{{title}}"{{/if}}>{{label}}</span>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+{{#unless level}}
+</nav>
+{{/unless}}
+
+

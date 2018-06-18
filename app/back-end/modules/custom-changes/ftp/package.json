@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "ftp@^0.3.10",
+        "scope": null,
+        "escapedName": "ftp",
+        "name": "ftp",
+        "rawSpec": "^0.3.10",
+        "spec": ">=0.3.10 <0.4.0",
+        "type": "range"
+      },
+      "/Users/dziudek/Desktop/Publii/app"
+    ]
+  ],
+  "_from": "ftp@>=0.3.10 <0.4.0",
+  "_id": "ftp@0.3.10",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/ftp",
+  "_npmUser": {
+    "name": "mscdex",
+    "email": "mscdex@mscdex.net"
+  },
+  "_npmVersion": "1.4.28",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "ftp@^0.3.10",
+    "scope": null,
+    "escapedName": "ftp",
+    "name": "ftp",
+    "rawSpec": "^0.3.10",
+    "spec": ">=0.3.10 <0.4.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ftp/-/ftp-0.3.10.tgz",
+  "_shasum": "9197d861ad8142f3e63d5a83bfe4c59f7330885d",
+  "_shrinkwrap": null,
+  "_spec": "ftp@^0.3.10",
+  "_where": "/Users/dziudek/Desktop/Publii/app",
+  "author": {
+    "name": "Brian White",
+    "email": "mscdex@mscdex.net"
+  },
+  "bugs": {
+    "url": "https://github.com/mscdex/node-ftp/issues"
+  },
+  "dependencies": {
+    "readable-stream": "1.1.x",
+    "xregexp": "2.0.0"
+  },
+  "description": "An FTP client module for node.js",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "9197d861ad8142f3e63d5a83bfe4c59f7330885d",
+    "tarball": "https://registry.npmjs.org/ftp/-/ftp-0.3.10.tgz"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "homepage": "https://github.com/mscdex/node-ftp",
+  "keywords": [
+    "ftp",
+    "client",
+    "transfer"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/mscdex/node-ftp/raw/master/LICENSE"
+    }
+  ],
+  "main": "./lib/connection",
+  "maintainers": [
+    {
+      "name": "mscdex",
+      "email": "mscdex@mscdex.net"
+    }
+  ],
+  "name": "ftp",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mscdex/node-ftp.git"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "version": "0.3.10"
+}

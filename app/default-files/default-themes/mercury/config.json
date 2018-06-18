@@ -1,0 +1,1204 @@
+{
+    "name": "Mercury",
+    "version": "1.6.7.2",
+    "author": "TidyCustoms <https://tidycustoms.net/>",
+    "menus": {
+        "mainMenu": "Main menu"
+    },
+    "renderer": {
+        "relatedPostsNumber": 3,
+        "renderRelatedPosts": true,
+        "renderSimilarPosts": false,
+        "renderPrevNextPosts": true,
+        "createContentStructure": false,
+        "createSearchPage": true,
+        "create404page": true,
+        "customHTML": {
+            "beforePost": "Before every post",
+            "afterPost": "After every post"
+        }
+    },
+    "config": [
+
+        {
+            "name": "postsPerPage",
+            "label": "Posts per page",
+            "value": 11,
+            "type": "number"
+        },
+        {
+            "name": "tagsPostsPerPage",
+            "label": "Tags posts per page",
+            "value": 11,
+            "type": "number"
+        },
+        {
+            "name": "authorsPostsPerPage",
+            "label": "Authors posts per page",
+            "value": 11,
+            "type": "number"
+        },
+        {
+            "name": "excerptLength",
+            "label": "Excerpt length",
+            "value": 12,
+            "type": "number"
+        },
+        {
+            "name": "logo",
+            "label": "Website logo",
+            "value": "",
+            "type": "upload",
+            "upload": true
+        }
+    ],
+    "customConfig": [
+        {
+            "name": "pageWidth",
+            "label": "Page width",
+            "group": "Layout",
+            "note": "Use of REM units recommended; for full-screen set to 100%",
+            "value": "66rem",
+            "type": "text"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "gridType",
+            "label": "Grid type",
+            "group": "Layout",
+            "value": "masonry",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Grid",
+                    "value": "fitRows"
+                },
+                {
+                    "label": "Masonry",
+                    "value": "masonry"
+                }
+            ]
+        },
+        {
+            "name": "cardsHeight",
+            "label": "Image card height",
+            "group": "Layout",
+            "value": "300px",
+            "type": "text",
+            "dependencies": [{
+                "field": "gridType",
+                "value": "fitRows"
+            }]
+        },
+        {
+            "name": "gridTransition",
+            "label": "Grid items transition",
+            "group": "Layout",
+            "value": "0.6",
+            "type": "range",
+            "note": "Duration of the transition when items change position, \"0\" = no transitions ",
+            "min": 0,
+            "max": 1,
+            "step": 0.1
+        },
+        {
+            "name": "gridGutter",
+            "label": "Grid Gutter",
+            "group": "Layout",
+            "value": "0.5",
+            "type": "range",
+            "min": 0,
+            "max": 10,
+            "step": 0.5
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "layoutFrontpage",
+            "label": "Frontpage layout",
+            "group": "Layout",
+            "value": "--3",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "--1"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "--2"
+
+                },
+                {
+                    "label": "3 columns",
+                    "value": "--3"
+                },
+                {
+                    "label": "4 columns",
+                    "value": "--4"
+                }]
+        },
+        {
+            "name": "layoutTags",
+            "label": "Tags page layout",
+            "group": "Layout",
+            "value": "--3",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "--1"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "--2"
+
+                },
+                {
+                    "label": "3 columns",
+                    "value": "--3"
+                },
+                {
+                    "label": "4 columns",
+                    "value": "--4"
+                }]
+        },
+        {
+            "name": "layoutAuthor",
+            "label": "Author page layout",
+            "group": "Layout",
+            "value": "--3",
+            "type": "select",
+            "options": [
+                {
+                    "label": "1 column",
+                    "value": "--1"
+
+                },
+                {
+                    "label": "2 columns",
+                    "value": "--2"
+
+                },
+                {
+                    "label": "3 columns",
+                    "value": "--3"
+                },
+                {
+                    "label": "4 columns",
+                    "value": "--4"
+                }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Front page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "filters",
+            "group": "Layout",
+            "label": "Enable filters",
+            "note": "Filter Items on the Front page",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "filtersLabel",
+            "label": "Label",
+            "group": "Layout",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "filters",
+                "value": true
+            }]
+        },
+        {
+            "name": "filtersAllPhrase",
+            "label": "Phrase for 'All'",
+            "group": "Layout",
+            "value": "All",
+            "type": "text",
+            "dependencies": [{
+                "field": "filters",
+                "value": true
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Post page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "featuredImageWidth",
+            "label": "Featured Image width",
+            "group": "Layout",
+            "value": "post__image--wide",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Normal",
+                    "value": "post__image--normal"
+
+                },
+                {
+                    "label": "Wide",
+                    "value": "post__image--wide"
+
+                },
+                {
+                    "label": "Full",
+                    "value": "post__image--full"
+                }]
+        },
+
+        {
+            "name": "primaryColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#ff80ab",
+            "type": "colorpicker"
+        },
+        {
+            "name": "secondaryColor",
+            "label": "Secondary color",
+            "group": "Colors",
+            "value": "#111111",
+            "type": "colorpicker"
+        },
+        {
+            "name": "headingColor",
+            "label": "Heading color",
+            "group": "Colors",
+            "value": "#111111",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#111111",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkColor",
+            "label": "Link color",
+            "group": "Colors",
+            "value": "#ff80ab",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColor",
+            "label": "Link hover color",
+            "group": "Colors",
+            "value": "#111111",
+            "type": "colorpicker"
+        },
+
+        {
+            "name": "minFontSize",
+            "label": "Minimum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "maxFontSize",
+            "label": "Maximum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.2",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "linkColorMenu",
+            "label": "Menu link color",
+            "group": "Menu",
+            "value": "#111111",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColorMenu",
+            "label": "Menu link hover color",
+            "group": "Menu",
+            "value": "#ff80ab",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Menu",
+            "size": "small"
+        },
+        {
+            "name": "submenu",
+            "label": "Submenu width",
+            "group": "Menu",
+            "value": "auto",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Auto",
+                    "value": "auto"
+
+                },
+                {
+                    "label": "Custom",
+                    "value": "custom"
+
+                }
+            ]
+        },
+        {
+            "name": "submenuWidth",
+            "group": "Menu",
+            "note": "The submenu width in REM unit",
+            "label": "",
+            "value": "15",
+            "type": "range",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "dependencies": [{
+                "field": "submenu",
+                "value": "custom"
+            }]
+        },
+
+        {
+            "name": "search",
+            "label": "Search",
+            "group": "Search",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "searchId",
+            "group": "Search",
+            "label": "Google Custom Search Id",
+            "note": "A search ID is required for search functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "searchParam",
+            "group": "Search",
+            "label": "Search parameter",
+            "note": "You can change the default \"q\" search parameter if desired; this is recommended only for advanced users.",
+            "value": "q",
+            "type": "text",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "textHero",
+            "label": "Hero text",
+            "group": "Hero section",
+            "value": "<p>Your photography stories</p><h1> Capturing life with natural light <i>photography</i></h1>",
+            "type": "wysiwyg"
+        },
+
+        {
+            "name": "cardsLayout",
+            "label": "Cards layout",
+            "group": "Cards section",
+            "value": "",
+            "type": "select",
+            "options": [
+                {
+                    "label": "default",
+                    "value": ""
+
+                },
+                {
+                    "label": "compact",
+                    "value": "true"
+
+                }]
+        },
+        {
+            "name": "cardsImgScale",
+            "label": "Image zoom effect",
+            "group": "Cards section",
+            "value": "1.3",
+            "type": "range",
+            "min": 1,
+            "max": 10,
+            "step": 0.1
+        },
+
+        {
+            "name": "shareFacebook",
+            "group": "Share Buttons",
+            "label": "Facebook share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareTwitter",
+            "group": "Share Buttons",
+            "label": "Twitter share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareTwitterName",
+            "group": "Share Buttons",
+            "note": "Enter your Twitter account's handle here; it will be used when the Twitter share button is clicked on your site e.g. 'via @TwitterHandle'. If left blank, the default username of @SiteName will be used",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "shareTwitter",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "shareGoogleplus",
+            "group": "Share Buttons",
+            "label": "Google+ share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "sharePinterest",
+            "group": "Share Buttons",
+            "label": "Pinterest share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareStumbleupon",
+            "group": "Share Buttons",
+            "label": "StumbleUpon share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareLinkedin",
+            "group": "Share Buttons",
+            "label": "LinkedIn share button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareBuffer",
+            "group": "Share Buttons",
+            "label": "Buffer share button",
+            "value": true,
+            "type": "checkbox"
+        },
+
+        {
+            "name": "commentDisqusShortname",
+            "label": "Disqus shortname",
+            "group": "Comments",
+            "placeholder": "Please enter your Disqus shortname",
+            "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post View tab.</span>",
+            "value": "",
+            "type": "text"
+        },
+
+        {
+            "name": "copyrightText",
+            "label": "Copyright text",
+            "group": "Footer",
+            "value": "Powered by Publii",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "socialButtons",
+            "group": "Footer",
+            "label": "Follow Buttons",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "socialFacebook",
+            "label": "Facebook",
+            "group": "Footer",
+            "placeholder": "Please enter your Facebook URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialTwitter",
+            "label": "Twitter",
+            "group": "Footer",
+            "placeholder": "Please enter your Twitter URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialGoogleplus",
+            "label": "Google+",
+            "group": "Footer",
+            "placeholder": "Please enter your Google+ URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialInstagram",
+            "label": "Instagram",
+            "group": "Footer",
+            "placeholder": "Please enter your Instagram URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialLinkedin",
+            "label": "LinkedIn",
+            "group": "Footer",
+            "placeholder": "Please enter your LinkedIn URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialVimeo",
+            "label": "Vimeo",
+            "group": "Footer",
+            "placeholder": "Please enter your Vimeo URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialPinterest",
+            "label": "Pinterest",
+            "group": "Footer",
+            "placeholder": "Please enter your Pinterest URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "socialYoutube",
+            "label": "Youtube",
+            "group": "Footer",
+            "placeholder": "Please enter your Youtube URL",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "socialButtons",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "galleryItemGap",
+            "label": "Item spacing",
+            "group": "Gallery",
+            "note": "Use of REM units recommended but you can also use others (px, vw,)",
+            "value": "0.5rem",
+            "type": "text"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Gallery",
+            "size": "smaller"
+         },
+        {
+            "name": "galleryLightboxStyle",
+            "label": "Lightbox style",
+            "group": "Gallery",
+            "note": "Set the lightbox slideshow style by choosing dark or light overlay",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Dark",
+                    "value": "pswp--dark"
+                },
+                {
+                    "label": "Light",
+                    "value": "pswp--light"
+                }
+            ]
+        },
+        {
+            "name": "galleryLightboxOpacity",
+            "label": "",
+            "group": "Gallery",
+            "note": "Adjust the lightbox overlay transparency",
+            "value": "0.7",
+            "type": "range",
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Gallery",
+            "size": "smaller"
+         },
+        {
+            "name": "galleryAdvanced",
+            "label": "Advanced lightbox settings",
+            "group": "Gallery",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "galleryCounter",
+            "label": "Current slide / total number",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryZoom",
+            "label": "Zoom in/out button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryFullscreen",
+            "label": "Toggle fullscreen button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryShare",
+            "label": "Share button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryClose",
+            "label": "Close button",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryArrows",
+            "label": "Next / Previous arrows",
+            "group": "Gallery",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryPreloader",
+            "label": "Preloader",
+            "group": "Gallery",
+            "note": "Loading indicator is displayed with 1s delay, so if the photo loads faster it will be invisible.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryCloseOnScroll",
+            "label": "Close gallery on page scroll",
+            "group": "Gallery",
+            "note": "Option works just for devices without hardware touch support.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "galleryArrowKeys",
+            "label": "Keyboard navigation",
+            "group": "Gallery",
+            "note": "Keyboard left or right arrow key navigation.",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "galleryAdvanced",
+                "value": "true"
+            }]
+        },
+
+        {
+            "name": "formatDate",
+            "label": "Date format",
+            "group": "Additional",
+            "value": "MMMM D, YYYY",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Nov 1, 2016",
+                    "value": "MMM D, YYYY"
+
+                },
+                {
+                    "label": "1 Nov 2016",
+                    "value": "D MMM YYYY"
+
+                },
+                {
+                    "label": "November 1, 2016",
+                    "value": "MMMM D, YYYY"
+                },
+                {
+                    "label": "1 November 2016",
+                    "value": "D MMMM YYYY"
+                },
+                {
+                    "label": "Sunday, November 1, 2016",
+                    "value": "dddd, MMMM D, YYYY"
+                },
+                {
+                    "label": "Sunday, 1 November 2016",
+                    "value": "dddd, D MMMM YYYY"
+                },
+                {
+                    "label": "November 1, 2016 10:02:05",
+                    "value": "MMMM D, YYYY HH:mm:ss"
+
+                },
+                {
+                    "label": "1 November 2016 10:02:05",
+                    "value": "D MMMM YYYY HH:mm:ss"
+
+                },
+                {
+                    "label": "01/21/2016",
+                    "value": "MM/DD/YYYY"
+                },
+                {
+                    "label": "21/01/2016",
+                    "value": "DD/MM/YYYY"
+                },
+                {
+                    "label": "Custom - create your own date format",
+                    "value": "custom"
+                }
+            ]
+        },
+        {
+            "name": "formatDateCustom",
+            "group": "Additional",
+            "label": "",
+            "note": "More details you can find <a href='https://github.com/taylorhakes/fecha' target='_blank'>here.</a>",
+            "value": "HH:mm:ss YY/MM/DD",
+            "type": "text",
+            "dependencies": [{
+                "field": "formatDate",
+                "value": "custom"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Additional",
+            "size": "small"
+         },
+        {
+            "name": "lazyLoad",
+            "group": "Additional",
+            "label": "Lazy Load",
+            "note": "The SEO-friendly high-performance lazy loader improves load times by deferring downloading of images until after the initial page load is complete.",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Additional",
+            "size": "small"
+         },
+        {
+            "name": "faviconUpload",
+            "label": "Upload favicon file",
+            "group": "Additional",
+            "note": "The ideal size of a favicon is 16x16 pixels. Save your favicon as either favicon.png or favicon.ico",
+            "value": "",
+            "type": "smallupload",
+            "upload": true
+        },
+        {
+            "name": "faviconExtension",
+            "label": "Favicon extension",
+            "group": "Additional",
+            "value": "image/x-icon",
+            "type": "select",
+            "options": [
+                {
+                    "label": ".ico",
+                    "value": "image/x-icon"
+                },
+                {
+                    "label": ".png",
+                    "value": "image/png"
+                }]
+        }
+
+    ],
+    "postConfig": [
+        {
+            "name": "displayAuthor",
+            "label": "Display author name",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayDate",
+            "label": "Display date",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayLastUpdatedDate",
+            "label": "Display last updated date",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayTags",
+            "label": "Display tags",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayShareButtons",
+            "label": "Display share buttons",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostNavigation",
+            "label": "Display post navigation",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayAuthorBio",
+            "label": "Display author bio",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayRelatedPosts",
+            "label": "Display related posts",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayComments",
+            "label": "Display comments",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        }
+    ],
+    "files": {
+        "ignoreAssets": ["scss", ".DS_Store"],
+        "assetsPath": "assets",
+        "partialsPath": "partials",
+        "responsiveImages": {
+            "contentImages": {
+                "sizes": "(max-width: 1024px) 100vw, 1024px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    }
+                }
+            },
+            "featuredImages": {
+                "sizes": {
+                    "cards": "(min-width: 75em) 25vw, (min-width: 56.25em) 33vw, (min-width: 37.5em) 50vw, 100vw",
+                    "post": "(max-width: 1600px) 100vw, 1600px",
+                    "amp": "(max-width: 768px) 100vw, 768px"
+                },
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto",
+                        "group": "post,cards,amp"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto",
+                        "group": "post,cards,amp"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto",
+                        "group": "post,cards,amp"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto",
+                        "group": "post,cards"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto",
+                        "group": "post,cards"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto",
+                        "group": "post,cards"
+                    },
+                    "sm2": {
+                        "width": 375,
+                        "height": "auto",
+                        "group": "post,cards"
+                    }
+                }
+            },
+
+            "optionImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": 255,
+                        "crop": true
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
+                    }
+                }
+            },
+
+            "galleryImages": {
+                "sizes": "",
+                "dimensions": {
+                    "thumbnail": {
+                        "width": 240,
+                        "height": 240,
+                        "crop": true
+                    }
+                }
+            }
+        }
+    },
+    "customElements": [
+        {
+            "label": "Info",
+            "cssClasses": "msg msg--info",
+            "selector": "p"
+        },
+        {
+            "label": "Highlight",
+            "cssClasses": "msg msg--highlight ",
+            "selector": "p"
+        },
+        {
+            "label": "Success",
+            "cssClasses": "msg msg--success",
+            "selector": "p"
+        },
+        {
+            "label": "Drop cap",
+            "cssClasses": "dropcap",
+            "selector": "p"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{{#unless level}}
+<nav class="navbar js-navbar">
+	<button class="navbar__toggle js-navbar__toggle">{{ translate 'partials.menu.label' }}</button>
+{{/unless}}
+    <ul{{#if level}} class="navbar__submenu" {{else}} class="navbar__menu"{{/if}}>
+        {{#each items}}
+            <li{{menuItemClasses}}>
+            {{#if link}}
+            <a href="{{menuUrl}}"{{#if title}} title="{{title}}"{{/if}}>{{label}}</a>
+            {{else}}
+            <span{{#if title}} title="{{title}}"{{/if}}>{{label}}</span>
+            {{/if}}
+
+            {{#if items}}
+                {{> menu}}
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+{{#unless level}}
+</nav>
+{{/unless}}

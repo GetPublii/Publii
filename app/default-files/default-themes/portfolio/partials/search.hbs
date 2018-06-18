@@ -1,0 +1,10 @@
+{{#if @config.custom.search}}
+    <div class="top__search">
+        <form action="{{@website.searchUrl}}" class="search">
+            <input
+                type="search"
+                name="{{@config.custom.searchParam}}"
+                placeholder="{{ translate 'search.placeholder' }}"/>
+        </form>
+    </div>
+{{/if}}

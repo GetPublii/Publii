@@ -1,0 +1,93 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "netlify",
+        "scope": null,
+        "escapedName": "netlify",
+        "name": "netlify",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/dziudek/Desktop/Publii/app"
+    ]
+  ],
+  "_from": "netlify@latest",
+  "_id": "netlify@1.2.0",
+  "_inCache": true,
+  "_location": "/netlify",
+  "_nodeVersion": "5.12.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/netlify-1.2.0.tgz_1476908581973_0.8832810819149017"
+  },
+  "_npmUser": {
+    "name": "biilmann",
+    "email": "info@mathias-biilmann.net"
+  },
+  "_npmVersion": "3.8.6",
+  "_phantomChildren": {
+    "natives": "1.1.0"
+  },
+  "_requested": {
+    "raw": "netlify",
+    "scope": null,
+    "escapedName": "netlify",
+    "name": "netlify",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/netlify/-/netlify-1.2.0.tgz",
+  "_shasum": "ebf89b94b01b478d539630174decb496c2bbe315",
+  "_shrinkwrap": null,
+  "_spec": "netlify",
+  "_where": "/Users/dziudek/Desktop/Publii/app",
+  "author": {
+    "name": "Netlify"
+  },
+  "bugs": {
+    "url": "https://github.com/netlify/node-client/issues"
+  },
+  "dependencies": {
+    "base64-js": ">=0.0.4",
+    "glob": ">=3.2.6",
+    "graceful-fs": "^3.0.4",
+    "semaphore": "^1.0.5",
+    "when": "^3.7.5"
+  },
+  "description": "Netlify API client",
+  "devDependencies": {
+    "browserify": ">=2.34.3",
+    "jasmine-node": ">=1.11.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "ebf89b94b01b478d539630174decb496c2bbe315",
+    "tarball": "https://registry.npmjs.org/netlify/-/netlify-1.2.0.tgz"
+  },
+  "gitHead": "596a194c0fba9ab8e1942ccd954190c9f7fa30df",
+  "homepage": "https://github.com/netlify/node-client",
+  "main": "lib/netlify.js",
+  "maintainers": [
+    {
+      "name": "biilmann",
+      "email": "info@mathias-biilmann.net"
+    }
+  ],
+  "name": "netlify",
+  "optionalDependencies": {},
+  "readme": "Netlify Node Client\n======================\n\nNetlify is a hosting service for the programmable web. It understands your documents, processes forms and lets you do deploys, manage forms submissions, inject javascript snippets into sites and do intelligent updates of HTML documents through it's API.\n\nInstallation\n============\n\nInstall by running\n\n    npm install netlify\n\n\nAuthenticating\n==============\n\nRegister a new application at https://app.netlify.com/applications to get your Oauth2 secret and key.\n\nOnce you have your credentials you can instantiate a Netlify client.\n\n```js\nvar netlify = require(\"netlify\"),\n    client     = netlify.createClient(options);\n```\n\nTypically you'll have an `access_token` stored that you want to instantiate the client with:\n\n```\nvar client = netlify.createClient({access_token: \"my-access-token\"});\n```\n\nA client need an access token before it can make requests to the Netlify API. Oauth2 gives you two ways to get an access token:\n\n1. **Authorize from credentials**: Authenticate directly with your API credentials.\n2. **Authorize from a URL**: send a user to a URL, where she can grant your access API access on her behalf.\n\nThe first method is the simplest, and works when you don't need to authenticate on behalf of some other user:\n\n```js\nvar client = netlify.createClient({client_id: CLIENT_ID, client_secret: CLIENT_SECRET});\n\nclient.authorizeFromCredentials().then(function(access_token) {\n  // Client is now ready to do requests\n  // You can store the access_token to avoid authorizing in the future\n});\n\n```\nTo authorize on behalf of a user, you first need to send the user to a Netlify url where she'll be asked to grant your application permission. Once the user has visited that URL, she'll be redirected back to a redirect URI you specify (this must match the redirect URI on file for your Application). When the user returns to your app, you'll be able to access a `code` query parameter, that you can use to obtain the final `access_token`\n\n```js\nvar client = netlify.createClient({\n  client_id: CLIENT_ID,\n  client_secret: CLIENT_SECRET,\n  redirect_uri: \"http://www.example.com/callback\"\n});\n\nvar url = client.authorizeUrl();\n\n// Send the client to the url, they will be redirected back to the redirect_uri\n// Once they are back at your url, grab the code query param and use it to authorize\n\nclient.authorizeFromCode(params.code).then(function(access_token) {\n  // Client is now ready to do requests\n  // You can store the access_token to avoid authorizing in the future  \n});\n```\n\nDeploy a new version of a site\n==============================\n\nIf you're just going to deploy a new version of a site from a script, the module exports a simple deploy method that will handle this:\n\n```js\nvar netlify = require(\"netlify\");\n\nnetlify.deploy({access_token: \"some-token\", site_id: \"some-site\", dir: \"/path/to/site\"}).then(function(deploy) {\n  console.log(\"New deploy is live\");\n});\n```\n\nSites\n=====\n\nGetting a list of all sites you have access to:\n\n```js\nclient.sites().then(function(sites) {\n  // do work\n});\n```\n\nGetting a specific site by id:\n\n```js\nclient.site(id).then(function(site) {\n  // do work\n})\n```\n\nCreating a new empty site:\n\n```js\nclient.createSite({\n  name: \"my-unique-site-name\",\n  domain: \"example.com\",\n  password: \"secret\"\n}).then(function(site) {\n  console.log(site);\n})\n```\n\nTo deploy a site from a dir and wait for the processing of the site to finish:\n\n```js\nclient.createSite({}).then(function(site) {\n  site.createDeploy({dir: \"/tmp/my-site\"}).then(function(deploy) {\n    deploy.waitForReady().then(function() {\n      console.log(\"Deploy is done: \", deploy);\n    });\n  });\n});\n```\n\nCreating a new deploy for a site from a zip file:\n\n```ruby\nclient.site(id).then(function(site) {\n  site.createDeploy({zip: \"/tmp/my-site.zip\"}).then(function(deploy) {\n    deploy.waitForReady().then(function() {\n      console.log(\"Site redeployed\");\n    });\n  });\n});\n```\n\nUpdate the name of the site (its subdomain), the custom domain and the notification email for form submissions:\n\n```js\nsite.update({name: \"my-site\", customDomain: \"www.example.com\", notificationEmail: \"me@example.com\", password: \"secret\"}).then(function(site) {\n  console.log(\"Updated site\");\n});\n```\n\nDeleting a site:\n\n```js\nsite.destroy().then(function() {\n  console.log(\"Site deleted\");\n});\n```\n\nPagination and Rate Limits\n==========================\n\nAny collection returned by the client will have a meta attribute that lets you check pagination and rate limit values:\n\n```js\nclient.sites().then(function(sites) {\n  // Pagination has first, next, prev and last\n  console.log(sites.meta.pagination);\n  // Rate has the rate limit, remaining requests and the unix timestamp when the limit will reset\n  console.log(sites.meta.rate);\n});\n```\n\nYou can use `page` and `per_page` as options to any of the paginatied collection methods:\n\n```js\nclient.sites({page: 2, per_page: 10}).then(function(sites) {\n  console.log(\"Page 2: \", sites);\n});\n```\n\nForms\n=====\n\nAccess all forms you have access to:\n\n```js\nclient.forms().then(function(forms) {\n  // do work\n})\n```\n\nAccess forms for a specific site:\n\n```js\nclient.site(id).then(function(site) {\n  site.forms().then(function(forms) {\n    // do work\n  });\n});\n```\n\nAccess a specific form:\n\n```js\nclient.form(id).then(function(form) {\n  // do work\n});\n```\n\nAccess a list of all form submissions you have access to:\n\n```js\nclient.submissions().then(function(submissions) {\n  // do work\n});\n```\n\nAccess submissions from a specific site:\n\n```js\nclient.site(id).then(function(site) {\n  site.submissions().then(function(submissions) {\n    // do work\n  });\n});\n```\n\nAccess submissions from a specific form:\n\n```js\nclient.form(id).then(function(form) {\n  form.submissions().then(function(submissions) {\n    // do work\n  });\n});\n```\n\nGet a specific submission:\n\n```js\nclient.submission(id).then(function(submission) {\n  // do work\n})\n```\n\nFiles\n=====\n\nAccess all files in a site:\n\n```js\nclient.site(id).then(function(site) {\n  site.files().then(function(files) {\n    // do work\n  });\n});\n```\n\nGet a specific file:\n\n```js\nclient.site(id).then(function(site) {\n  site.file(path).then(function(file) {\n    // do work\n  });\n});\n```\n\nDeploys\n=======\n\nAccess all deploys for a site:\n\n```js\nsite.deploys().then(function(deploys) {\n  // do work\n});\n```\n\nAccess a specific deploy:\n\n```js\nsite.deploy(id).then(function(deploy) {\n  // do work\n});\n```\n\nCreate a new deploy:\n\n```js\nsite.createDeploy({dir: \"/path/to/folder\"}).then(function(deploy) {\n  console.log(deploy)\n})\n```\n\nCreate a draft deploy (wont get published after processing):\n\n```js\nsite.createDeploy({dir: \"/path/to/folder\", draft: true}).then(function(deploy) {\n  console.log(deploy);\n})\n```\n\nPublish a deploy (makes it the current live version of the site):\n\n```js\nsite.deploy(id).then(function(deploy) {\n  deploy.publish().then(function(deploy) {\n    // restored\n  });\n});\n```\n\n\nSnippets\n========\n\nSnippets are small code snippets injected into all HTML pages of a site right before the closing head or body tag. To get all snippets for a site:\n\n```js\nclient.site(id).then(function(site) {\n  site.snippets().then(function(snippets) {\n    // do work\n  });\n});\n```\n\nGet a specific snippet:\n\n```js\nclient.site(id).then(function(site) {\n  site.snippet(snippetId).then(function(snippet) {\n    // do work\n  });\n});\n```\n\nAdd a snippet to a site\n\nYou can specify a `general` snippet that will be inserted into all pages, and a `goal` snippet that will be injected into a page following a successful form submission. Each snippet must have a title. You can optionally set the position of both the general and the goal snippet to `head` or `footer` to determine if it gets injected into the head tag or at the end of the page.\n\n```js\nclient.site(id).then(function(site) {\n  site.createSnippet({\n    general: \"<script>alert('Hello')</script>\",\n    general_position: \"head\",\n    goal: \"<script>alert('Success')</script>\",\n    goal_position: \"footer\",\n    title: \"Alerts\"\n  }).then(function(snippet) {\n    console.log(snippet);\n  });\n});\n```\n\nUpdate a snippet:\n\n```js\nsnippet.update({\n  general: \"<script>alert('Hello')</script>\",\n  general_position: \"head\",\n  goal: \"<script>alert('Success')</script>\",\n  goal_position: \"footer\",\n  title: \"Alerts\"\n}).then(function(snippet) {\n  console.log(snippet);\n});\n```\n\nDelete a snippet:\n\n```js\nsnippet.destroy().then(function() {\n  console.log(\"Snippet deleted\");\n});\n```\n\nUsers\n=====\n\nThe user methods are mainly useful for resellers. Creating, deleting and updating users are limited to resellers.\n\nGetting a list of users:\n\n```js\nclient.users().then(function(users) {\n  // do work\n});\n```\n\nGetting a specific user:\n\n```js\nclient.user(id).then(function(user) {\n  // do work\n});\n```\n\nCreating a new user (`email` is required, `uid` is optional. Both must be unique):\n\n```js\nclient.createUser({email: \"user@example.com\", uid: \"12345\"}).then(function(user) {\n  console.log(user);\n});\n```\n\nUpdating a user:\n\n```js\nclient.user(id).then(function(user) {\n  user.update({email: \"user@example.com\", uid: \"12345\"}).then(function(user) {\n    console.log(user);\n  });\n});\n```\n\nDeleting a user:\n\n```js\nclient.user(id).then(function(user) {\n  user.destroy().then(function() {\n    console.log(\"User deleted\");\n  });\n});\n```\n\nGetting sites belonging to a user:\n\n```js\nclient.user(id).then(function(user) {\n  user.sites().then(function(sites) {\n    console.log(sites);\n  });\n});\n```\n\nDNS\n===\n\nResellers can create and manage DNS Zones through the Netlify API.\n\nGetting a list of DNS Zones:\n\n```js\nclient.dnsZones().then(function(zones) {\n  console.log(zones);\n});\n```\n\nGetting a specific DNS zone:\n\n```js\nclient.dnsZone(id).then(function(zone) {\n  console.log(zone);\n});\n```\n\nCreating a new zone:\n\n```js\nclient.createDnsZone({name: \"example.com\"}).then(function(zone) {\n  console.log(zone);\n});\n```\n\nDeleting a zone:\n\n```js\nclient.dnsZone(id).then(function(zone) {\n  zone.destroy().then(function() {\n    // Deleted\n  });\n});\n```\n\nGetting records for a zone:\n\n```js\nzone.records().then(function(records) {\n  console.log(records);\n});\n```\n\nGetting a specific record:\n\n```js\nzone.record(id).then(function(record) {\n  console.log(record);\n});\n```\n\nAdding a new record (supported types: A, CNAME, TXT, MX):\n\n```js\nzone.createRecord({\n  hostname: \"www\",\n  type: \"CNAME\",\n  value: \"netlify.com\",\n  ttl: 3600\n}).then(function(record) {\n  console.log(record);\n});\n```\n\nDeleting a record:\n\n```js\nrecord.destroy().then(function() {\n  // deleted\n});\n```\n\nAccess Tokens\n=============\n\nResellers can use the node client to create and revoke access tokens on behalf of their users. To use any of these methods your OAuth access token must belong to a reseller admin user.\n\nCreating an access token:\n\n```js\nclient.createAccessToken({user: {email: \"test@example.com\", uid: \"1234\"}}).then(function(accessToken) {\n  // accessToken.access_token\n});\n```\n\nThe user must have either an email or a uid (or both) as a unique identifier. If the user doesn't exist, a new user will be created on the fly.\n\nDeleting an access token:\n\n```js\nclient.accessToken(\"token-string\").then(function(accessToken) {\n  accessToken.destroy().then(function() {\n    console.log(\"Access token revoked\");\n  });\n});\n```\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netlify/node-client.git"
+  },
+  "scripts": {},
+  "version": "1.2.0"
+}
