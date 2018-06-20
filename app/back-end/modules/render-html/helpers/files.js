@@ -45,28 +45,32 @@ class Files {
         let overridesPath = path.join(themeDir.replace(/[\\\/]{1,1}$/, '') + '-override', themeConfig.files.assetsPath);
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath);
 
-        // Load list of directories and files in the theme assets directory
-        let filesAndDirs = fs.readdirSync(assetsPath);
-
-        // Exclude directories and files which are on the ignore list
-        filesAndDirs = filesAndDirs.filter(item => {
-            return themeConfig.files.ignoreAssets.indexOf(item) === -1;
-        });
-
         // Create the assets directory
         fs.mkdirSync(outputPath);
 
-        // Copy each directory and file from the list
-        for(let i = 0; i < filesAndDirs.length; i++) {
-            if(filesAndDirs[i] === '.' || filesAndDirs[i] === '..') {
-                continue;
-            }
+        // Copy each directory and file from the assets catalog
+        list([assetsPath], {
+            recurse: true,
+            flatten: true
+        }).then(files => {
+            files.filter(item => {
+                let filename = path.parse(item.path).base;
+                return themeConfig.files.ignoreAssets.indexOf(filename) === -1
+            }).forEach(item => {
+                if(item.mode.dir === false) {
+                    let filePath = normalizePath(item.path);
+                    let destinationPath = filePath.replace(
+                        normalizePath(assetsPath),
+                        normalizePath(outputPath)
+                    );
 
-            fs.copySync(
-                path.join(assetsPath, filesAndDirs[i]),
-                path.join(outputPath, filesAndDirs[i])
-            );
-        }
+                    fs.copySync(
+                        filePath,
+                        destinationPath
+                    );
+                }
+            });
+        });
 
         // Check for overrided asset files
         if(UtilsHelper.dirExists(overridesPath)) {
