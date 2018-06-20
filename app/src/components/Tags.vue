@@ -61,7 +61,8 @@
                 <collection-cell width="calc(100% - 90px)">
                     <a
                         href="#"
-                        @click.prevent.stop="editTag(item)">
+                        @click.prevent.stop="editTag(item)"
+                        :title="'Tag ID:' + item.id">
                         {{ item.name }}
                     </a>
                 </collection-cell>
