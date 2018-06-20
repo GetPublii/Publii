@@ -61,6 +61,11 @@ export default {
             });
         },
         loadFile: function(filename) {
+            if (filename === '') {
+                this.$refs.codemirror.editor.setValue('');
+                return;
+            }
+
             ipcRenderer.send('app-log-file-load', filename);
 
             ipcRenderer.once('app-log-file-loaded', (event, data) => {
