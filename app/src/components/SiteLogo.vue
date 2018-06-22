@@ -157,11 +157,11 @@ export default {
 
     &-bg {
         align-items: center;
-        border-radius: 50%;
+        border-radius: 3px;
         display: flex;
-        height: 2.9rem;
+        height: 3rem;
         justify-content: center;
-        width: 2.9rem;
+        width: 3rem;
 
         @for $i from 1 through 16 {
             &[data-color="#{$i}"] {

@@ -115,7 +115,7 @@ export default {
     text-align: center;
 
     &-preview {
-        border-radius: 50%;
+        border-radius: 4px;
         float: left;
         height: 9rem;
         line-height: 100%;
@@ -132,11 +132,10 @@ export default {
 
     &-color {
         float: right;
-        margin: 0 0 1rem 0;
-        padding: 0;
-        width: calc( 100% - 100px );
+        margin: 0 0 1rem 2rem;
+        padding: 0;       
 
-        &-block {
+        &-block {  
             border-radius: 50%;
             cursor: pointer;
             display: block;
@@ -144,6 +143,7 @@ export default {
             height: 3.5rem;
             list-style-type: none;
             padding: 0;
+            transition: all .2s ease-out;
             width: 3.5rem;
 
             @include logoColors();
@@ -153,16 +153,15 @@ export default {
             }
 
             &[data-status="inactive"] {
-                transform: scale(.75);
+                transform: scale(.75); 
             }
         }
     }
 
     &-icon {
         float: right;
-        margin: 0 0 1rem 0;
-        padding: 0;
-        width: calc( 100% - 100px );
+        margin: 0 0 1rem 1rem;
+        padding: 0;       
 
         &-block {
             cursor: pointer;
@@ -171,6 +170,8 @@ export default {
             height: 3.5rem;
             list-style-type: none;
             padding: 0;
+            transition: all .2s ease-out;
+            will-change: transform;
             width: 3.5rem;
 
             & > svg {

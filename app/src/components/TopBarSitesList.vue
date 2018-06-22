@@ -65,7 +65,7 @@ export default {
 .sites {
     &-list {
         &-wrapper {
-            border-top: 1px solid rgba($color-8, 0.4);
+           
             max-height: 350px;
             overflow-y: scroll;
         }

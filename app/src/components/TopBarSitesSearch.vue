@@ -34,21 +34,21 @@ export default {
 @import '../scss/variables.scss';
 
 .site-switch {
-    .search {
-        padding-left: 0.55rem;
+    .search {       
 
-        .input-wrapper {
-            width: 95%;
+        .input-wrapper {            
 
             input {
+                background: $color-9;
+                border-radius: 6px;
                 box-shadow: none!important;
-                padding-left: 4.6rem!important;
+                padding: 1.2rem 3rem 1.2rem 4.4rem!important;
             }
 
             svg {
-                fill: $color-5!important;
+                fill: $color-7!important;
                 height: 1.6rem;
-                left: 2.5rem!important;
+                left: 3.5rem!important;
                 width: 1.6rem;
             }
         }
@@ -62,9 +62,9 @@ export default {
             line-height: 1.7rem;
             padding: 0;
             position: absolute;
-            right: 1.6rem;
+            right: 3rem;
             text-align: center;
-            top: 1.8rem;
+            top: 2.36rem;
             width: 2rem;
 
             &:active,

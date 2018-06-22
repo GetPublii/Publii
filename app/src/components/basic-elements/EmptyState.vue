@@ -68,19 +68,16 @@ export default {
     padding: 20px;
     position: absolute;
     text-align: center;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 40%;
+    transform: translateY(-40%);
     width: 100%;
 
-    h2 {
-        color: $color-7;
-        font-size: 2.8rem;
+    h2 {       
         font-weight: 400;
         text-transform: none;
     }
 
-    p {
-        font-size: 1.8rem;
+    p {       
         margin: -1.5rem 0 4rem 0;
     }
 

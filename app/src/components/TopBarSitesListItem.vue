@@ -53,53 +53,63 @@ export default {
  */
 .single-site {
     align-items: center;
-    background: $color-10;
-    border-top: 1px solid rgba($color-8, 0.4);
-    cursor: pointer;
-    display: flex;
-    margin: 0;
-    padding: 0.9rem 2rem;
-    width: 100%;
+    background: $color-10;   
+    border-top: 1px solid rgba($color-8, 0.2);
+    border-radius: 4px;
+    cursor: pointer;   
+    display: flex; 
+    flex-direction: row-reverse;
+    margin: 0 2rem;
+    padding: 0.9rem 0 0.9rem 1rem;    
 
     &:first-child {
         border-top: none;
     }
-
+   
     &-icon {
         align-items: center;
         background: $color-10;
-        border-radius: 50%;
+        border-radius: 3px;
         display: flex;
-        height: 3.5rem;
+        height: 3.3rem;
         justify-content: center;
         position: relative;
         transition: all .25s ease-out;
-        width: 3.5rem;
+        will-change: transform;
+        width: 3.3rem;  
 
         @include logoColors();
 
     }
 
-    &:hover {
-        background: $color-9;
-
+    &:hover {      
+        background: linear-gradient(to left, rgba(255,255,255,0) 0%,$color-9 100%); 
+       
         .single-site-icon {
             transform: scale(1.1);
+        }
+        
+        .single-site-name {
+            color: $color-4;
+           
         }
     }
 
     &-name {
         display: block;
         font-size: 1.5rem;
-        font-weight: 600;
-        line-height: 3.9rem;
-        margin: 0 0 0 1.6rem;
+        font-weight: 400;
+        line-height: 3.6rem;
+        margin: 0 1.6rem 0 0;
         overflow: hidden;
         padding: 0;
         text-align: left;
-        text-overflow: ellipsis;
+        text-overflow: ellipsis; 
+        transition: all .25s ease-out;
         white-space: nowrap;
         width: 80%;
     }
 }
 </style>
+
+
