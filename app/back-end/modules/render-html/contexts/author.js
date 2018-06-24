@@ -90,7 +90,8 @@ class RendererContextAuthor extends RendererContext {
             siteName = this.siteConfig.displayName;
         }
 
-        this.metaTitle = this.siteConfig.advanced.authorMetaTitle;
+        this.metaTitle = this.siteConfig.advanced.authorMetaTitle.replace(/%authorname/g, this.author.name)
+                                                                 .replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.authorMetaDescription;
 
         let metaData = this.author.config;
