@@ -21,6 +21,10 @@
                 title="Report a bug in our supportdesk"
                 path="https://publii.ticksy.com/" />
             <topbar-dropdown-item
+                label="Github repository"
+                title="View Publii on Github"
+                path="https://github.com/getpublii/publii" />
+            <topbar-dropdown-item
                 label="About Publii"
                 title="More informations about Publii"
                 path="/about" />
