@@ -94,7 +94,8 @@ class RendererContextTag extends RendererContext {
         }
 
         // Prepare meta data
-        this.metaTitle = this.siteConfig.advanced.tagMetaTitle;
+        this.metaTitle = this.siteConfig.advanced.tagMetaTitle.replace(/%tagname/g, this.tag.name)
+                                                              .replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.tagMetaDescription;
 
         let metaData = this.tag.additionalData;
