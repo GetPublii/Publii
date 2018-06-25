@@ -32,6 +32,19 @@
             mode="css"
             editorLoadedEventName="custom-css-editor-loaded">
         </codemirror-editor>
+
+        <small class="editor-note">
+            <span>
+                Run a find:
+                <template v-if="!isMac">Ctrl + F</template>
+                <template v-if="isMac">Cmd + F</template>
+            </span>
+            <span>
+                Find and replace:
+                <template v-if="!isMac">Ctrl + Alt + F</template>
+                <template v-if="isMac">Cmd + Alt + F</template>
+            </span>
+        </small>
     </section>
 </template>
 
@@ -55,6 +68,9 @@ export default {
     computed: {
         siteHasTheme: function() {
             return !!this.$store.state.currentSite.config.theme;
+        },
+        isMac: function () {
+            return window.process.platform === 'darwin';
         }
     },
     mounted: function() {
@@ -113,4 +129,15 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.editor-note {
+    color: $color-6;
+    display: block;
+    margin-top: 2rem;
+
+    span {
+        display: inline-block;
+        margin: .5rem 2rem 0 0;
+    }
+}
 </style>
