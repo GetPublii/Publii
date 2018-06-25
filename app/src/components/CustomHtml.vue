@@ -40,6 +40,22 @@
                     editorLoadedEventName="custom-html-editor-loaded"
                     mode="xml">
                 </codemirror-editor>
+                <small
+                    v-for="(editor, index) in Object.keys(editors)"
+                    class="editor-note"
+                    :slot="'tab-' + index"
+                    :key="'note-' + editor">
+                    <span>
+                        Run a find:
+                        <template v-if="!isMac">Ctrl + F</template>
+                        <template v-if="isMac">Cmd + F</template>
+                    </span>
+                    <span>
+                        Find and replace:
+                        <template v-if="!isMac">Ctrl + Alt + F</template>
+                        <template v-if="isMac">Cmd + Alt + F</template>
+                    </span>
+                </small>
             </tabs>
         </fields-group>
     </section>
@@ -72,6 +88,9 @@ export default {
     computed: {
         siteHasTheme: function() {
             return !!this.$store.state.currentSite.config.theme;
+        },
+        isMac: function () {
+            return window.process.platform === 'darwin';
         }
     },
     mounted: function() {
@@ -240,4 +259,13 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.editor-note {
+    color: $color-6;
+
+    span {
+        display: inline-block;
+        margin: .5rem 2rem 0 0;
+    }
+}
 </style>
