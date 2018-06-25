@@ -145,6 +145,15 @@ class EditorBridge {
                     return;
                 }
 
+                if(clickedElement.tagName === 'SCRIPT') {
+                    let content = this.tinymceEditor.getContent({
+                        source_view: true
+                    });
+
+                    window.app.$bus.$emit('source-code-editor-show', content, this.tinymceEditor);
+                    return;
+                }
+
                 if(clickedElement.tagName === 'FIGURE') {
                     showPopup = true;
                 } else if(e.path[1] && e.path[1].tagName === 'FIGURE') {
