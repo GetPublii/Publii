@@ -582,8 +582,9 @@ class Renderer {
                 globalContext.renderer.isLastPage = currentPage === totalPages;
 
                 if (currentPage > 1) {
-                    globalContext.website.pageUrl = this.siteConfig.domain + '/page/' + currentPage + '/';
-                    globalContext.website.ampUrl = this.siteConfig.domain + '/amp/page/' + currentPage + '/';
+                    let pagePart = this.siteConfig.advanced.urls.pageName;
+                    globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
+                    globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
                 } else {
                     globalContext.website.pageUrl = this.siteConfig.domain + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
@@ -991,12 +992,13 @@ class Renderer {
                     this.menuContext = ['tag', tagSlug];
 
                     if (currentPage > 1) {
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/page/' + currentPage + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/page/' + currentPage + '/';
+                        let pagePart = this.siteConfig.advanced.urls.pageName;
+                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/page/' + currentPage + '/';
-                            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/page/' + currentPage + '/';
+                            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         }
                     } else {
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
@@ -1222,8 +1224,9 @@ class Renderer {
                     this.menuContext = ['author', authorUsername];
 
                     if (currentPage > 1) {
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/page/' + currentPage + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/page/' + currentPage + '/';
+                        let pagePart = this.siteConfig.advanced.urls.pageName;
+                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
+                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                     } else {
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
