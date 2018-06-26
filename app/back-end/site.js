@@ -148,7 +148,7 @@ class Site {
         let galleryCatalogs = [];
         catalogs = catalogs.map(catalog => 'posts/' + catalog);
         catalogs.push('website');
-        catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog));
+        catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
 
         for(let catalog of catalogs) {
             if(catalog.indexOf('/.') > -1) {

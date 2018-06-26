@@ -123,6 +123,10 @@ function isImage(image, fullImagePath) {
         return false;
     }
 
+    if(path.parse(image).ext === '') {
+        return false;
+    }
+
     if(UtilsHelper.dirExists(fullImagePath)) {
         return false;
     }
