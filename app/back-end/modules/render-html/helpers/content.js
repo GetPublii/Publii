@@ -308,6 +308,8 @@ class ContentHelper {
     static _addResponsiveAttributes(matches, url, themeConfig) {
         if(
             ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
+            url.toLowerCase().indexOf('http://') === -1 &&
+            url.toLowerCase().indexOf('https://') === -1 &&
             !(
                 url.toLowerCase().indexOf('.jpg') === -1 &&
                 url.toLowerCase().indexOf('.jpeg') === -1 &&
@@ -323,6 +325,11 @@ class ContentHelper {
                 return matches +
                     ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig) + '" ';
             }
+        } else if (
+            url.toLowerCase().indexOf('http://') === 0 ||
+            url.toLowerCase().indexOf('https://') === 0
+        ) {
+            return matches + ' data-is-external-image="true" ';
         } else {
             return matches;
         }
