@@ -98,6 +98,7 @@ export default {
                     alignright: {selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-right'},
                     alignjustify: {selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-justify'}
                 },
+                height: 320,
                 entity_encoding: "raw",
                 allow_script_urls: true,
                 style_formats: customFormats

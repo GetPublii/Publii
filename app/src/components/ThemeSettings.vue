@@ -87,7 +87,8 @@
                                 v-if="checkDependencies(field.dependencies)"
                                 :label="getFieldLabel(field)"
                                 :key="'tab-' + index + '-field-' + subindex"
-                                :noLabelSpace="field.type === 'separator'">
+                                :noLabelSpace="field.type === 'separator'"
+                                :labelFullWidth="field.type === 'wysiwyg'">
                                 <range-slider
                                     v-if="field.type === 'range'"
                                     :min="field.min"
