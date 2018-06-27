@@ -66,12 +66,19 @@ export default {
     },
     methods: {
         initWysiwyg () {
+            let customFormats = this.loadCustomFormatsFromTheme();
+            let secondToolbarStructure = "formatselect removeformat code undo redo";
+
+            if (customFormats.length) {
+                secondToolbarStructure = "styleselect formatselect removeformat code undo redo";
+            }
+
             tinymce.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
-                content_css: 'dist/css/editor-options.css',
+                content_css: this.getTinyMCECSSFiles(),
                 plugins: "autolink link lists paste code",
                 toolbar1: "bold italic link unlink blockquote alignleft aligncenter alignright alignjustify bullist numlist",
-                toolbar2: "formatselect removeformat code undo redo",
+                toolbar2: secondToolbarStructure,
                 toolbar3: "",
                 preview_styles: false,
                 resize: false,
@@ -92,11 +99,94 @@ export default {
                     alignjustify: {selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-justify'}
                 },
                 entity_encoding: "raw",
-                allow_script_urls: true
+                allow_script_urls: true,
+                style_formats: customFormats
             });
         },
         generateID () {
             return 't-' + Math.ceil(Math.random() * 10000000).toString();
+        },
+        loadCustomFormatsFromTheme() {
+            let output = [];
+            let customElements = [];
+            let inlineElements = [
+                'a', 'b', 'abbr', 'acronym', 'cite', 'dfn', 'kbd',
+                'samp', 'time', 'var', 'bdo', 'br', 'big', 'code',
+                'i', 'em', 'small','strong','span', 'tt', 'img',
+                'map', 'object', 'q', 'script', 'sub', 'sup', 'button',
+                'input', 'label', 'select', 'textarea'
+            ];
+
+            // Detect mode
+            if(
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.customElementsMode &&
+                this.$store.state.currentSite.themeSettings.customElementsMode === 'advanced'
+            ) {
+                output = JSON.parse(JSON.stringify(this.$store.state.currentSite.themeSettings.customElements));
+                return output;
+            }
+
+            // Load custom elements
+            if(
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.customElements
+            ) {
+                customElements = this.$store.state.currentSite.themeSettings.customElements;
+            }
+
+            if(customElements && customElements.length) {
+                for(let i = 0; i < customElements.length; i++) {
+                    if(!customElements[i]) {
+                        continue;
+                    }
+
+                    if(!customElements[i].tag && !customElements[i].selector) {
+                        continue;
+                    }
+
+                    if(!customElements[i].themeSettings) {
+                        continue;
+                    }
+
+                    let style = {
+                        title: customElements[i].label,
+                        classes: customElements[i].cssClasses
+                    };
+
+                    if(customElements[i].selector) {
+                        style.selector = customElements[i].selector;
+                    } else {
+                        if (inlineElements.indexOf(customElements[i].tag)) {
+                            style.inline = customElements[i].tag;
+                        } else {
+                            style.block = customElements[i].tag;
+                        }
+                    }
+
+                    output.push(style);
+                }
+            }
+
+            return output;
+        },
+        extensionsPath () {
+            return [
+                'file:///',
+                this.$store.state.currentSite.siteDir,
+                '/input/themes/',
+                this.$store.state.currentSite.config.theme,
+                '/'
+            ].join('');
+        },
+        getTinyMCECSSFiles () {
+            let pathToEditorCSS = this.extensionsPath() + 'assets/css/editor.css';
+            let customEditorCSS = pathToEditorCSS;
+
+            return [
+                'dist/css/editor-options.css?v=0710',
+                customEditorCSS
+            ].join(',');
         }
     },
     beforeDestroy () {

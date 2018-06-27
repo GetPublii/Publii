@@ -21,7 +21,7 @@ class EditorBridge {
             setup: this.setupEditor.bind(this, customFormats),
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
-            style_formats: customFormats,
+            style_formats: customFormats
         });
 
         // Remove style selector when there is no custom styles from the theme
@@ -363,6 +363,10 @@ class EditorBridge {
                 }
 
                 if(!customElements[i].tag && !customElements[i].selector) {
+                    continue;
+                }
+
+                if(customElements[i].postEditor === false) {
                     continue;
                 }
 
