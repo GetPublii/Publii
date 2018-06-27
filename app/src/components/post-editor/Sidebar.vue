@@ -632,6 +632,15 @@ export default {
                     display: none;
                 }
             }
+
+            .multiselect,
+            .multiselect__tags {
+                min-height: 52px;
+            }
+
+            .multiselect__input {
+                max-width: 120px;
+            }
         }
 
         .post-editor-settings {
