@@ -81,6 +81,11 @@ class RendererContextFeed extends RendererContext {
 
         let siteOwnerData = this.renderer.cachedItems.authors[1];
         let logoUrl = normalizePath(this.themeConfig.config.logo);
+        let siteName = this.siteConfig.name;
+
+        if (this.siteConfig.displayName) {
+            siteName = this.siteConfig.displayName;
+        }
 
         if(logoUrl !== '') {
             logoUrl = normalizePath(this.siteConfig.domain) + '/' + normalizePath(this.themeConfig.config.logo);
@@ -90,7 +95,7 @@ class RendererContextFeed extends RendererContext {
         logoUrl = logoUrl.replace('/amp/media/website/', '/media/website/');
 
         this.context = {
-            siteName: this.siteConfig.name,
+            siteName: siteName,
             siteAuthor: siteOwnerData,
             siteDomain: this.siteConfig.domain,
             siteLogo: logoUrl,
