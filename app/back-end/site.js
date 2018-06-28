@@ -354,12 +354,10 @@ class Site {
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
 
         // Check if root-files exists
-        if(UtilsHelper.dirExists(rootFilesPath)) {
-            return;
+        if(!UtilsHelper.dirExists(rootFilesPath)) {
+            // When there is no root-files - create missing dirs
+            fs.mkdirSync(rootFilesPath);
         }
-
-        // When there is no root-files - create missing dirs
-        fs.mkdirSync(rootFilesPath);
 
         if(!UtilsHelper.dirExists(mediaFilesPath)) {
             fs.mkdirSync(mediaFilesPath);
