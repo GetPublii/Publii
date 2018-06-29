@@ -81,14 +81,6 @@ function menuURLHelper(rendererInstance, Handlebars) {
 
         // External links which should start with protocol
         if(this.type === 'external') {
-            if(
-                this.link.substr(0, 1) !== '#' &&
-                this.link.substr(0, 7) !== 'http://' &&
-                this.link.substr(0, 8) !== 'https://'
-            ) {
-                this.link = 'http://' + this.link;
-            }
-
             output = this.link;
         }
 
