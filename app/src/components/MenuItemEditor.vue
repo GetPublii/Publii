@@ -126,6 +126,17 @@
                     type="text" />
             </label>
 
+            <label key="menu-item-editor-field-target">
+                <span>Link target:</span>
+                <v-select
+                    v-model="target"
+                    :options="linkTargets"
+                    :searchable="false"
+                    :custom-label="customTargetLabels"
+                    :show-labels="false"
+                    placeholder="Select link target"></v-select>
+            </label>
+
             <div class="menu-item-editor-buttons">
                 <p-button
                     v-if="menuItemID !== ''"
@@ -164,6 +175,7 @@ export default {
             label: '',
             title: '',
             type: '',
+            target: '_self',
             cssClass: '',
             internalLink: '',
             externalLink: '',
@@ -179,6 +191,9 @@ export default {
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
+        },
+        linkTargets () {
+            return [ '_self', '_blank' ];
         },
         authorPages () {
             return this.$store.state.currentSite.authors.map(author => author.username).sort((a, b) => {
@@ -212,6 +227,7 @@ export default {
             this.label = params.label || '';
             this.title = params.title || '';
             this.cssClass = params.cssClass || '';
+            this.target = params.target || '_self';
 
             setTimeout(() => {
                 this.type = params.type || '';
@@ -240,6 +256,12 @@ export default {
         customPostLabels (value) {
             return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
         },
+        customTargetLabels (value) {
+            switch (value) {
+                case '_self': return 'The same window';
+                case '_blank': return 'New window';
+            }
+        },
         closeDropdown (refID) {
             this.$refs[refID].isOpen = false;
         },
@@ -250,6 +272,7 @@ export default {
             this.label = '';
             this.title = '';
             this.type = '';
+            this.target = '_self';
             this.cssClass = '';
             this.internalLink = '';
             this.externalLink = '';
@@ -320,6 +343,7 @@ export default {
                 label: this.label,
                 title: this.title,
                 type: this.type,
+                target: this.target,
                 link: this.getLinkValue(),
                 cssClass: this.cssClass,
                 items: []
@@ -351,6 +375,7 @@ export default {
                 label: this.label,
                 title: this.title,
                 type: this.type,
+                target: this.target,
                 link: this.getLinkValue(),
                 cssClass: this.cssClass
             };

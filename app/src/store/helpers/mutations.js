@@ -281,6 +281,7 @@ function editMenuItemByID(item, editedMenuItem) {
         item.title = editedMenuItem.title;
         item.type = editedMenuItem.type;
         item.link = editedMenuItem.link;
+        item.target = editedMenuItem.target;
         item.cssClass = editedMenuItem.cssClass;
     }
 

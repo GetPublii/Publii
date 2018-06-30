@@ -5,7 +5,7 @@
         {{#each items}}
             <li{{menuItemClasses}}>
             {{#if link}}
-            <a href="{{menuUrl}}"{{#if title}} title="{{title}}"{{/if}}>{{label}}</a>
+            <a href="{{menuUrl}}"{{#if title}} title="{{title}}"{{/if}}{{#if target}} target="{{target}}"{{/if}}>{{label}}</a>
             {{else}}
             <span{{#if title}} title="{{title}}"{{/if}}>{{label}}</span>
             {{/if}}
@@ -17,6 +17,6 @@
         {{/each}}
     </ul>
 {{#unless level}}
-	<button class="menu__close js-menu__close">{{ translate 'partials.menu.close' }}</button>
+    <button class="menu__close js-menu__close">{{ translate 'partials.menu.close' }}</button>
 </nav>
 {{/unless}}

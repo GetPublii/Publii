@@ -1,11 +1,11 @@
 {{#unless level}}
-<nav class="footer__nav">	
+<nav class="footer__nav">
 {{/unless}}
     <ul>
         {{#each items}}
             <li{{menuItemClasses}}>
             {{#if link}}
-            <a href="{{menuUrl}}" class="inverse" {{#if title}} title="{{title}}"{{/if}}>{{label}}</a>
+            <a href="{{menuUrl}}" class="inverse" {{#if title}} title="{{title}}"{{/if}}{{#if target}} target="{{target}}"{{/if}}>{{label}}</a>
             {{else}}
             <span{{#if title}} title="{{title}}"{{/if}}>{{label}}</span>
             {{/if}}
@@ -15,5 +15,3 @@
 {{#unless level}}
 </nav>
 {{/unless}}
-
-
