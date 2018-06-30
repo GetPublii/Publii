@@ -21,6 +21,12 @@ class PostItem {
     prepareData() {
         let postURL = this.siteConfig.domain + '/' + this.post[3] + '.html';
         let preparedText = ContentHelper.prepareContent(this.post[0], this.post[4], this.siteConfig.domain, this.themeConfig, this.renderer);
+        let hasCustomExcerpt = false;
+        let readmoreMatches = this.post[4].match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+
+        if (readmoreMatches && readmoreMatches.length) {
+            hasCustomExcerpt = true;
+        }
 
         if(this.siteConfig.advanced.urls.cleanUrls) {
             postURL = this.siteConfig.domain + '/' + this.post[3] + '/';
@@ -43,7 +49,8 @@ class PostItem {
             status: this.post[8],
             isFeatured: this.post[8].indexOf('featured') > -1,
             isHidden: this.post[8].indexOf('hidden') > -1,
-            hasGallery: preparedText.indexOf('class="gallery') !== -1
+            hasGallery: preparedText.indexOf('class="gallery') !== -1,
+            hasCustomExcerpt: hasCustomExcerpt
         };
 
         this.postData.featuredImage = {};
