@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.27.4",
+  "version": "0.28.1",
   "bundle": "test",
   "description": "A simple static websites CMS application",
   "main": "main.js",

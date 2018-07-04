@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.27.4",
+  "version": "0.28.1",
   "description": "A simple static blogging application",
   "main": "app/main.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "build": "cross-env NODE_ENV=development gulp build",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/js/**/*.spec.js --reporter dot",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=2.0.2 --overwrite --symlinks --app-version=0.27.4 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.27.4 --version-string.FileVersion=0.27.4 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=2.0.2 --overwrite --symlinks --app-version=0.28.1 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.28.1 --version-string.FileVersion=0.28.1 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
     "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.2 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app"
   },
   "repository": {
