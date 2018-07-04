@@ -185,7 +185,8 @@ class Sitemap {
                     }
 
                     // Add all pages of pagination
-                    this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/page/' + authorFile + '/index.html');
+                    let pageName = this.siteConfig.advanced.urls.pageName;
+                    this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
                 }
             }
         }
@@ -252,7 +253,8 @@ class Sitemap {
                     }
 
                     // Add all pages of pagination
-                    this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/page/' + tagFile + '/index.html');
+                    let pageName = this.siteConfig.advanced.urls.pageName;
+                    this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
                 }
             }
         }
@@ -274,7 +276,8 @@ class Sitemap {
                 continue;
             }
 
-            this.fileList.push('page/' + file + '/index.html');
+            let pageName = this.siteConfig.advanced.urls.pageName;
+            this.fileList.push(pageName + '/' + file + '/index.html');
         }
     }
 
