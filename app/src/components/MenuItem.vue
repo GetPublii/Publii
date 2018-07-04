@@ -99,6 +99,7 @@ export default {
             title: '',
             target: '_self',
             cssClass: '',
+            rel: '',
             items: []
         };
     },
@@ -150,6 +151,7 @@ export default {
         this.link = this.itemData.link;
         this.title = this.itemData.title;
         this.target = this.itemData.target;
+        this.rel = this.itemData.rel;
         this.items = this.itemData.items;
         this.cssClass = this.itemData.cssClass;
     },
@@ -241,6 +243,7 @@ export default {
                     cssClass: this.cssClass,
                     type: this.type,
                     target: this.target,
+                    rel: this.rel,
                     link: this.link
                 });
             }, 50);
