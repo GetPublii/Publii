@@ -137,6 +137,13 @@
                     placeholder="Select link target"></v-select>
             </label>
 
+            <label key="menu-item-editor-field-rel">
+                <span>Link rel attribute:</span>
+                <input
+                    v-model="rel"
+                    type="text" />
+            </label>
+
             <div class="menu-item-editor-buttons">
                 <p-button
                     v-if="menuItemID !== ''"
@@ -176,6 +183,7 @@ export default {
             title: '',
             type: '',
             target: '_self',
+            rel: '',
             cssClass: '',
             internalLink: '',
             externalLink: '',
@@ -228,6 +236,7 @@ export default {
             this.title = params.title || '';
             this.cssClass = params.cssClass || '';
             this.target = params.target || '_self';
+            this.rel = params.rel || '';
 
             setTimeout(() => {
                 this.type = params.type || '';
@@ -273,6 +282,7 @@ export default {
             this.title = '';
             this.type = '';
             this.target = '_self';
+            this.rel = '';
             this.cssClass = '';
             this.internalLink = '';
             this.externalLink = '';
@@ -344,6 +354,7 @@ export default {
                 title: this.title,
                 type: this.type,
                 target: this.target,
+                rel: this.rel,
                 link: this.getLinkValue(),
                 cssClass: this.cssClass,
                 items: []
@@ -376,6 +387,7 @@ export default {
                 title: this.title,
                 type: this.type,
                 target: this.target,
+                rel: this.rel,
                 link: this.getLinkValue(),
                 cssClass: this.cssClass
             };
