@@ -70,7 +70,7 @@ class ContentHelper {
 
         // Find all images and add srcset and sizes attributes
         preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
-            return ContentHelper._addResponsiveAttributes(matches, url, themeConfig);
+            return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, domain);
         });
 
         // Wrap images with classes into <figure>
@@ -302,14 +302,14 @@ class ContentHelper {
      * @param matches
      * @param url
      * @param themeConfig
+     * @param domain
      * @returns {*}
      * @private
      */
-    static _addResponsiveAttributes(matches, url, themeConfig) {
+    static _addResponsiveAttributes(matches, url, themeConfig, domain) {
         if(
             ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
-            url.toLowerCase().indexOf('http://') === -1 &&
-            url.toLowerCase().indexOf('https://') === -1 &&
+            ContentHelper._imageIsLocal(url, domain) &&
             !(
                 url.toLowerCase().indexOf('.jpg') === -1 &&
                 url.toLowerCase().indexOf('.jpeg') === -1 &&
@@ -325,14 +325,31 @@ class ContentHelper {
                 return matches +
                     ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig) + '" ';
             }
-        } else if (
-            url.toLowerCase().indexOf('http://') === 0 ||
-            url.toLowerCase().indexOf('https://') === 0
-        ) {
+        } else if (!ContentHelper._imageIsLocal(url, domain)) {
             return matches + ' data-is-external-image="true" ';
         } else {
             return matches;
         }
+    }
+
+    /**
+     * Detect if image is an local image
+     *
+     * @param url - image URL
+     * @param domain - site domain
+     * @returns {bool}
+     * @private
+     */
+    static _imageIsLocal (url, domain) {
+        if (url.toLowerCase().indexOf('http://') > -1 || url.toLowerCase().indexOf('https://') > -1) {
+            if (url.indexOf(domain) > -1 || url.toLowerCase().indexOf(domain) > -1) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+
+        return false;
     }
 
     /**
