@@ -32,6 +32,7 @@
     "fs-extra": "^5.0.0",
     "ftp": "^0.3.10",
     "github": "^9.2.0",
+    "gitlab": "^3.5.1",
     "glob-move": "^1.0.1",
     "handlebars": "^4.0.5",
     "html-minifier": "^3.0.2",
