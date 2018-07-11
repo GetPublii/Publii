@@ -99,6 +99,7 @@ export default {
         loadSite: function(siteName, data = false, config = false) {
             // Write a config of the current Site - if necessary
             if(siteName !== false && config === false) {
+                siteName = mainProcess.slug(siteName);
                 this.$store.commit('copySiteConfig', siteName);
             }
 
