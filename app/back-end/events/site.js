@@ -146,6 +146,7 @@ class SiteEvents {
                 let s3IdData = false;
                 let s3KeyData = false;
                 let ghTokenData = false;
+                let glTokenData = false;
                 let netlifyIdData = false;
                 let netlifyTokenData = false;
 
@@ -191,6 +192,15 @@ class SiteEvents {
                             config.settings.deployment.github.token
                         );
                         config.settings.deployment.github.token = ghTokenData.toSave;
+                    }
+
+                    if(config.settings.deployment.gitlab.token !== '') {
+                        glTokenData = self.loadPassword(
+                            config.settings,
+                            'publii-gl-token',
+                            config.settings.deployment.gitlab.token
+                        );
+                        config.settings.deployment.gitlab.token = glTokenData.toSave;
                     }
 
                     if(config.settings.deployment.netlify.id !== '' && config.settings.deployment.netlify.token !== '') {
