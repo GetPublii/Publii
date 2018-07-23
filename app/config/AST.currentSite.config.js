@@ -7,7 +7,7 @@ const AstCurrentSiteConfig = {
         icon: ''
     },
     domain: '',
-    language: 'en-us',
+    language: 'en',
     advanced: {
         cssCompression: 1,
         htmlCompression: 1,
