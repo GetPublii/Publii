@@ -922,6 +922,29 @@
 
                     <div slot="tab-8">
                         <field
+                            id="feed-title"
+                            label="Feed title:">
+                            <dropdown
+                                slot="field"
+                                id="feed-title"
+                                key="feed-title"
+                                v-model="advanced.feed.title"
+                                :items="{ 'displayName': 'Page name', 'customTitle': 'Custom feed title' }"></dropdown>
+                        </field>
+
+                        <field
+                            v-if="advanced.feed.title === 'customTitle'"
+                            id="feed-title-value"
+                            label="Custom feed title">
+                            <label slot="field">
+                                <text-input
+                                    id="feed-title-value"
+                                    type="text"
+                                    v-model="advanced.feed.titleValue" />
+                            </label>
+                        </field>
+
+                        <field
                             id="feed-show-full-text"
                             label="Show full text">
                             <label slot="field">
