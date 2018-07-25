@@ -11,7 +11,16 @@ process.on('message', async function(msg){
         let singlePageMode = msg.singlePageMode;
         let previewLocation = msg.previewLocation;
         let renderer = new Renderer(appDir, sitesDir, siteConfig, postID, postData);
-        let result = await renderer.render(previewMode, previewLocation, singlePageMode);
+        let result;
+
+        try {
+            result = await renderer.render(previewMode, previewLocation, singlePageMode);
+        } catch (e) {
+            process.send({
+                type: 'app-rendering-results',
+                result: e
+            });
+        }
 
         // When process is ready - finish it by sending a proper event
         process.send({

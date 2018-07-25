@@ -77,7 +77,12 @@ class DeployEvents {
                         status: true
                     });
                 } else {
-                    event.sender.send('app-deploy-render-error', data.result);
+                    event.sender.send('app-deploy-render-error', {
+                        message: [{
+                            message: 'Rendering process crashed',
+                            desc: 'Checkout the rendering-errors.log file under Tools -> Log viewer'
+                        }]
+                    });
                 }
             } else {
                 event.sender.send(data.type, {
