@@ -58,15 +58,15 @@ class Gdpr {
         let output = `
         .cookie-popup {
             background: #fff;
-            border-radius: 6px;
+            border-radius: 2px;
             bottom: 1rem;
             -webkit-box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-            font-size: 13px;
-            left: 1rem;
-            right: 1rem;
-            max-width: 480px;
-            padding: 1.333333rem;
+            font-size: 15px;
+            left: 16px;
+            right: 16px;
+            max-width: 600px;
+            padding: 2rem;
             position: fixed;
             -webkit-transform: translateY(100%);
             -ms-transform: translateY(100%);
@@ -78,7 +78,7 @@ class Gdpr {
             transition: transform 0.8s ease 0s, -webkit-transform 0.8s ease 0s;
             will-change: transform;
             z-index: 1000;
-        }
+        }        
 
         .cookie-popup--uses-badge {
             background: #24a931;
@@ -88,7 +88,7 @@ class Gdpr {
             padding: 0;
             -webkit-transition: all 0.24s ease-out;
             transition: all 0.24s ease-out;
-            width: 6rem;
+            width: 6.4rem;
         }
 
         .cookie-popup.cookie-popup--uses-badge:hover,
@@ -107,7 +107,7 @@ class Gdpr {
         }
 
         .cookie-popup--is-sticky {
-            border-radius: 6px;
+            border-radius: 2px;
             -webkit-transform: translateY(0);
             -ms-transform: translateY(0);
             transform: translateY(0);
@@ -117,14 +117,24 @@ class Gdpr {
 
         .cookie-popup--uses-badge.cookie-popup--is-sticky {
             background: #ffffff;
-            bottom: 1rem;
+            bottom: 16px;
             height: auto;
-            padding: 1.333333rem;
+            padding: 2rem;
             width: 100%;
         }
 
-        .cookie-popup--uses-badge.cookie-popup--is-sticky:hover {
-            bottom: 1rem;
+        @media (max-width:600px) {
+            .cookie-popup--uses-badge.cookie-popup--is-sticky { 
+                 bottom: 0 !important;
+                 left: 0;
+                 right: 0;                
+            }
+        }
+        
+        @media (min-width:600px) {
+            .cookie-popup--uses-badge.cookie-popup--is-sticky:hover {
+                 bottom: 1rem;
+            }
         }
 
         .cookie-popup--uses-badge.cookie-popup--is-sticky > h2,
@@ -154,12 +164,12 @@ class Gdpr {
         }
 
         .cookie-popup > h2 {
-            font-size: 17px;
+            font-size: 20px;
             margin: 0;
         }
 
         .cookie-popup > p {
-            margin: 0.53333rem 0 0;
+            margin: 1rem 0 0;
         }
 
         .cookie-popup input[type="checkbox"] + label {
@@ -188,7 +198,7 @@ class Gdpr {
             box-shadow: none;
             color: #ffffff !important;
             font-size: 13px;
-            padding: 0.26667rem 0.53333rem;
+            padding: 0.666rem 1.2rem;
         }
 
         .cookie-popup > form,
