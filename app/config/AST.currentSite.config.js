@@ -123,7 +123,7 @@ const AstCurrentSiteConfig = {
             token: ''
         },
         gitlab: {
-            user: '',
+            server: 'https://gitlab.com/',
             repo: '',
             branch: '',
             token: ''

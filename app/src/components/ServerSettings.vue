@@ -276,14 +276,19 @@
 
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
-                    id="gl-user"
-                    label="Username">
+                    id="gl-server"
+                    label="Server">
                     <text-input
                         slot="field"
-                        ref="gitlab_user"
-                        id="gl-user"
-                        key="gl-user"
-                        :value="deploymentSettings.gitlab.user" />
+                        ref="gitlab_server"
+                        id="gl-server"
+                        key="gl-server"
+                        :value="deploymentSettings.gitlab.server" />
+                    <small
+                        slot="note"
+                        class="note">
+                        Change this value only if you are using your own GitLab instance.
+                    </small>
                 </field>
 
                 <field
@@ -930,8 +935,8 @@ export default {
             return true;
         },
         validateGitlabPages: function() {
-            if(this.$refs['gitlab_user'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The username field cannot be empty.' });
+            if(this.$refs['gitlab_server'].getValue().trim() === '') {
+                this.$bus.$emit('alert-display', { 'message': 'The server field cannot be empty.' });
                 return false;
             }
 

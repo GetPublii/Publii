@@ -18,18 +18,6 @@ class GitlabPages {
         this.deployment = deploymentInstance;
         this.connection = false;
         this.debugOutput = [];
-        let token = this.deployment.siteConfig.deployment.github.token;
-        let account = slug(this.deployment.siteConfig.name);
-
-        if (token === 'publii-gl-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-gl-token', account);
-        }
-
-        this.client = new Gitlab({
-            url: 'https://gitlab.com/', // Dodać opcję URL, pozwalającą na użycie własnej instalacji GitLaba
-            token: token
-        });
-
         this.repository = '';
         this.user = '';
         this.branch = '';
@@ -41,10 +29,21 @@ class GitlabPages {
 
     initConnection() {
         let self = this;
-        this.repository = this.deployment.siteConfig.deployment.github.repo;
-        this.user = this.deployment.siteConfig.deployment.github.user;
-        this.branch = this.deployment.siteConfig.deployment.github.branch;
+        this.repository = this.deployment.siteConfig.deployment.gitlab.repo;
+        this.user = this.deployment.siteConfig.deployment.gitlab.user;
+        this.branch = this.deployment.siteConfig.deployment.gitlab.branch;
         this.waitForTimeout = true;
+        let token = this.deployment.siteConfig.deployment.gitlab.token;
+        let account = slug(this.deployment.siteConfig.name);
+
+        if (token === 'publii-gl-token ' + account) {
+            token = passwordSafeStorage.getPassword('publii-gl-token', account);
+        }
+
+        this.client = new Gitlab({
+            url: this.deployment.siteConfig.deployment.gitlab.server,
+            token: token
+        });
 
         /*
         process.send({
@@ -119,44 +118,71 @@ class GitlabPages {
     }
 
     testConnection(app, deploymentConfig, siteName) {
-        let repository = deploymentConfig.github.repo;
-        let user = deploymentConfig.github.user;
-        let branch = 'heads/' + deploymentConfig.github.branch;
+        let repository = deploymentConfig.gitlab.repo;
+        let branchName = deploymentConfig.gitlab.branch;
+        let token = deploymentConfig.gitlab.token;
         let account = slug(siteName);
         this.waitForTimeout = true;
 
-        /*
-        this.apiRequest(
-            {
-                owner: user,
-                repo: repository,
-                ref: branch
-            },
-            (api) => api.gitdata.getReference,
-            (result) => {
-                if(result.data && result.data.object) {
-                    return result.data.object.sha;
+        if (token === 'publii-gl-token ' + account) {
+            token = passwordSafeStorage.getPassword('publii-gl-token', account);
+        }
+
+        this.client = new Gitlab({
+            url: deploymentConfig.gitlab.server,
+            token: token
+        });
+
+        this.client.Projects.all({
+            owned: true,
+            maxPages: 1,
+            perPage: 1
+        }).then(project => {
+            this.client.Projects.all({
+                search: repository,
+                owned: true,
+                maxPages: 1,
+                perPage: 1
+            }).then(projects => {
+                let projectID = projects[0].id;
+
+                if(!projectID) {
+                    this.waitForTimeout = false;
+                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                        message: 'Selected repository does not exist'
+                    });
+
+                    return;
                 }
 
-                return null;
-            }
-        ).then(result => {
-            if(result === null) {
+                this.client.Branches.show(projectID, branchName).then(branch => {
+                    if(!branch) {
+                        this.waitForTimeout = false;
+                        app.mainWindow.webContents.send('app-deploy-test-error', {
+                            message: 'Selected branch does not exist'
+                        });
+
+                        return;
+                    }
+
+                    this.waitForTimeout = false;
+                    app.mainWindow.webContents.send('app-deploy-test-success');
+                }).catch(err => {
+                    this.waitForTimeout = false;
+                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                        message: 'Selected branch does not exist'
+                    });
+                });
+            }).catch(err => {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Selected branch does not exist'
+                    message: 'Selected repository does not exist'
                 });
-
-                return;
-            }
-
-            this.waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
+            });
         }).catch(err => {
-            err = JSON.parse(err);
             this.waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: err.message
+                message: 'Provided token or server address is invalid'
             });
         });
 
@@ -169,7 +195,6 @@ class GitlabPages {
                 this.waitForTimeout = false;
             }
         }, 10000);
-        */
     }
 
     deploy() {
