@@ -198,6 +198,10 @@ export default {
                     return false;
                 }
 
+                if(deploymentConfig.protocol === 'gitlab-pages' && this.checkGitlabConfig(deploymentConfig)) {
+                    return false;
+                }
+
                 if(deploymentConfig.protocol === 'netlify' && this.checkNetlify(deploymentConfig)) {
                     return false;
                 }
@@ -514,6 +518,19 @@ export default {
                 deploymentConfig.github.user !== '' &&
                 deploymentConfig.github.repo !== '' &&
                 deploymentConfig.github.branch !== ''
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        checkGitlabConfig: function(deploymentConfig) {
+            if(
+                deploymentConfig.gitlab &&
+                deploymentConfig.gitlab.server !== '' &&
+                deploymentConfig.gitlab.repo !== '' &&
+                deploymentConfig.gitlab.branch !== '' &&
+                deploymentConfig.gitlab.token !== ''
             ) {
                 return true;
             }
