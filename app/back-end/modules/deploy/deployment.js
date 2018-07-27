@@ -370,6 +370,11 @@ class Deployment {
             return;
         }
 
+        if(this.siteConfig.deployment.protocol === 'gitlab-pages') {
+            this.client.createBranch();
+            return;
+        }
+
         let self = this;
 
         if(this.filesToRemove.length > 0) {
