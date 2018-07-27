@@ -117,7 +117,7 @@ class Gdpr {
 
         .cookie-popup--uses-badge.cookie-popup--is-sticky {
             background: #ffffff;
-            bottom: 16px;
+            bottom: 1rem;
             height: auto;
             padding: 2rem;
             width: 100%;
