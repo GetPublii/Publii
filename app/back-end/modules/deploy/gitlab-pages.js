@@ -210,6 +210,14 @@ class GitlabPages {
         }).catch(err => {
             console.log('downloadFilesList: ', err.error);
             console.warn(err);
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: err.message
+                }
+            });
         });
     }
 
@@ -222,8 +230,13 @@ class GitlabPages {
             return this.removeFiles();
         }).catch(err => {
             console.log('(!) BRANCH NOT CREATED');
-            console.log('createBranch: ', err);
-            // @TODO
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: err.message
+                }
+            });
         });
     }
 
@@ -461,16 +474,31 @@ class GitlabPages {
                         }
                     });
                 }).catch(err => {
-                    console.log('merge (3): ', err);
-                    // @TODO
+                    process.send({
+                        type: 'web-contents',
+                        message: 'app-connection-error',
+                        value: {
+                            additionalMessage: err.message
+                        }
+                    });
                 });
             }).catch(err => {
-                console.log('merge (2): ', err);
-                // @TODO
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: err.message
+                    }
+                });
             });
         }).catch(err => {
-            console.log('merge (1): ', err);
-            // @TODO
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: err.message
+                }
+            });
         });
     }
 
@@ -478,8 +506,14 @@ class GitlabPages {
         this.client.Commits.create(this.projectID, this.temporaryBranch, commitMessage, operations).then(res => {
             return nextOperationCallback();
         }).catch(err => {
-            console.log('makeCommit: ', err);
-            // @TODO
+            console.log('(!) COMMIT ERROR: ', err.message);
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: err.message
+                }
+            });
         });
     }
 
