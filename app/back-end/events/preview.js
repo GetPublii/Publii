@@ -101,7 +101,10 @@ class PreviewEvents {
                     self.showPreview(site, singlePageMode);
                 } else {
                     event.sender.send('app-preview-render-error', {
-                        message: data.result
+                        message: [{
+                            message: 'Rendering process crashed',
+                            desc: 'Checkout the rendering-errors.log file under Tools -> Log viewer'
+                        }]
                     });
                 }
             } else {

@@ -1,7 +1,7 @@
 module.exports = [
     {
-        name: 'English',
-        code: 'en-us'
+        name: 'English (International)',
+        code: 'en'
     },
     {
         name: 'Belarusian',
@@ -62,6 +62,10 @@ module.exports = [
     {
         name: 'English (New Zealand)',
         code: 'en-nz'
+    },
+    {
+        name: 'English (USA)',
+        code: 'en-us'
     },
     {
         name: 'Estonian',

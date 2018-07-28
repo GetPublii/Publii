@@ -451,6 +451,11 @@ class ContentHelper {
             }
         }
 
+        // Sort urls by length descending - to avoid issues when shorter URLs are used to replace longer URLs
+        urls.sort((urlA, urlB) => {
+            return urlB.length - urlA.length;
+        });
+
         // Replace original URLs with proper URLs
         for(let url of urls) {
             text = text.split(url).join(links[url]);

@@ -7,7 +7,7 @@ const AstCurrentSiteConfig = {
         icon: ''
     },
     domain: '',
-    language: 'en-us',
+    language: 'en',
     advanced: {
         cssCompression: 1,
         htmlCompression: 1,
@@ -46,6 +46,8 @@ const AstCurrentSiteConfig = {
         hiddenPostsListingOrderBy: 'created_at',
         hiddenPostsListingOrder: 'DESC',
         feed: {
+            title: 'displayName',
+            titleValue: '',
             showFullText: 1,
             numberOfPosts: 10,
             showFeaturedImage: 1

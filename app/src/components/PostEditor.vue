@@ -433,6 +433,10 @@ export default {
                 creationDate = Date.now();
             }
 
+            if (this.postData.status.indexOf('draft') > -1 && newPostStatus === 'published') {
+                creationDate = Date.now();
+            }
+
             let postData = {
                 'site': this.$store.state.currentSite.config.name,
                 'title': this.postData.title,

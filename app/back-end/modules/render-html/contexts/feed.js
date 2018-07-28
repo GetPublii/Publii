@@ -83,8 +83,12 @@ class RendererContextFeed extends RendererContext {
         let logoUrl = normalizePath(this.themeConfig.config.logo);
         let siteName = this.siteConfig.name;
 
-        if (this.siteConfig.displayName) {
-            siteName = this.siteConfig.displayName;
+        if (this.siteConfig.advanced.feed.title === 'customTitle') {
+            siteName = this.siteConfig.advanced.feed.titleValue;
+        } else {
+            if (this.siteConfig.displayName) {
+                siteName = this.siteConfig.displayName;
+            }
         }
 
         if(logoUrl !== '') {
