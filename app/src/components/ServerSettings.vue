@@ -76,6 +76,13 @@
                     <small
                         class="note"
                         slot="note"
+                        v-if="deploymentMethodSelected === 'gitlab-pages'">
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a GitLab Pages website</a>.
+                    </small>
+
+                    <small
+                        class="note"
+                        slot="note"
                         v-if="deploymentMethodSelected === 's3'">
                         Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a S3 website</a>.
                     </small>
@@ -265,6 +272,66 @@
                         type="password"
                         key="gh-token"
                         :value="deploymentSettings.github.token" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'gitlab-pages'"
+                    id="gl-server"
+                    label="Server">
+                    <text-input
+                        slot="field"
+                        ref="gitlab_server"
+                        id="gl-server"
+                        key="gl-server"
+                        :value="deploymentSettings.gitlab.server" />
+                    <small
+                        slot="note"
+                        class="note">
+                        Change this value only if you are using your own GitLab instance.
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'gitlab-pages'"
+                    id="gl-repo"
+                    label="Repository">
+                    <text-input
+                        slot="field"
+                        ref="gitlab_repo"
+                        id="gl-repo"
+                        key="gl-repo"
+                        :value="deploymentSettings.gitlab.repo" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'gitlab-pages'"
+                    id="gl-branch"
+                    label="Branch">
+                    <text-input
+                        slot="field"
+                        ref="gitlab_branch"
+                        id="gl-branch"
+                        key="gl-branch"
+                        :value="deploymentSettings.gitlab.branch" />
+
+                    <small
+                        slot="note"
+                        class="note">
+                        Examples: <strong>docs</strong> or <strong>master</strong>
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'gitlab-pages'"
+                    id="gl-token"
+                    label="Token">
+                    <text-input
+                        slot="field"
+                        ref="gitlab_token"
+                        id="gl-token"
+                        type="password"
+                        key="gl-token"
+                        :value="deploymentSettings.gitlab.token" />
                 </field>
 
                 <field
@@ -488,6 +555,7 @@ export default {
             httpProtocolSelected: '',
             deploymentMethods: {
                 'github-pages': 'Github Pages',
+                'gitlab-pages': 'GitLab Pages',
                 'netlify': 'Netlify',
                 's3': 'Amazon S3',
                 'google-cloud': 'Google Cloud',
@@ -570,6 +638,7 @@ export default {
                     case 'ftp+implicit+tls': portValue = '990'; break;
                     case 's3': portValue = ''; break;
                     case 'github-pages': portValue = ''; break;
+                    case 'gitlab-pages': portValue = ''; break;
                     case 'netlify': portValue = ''; break;
                     case 'google-cloud': portValue = ''; break;
                     case 'manual': portValue = ''; break;
@@ -595,6 +664,13 @@ export default {
 
             if(this.deploymentMethodSelected === 'github-pages') {
                 if(domain.indexOf('github.io') > -1) {
+                    httpProtocol = 'https';
+                    this.httpProtocolSelected = 'https';
+                }
+            }
+
+            if(this.deploymentMethodSelected === 'gitlab-pages') {
+                if(domain.indexOf('gitlab.io') > -1) {
                     httpProtocol = 'https';
                     this.httpProtocolSelected = 'https';
                 }
@@ -647,6 +723,10 @@ export default {
 
             if(currentProtocol === 'github-pages') {
                 currentProtocol = 'github';
+            }
+
+            if(currentProtocol === 'gitlab-pages') {
+                currentProtocol = 'gitlab';
             }
 
             if(currentProtocol === 'google-cloud') {
@@ -757,6 +837,10 @@ export default {
                 return this.validateGithubPages();
             }
 
+            if(this.deploymentMethodSelected === 'gitlab-pages') {
+                return this.validateGitlabPages();
+            }
+
             if(this.deploymentMethodSelected === 'netlify') {
                 return this.validateNetlify();
             }
@@ -844,6 +928,29 @@ export default {
             }
 
             if(this.$refs['github_token'].getValue().trim() === '') {
+                this.$bus.$emit('alert-display', { 'message': 'The token field cannot be empty.' });
+                return false;
+            }
+
+            return true;
+        },
+        validateGitlabPages: function() {
+            if(this.$refs['gitlab_server'].getValue().trim() === '') {
+                this.$bus.$emit('alert-display', { 'message': 'The server field cannot be empty.' });
+                return false;
+            }
+
+            if(this.$refs['gitlab_repo'].getValue().trim() === '') {
+                this.$bus.$emit('alert-display', { 'message': 'The repository field cannot be empty.' });
+                return false;
+            }
+
+            if(this.$refs['gitlab_branch'].getValue().trim() === '') {
+                this.$bus.$emit('alert-display', { 'message': 'The branch field cannot be empty.' });
+                return false;
+            }
+
+            if(this.$refs['gitlab_token'].getValue().trim() === '') {
                 this.$bus.$emit('alert-display', { 'message': 'The token field cannot be empty.' });
                 return false;
             }
