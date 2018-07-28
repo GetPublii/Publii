@@ -18,6 +18,12 @@
                 </p>
 
                 <p
+                    v-if="isGitlabPages"
+                    class="description alert">
+                    <strong>Remember!</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment.
+                </p>
+
+                <p
                     v-if="isManual"
                     class="description alert">
                     Your website files has been prepared. Use the "Get website files" button below to get your files in order to manually deploy them.
@@ -169,6 +175,10 @@ export default {
         isGithubPages: function() {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;
             return deploymentConfig && deploymentConfig.protocol === 'github-pages';
+        },
+        isGitlabPages: function() {
+            let deploymentConfig = this.$store.state.currentSite.config.deployment;
+            return deploymentConfig && deploymentConfig.protocol === 'gitlab-pages';
         },
         isManual: function() {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;

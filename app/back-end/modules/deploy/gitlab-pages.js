@@ -151,6 +151,7 @@ class GitlabPages {
         });
 
         this.setUploadProgress(6);
+        console.log('(!) CLIENT CREATED');
 
         process.send({
             type: 'web-contents',
@@ -174,7 +175,7 @@ class GitlabPages {
             this.projectID = projects[0].id;
 
             this.client.RepositoryFiles.showRaw(this.projectID, '/publii-files.json', this.branch).then(response => {
-                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), response, err => {
+                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), JSON.stringify(response), err => {
                     if (err) {
                         console.log('(!) An error occurred during writing files-remote.json file: ', err);
                     }
@@ -183,16 +184,31 @@ class GitlabPages {
                 });
 
                 try {
-                    this.remoteFilesList = JSON.parse(response);
+                    if (response.length) {
+                        this.remoteFilesList = response.map(file => {
+                            file.path = file.path.substr(7);
+
+                            if (file.path.indexOf('/') > -1) {
+                                file.path = '/' + file.path;
+                            }
+
+                            return file;
+                        });
+                    } else {
+                        this.remoteFilesList = [];
+                    }
                 } catch (e) {
                     this.remoteFilesList = [];
                 }
+
+                console.log('(!) REMOTE FILE DOWNLOADED');
             }).catch(err => {
-                console.log('(!) ERROR WHILE DOWNLOADING files-remote.json: ', err);
+                console.log('(!) REMOTE FILE NOT DOWNLOADED');
+                console.log('(!) ERROR WHILE DOWNLOADING files-remote.json: ', err.error);
                 this.deployment.compareFilesList(false);
             });
         }).catch(err => {
-            console.log('downloadFilesList: ', err);
+            console.log('downloadFilesList: ', err.error);
             console.warn(err);
         });
     }
@@ -202,8 +218,10 @@ class GitlabPages {
         this.setUploadProgress(8);
 
         this.client.Branches.create(this.projectID, this.temporaryBranch, this.branch).then(res => {
-            this.removeFiles();
+            console.log('(!) BRANCH CREATED');
+            return this.removeFiles();
         }).catch(err => {
+            console.log('(!) BRANCH NOT CREATED');
             console.log('createBranch: ', err);
             // @TODO
         });
@@ -213,19 +231,22 @@ class GitlabPages {
         // Create a commit to remove all unnecessary files
         if (this.deployment.filesToRemove.length) {
             this.filesToRemove = [];
+            console.log('(!) FILES TO REMOVE DETECTED');
 
             for (let i = 0; i < this.deployment.filesToRemove.length; i++) {
+                let filePath = this.deployment.filesToRemove[i].path;
+
                 this.filesToRemove.push({
                     'action': 'delete',
-                    'file_path': this.deployment.filesToRemove[i].path
+                    'file_path': this.getPrefix(filePath) + filePath
                 });
             }
 
-            this.makeCommit(this.filesToRemove, this.updateTextFiles, 'Publii - remove files');
-            return;
+            return this.makeCommit(this.filesToRemove, this.updateTextFiles.bind(this), 'Publii - remove files');
         }
 
-        this.updateTextFiles();
+        console.log('(!) NO FILES TO REMOVE DETECTED');
+        return this.updateTextFiles();
     }
 
     updateTextFiles () {
@@ -249,18 +270,23 @@ class GitlabPages {
                     continue;
                 }
 
+                let filePath = this.deployment.filesToUpload[i].path;
+
                 this.filesToUpdate.push({
                     'action': 'update',
-                    'file_path': this.deployment.filesToUpload[i].path,
+                    'file_path': this.getPrefix(filePath) + filePath,
                     'encoding': 'base64',
-                    'content': this.readFile(path.join(this.outputDir, this.deployment.filesToUpload[i].path))
+                    'content': this.readFile(path.join(this.deployment.inputDir, this.deployment.filesToUpload[i].path))
                 });
             }
 
-            this.makeCommit(this.filesToUpdate, this.uploadTextFiles, 'Publii - update non-binary files');
-            return;
+            if (this.filesToUpdate.length) {
+                console.log('(!) TEXT FILES TO UPDATE DETECTED');
+                return this.makeCommit(this.filesToUpdate, this.uploadTextFiles.bind(this), 'Publii - update non-binary files');
+            }
         }
 
+        console.log('(!) NO TEXT FILES TO UPDATE DETECTED');
         this.uploadTextFiles();
     }
 
@@ -285,18 +311,23 @@ class GitlabPages {
                     continue;
                 }
 
+                let filePath = this.deployment.filesToUpload[i].path;
+
                 this.filesToUpdate.push({
                     'action': 'create',
-                    'file_path': this.deployment.filesToUpload[i].path,
+                    'file_path': this.getPrefix(filePath) + filePath,
                     'encoding': 'base64',
-                    'content': this.readFile(path.join(this.outputDir, this.deployment.filesToUpload[i].path))
+                    'content': this.readFile(path.join(this.deployment.inputDir, this.deployment.filesToUpload[i].path))
                 });
             }
 
-            this.makeCommit(this.filesToUpdate, this.createBinaryFilesList, 'Publii - upload non-binary files');
-            return;
+            if (this.filesToUpdate.length) {
+                console.log('(!) TEXT FILES TO UPLOAD DETECTED');
+                return this.makeCommit(this.filesToUpdate, this.createBinaryFilesList.bind(this), 'Publii - upload non-binary files');
+            }
         }
 
+        console.log('(!) NO TEXT FILES TO UPLOAD DETECTED');
         this.createBinaryFilesList();
     }
 
@@ -311,17 +342,23 @@ class GitlabPages {
             for (let i = 0; i < this.deployment.filesToUpload.length; i++) {
                 if (existingFilesList.indexOf(this.deployment.filesToUpload[i].path) > -1) {
                     if (this.isBinaryFile(this.deployment.filesToUpload[i].path)) {
+                        console.log('(!) BINARY FILE TO UPDATE DETECTED');
+                        let filePath = this.deployment.filesToUpload[i].path;
+
                         this.binaryFilesToUpdate.push({
                             'action': 'update',
-                            'file_path': this.deployment.filesToUpload[i].path,
+                            'file_path': this.getPrefix(filePath) + filePath,
                             'encoding': 'base64'
                         });
                     }
                 } else {
                     if (this.isBinaryFile(this.deployment.filesToUpload[i].path)) {
+                        console.log('(!) BINARY FILE TO UPLOAD DETECTED');
+                        let filePath = this.deployment.filesToUpload[i].path;
+
                         this.binaryFilesToUpload.push({
                             'action': 'create',
-                            'file_path': this.deployment.filesToUpload[i].path,
+                            'file_path': this.getPrefix(filePath) + filePath,
                             'encoding': 'base64'
                         });
                     }
@@ -338,13 +375,14 @@ class GitlabPages {
 
     updateBinaryFiles () {
         if (this.binaryFilesToUpdate.length) {
-            this.binaryFilesUploaded++;
+            this.binaryFilesUploadedCount++;
             let progress = Math.floor(this.currentUploadProgress + this.binaryProgressOffset);
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
             let commit = this.binaryFilesToUpdate.shift();
-            commit.content = this.readFile(path.join(this.outputDir, commit.file_path));
+            commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
             this.setUploadProgress(progress, operations);
-            this.makeCommit([commit], this.updateBinaryFiles, 'Publii - update ' + commit.file_path);
+            console.log('(!) BINARY FILE UPDATED');
+            this.makeCommit([commit], this.updateBinaryFiles.bind(this), 'Publii - update public/' + commit.file_path);
             return;
         }
 
@@ -355,13 +393,14 @@ class GitlabPages {
 
     uploadBinaryFiles () {
         if (this.binaryFilesToUpload.length) {
-            this.binaryFilesUploaded++;
+            this.binaryFilesUploadedCount++;
             let progress = Math.floor(this.currentUploadProgress + this.binaryProgressOffset);
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
             let commit = this.binaryFilesToUpload.shift();
-            commit.content = this.readFile(path.join(this.outputDir, commit.file_path));
+            commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
             this.setUploadProgress(progress, operations);
-            this.makeCommit([commit], this.uploadBinaryFiles, 'Publii - upload ' + commit.file_path);
+            console.log('(!) BINARY FILE UPLOADED');
+            this.makeCommit([commit], this.uploadBinaryFiles.bind(this), 'Publii - upload public/' + commit.file_path);
             return;
         }
 
@@ -371,21 +410,37 @@ class GitlabPages {
     updateFilesListFile () {
         this.setUploadProgress(98);
 
-        let localFilesListPath = path.join(this.inputDir, 'files.publii.json');
+        let localFilesListPath = path.join(this.deployment.inputDir, 'files.publii.json');
+        let localFilesContent = fs.readFileSync(localFilesListPath);
         let actionType = 'create';
+        let commit = [];
 
         if (this.remoteFilesList.length) {
+            console.log('(!) REMOTE FILES SHOULD BE UPDATED');
             actionType = 'update';
         }
 
-        let commit = [{
-            'action': actionType,
-            'file_path': 'publii-files.json',
-            'encoding': 'base64',
-            'content': this.readFile(localFilesListPath)
-        }];
+        try {
+            localFilesContent = JSON.parse(localFilesContent);
+            localFilesContent = localFilesContent.map(file => {
+                file.path = this.getPrefix(file.path) + file.path;
+                return file;
+            });
+            localFilesContent = JSON.stringify(localFilesContent);
 
-        this.makeCommit(commit, this.mergeTemporaryBranch, 'Publii - upload remote files list');
+            commit.push({
+                'action': actionType,
+                'file_path': 'publii-files.json',
+                'encoding': 'base64',
+                'content': Buffer.from(localFilesContent).toString('base64')
+            });
+        } catch (err) {
+            console.log('(!) AN ERROR OCCURRED DURING REMOTE FILES LIST CREATION');
+            console.log(err);
+        }
+
+        console.log('(!) REMOTE FILES LIST UPDATED');
+        return this.makeCommit(commit, this.mergeTemporaryBranch.bind(this), 'Publii - upload remote files list');
     }
 
     mergeTemporaryBranch () {
@@ -421,7 +476,7 @@ class GitlabPages {
 
     makeCommit (operations, nextOperationCallback, commitMessage = 'Publii - deployment') {
         this.client.Commits.create(this.projectID, this.temporaryBranch, commitMessage, operations).then(res => {
-            nextOperationCallback();
+            return nextOperationCallback();
         }).catch(err => {
             console.log('makeCommit: ', err);
             // @TODO
@@ -463,6 +518,16 @@ class GitlabPages {
         }
 
         return true;
+    }
+
+    getPrefix (fileNameToBePrefixed) {
+        let prefix = 'public';
+
+        if (fileNameToBePrefixed[0] !== '/') {
+            prefix = 'public/';
+        }
+
+        return prefix;
     }
 
     isNecessaryFile (filePath) {

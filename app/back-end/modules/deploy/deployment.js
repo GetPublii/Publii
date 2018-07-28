@@ -200,6 +200,18 @@ class Deployment {
             if(remoteFiles) {
                 try {
                     remoteFiles = JSON.parse(remoteFiles);
+
+                    if (this.siteConfig.deployment.protocol === 'gitlab-pages') {
+                        remoteFiles = remoteFiles.map(file => {
+                            file.path = file.path.substr(7);
+
+                            if (file.path.indexOf('/') > -1) {
+                                file.path = '/' + file.path;
+                            }
+
+                            return file;
+                        });
+                    }
                 } catch (e) {
                     console.log('Malformed files-remote.json file: ' + e);
                 }
