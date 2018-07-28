@@ -124,6 +124,12 @@ const AstCurrentSiteConfig = {
             branch: '',
             token: ''
         },
+        gitlab: {
+            server: 'https://gitlab.com/',
+            repo: '',
+            branch: '',
+            token: ''
+        },
         netlify: {
             id: '',
             token: ''

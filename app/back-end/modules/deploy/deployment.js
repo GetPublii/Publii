@@ -8,6 +8,7 @@ const FTP = require('./ftp.js');
 const SFTP = require('./sftp.js');
 const S3 = require('./s3.js');
 const GithubPages = require('./github-pages.js');
+const GitlabPages = require('./gitlab-pages.js');
 const Netlify = require('./netlify.js');
 const GoogleCloud = require('./google-cloud.js');
 const ManualDeployment = require('./manual.js');
@@ -19,6 +20,7 @@ const ManualDeployment = require('./manual.js');
  * (S)FTP(S),
  * S3 server,
  * Github Pages,
+ * Gitlab Pages,
  * Netlify,
  * Google Cloud,
  * Manually
@@ -63,6 +65,7 @@ class Deployment {
             case 'netlify':         connection = new Netlify();     break;
             case 'google-cloud':    connection = new GoogleCloud(); break;
             case 'github-pages':    connection = new GithubPages(); break;
+            case 'gitlab-pages':    connection = new GitlabPages(); break;
             default:                connection = new FTP();         break;
         }
 
@@ -80,6 +83,7 @@ class Deployment {
             case 'sftp+key':        this.client = new SFTP(this);               break;
             case 's3':              this.client = new S3(this);                 break;
             case 'github-pages':    this.client = new GithubPages(this);        break;
+            case 'gitlab-pages':    this.client = new GitlabPages(this);        break;
             case 'netlify':         this.client = new Netlify(this);            break;
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
@@ -138,7 +142,10 @@ class Deployment {
                     filePath = filePath.substr(1);
                 }
 
-                if (this.siteConfig.deployment.protocol !== 'google-cloud') {
+                if (
+                    this.siteConfig.deployment.protocol !== 'google-cloud' &&
+                    this.siteConfig.deployment.protocol !== 'gitlab-pages'
+                ) {
                     fileList.push({
                         path: filePath,
                         type: 'directory',
@@ -193,6 +200,18 @@ class Deployment {
             if(remoteFiles) {
                 try {
                     remoteFiles = JSON.parse(remoteFiles);
+
+                    if (this.siteConfig.deployment.protocol === 'gitlab-pages') {
+                        remoteFiles = remoteFiles.map(file => {
+                            file.path = file.path.substr(7);
+
+                            if (file.path.indexOf('/') > -1) {
+                                file.path = '/' + file.path;
+                            }
+
+                            return file;
+                        });
+                    }
                 } catch (e) {
                     console.log('Malformed files-remote.json file: ' + e);
                 }
@@ -217,7 +236,10 @@ class Deployment {
             }
 
             if(!fileFounded) {
-                if (this.siteConfig.deployment.protocol === 'google-cloud' && remoteFile.type === 'directory') {
+                if (
+                    (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
+                    remoteFile.type === 'directory'
+                ) {
                     continue;
                 }
 
@@ -244,8 +266,11 @@ class Deployment {
                 }
             }
 
-            if(fileShouldBeUploaded) {
-                if (this.siteConfig.deployment.protocol === 'google-cloud' && localFile.type === 'directory') {
+            if (fileShouldBeUploaded) {
+                if (
+                    (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
+                    localFile.type === 'directory'
+                ) {
                     continue;
                 }
 
@@ -354,6 +379,11 @@ class Deployment {
     removeFile() {
         if(this.siteConfig.deployment.protocol === 's3') {
             this.client.removeFile();
+            return;
+        }
+
+        if(this.siteConfig.deployment.protocol === 'gitlab-pages') {
+            this.client.createBranch();
             return;
         }
 

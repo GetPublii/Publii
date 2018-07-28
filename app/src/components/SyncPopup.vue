@@ -18,6 +18,12 @@
                 </p>
 
                 <p
+                    v-if="isGitlabPages"
+                    class="description alert">
+                    <strong>Remember!</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment.
+                </p>
+
+                <p
                     v-if="isManual"
                     class="description alert">
                     Your website files has been prepared. Use the "Get website files" button below to get your files in order to manually deploy them.
@@ -170,6 +176,10 @@ export default {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;
             return deploymentConfig && deploymentConfig.protocol === 'github-pages';
         },
+        isGitlabPages: function() {
+            let deploymentConfig = this.$store.state.currentSite.config.deployment;
+            return deploymentConfig && deploymentConfig.protocol === 'gitlab-pages';
+        },
         isManual: function() {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;
             return deploymentConfig && deploymentConfig.protocol === 'manual';
@@ -195,6 +205,10 @@ export default {
                 }
 
                 if(deploymentConfig.protocol === 'github-pages' && this.checkGithubConfig(deploymentConfig)) {
+                    return false;
+                }
+
+                if(deploymentConfig.protocol === 'gitlab-pages' && this.checkGitlabConfig(deploymentConfig)) {
                     return false;
                 }
 
@@ -514,6 +528,19 @@ export default {
                 deploymentConfig.github.user !== '' &&
                 deploymentConfig.github.repo !== '' &&
                 deploymentConfig.github.branch !== ''
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        checkGitlabConfig: function(deploymentConfig) {
+            if(
+                deploymentConfig.gitlab &&
+                deploymentConfig.gitlab.server !== '' &&
+                deploymentConfig.gitlab.repo !== '' &&
+                deploymentConfig.gitlab.branch !== '' &&
+                deploymentConfig.gitlab.token !== ''
             ) {
                 return true;
             }

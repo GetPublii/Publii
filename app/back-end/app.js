@@ -329,6 +329,10 @@ class App {
             if(siteConfig.deployment.github) {
                 siteConfig.deployment.github.token = this.loadPassword('publii-gh-token', siteConfig.deployment.github.token);
             }
+
+            if(siteConfig.deployment.gitlab) {
+                siteConfig.deployment.gitlab.token = this.loadPassword('publii-gl-token', siteConfig.deployment.gitlab.token);
+            }
         }
 
         return siteConfig;

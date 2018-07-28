@@ -187,11 +187,11 @@
 
     #link-toolbar,
     #inline-toolbar {
-        background: $color-10;
+        background: $color-4;
         border-radius: 3px;
-        box-shadow: 0 0 18px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 26px rgba(0, 0, 0, 0.2);
         display: none;
-        padding: .25rem 1rem .75rem 1rem;
+        padding: .35rem 1rem .85rem;
         position: absolute;
         user-select: none;
         z-index: 10;
@@ -200,19 +200,19 @@
             cursor: pointer;
             height: 24px;
             padding: 4px;
-            width: 24px;
+            width: 30px;
         }
 
         select {
             -webkit-appearance: none;
-            background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
-            background-size: 10px;
+            background: $color-4 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+            background-size: 9px;
             border: none;
             border-radius: 3px;
             box-shadow: none;
-            color: $color-5;
+            color: $color-9;
             font: 400 1.6rem/1.5 $secondary-font;
-            margin-left: 10px;
+            margin-left: 15px;
             max-width: 150px!important;
             min-width: 125px;
             min-height: 24px;
@@ -224,6 +224,14 @@
             &:focus {
                 box-shadow: none;
             }
+            
+            & + select {
+                margin-left: 0;
+            }
+        }
+        
+        .mce-ico { 
+            color: $color-9;
         }
     }
 
