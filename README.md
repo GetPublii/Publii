@@ -25,6 +25,10 @@ can create, update and modify your site offline, then upload the site changes to
 the click of a button. Publii supports multiple upload options, including standard HTTP/HTTPS
 servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
 
+
+![Publii Open Source Static CMS](https://getpublii.com//publii-static-cms.svg)
+
+
 ## Installation
 ### Required Software
 
