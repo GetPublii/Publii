@@ -128,6 +128,19 @@ export default {
         },
         syncWebsite: function() {
             if(this.redirectTo === 'sync') {
+                if (!this.$store.state.currentSite.config.theme) {
+                    let siteName = this.$store.state.currentSite.config.name;
+
+                    this.$bus.$emit('confirm-display', {
+                        message: 'You haven\'t selected any theme. Please go to the Settings and select the theme first.',
+                        okLabel: 'Go to settings',
+                        okClick: () => {
+                            this.$router.push(`/site/${siteName}/settings/`);
+                        }
+                    })
+                    return;
+                }
+
                 this.$bus.$emit('sync-popup-display');
             } else if(this.redirectTo === 'site-settings') {
                 let siteName = this.$store.state.currentSite.config.name;
