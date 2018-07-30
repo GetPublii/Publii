@@ -1252,7 +1252,7 @@ export default {
             newSettings.language = this.language;
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {
-                if (group.name === '' || group.id === '') {
+                if (group.name === '') {
                     return false;
                 }
 

@@ -3,7 +3,7 @@ class Gdpr {
         let groups = ``;
 
         for (let i = 0; i < configuration.groups.length; i++) {
-            if (i === 0) {
+            if (configuration.groups[i].id === '-' || configuration.groups[i].id === '') {
                 groups += `
                 <input
                     id="gdpr-necessary"
@@ -12,7 +12,7 @@ class Gdpr {
                     disabled="disabled"
                     type="checkbox">
                 <label for="gdpr-necessary">
-                    ${configuration.groups[0].name}
+                    ${configuration.groups[i].name}
                 </label>`;
                 continue;
             }
@@ -78,7 +78,7 @@ class Gdpr {
             transition: transform 0.8s ease 0s, -webkit-transform 0.8s ease 0s;
             will-change: transform;
             z-index: 1000;
-        }        
+        }
 
         .cookie-popup--uses-badge {
             background: #24a931;
@@ -124,13 +124,13 @@ class Gdpr {
         }
 
         @media (max-width:600px) {
-            .cookie-popup--uses-badge.cookie-popup--is-sticky { 
+            .cookie-popup--uses-badge.cookie-popup--is-sticky {
                  bottom: 0 !important;
                  left: 0;
-                 right: 0;                
+                 right: 0;
             }
         }
-        
+
         @media (min-width:600px) {
             .cookie-popup--uses-badge.cookie-popup--is-sticky:hover {
                  bottom: 1rem;
@@ -300,27 +300,29 @@ class Gdpr {
                     popup.classList.remove('cookie-popup--is-sticky');
 
                     setTimeout(function () {
-                        if (currentConfig) {
+                        if (currentConfig !== null) {
                             window.location.reload();
                         }
                     }, 250);
                 });
 
-                if (!currentConfig) {
+                if (currentConfig === null) {
                     popup.classList.add('cookie-popup--is-sticky');
                 } else {
-                    var allowedGroups = currentConfig.split(',');
+                    if (currentConfig !== '') {
+                        var allowedGroups = currentConfig.split(',');
 
-                    for (var i = 0; i < allowedGroups.length; i++) {
-                        var scripts = document.querySelectorAll('script[type="gdpr-blocker/' + allowedGroups[i] + '"]');
-                        var checkbox = popup.querySelector('input[type="checkbox"][name="gdpr-' + allowedGroups[i] + '"]');
+                        for (var i = 0; i < allowedGroups.length; i++) {
+                            var scripts = document.querySelectorAll('script[type="gdpr-blocker/' + allowedGroups[i] + '"]');
+                            var checkbox = popup.querySelector('input[type="checkbox"][name="gdpr-' + allowedGroups[i] + '"]');
 
-                        if (checkbox) {
-                            checkbox.checked = true;
-                        }
+                            if (checkbox) {
+                                checkbox.checked = true;
+                            }
 
-                        for (var j = 0; j < scripts.length; j++) {
-                            addScript(scripts[j].src, scripts[j].text);
+                            for (var j = 0; j < scripts.length; j++) {
+                                addScript(scripts[j].src, scripts[j].text);
+                            }
                         }
                     }
                 }

@@ -13,11 +13,9 @@
                 v-model="group.name" />
 
             <text-input
-                :disabled="index === 0"
                 v-model="group.id" />
 
             <icon
-                v-if="index !== 0"
                 size="m"
                 name="sidebar-close"
                 primaryColor="color-3"
