@@ -476,6 +476,15 @@
                                 slot="field"
                                 v-model="advanced.openGraphImage" />
                         </field>
+
+                        <field
+                            v-if="advanced.openGraphEnabled"
+                            label="Facebook App ID">
+                            <input
+                                slot="field"
+                                type="text"
+                                v-model="advanced.openGraphAppId" />
+                        </field>
                     </div>
 
                     <div slot="tab-4">

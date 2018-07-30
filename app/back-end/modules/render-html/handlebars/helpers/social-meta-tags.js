@@ -77,6 +77,12 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
 
             output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
             output += '<meta property="og:description" content="' + description.replace(/"/g, "'") + '" />';
+            output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '" />';
+            output += '<meta property="og:type" content="article" />';
+
+            if (rendererInstance.siteConfig.advanced.openGraphAppId !== '') {
+                output += '<meta property="fb:app_id" content="' + rendererInstance.siteConfig.advanced.openGraphAppId + '" />';
+            }
         }
 
         // If user set Twitter username - generate Twitter Cards tags

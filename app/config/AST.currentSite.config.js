@@ -21,6 +21,7 @@ const AstCurrentSiteConfig = {
         sitemapExcludedFiles: '',
         openGraphEnabled: 1,
         openGraphImage: '',
+        openGraphAppId: '',
         twitterCardsEnabled: 1,
         twitterCardsType: 'summary',
         twitterUsername: '',
