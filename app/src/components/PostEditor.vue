@@ -153,6 +153,7 @@ export default {
                 metaTitle: '',
                 metaDescription: '',
                 metaRobots: 'index, follow',
+                canonicalUrl: '',
                 featuredImage: {
                     path: '',
                     alt: '',
@@ -347,6 +348,7 @@ export default {
                     this.postData.metaTitle = data.additionalData.metaTitle || "";
                     this.postData.metaDescription = data.additionalData.metaDesc || "";
                     this.postData.metaRobots = data.additionalData.metaRobots || "";
+                    this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
                     // Update post template
                     this.postData.template = data.posts[9];
@@ -457,7 +459,8 @@ export default {
                 'additionalData': {
                     metaTitle: this.postData.metaTitle,
                     metaDesc: this.postData.metaDescription,
-                    metaRobots: this.postData.metaRobots
+                    metaRobots: this.postData.metaRobots,
+                    canonicalUrl: this.postData.canonicalUrl
                 },
                 'postViewSettings': postViewSettings,
                 'id': this.postID,

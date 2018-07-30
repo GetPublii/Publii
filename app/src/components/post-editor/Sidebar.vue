@@ -300,6 +300,14 @@
                                         :items="metaRobotsOptions">
                                     </dropdown>
                                 </label>
+
+                                <label>
+                                    Canonical URL:
+                                    <input
+                                        type="text"
+                                        v-model="$parent.postData.canonicalUrl"
+                                        placeholder="Leave blank to use a default Page URL" />
+                                </label>
                             </div>
                         </div>
                     </div>

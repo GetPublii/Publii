@@ -11,6 +11,11 @@ function canonicalLinkHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('canonicalLink', function (context) {
         let pageUrl = context.data.website.pageUrl;
 
+        // If current page is a post - check for canonical URL
+        if (context.data.root.canonicalUrl) {
+            pageUrl = context.data.root.canonicalUrl;
+        }
+
         // We need to remove amp directory from the url in AMP renderer mode
         if(rendererInstance.ampMode) {
             pageUrl = pageUrl.replace('/amp/', '/');
