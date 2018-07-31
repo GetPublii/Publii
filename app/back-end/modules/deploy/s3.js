@@ -174,7 +174,7 @@ class S3 {
             }
 
             let params = {
-                ACL: "public-read",
+                ACL: 'authenticated-read',
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,
