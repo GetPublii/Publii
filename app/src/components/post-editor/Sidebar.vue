@@ -279,17 +279,21 @@
 
                                 <label>
                                     Page title:
-                                    <input
+                                    <text-input
                                         type="text"
                                         v-model="$parent.postData.metaTitle"
-                                        placeholder="Leave blank to use a default Page title" />
+                                        placeholder="Leave blank to use a default Page title"
+                                        :charCounter="true"
+                                        :preferredCount="70" />
                                     <small class="note">The following variables can be used in the Page Title: %posttitle, %sitename, %authorname </small>
                                 </label>
 
                                 <label>
                                     Meta description:
                                     <text-area
-                                        v-model="$parent.postData.metaDescription"></text-area>
+                                        v-model="$parent.postData.metaDescription"
+                                        :charCounter="true"
+                                        :preferredCount="160"></text-area>
                                 </label>
 
                                 <label>

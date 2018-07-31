@@ -102,7 +102,9 @@
                             <text-input
                                 id="meta-title"
                                 v-model="advanced.metaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                         </field>
 
                         <field
@@ -112,7 +114,9 @@
                             <text-area
                                 id="meta-description"
                                 v-model="advanced.metaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -138,7 +142,9 @@
                             <text-input
                                 id="post-meta-title"
                                 slot="field"
-                                v-model="advanced.postMetaTitle" />
+                                v-model="advanced.postMetaTitle"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -153,7 +159,9 @@
                             <text-area
                                 id="post-meta-description"
                                 v-model="advanced.postMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -182,7 +190,9 @@
                             <text-input
                                 id="tag-meta-title"
                                 v-model="advanced.tagMetaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -197,7 +207,9 @@
                             <text-area
                                 id="tag-meta-description"
                                 v-model="advanced.tagMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -239,7 +251,9 @@
                             <text-input
                                 id="author-meta-title"
                                 v-model="advanced.authorMetaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -254,7 +268,9 @@
                             <text-area
                                 id="author-meta-description"
                                 v-model="advanced.authorMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field

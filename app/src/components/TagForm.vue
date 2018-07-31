@@ -33,17 +33,21 @@
 
             <label>
                 <span>Description:</span>
-                <text-area v-model="tagData.description" rows="4"></text-area>
+                <text-area
+                    v-model="tagData.description"
+                    :rows="4"></text-area>
             </label>
 
             <label>
                 <span>Page Title:</span>
-                <input
+                <text-input
                     v-model="tagData.additionalData.metaTitle"
                     type="text"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive" />
+                    :readonly="!metaOptionsActive"
+                    :charCounter="metaOptionsActive"
+                    :preferredCount="70" />
             </label>
 
             <label>
@@ -52,7 +56,9 @@
                     v-model="tagData.additionalData.metaDescription"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"></text-area>
+                    :readonly="!metaOptionsActive"
+                    :charCounter="metaOptionsActive"
+                    :preferredCount="160"></text-area>
             </label>
 
             <label>

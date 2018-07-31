@@ -70,12 +70,14 @@
 
             <label>
                 <span>Page title:</span>
-                <input
+                <text-input
                     v-model="authorData.metaTitle"
                     type="text"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive" />
+                    :readonly="!metaOptionsActive"
+                    :charCounter="metaOptionsActive"
+                    :preferredCount="70" />
             </label>
 
             <label>
@@ -84,7 +86,9 @@
                     v-model="authorData.metaDescription"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"></text-area>
+                    :readonly="!metaOptionsActive"
+                    :charCounter="metaOptionsActive"
+                    :preferredCount="160"></text-area>
             </label>
 
             <label>
