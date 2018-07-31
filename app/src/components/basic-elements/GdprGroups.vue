@@ -1,6 +1,8 @@
 <template>
     <div class="gdpr-groups">
-        <div class="gdpr-groups-header">
+        <div
+            v-if="content.length"
+            class="gdpr-groups-header">
             <div class="gdpr-groups-header-cell">Group name</div>
             <div class="gdpr-groups-header-cell">Group ID</div>
         </div>

@@ -29,8 +29,8 @@ class Gdpr {
 
         let output = `
         <div class="cookie-popup js-cookie-popup ${configuration.behaviour !== 'badge' ? 'cookie-popup--uses-link' : ''} ${configuration.behaviour !== 'link' ? 'cookie-popup--uses-badge' : ''}">
-            <h2>${configuration.popupTitlePrimary}</h2>
-
+            ${configuration.popupTitlePrimary !== '' ? '<h2>' + configuration.popupTitlePrimary + '</h2>' : ''}
+            
             <p>
                 ${configuration.popupDesc}
                 <a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">
