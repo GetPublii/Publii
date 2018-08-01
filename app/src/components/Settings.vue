@@ -498,6 +498,21 @@
 
                         <field
                             v-if="advanced.openGraphEnabled"
+                            id="use-page-title-instead-item-name"
+                            label="Use as a title page title">
+                            <switcher
+                                slot="field"
+                                id="use-page-title-instead-item-name"
+                                v-model="advanced.usePageTitleInsteadItemName" />
+                            <small
+                                slot="note"
+                                class="note">
+                                When this option is enabled, og:title and twitter:title metatags will contain page title, instead of the post title, tag name or author name.
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.openGraphEnabled"
                             label="Facebook App ID">
                             <input
                                 slot="field"
