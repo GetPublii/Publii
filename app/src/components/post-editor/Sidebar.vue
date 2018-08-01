@@ -277,7 +277,7 @@
                                         @keyup="$parent.slugUpdated">
                                 </label>
 
-                                <label>
+                                <label class="with-char-counter">
                                     Page title:
                                     <text-input
                                         type="text"
@@ -787,6 +787,13 @@ export default {
 
                 textarea {
                     height: 100px;
+                }
+
+                &.with-char-counter {
+                    .note {
+                        margin-top: -3rem;
+                        width: 70%;
+                    }
                 }
             }
 

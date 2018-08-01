@@ -138,6 +138,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="post-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="post-meta-title"
@@ -186,6 +187,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="tag-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="tag-meta-title"
@@ -247,6 +249,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="author-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="author-meta-title"

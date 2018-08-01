@@ -51,7 +51,7 @@ export default {
     display: block;
     font-size: 1.2rem;
     line-height: 1.6;
-    margin: .25rem 0;
+    margin: .5rem 0;
     text-align: right;
     width: 100%;
 
