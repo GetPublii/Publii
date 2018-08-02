@@ -290,32 +290,43 @@ button {
   -o-transition: all 0.24s ease;
   transition: all 0.24s ease;
   width: 100%; }
-  @media all and (min-width: 37.5em) {
+  @media all and (min-width: 20em) {
     .btn, [type=button],
     [type=submit],
     button {
       width: auto; } }
-  .btn:hover, [type=button]:hover,
-  [type=submit]:hover,
-  button:hover, .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
-  button:focus, .btn:active, [type=button]:active,
-  [type=submit]:active,
+  .btn:hover, :hover[type=button],
+  :hover[type=submit],
+  button:hover, .btn:focus, :focus[type=button],
+  :focus[type=submit],
+  button:focus, .btn:active, :active[type=button],
+  :active[type=submit],
   button:active {
     background: #2c2e35;
     border-color: #2c2e35;
     color: #ffffff; }
-  .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     outline: none; }
-  .btn:disabled, [type=button]:disabled,
-  [type=submit]:disabled,
+  .btn:disabled, :disabled[type=button],
+  :disabled[type=submit],
   button:disabled {
     background-color: #f4f5f5;
     border-color: #cacbcd;
     color: #6b6d72;
     cursor: not-allowed; }
+  @media all and (max-width: 19.9375em) {
+    .btn + .btn, [type=button] + .btn, [type=submit] + .btn, button + .btn, .btn + [type=button], [type=button] + [type=button], [type=submit] + [type=button], button + [type=button],
+    .btn + [type=submit],
+    [type=button] + [type=submit],
+    [type=submit] + [type=submit],
+    button + [type=submit],
+    .btn + button,
+    [type=button] + button,
+    [type=submit] + button,
+    button + button {
+      margin-top: 0.51429rem; } }
 
 [type=button],
 [type=submit],
@@ -1295,7 +1306,8 @@ textarea {
     margin-right: auto;
     text-align: center; }
   @media all and (min-width: 56.25em) {
-    .main--full .post__image--wide, .main--full .post__image--full {
+    .main--full .post__image--wide,
+    .main--full .post__image--full {
       margin-left: calc(-50vw + 50%);
       margin-right: calc(-50vw + 50%);
       padding: 0 calc(2.57143rem + 0.5vw);

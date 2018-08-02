@@ -61,7 +61,7 @@ textarea {
   fill: #333333; }
 
 /* Typography
-   ==========================================================================
+   ========================================================================== 
 */
 html {
   font-size: 1rem; }
@@ -306,34 +306,45 @@ button {
   -o-transition: all 0.12s linear 0s;
   transition: all 0.12s linear 0s;
   width: 100%; }
-  @media all and (min-width: 37.5em) {
+  @media all and (min-width: 20em) {
     .btn, [type=button],
     [type=submit],
     button {
       width: auto; } }
-  .btn:hover, [type=button]:hover,
-  [type=submit]:hover,
-  button:hover, .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:hover, :hover[type=button],
+  :hover[type=submit],
+  button:hover, .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     border-color: #2c3e50;
     color: #2c3e50;
     text-decoration: none; }
-  .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     outline: 2px dotted #2c3e50; }
-  .btn:disabled, [type=button]:disabled,
-  [type=submit]:disabled,
+  .btn:disabled, :disabled[type=button],
+  :disabled[type=submit],
   button:disabled {
     background-color: #f4f5f6;
     border-color: #cacfd3;
     color: #969fa8;
     cursor: not-allowed; }
-  .btn:active, [type=button]:active,
-  [type=submit]:active,
+  .btn:active, :active[type=button],
+  :active[type=submit],
   button:active {
     border: 1px solid #d73a42; }
+  @media all and (max-width: 19.9375em) {
+    .btn + .btn, [type=button] + .btn, [type=submit] + .btn, button + .btn, .btn + [type=button], [type=button] + [type=button], [type=submit] + [type=button], button + [type=button],
+    .btn + [type=submit],
+    [type=button] + [type=submit],
+    [type=submit] + [type=submit],
+    button + [type=submit],
+    .btn + button,
+    [type=button] + button,
+    [type=submit] + button,
+    button + button {
+      margin-top: 0.53333rem; } }
 
 [type=button],
 [type=submit],
@@ -740,10 +751,10 @@ main {
   top: 0;
   z-index: 1; }
   .hero:after {
-    background: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.64)));
-    background: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.64) 100%);
-    background: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.64) 100%);
-    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.64) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.64)));
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.64) 100%);
+    background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.64) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.64) 100%);
     content: '';
     display: block;
     height: 50vh;
@@ -1113,8 +1124,9 @@ main {
   @media all and (min-width: 56.25em) {
     .pagination {
       margin-top: 3.2rem; } }
-  .pagination > a + a {
-    margin-left: 0.53333rem; }
+  @media all and (min-width: 20em) {
+    .pagination > a + a {
+      margin-left: 0.53333rem; } }
 
 /* Footer ------------------------ */
 .footer {
