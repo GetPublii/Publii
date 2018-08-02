@@ -64,7 +64,7 @@
                     <p-button
                         type="outline"
                         :disabled="!themeConfigured"
-                        :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : false"
+                        :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
                         @click.native="generatePostPreview">
                         Preview
                     </p-button>
