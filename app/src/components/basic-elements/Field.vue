@@ -52,6 +52,10 @@ export default {
         spacing: {
             default: 'normal',
             type: String
+        },
+        withCharCounter: {
+            default: false,
+            type: Boolean
         }
     },
     computed: {
@@ -59,7 +63,8 @@ export default {
             return {
                 'field': true,
                 'field-label-full-width': this.labelFullWidth,
-                'field-small-spacing': this.spacing === 'small'
+                'field-small-spacing': this.spacing === 'small',
+                'field-with-char-counter': this.withCharCounter
             };
         },
         labelCssClasses: function() {
@@ -292,6 +297,13 @@ label {
             textarea {
                 margin: 0;
             }
+        }
+    }
+
+    &.field-with-char-counter {
+        .note {
+            margin-top: -3rem;
+            width: 70%;
         }
     }
 }

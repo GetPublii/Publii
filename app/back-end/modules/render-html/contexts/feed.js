@@ -42,13 +42,11 @@ class RendererContextFeed extends RendererContext {
             let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post[0] + '/';
             let preparedText = post[4].split('#DOMAIN_NAME#').join(domainMediaPath);
             let contentMode = self.siteConfig.advanced.feed.showFullText ? 'fullText' : 'excerpt';
-            let text = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
+            let text = this.cleanUpText(preparedText);
             let excerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, post[4]);
             let authorData = this.getAuthor('post', post[0]);
 
-            if(contentMode === 'fullText') {
-                excerpt = false;
-            } else {
+            if(contentMode !== 'fullText') {
                 text = false;
             }
 
@@ -73,6 +71,15 @@ class RendererContextFeed extends RendererContext {
                 thumbnail: this.getPostThumbnail(post[0])
             }
         });
+    }
+
+    cleanUpText (text) {
+        text = text.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
+        text = text.replace(/contenteditable="false"/gmi, '');
+        text = text.replace(/contenteditable="true"/gmi, '');
+        text = text.replace(/data\-[a-z\-0-9]{1,}=".*?"/gmi, '');
+
+        return text;
     }
 
     setContext() {

@@ -328,34 +328,45 @@ button {
   -o-transition: all 0.12s linear 0s;
   transition: all 0.12s linear 0s;
   width: 100%; }
-  @media all and (min-width: 37.5em) {
+  @media all and (min-width: 20em) {
     .btn, [type=button],
     [type=submit],
     button {
       width: auto; } }
-  .btn:hover, [type=button]:hover,
-  [type=submit]:hover,
-  button:hover, .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:hover, :hover[type=button],
+  :hover[type=submit],
+  button:hover, .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     background: #111111;
     border-color: #111111;
     color: #ffffff; }
-  .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     outline: 2px dotted #111111; }
-  .btn:disabled, [type=button]:disabled,
-  [type=submit]:disabled,
+  .btn:disabled, :disabled[type=button],
+  :disabled[type=submit],
   button:disabled {
     background-color: #f3f3f3;
     border-color: #c4c4c4;
     color: #585858;
     cursor: not-allowed; }
-  .btn:active, [type=button]:active,
-  [type=submit]:active,
+  .btn:active, :active[type=button],
+  :active[type=submit],
   button:active {
     border: 1px solid #ff80ab; }
+  @media all and (max-width: 19.9375em) {
+    .btn + .btn, [type=button] + .btn, [type=submit] + .btn, button + .btn, .btn + [type=button], [type=button] + [type=button], [type=submit] + [type=button], button + [type=button],
+    .btn + [type=submit],
+    [type=button] + [type=submit],
+    [type=submit] + [type=submit],
+    button + [type=submit],
+    .btn + button,
+    [type=button] + button,
+    [type=submit] + button,
+    button + button {
+      margin-top: 0.5rem; } }
 
 [type=button],
 [type=submit],
@@ -1460,11 +1471,9 @@ main {
   @media all and (min-width: 56.25em) {
     .pagination {
       margin-top: 4.5rem; } }
-  .pagination > a {
-    margin: 0 0 0.75rem; }
-    @media all and (min-width: 37.5em) {
-      .pagination > a {
-        margin: 0 0 0 0.75rem; } }
+  @media all and (min-width: 20em) {
+    .pagination > a + a {
+      margin: 0 0 0 0.5rem; } }
 
 /* Footer ------------------------ */
 .footer {

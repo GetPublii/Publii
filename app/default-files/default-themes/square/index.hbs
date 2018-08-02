@@ -74,9 +74,11 @@
                                     {{/author}}
                                 </p>
                             </header>
-                            {{#if excerpt}}
-                                <p>{{{excerpt}}}</p>
-                            {{/if}}
+                           {{#if hasCustomExcerpt}}
+                               {{{ excerpt }}}
+                           {{else}}
+                              <p>{{{ excerpt }}}</p>
+                           {{/if}}
                         </article>
                     {{/each}}
                     {{> pagination}}

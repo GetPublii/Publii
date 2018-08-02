@@ -76,11 +76,16 @@
                                 <a href="{{url}}">{{title}}</a>
                             </h2>
                         </header>
-                        {{#if excerpt}}
-                            <p class="category__entry">
-                                {{{excerpt}}}
-                            </p>
+                        {{#if hasCustomExcerpt}}
+                             <div class="category__entry">
+                                 {{{excerpt}}}
+                             </div>
+                        {{else}}
+                             <p class="category__entry">
+                                  {{{excerpt}}}
+                             </p>
                         {{/if}}
+                        
                         <a href="{{url}}" class="category__btn">{{ translate 'common.readmore' }}</a>
                     </article>
                 {{/each}}

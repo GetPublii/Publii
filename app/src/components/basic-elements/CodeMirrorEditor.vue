@@ -1,7 +1,7 @@
 <template>
-    <text-area
+    <textarea
         :id="id"
-        ref="textarea"></text-area>
+        ref="textarea"></textarea>
 </template>
 
 <script>
@@ -54,7 +54,7 @@ export default {
     methods: {
         initEditor: function() {
             this.editor = CodeMirror.fromTextArea(
-                this.$refs.textarea.$el,
+                this.$refs['textarea'],
                 {
                     lineWrapping: true,
                     lineNumbers: true,

@@ -34,6 +34,11 @@
             @click="hidePassword">
             Hide password
         </span>
+
+        <char-counter
+            v-if="charCounter"
+            v-model="content"
+            :preferredCount="preferredCount" />
     </div>
 </template>
 
@@ -102,6 +107,14 @@ export default {
         'customCssClasses': {
             default: '',
             type: String
+        },
+        'charCounter': {
+            default: false,
+            type: Boolean
+        },
+        'preferredCount': {
+            default: 0,
+            type: Number
         }
     },
     computed: {
@@ -131,7 +144,7 @@ export default {
         }
     },
     watch: {
-        value (newValue, oldValue) { 
+        value (newValue, oldValue) {
             this.content = newValue;
         },
         content: function(newValue) {

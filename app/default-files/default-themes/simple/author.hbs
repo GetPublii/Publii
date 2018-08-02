@@ -89,8 +89,10 @@
                             </a>
                         </h2>
                     </header>
-                    {{#if excerpt}}
-                        <p>{{{excerpt}}}</p>
+                    {{#if hasCustomExcerpt}}
+                        {{{ excerpt }}}
+                    {{else}}
+                        <p>{{{ excerpt }}}</p>
                     {{/if}}
                     {{#if @config.custom.authorReadMore}}
                         <a href="{{url}}" class="u-readmore">

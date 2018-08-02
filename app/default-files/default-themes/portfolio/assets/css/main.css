@@ -339,33 +339,44 @@ button {
   -o-transition: all 0.12s linear 0s;
   transition: all 0.12s linear 0s;
   width: 100%; }
-  @media all and (min-width: 37.5em) {
+  @media all and (min-width: 20em) {
     .btn, [type=button],
     [type=submit],
     button {
       width: auto; } }
-  .btn:hover, [type=button]:hover,
-  [type=submit]:hover,
-  button:hover, .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:hover, :hover[type=button],
+  :hover[type=submit],
+  button:hover, .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     color: #fff;
     background: #D6496C; }
-  .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     outline: none; }
-  .btn:disabled, [type=button]:disabled,
-  [type=submit]:disabled,
+  .btn:disabled, :disabled[type=button],
+  :disabled[type=submit],
   button:disabled {
     background-color: #f6f6f7;
     border-color: #d3d4d7;
     color: #7a7e88;
     cursor: not-allowed; }
-  .btn:active, [type=button]:active,
-  [type=submit]:active,
+  .btn:active, :active[type=button],
+  :active[type=submit],
   button:active {
     background: #D6496C; }
+  @media all and (max-width: 19.9375em) {
+    .btn + .btn, [type=button] + .btn, [type=submit] + .btn, button + .btn, .btn + [type=button], [type=button] + [type=button], [type=submit] + [type=button], button + [type=button],
+    .btn + [type=submit],
+    [type=button] + [type=submit],
+    [type=submit] + [type=submit],
+    button + [type=submit],
+    .btn + button,
+    [type=button] + button,
+    [type=submit] + button,
+    button + button {
+      margin-top: 0.5rem; } }
 
 [type=button],
 [type=submit],

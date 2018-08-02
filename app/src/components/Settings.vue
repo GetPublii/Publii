@@ -102,7 +102,9 @@
                             <text-input
                                 id="meta-title"
                                 v-model="advanced.metaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                         </field>
 
                         <field
@@ -112,7 +114,9 @@
                             <text-area
                                 id="meta-description"
                                 v-model="advanced.metaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -134,11 +138,14 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="post-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="post-meta-title"
                                 slot="field"
-                                v-model="advanced.postMetaTitle" />
+                                v-model="advanced.postMetaTitle"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -153,7 +160,9 @@
                             <text-area
                                 id="post-meta-description"
                                 v-model="advanced.postMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -178,11 +187,14 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="tag-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="tag-meta-title"
                                 v-model="advanced.tagMetaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -197,7 +209,9 @@
                             <text-area
                                 id="tag-meta-description"
                                 v-model="advanced.tagMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -235,11 +249,14 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="author-meta-title"
+                            :withCharCounter="true"
                             label="Page Title:">
                             <text-input
                                 id="author-meta-title"
                                 v-model="advanced.authorMetaTitle"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
                             <small
                                 slot="note"
                                 class="note">
@@ -254,7 +271,9 @@
                             <text-area
                                 id="author-meta-description"
                                 v-model="advanced.authorMetaDescription"
-                                slot="field" />
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
                         </field>
 
                         <field
@@ -475,6 +494,30 @@
                             <image-upload
                                 slot="field"
                                 v-model="advanced.openGraphImage" />
+                        </field>
+
+                        <field
+                            v-if="advanced.openGraphEnabled"
+                            id="use-page-title-instead-item-name"
+                            label="Use as a title page title">
+                            <switcher
+                                slot="field"
+                                id="use-page-title-instead-item-name"
+                                v-model="advanced.usePageTitleInsteadItemName" />
+                            <small
+                                slot="note"
+                                class="note">
+                                When this option is enabled, og:title and twitter:title metatags will contain page title, instead of the post title, tag name or author name.
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.openGraphEnabled"
+                            label="Facebook App ID">
+                            <input
+                                slot="field"
+                                type="text"
+                                v-model="advanced.openGraphAppId" />
                         </field>
                     </div>
 
@@ -1243,7 +1286,7 @@ export default {
             newSettings.language = this.language;
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {
-                if (group.name === '' || group.id === '') {
+                if (group.name === '') {
                     return false;
                 }
 

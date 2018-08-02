@@ -431,7 +431,7 @@ class EditorBridge {
         let body = doc.body;
         window.app.$bus.$emit('init-inline-editor', customFormats);
 
-        $(body).on('mouseup', () => {
+        $(doc.querySelector('html')).on('mouseup', () => {
             let sel = win.getSelection();
             let text = sel.toString();
             window.app.$bus.$emit('update-inline-editor', {

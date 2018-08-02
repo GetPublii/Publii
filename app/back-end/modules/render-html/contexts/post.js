@@ -30,6 +30,7 @@ class RendererContextPost extends RendererContext {
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
         this.metaTitle = this.siteConfig.advanced.postMetaTitle;
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
+        this.canonicalUrl = this.post.url;
         this.metaRobots = '';
 
         if(this.metaData && this.metaData[0]) {
@@ -45,6 +46,10 @@ class RendererContextPost extends RendererContext {
 
             if(results.metaRobots) {
                 this.metaRobots = results.metaRobots;
+            }
+
+            if(results.canonicalUrl) {
+                this.canonicalUrl = results.canonicalUrl;
             }
         }
 
@@ -279,6 +284,7 @@ class RendererContextPost extends RendererContext {
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,
+            canonicalUrl: this.canonicalUrl,
             previousPost: this.previousPost,
             previousSimilarPost: this.previousSimilarPost,
             nextPost: this.nextPost,

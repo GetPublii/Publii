@@ -332,34 +332,45 @@ button {
   -o-transition: all 0.24s ease-out;
   transition: all 0.24s ease-out;
   width: 100%; }
-  @media all and (min-width: 37.5em) {
+  @media all and (min-width: 20em) {
     .btn, [type=button],
     [type=submit],
     button {
       width: auto; } }
-  .btn:hover, [type=button]:hover,
-  [type=submit]:hover,
-  button:hover, .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:hover, :hover[type=button],
+  :hover[type=submit],
+  button:hover, .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     background: #343434;
     border-color: #343434;
     color: #ffffff; }
-  .btn:focus, [type=button]:focus,
-  [type=submit]:focus,
+  .btn:focus, :focus[type=button],
+  :focus[type=submit],
   button:focus {
     outline: 2px dotted #343434; }
-  .btn:disabled, [type=button]:disabled,
-  [type=submit]:disabled,
+  .btn:disabled, :disabled[type=button],
+  :disabled[type=submit],
   button:disabled {
     background-color: whitesmoke;
     border-color: #cccccc;
     color: #59585F;
     cursor: not-allowed; }
-  .btn:active, [type=button]:active,
-  [type=submit]:active,
+  .btn:active, :active[type=button],
+  :active[type=submit],
   button:active {
     border: 1px solid #343434; }
+  @media all and (max-width: 19.9375em) {
+    .btn + .btn, [type=button] + .btn, [type=submit] + .btn, button + .btn, .btn + [type=button], [type=button] + [type=button], [type=submit] + [type=button], button + [type=button],
+    .btn + [type=submit],
+    [type=button] + [type=submit],
+    [type=submit] + [type=submit],
+    button + [type=submit],
+    .btn + button,
+    [type=button] + button,
+    [type=submit] + button,
+    button + button {
+      margin-top: 0.53333rem; } }
   .btn--inverse, .newsletter button,
   .newsletter .button {
     background: #343434;
@@ -1079,9 +1090,9 @@ main {
       color: #dd2c00; }
     .hero__category a:focus {
       color: #dd2c00; }
-  .hero .btn, .hero [type=button], .hero
-  [type=submit], .hero
-  button {
+  .hero .btn, .hero [type=button],
+  .hero [type=submit],
+  .hero button {
     margin-top: calc(2.4rem + 0.35vw); }
   .hero__rest-items {
     position: relative; }
@@ -1600,11 +1611,9 @@ main {
   margin-top: calc(3.2rem + 2vw);
   text-align: center;
   width: 100%; }
-  .pagination > a {
-    margin: 0 0 0.8rem; }
-    @media all and (min-width: 37.5em) {
-      .pagination > a {
-        margin: 0 0 0 0.8rem; } }
+  @media all and (min-width: 37.5em) {
+    .pagination > a + a {
+      margin-left: 0.53333rem; } }
 
 /* Footer ------------------------ */
 .footer {
@@ -1621,14 +1630,16 @@ main {
       font-size: 0.77248rem;
       font-style: italic;
       margin: 0 0 calc(0.8rem + 0.5vw); }
-    .newsletter input[type=email], .newsletter input[type=text] {
+    .newsletter input[type=email],
+    .newsletter input[type=text] {
       border: none;
       border-bottom: 1px solid #d6d6d6;
       display: block;
       margin: 0.26667rem 0;
       padding: 0.53333rem 0; }
       @media all and (min-width: 37.5em) {
-        .newsletter input[type=email], .newsletter input[type=text] {
+        .newsletter input[type=email],
+        .newsletter input[type=text] {
           font-size: 0.9375rem;
           margin-bottom: 0;
           width: 100%; } }

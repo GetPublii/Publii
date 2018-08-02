@@ -41,10 +41,18 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
 
             if (contextData.data.context.indexOf('tag') !== -1) {
                 title = contextData.data.root.tag.name;
+
+                if (rendererInstance.siteConfig.advanced.usePageTitleInsteadItemName) {
+                    title = contextData.data.root.title;
+                }
             }
 
             if (contextData.data.context.indexOf('author') !== -1) {
                 title = contextData.data.root.author.name;
+
+                if (rendererInstance.siteConfig.advanced.usePageTitleInsteadItemName) {
+                    title = contextData.data.root.title;
+                }
             }
         } else {
             // Data for the single post page
@@ -55,6 +63,11 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             }
 
             title = contextData.data.root.post.title;
+
+            if (rendererInstance.siteConfig.advanced.usePageTitleInsteadItemName) {
+                title = contextData.data.root.title;
+            }
+
             description = contextData.data.root.metaDescriptionRaw;
 
             if(description === '') {
@@ -77,6 +90,12 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
 
             output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
             output += '<meta property="og:description" content="' + description.replace(/"/g, "'") + '" />';
+            output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '" />';
+            output += '<meta property="og:type" content="article" />';
+
+            if (rendererInstance.siteConfig.advanced.openGraphAppId !== '') {
+                output += '<meta property="fb:app_id" content="' + rendererInstance.siteConfig.advanced.openGraphAppId + '" />';
+            }
         }
 
         // If user set Twitter username - generate Twitter Cards tags

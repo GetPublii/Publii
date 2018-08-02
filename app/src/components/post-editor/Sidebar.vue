@@ -277,19 +277,23 @@
                                         @keyup="$parent.slugUpdated">
                                 </label>
 
-                                <label>
+                                <label class="with-char-counter">
                                     Page title:
-                                    <input
+                                    <text-input
                                         type="text"
                                         v-model="$parent.postData.metaTitle"
-                                        placeholder="Leave blank to use a default Page title" />
+                                        placeholder="Leave blank to use a default Page title"
+                                        :charCounter="true"
+                                        :preferredCount="70" />
                                     <small class="note">The following variables can be used in the Page Title: %posttitle, %sitename, %authorname </small>
                                 </label>
 
                                 <label>
                                     Meta description:
                                     <text-area
-                                        v-model="$parent.postData.metaDescription"></text-area>
+                                        v-model="$parent.postData.metaDescription"
+                                        :charCounter="true"
+                                        :preferredCount="160"></text-area>
                                 </label>
 
                                 <label>
@@ -299,6 +303,14 @@
                                         v-model="$parent.postData.metaRobots"
                                         :items="metaRobotsOptions">
                                     </dropdown>
+                                </label>
+
+                                <label>
+                                    Canonical URL:
+                                    <input
+                                        type="text"
+                                        v-model="$parent.postData.canonicalUrl"
+                                        placeholder="Leave blank to use a default Page URL" />
                                 </label>
                             </div>
                         </div>
@@ -775,6 +787,13 @@ export default {
 
                 textarea {
                     height: 100px;
+                }
+
+                &.with-char-counter {
+                    .note {
+                        margin-top: -3rem;
+                        width: 70%;
+                    }
                 }
             }
 

@@ -1,6 +1,8 @@
 <template>
     <div class="gdpr-groups">
-        <div class="gdpr-groups-header">
+        <div
+            v-if="content.length"
+            class="gdpr-groups-header">
             <div class="gdpr-groups-header-cell">Group name</div>
             <div class="gdpr-groups-header-cell">Group ID</div>
         </div>
@@ -13,11 +15,9 @@
                 v-model="group.name" />
 
             <text-input
-                :disabled="index === 0"
                 v-model="group.id" />
 
             <icon
-                v-if="index !== 0"
                 size="m"
                 name="sidebar-close"
                 primaryColor="color-3"

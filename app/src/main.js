@@ -9,6 +9,7 @@ import appSubmenuContent from './config/app-submenu';
 // Basic elements
 import Alert from './components/basic-elements/Alert';
 import Button from './components/basic-elements/Button';
+import CharCounter from './components/basic-elements/CharCounter';
 import Checkbox from './components/basic-elements/Checkbox';
 import CodeMirrorEditor from './components/basic-elements/CodeMirrorEditor';
 import Collection from './components/basic-elements/Collection';
@@ -53,6 +54,7 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
     // Register global components
     Vue.component('alert', Alert);
     Vue.component('p-button', Button);
+    Vue.component('char-counter', CharCounter);
     Vue.component('checkbox', Checkbox);
     Vue.component('codemirror-editor', CodeMirrorEditor);
     Vue.component('collection', Collection);

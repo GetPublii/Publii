@@ -1,9 +1,15 @@
 <template>
-    <textarea
-        :id="editorID"
-        :data-id="editorID"
-        :rows="rows"
-        v-model="content"></textarea>
+    <div>
+        <textarea
+            :id="editorID"
+            :data-id="editorID"
+            :rows="rows"
+            v-model="content"></textarea>
+        <char-counter
+            v-if="charCounter"
+            v-model="content"
+            :preferredCount="preferredCount" />
+    </div>
 </template>
 
 <script>
@@ -25,6 +31,14 @@ export default {
         rows: {
             default: false,
             type: [Number, Boolean]
+        },
+        charCounter: {
+            default: false,
+            type: Boolean
+        },
+        preferredCount: {
+            default: 0,
+            type: Number
         }
     },
     data: function() {

@@ -1,6 +1,6 @@
 {
     "name": "Portfolio",
-    "version": "1.1.8.4",
+    "version": "1.1.8.6",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -11,6 +11,7 @@
         "renderPrevNextPosts": false,
         "createContentStructure": false,
         "create404page": true,
+        "featuredPostsNumber": -1,
         "createSearchPage": true,
         "customHTML": {
              "afterPost": "After every post"
