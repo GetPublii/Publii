@@ -255,7 +255,7 @@ class GitlabPages {
                 });
             }
 
-            return this.makeCommit(this.filesToRemove, this.updateTextFiles.bind(this), 'Publii - remove files');
+            return this.makeCommit(this.filesToRemove, this.updateTextFiles.bind(this), '[skip ci] Publii - remove files');
         }
 
         console.log('(!) NO FILES TO REMOVE DETECTED');
@@ -295,7 +295,7 @@ class GitlabPages {
 
             if (this.filesToUpdate.length) {
                 console.log('(!) TEXT FILES TO UPDATE DETECTED');
-                return this.makeCommit(this.filesToUpdate, this.uploadTextFiles.bind(this), 'Publii - update non-binary files');
+                return this.makeCommit(this.filesToUpdate, this.uploadTextFiles.bind(this), '[skip ci] Publii - update non-binary files');
             }
         }
 
@@ -336,7 +336,7 @@ class GitlabPages {
 
             if (this.filesToUpdate.length) {
                 console.log('(!) TEXT FILES TO UPLOAD DETECTED');
-                return this.makeCommit(this.filesToUpdate, this.createBinaryFilesList.bind(this), 'Publii - upload non-binary files');
+                return this.makeCommit(this.filesToUpdate, this.createBinaryFilesList.bind(this), '[skip ci] Publii - upload non-binary files');
             }
         }
 
@@ -388,14 +388,21 @@ class GitlabPages {
 
     updateBinaryFiles () {
         if (this.binaryFilesToUpdate.length) {
-            this.binaryFilesUploadedCount++;
-            let progress = Math.floor(this.currentUploadProgress + this.binaryProgressOffset);
+            let commits = [];
+            let progress = this.currentUploadProgress;
+
+            for (let i = 1; i <= 10 && this.binaryFilesToUpdate.length; i++) {
+                progress = progress + this.binaryProgressOffset;
+                this.binaryFilesUploadedCount++;
+                let commit = this.binaryFilesToUpdate.shift();
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commits.push(commit);
+            }
+
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
-            let commit = this.binaryFilesToUpdate.shift();
-            commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
             this.setUploadProgress(progress, operations);
-            console.log('(!) BINARY FILE UPDATED');
-            this.makeCommit([commit], this.updateBinaryFiles.bind(this), 'Publii - update public/' + commit.file_path);
+            console.log('(!) BINARY FILES UPDATED');
+            this.makeCommit(commits, this.updateBinaryFiles.bind(this), '[skip ci] Publii - update ' + commits.length + ' files');
             return;
         }
 
@@ -406,14 +413,21 @@ class GitlabPages {
 
     uploadBinaryFiles () {
         if (this.binaryFilesToUpload.length) {
-            this.binaryFilesUploadedCount++;
-            let progress = Math.floor(this.currentUploadProgress + this.binaryProgressOffset);
+            let commits = [];
+            let progress = this.currentUploadProgress;
+
+            for (let i = 1; i <= 10 && this.binaryFilesToUpload.length; i++) {
+                progress = progress + this.binaryProgressOffset;
+                this.binaryFilesUploadedCount++;
+                let commit = this.binaryFilesToUpload.shift();
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commits.push(commit);
+            }
+
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
-            let commit = this.binaryFilesToUpload.shift();
-            commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
             this.setUploadProgress(progress, operations);
-            console.log('(!) BINARY FILE UPLOADED');
-            this.makeCommit([commit], this.uploadBinaryFiles.bind(this), 'Publii - upload public/' + commit.file_path);
+            console.log('(!) BINARY FILES UPLOADED');
+            this.makeCommit(commits, this.uploadBinaryFiles.bind(this), '[skip ci] Publii - upload ' + commits.length + ' files');
             return;
         }
 
@@ -453,7 +467,7 @@ class GitlabPages {
         }
 
         console.log('(!) REMOTE FILES LIST UPDATED');
-        return this.makeCommit(commit, this.mergeTemporaryBranch.bind(this), 'Publii - upload remote files list');
+        return this.makeCommit(commit, this.mergeTemporaryBranch.bind(this), '[skip ci] Publii - upload remote files list');
     }
 
     mergeTemporaryBranch () {
