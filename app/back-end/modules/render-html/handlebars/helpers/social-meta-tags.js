@@ -36,7 +36,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         if(contextData.data.context.indexOf('post') === -1) {
             // Data for the index/tag listing page
             image = contextData.data.website.logo;
-            title = contextData.data.website.name;
+            title = siteName;
             description = contextData.data.root.metaDescriptionRaw;
 
             if (contextData.data.context.indexOf('tag') !== -1) {
