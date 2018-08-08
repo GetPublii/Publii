@@ -76,14 +76,13 @@ export default {
     font-size: 1.6rem;
     font-weight: 400;
     left: 50%;
-    max-width: 60rem;
-    min-width: 40rem;
     overflow: hidden;
     padding: 4rem;
     position: absolute;
     text-align: center;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+    width: 60rem;
 
     .error-log {
         height: 225px;
