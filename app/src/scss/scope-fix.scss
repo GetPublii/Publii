@@ -215,13 +215,20 @@
 /**
  * Improved layout of v-select for long items
  */
-.multiselect__single,
-.multiselect__option {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+.multiselect__tags {
+    .multiselect__single,
+    .multiselect__option {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .multiselect__content {
     width: 100%;
+
+    .multiselect__option {
+        white-space: normal;
+    }
 }

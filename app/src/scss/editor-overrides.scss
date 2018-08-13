@@ -28,30 +28,30 @@
     text-align: right;
 }
 
- .mce-window * {
+.mce-window * {
     font-size: 1.6rem !important;
 }
 .mce-menu-item {
-    
+
     &-normal {
         &.mce-active {
-            background-color: $color-9 !important; 
-            
+            background-color: $color-9 !important;
+
             .mce-text {
-                color: $color-5 !important; 
-                font-weight: 600 !important; 
+                color: $color-5 !important;
+                font-weight: 600 !important;
             }
         }
     }
-    
+
     &:hover,
     &:focus,
     &.mce-selected {
         background-color: $color-9 !important;
-        color: $color-5 !important; 
-        
+        color: $color-5 !important;
+
         .mce-text {
-                color: $color-5 !important;                
+                color: $color-5 !important;
         }
     }
 }
@@ -67,18 +67,14 @@
     margin: 0 !important;
     padding: 0.8rem 1.2rem !important;
     text-shadow: none !important;
-    
+
     &:hover {
         background: rgba($color-helper-8, 0.4) !important;
     }
-    
+
     &.mce-active {
         background: $color-1!important;
         color: $color-10;
-       
-        
-       
-       
     }
 }
 
@@ -224,13 +220,13 @@
             &:focus {
                 box-shadow: none;
             }
-            
+
             & + select {
                 margin-left: 0;
             }
         }
-        
-        .mce-ico { 
+
+        .mce-ico {
             color: $color-9;
         }
     }
@@ -288,7 +284,7 @@ body[data-os="win"] {
         &:hover {
             color: $color-4;
         }
-        
+
     }
 }
 
@@ -327,7 +323,7 @@ body[data-os="win"] {
                 background: $color-10!important;
                 color: $color-5!important;
             }
-            
+
             i {
                 color: $color-3;
                 font-size: 1.4rem !important;
