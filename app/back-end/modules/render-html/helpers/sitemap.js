@@ -62,7 +62,10 @@ class Sitemap {
 
             // Detect homepage pagination
             if(file === this.siteConfig.advanced.urls.pageName) {
-                this.getHomepagePaginationFilesList();
+                if (!this.siteConfig.advanced.homepageNoIndexPagination) {
+                    this.getHomepagePaginationFilesList();
+                }
+
                 continue;
             }
 
@@ -168,6 +171,10 @@ class Sitemap {
 
             this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
 
+            if (this.siteConfig.advanced.authorNoIndexPagination) {
+                continue;
+            }
+
             let paginationPath = path.join(
                 this.baseDirectory,
                 this.siteConfig.advanced.urls.authorsPrefix,
@@ -235,6 +242,10 @@ class Sitemap {
             }
 
             this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/index.html');
+
+            if (this.siteConfig.advanced.tagNoIndexPagination) {
+                continue;
+            }
 
             let paginationPath = path.join(
                 this.baseDirectory,
