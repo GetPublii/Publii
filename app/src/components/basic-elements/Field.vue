@@ -196,6 +196,10 @@ label {
             margin-right: .5rem;
             width: 1.4rem;
         }
+
+        &.is-invalid {
+            color: $color-3;
+        }
     }
 
     label + .note {

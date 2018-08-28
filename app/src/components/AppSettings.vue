@@ -79,9 +79,15 @@
                 <dir-select
                     id="sites-location"
                     placeholder="Leave blank to use default sites directory"
-                    :value="locations.sites"
+                    v-model="locations.sites"
                     ref="sitesLocation"
                     slot="field" />
+                <small
+                    v-if="locations.sites !== '' && !checkSitesCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
 
             <field
@@ -90,9 +96,15 @@
                 <dir-select
                     id="backups-location"
                     placeholder="Set it if you want to use backup tool"
-                    :value="locations.backups"
+                    v-model="locations.backups"
                     ref="backupsLocation"
                     slot="field" />
+                <small
+                    v-if="locations.backups !== '' && !checkBackupsCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
 
             <field
@@ -101,9 +113,15 @@
                 <dir-select
                     id="preview-location"
                     placeholder="Leave blank to use default preview directory"
-                    :value="locations.preview"
+                    v-model="locations.preview"
                     ref="previewLocation"
                     slot="field" />
+                <small
+                    v-if="locations.preview !== '' && !checkPreviewCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
         </fields-group>
 
@@ -122,6 +140,7 @@
 </template>
 
 <script>
+import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import ThemesList from './ThemesList';
 import Utils from './../helpers/utils.js';
@@ -132,6 +151,15 @@ export default {
     mixins: [GoToLastOpenedWebsite],
     components: {
         'themes-list': ThemesList
+    },
+    data () {
+        return {
+            locations: {
+                sites: '',
+                backups: '',
+                preview: ''
+            }
+        };
     },
     computed: {
         screens () {
@@ -163,22 +191,27 @@ export default {
         imageResizeEnginesSelected () {
             return this.$store.state.app.config.resizeEngine;
         },
-        locations () {
-            return {
-                sites: this.$store.state.app.config.sitesLocation,
-                backups: this.$store.state.app.config.backupsLocation,
-                preview: this.$store.state.app.config.previewLocation
-            };
-        },
         openDevToolsInMainWindow () {
             return this.$store.state.app.config.openDevToolsInMain;
         },
         wideScrollbars () {
             return this.$store.state.app.config.wideScrollbars;
+        },
+        checkSitesCatalog () {
+            return fs.existsSync(this.locations.sites);
+        },
+        checkBackupsCatalog () {
+            return fs.existsSync(this.locations.backups);
+        },
+        checkPreviewCatalog () {
+            return fs.existsSync(this.locations.preview);
         }
     },
     mounted () {
         this.$bus.$emit('sites-list-reset');
+        this.locations.sites = this.$store.state.app.config.sitesLocation;
+        this.locations.backups = this.$store.state.app.config.backupsLocation;
+        this.locations.preview = this.$store.state.app.config.previewLocation;
     },
     methods: {
         goBack () {
@@ -202,9 +235,9 @@ export default {
                 openDevToolsInMain: this.$refs.openDevToolsInMain.isChecked,
                 timeFormat: this.$refs.timeFormat.selectedValue,
                 resizeEngine: this.$refs.resizeEngine.selectedValue,
-                sitesLocation: this.$refs.sitesLocation.fieldValue.trim(),
-                backupsLocation: this.$refs.backupsLocation.fieldValue.trim(),
-                previewLocation: this.$refs.previewLocation.fieldValue.trim(),
+                sitesLocation: this.locations.sites.trim(),
+                backupsLocation: this.locations.backups.trim(),
+                previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.$refs.wideScrollbars.isChecked
             };
 
