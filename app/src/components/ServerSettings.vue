@@ -716,7 +716,7 @@ export default {
             let excludedRefs = ['content', 'httpProtocol', 'domain'];
             let availableRefs = Object.keys(this.$refs);
             let newSettings = {
-                domain: this.fullDomainName(),
+                domain: this.fullDomainName().trim(),
                 deployment: Object.assign({}, defaultDeploymentSettings)
             };
             let currentProtocol = this.$refs['protocol'].getValue();
@@ -746,10 +746,18 @@ export default {
                     let refParts = ref.split('_');
 
                     if(refParts[0] === currentProtocol) {
-                        this.deploymentSettings[refParts[0]][refParts[1]] = this.$refs[ref].getValue();
+                        if (typeof this.$refs[ref].getValue() === 'string') {
+                            this.deploymentSettings[refParts[0]][refParts[1]] = this.$refs[ref].getValue().trim();
+                        } else {
+                            this.deploymentSettings[refParts[0]][refParts[1]] = this.$refs[ref].getValue();
+                        }
                     }
                 } else if(this.$refs[ref]) {
-                    this.deploymentSettings[ref] = this.$refs[ref].getValue();
+                    if (typeof this.$refs[ref].getValue() === 'string') {
+                        this.deploymentSettings[ref] = this.$refs[ref].getValue().trim();
+                    } else {
+                        this.deploymentSettings[ref] = this.$refs[ref].getValue();
+                    }
                 }
             }
 
