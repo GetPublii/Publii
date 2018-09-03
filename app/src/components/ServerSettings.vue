@@ -26,17 +26,15 @@
                     <dropdown
                         slot="field"
                         id="http-protocol"
-                        ref="httpProtocol"
                         key="httpProtocol"
                         :items="httpProtocols"
-                        :selected="httpProtocolSelected"></dropdown>
+                        v-model="httpProtocolSelected"></dropdown>
 
                     <text-input
                         slot="field"
-                        ref="domain"
                         id="domain"
                         key="domain"
-                        :value="domain" />
+                        v-model="domain" />
                 </field>
 
                 <field
@@ -45,11 +43,9 @@
                     <dropdown
                         slot="field"
                         id="deploymentMethod"
-                        ref="protocol"
                         key="protocol"
-                        :onChange="deploymentMethodChanged"
                         :items="deploymentMethods"
-                        :selected="deploymentMethodSelected"></dropdown>
+                        v-model="deploymentMethodSelected"></dropdown>
 
                     <small
                         class="note"
@@ -101,11 +97,10 @@
                     label="Port">
                     <text-input
                         slot="field"
-                        ref="port"
                         id="port"
                         type="number"
                         key="port"
-                        :value="deploymentSettings.port" />
+                        v-model="deploymentSettings.port" />
                 </field>
 
                 <field
@@ -114,10 +109,9 @@
                     label="Server">
                     <text-input
                         slot="field"
-                        ref="server"
                         id="server"
                         key="server"
-                        :value="deploymentSettings.server" />
+                        v-model="deploymentSettings.server" />
                 </field>
 
                 <field
@@ -126,10 +120,9 @@
                     label="Username">
                     <text-input
                         slot="field"
-                        ref="username"
                         id="username"
                         key="username"
-                        :value="deploymentSettings.username" />
+                        v-model="deploymentSettings.username" />
                 </field>
 
                 <field
@@ -138,11 +131,10 @@
                     label="Password">
                     <text-input
                         slot="field"
-                        ref="password"
                         id="password"
                         type="password"
                         key="password"
-                        :value="deploymentSettings.password" />
+                        v-model="deploymentSettings.password" />
                 </field>
 
                 <field
@@ -153,10 +145,8 @@
                     <switcher
                         slot="field"
                         id="askforpassword"
-                        ref="askforpassword"
                         key="askforpassword"
-                        :checked="deploymentSettings.askforpassword"
-                        :onToggle="toggleAskForPassword" />
+                        v-model="deploymentSettings.askforpassword" />
                     <template slot="second-label">
                         Require the FTP password on every time you sync your site
                     </template>
@@ -168,8 +158,7 @@
                     label="Your key">
                     <file-select
                         id="sftpkey"
-                        :value="deploymentSettings.sftpkey"
-                        ref="sftpkey"
+                        v-model="deploymentSettings.sftpkey"
                         key="sftpkey"
                         slot="field" />
                 </field>
@@ -180,11 +169,10 @@
                     label="Passphrase for a key">
                     <text-input
                         slot="field"
-                        ref="passphrase"
                         id="passphrase"
                         type="password"
                         key="passphrase"
-                        :value="deploymentSettings.passphrase" />
+                        v-model="deploymentSettings.passphrase" />
 
                     <small
                         slot="note"
@@ -199,10 +187,9 @@
                     label="Remote path">
                     <text-input
                         slot="field"
-                        ref="path"
                         id="path"
                         key="path"
-                        :value="deploymentSettings.path" />
+                        v-model="deploymentSettings.path" />
 
                     <small
                         v-if="['ftp', 'ftp+tls'].indexOf(deploymentMethodSelected) > -1"
@@ -225,10 +212,9 @@
                     label="Username">
                     <text-input
                         slot="field"
-                        ref="github_user"
                         id="gh-user"
                         key="gh-user"
-                        :value="deploymentSettings.github.user" />
+                        v-model="deploymentSettings.github.user" />
                 </field>
 
                 <field
@@ -237,10 +223,9 @@
                     label="Repository">
                     <text-input
                         slot="field"
-                        ref="github_repo"
                         id="gh-repo"
                         key="gh-repo"
-                        :value="deploymentSettings.github.repo" />
+                        v-model="deploymentSettings.github.repo" />
                 </field>
 
                 <field
@@ -249,10 +234,9 @@
                     label="Branch">
                     <text-input
                         slot="field"
-                        ref="github_branch"
                         id="gh-branch"
                         key="gh-branch"
-                        :value="deploymentSettings.github.branch" />
+                        v-model="deploymentSettings.github.branch" />
 
                     <small
                         slot="note"
@@ -267,11 +251,10 @@
                     label="Token">
                     <text-input
                         slot="field"
-                        ref="github_token"
                         id="gh-token"
                         type="password"
                         key="gh-token"
-                        :value="deploymentSettings.github.token" />
+                        v-model="deploymentSettings.github.token" />
                 </field>
 
                 <field
@@ -280,10 +263,9 @@
                     label="Server">
                     <text-input
                         slot="field"
-                        ref="gitlab_server"
                         id="gl-server"
                         key="gl-server"
-                        :value="deploymentSettings.gitlab.server" />
+                        v-model="deploymentSettings.gitlab.server" />
                     <small
                         slot="note"
                         class="note">
@@ -297,10 +279,9 @@
                     label="Repository">
                     <text-input
                         slot="field"
-                        ref="gitlab_repo"
                         id="gl-repo"
                         key="gl-repo"
-                        :value="deploymentSettings.gitlab.repo" />
+                        v-model="deploymentSettings.gitlab.repo" />
                 </field>
 
                 <field
@@ -309,10 +290,9 @@
                     label="Branch">
                     <text-input
                         slot="field"
-                        ref="gitlab_branch"
                         id="gl-branch"
                         key="gl-branch"
-                        :value="deploymentSettings.gitlab.branch" />
+                        v-model="deploymentSettings.gitlab.branch" />
 
                     <small
                         slot="note"
@@ -327,11 +307,10 @@
                     label="Token">
                     <text-input
                         slot="field"
-                        ref="gitlab_token"
                         id="gl-token"
                         type="password"
                         key="gl-token"
-                        :value="deploymentSettings.gitlab.token" />
+                        v-model="deploymentSettings.gitlab.token" />
                 </field>
 
                 <field
@@ -340,10 +319,9 @@
                     label="Site ID">
                     <text-input
                         slot="field"
-                        ref="netlify_id"
                         id="netlify-id"
                         key="netlify-id"
-                        :value="deploymentSettings.netlify.id" />
+                        v-model="deploymentSettings.netlify.id" />
                 </field>
 
                 <field
@@ -352,11 +330,10 @@
                     label="Netlify token">
                     <text-input
                         slot="field"
-                        ref="netlify_token"
                         id="netlify-token"
                         type="password"
                         key="netlify-token"
-                        :value="deploymentSettings.netlify.token" />
+                        v-model="deploymentSettings.netlify.token" />
                 </field>
 
                 <field
@@ -365,11 +342,10 @@
                     label="Access ID">
                     <text-input
                         slot="field"
-                        ref="s3_id"
                         id="s3-id"
                         type="password"
                         key="s3-id"
-                        :value="deploymentSettings.s3.id" />
+                        v-model="deploymentSettings.s3.id" />
                 </field>
 
                 <field
@@ -378,11 +354,10 @@
                     label="Secret key">
                     <text-input
                         slot="field"
-                        ref="s3_key"
                         id="s3-key"
                         type="password"
                         key="s3-key"
-                        :value="deploymentSettings.s3.key" />
+                        v-model="deploymentSettings.s3.key" />
                 </field>
 
                 <field
@@ -391,10 +366,9 @@
                     label="Bucket">
                     <text-input
                         slot="field"
-                        ref="s3_bucket"
                         id="s3-bucket"
                         key="s3-bucket"
-                        :value="deploymentSettings.s3.bucket" />
+                        v-model="deploymentSettings.s3.bucket" />
                 </field>
 
                 <field
@@ -404,10 +378,9 @@
                     <dropdown
                         slot="field"
                         id="s3-region"
-                        ref="s3_region"
                         :items="s3Regions"
                         key="s3-region"
-                        :selected="deploymentSettings.s3.region"></dropdown>
+                        v-model="deploymentSettings.s3.region"></dropdown>
                 </field>
 
                 <field
@@ -416,10 +389,9 @@
                     label="Prefix">
                     <text-input
                         slot="field"
-                        ref="s3_prefix"
                         id="s3-prefix"
                         key="s3-prefix"
-                        :value="deploymentSettings.s3.prefix" />
+                        v-model="deploymentSettings.s3.prefix" />
 
                     <small
                         slot="note"
@@ -434,8 +406,7 @@
                     label="Your JSONkey">
                     <file-select
                         id="google-key"
-                        :value="deploymentSettings.google.key"
-                        ref="google_key"
+                        v-model="deploymentSettings.google.key"
                         key="google-key"
                         slot="field" />
                 </field>
@@ -446,10 +417,9 @@
                     label="Bucket">
                     <text-input
                         slot="field"
-                        ref="google_bucket"
                         id="google-bucket"
                         key="google-bucket"
-                        :value="deploymentSettings.google.bucket" />
+                        v-model="deploymentSettings.google.bucket" />
                 </field>
 
                 <field
@@ -458,10 +428,9 @@
                     label="Prefix">
                     <text-input
                         slot="field"
-                        ref="google_prefix"
                         id="google-prefix"
                         key="google-prefix"
-                        :value="deploymentSettings.google.prefix" />
+                        v-model="deploymentSettings.google.prefix" />
 
                     <small
                         slot="note"
@@ -477,10 +446,9 @@
                     <dropdown
                         slot="field"
                         id="manual-output"
-                        ref="manual_output"
                         key="manual-output"
                         :items="{ '': 'Select output type', 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
-                        :selected="deploymentSettings.manual.output"></dropdown>
+                        v-model="deploymentSettings.manual.output"></dropdown>
 
                     <small
                         slot="note"
@@ -495,12 +463,10 @@
                     label="Output directory">
                     <dir-select
                         id="manual-output-dir"
-                        :value="deploymentSettings.manual.outputDirectory"
-                        ref="manual_outputDirectory"
+                        v-model="deploymentSettings.manual.outputDirectory"
                         placeholder="Leave blank to use default output directory"
                         slot="field"
-                        key="manual-output-dir"
-                        :onChange="manualOutputDirectorySelected" />
+                        key="manual-output-dir" />
 
                     <small
                         v-if="deploymentSettings.manual.outputDirectory"
@@ -545,7 +511,7 @@ export default {
     mixins: [
         ExternalLinks
     ],
-    data: function() {
+    data () {
         return {
             domain: '',
             httpProtocols: {
@@ -578,9 +544,6 @@ export default {
         currentHttpProtocol () {
             return this.$store.state.currentSite.config.domain.indexOf('https') === 0 ? 'https' : 'http';
         },
-        currentDeploymentMethod () {
-            return this.$store.state.currentSite.config.deployment.protocol;
-        },
         siteIsOnline () {
             if(
                 !this.$store.state.currentSite.config.domain ||
@@ -599,10 +562,17 @@ export default {
             }
         }
     },
-    mounted: function() {
+    watch: {
+        deploymentMethodSelected: function (newValue) {
+            setTimeout(() => {
+                this.setPortValue();
+            }, 0);
+        }
+    },
+    mounted () {
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
-        this.deploymentMethodSelected = this.currentDeploymentMethod || 'github-pages';
+        this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || 'github-pages';
         this.deploymentSettings = Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment)));
 
         setTimeout(() => {
@@ -610,88 +580,62 @@ export default {
         }, 0);
     },
     methods: {
-        deploymentMethodChanged: function(newValue) {
-            this.deploymentMethodSelected = newValue;
-
-            setTimeout(() => {
-                this.setPortValue();
-            }, 0);
-        },
-        toggleAskForPassword: function(newValue) {
-            this.deploymentSettings.askforpassword = newValue;
-        },
-        setPortValue: function() {
-            if(!this.$refs['port']) {
+        setPortValue () {
+            if (['', '21', '22', '990'].indexOf(this.deploymentSettings.port) === -1) {
                 return;
             }
 
-            let portValue = this.deploymentSettings.port;
-
-            if(['', '21', '22', '990'].indexOf(portValue) > -1) {
-                portValue = '21';
-
-                switch(this.deploymentMethodSelected) {
-                    case 'ftp': portValue = '21'; break;
-                    case 'sftp': portValue = '22'; break;
-                    case 'sftp+key': portValue = '22'; break;
-                    case 'ftp+tls': portValue = '21'; break;
-                    case 'ftp+implicit+tls': portValue = '990'; break;
-                    case 's3': portValue = ''; break;
-                    case 'github-pages': portValue = ''; break;
-                    case 'gitlab-pages': portValue = ''; break;
-                    case 'netlify': portValue = ''; break;
-                    case 'google-cloud': portValue = ''; break;
-                    case 'manual': portValue = ''; break;
-                    default: portValue = '21';
-                }
+            switch(this.deploymentMethodSelected) {
+                case 'sftp':
+                case 'sftp+key':
+                    this.deploymentSettings.port = '22'; break;
+                case 'ftp+implicit+tls':
+                    this.deploymentSettings.port = '990'; break;
+                case 's3':
+                case 'github-pages':
+                case 'gitlab-pages':
+                case 'netlify':
+                case 'google-cloud':
+                case 'manual':
+                    this.deploymentSettings.port = ''; break;
+                case 'ftp':
+                case 'ftp+tls':
+                default:
+                    this.deploymentSettings.port = '21';
             }
-
-            this.deploymentSettings.port = portValue;
-            this.$refs['port'].content = portValue;
         },
-        manualOutputDirectorySelected: function(newValue) {
-            this.deploymentSettings.manual.outputDirectory = newValue;
+        prepareDomain () {
+            return this.domain.replace('http://', '').replace('https://', '').replace(/\/$/, '');
         },
-        prepareDomain: function() {
-            return this.$refs['domain'].getValue()
-                    .replace('http://', '')
-                    .replace('https://', '')
-                    .replace(/\/$/, '');
-        },
-        fullDomainName: function() {
-            let httpProtocol = this.$refs['httpProtocol'].getValue();
+        fullDomainName () {
             let domain = this.prepareDomain();
 
             if(this.deploymentMethodSelected === 'github-pages') {
                 if(domain.indexOf('github.io') > -1) {
-                    httpProtocol = 'https';
                     this.httpProtocolSelected = 'https';
                 }
             }
 
             if(this.deploymentMethodSelected === 'gitlab-pages') {
                 if(domain.indexOf('gitlab.io') > -1) {
-                    httpProtocol = 'https';
                     this.httpProtocolSelected = 'https';
                 }
             }
 
-            return httpProtocol + '://' + domain;
+            return this.httpProtocolSelected + '://' + domain;
         },
-        save: function() {
+        save () {
             if(!this.validate()) {
                 return;
             }
 
             let newSettings = this.getDeploymentSettings();
 
-            // Send request to the back-end
             ipcRenderer.send('app-site-config-save', {
                 "site": this.$store.state.currentSite.config.name,
                 "settings": newSettings
             });
 
-            // Settings saved
             ipcRenderer.once('app-site-config-saved', (event, data) => {
                 if(data.status === true) {
                     this.saved(newSettings);
@@ -706,69 +650,23 @@ export default {
                 }
             });
         },
-        saved: function(newSettings) {
+        saved (newSettings) {
             this.$store.commit('setSiteConfig', {
                 name: this.$store.state.currentSite.config.name,
                 config: newSettings
             });
         },
-        getDeploymentSettings: function() {
-            let excludedRefs = ['content', 'httpProtocol', 'domain'];
-            let availableRefs = Object.keys(this.$refs);
+        getDeploymentSettings () {
             let newSettings = {
                 domain: this.fullDomainName().trim(),
                 deployment: Object.assign({}, defaultDeploymentSettings)
             };
-            let currentProtocol = this.$refs['protocol'].getValue();
-
-            if(currentProtocol === 'github-pages') {
-                currentProtocol = 'github';
-            }
-
-            if(currentProtocol === 'gitlab-pages') {
-                currentProtocol = 'gitlab';
-            }
-
-            if(currentProtocol === 'google-cloud') {
-                currentProtocol = 'google';
-            }
-
-            for(let ref of availableRefs) {
-                if(excludedRefs.indexOf(ref) > -1) {
-                    continue;
-                }
-
-                if(ref === 'password' && this.$refs['askforpassword'] && this.$refs['askforpassword'].getValue()) {
-                    continue;
-                }
-
-                if(ref.indexOf('_') > -1) {
-                    let refParts = ref.split('_');
-
-                    if(refParts[0] === currentProtocol) {
-                        if (typeof this.$refs[ref].getValue() === 'string') {
-                            this.deploymentSettings[refParts[0]][refParts[1]] = this.$refs[ref].getValue().trim();
-                        } else {
-                            this.deploymentSettings[refParts[0]][refParts[1]] = this.$refs[ref].getValue();
-                        }
-                    }
-                } else if(this.$refs[ref]) {
-                    if (typeof this.$refs[ref].getValue() === 'string') {
-                        this.deploymentSettings[ref] = this.$refs[ref].getValue().trim();
-                    } else {
-                        this.deploymentSettings[ref] = this.$refs[ref].getValue();
-                    }
-                }
-            }
-
             newSettings.deployment = Object.assign({}, newSettings.deployment, this.deploymentSettings);
             let currentSiteConfigCopy = JSON.parse(JSON.stringify(this.$store.state.currentSite.config));
-            newSettings = Utils.deepMerge(currentSiteConfigCopy, newSettings);
-
-            return newSettings;
+            return Utils.deepMerge(currentSiteConfigCopy, newSettings);
         },
-        testConnection: function() {
-            if(['ftp', 'sftp', 'sftp+key', 'ftp+tls'].indexOf(this.deploymentMethodSelected) > -1 && this.$refs['askforpassword'].getValue()) {
+        testConnection () {
+            if(['ftp', 'sftp', 'sftp+key', 'ftp+tls'].indexOf(this.deploymentMethodSelected) > -1 && this.deploymentSettings.askforpassword) {
                 this.$bus.$emit('confirm-display', {
                     hasInput: true,
                     inputIsPassword: true,
@@ -787,7 +685,7 @@ export default {
                 this.test();
             }
         },
-        test: function(password = false) {
+        test (password = false) {
             if(!this.validate()) {
                 return;
             }
@@ -832,172 +730,133 @@ export default {
                 this.testInProgress = false;
             });
         },
-        validate: function() {
-            if(['ftp', 'sftp', 'sftp+key', 'ftp+tls'].indexOf(this.deploymentMethodSelected) > -1) {
-                return this.validateFtp();
-            }
-
-            if(this.deploymentMethodSelected === 's3') {
-                return this.validateS3();
-            }
-
-            if(this.deploymentMethodSelected === 'github-pages') {
-                return this.validateGithubPages();
-            }
-
-            if(this.deploymentMethodSelected === 'gitlab-pages') {
-                return this.validateGitlabPages();
-            }
-
-            if(this.deploymentMethodSelected === 'netlify') {
-                return this.validateNetlify();
-            }
-
-            if(this.deploymentMethodSelected === 'google-cloud') {
-                return this.validateGoogleCloud();
-            }
-
-            if(this.deploymentMethodSelected === 'manual') {
-                return this.validateManual();
+        validate () {
+            switch (this.deploymentMethodSelected) {
+                case 'ftp':
+                case 'sftp':
+                case 'sftp+key':
+                case 'ftp+tls':
+                    return this.validateFtp();
+                case 's3':
+                    return this.validateS3();
+                case 'github-pages':
+                    return this.validateGithubPages();
+                case 'gitlab-pages':
+                    return this.validateGitlabPages();
+                case 'netlify':
+                    return this.validateNetlify();
+                case 'google-cloud':
+                    return this.validateGoogleCloud();
+                case 'manual':
+                    return this.validateManual();
             }
 
             return false;
         },
-        validateFtp: function() {
-            if(this.$refs['port'].getValue().trim() === '') {
+        validateFtp () {
+            if (this.deploymentSettings.port.trim() === '') {
                 this.$bus.$emit('alert-display', { 'message': 'The port field cannot be empty.' });
                 return false;
             }
 
-            if(isNaN(this.$refs['port'].getValue())) {
+            if (isNaN(this.deploymentSettings.port)) {
                 this.$bus.$emit('alert-display', { 'message': 'The port field value must be a number.' });
                 return false;
             }
 
-            if(this.$refs['server'].getValue().trim() === '') {
+            if (this.deploymentSettings.server.trim() === '') {
                 this.$bus.$emit('alert-display', { 'message': 'The server field cannot be empty.' });
                 return false;
             }
 
-            if(this.$refs['username'].getValue().trim() === '') {
+            if (this.deploymentSettings.username.trim() === '') {
                 this.$bus.$emit('alert-display', { 'message': 'The username field cannot be empty.' });
                 return false;
             }
 
-            if(this.deploymentMethodSelected !== 'sftp+key' && !this.$refs['askforpassword'].getValue() && this.$refs['password'].getValue().trim() === '') {
+            if (
+                this.deploymentMethodSelected !== 'sftp+key' &&
+                !this.deploymentSettings.askforpassword &&
+                this.deploymentSettings.password.trim() === ''
+            ) {
                 this.$bus.$emit('alert-display', { 'message': 'The password field cannot be empty.' });
                 return false;
             }
 
-            if(this.deploymentMethodSelected === 'sftp+key' && this.$refs['sftpkey'].getValue().trim() === '') {
+            if (
+                this.deploymentMethodSelected === 'sftp+key' &&
+                this.deploymentSettings.sftpkey.trim() === ''
+            ) {
                 this.$bus.$emit('alert-display', { 'message': 'Please select the key file.' });
                 return false;
             }
 
             return true;
         },
-        validateS3: function() {
-            if(this.$refs['s3_id'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The access ID field cannot be empty.' });
-                return false;
-            }
+        validateFields (messages) {
+            let fields = Object.keys(messages);
 
-            if(this.$refs['s3_key'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The secret key field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['s3_bucket'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The bucket field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['s3_region'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The region selection cannot be empty.' });
-                return false;
+            for (let i = 0; i < fields.length; i++) {
+                if(this.deploymentSettings[fields[i]].trim() === '') {
+                    this.$bus.$emit('alert-display', { 'message': messages[fields[i]] });
+                    return false;
+                }
             }
 
             return true;
         },
-        validateGithubPages: function() {
-            if(this.$refs['github_user'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The username field cannot be empty.' });
-                return false;
-            }
+        validateS3 () {
+            let messages = {
+                's3_id': 'The access ID field cannot be empty.',
+                's3_key': 'The secret key field cannot be empty.',
+                's3_bucket': 'The bucket field cannot be empty.',
+                's3_region': 'The region selection cannot be empty.'
+            };
 
-            if(this.$refs['github_repo'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The repository field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['github_branch'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The branch field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['github_token'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The token field cannot be empty.' });
-                return false;
-            }
-
-            return true;
+            return this.validateFields(messages);
         },
-        validateGitlabPages: function() {
-            if(this.$refs['gitlab_server'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The server field cannot be empty.' });
-                return false;
-            }
+        validateGithubPages () {
+            let messages = {
+                'github_user': 'The username field cannot be empty.',
+                'github_repo': 'The repository field cannot be empty.',
+                'github_branch': 'The branch field cannot be empty.',
+                'github_token': 'The token field cannot be empty.'
+            };
 
-            if(this.$refs['gitlab_repo'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The repository field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['gitlab_branch'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The branch field cannot be empty.' });
-                return false;
-            }
-
-            if(this.$refs['gitlab_token'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The token field cannot be empty.' });
-                return false;
-            }
-
-            return true;
+            return this.validateFields(messages);
         },
-        validateNetlify: function() {
-            if(this.$refs['netlify_id'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The Site ID field cannot be empty.' });
-                return false;
-            }
+        validateGitlabPages () {
+            let messages = {
+                'gitlab_server': 'The server field cannot be empty.',
+                'gitlab_repo': 'The repository field cannot be empty.',
+                'gitlab_branch': 'The branch field cannot be empty.',
+                'gitlab_token': 'The token field cannot be empty.'
+            };
 
-            if(this.$refs['netlify_token'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The token field cannot be empty.' });
-                return false;
-            }
-
-            return true;
+            return this.validateFields(messages);
         },
-        validateGoogleCloud: function() {
-            if(this.$refs['google_key'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The JSON key field cannot be empty.' });
-                return false;
-            }
+        validateNetlify () {
+            let messages = {
+                'netlify_id': 'The Site ID field cannot be empty.',
+                'netlify_token': 'The token field cannot be empty.'
+            };
 
-            if(this.$refs['google_bucket'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The bucket field cannot be empty.' });
-                return false;
-            }
-
-            return true;
+            return this.validateFields(messages);
         },
-        validateManual: function() {
-            if(this.$refs['manual_output'].getValue().trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The output type selection cannot be empty.' });
-                return false;
-            }
+        validateGoogleCloud () {
+            let messages = {
+                'google_key': 'The JSON key field cannot be empty.',
+                'google_bucket': 'The bucket field cannot be empty.'
+            };
 
-            return true;
+            return this.validateFields(messages);
+        },
+        validateManual () {
+            let messages = {
+                'manual_output': 'The output type selection cannot be empty.'
+            };
+
+            return this.validateFields(messages);
         },
         visitWebsite () {
             if(!this.siteIsOnline) {
