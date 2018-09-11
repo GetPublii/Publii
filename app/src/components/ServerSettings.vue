@@ -662,6 +662,7 @@ export default {
                 deployment: Object.assign({}, defaultDeploymentSettings)
             };
             newSettings.deployment = Object.assign({}, newSettings.deployment, this.deploymentSettings);
+            newSettings.deployment.protocol = this.deploymentMethodSelected;
             let currentSiteConfigCopy = JSON.parse(JSON.stringify(this.$store.state.currentSite.config));
             return Utils.deepMerge(currentSiteConfigCopy, newSettings);
         },
@@ -797,7 +798,7 @@ export default {
             let fields = Object.keys(messages);
 
             for (let i = 0; i < fields.length; i++) {
-                if(this.deploymentSettings[fields[i]].trim() === '') {
+                if(this.deploymentSettings[fields[i]] && this.deploymentSettings[fields[i]].trim() === '') {
                     this.$bus.$emit('alert-display', { 'message': messages[fields[i]] });
                     return false;
                 }

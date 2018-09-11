@@ -342,9 +342,13 @@ class S3 {
 
     removeFileObject(input) {
         let self = this;
+        let params = {
+            Bucket: this.bucket,
+            Key: input
+        };
 
         this.connection.deleteObject(
-            input,
+            params,
             function (err) {
                 self.deployment.currentOperationNumber++;
                 self.deployment.outputLog.push('DEL ' + input);
