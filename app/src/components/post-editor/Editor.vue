@@ -9,9 +9,18 @@ import EditorBridge from './EditorBridge.js';
 
 export default {
     name: 'editor',
+    data () {
+        return {
+            editorInstance: false
+        };
+    },
     methods: {
         init () {
-            new EditorBridge(this.$parent.postID); 
+            if (!this.editorInstance) {
+                this.editorInstance = new EditorBridge(this.$parent.postID);
+            } else {
+                this.editorInstance.reloadEditor();
+            }
         }
     },
     beforeDestroy () {

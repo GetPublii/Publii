@@ -21,8 +21,8 @@
                 <p-button
                     :disabled="postData.title === ''"
                     @click.native="draftPost">
-                    <template v-if="!isEdit && !isDraft">Save as draft</template>
-                    <template v-if="isEdit">Save draft</template>
+                    <template v-if="(!isEdit && !isDraft) || (isEdit && !isDraft)">Save as draft</template>
+                    <template v-else>Save draft</template>
                 </p-button>
 
                 <p-button
@@ -127,6 +127,7 @@ export default {
     data () {
         return {
             postID: this.$route.params.post_id || 0,
+            newPost: true,
             sourceCodeEditorVisible: false,
             writersPanelOpen: false,
             postSlugEdited: false,
@@ -193,6 +194,7 @@ export default {
     },
     mounted () {
         if (this.isEdit) {
+            this.newPost = false;
             this.loadPostData();
         } else {
             this.$refs['post-title'].focus();
@@ -379,13 +381,18 @@ export default {
                 ) {
                     let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
 
-                    $(document.body).append(
-                        // It seems that Webpack goes crazy when it sees 'script' tag :)
-                        $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
-                    );
+                    if (!document.querySelector('custom-post-editor-script')) {
+                        $(document.body).append(
+                            // It seems that Webpack goes crazy when it sees 'script' tag :)
+                            $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
+                        );
+                    }
                 }
 
-               this.setDataLossWatcher();
+                setTimeout(() => {
+                    this.possibleDataLoss = false;
+                    this.setDataLossWatcher();
+                }, 100);
             });
         },
         setDataLossWatcher () {
@@ -394,7 +401,7 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost(newPostStatus, preview = false) {
+        savePost (newPostStatus, preview = false) {
             tinymce.triggerSave();
             let finalStatus = newPostStatus;
             let mediaPath = this.getMediaPath();
@@ -473,12 +480,16 @@ export default {
                 return postData;
             }
         },
-        savingPost(newStatus, postData) {
+        savingPost (newStatus, postData) {
             // Send form data to the back-end
             ipcRenderer.send('app-post-save', postData);
 
             // Post save
             ipcRenderer.once('app-post-saved', (event, data) => {
+                if (this.postID === 0) {
+                    this.postID = data.postID;
+                }
+
                 if (data.posts) {
                     this.savedPost(newStatus, data);
                 } else {
@@ -486,9 +497,29 @@ export default {
                 }
             });
         },
-        savedPost(newStatus, updatedData) {
+        savedPost (newStatus, updatedData) {
             this.$store.commit('refreshAfterPostUpdate', updatedData);
-            this.closeEditor();
+            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/' + this.postID);
+            let message = 'Changes have been saved';
+
+            if (this.newPost) {
+                this.newPost = false;
+
+                if (newStatus === 'draft') {
+                    message = 'New draft has been created';
+                } else {
+                    message = 'New post has been created';
+                }
+            }
+
+            this.$bus.$emit('message-display', {
+                message: message,
+                type: 'success',
+                lifeTime: 3
+            });
+
+            this.loadPostData();
+            this.possibleDataLoss = false;
         },
         publishPost () {
             this.savePost('published');
