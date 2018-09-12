@@ -100,7 +100,15 @@
                         id="port"
                         type="number"
                         key="port"
+                        :class="{ 'is-invalid': errors.indexOf('port') > -1 }"
+                        @keyup.native="cleanError('port')"
                         v-model="deploymentSettings.port" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('port') > -1"
+                        class="note">
+                        The port field cannot be empty.
+                    </small>
                 </field>
 
                 <field
@@ -111,7 +119,15 @@
                         slot="field"
                         id="server"
                         key="server"
+                        :class="{ 'is-invalid': errors.indexOf('server') > -1 }"
+                        @keyup.native="cleanError('server')"
                         v-model="deploymentSettings.server" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('server') > -1"
+                        class="note">
+                        The server field cannot be empty.
+                    </small>
                 </field>
 
                 <field
@@ -122,7 +138,15 @@
                         slot="field"
                         id="username"
                         key="username"
+                        :class="{ 'is-invalid': errors.indexOf('username') > -1 }"
+                        @keyup.native="cleanError('username')"
                         v-model="deploymentSettings.username" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('username') > -1"
+                        class="note">
+                        The username field cannot be empty.
+                    </small>
                 </field>
 
                 <field
@@ -134,7 +158,15 @@
                         id="password"
                         type="password"
                         key="password"
+                        :class="{ 'is-invalid': errors.indexOf('password') > -1 }"
+                        @keyup.native="cleanError('password')"
                         v-model="deploymentSettings.password" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('username') > -1"
+                        class="note">
+                        The password field cannot be empty.
+                    </small>
                 </field>
 
                 <field
@@ -158,9 +190,17 @@
                     label="Your key">
                     <file-select
                         id="sftpkey"
+                        :class="{ 'is-invalid': errors.indexOf('key') > -1 }"
+                        @click.native="cleanError('key')"
                         v-model="deploymentSettings.sftpkey"
                         key="sftpkey"
                         slot="field" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('key') > -1"
+                        class="note">
+                        Please select the key file
+                    </small>
                 </field>
 
                 <field
@@ -214,7 +254,15 @@
                         slot="field"
                         id="gh-user"
                         key="gh-user"
+                        :class="{ 'is-invalid': errors.indexOf('github-user') > -1 }"
+                        @keyup.native="cleanError('github-user')"
                         v-model="deploymentSettings.github.user" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('github-user') > -1"
+                        class="note">
+                        The username field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -225,7 +273,15 @@
                         slot="field"
                         id="gh-repo"
                         key="gh-repo"
+                        :class="{ 'is-invalid': errors.indexOf('github-repo') > -1 }"
+                        @keyup.native="cleanError('github-repo')"
                         v-model="deploymentSettings.github.repo" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('github-repo') > -1"
+                        class="note">
+                        The repository field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -236,8 +292,15 @@
                         slot="field"
                         id="gh-branch"
                         key="gh-branch"
+                        :class="{ 'is-invalid': errors.indexOf('github-branch') > -1 }"
+                        @keyup.native="cleanError('github-branch')"
                         v-model="deploymentSettings.github.branch" />
-
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('github-branch') > -1"
+                        class="note">
+                        The branch field cannot be empty
+                    </small>
                     <small
                         slot="note"
                         class="note">
@@ -254,7 +317,15 @@
                         id="gh-token"
                         type="password"
                         key="gh-token"
+                        :class="{ 'is-invalid': errors.indexOf('github-token') > -1 }"
+                        @keyup.native="cleanError('github-token')"
                         v-model="deploymentSettings.github.token" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('github-token') > -1"
+                        class="note">
+                        The token field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -265,6 +336,8 @@
                         slot="field"
                         id="gl-server"
                         key="gl-server"
+                        :class="{ 'is-invalid': errors.indexOf('gitlab-server') > -1 }"
+                        @keyup.native="cleanError('gitlab-server')"
                         v-model="deploymentSettings.gitlab.server" />
                     <small
                         slot="note"
@@ -281,7 +354,15 @@
                         slot="field"
                         id="gl-repo"
                         key="gl-repo"
+                        :class="{ 'is-invalid': errors.indexOf('gitlab-repo') > -1 }"
+                        @keyup.native="cleanError('gitlab-repo')"
                         v-model="deploymentSettings.gitlab.repo" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('gitlab-repo') > -1"
+                        class="note">
+                        The repository field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -292,8 +373,15 @@
                         slot="field"
                         id="gl-branch"
                         key="gl-branch"
+                        :class="{ 'is-invalid': errors.indexOf('gitlab-branch') > -1 }"
+                        @keyup.native="cleanError('gitlab-branch')"
                         v-model="deploymentSettings.gitlab.branch" />
-
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('gitlab-branch') > -1"
+                        class="note">
+                        The branch field cannot be empty
+                    </small>
                     <small
                         slot="note"
                         class="note">
@@ -310,7 +398,15 @@
                         id="gl-token"
                         type="password"
                         key="gl-token"
+                        :class="{ 'is-invalid': errors.indexOf('gitlab-token') > -1 }"
+                        @keyup.native="cleanError('gitlab-token')"
                         v-model="deploymentSettings.gitlab.token" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('gitlab-token') > -1"
+                        class="note">
+                        The token field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -321,7 +417,15 @@
                         slot="field"
                         id="netlify-id"
                         key="netlify-id"
+                        :class="{ 'is-invalid': errors.indexOf('netlify-id') > -1 }"
+                        @keyup.native="cleanError('netlify-id')"
                         v-model="deploymentSettings.netlify.id" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('netlify-id') > -1"
+                        class="note">
+                        The Site ID field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -333,7 +437,15 @@
                         id="netlify-token"
                         type="password"
                         key="netlify-token"
+                        :class="{ 'is-invalid': errors.indexOf('netlify-token') > -1 }"
+                        @keyup.native="cleanError('netlify-token')"
                         v-model="deploymentSettings.netlify.token" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('netlify-token') > -1"
+                        class="note">
+                        The token field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -345,7 +457,15 @@
                         id="s3-id"
                         type="password"
                         key="s3-id"
+                        :class="{ 'is-invalid': errors.indexOf('s3-id') > -1 }"
+                        @keyup.native="cleanError('s3-id')"
                         v-model="deploymentSettings.s3.id" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('s3-id') > -1"
+                        class="note">
+                        The access ID field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -357,7 +477,15 @@
                         id="s3-key"
                         type="password"
                         key="s3-key"
+                        :class="{ 'is-invalid': errors.indexOf('s3-key') > -1 }"
+                        @keyup.native="cleanError('s3-key')"
                         v-model="deploymentSettings.s3.key" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('s3-key') > -1"
+                        class="note">
+                        The secret key field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -368,7 +496,15 @@
                         slot="field"
                         id="s3-bucket"
                         key="s3-bucket"
+                        :class="{ 'is-invalid': errors.indexOf('s3-bucket') > -1 }"
+                        @keyup.native="cleanError('s3-bucket')"
                         v-model="deploymentSettings.s3.bucket" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('s3-bucket') > -1"
+                        class="note">
+                        The bucket field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -380,7 +516,15 @@
                         id="s3-region"
                         :items="s3Regions"
                         key="s3-region"
+                        :class="{ 'is-invalid': errors.indexOf('s3-region') > -1 }"
+                        @click.native="cleanError('s3-region')"
                         v-model="deploymentSettings.s3.region"></dropdown>
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('s3-region') > -1"
+                        class="note">
+                        The region selection cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -392,7 +536,6 @@
                         id="s3-prefix"
                         key="s3-prefix"
                         v-model="deploymentSettings.s3.prefix" />
-
                     <small
                         slot="note"
                         class="note">
@@ -403,12 +546,20 @@
                 <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-key"
-                    label="Your JSONkey">
+                    label="Your JSON key">
                     <file-select
                         id="google-key"
                         v-model="deploymentSettings.google.key"
                         key="google-key"
+                        :class="{ 'is-invalid': errors.indexOf('google-key') > -1 }"
+                        @click.native="cleanError('google-key')"
                         slot="field" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('google-key') > -1"
+                        class="note">
+                        The JSON key file selection cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -419,7 +570,15 @@
                         slot="field"
                         id="google-bucket"
                         key="google-bucket"
+                        :class="{ 'is-invalid': errors.indexOf('google-bucket') > -1 }"
+                        @keyup.native="cleanError('google-bucket')"
                         v-model="deploymentSettings.google.bucket" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('google-bucket') > -1"
+                        class="note">
+                        The bucket field cannot be empty
+                    </small>
                 </field>
 
                 <field
@@ -431,7 +590,6 @@
                         id="google-prefix"
                         key="google-prefix"
                         v-model="deploymentSettings.google.prefix" />
-
                     <small
                         slot="note"
                         class="note">
@@ -448,7 +606,16 @@
                         id="manual-output"
                         key="manual-output"
                         :items="{ '': 'Select output type', 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
+                        :class="{ 'is-invalid': errors.indexOf('manual-output') > -1 }"
+                        @click.native="cleanError('manual-output')"
                         v-model="deploymentSettings.manual.output"></dropdown>
+
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('manual-output') > -1"
+                        class="note">
+                        The manual output selection cannot be empty
+                    </small>
 
                     <small
                         slot="note"
@@ -534,7 +701,8 @@ export default {
             deploymentMethodSelected: '',
             deploymentSettings: defaultDeploymentSettings,
             s3Regions: s3RegionsList,
-            testInProgress: false
+            testInProgress: false,
+            errors: []
         };
     },
     computed: {
@@ -626,6 +794,12 @@ export default {
         },
         save () {
             if(!this.validate()) {
+                this.$bus.$emit('message-display', {
+                    message: 'Please fill all required fields',
+                    type: 'warning',
+                    lifeTime: 3
+                });
+
                 return;
             }
 
@@ -688,6 +862,12 @@ export default {
         },
         test (password = false) {
             if(!this.validate()) {
+                this.$bus.$emit('message-display', {
+                    message: 'Please fill all required fields',
+                    type: 'warning',
+                    lifeTime: 3
+                });
+
                 return;
             }
 
@@ -732,47 +912,48 @@ export default {
             });
         },
         validate () {
+            this.errors = [];
+
             switch (this.deploymentMethodSelected) {
                 case 'ftp':
                 case 'sftp':
                 case 'sftp+key':
                 case 'ftp+tls':
-                    return this.validateFtp();
+                    this.validateFtp();
+                    break;
                 case 's3':
-                    return this.validateS3();
+                    this.validateS3();
+                    break;
                 case 'github-pages':
-                    return this.validateGithubPages();
+                    this.validateGithubPages();
+                    break;
                 case 'gitlab-pages':
-                    return this.validateGitlabPages();
+                    this.validateGitlabPages();
+                    break;
                 case 'netlify':
-                    return this.validateNetlify();
+                    this.validateNetlify();
+                    break;
                 case 'google-cloud':
-                    return this.validateGoogleCloud();
+                    this.validateGoogleCloud();
+                    break;
                 case 'manual':
-                    return this.validateManual();
+                    this.validateManual();
+                    break;
             }
 
-            return false;
+            return !this.errors.length;
         },
         validateFtp () {
             if (this.deploymentSettings.port.trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The port field cannot be empty.' });
-                return false;
-            }
-
-            if (isNaN(this.deploymentSettings.port)) {
-                this.$bus.$emit('alert-display', { 'message': 'The port field value must be a number.' });
-                return false;
+                this.errors.push('port');
             }
 
             if (this.deploymentSettings.server.trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The server field cannot be empty.' });
-                return false;
+                this.errors.push('server');
             }
 
             if (this.deploymentSettings.username.trim() === '') {
-                this.$bus.$emit('alert-display', { 'message': 'The username field cannot be empty.' });
-                return false;
+                this.errors.push('username');
             }
 
             if (
@@ -780,84 +961,50 @@ export default {
                 !this.deploymentSettings.askforpassword &&
                 this.deploymentSettings.password.trim() === ''
             ) {
-                this.$bus.$emit('alert-display', { 'message': 'The password field cannot be empty.' });
-                return false;
+                this.errors.push('password');
             }
 
             if (
                 this.deploymentMethodSelected === 'sftp+key' &&
                 this.deploymentSettings.sftpkey.trim() === ''
             ) {
-                this.$bus.$emit('alert-display', { 'message': 'Please select the key file.' });
-                return false;
+                this.errors.push('key');
             }
-
-            return true;
         },
-        validateFields (messages) {
-            let fields = Object.keys(messages);
-
+        validateFields (fields) {
             for (let i = 0; i < fields.length; i++) {
-                if(this.deploymentSettings[fields[i]] && this.deploymentSettings[fields[i]].trim() === '') {
-                    this.$bus.$emit('alert-display', { 'message': messages[fields[i]] });
-                    return false;
+                let field = fields[i].split('_');
+
+                if (!this.deploymentSettings[field[0]][field[1]]) {
+                    this.errors.push(fields[i].replace('_', '-'));
+                } else if (this.deploymentSettings[field[0]][field[1]] && this.deploymentSettings[field[0]][field[1]].trim() === '') {
+                    this.errors.push(fields[i].replace('_', '-'));
                 }
             }
-
-            return true;
         },
         validateS3 () {
-            let messages = {
-                's3_id': 'The access ID field cannot be empty.',
-                's3_key': 'The secret key field cannot be empty.',
-                's3_bucket': 'The bucket field cannot be empty.',
-                's3_region': 'The region selection cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['s3_id', 's3_key', 's3_bucket', 's3_region'];
+            return this.validateFields(fields);
         },
         validateGithubPages () {
-            let messages = {
-                'github_user': 'The username field cannot be empty.',
-                'github_repo': 'The repository field cannot be empty.',
-                'github_branch': 'The branch field cannot be empty.',
-                'github_token': 'The token field cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['github_user', 'github_repo', 'github_branch', 'github_token'];
+            return this.validateFields(fields);
         },
         validateGitlabPages () {
-            let messages = {
-                'gitlab_server': 'The server field cannot be empty.',
-                'gitlab_repo': 'The repository field cannot be empty.',
-                'gitlab_branch': 'The branch field cannot be empty.',
-                'gitlab_token': 'The token field cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['gitlab_server', 'gitlab_repo', 'gitlab_branch', 'gitlab_token'];
+            return this.validateFields(fields);
         },
         validateNetlify () {
-            let messages = {
-                'netlify_id': 'The Site ID field cannot be empty.',
-                'netlify_token': 'The token field cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['netlify_id', 'netlify_token'];
+            return this.validateFields(fields);
         },
         validateGoogleCloud () {
-            let messages = {
-                'google_key': 'The JSON key field cannot be empty.',
-                'google_bucket': 'The bucket field cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['google_key', 'google_bucket'];
+            return this.validateFields(fields);
         },
         validateManual () {
-            let messages = {
-                'manual_output': 'The output type selection cannot be empty.'
-            };
-
-            return this.validateFields(messages);
+            let fields = ['manual_output'];
+            return this.validateFields(fields);
         },
         visitWebsite () {
             if(!this.siteIsOnline) {
@@ -865,6 +1012,13 @@ export default {
             }
 
             shell.openExternal(this.$store.state.currentSite.config.domain);
+        },
+        cleanError (field) {
+            let pos = this.errors.indexOf(field);
+
+            if (pos !== -1) {
+                this.errors.splice(pos, 1);
+            }
         }
     }
 }
@@ -885,6 +1039,10 @@ export default {
             float: right;
             width: calc(100% - 120px);
         }
+    }
+
+    .is-invalid + .note {
+        color: $color-3;
     }
 }
 </style>
