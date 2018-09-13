@@ -62,9 +62,6 @@ class ContentHelper {
         // Remove contenteditable attributes
         preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
 
-        // Remove read more text
-        preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
-
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
