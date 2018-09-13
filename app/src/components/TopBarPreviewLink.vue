@@ -22,7 +22,7 @@ export default {
     },
     computed: {
         isOnline: function() {
-            if(!this.siteIsLoaded) {
+            if(!this.$store.state.currentSite.config) {
                 return false;
             }
 
@@ -54,9 +54,6 @@ export default {
             return 'off-live-preview';
         }
     },
-    mounted: function() {
-        this.$bus.$on('site-loaded', this.whenSiteLoaded);
-    },
     methods: {
         openPreview () {
             if(!this.isOnline) {
@@ -64,13 +61,7 @@ export default {
             }
 
             shell.openExternal(this.$store.state.currentSite.config.domain);
-        },
-        whenSiteLoaded () {
-            this.siteIsLoaded = true;
         }
-    },
-    beforeDestroy () {
-        this.$bus.$off('site-loaded', this.whenSiteLoaded);
     }
 };
 </script>
