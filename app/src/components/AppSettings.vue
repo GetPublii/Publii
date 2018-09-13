@@ -47,6 +47,16 @@
             </field>
 
             <field
+                id="close-editor-on-save"
+                label="Close post editor on save"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="close-editor-on-save"
+                    v-model="closeEditorOnSave" />
+            </field>
+
+            <field
                 id="open-devtools-in-main"
                 label="Open DevTools automatically in the Main Window"
                 :labelSeparated="false">
@@ -153,6 +163,7 @@ export default {
             imageResizeEnginesSelected: 'sharp',
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
+            closeEditorOnSave: true,
             locations: {
                 sites: '',
                 backups: '',
@@ -201,6 +212,7 @@ export default {
         this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
         this.screensSelected = this.$store.state.app.config.startScreen;
+        this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
     },
     methods: {
         goBack () {
@@ -227,7 +239,8 @@ export default {
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
-                wideScrollbars: this.wideScrollbars
+                wideScrollbars: this.wideScrollbars,
+                closeEditorOnSave: this.closeEditorOnSave
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

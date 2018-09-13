@@ -8,6 +8,7 @@ const AstAppConfig = {
     sitesLocation: "",
     startScreen: "",
     timeFormat: 12,
+    closeEditorOnSave: true,
     wideScrollbars: false
 };
 

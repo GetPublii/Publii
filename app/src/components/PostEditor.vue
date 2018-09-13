@@ -15,7 +15,7 @@
                     :disabled="postData.title === ''"
                     @click.native="publishPost">
                     <template v-if="!isEdit || isDraft">Publish post</template>
-                    <template v-if="isEdit && !isDraft">Save changes</template>
+                    <template v-if="isEdit && !isDraft">Publish changes</template>
                 </p-button>
 
                 <p-button
@@ -181,6 +181,9 @@ export default {
         },
         themeConfigured () {
             return !!this.$store.state.currentSite.config.theme;
+        },
+        closeEditorOnSave () {
+            return this.$store.state.app.config.closeEditorOnSave;
         },
         extensionsPath () {
             return [
@@ -499,6 +502,12 @@ export default {
         },
         savedPost (newStatus, updatedData) {
             this.$store.commit('refreshAfterPostUpdate', updatedData);
+
+            if (this.closeEditorOnSave) {
+                this.closeEditor();
+                return;
+            }
+
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/' + this.postID);
             let message = 'Changes have been saved';
 
@@ -597,7 +606,21 @@ export default {
     }
 
     &-actions {
+        .button {
+            text-align: center;
 
+            &:nth-child(1) {
+                width: 170px;
+            }
+
+            &:nth-child(2) {
+                width: 140px;
+            }
+
+            &:nth-child(3) {
+                width: 90px;
+            }
+        }
     }
 
     &-field-select-tags {
