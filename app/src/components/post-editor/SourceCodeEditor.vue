@@ -99,13 +99,24 @@ export default {
 }
 
 /*
- * Special styles for win
+ * Special styles for win & linux
  */
 
 body[data-os="win"] {
     .source-code-editor {
         height: calc(100vh - 10rem)!important;
         top: 10rem;
+
+        .CodeMirror-wrap {
+            height: 100%;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .source-code-editor {
+        height: calc(100vh - 6.2rem)!important;
+        top: 6.2rem;
 
         .CodeMirror-wrap {
             height: 100%;

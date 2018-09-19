@@ -138,4 +138,10 @@ body[data-os="win"] {
         }
     }
 }
+
+body[data-os="linux"] {
+  .appbar {
+    display: none;
+  }
+}
 </style>

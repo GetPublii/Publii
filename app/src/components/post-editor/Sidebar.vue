@@ -830,6 +830,12 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .post-editor-sidebar {
+        height: calc(100vh - 6.2rem);
+    }
+}
+
 /*
  * Responsive improvements
  */

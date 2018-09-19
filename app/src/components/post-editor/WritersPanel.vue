@@ -180,6 +180,15 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .post-editor {
+        &-writers-panel {
+            height: calc(100vh - 6.2rem);
+            top: 6.2rem;
+        }
+    }
+}
+
 /*
  * Responsive improvements
  */

@@ -690,7 +690,7 @@ export default {
 }
 
 /*
- * Windows adjustments
+ * Windows & linux adjustments
  */
 body[data-os="win"] {
     .post-editor {
@@ -708,8 +708,24 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .post-editor {
+        .appbar {
+            height: 0!important;
+        }
+
+        .topbar {
+            height: 0;
+        }
+
+        &-topbar {
+            top: 0;
+        }
+    }
+}
+
 /*
- * Special styles for win
+ * Special styles for win & linux
  */
 
 body[data-os="win"] {
@@ -744,6 +760,25 @@ body[data-os="win"] {
 
         #link-toolbar {
             padding-top: .75rem;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 6.2rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 6.2rem);
+
+        &-content {
+            height: calc( 100vh - 29.8rem );
+        }
+
+        #post-editor_ifr {
+            height: calc( 100vh - 31.8rem )!important;
         }
     }
 }
