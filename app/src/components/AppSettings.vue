@@ -187,6 +187,12 @@ export default {
             };
         },
         imageResizeEngines () {
+            if (process.platform === 'linux') {
+                return {
+                    'jimp': 'Jimp (slower but more stable)'
+                };
+            }
+
             return {
                 'sharp': 'Sharp (faster)',
                 'jimp': 'Jimp (slower but more stable)'
