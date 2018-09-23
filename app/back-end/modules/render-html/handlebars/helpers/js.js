@@ -33,7 +33,7 @@ function JSHelper(rendererInstance, Handlebars) {
         let localPath = path.join(
             rendererInstance.inputDir,
             'themes',
-            rendererInstance.themeConfig.name,
+            rendererInstance.themeConfig.name.toLowerCase(),
             rendererInstance.themeConfig.files.assetsPath,
             'js',
             filename
