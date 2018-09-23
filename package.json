@@ -2,7 +2,13 @@
   "productName": "Publii",
   "name": "Publii",
   "version": "0.29.1",
-  "description": "A simple static blogging application",
+  "description": "Static Site CMS",
+  "homepage": "https://getpublii.com",
+  "author": {
+    "name": "TidyCustoms",
+    "email": "bob@tidycustoms.net"
+  },
+  "license": "GPL-3.0",
   "main": "app/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --progress --colors --watch",
@@ -14,7 +20,8 @@
     "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=2.0.5 --overwrite --symlinks --app-version=0.29.1 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.29.1 --version-string.FileVersion=0.29.1 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
     "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.5 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
     "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.5 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/1024x1024.png",
-    "postinstall": "opencollective postinstall"
+    "postinstall": "opencollective postinstall",
+    "dist": "build"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -23,9 +30,6 @@
     "url": "https://github.com/GetPublii/Publii/issues"
   },
   "keywords": [],
-  "author": "Tidy Customs",
-  "license": "GPL-3.0",
-  "homepage": "",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -57,9 +61,13 @@
     "opencollective": "^1.0.3"
   },
   "build": {
-    "app-bundle-id": "tidycustoms",
-    "app-category-type": "publii",
-    "iconUrl": ""
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ]
+    }
   },
   "collective": {
     "type": "opencollective",
