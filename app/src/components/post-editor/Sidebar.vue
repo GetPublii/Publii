@@ -374,37 +374,41 @@
                                 </dropdown>
                             </label>
 
-                            <label v-for="(field, index) of postViewThemeSettings">
-                                {{ field.label }}
+                            <template v-for="(field, index) of postViewThemeSettings">
+                                <label
+                                    v-if="!field.postTemplates || field.postTemplates.split(',').indexOf($parent.postData.template) > -1"
+                                    :key="'post-view-field-' + index">
+                                    {{ field.label }}
 
-                                <dropdown
-                                    v-if="!field.type || field.type === 'select'"
-                                    :id="field.name + '-select'"
-                                    class="post-view-settings"
-                                    v-model="$parent.postData.postViewOptions[field.name]"
-                                    :items="generateItems(field.options)">
-                                    <option slot="first-choice" value="">Use global configuration</option>
-                                </dropdown>
+                                    <dropdown
+                                        v-if="!field.type || field.type === 'select'"
+                                        :id="field.name + '-select'"
+                                        class="post-view-settings"
+                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        :items="generateItems(field.options)">
+                                        <option slot="first-choice" value="">Use global configuration</option>
+                                    </dropdown>
 
-                                <text-input
-                                    v-if="field.type === 'text' || field.type === 'number'"
-                                    :type="field.type"
-                                    class="post-view-settings"
-                                    placeholder="Leave it blank to use default value"
-                                    v-model="$parent.postData.postViewOptions[field.name]" />
+                                    <text-input
+                                        v-if="field.type === 'text' || field.type === 'number'"
+                                        :type="field.type"
+                                        class="post-view-settings"
+                                        placeholder="Leave it blank to use default value"
+                                        v-model="$parent.postData.postViewOptions[field.name]" />
 
-                                <text-area
-                                    v-if="field.type === 'textarea'"
-                                    class="post-view-settings"
-                                    placeholder="Leave it blank to use default value"
-                                    v-model="$parent.postData.postViewOptions[field.name]" />
+                                    <text-area
+                                        v-if="field.type === 'textarea'"
+                                        class="post-view-settings"
+                                        placeholder="Leave it blank to use default value"
+                                        v-model="$parent.postData.postViewOptions[field.name]" />
 
-                                <small
-                                    v-if="field.note"
-                                    class="note">
-                                    {{ field.note }}
-                                </small>
-                            </label>
+                                    <small
+                                        v-if="field.note"
+                                        class="note">
+                                        {{ field.note }}
+                                    </small>
+                                </label>
+                            </template>
                         </div>
                     </div>
                 </div>
