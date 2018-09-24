@@ -243,6 +243,7 @@ class GithubPages {
                             type: 'sender',
                             message: 'app-deploy-uploaded',
                             value: {
+                                progress: 100,
                                 status: true
                             }
                         });
@@ -335,6 +336,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 8,
                 message: 'Get informations about the latest commit...'
             }
         });
@@ -363,6 +365,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 8,
                 message: 'Retrieving handler of the remote tree of files...'
             }
         });
@@ -383,6 +386,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 8,
                 message: 'Retrieving the remote tree of files...'
             }
         });
@@ -404,6 +408,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 8,
                 message: 'Preparing tree of files to upload...'
             }
         });
@@ -596,6 +601,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 95,
                 message: 'Creating the new remote tree of files...'
             }
         });
@@ -620,6 +626,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 95,
                 message: 'Creating the new remote tree of files...'
             }
         });
@@ -646,6 +653,7 @@ class GithubPages {
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
+                progress: 99,
                 message: 'Finishing the deployment process...'
             }
         });
