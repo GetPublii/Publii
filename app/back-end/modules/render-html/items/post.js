@@ -50,6 +50,7 @@ class PostItem {
             isFeatured: this.post[8].indexOf('featured') > -1,
             isHidden: this.post[8].indexOf('hidden') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
+            template: this.post[9],
             hasCustomExcerpt: hasCustomExcerpt
         };
 
