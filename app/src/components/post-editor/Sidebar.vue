@@ -565,10 +565,10 @@ export default {
             }
 
             if (field.postTemplates.indexOf('!') === 0) {
-                return !(field.postTemplates.replace('!', '').split(',').indexOf($parent.postData.template) > -1);
+                return !(field.postTemplates.replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
             }
 
-            return field.postTemplates.split(',').indexOf($parent.postData.template) > -1;
+            return field.postTemplates.split(',').indexOf(this.$parent.postData.template) > -1;
         },
         fieldPlaceholder (field) {
             if (!field.placeholder) {
