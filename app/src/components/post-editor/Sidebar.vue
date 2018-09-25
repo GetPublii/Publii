@@ -393,13 +393,13 @@
                                         v-if="field.type === 'text' || field.type === 'number'"
                                         :type="field.type"
                                         class="post-view-settings"
-                                        placeholder="Leave it blank to use default value"
+                                        :placeholder="fieldPlaceholder(field)"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
                                     <text-area
                                         v-if="field.type === 'textarea'"
                                         class="post-view-settings"
-                                        placeholder="Leave it blank to use default value"
+                                        :placeholder="fieldPlaceholder(field)"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
                                     <small
@@ -569,6 +569,13 @@ export default {
             }
 
             return field.postTemplates.split(',').indexOf($parent.postData.template) > -1;
+        },
+        fieldPlaceholder (field) {
+            if (!field.placeholder) {
+                return 'Leave it blank to use default value';
+            }
+
+            return field.placeholder;
         }
     },
     beforeDestroy () {
