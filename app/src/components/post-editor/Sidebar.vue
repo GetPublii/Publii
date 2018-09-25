@@ -376,7 +376,7 @@
 
                             <template v-for="(field, index) of postViewThemeSettings">
                                 <label
-                                    v-if="!field.postTemplates || field.postTemplates.split(',').indexOf($parent.postData.template) > -1"
+                                    v-if="displayField(field)"
                                     :key="'post-view-field-' + index">
                                     {{ field.label }}
 
@@ -558,6 +558,17 @@ export default {
         },
         changeDate () {
             this.$bus.$emit('date-popup-display', this.$parent.postData.creationDate.timestamp);
+        },
+        displayField (field) {
+            if (!field.postTemplates) {
+                return true;
+            }
+
+            if (field.postTemplates.indexOf('!') === 0) {
+                return !(field.postTemplates.replace('!', '').split(',').indexOf($parent.postData.template) > -1);
+            }
+
+            return field.postTemplates.split(',').indexOf($parent.postData.template) > -1;
         }
     },
     beforeDestroy () {
