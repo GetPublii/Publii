@@ -364,7 +364,9 @@ export default {
                     for(let i = 0; i < postViewFields.length; i++) {
                         let newValue = '';
 
-                        if(data.postViewSettings[postViewFields[i]] && data.postViewSettings[postViewFields[i]].value) {
+                        if(
+                            data.postViewSettings[postViewFields[i]] && data.postViewSettings[postViewFields[i]].value
+                        ) {
                             newValue = data.postViewSettings[postViewFields[i]].value;
                         } else {
                             newValue = data.postViewSettings[postViewFields[i]];

@@ -208,6 +208,12 @@
                                     placeholder="Leave it blank to use default value"
                                     v-model="postView[field.name]" />
 
+                                <color-picker
+                                    v-if="field.type === 'colorpicker'"
+                                    slot="field"
+                                    v-model="postView[field.name]">
+                                </color-picker>
+
                                 <small
                                     v-if="field.note"
                                     slot="note"

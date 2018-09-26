@@ -402,6 +402,12 @@
                                         :placeholder="fieldPlaceholder(field)"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
+                                    <color-picker
+                                        v-if="field.type === 'colorpicker'"
+                                        class="post-view-settings"
+                                        v-model="$parent.postData.postViewOptions[field.name]">
+                                    </color-picker>
+
                                     <small
                                         v-if="field.note"
                                         class="note">

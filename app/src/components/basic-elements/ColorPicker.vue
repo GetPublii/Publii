@@ -48,6 +48,7 @@ export default {
     },
     mounted: function() {
         this.$watch('value', (color) => {
+            console.log('COLOR CHANGE:', color);
             this.content = color;
             this.pickerContent = color;
         }, { immediate: true });
