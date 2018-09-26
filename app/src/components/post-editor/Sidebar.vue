@@ -577,11 +577,11 @@ export default {
             return field.postTemplates.split(',').indexOf(this.$parent.postData.template) > -1;
         },
         fieldPlaceholder (field) {
-            if (!field.placeholder) {
-                return 'Leave it blank to use default value';
+            if (field.placeholder || field.placeholder === '') {
+                return field.placeholder;
             }
 
-            return field.placeholder;
+			return 'Leave it blank to use default value';
         }
     },
     beforeDestroy () {
