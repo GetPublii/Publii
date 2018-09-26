@@ -109,7 +109,12 @@ export default {
 
         // Disable refresh shortcuts and Dev Tools shortcuts
         setupMenu: function() {
-            if(process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === 'development') {
+                return;
+            }
+
+            if (process.platform === 'linux') {
+                Menu.setApplicationMenu(null);
                 return;
             }
 
