@@ -14,7 +14,7 @@ const Jimp = require('jimp');
 
 let sharp;
 
-if (process.platform === 'linux') {
+if (process.platform !== 'linux') {
   sharp = require('sharp');
 }
 

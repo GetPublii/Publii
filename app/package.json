@@ -19,6 +19,7 @@
   "bugs": {
     "url": "https://github.com/GetPublii/Publii/issues"
   },
+  "files": ["**/*", "dist/**/*"],
   "homepage": "https://getpublii.com",
   "dependencies": {
     "@google-cloud/storage": "^1.1.1",
