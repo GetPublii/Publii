@@ -98,7 +98,7 @@ export default {
             document.body.setAttribute('data-node-version', process.versions.node);
             document.body.setAttribute('data-chrome-version', process.versions.chrome);
             document.body.setAttribute('data-electron-version', process.versions.electron);
-            document.body.setAttribute('data-os', process.platform === "darwin" ? "osx" : "win");
+            document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
             document.body.setAttribute('data-env', process.env.NODE_ENV);
         },
 
@@ -109,7 +109,12 @@ export default {
 
         // Disable refresh shortcuts and Dev Tools shortcuts
         setupMenu: function() {
-            if(process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === 'development') {
+                return;
+            }
+
+            if (process.platform === 'linux') {
+                Menu.setApplicationMenu(null);
                 return;
             }
 
@@ -277,6 +282,26 @@ body[data-os="win"] {
 
         &-site-sidebar {
             top: 9.8rem;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    #app {
+        & > .topbar + section {
+            height: calc(100vh - 6.2rem);
+            top: 6.2rem;
+        }
+    }
+
+    .app {
+        &-view {
+            border: 1px solid $grey-icon-color;
+            overflow: hidden;
+        }
+
+        &-site-sidebar {
+            top: 6.2rem;
         }
     }
 }

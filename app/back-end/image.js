@@ -10,8 +10,13 @@ const normalizePath = require('normalize-path');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
-const sharp = require('sharp');
 const Jimp = require('jimp');
+
+let sharp;
+
+if (process.platform !== 'linux') {
+  sharp = require('sharp');
+}
 
 class Image extends Model {
     constructor(appInstance, imageData) {

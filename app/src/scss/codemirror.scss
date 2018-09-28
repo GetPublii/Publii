@@ -29,6 +29,15 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .tools-log-viewer,
+    .tools-custom-html {
+        .CodeMirror {
+            height: calc(100vh - 41.4rem)!important;
+        }
+    }
+}
+
 @media (max-width: 1400px) {
     .tools-log-viewer,
     .tools-custom-html {
@@ -43,6 +52,15 @@ body[data-os="win"] {
         .tools-custom-html {
             .CodeMirror {
                 height: calc(100vh - 35rem)!important;
+            }
+        }
+    }
+
+    body[data-os="linux"] {
+        .tools-log-viewer,
+        .tools-custom-html {
+            .CodeMirror {
+                height: calc(100vh - 31.4rem)!important;
             }
         }
     }

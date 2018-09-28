@@ -87,6 +87,16 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .topbar {
+        height: 6.2rem;
+
+        & > .topbar-inner {
+            top: 0;
+        }
+    }
+}
+
 /*
  * Responsive improvements
  */

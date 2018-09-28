@@ -172,4 +172,10 @@ body[data-os="win"] {
         top: 3.6rem;
     }
 }
+
+body[data-os="linux"] {
+    .messages {
+        top: 2.4rem;
+    }
+}
 </style>
