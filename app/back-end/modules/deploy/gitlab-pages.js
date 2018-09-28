@@ -39,7 +39,7 @@ class GitlabPages {
         this.currentUploadProgress = 0;
     }
 
-    testConnection (app, deploymentConfig, siteName) {
+    async testConnection (app, deploymentConfig, siteName) {
         let repository = deploymentConfig.gitlab.repo;
         let branchName = deploymentConfig.gitlab.branch;
         let token = deploymentConfig.gitlab.token;
@@ -47,7 +47,7 @@ class GitlabPages {
         this.waitForTimeout = true;
 
         if (token === 'publii-gl-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-gl-token', account);
+            token = await passwordSafeStorage.getPassword('publii-gl-token', account);
         }
 
         this.client = new Gitlab({
@@ -129,7 +129,7 @@ class GitlabPages {
         }, 10000);
     }
 
-    initConnection () {
+    async initConnection () {
         this.repository = this.deployment.siteConfig.deployment.gitlab.repo;
         this.user = this.deployment.siteConfig.deployment.gitlab.user;
         this.branch = this.deployment.siteConfig.deployment.gitlab.branch;
@@ -142,7 +142,7 @@ class GitlabPages {
         let account = slug(this.deployment.siteConfig.name);
 
         if (token === 'publii-gl-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-gl-token', account);
+            token = await passwordSafeStorage.getPassword('publii-gl-token', account);
         }
 
         this.client = new Gitlab({

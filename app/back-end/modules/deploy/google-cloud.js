@@ -18,7 +18,7 @@ class GoogleCloud {
         this.logTimer = false;
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         let bucketName = this.deployment.siteConfig.deployment.google.bucket;
         let keyFilePath = normalizePath(this.deployment.siteConfig.deployment.google.key);
@@ -267,7 +267,7 @@ class GoogleCloud {
         this.deployment.removeFile();
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let bucketName = deploymentConfig.google.bucket;
         let keyFilePath = normalizePath(deploymentConfig.google.key);
         let waitForTimeout = true;

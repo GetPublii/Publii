@@ -70,14 +70,14 @@ class Deployment {
         }
 
         if(connection) {
-            connection.testConnection(app, deploymentConfig, siteName);
+            connection.testConnection(app, deploymentConfig, siteName).then(() => true);
         }
     }
 
     /**
      * Inits connection
      */
-    initSession() {
+    async initSession() {
         switch(this.siteConfig.deployment.protocol) {
             case 'sftp':
             case 'sftp+key':        this.client = new SFTP(this);               break;
@@ -90,7 +90,7 @@ class Deployment {
             default:                this.client = new FTP(this);                break;
         }
 
-        this.client.initConnection();
+        await this.client.initConnection();
     }
 
     /**

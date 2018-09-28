@@ -21,7 +21,7 @@ class FTP {
         this.logTimer = false;
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         let waitForTimeout = true;
         let ftpPassword = this.deployment.siteConfig.deployment.password;
@@ -31,7 +31,7 @@ class FTP {
         this.connection = new ftpClient();
 
         if(ftpPassword === 'publii ' + account) {
-            ftpPassword = passwordSafeStorage.getPassword('publii', account);
+            ftpPassword = await passwordSafeStorage.getPassword('publii', account);
         }
 
         if(this.deployment.siteConfig.deployment.protocol !== 'ftp') {
@@ -444,7 +444,7 @@ class FTP {
         );
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let client = new ftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
@@ -452,7 +452,7 @@ class FTP {
         let secureConnection = false;
 
         if(ftpPassword === 'publii ' + account) {
-            ftpPassword = passwordSafeStorage.getPassword('publii', account);
+            ftpPassword = await passwordSafeStorage.getPassword('publii', account);
         }
 
         if(deploymentConfig.protocol !== 'ftp') {

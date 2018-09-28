@@ -38,7 +38,7 @@ class GithubPages {
         this.uploadedBlobs = {};
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         this.token = this.deployment.siteConfig.deployment.github.token;
         this.repository = this.deployment.siteConfig.deployment.github.repo;
@@ -48,7 +48,7 @@ class GithubPages {
         let account = slug(this.deployment.siteConfig.name);
 
         if(this.token === 'publii-gh-token ' + account) {
-            this.token = passwordSafeStorage.getPassword('publii-gh-token', account);
+            this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
         this.client.authenticate({
@@ -137,7 +137,7 @@ class GithubPages {
         }, 15000);
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let token = deploymentConfig.github.token;
         let repository = deploymentConfig.github.repo;
         let user = deploymentConfig.github.user;
@@ -146,7 +146,7 @@ class GithubPages {
         this.waitForTimeout = true;
 
         if(token === 'publii-gh-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-gh-token', account);
+            token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
         this.client.authenticate({

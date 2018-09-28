@@ -18,7 +18,7 @@ class S3 {
         this.waitForTimeout = false;
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         let s3Id = this.deployment.siteConfig.deployment.s3.id;
         let s3Key = this.deployment.siteConfig.deployment.s3.key;
@@ -29,11 +29,11 @@ class S3 {
         this.waitForTimeout = true;
 
         if(s3Id === 'publii-s3-id ' + account) {
-            s3Id = passwordSafeStorage.getPassword('publii-s3-id', account);
+            s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);
         }
 
         if(s3Key === 'publii-s3-key ' + account) {
-            s3Key = passwordSafeStorage.getPassword('publii-s3-key', account);
+            s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
         this.connection = new AWS.S3({
@@ -402,7 +402,7 @@ class S3 {
         return filePath;
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let s3Id = deploymentConfig.s3.id;
         let s3Key = deploymentConfig.s3.key;
         let bucket = deploymentConfig.s3.bucket;
@@ -412,11 +412,11 @@ class S3 {
         let waitForTimeout = true;
 
         if(s3Id === 'publii-s3-id ' + account) {
-            s3Id = passwordSafeStorage.getPassword('publii-s3-id', account);
+            s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);
         }
 
         if(s3Key === 'publii-s3-key ' + account) {
-            s3Key = passwordSafeStorage.getPassword('publii-s3-key', account);
+            s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
         let connection = new AWS.S3({

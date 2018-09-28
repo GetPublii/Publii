@@ -17,7 +17,7 @@ class Netlify {
         this.econnresetCounter = 0;
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         let client;
         let localDir;
@@ -26,11 +26,11 @@ class Netlify {
         let account = slug(this.deployment.siteConfig.name);
 
         if(siteID === 'publii-netlify-id ' + account) {
-            siteID = passwordSafeStorage.getPassword('publii-netlify-id', account);
+            siteID = await passwordSafeStorage.getPassword('publii-netlify-id', account);
         }
 
         if(token === 'publii-netlify-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-netlify-token', account);
+            token = await passwordSafeStorage.getPassword('publii-netlify-token', account);
         }
 
         client = netlify.createClient({
@@ -148,7 +148,7 @@ class Netlify {
         });
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let client;
         let siteID = deploymentConfig.netlify.id;
         let token = deploymentConfig.netlify.token;
@@ -156,11 +156,11 @@ class Netlify {
         let waitForTimeout = true;
 
         if(siteID === 'publii-netlify-id ' + account) {
-            siteID = passwordSafeStorage.getPassword('publii-netlify-id', account);
+            siteID = await passwordSafeStorage.getPassword('publii-netlify-id', account);
         }
 
         if(token === 'publii-netlify-token ' + account) {
-            token = passwordSafeStorage.getPassword('publii-netlify-token', account);
+            token = await passwordSafeStorage.getPassword('publii-netlify-token', account);
         }
 
         client = netlify.createClient({
