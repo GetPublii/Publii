@@ -58,11 +58,15 @@
   "dependencies": {
     "electron": "^2.0.9",
     "handlebars": "^4.0.5",
+    "keytar": "^4.2.1",
     "opencollective": "^1.0.3"
   },
   "build": {
     "asar": false,
-    "files": ["**/*", "dist/**/*"],
+    "files": [
+      "**/*",
+      "dist/**/*"
+    ],
     "linux": {
       "target": [
         "rpm",
@@ -75,10 +79,14 @@
     }
   },
   "deb": {
-    "depends": ["libsecret-1-dev"]
+    "depends": [
+      "libsecret-1-dev"
+    ]
   },
   "rpm": {
-    "depends": ["libsecret-devel"]
+    "depends": [
+      "libsecret-devel"
+    ]
   },
   "appImage": {
     "license": "license.txt"
