@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.29.1",
+  "version": "0.30.4",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -19,7 +19,10 @@
   "bugs": {
     "url": "https://github.com/GetPublii/Publii/issues"
   },
-  "files": ["**/*", "dist/**/*"],
+  "files": [
+    "**/*",
+    "dist/**/*"
+  ],
   "homepage": "https://getpublii.com",
   "dependencies": {
     "@google-cloud/storage": "^1.1.1",
