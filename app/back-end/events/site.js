@@ -389,11 +389,7 @@ class SiteEvents {
             let existingPassword = await passwordSafeStorage.getPassword(type, account);
 
             if (newPassword !== '') {
-                if (existingPassword !== null) {
-                    await passwordSafeStorage.replacePassword(type, account, newPassword);
-                } else {
-                    await passwordSafeStorage.addPassword(type, account, newPassword);
-                }
+                await passwordSafeStorage.setPassword(type, account, newPassword);
             } else if (existingPassword !== null) {
                 // Remove the password from the storage if it still exists
                 // and user provided an empty password now
