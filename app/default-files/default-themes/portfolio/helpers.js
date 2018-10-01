@@ -3,13 +3,23 @@
  */
 
 let themeHelpers = {
-    lazyLoadForContentImages: function(postText) {
+    lazyLoadForContentImages: function(postText, lazyLoadEffect = '') {
         let modifiedPostText = postText;
         // Select all images from the content
         modifiedPostText = modifiedPostText.replace(/<img[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
             if (match.indexOf('data-is-external-image="true"') > -1) {
                 return match;
             }
+            
+            if (lazyLoadEffect === 'lqip') {{
+            	match = match.replace('src="', 'data-src="');
+                match = match.replace('srcset="', 'data-srcset="');               
+                if(match.indexOf('class="') > -1) {
+                    match = match.replace('class="', 'class="lazyload ');
+                } else {
+                    match = match.replace('<img', '<img class="lazyload"');
+                }
+            } return match; }
 
             // Create *-xs image path
             let image = url.split('.');
@@ -36,14 +46,35 @@ let themeHelpers = {
                 match = match.replace(/sizes=".*?"/i, 'data-sizes="auto"');
                 // add necessary CSS classes
                 if(match.indexOf('class="') > -1) {
-                    match = match.replace('class="', 'class="lazyload blur-up ');
+                    match = match.replace('class="', 'class="lazyload ');
                 } else {
-                    match = match.replace('<img', '<img class="lazyload blur-up"');
+                    match = match.replace('<img', '<img class="lazyload"');
                 }
             }
             // return modified <img> tag
             return match;
         });
+        
+            // Select all iframes from the content
+        modifiedPostText = modifiedPostText.replace(/<iframe[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+            // Replace src attribute with data-src            
+            match = match.replace('src="', 'data-src="');
+            // Add class attribute            
+            match = match.replace('<iframe', '<iframe class="lazyload"');
+            // return modified <iframe> tag
+            return match;
+        });
+       
+        // Select all videos from the content
+        modifiedPostText = modifiedPostText.replace(/<video[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+            // Replace src attribute with data-src            
+            match = match.replace('src="', 'data-src="');
+            // Add class attribute            
+            match = match.replace('<video', '<video class="lazyload"');
+            // return modified <video> tag
+            return match;
+        });
+
 
         return modifiedPostText;
     }

@@ -29,10 +29,10 @@
             {{#if @pagination.nextPage}}
                 <link rel="next" href="{{@pagination.nextPageUrl }}">
             {{/if}}
-        {{/if}}        
-        <link rel="stylesheet" href="{{css "style.css" }}">
-        <link href="https://fonts.googleapis.com/css?family=Nunito:300,600|Montserrat|Damion" rel="stylesheet">
+        {{/if}} 
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+        <link href="https://fonts.googleapis.com/css?family=Nunito:300,600|Montserrat|Damion" rel="stylesheet">       
+        <link rel="stylesheet" href="{{css "style.css" }}">       
 		{{#is "post"}}
            {{#post}}
               {{#if hasGallery}}

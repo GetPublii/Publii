@@ -1,6 +1,6 @@
 {
     "name": "Mercury",
-    "version": "1.6.7.5",
+    "version": "1.6.8.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -239,36 +239,6 @@
                 "value": true
             }]
         },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Post page",
-            "group": "Layout",
-            "size": "big"
-        },
-        {
-            "name": "featuredImageWidth",
-            "label": "Featured Image width",
-            "group": "Layout",
-            "value": "post__image--wide",
-            "type": "select",
-            "options": [
-                {
-                    "label": "Normal",
-                    "value": "post__image--normal"
-
-                },
-                {
-                    "label": "Wide",
-                    "value": "post__image--wide"
-
-                },
-                {
-                    "label": "Full",
-                    "value": "post__image--full"
-                }]
-        },
-
         {
             "name": "primaryColor",
             "label": "Primary color",
@@ -661,6 +631,7 @@
             "label": "Lightbox style",
             "group": "Gallery",
             "note": "Set the lightbox slideshow style by choosing dark or light overlay",
+            "value": "pswp--dark",
             "type": "select",
             "options": [
                 {
@@ -886,6 +857,34 @@
             "type": "checkbox"
         },
         {
+            "name": "lazyLoadEffect",
+            "label": "Lazy load effects",
+            "group": "Additional",
+            "note": "More details you can find <a href='https://getpublii.com/docs/theme-settings.html' target='_blank'>here.</a>",
+            "value": "fadein",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Fade in",
+                    "value": "fadein"
+
+                },
+                {
+                    "label": "Blur up",
+                    "value": "blur"
+
+                },
+                {
+                    "label": "No LQIP",
+                    "value": "lqip"
+
+            }],
+            "dependencies": [{
+                "field": "lazyLoad",
+                "value": "true"
+            }]
+        },
+        {
             "name": "separator",
             "type": "separator",
             "label": " ",
@@ -920,6 +919,28 @@
 
     ],
     "postConfig": [
+         {
+            "name": "featuredImageWidth",
+            "label": "Featured Image width",           
+            "value": "post__image--wide",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Normal",
+                    "value": "post__image--normal"
+
+                },
+                {
+                    "label": "Wide",
+                    "value": "post__image--wide"
+
+                },
+                {
+                    "label": "Full",
+                    "value": "post__image--full"
+                }
+            ]
+        },
         {
             "name": "displayAuthor",
             "label": "Display author name",

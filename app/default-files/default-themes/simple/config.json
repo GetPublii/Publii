@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "1.5.7.6",
+    "version": "1.5.8.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -673,6 +673,7 @@
             "label": "Lightbox style",
             "group": "Gallery",
             "note": "Set the lightbox slideshow style by choosing dark or light overlay",
+            "value": "pswp--dark",
             "type": "select",
             "options": [
                 {
@@ -890,13 +891,41 @@
             "group": "Additional",
             "size": "small"
          },
-        {
+         {
             "name": "lazyLoad",
             "group": "Additional",
             "label": "Lazy Load",
             "note": "The SEO-friendly high-performance lazy loader improves load times by deferring downloading of images until after the initial page load is complete.",
             "value": true,
             "type": "checkbox"
+        },
+        {
+            "name": "lazyLoadEffect",
+            "label": "Lazy load effects",
+            "group": "Additional",
+            "note": "More details you can find <a href='https://getpublii.com/docs/theme-settings.html' target='_blank'>here.</a>",
+            "value": "fadein",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Fade in",
+                    "value": "fadein"
+
+                },
+                {
+                    "label": "Blur up",
+                    "value": "blur"
+
+                },
+                {
+                    "label": "No LQIP",
+                    "value": "lqip"
+
+            }],
+            "dependencies": [{
+                "field": "lazyLoad",
+                "value": "true"
+            }]
         },
         {
             "name": "separator",

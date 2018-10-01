@@ -7,8 +7,12 @@
                 <figure class="hero__wrap">
                     {{#if @config.custom.lazyLoad}}
                         <img
-                            class="lazyload blur-up"
-                            src="{{@config.custom.uploadHero}}"
+                            class="lazyload" 
+                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                src="{{@config.custom.uploadHero}}"
+                            {{else}}
+                                data-src="{{@config.custom.uploadHero}}"
+                             {{/checkIf}}
                             {{responsiveSrcSet @config.custom.uploadHero}}
                             {{responsiveSizes}}
                             alt="{{@config.custom.uploadHeroAlt}}">
@@ -27,8 +31,12 @@
                 <div class="hero__wrap">
                     {{#if @config.custom.lazyLoad}}
                         <img
-                            class="lazyload blur-up"
-                            src="{{@config.custom.uploadHero}}"
+                            class="lazyload"
+                             {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                src="{{@config.custom.uploadHero}}"
+                            {{else}}
+                                data-src="{{@config.custom.uploadHero}}"
+                             {{/checkIf}}
                             {{responsiveSrcSet @config.custom.uploadHero}}
                             {{responsiveSizes}}
                             alt="{{@config.custom.uploadHeroAlt}}">

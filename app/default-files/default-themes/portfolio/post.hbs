@@ -24,10 +24,16 @@
                                 <figure class="post__featured-image post__image--full">
                                     {{#if @config.custom.lazyLoad}}
                                         <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"                                           
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}                                           
                                             data-srcset="{{srcset.post}}"
                                             data-sizes="auto"
+                                            height="{{height}}" 
+										    width="{{width}}"
                                             alt="{{alt}}">
                                     {{else}}
                                         <img
@@ -45,10 +51,16 @@
                                 <div class="post__featured-image post__image--full">
                                     {{#if @config.custom.lazyLoad}}
                                         <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}} 
                                             data-srcset="{{srcset.post}}"
                                             data-sizes="auto"
+                                            height="{{height}}" 
+										    width="{{width}}"
                                             alt="{{alt}}">
                                     {{else}}
                                         <img
@@ -88,7 +100,7 @@
                     </header>
                     <div class="post__entry">
                         {{#if @config.custom.lazyLoad}}
-                            {{{lazyLoadForContentImages text}}}
+                            {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
                         {{else}}
                             {{{text}}}
                         {{/if}}
@@ -120,7 +132,12 @@
                                     <div class="post__bio">
                                         {{#if avatar}}
                                             <div class="post__bio-thumb">
-                                                <img src="{{avatar}}" alt="{{name}}"></div>
+                                                {{#if @config.custom.lazyLoad}}
+                                                    <img class="lazyload" data-src="{{avatar}}" alt="{{name}}">
+                                                {{else}}
+                                                    <img src="{{avatar}}" alt="{{name}}">
+                                               {{/if}}
+                                            </div>
                                         {{/if}}
                                         <div class="post__bio-text">
                                             {{#if name}}

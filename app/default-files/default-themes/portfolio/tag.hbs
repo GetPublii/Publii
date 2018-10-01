@@ -38,8 +38,12 @@
                                 <figure class="category__image">
                                     <a href="{{../url}}">
                                         <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}
                                             data-srcset="{{srcset.post}}"
                                             data-sizes="auto"
 											height="{{height}}" 

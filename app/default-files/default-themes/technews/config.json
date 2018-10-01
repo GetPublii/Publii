@@ -1,6 +1,6 @@
 {
     "name": "Technews",
-    "version": "1.0.4.5",
+    "version": "1.0.5.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu",
@@ -88,17 +88,9 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "size": "small"
-        },
-
-        {
-            "name": "separator",
-            "type": "separator",
             "label": "Frontpage",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
         },
 
         {
@@ -195,17 +187,9 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "size": "small"
-        },
-
-        {
-            "name": "separator",
-            "type": "separator",
             "label": "Tags page",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
         },
         {
             "name": "layoutTags",
@@ -298,21 +282,12 @@
                 "value": "true"
             }]
         },
-
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "size": "small"
-        },
-
         {
             "name": "separator",
             "type": "separator",
             "label": "Author Page",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
         },
         {
             "name": "layoutAuthor",
@@ -1113,6 +1088,7 @@
             "label": "Lightbox style",
             "group": "Gallery",
             "note": "Set the lightbox slideshow style by choosing dark or light overlay",
+            "value": "pswp--dark",
             "type": "select",
             "options": [
                 {
@@ -1337,6 +1313,34 @@
             "note": "The SEO-friendly high-performance lazy loader improves load times by deferring downloading of images until after the initial page load is complete.",
             "value": true,
             "type": "checkbox"
+        },
+        {
+            "name": "lazyLoadEffect",
+            "label": "Lazy load effects",
+            "group": "Additional",
+            "note": "More details you can find <a href='https://getpublii.com/docs/theme-settings.html' target='_blank'>here.</a>",
+            "value": "fadein",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Fade in",
+                    "value": "fadein"
+
+                },
+                {
+                    "label": "Blur up",
+                    "value": "blur"
+
+                },
+                {
+                    "label": "No LQIP",
+                    "value": "lqip"
+
+            }],
+            "dependencies": [{
+                "field": "lazyLoad",
+                "value": "true"
+            }]
         },
         {
             "name": "separator",

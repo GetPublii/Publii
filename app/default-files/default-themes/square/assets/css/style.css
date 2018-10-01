@@ -1020,7 +1020,6 @@ textarea {
 .pswp--light .pswp__caption__center {
   color: #262626; }
 
-/*# sourceMappingURL=main.css.map */
         .cookie-popup {
             background: #fff;
             border-radius: 2px;
@@ -1263,4 +1262,26 @@ input[type=radio]:checked + label:before {
   }/*
  * Put your custom CSS code here
  */
+.top,
+.top--right {
+    width: 42%;
+}
 
+@media all and (min-width: 56.25em) {
+    .main__left {     
+         width: 50vw;
+    }
+    .main__right,
+    .main .tank {
+        width: 50%;
+    }
+   .hero > img {
+        width: 50vw;
+    }
+}
+
+@media all and (min-width: 56.25em) and (max-width: 112.4375em) {
+    .main__left > header {
+        padding: 0 8%;
+    }
+}
