@@ -82,7 +82,7 @@ Please remember to have running the dev command in the second terminal process:
 npm run dev
 ```
 
-It will allows you to refresh the app with changes without app restart - just click `Ctrl+R` shortcut to refresh the app.
+It will allow you to refresh the app with changes without app restart - just click `Ctrl+R` shortcut to refresh the app.
 
 ## Getting Started
 You can learn more about getting started in our [User documentation](https://getpublii.com/docs/) or [Developer documentation](https://getpublii.com/dev/).
