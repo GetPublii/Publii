@@ -6,7 +6,7 @@
 
 
 
-[Publii](https://getpublii.com/) is a desktop-based CMS for Windows and Mac that makes creating static websites fast
+[Publii](https://getpublii.com/) is a desktop-based CMS for Windows, Mac and Linux that makes creating static websites fast
 and hassle-free, even for beginners.
 
 **Current version: 0.29.1 (build 10999)**
@@ -19,7 +19,7 @@ options. Users can enjoy the benefits of a super-fast and secure static website,
 convenience that a CMS provides.
 
 What makes Publii even more unique is that the app runs locally on your desktop rather
-than on the site&#39;s server. Available for both Windows and Mac, once the app has been installed
+than on the site&#39;s server. Available for Windows, Mac, Linux once the app has been installed
 you can create a site in minutes, even without internet access; since Publii is a desktop app you
 can create, update and modify your site offline, then upload the site changes to your server at
 the click of a button. Publii supports multiple upload options, including standard HTTP/HTTPS
