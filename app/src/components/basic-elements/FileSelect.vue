@@ -56,6 +56,12 @@ export default {
             fieldValue: this.value
         };
     },
+    watch: {
+        value (newValue, oldValue) {
+            this.fieldValue = newValue;
+            this.$emit('input', this.fieldValue);
+        }
+    },
     methods: {
         clear: function() {
             this.$refs.input.content = '';
@@ -102,19 +108,19 @@ export default {
         width: 100%!important;
     }
 
-    .clear {        
+    .clear {
         color: $color-3;
-        cursor: pointer;    
+        cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
         height: 2rem;
-        line-height: 1.9rem;       
+        line-height: 1.9rem;
         position: absolute;
         right: 1.5rem;
-        text-align: center;        
+        text-align: center;
         top: 1.4rem;
         transition: all .3s ease-out;
-        width: 2rem;       
+        width: 2rem;
 
         &:hover {
             color: $color-4;

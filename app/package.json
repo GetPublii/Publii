@@ -1,15 +1,17 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.29.1",
-  "bundle": "test",
-  "description": "A simple static websites CMS application",
+  "version": "0.30.4",
+  "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js"
   },
   "keywords": [],
-  "author": "Tidy Customs",
+  "author": {
+    "name": "TidyCustoms",
+    "email": "bob@tidycustoms.net"
+  },
   "license": "GPL-3.0",
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -17,7 +19,11 @@
   "bugs": {
     "url": "https://github.com/GetPublii/Publii/issues"
   },
-  "homepage": "",
+  "files": [
+    "**/*",
+    "dist/**/*"
+  ],
+  "homepage": "https://getpublii.com",
   "dependencies": {
     "@google-cloud/storage": "^1.1.1",
     "archiver": "^1.3.0",
@@ -40,7 +46,7 @@
     "image-size": "^0.5.0",
     "isbinaryfile": "^3.0.2",
     "jimp": "^0.2.27",
-    "keytar": "^3.0.2",
+    "keytar": "^4.2.1",
     "ls-all": "^1.1.0",
     "md5": "^2.1.0",
     "mime": "^2.0.2",

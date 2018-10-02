@@ -13,10 +13,15 @@
             {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
                    <figure>
                       <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{responsiveSrcSet @config.custom.uploadHero}}
-                        {{responsiveSizes}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
+                           class="lazyload"
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                               src="{{@config.custom.uploadHero}}"
+                           {{else}}
+                               data-src="{{@config.custom.uploadHero}}"
+                           {{/checkIf}}
+                           {{responsiveSrcSet @config.custom.uploadHero}}
+                           {{responsiveSizes}}
+                           alt="{{@config.custom.uploadHeroAlt}}">
                       {{#if @config.custom.uploadHeroCaption}}
                          <figcaption>
                             {{@config.custom.uploadHeroCaption}}

@@ -22,9 +22,8 @@
                 <dropdown
                     slot="field"
                     id="start"
-                    ref="startScreen"
-                    :items="screens"
-                    :selected="screensSelected"></dropdown>
+                    v-model="screensSelected"
+                    :items="screens"></dropdown>
             </field>
 
             <field
@@ -33,9 +32,8 @@
                 <dropdown
                     slot="field"
                     id="time-format"
-                    ref="timeFormat"
                     :items="timeFormats"
-                    :selected="timeFormatsSelected"></dropdown>
+                    v-model="timeFormatsSelected"></dropdown>
             </field>
 
             <field
@@ -44,9 +42,18 @@
                 <dropdown
                     slot="field"
                     id="images-resize-engine"
-                    ref="resizeEngine"
                     :items="imageResizeEngines"
-                    :selected="imageResizeEnginesSelected"></dropdown>
+                    v-model="imageResizeEnginesSelected"></dropdown>
+            </field>
+
+            <field
+                id="close-editor-on-save"
+                label="Close post editor on save"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="close-editor-on-save"
+                    v-model="closeEditorOnSave" />
             </field>
 
             <field
@@ -56,8 +63,7 @@
                 <switcher
                     slot="field"
                     id="open-devtools-in-main"
-                    ref="openDevToolsInMain"
-                    :checked="openDevToolsInMainWindow" />
+                    v-model="openDevToolsInMainWindow" />
             </field>
 
             <field
@@ -67,8 +73,7 @@
                 <switcher
                     slot="field"
                     id="wide-scrollbars"
-                    ref="wideScrollbars"
-                    :checked="wideScrollbars" />
+                    v-model="wideScrollbars" />
             </field>
         </fields-group>
 
@@ -79,9 +84,14 @@
                 <dir-select
                     id="sites-location"
                     placeholder="Leave blank to use default sites directory"
-                    :value="locations.sites"
-                    ref="sitesLocation"
+                    v-model="locations.sites"
                     slot="field" />
+                <small
+                    v-if="locations.sites !== '' && !checkSitesCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
 
             <field
@@ -90,9 +100,14 @@
                 <dir-select
                     id="backups-location"
                     placeholder="Set it if you want to use backup tool"
-                    :value="locations.backups"
-                    ref="backupsLocation"
+                    v-model="locations.backups"
                     slot="field" />
+                <small
+                    v-if="locations.backups !== '' && !checkBackupsCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
 
             <field
@@ -101,9 +116,14 @@
                 <dir-select
                     id="preview-location"
                     placeholder="Leave blank to use default preview directory"
-                    :value="locations.preview"
-                    ref="previewLocation"
+                    v-model="locations.preview"
                     slot="field" />
+                <small
+                    v-if="locations.preview !== '' && !checkPreviewCatalog"
+                    slot="note"
+                    class="note is-invalid">
+                    Selected directory does not exist.
+                </small>
             </field>
         </fields-group>
 
@@ -122,6 +142,7 @@
 </template>
 
 <script>
+import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import ThemesList from './ThemesList';
 import Utils from './../helpers/utils.js';
@@ -129,9 +150,26 @@ import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
 export default {
     name: 'appsettings',
-    mixins: [GoToLastOpenedWebsite],
+    mixins: [
+        GoToLastOpenedWebsite
+    ],
     components: {
         'themes-list': ThemesList
+    },
+    data () {
+        return {
+            screensSelected: '',
+            timeFormatsSelected: '12',
+            imageResizeEnginesSelected: 'sharp',
+            openDevToolsInMainWindow: false,
+            wideScrollbars: false,
+            closeEditorOnSave: true,
+            locations: {
+                sites: '',
+                backups: '',
+                preview: ''
+            }
+        };
     },
     computed: {
         screens () {
@@ -142,43 +180,45 @@ export default {
                 ...websites
             };
         },
-        screensSelected () {
-            return this.$store.state.app.config.startScreen;
-        },
         timeFormats () {
             return {
                 '24': '24h',
                 '12': '12h'
             };
         },
-        timeFormatsSelected () {
-            return (this.$store.state.app.config.timeFormat).toString();
-        },
         imageResizeEngines () {
+            if (process.platform === 'linux') {
+                return {
+                    'jimp': 'Jimp (slower but more stable)'
+                };
+            }
+
             return {
                 'sharp': 'Sharp (faster)',
                 'jimp': 'Jimp (slower but more stable)'
             };
         },
-        imageResizeEnginesSelected () {
-            return this.$store.state.app.config.resizeEngine;
+        checkSitesCatalog () {
+            return fs.existsSync(this.locations.sites);
         },
-        locations () {
-            return {
-                sites: this.$store.state.app.config.sitesLocation,
-                backups: this.$store.state.app.config.backupsLocation,
-                preview: this.$store.state.app.config.previewLocation
-            };
+        checkBackupsCatalog () {
+            return fs.existsSync(this.locations.backups);
         },
-        openDevToolsInMainWindow () {
-            return this.$store.state.app.config.openDevToolsInMain;
-        },
-        wideScrollbars () {
-            return this.$store.state.app.config.wideScrollbars;
+        checkPreviewCatalog () {
+            return fs.existsSync(this.locations.preview);
         }
     },
     mounted () {
         this.$bus.$emit('sites-list-reset');
+        this.locations.sites = this.$store.state.app.config.sitesLocation;
+        this.locations.backups = this.$store.state.app.config.backupsLocation;
+        this.locations.preview = this.$store.state.app.config.previewLocation;
+        this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
+        this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
+        this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
+        this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
+        this.screensSelected = this.$store.state.app.config.startScreen;
+        this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
     },
     methods: {
         goBack () {
@@ -195,17 +235,18 @@ export default {
                 }
             }
         },
-        save: function(e) {
+        save () {
             let newSettings = {
                 licenseAccepted: true,
-                startScreen: this.$refs.startScreen.selectedValue,
-                openDevToolsInMain: this.$refs.openDevToolsInMain.isChecked,
-                timeFormat: this.$refs.timeFormat.selectedValue,
-                resizeEngine: this.$refs.resizeEngine.selectedValue,
-                sitesLocation: this.$refs.sitesLocation.fieldValue.trim(),
-                backupsLocation: this.$refs.backupsLocation.fieldValue.trim(),
-                previewLocation: this.$refs.previewLocation.fieldValue.trim(),
-                wideScrollbars: this.$refs.wideScrollbars.isChecked
+                startScreen: this.screensSelected,
+                openDevToolsInMain: this.openDevToolsInMainWindow,
+                timeFormat: this.timeFormatsSelected,
+                resizeEngine: this.imageResizeEnginesSelected,
+                sitesLocation: this.locations.sites.trim(),
+                backupsLocation: this.locations.backups.trim(),
+                previewLocation: this.locations.preview.trim(),
+                wideScrollbars: this.wideScrollbars,
+                closeEditorOnSave: this.closeEditorOnSave
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
@@ -221,11 +262,11 @@ export default {
                 this.saved(newSettings, data);
             });
         },
-        saved: function(newSettings, data) {
+        saved (newSettings, data) {
             this.$store.commit('setSiteDir', newSettings.sitesLocation);
             this.$store.commit('setAppConfig', newSettings);
 
-            if(data.status === true) {
+            if (data.status === true) {
                 this.$bus.$emit('message-display', {
                     message: 'Global settings has been successfully saved.',
                     type: 'success',

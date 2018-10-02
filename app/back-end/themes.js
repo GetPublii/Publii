@@ -92,12 +92,12 @@ class Themes {
             themeData = JSON.parse(themeData);
 
             if(themeData.name) {
-                return themeData.name;
+                return themeData.name.toLowerCase();
             }
         }
 
         if(returnDir && siteData.theme) {
-            return siteData.theme
+            return siteData.theme.toLowerCase();
         }
 
         return "not selected";

@@ -33,3 +33,10 @@ body[data-os="win"] {
         top: 36px;
     }
 }
+
+body[data-os="linux"] {
+    .overlay {
+        height: calc(100%);
+        top: 0;
+    }
+}

@@ -540,3 +540,18 @@ a script {
         line-height: 1.5rem;
     }
 }
+
+/*
+ * Styling for anchors
+ */
+
+.mce-item-anchor {
+    background-color: #efefef;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    height: 15px !important;
+    margin: 0 5px 0 0;
+    position: relative;
+    top: 1px;
+    width: 15px !important;
+}

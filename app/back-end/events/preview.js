@@ -67,10 +67,18 @@ class PreviewEvents {
         rendererProcess.on('disconnect', function(data) {
             setTimeout(function() {
                 if(!resultsRetrieved) {
+                    let errorDesc = 'Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer. ';
+                    let errorTitle = 'Rendering process crashed';
+
+                    if (data.result && data.result[0] && data.result[0].message) {
+                        errorTitle = 'Rendering process failed';
+                        errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
+                    }
+
                     event.sender.send('app-preview-render-error', {
                         message: [{
-                            message: 'Rendering process crashed',
-                            desc: 'Checkout the rendering-errors.log file under Tools -> Log viewer'
+                            message: errorTitle,
+                            desc: errorDesc
                         }]
                     });
                 }
@@ -100,10 +108,18 @@ class PreviewEvents {
 
                     self.showPreview(site, singlePageMode);
                 } else {
+                    let errorDesc = 'Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer. ';
+                    let errorTitle = 'Rendering process crashed';
+
+                    if (data.result && data.result[0] && data.result[0].message) {
+                        errorTitle = 'Rendering process failed';
+                        errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
+                    }
+
                     event.sender.send('app-preview-render-error', {
                         message: [{
-                            message: 'Rendering process crashed',
-                            desc: 'Checkout the rendering-errors.log file under Tools -> Log viewer'
+                            message: errorTitle,
+                            desc: errorDesc
                         }]
                     });
                 }

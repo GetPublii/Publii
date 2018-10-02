@@ -1440,16 +1440,15 @@ main {
         }
         .gallery {
                margin: calc(1.6rem + 1vw) -0.5333rem;
+        } 
+        .lazyload,
+        .lazyloading {
+               opacity: 0;
         }
-        .blur-up {
-               -webkit-filter: blur(5px);
-                         filter: blur(5px);
-               transition: filter 400ms, -webkit-filter 400ms;
-        }
-        .blur-up.lazyloaded {
-               -webkit-filter: blur(0);
-                       filter: blur(0);
-        }/*
+        .lazyloaded {
+               opacity: 1;
+               transition: opacity 2s cubic-bezier(0.215, 0.61, 0.355, 1); 
+          }/*
  * Put your custom CSS code here
  */
 

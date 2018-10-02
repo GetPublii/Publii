@@ -14,7 +14,7 @@ class ManualDeployment {
         this.deployment = deploymentInstance;
     }
 
-    initConnection() {
+    async initConnection() {
         this.deployment.setInput();
 
         switch(this.deployment.siteConfig.deployment.manual.output) {

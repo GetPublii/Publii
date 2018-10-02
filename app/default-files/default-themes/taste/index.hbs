@@ -29,8 +29,12 @@
                                 {{#if @config.custom.lazyLoad}}
                                     <a href="{{../url}}" class="card__image-link" style="padding-bottom: calc({{height}}/{{width}} * 100%)">
 										<img
-                                        class="lazyload blur-up"
-                                        src="{{urlXs}}"
+                                        class="lazyload"
+                                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                           src="{{urlXs}}" 
+                                             {{else}}
+                                            data-src="{{url}}"  
+                                        {{/checkIf}}
                                         data-srcset="{{srcset}}"
                                         data-sizes="auto"
                                         alt="{{alt}}"></a>

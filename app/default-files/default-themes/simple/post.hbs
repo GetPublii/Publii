@@ -11,10 +11,14 @@
                                 <figure class="hero__wrap">
                                     {{#if @config.custom.lazyLoad}}
                                         <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"                                           
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}"
+                                            {{else}}
+                                                data-src="{{url}}"
+                                            {{/checkIf}}                                           
                                             data-srcset="{{srcset.post}}"
-                                            data-sizes="auto"
+                                            data-sizes="{{srcset.sizes}}"
                                             alt="{{alt}}">
                                     {{else}}
                                         <img
@@ -32,10 +36,14 @@
                                 <div class="hero__wrap">
                                     {{#if @config.custom.lazyLoad}}
                                         <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"                                           
+                                            class="lazyload"
+                                             {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}"
+                                            {{else}}
+                                                data-src="{{url}}"
+                                            {{/checkIf}}                                           
                                             data-srcset="{{srcset.post}}"
-                                            data-sizes="auto"
+                                            data-sizes="{{srcset.sizes}}"
                                             alt="{{alt}}">
                                     {{else}}
                                         <img
@@ -99,7 +107,7 @@
                 </div>
                 <div class="post__entry">
                     {{#if @config.custom.lazyLoad}}
-                        {{{lazyLoadForContentImages text}}}
+                        {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
                     {{else}}
                         {{{text}}}
                     {{/if}}
@@ -197,9 +205,12 @@
                                                         {{#if @config.custom.lazyLoad}}
                                                             <a href="{{../url}}">
                                                                 <img
-                                                                    class="lazyload blur-up"
-                                                                    src="{{urlXs}}"
-                                                                    srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                                                    class="lazyload"
+                                                                     {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                                       src="{{urlXs}}"
+                                                                    {{else}}
+                                                                       data-src="{{urlXs}}"
+                                                                    {{/checkIf}}
                                                                     data-srcset="{{urlXs}}"
                                                                     data-expand="300"
                                                                     alt="{{alt}}">

@@ -1,8 +1,14 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.29.1",
-  "description": "A simple static blogging application",
+  "version": "0.30.4",
+  "description": "Static Site CMS",
+  "homepage": "https://getpublii.com",
+  "author": {
+    "name": "TidyCustoms",
+    "email": "bob@tidycustoms.net"
+  },
+  "license": "GPL-3.0",
   "main": "app/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --progress --colors --watch",
@@ -11,9 +17,11 @@
     "build": "cross-env NODE_ENV=development gulp build",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/js/**/*.spec.js --reporter dot",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=2.0.5 --overwrite --symlinks --app-version=0.29.1 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.29.1 --version-string.FileVersion=0.29.1 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
-    "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.5 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
-    "postinstall": "opencollective postinstall"
+    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=2.0.9 --overwrite --symlinks --app-version=0.30.4 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.30.4 --version-string.FileVersion=0.30.4 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.9 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
+    "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --ignore=app/node_modules/electron-* --electron-version=2.0.9 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
+    "postinstall": "opencollective postinstall",
+    "dist": "build"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -22,9 +30,6 @@
     "url": "https://github.com/GetPublii/Publii/issues"
   },
   "keywords": [],
-  "author": "Tidy Customs",
-  "license": "GPL-3.0",
-  "homepage": "",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -51,14 +56,39 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^2.0.5",
+    "electron": "^2.0.9",
     "handlebars": "^4.0.5",
     "opencollective": "^1.0.3"
   },
   "build": {
-    "app-bundle-id": "tidycustoms",
-    "app-category-type": "publii",
-    "iconUrl": ""
+    "asar": false,
+    "files": [
+      "**/*",
+      "dist/**/*"
+    ],
+    "linux": {
+      "target": [
+        "rpm",
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development",
+      "description": "Static Site CMS",
+      "executableName": "Publii"
+    }
+  },
+  "deb": {
+    "depends": [
+      "libsecret-1-dev"
+    ]
+  },
+  "rpm": {
+    "depends": [
+      "libsecret-devel"
+    ]
+  },
+  "appImage": {
+    "license": "license.txt"
   },
   "collective": {
     "type": "opencollective",

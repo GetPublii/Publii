@@ -59,19 +59,19 @@ export default {
     &.small,
     &.medium,
     &.big {
-        padding-top: 1.4rem;
+        padding-bottom: 1rem;
     }
 
     &.small {
-        padding: 1rem 0;
+        padding-top: 1rem;
     }
 
     &.medium {
-        padding: 2rem 0;
+        padding-top: 2rem;
     }
 
     &.big {
-        padding: 4rem 0;
+        padding-top: 4rem;
     }
 
     &.line > .separator-wrapper:before {

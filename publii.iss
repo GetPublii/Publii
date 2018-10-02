@@ -11,7 +11,7 @@ Type: filesandordirs; Name: "{app}\resources";
 
 [Setup]
 AppName=Publii
-AppVersion=0.29.1
+AppVersion=0.30.4
 DefaultDirName={pf}\Publii
 DefaultGroupName=Publii
 UninstallDisplayIcon={app}\Publii.exe

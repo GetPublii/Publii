@@ -1049,7 +1049,8 @@ textarea {
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
-    width: 100%; }
+    width: 100%;
+    will-change: transform; }
 
 .card__header {
   background: #ffffff; }
@@ -1207,6 +1208,7 @@ textarea {
         -webkit-transition: all 0.24s ease;
         -o-transition: all 0.24s ease;
         transition: all 0.24s ease;
+        will-change: transform;
         width: 100px; }
         @media all and (max-width: 37.4375em) {
           .post__nav__link > img {
@@ -1261,7 +1263,8 @@ textarea {
         .post__related__wrap figure a > img {
           -webkit-transition: all 0.24s ease;
           -o-transition: all 0.24s ease;
-          transition: all 0.24s ease; }
+          transition: all 0.24s ease;
+          will-change: transform; }
         .post__related__wrap figure a:hover img {
           opacity: 0.8; }
       .post__related__wrap figcaption {

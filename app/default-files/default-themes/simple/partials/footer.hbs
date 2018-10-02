@@ -66,27 +66,6 @@
     {{/if}}
 </footer>
 </div>
-
-<script>
-    var loadCSSFiles = function() {
-        var links = ['https://fonts.googleapis.com/css?family=Roboto:400,700|Roboto+Condensed:400,700&amp;subset=latin-ext'],
-            headElement = document.getElementsByTagName('head')[0],
-            linkElement, i;
-        for (i = 0; i < links.length; i++) {
-            linkElement = document.createElement('link');
-            linkElement.rel = 'stylesheet';
-            linkElement.href = links[i];
-            headElement.appendChild(linkElement);
-        }
-    };
-    var raf = requestAnimationFrame || mozRequestAnimationFrame || webkitRequestAnimationFrame || msRequestAnimationFrame;
-    if (raf) {
-        raf(loadCSSFiles);
-    } else {
-        window.addEventListener('load', loadCSSFiles);
-    }
-
-</script>
 <script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" aria-dropeffect="" crossorigin="anonymous"></script>
 <script defer src="{{js "scripts.min.js"}}"></script>
 {{#is "post"}}

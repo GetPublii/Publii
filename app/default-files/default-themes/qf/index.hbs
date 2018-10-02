@@ -1,176 +1,188 @@
 {{> head}}
-    {{> top}}
-    <main>
-        {{#if @renderer.isFirstPage}}
-            {{#if featuredPosts}}
-                <div class="hero hero--frontpage">
-                    {{#each featuredPosts}}
-                        {{#checkIf @index '==' 0}}
-                            <figure class="hero__first-item">
-                                {{#featuredImage}}
-                                    {{#if url}}
-                                        {{#if @config.custom.lazyLoad}}
-                                            <img
-                                                class="lazyload blur-up hero__image"
-                                                src="{{urlXs}}"
-                                                data-srcset="{{srcset.cards}}"
-                                                data-sizes="auto"
-                                                alt="{{alt}}">
-                                        {{else}}
-                                            <img
-                                                src="{{url}}"
-                                                sizes="{{sizes.cards}}"
-                                                srcset="{{srcset.cards}}"
-                                                alt="{{alt}}"
-                                                class="hero__image">
-                                        {{/if}}
+{{> top}}
+<main>
+   {{#if @renderer.isFirstPage}}
+      {{#if featuredPosts}}
+         <div class="hero hero--frontpage">
+            {{#each featuredPosts}}
+               {{#checkIf @index '==' 0}}
+                  <figure class="hero__first-item">
+                     {{#featuredImage}}
+                        {{#if url}}
+                           {{#if @config.custom.lazyLoad}}
+                              <img
+                                 class="lazyload hero__image"
+                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                     src="{{urlXs}}"
+                                 {{else}}
+                                     data-src="{{url}}"
+                                 {{/checkIf}}
+                                 data-srcset="{{srcset.cards}}"
+                                 data-sizes="auto"
+                                 alt="{{alt}}">
+                           {{else}}
+                              <img
+                                 src="{{url}}"
+                                 sizes="{{sizes.cards}}"
+                                 srcset="{{srcset.cards}}"
+                                 alt="{{alt}}"
+                                 class="hero__image">
+                           {{/if}}
+                        {{/if}}
+                     {{/featuredImage}}
+                     <figcaption class="hero__txt">
+                        {{#if @config.custom.heroCategory}}
+                           <span class="hero__category">
+                              {{#checkIf @config.custom.heroCategorySource '==' "text" }}
+                                 {{@config.custom.heroCategoryText}}
+                              {{else}}
+                                 {{#if tags}}
+                                    {{#each tags}}
+                                       {{#if @first}}
+                                          {{name}}
+                                       {{/if}}
+                                    {{/each}}
+                                 {{/if}}
+                              {{/checkIf}}
+                           </span>
+                        {{/if}}
+                        <h1>
+                           {{title}}
+                        </h1>
+                        {{#if @config.custom.heroDate}}
+                           <p class="hero__meta">
+                              <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                 {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                 {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                 {{/checkIf}}
+                              </time>
+                           </p>
+                        {{/if}}
+                        {{#if @config.custom.heroReadmore}}
+                           <a href="{{url}}" class="btn">{{ translate 'post.readMore' }}</a>
+                        {{/if}}
+                     </figcaption>
+                  </figure>
+               {{/checkIf}}
+            {{/each}}
+            {{#if @config.custom.heroThumbinals}}
+               <div class="hero__rest-items">
+                  {{#each featuredPosts}}
+                     {{#checkIf @index '>' 0}}
+                        <figure>
+                           <a href="{{url}}">
+                              {{#featuredImage}}
+                                 {{#if url}}
+                                    {{#if @config.custom.lazyLoad}}
+                                       <img
+                                          class="lazyload"
+                                          {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                              src="{{urlXs}}"
+                                          {{else}}
+                                              data-src="{{url}}"
+                                          {{/checkIf}}
+                                          data-srcset="{{srcset.cards}}"
+                                          data-sizes="auto"
+                                          data-expand="300"
+                                          alt="{{alt}}">
+                                    {{else}}
+                                       <img
+                                          src="{{url}}"
+                                          sizes="{{sizes.cards}}"
+                                          srcset="{{srcset.cards}}"
+                                          alt="{{alt}}">
                                     {{/if}}
-                                {{/featuredImage}}
-                                <figcaption class="hero__txt">
-                                    {{#if @config.custom.heroCategory}}
-                                        <span class="hero__category">
-                                            {{#checkIf @config.custom.heroCategorySource '==' "text" }}
-                                                {{@config.custom.heroCategoryText}}
-                                            {{else}}
-                                                {{#if tags}}
-                                                    {{#each tags}}
-                                                        {{#if @first}}
-                                                            {{name}}
-                                                        {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-                                            {{/checkIf}}
-                                        </span>
-                                    {{/if}}
-                                    <h1>
-                                        {{title}}
-                                    </h1>
-                                    {{#if @config.custom.heroDate}}
-                                        <p class="hero__meta">
-                                            <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                                               {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                                    {{date createdAt @config.custom.formatDate}}
-                                               {{else}}
-                                                    {{date createdAt @config.custom.formatDateCustom}}
-                                               {{/checkIf}}
-                                            </time>
-                                        </p>
-                                    {{/if}}
-                                    {{#if @config.custom.heroReadmore}}
-                                        <a href="{{url}}" class="btn">{{ translate 'post.readMore' }}</a>
-                                    {{/if}}
-                                </figcaption>
-                            </figure>
-                        {{/checkIf}}
-                    {{/each}}
-                    {{#if @config.custom.heroThumbinals}}
-                        <div class="hero__rest-items">
-                            {{#each featuredPosts}}
-                                {{#checkIf @index '>' 0}}
-                                    <figure>
-                                        <a href="{{url}}">
-                                            {{#featuredImage}}
-                                                {{#if url}}
-                                                    {{#if @config.custom.lazyLoad}}
-                                                        <img
-                                                            class="lazyload blur-up"
-                                                            src="{{urlXs}}"
-                                                            data-srcset="{{srcset.cards}}"
-                                                            data-sizes="auto"
-															data-expand="300"
-                                                            alt="{{alt}}">
-                                                    {{else}}
-                                                        <img
-                                                            src="{{url}}"
-                                                            sizes="{{sizes.cards}}"
-                                                            srcset="{{srcset.cards}}"
-                                                            alt="{{alt}}">
-                                                    {{/if}}
-                                                {{/if}}
-                                            {{/featuredImage}}
-                                        </a>
-                                        <figcaption>
-                                            <h2>
-                                                <a href="{{url}}" class="inverse">
-                                                    {{title}}
-                                                </a>
-                                            </h2>
-                                        </figcaption>
-                                    </figure>
-                                {{/checkIf}}
-                            {{/each}}
-                        </div>
-                    {{/if}}
-                </div>
+                                 {{/if}}
+                              {{/featuredImage}}
+                           </a>
+                           <figcaption>
+                              <h2>
+                                 <a href="{{url}}" class="inverse">
+                                    {{title}}
+                                 </a>
+                              </h2>
+                           </figcaption>
+                        </figure>
+                     {{/checkIf}}
+                  {{/each}}
+               </div>
             {{/if}}
-        {{/if}}
+         </div>
+      {{/if}}
+   {{/if}}
 
-        {{#if posts.length}}
-            <div
-                class="category{{#if @config.custom.cardsReverse}} category--reverse{{/if}}{{#if @config.custom.showBgLetters}} category--bg-letters{{/if}}">
-                {{#each posts}}
-                    <article
-                        class="card{{#if @config.custom.cardsFeaturedBadge}}{{#isFeatured}} card--featured{{/isFeatured}}{{/if}}">
-                        {{#featuredImage}}
-                            {{#if url}}
-                                {{#if @config.custom.lazyLoad}}
-                                    <a href="{{../url}}" class="card__image"><img
-                                        class="lazyload blur-up"
-                                        src="{{urlXs}}"
-                                        data-srcset="{{srcset.cards}}"
-                                        data-sizes="auto" 
-										data-expand="300"						  
-                                        alt="{{alt}}"></a>
-                                {{else}}
-                                    <a href="{{../url}}" class="card__image">
-                                        <img
-                                            src="{{url}}"
-                                            sizes="{{sizes.cards}}"
-                                            srcset="{{srcset.cards}}"
-                                            alt="{{alt}}">
-                                    </a>
-                                {{/if}}
-                            {{/if}}
-                        {{/featuredImage}}
-                        <div class="card__txt">
-                            <header>
-                                <h2>
-                                    <a href="{{url}}" class="inverse">
-                                        {{title}}
-                                    </a>
-                                </h2>
-                                {{#checkIfAny @config.custom.cardAuthor @config.custom.cardDate}}
-                                    <p class="card__meta">
-                                        {{#author}}
-                                            {{#if @config.custom.cardAuthor}}
-                                                <a href="{{url}}" title="{{name}}">{{name}}</a>
-                                            {{/if}}
-                                        {{/author}}
-                                        {{#if @config.custom.cardDate}}
-                                             <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                                               {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                                    {{date createdAt @config.custom.formatDate}}
-                                               {{else}}
-                                                    {{date createdAt @config.custom.formatDateCustom}}
-                                               {{/checkIf}}
-                                            </time>
-                                        {{/if}}
-                                    </p>
-                                {{/checkIfAny}}
-                            </header>
-                            {{#if @config.custom.cardExcerpt}}
-                                {{#if excerpt}}
-                                    <p class="card__desc">{{{excerpt}}}</p>
-                                {{/if}}
-                            {{/if}}
-                            {{#if @config.custom.cardReadmore}}
-                                <a href="{{url}}" class="btn">{{ translate 'post.readMore' }}</a>
-                            {{/if}}
-                        </div>
-                    </article>
-                {{/each}}
-            </div>
-        {{/if}}
-        {{> pagination}}
-    </main>
-    {{> footer}}
+   {{#if posts.length}}
+      <div
+         class="category{{#if @config.custom.cardsReverse}} category--reverse{{/if}}{{#if @config.custom.showBgLetters}} category--bg-letters{{/if}}">
+         {{#each posts}}
+            <article
+               class="card{{#if @config.custom.cardsFeaturedBadge}}{{#isFeatured}} card--featured{{/isFeatured}}{{/if}}">
+               {{#featuredImage}}
+                  {{#if url}}
+                     {{#if @config.custom.lazyLoad}}
+                        <a href="{{../url}}" class="card__image"><img
+                           class="lazyload"
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                               src="{{urlXs}}"
+                           {{else}}
+                               data-src="{{url}}"
+                           {{/checkIf}}
+                           data-srcset="{{srcset.cards}}"
+                           data-sizes="auto"
+                           data-expand="300"
+                           alt="{{alt}}"></a>
+                     {{else}}
+                        <a href="{{../url}}" class="card__image">
+                           <img
+                              src="{{url}}"
+                              sizes="{{sizes.cards}}"
+                              srcset="{{srcset.cards}}"
+                              alt="{{alt}}">
+                        </a>
+                     {{/if}}
+                  {{/if}}
+               {{/featuredImage}}
+               <div class="card__txt">
+                  <header>
+                     <h2>
+                        <a href="{{url}}" class="inverse">
+                           {{title}}
+                        </a>
+                     </h2>
+                     {{#checkIfAny @config.custom.cardAuthor @config.custom.cardDate}}
+                        <p class="card__meta">
+                           {{#author}}
+                              {{#if @config.custom.cardAuthor}}
+                                 <a href="{{url}}" title="{{name}}">{{name}}</a>
+                              {{/if}}
+                           {{/author}}
+                           {{#if @config.custom.cardDate}}
+                              <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                                 {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                 {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                 {{/checkIf}}
+                              </time>
+                           {{/if}}
+                        </p>
+                     {{/checkIfAny}}
+                  </header>
+                  {{#if @config.custom.cardExcerpt}}
+                     {{#if excerpt}}
+                        <p class="card__desc">{{{excerpt}}}</p>
+                     {{/if}}
+                  {{/if}}
+                  {{#if @config.custom.cardReadmore}}
+                     <a href="{{url}}" class="btn">{{ translate 'post.readMore' }}</a>
+                  {{/if}}
+               </div>
+            </article>
+         {{/each}}
+      </div>
+   {{/if}}
+   {{> pagination}}
+</main>
+{{> footer}}

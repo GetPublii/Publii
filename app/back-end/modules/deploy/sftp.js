@@ -16,7 +16,7 @@ class SFTP {
         this.connection = false;
     }
 
-    initConnection() {
+    async initConnection() {
         let self = this;
         let waitForTimeout = true;
         let ftpPassword = this.deployment.siteConfig.deployment.password;
@@ -26,11 +26,11 @@ class SFTP {
         this.connection = new sftpClient();
 
         if(ftpPassword === 'publii ' + account) {
-            ftpPassword = passwordSafeStorage.getPassword('publii', account);
+            ftpPassword = await passwordSafeStorage.getPassword('publii', account);
         }
 
         if(passphrase === 'publii-passphrase ' + account) {
-            passphrase = passwordSafeStorage.getPassword('publii-passphrase', account);
+            passphrase = await passwordSafeStorage.getPassword('publii-passphrase', account);
         }
 
         let connectionSettings = {
@@ -333,7 +333,7 @@ class SFTP {
         });
     }
 
-    testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName) {
         let client = new sftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
@@ -341,11 +341,11 @@ class SFTP {
         let account = slug(siteName);
 
         if(ftpPassword === 'publii ' + account) {
-            ftpPassword = passwordSafeStorage.getPassword('publii', account);
+            ftpPassword = await passwordSafeStorage.getPassword('publii', account);
         }
 
         if(passphrase === 'publii-passphrase ' + account) {
-            passphrase = passwordSafeStorage.getPassword('publii-passphrase', account);
+            passphrase = await passwordSafeStorage.getPassword('publii-passphrase', account);
         }
 
         let connectionSettings = {

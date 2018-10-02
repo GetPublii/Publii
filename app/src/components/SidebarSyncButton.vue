@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import fs from 'fs';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
@@ -120,7 +121,18 @@ export default {
                     okClick: () => {
                         this.$router.push(`/site/${siteName}/settings/`);
                     }
-                })
+                });
+                return;
+            }
+
+            if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                this.$bus.$emit('confirm-display', {
+                    message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
+                    okLabel: 'Go to application settings',
+                    okClick: () => {
+                        this.$router.push(`/app-settings/`);
+                    }
+                });
                 return;
             }
 

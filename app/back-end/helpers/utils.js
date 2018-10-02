@@ -287,6 +287,7 @@ class UtilsHelper {
             themeConfigPath = path.join(inputDir, 'config.json');
             overridedThemeConfigPath = UtilsHelper.fileIsOverrided(inputDir, themeConfigPath);
         } else {
+            themeName = themeName.toLowerCase();
             themeConfigPath = path.join(inputDir, 'themes', themeName, 'config.json');
             overridedThemeConfigPath = UtilsHelper.fileIsOverrided(inputDir, themeName, themeConfigPath);
         }

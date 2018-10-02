@@ -28,42 +28,24 @@
 						{{#featuredImage}}
                         {{#if url}}
                             {{#checkIfAny caption credits}}
-                                <figure class="hero">
-                                    {{#if @config.custom.lazyLoad}}
-                                        <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"                                           
-                                            data-srcset="{{srcset}}"
-                                            data-sizes="auto"
-                                            alt="{{alt}}">
-                                    {{else}}
+                                <figure class="hero">                                    
                                         <img
                                             src="{{url}}"
                                             sizes="{{sizes}}"
                                             srcset="{{srcset}}"
-                                            alt="{{alt}}">
-                                    {{/if}}
+                                            alt="{{alt}}">                                    
                                     <figcaption class="hero__caption">
                                         {{caption}}
                                         {{credits}}
                                     </figcaption>
                                 </figure>
                             {{else}}
-                                <div class="hero">
-                                    {{#if @config.custom.lazyLoad}}
-                                        <img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"                                           
-                                            data-srcset="{{srcset}}"
-                                            data-sizes="auto"
-                                            alt="{{alt}}">
-                                    {{else}}
+                                <div class="hero">                                    
                                         <img
                                             src="{{url}}"
                                             sizes="{{sizes}}"
                                             srcset="{{srcset}}"
-                                            alt="{{alt}}">
-                                    {{/if}}
+                                            alt="{{alt}}">                                   
                                 </div>
                             {{/checkIfAny}}
 
@@ -119,7 +101,7 @@
                     <div class="main__right">
                         <div class="post__entry">
                             {{#if @config.custom.lazyLoad}}
-                               {{{lazyLoadForContentImages text}}}
+                               {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
                             {{else}}
                                {{{text}}}
                             {{/if}}

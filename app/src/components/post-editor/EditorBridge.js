@@ -557,6 +557,12 @@ class EditorBridge {
             this.contentImageUploading = false;
         });
     }
+
+    reloadEditor () {
+        this.tinymceEditor.once('keyup', e => {
+            window.app.$bus.$emit('post-editor-possible-data-loss');
+        });
+    }
 }
 
 export default EditorBridge;

@@ -61,10 +61,11 @@ class App {
         this.checkDirs();
         this.loadConfig();
         this.checkThemes();
-        this.loadSites();
-        this.loadThemes();
-        this.initWindow();
-        this.initWindowEvents();
+        this.loadSites().then(() => {
+            this.loadThemes();
+            this.initWindow();
+            this.initWindowEvents();
+        });
     }
 
     /**
@@ -146,9 +147,9 @@ class App {
      *
      * @returns {object}
      */
-    reloadSite(siteName) {
+    async reloadSite(siteName) {
         let siteData = this.switchSite(siteName);
-        let siteConfig = this.loadSite(siteName);
+        let siteConfig = await this.loadSite(siteName);
 
         return {
             data: siteData,
@@ -219,7 +220,7 @@ class App {
      * @param storeInConfig
      * @returns {object}
      */
-    loadSite(siteName) {
+    async loadSite(siteName) {
         let dirPath = path.join(this.sitesDir, siteName);
         let fileStat = fs.statSync(dirPath);
 
@@ -254,7 +255,7 @@ class App {
         siteConfig = SiteConfigMigrator.moveOldAuthorData(this, siteConfig);
 
         // Load passwords
-        siteConfig = this.loadPasswords(siteConfig);
+        siteConfig = await this.loadPasswords(siteConfig);
         this.sites[siteConfig.name] = JSON.parse(JSON.stringify(siteConfig));
 
         if(this.sites[siteConfig.name].logo.icon.indexOf('#') > -1) {
@@ -272,19 +273,19 @@ class App {
     /**
      * Load websites
      */
-    loadSites() {
+    async loadSites() {
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
 
         for(let siteName of files) {
-            this.loadSite(siteName);
+            await this.loadSite(siteName);
         }
     }
 
     /**
      * Load password from Keytar
      */
-    loadPassword(type, passwordKey) {
+    async loadPassword(type, passwordKey) {
          if(passwordKey.indexOf(type) === 0) {
             let passwordData = passwordKey.split(' ');
             let service = passwordData[0];
@@ -292,7 +293,7 @@ class App {
             let retrievedPassword = '';
 
             if(passwordSafeStorage) {
-                retrievedPassword = passwordSafeStorage.getPassword(service, account);
+                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
             }
 
             if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
@@ -308,30 +309,30 @@ class App {
     /**
      * Load passwords if its are stored in the keychain
      */
-    loadPasswords(siteConfig) {
+    async loadPasswords(siteConfig) {
         if(siteConfig.deployment) {
-            siteConfig.deployment.password = this.loadPassword('publii', siteConfig.deployment.password);
+            siteConfig.deployment.password = await this.loadPassword('publii', siteConfig.deployment.password);
 
             if(siteConfig.deployment.passphrase) {
-                siteConfig.deployment.passphrase = this.loadPassword('publii-passphrase', siteConfig.deployment.passphrase);
+                siteConfig.deployment.passphrase = await this.loadPassword('publii-passphrase', siteConfig.deployment.passphrase);
             }
 
             if(siteConfig.deployment.s3) {
-                siteConfig.deployment.s3.id = this.loadPassword('publii-s3-id', siteConfig.deployment.s3.id);
-                siteConfig.deployment.s3.key = this.loadPassword('publii-s3-key', siteConfig.deployment.s3.key);
+                siteConfig.deployment.s3.id = await this.loadPassword('publii-s3-id', siteConfig.deployment.s3.id);
+                siteConfig.deployment.s3.key = await this.loadPassword('publii-s3-key', siteConfig.deployment.s3.key);
             }
 
             if(siteConfig.deployment.netlify) {
-                siteConfig.deployment.netlify.id = this.loadPassword('publii-netlify-id', siteConfig.deployment.netlify.id);
-                siteConfig.deployment.netlify.token = this.loadPassword('publii-netlify-token', siteConfig.deployment.netlify.token);
+                siteConfig.deployment.netlify.id = await this.loadPassword('publii-netlify-id', siteConfig.deployment.netlify.id);
+                siteConfig.deployment.netlify.token = await this.loadPassword('publii-netlify-token', siteConfig.deployment.netlify.token);
             }
 
             if(siteConfig.deployment.github) {
-                siteConfig.deployment.github.token = this.loadPassword('publii-gh-token', siteConfig.deployment.github.token);
+                siteConfig.deployment.github.token = await this.loadPassword('publii-gh-token', siteConfig.deployment.github.token);
             }
 
             if(siteConfig.deployment.gitlab) {
-                siteConfig.deployment.gitlab.token = this.loadPassword('publii-gl-token', siteConfig.deployment.gitlab.token);
+                siteConfig.deployment.gitlab.token = await this.loadPassword('publii-gl-token', siteConfig.deployment.gitlab.token);
             }
         }
 
@@ -428,6 +429,10 @@ class App {
             windowParams.titleBarStyle = 'hidden';
         } else {
             windowParams.frame = false;
+        }
+
+        if (process.platform === 'linux') {
+          windowParams.icon = path.join(__dirname, '..', 'src', 'assets', 'installation', '1024x1024.png');
         }
 
         this.mainWindow = new BrowserWindow(windowParams);

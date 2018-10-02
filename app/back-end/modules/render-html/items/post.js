@@ -43,13 +43,14 @@ class PostItem {
             slug: this.post[3],
             url: postURL,
             text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, ''),
-            excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, this.post[4]),
+            excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText),
             createdAt: this.post[6],
             modifiedAt: this.post[7],
             status: this.post[8],
             isFeatured: this.post[8].indexOf('featured') > -1,
             isHidden: this.post[8].indexOf('hidden') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
+            template: this.post[9],
             hasCustomExcerpt: hasCustomExcerpt
         };
 

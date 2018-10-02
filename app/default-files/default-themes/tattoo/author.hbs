@@ -1,79 +1,88 @@
 {{> head}}
-    {{> top}}
-        <main>
-            <section class="hero {{@config.custom.widthHero}}">
-                <header>
-                    {{#author}}
-                        {{#if avatar}}
-                            <img src="{{avatar}}" class="author__thumb" alt="{{name}}">
-                        {{/if}}
-                        <p>
-                            {{postsNumber}}
-                            {{ translate "listing.post" (math postsNumber '+' 0)}}
-                        </p>
-                        <h1>{{name}}</h1>
-                    {{/author}}
-                </header>
-                {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-                   <figure>
-                      <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{responsiveSrcSet @config.custom.uploadHero}}
-                        {{responsiveSizes}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
-                      {{#if @config.custom.uploadHeroCaption}}
-                         <figcaption>
-                            {{@config.custom.uploadHeroCaption}}
-                         </figcaption>
-                      {{/if}}
+{{> top}}
+<main>
+   <section class="hero {{@config.custom.widthHero}}">
+      <header>
+         {{#author}}
+            {{#if avatar}}
+               <img src="{{avatar}}" class="author__thumb" alt="{{name}}">
+            {{/if}}
+            <p>
+               {{postsNumber}}
+               {{ translate "listing.post" (math postsNumber '+' 0)}}
+            </p>
+            <h1>{{name}}</h1>
+         {{/author}}
+      </header>
+      {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+         <figure>
+            <img
+               class="lazyload"
+               {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+               src="{{@config.custom.uploadHero}}"
+               {{else}}
+               data-src="{{@config.custom.uploadHero}}"
+               {{/checkIf}}
+               {{responsiveSrcSet @config.custom.uploadHero}}
+               {{responsiveSizes}}
+               alt="{{@config.custom.uploadHeroAlt}}">
+            {{#if @config.custom.uploadHeroCaption}}
+               <figcaption>
+                  {{@config.custom.uploadHeroCaption}}
+               </figcaption>
+            {{/if}}
+         </figure>
+      {{/checkIfAll}}
+   </section>
+   <div class="category {{@config.custom.layoutAuthor}}">
+      {{#each posts}}
+         <article class="card">
+            {{#featuredImage}}
+               {{#if url}}
+                  <figure class="card__image">
+                     {{#if @config.custom.lazyLoad}}
+                        <a href="{{../url}}">
+                           <img
+                              class="lazyload"
+                              {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                              src="{{urlXs}}"
+                              {{else}}
+                              data-src="{{url}}"
+                              {{/checkIf}}
+                              data-srcset="{{srcset.cards}}"
+                              data-sizes="auto"
+                              data-expand="300"
+                              alt="{{alt}}"></a>
+                     {{else}}
+                        <a href="{{../url}}">
+                           <img
+                              src="{{url}}"
+                              sizes="{{sizes.cards}}"
+                              srcset="{{srcset.cards}}"
+                              alt="{{alt}}"></a>
+                     {{/if}}
                   </figure>
-              {{/checkIfAll}}           
-            </section>
-            <div class="category {{@config.custom.layoutAuthor}}">
-                {{#each posts}}
-                    <article class="card">
-                        {{#featuredImage}}
-                            {{#if url}}
-                                <figure class="card__image">
-                                    {{#if @config.custom.lazyLoad}}
-                                        <a href="{{../url}}">
-											<img
-                                            class="lazyload blur-up"
-                                            src="{{urlXs}}"
-                                            data-srcset="{{srcset.cards}}"
-                                            data-sizes="auto"
-                                            data-expand="300"
-                                            alt="{{alt}}"></a>
-                                    {{else}}
-                                        <a href="{{../url}}">
-											<img
-                                            src="{{url}}"
-                                            sizes="{{sizes.cards}}"
-                                            srcset="{{srcset.cards}}"
-                                            alt="{{alt}}"></a>
-                                    {{/if}}
-                                </figure>
-                            {{/if}}
-                        {{/featuredImage}}
-                        <header class="card__header">
-                            <p>
-                                <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                                {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                    {{date createdAt @config.custom.formatDate}}
-                                {{else}}
-                                    {{date createdAt @config.custom.formatDateCustom}}
-                                {{/checkIf}}
-                            </time>
-                            </p>
-                            <h2>
-                                <a href="{{url}}">
-                                    {{title}}
-                                </a>
-                            </h2>
-                        </header>
-                    </article>
-                {{/each}}
-            </div>
-            {{> pagination}}
-        </main>
-        {{> footer}}
+               {{/if}}
+            {{/featuredImage}}
+            <header class="card__header">
+               <p>
+                  <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                     {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                        {{date createdAt @config.custom.formatDate}}
+                     {{else}}
+                        {{date createdAt @config.custom.formatDateCustom}}
+                     {{/checkIf}}
+                  </time>
+               </p>
+               <h2>
+                  <a href="{{url}}">
+                     {{title}}
+                  </a>
+               </h2>
+            </header>
+         </article>
+      {{/each}}
+   </div>
+   {{> pagination}}
+</main>
+{{> footer}}

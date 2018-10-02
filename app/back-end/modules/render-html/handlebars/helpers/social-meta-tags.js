@@ -14,6 +14,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         let image = '';
         let title = '';
         let description = '';
+        let openGraphType = 'website';
         let twitterUsername = rendererInstance.siteConfig.advanced.twitterUsername;
         let twitterCardsType = rendererInstance.siteConfig.advanced.twitterCardsType;
         let twitterCardsEnabled = rendererInstance.siteConfig.advanced.twitterCardsEnabled;
@@ -36,7 +37,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         if(contextData.data.context.indexOf('post') === -1) {
             // Data for the index/tag listing page
             image = contextData.data.website.logo;
-            title = contextData.data.website.name;
+            title = siteName;
             description = contextData.data.root.metaDescriptionRaw;
 
             if (contextData.data.context.indexOf('tag') !== -1) {
@@ -57,6 +58,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         } else {
             // Data for the single post page
             image = contextData.data.root.post.featuredImage.url;
+            openGraphType = 'article';
 
             if(!image) {
                 image = contextData.data.website.logo;
@@ -91,7 +93,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
             output += '<meta property="og:description" content="' + description.replace(/"/g, "'") + '" />';
             output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '" />';
-            output += '<meta property="og:type" content="article" />';
+            output += '<meta property="og:type" content="' + openGraphType + '" />';
 
             if (rendererInstance.siteConfig.advanced.openGraphAppId !== '') {
                 output += '<meta property="fb:app_id" content="' + rendererInstance.siteConfig.advanced.openGraphAppId + '" />';

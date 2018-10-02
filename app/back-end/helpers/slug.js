@@ -40,6 +40,7 @@ function createSlug(textToSlugify, filenameMode = false, saveLowerChars = false)
         }
 
         textToSlugify = slug(textToSlugify);
+        slug.defaults.mode = 'rfc3986-non-unicode';
     } else {
         slug.defaults.mode = 'rfc3986-non-unicode-with-dots';
         textToSlugify = slug(textToSlugify);

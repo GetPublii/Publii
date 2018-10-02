@@ -131,6 +131,21 @@
                             </dropdown>
                         </field>
 
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="homepage-no-index-pagination"
+                            label="Disable homepage pagination indexing">
+                            <switcher
+                                slot="field"
+                                id="homepage-no-index-pagination"
+                                v-model="advanced.homepageNoIndexPagination" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled your homepage pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
+                            </small>
+                        </field>
+
                         <separator
                             type="medium"
                             label="Post page" />
@@ -241,6 +256,21 @@
                             </small>
                         </field>
 
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="tag-no-index-pagination"
+                            label="Disable tags pagination indexing">
+                            <switcher
+                                slot="field"
+                                id="tag-no-index-pagination"
+                                v-model="advanced.tagNoIndexPagination" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled your tags pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
+                            </small>
+                        </field>
+
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
@@ -299,6 +329,21 @@
                                 slot="note"
                                 class="note">
                                 If this option is enabled authors without posts assigned to them will still have their subpages created and appear on the authors list.
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="author-no-index-pagination"
+                            label="Disable authors pagination indexing">
+                            <switcher
+                                slot="field"
+                                id="author-no-index-pagination"
+                                v-model="advanced.authorNoIndexPagination" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
                             </small>
                         </field>
                     </div>
@@ -1129,6 +1174,7 @@
 </template>
 
 <script>
+import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
@@ -1427,6 +1473,17 @@ export default {
                 this.buttonsLocked = false;
 
                 if(showPreview) {
+                    if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                        this.$bus.$emit('confirm-display', {
+                            message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
+                            okLabel: 'Go to application settings',
+                            okClick: () => {
+                                this.$router.push(`/app-settings/`);
+                            }
+                        });
+                        return;
+                    }
+
                     this.$bus.$emit('rendering-popup-display');
                 }
             }, 1000);

@@ -15,14 +15,14 @@
                     :disabled="postData.title === ''"
                     @click.native="publishPost">
                     <template v-if="!isEdit || isDraft">Publish post</template>
-                    <template v-if="isEdit && !isDraft">Save changes</template>
+                    <template v-if="isEdit && !isDraft">Publish changes</template>
                 </p-button>
 
                 <p-button
                     :disabled="postData.title === ''"
                     @click.native="draftPost">
-                    <template v-if="!isEdit && !isDraft">Save as draft</template>
-                    <template v-if="isEdit">Save draft</template>
+                    <template v-if="(!isEdit && !isDraft) || (isEdit && !isDraft)">Save as draft</template>
+                    <template v-else>Save draft</template>
                 </p-button>
 
                 <p-button
@@ -127,6 +127,7 @@ export default {
     data () {
         return {
             postID: this.$route.params.post_id || 0,
+            newPost: true,
             sourceCodeEditorVisible: false,
             writersPanelOpen: false,
             postSlugEdited: false,
@@ -181,6 +182,9 @@ export default {
         themeConfigured () {
             return !!this.$store.state.currentSite.config.theme;
         },
+        closeEditorOnSave () {
+            return this.$store.state.app.config.closeEditorOnSave;
+        },
         extensionsPath () {
             return [
                 'file:///',
@@ -193,6 +197,7 @@ export default {
     },
     mounted () {
         if (this.isEdit) {
+            this.newPost = false;
             this.loadPostData();
         } else {
             this.$refs['post-title'].focus();
@@ -359,7 +364,9 @@ export default {
                     for(let i = 0; i < postViewFields.length; i++) {
                         let newValue = '';
 
-                        if(data.postViewSettings[postViewFields[i]] && data.postViewSettings[postViewFields[i]].value) {
+                        if(
+                            data.postViewSettings[postViewFields[i]] && data.postViewSettings[postViewFields[i]].value
+                        ) {
                             newValue = data.postViewSettings[postViewFields[i]].value;
                         } else {
                             newValue = data.postViewSettings[postViewFields[i]];
@@ -379,13 +386,18 @@ export default {
                 ) {
                     let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
 
-                    $(document.body).append(
-                        // It seems that Webpack goes crazy when it sees 'script' tag :)
-                        $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
-                    );
+                    if (!document.querySelector('custom-post-editor-script')) {
+                        $(document.body).append(
+                            // It seems that Webpack goes crazy when it sees 'script' tag :)
+                            $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
+                        );
+                    }
                 }
 
-               this.setDataLossWatcher();
+                setTimeout(() => {
+                    this.possibleDataLoss = false;
+                    this.setDataLossWatcher();
+                }, 100);
             });
         },
         setDataLossWatcher () {
@@ -394,7 +406,7 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost(newPostStatus, preview = false) {
+        savePost (newPostStatus, preview = false) {
             tinymce.triggerSave();
             let finalStatus = newPostStatus;
             let mediaPath = this.getMediaPath();
@@ -473,12 +485,16 @@ export default {
                 return postData;
             }
         },
-        savingPost(newStatus, postData) {
+        savingPost (newStatus, postData) {
             // Send form data to the back-end
             ipcRenderer.send('app-post-save', postData);
 
             // Post save
             ipcRenderer.once('app-post-saved', (event, data) => {
+                if (this.postID === 0) {
+                    this.postID = data.postID;
+                }
+
                 if (data.posts) {
                     this.savedPost(newStatus, data);
                 } else {
@@ -486,9 +502,35 @@ export default {
                 }
             });
         },
-        savedPost(newStatus, updatedData) {
+        savedPost (newStatus, updatedData) {
             this.$store.commit('refreshAfterPostUpdate', updatedData);
-            this.closeEditor();
+
+            if (this.closeEditorOnSave) {
+                this.closeEditor();
+                return;
+            }
+
+            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/' + this.postID);
+            let message = 'Changes have been saved';
+
+            if (this.newPost) {
+                this.newPost = false;
+
+                if (newStatus === 'draft') {
+                    message = 'New draft has been created';
+                } else {
+                    message = 'New post has been created';
+                }
+            }
+
+            this.$bus.$emit('message-display', {
+                message: message,
+                type: 'success',
+                lifeTime: 3
+            });
+
+            this.loadPostData();
+            this.possibleDataLoss = false;
         },
         publishPost () {
             this.savePost('published');
@@ -566,7 +608,21 @@ export default {
     }
 
     &-actions {
+        .button {
+            text-align: center;
 
+            &:nth-child(1) {
+                width: 170px;
+            }
+
+            &:nth-child(2) {
+                width: 140px;
+            }
+
+            &:nth-child(3) {
+                width: 90px;
+            }
+        }
     }
 
     &-field-select-tags {
@@ -636,7 +692,7 @@ export default {
 }
 
 /*
- * Windows adjustments
+ * Windows & linux adjustments
  */
 body[data-os="win"] {
     .post-editor {
@@ -654,8 +710,24 @@ body[data-os="win"] {
     }
 }
 
+body[data-os="linux"] {
+    .post-editor {
+        .appbar {
+            height: 0!important;
+        }
+
+        .topbar {
+            height: 0;
+        }
+
+        &-topbar {
+            top: 0;
+        }
+    }
+}
+
 /*
- * Special styles for win
+ * Special styles for win & linux
  */
 
 body[data-os="win"] {
@@ -690,6 +762,25 @@ body[data-os="win"] {
 
         #link-toolbar {
             padding-top: .75rem;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 6.2rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 6.2rem);
+
+        &-content {
+            height: calc( 100vh - 29.8rem );
+        }
+
+        #post-editor_ifr {
+            height: calc( 100vh - 31.8rem )!important;
         }
     }
 }

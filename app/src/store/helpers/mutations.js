@@ -41,7 +41,13 @@ export default {
         state.currentSite.config = JSON.parse(JSON.stringify(state.sites[siteName]));
     },
     setSiteConfig (state, siteData) {
-        Vue.set(state.sites, siteData.name, JSON.parse(JSON.stringify(siteData.config)));
+        let siteName = siteData.name;
+
+        if (!siteName) {
+            siteName = siteData.config.name;
+        }
+
+        Vue.set(state.sites, siteName, JSON.parse(JSON.stringify(siteData.config)));
         state.currentSite.config = JSON.parse(JSON.stringify(siteData.config));
     },
     replaceSiteConfig (state, data) {

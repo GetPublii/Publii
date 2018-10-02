@@ -37,11 +37,17 @@
                                     {{else}}
                                         {{#if @config.custom.lazyLoad}}
                                             <img
-                                                class="lazyload blur-up"
-                                                src="{{urlXs}}"
+                                                class="lazyload"
+                                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                    src="{{urlXs}}" 
+                                                 {{else}}
+                                                    data-src="{{url}}"  
+                                                 {{/checkIf}}
                                                 data-srcset="{{srcset.slider}}"
                                                 data-sizes="auto"
                                                 data-expand="100"
+                                                height="{{height}}" 
+										        width="{{width}}"
                                                 alt="{{alt}}">
                                         {{else}}
                                             <img
@@ -118,11 +124,17 @@
                                     {{else}}
                                         {{#if @config.custom.lazyLoad}}
                                             <img
-                                                class="lazyload blur-up"
-                                                src="{{urlXs}}"
+                                                class="lazyload"
+                                                {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                   src="{{urlXs}}" 
+                                                {{else}}
+                                                   data-src="{{url}}"  
+                                                {{/checkIf}}
                                                 data-srcset="{{srcset.slider}}"
                                                 data-sizes="auto"
                                                 data-expand="100"
+                                                height="{{height}}" 
+										        width="{{width}}"
                                                 alt="{{alt}}">
                                         {{else}}
                                             <img

@@ -35,13 +35,18 @@
                             {{#featuredImage}}
                                 {{#if @config.custom.lazyLoad}}
                                     <div class="card__header">
-                                        <img data-sizes="auto"                                           
-                                            src="{{urlXs}}"
-                                            data-srcset="{{srcset.cards}}"											
+                                        <img 
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}
+                                            data-srcset="{{srcset.cards}}"	
+                                            data-sizes="auto"  
 											width="{{width}}"
 											height="{{height}}"
-                                            alt="{{alt}}" 
-											class="lazyload blur-up">
+                                            alt="{{alt}}">
                                     </div>
                                 {{else}}
                                     <header class="card__header">
@@ -83,14 +88,18 @@
                             {{#featuredImage}}
                                 {{#if @config.custom.lazyLoad}}
                                     <div class="card__header">
-                                        <img
-                                            data-sizes="auto"
-                                            src="{{urlXs}}"
-                                            data-srcset="{{srcset.cards}}" 
+                                        <img 
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}
+                                            data-srcset="{{srcset.cards}}"	
+                                            data-sizes="auto"  
 											width="{{width}}"
 											height="{{height}}"
-                                            alt="{{alt}}" 
-											class="lazyload blur-up">
+                                            alt="{{alt}}">
                                     </div>
                                 {{else}}
                                     <header class="card__header">

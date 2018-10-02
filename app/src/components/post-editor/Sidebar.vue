@@ -374,37 +374,47 @@
                                 </dropdown>
                             </label>
 
-                            <label v-for="(field, index) of postViewThemeSettings">
-                                {{ field.label }}
+                            <template v-for="(field, index) of postViewThemeSettings">
+                                <label
+                                    v-if="displayField(field)"
+                                    :key="'post-view-field-' + index">
+                                    {{ field.label }}
 
-                                <dropdown
-                                    v-if="!field.type || field.type === 'select'"
-                                    :id="field.name + '-select'"
-                                    class="post-view-settings"
-                                    v-model="$parent.postData.postViewOptions[field.name]"
-                                    :items="generateItems(field.options)">
-                                    <option slot="first-choice" value="">Use global configuration</option>
-                                </dropdown>
+                                    <dropdown
+                                        v-if="!field.type || field.type === 'select'"
+                                        :id="field.name + '-select'"
+                                        class="post-view-settings"
+                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        :items="generateItems(field.options)">
+                                        <option slot="first-choice" value="">Use global configuration</option>
+                                    </dropdown>
 
-                                <text-input
-                                    v-if="field.type === 'text' || field.type === 'number'"
-                                    :type="field.type"
-                                    class="post-view-settings"
-                                    placeholder="Leave it blank to use default value"
-                                    v-model="$parent.postData.postViewOptions[field.name]" />
+                                    <text-input
+                                        v-if="field.type === 'text' || field.type === 'number'"
+                                        :type="field.type"
+                                        class="post-view-settings"
+                                        :placeholder="fieldPlaceholder(field)"
+                                        v-model="$parent.postData.postViewOptions[field.name]" />
 
-                                <text-area
-                                    v-if="field.type === 'textarea'"
-                                    class="post-view-settings"
-                                    placeholder="Leave it blank to use default value"
-                                    v-model="$parent.postData.postViewOptions[field.name]" />
+                                    <text-area
+                                        v-if="field.type === 'textarea'"
+                                        class="post-view-settings"
+                                        :placeholder="fieldPlaceholder(field)"
+                                        v-model="$parent.postData.postViewOptions[field.name]" />
 
-                                <small
-                                    v-if="field.note"
-                                    class="note">
-                                    {{ field.note }}
-                                </small>
-                            </label>
+                                    <color-picker
+                                        v-if="field.type === 'colorpicker'"
+                                        class="post-view-settings"
+                                        v-model="$parent.postData.postViewOptions[field.name]">
+                                    </color-picker>
+
+                                    <small
+                                        v-if="field.note"
+                                        class="note">
+                                        {{ field.note }}
+                                    </small>
+                                </label>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -554,6 +564,24 @@ export default {
         },
         changeDate () {
             this.$bus.$emit('date-popup-display', this.$parent.postData.creationDate.timestamp);
+        },
+        displayField (field) {
+            if (!field.postTemplates) {
+                return true;
+            }
+
+            if (field.postTemplates.indexOf('!') === 0) {
+                return !(field.postTemplates.replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
+            }
+
+            return field.postTemplates.split(',').indexOf(this.$parent.postData.template) > -1;
+        },
+        fieldPlaceholder (field) {
+            if (field.placeholder || field.placeholder === '') {
+                return field.placeholder;
+            }
+
+			return 'Leave it blank to use default value';
         }
     },
     beforeDestroy () {
@@ -827,6 +855,12 @@ export default {
 body[data-os="win"] {
     .post-editor-sidebar {
         height: calc(100vh - 10rem);
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-sidebar {
+        height: calc(100vh - 6.2rem);
     }
 }
 

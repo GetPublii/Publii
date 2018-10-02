@@ -99,14 +99,6 @@ label {
 
     &:first-child {
         margin-top: 0;
-
-        .separator {
-            &.small,
-            &.medium,
-            &.big {
-                padding-top: 1.4rem;
-            }
-        }
     }
 
     & > label {
@@ -204,6 +196,10 @@ label {
             margin-right: .5rem;
             width: 1.4rem;
         }
+
+        &.is-invalid {
+            color: $color-3;
+        }
     }
 
     label + .note {
@@ -228,18 +224,6 @@ label {
         display: block;
         position: relative;
         width: 100%;
-
-        &.small {
-            padding: 1rem 0;
-        }
-
-        &.medium {
-            padding: 2rem 0;
-        }
-
-        &.big {
-            padding: 4rem 0;
-        }
 
         &.line > .separator-wrapper:before {
             border: 1px solid $color-9;

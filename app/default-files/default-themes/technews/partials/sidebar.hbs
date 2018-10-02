@@ -12,9 +12,13 @@
                                             {{#if @config.custom.lazyLoad}}
                                                 <a href="{{../url}}">
                                                     <img
-                                                        class="lazyload blur-up featured-posts__img"
-                                                        src="{{urlXs}}"
-                                                        data-src="{{urlXs}}"
+                                                        class="lazyload featured-posts__img"
+                                                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                           src="{{urlXs}}"
+                                                        {{else}}
+                                                           data-src="{{urlXs}}"
+                                                        {{/checkIf}}
+                                                        data-srcset="{{urlXs}}"
                                                         alt="{{alt}}">
                                                 </a>
                                             {{else}}
@@ -160,7 +164,11 @@
                             <li>
                                 {{#if @config.custom.authorsAvatar}}
                                     <a href="{{url}}">
-                                        <img src="{{avatar}}" class="authors__img" alt="{{name}}">
+                                        {{#if @config.custom.lazyLoad}}
+                                            <img data-src="{{avatar}}" class="lazyload authors__img" alt="{{name}}">
+                                        {{else}}
+                                            <img src="{{avatar}}" class="authors__img" alt="{{name}}">
+                                        {{/if}}
                                     </a>
                                 {{/if}}
                                 <div>

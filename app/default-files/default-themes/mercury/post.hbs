@@ -34,16 +34,20 @@
                 {{#featuredImage}}
                     {{#if url}}
                         {{#checkIfAny caption credits}}
-                            <figure class="post__featured-image {{@config.custom.featuredImageWidth}}">
+                            <figure class="post__featured-image {{@config.post.featuredImageWidth}}">
                                 {{#if @config.custom.lazyLoad}}
-                                    <img                                       
-                                        src="{{urlXs}}"                                       
-                                        data-srcset="{{srcset.post}}"
-                                        data-sizes="auto"
-                                        height="{{height}}"
-                                        width="{{width}}"
-                                        alt="{{alt}}" 
-										class="lazyload blur-up">
+                                     <img 
+                                            class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}
+                                            data-srcset="{{srcset.post}}"	
+                                            data-sizes="auto"  
+											width="{{width}}"
+											height="{{height}}"
+                                            alt="{{alt}}">
                                 {{else}}
                                     <img
                                         src="{{url}}"
@@ -55,16 +59,20 @@
                                     {{credits}}</figcaption>
                             </figure>
                         {{else}}
-                            <div class="post__featured-image {{@config.custom.featuredImageWidth}}">
+                            <div class="post__featured-image {{@config.post.featuredImageWidth}}">
                                 {{#if @config.custom.lazyLoad}}
                                     <img                                      
-                                        src="{{urlXs}}"                                       
-                                        data-srcset="{{srcset.post}}"
-                                        data-sizes="auto"
-                                        height="{{height}}"
-                                        width="{{width}}"
-                                        alt="{{alt}}" 
-										class="lazyload blur-up">
+                                        class="lazyload"
+                                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                src="{{urlXs}}" 
+                                            {{else}}
+                                                data-src="{{url}}"  
+                                            {{/checkIf}}
+                                            data-srcset="{{srcset.post}}"	
+                                            data-sizes="auto"  
+											width="{{width}}"
+											height="{{height}}"
+                                            alt="{{alt}}">
                                 {{else}}
                                     <img
                                         src="{{url}}"
@@ -78,7 +86,7 @@
                 {{/featuredImage}}
                 <div class="post__entry">
                      {{#if @config.custom.lazyLoad}}
-                        {{{lazyLoadForContentImages text}}}
+                         {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
                     {{else}}
                         {{{text}}}
                     {{/if}}
@@ -152,7 +160,11 @@
                             {{#author}}
                                 <div class="post__bio">
                                     {{#if avatar}}
-                                        <img src="{{avatar}}" alt="{{name}}">
+                                        {{#if @config.custom.lazyLoad}}
+                                            <img class="lazyload" data-src="{{avatar}}" alt="{{name}}">
+                                        {{else}}
+                                            <img src="{{avatar}}" alt="{{name}}">
+                                        {{/if}}
                                     {{/if}}
                                     <div>
                                         {{#if name}}
@@ -183,8 +195,12 @@
                                                         {{#if @config.custom.lazyLoad}}
                                                             <a href="{{../url}}">
                                                                 <img
-                                                                    class="lazyload blur-up"
-                                                                    src="{{urlXs}}"
+                                                                    class="lazyload"
+                                                                    {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                                                        src="{{urlXs}}"
+                                                                    {{else}}
+                                                                        data-src="{{urlXs}}"
+                                                                    {{/checkIf}}
                                                                     data-srcset="{{urlXs}}"
                                                                     data-expand="300"
                                                                     alt="{{alt}}">

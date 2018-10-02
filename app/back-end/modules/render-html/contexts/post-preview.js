@@ -45,7 +45,7 @@ class RendererContextPostPreview extends RendererContext {
             author: this.renderer.cachedItems.authors[this.renderer.postData.author],
             url: postURL,
             text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, ''),
-            excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, this.renderer.postData.text),
+            excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText),
             createdAt: this.renderer.postData.creationDate,
             modifiedAt: this.renderer.postData.modificationDate,
             status: this.renderer.postData.status,
@@ -255,7 +255,7 @@ class RendererContextPostPreview extends RendererContext {
                 p.status LIKE "%published%" AND
                 p.status NOT LIKE "%trashed%" AND
                 p.status NOT LIKE "%hidden%"
-                ${conditions}    
+                ${conditions}
             GROUP BY
                 p.id
             LIMIT ${relatedPostsNumber}

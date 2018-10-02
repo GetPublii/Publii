@@ -7,7 +7,7 @@ process.on('message', function(msg){
         let sitesDir = msg.sitesDir;
         let siteConfig = msg.siteConfig;
         deploymentInstance = new Deployment(appDir, sitesDir, siteConfig);
-        deploymentInstance.initSession();
+        deploymentInstance.initSession().then(() => true);
     }
 
     if(msg.type === 'abort' && deploymentInstance) {

@@ -26,7 +26,6 @@
                     {{#if @config.custom.uploadHeroCaption}}
                         <figure class="hero">
                             <img
-                                class="lazyload"
                                 src="{{@config.custom.uploadHero}}"
                                 {{responsiveSrcSet @config.custom.uploadHero}}
                                 {{responsiveSizes}}
@@ -38,7 +37,6 @@
                     {{else}}
                         <div class="hero">
                             <img
-                                class="lazyload"
                                 src="{{@config.custom.uploadHero}}"
                                 {{responsiveSrcSet @config.custom.uploadHero}}
                                 {{responsiveSizes}}

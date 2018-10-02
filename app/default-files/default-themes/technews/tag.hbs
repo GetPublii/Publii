@@ -54,8 +54,12 @@
                             {{#if @config.custom.lazyLoad}}
                                 <a href="{{../url}}" class="cat__item-image-link" style="padding-bottom: calc({{height}}/{{width}} * 100%)">
                                     <img
-                                        class="lazyload blur-up cat__item-image"
-                                        src="{{urlXs}}"
+                                        class="lazyload cat__item-image"
+                                         {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                            src="{{urlXs}}"
+                                        {{else}}
+                                            data-src="{{url}}"
+                                        {{/checkIf}}
                                         data-srcset="{{srcset.listing}}"
                                         data-sizes="auto"
                                         data-expand="300"
@@ -83,7 +87,11 @@
                                     {{#if @config.custom.tagAuthorAvatar}}
                                         {{#author}}
                                             {{#if avatar}}
-                                                <img src="{{avatar}}" class="u-header__avatar" alt="{{name}}">
+                                                {{#if @config.custom.lazyLoad}}
+                                                    <img class="lazyload u-header__avatar" data-src="{{avatar}}" alt="{{name}}">
+                                                {{else}}
+                                                    <img src="{{avatar}}" alt="{{name}}" class="u-header__avatar">
+                                                {{/if}}
                                             {{/if}}
                                         {{/author}}
                                     {{/if}}

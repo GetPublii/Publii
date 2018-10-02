@@ -11,7 +11,7 @@ module.exports = {
     encodeUrlFragment: require('./encode-url-fragment.js'),
     JSHelper: require('./js.js'),
     metaDescription: require('./meta-description.js'),
-    metaRobots: require('./meta-robots.js'),
+    metaRobotsHelper: require('./meta-robots.js'),
     pageURLHelper: require('./page-url.js'),
     menuURLHelper: require('./menu-url.js'),
     menuItemClassesHelper: require('./menu-item-classes.js'),
