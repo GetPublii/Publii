@@ -1,7 +1,7 @@
 export default {
     selector: '#post-editor',
     file_picker_types: 'image',
-    plugins: "advlist anchor autolink autosave link image lists hr anchor pagebreak searchreplace media table paste autoresize autosave",
+    plugins: "advlist anchor autolink autosave link image lists hr anchor pagebreak searchreplace media table paste autoresize autosave textpattern",
     toolbar1: "bold italic underline strikethrough link unlink anchor blockquote alignleft aligncenter alignright bullist numlist image gallery media table",
     toolbar2: "styleselect formatselect searchreplace hr readmore sourcecode removeformat undo redo restoredraft",
     toolbar3: "",
@@ -37,5 +37,17 @@ export default {
     autosave_restore_when_empty: false,
     autosave_retention: "30m",
     entity_encoding: "raw",
-    allow_script_urls: true
+    allow_script_urls: true,
+    textpattern_patterns: [
+        {start: '*', end: '*', format: 'italic'},
+        {start: '**', end: '**', format: 'bold'},
+        {start: '##', format: 'h2'},
+        {start: '###', format: 'h3'},
+        {start: '####', format: 'h4'},
+        {start: '#####', format: 'h5'},
+        {start: '######', format: 'h6'},
+        {start: '1. ', cmd: 'InsertOrderedList'},
+        {start: '* ', cmd: 'InsertUnorderedList'},
+        {start: '- ', cmd: 'InsertUnorderedList'}
+   ]
 };
