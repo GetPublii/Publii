@@ -111,6 +111,10 @@ class Files {
         let dirs = ['posts', 'website', 'files'];
 
         for(let i = 0; i < dirs.length; i++) {
+            if (!UtilsHelper.dirExists(path.join(basePathInput, dirs[i]))) {
+                continue;
+            }
+
             fs.copySync(
                 path.join(basePathInput, dirs[i]),
                 path.join(basePathOutput, dirs[i])
