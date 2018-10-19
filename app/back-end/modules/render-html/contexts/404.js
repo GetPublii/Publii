@@ -25,6 +25,14 @@ class RendererContext404 extends RendererContext {
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
         this.metaTitle = this.siteConfig.advanced.errorMetaTitle.replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.errorMetaDescription;
+
+        if (this.metaTitle === '') {
+            this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
+        }
     }
 
     /**

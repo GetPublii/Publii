@@ -20,6 +20,14 @@ class RendererContextSearch extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.searchMetaTitle.replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.searchMetaDescription;
 
+        if (this.metaTitle === '') {
+            this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
+        }
+
         this.tags = this.renderer.commonData.tags;
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
