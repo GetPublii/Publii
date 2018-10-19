@@ -53,6 +53,12 @@ class RendererContextPost extends RendererContext {
             }
         }
 
+        let siteName = this.siteConfig.name;
+
+        if(this.siteConfig.displayName) {
+            siteName = this.siteConfig.displayName;
+        }
+
         if (this.metaTitle === '') {
             this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         }
