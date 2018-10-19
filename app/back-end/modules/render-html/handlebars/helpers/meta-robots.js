@@ -18,7 +18,6 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
         if (
             Array.isArray(options.data.context) &&
             options.data.context[0] && (
-                options.data.context[0].indexOf('404') !== -1 ||
                 (
                     rendererInstance.siteConfig.advanced.homepageNoIndexPagination &&
                     options.data.context.indexOf('index-pagination') !== -1

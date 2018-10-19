@@ -346,6 +346,100 @@
                                 If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
                             </small>
                         </field>
+
+                        <separator
+                            v-if="!advanced.noIndexThisPage"
+                            type="medium"
+                            label="Error page" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="error-meta-title"
+                            :withCharCounter="true"
+                            label="Page Title:">
+                            <text-input
+                                id="author-meta-title"
+                                v-model="advanced.errorMetaTitle"
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                The following variables can be used in the Error Page Title: %sitename
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="error-meta-description"
+                            label="Meta Description:">
+                            <text-area
+                                id="error-meta-description"
+                                v-model="advanced.errorMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="meta-robots-error"
+                            label="Meta Robots:">
+                            <dropdown
+                                id="meta-robots-error"
+                                slot="field"
+                                :items="seoOptions"
+                                v-model="advanced.metaRobotsError">
+                            </dropdown>
+                        </field>
+
+                        <separator
+                            v-if="!advanced.noIndexThisPage"
+                            type="medium"
+                            label="Search page" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="error-meta-title"
+                            :withCharCounter="true"
+                            label="Page Title:">
+                            <text-input
+                                id="search-meta-title"
+                                v-model="advanced.searchMetaTitle"
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                The following variables can be used in the Search Page Title: %sitename
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="search-meta-description"
+                            label="Meta Description:">
+                            <text-area
+                                id="search-meta-description"
+                                v-model="advanced.searchMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :preferredCount="160" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="meta-robots-search"
+                            label="Meta Robots:">
+                            <dropdown
+                                id="meta-robots-search"
+                                slot="field"
+                                :items="seoOptions"
+                                v-model="advanced.metaRobotsSearch">
+                            </dropdown>
+                        </field>
                     </div>
 
                     <div slot="tab-1">

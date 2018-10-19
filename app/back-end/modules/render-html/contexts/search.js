@@ -17,8 +17,8 @@ class RendererContextSearch extends RendererContext {
             siteName = this.siteConfig.displayName;
         }
 
-        this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.metaDescription;
+        this.metaTitle = this.siteConfig.advanced.searchMetaTitle.replace(/%sitename/g, siteName);
+        this.metaDescription = this.siteConfig.advanced.searchMetaDescription;
 
         this.tags = this.renderer.commonData.tags;
         this.menus = this.renderer.commonData.menus;
@@ -46,6 +46,12 @@ class RendererContextSearch extends RendererContext {
         this.loadData();
         this.prepareData();
 
+        let metaRobotsValue = this.siteConfig.advanced.metaRobotsSearch;
+
+        if (this.siteConfig.advanced.noIndexThisPage) {
+            metaRobotsValue = 'noindex,nofollow';
+        }
+
         this.context = {
             title: this.metaTitle !== '' ? this.metaTitle : this.title,
             featuredPosts: this.featuredPosts,
@@ -54,7 +60,7 @@ class RendererContextSearch extends RendererContext {
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
-            metaRobotsRaw: 'noindex,follow',
+            metaRobotsRaw: metaRobotsValue,
             siteOwner: this.renderer.cachedItems.authors[1],
             menus: this.menus,
             unassignedMenus: this.unassignedMenus

@@ -112,7 +112,7 @@ class RendererContextAuthor extends RendererContext {
 
         let metaRobotsValue = this.siteConfig.advanced.metaRobotsAuthors;
 
-        if(this.siteConfig.advanced.noIndexThisPage) {
+        if (this.siteConfig.advanced.noIndexThisPage) {
             metaRobotsValue = 'noindex,nofollow';
         }
 
