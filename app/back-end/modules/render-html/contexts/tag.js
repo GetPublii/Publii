@@ -108,6 +108,14 @@ class RendererContextTag extends RendererContext {
         if(metaData && metaData.metaDescription) {
             this.metaDescription = metaData.metaDescription;
         }
+
+        if (this.metaTitle === '') {
+            this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
+        }
     }
 
     setContext() {

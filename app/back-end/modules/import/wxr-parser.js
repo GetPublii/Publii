@@ -336,18 +336,8 @@ class WxrParser {
             }
         }
 
-        let newItemResultFiltered = newItemResult.tags.filter(tag => tag.slug === itemSlug);
-
-        if(this.usedTaxonomy === 'tags') {
-            // Store tag ID in the internal array as:
-            // wp:tag_slug -> tag ID in Publii
-            this.temp.tags[itemSlug] = newItemResultFiltered[0].id;
-        } else {
-            // Store tag ID in the internal array AS:
-            // wp:category_nicename -> tag ID in Publii
-            this.temp.tags[itemSlug] = newItemResultFiltered[0].id;
-        }
-
+        let newItemResultFiltered = newItemResult.tags.filter(tag => tag.slug === slug(itemSlug));
+        this.temp.tags[itemSlug] = newItemResultFiltered[0].id;
         this.temp.mapping.tags[tagData['wp:term_id']] = newItemResultFiltered[0].id;
 
         process.send({

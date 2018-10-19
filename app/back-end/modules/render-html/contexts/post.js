@@ -53,6 +53,14 @@ class RendererContextPost extends RendererContext {
             }
         }
 
+        if (this.metaTitle === '') {
+            this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
+        }
+
         // load related posts
         this.loadRelatedPosts();
 

@@ -9,6 +9,11 @@ const Handlebars = require('handlebars');
  */
 function canonicalLinkHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('canonicalLink', function (context) {
+        // If current page is not indexed - skip canonical link
+        if (context.data.root.metaRobotsRaw.indexOf('noindex') > -1) {
+            return '';
+        }
+        
         let pageUrl = context.data.website.pageUrl;
 
         // If current page is a post - check for canonical URL

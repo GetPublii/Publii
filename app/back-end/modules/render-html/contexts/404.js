@@ -23,8 +23,16 @@ class RendererContext404 extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
-        this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.metaDescription;
+        this.metaTitle = this.siteConfig.advanced.errorMetaTitle.replace(/%sitename/g, siteName);
+        this.metaDescription = this.siteConfig.advanced.errorMetaDescription;
+
+        if (this.metaTitle === '') {
+            this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
+        }
     }
 
     /**
@@ -46,6 +54,12 @@ class RendererContext404 extends RendererContext {
         this.loadData();
         this.prepareData();
 
+        let metaRobotsValue = this.siteConfig.advanced.metaRobotsError;
+
+        if(this.siteConfig.advanced.noIndexThisPage) {
+            metaRobotsValue = 'noindex,nofollow';
+        }
+
         this.context = {
             title: this.metaTitle !== '' ? this.metaTitle : this.title,
             featuredPosts: this.featuredPosts,
@@ -54,7 +68,7 @@ class RendererContext404 extends RendererContext {
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
-            metaRobotsRaw: 'noindex,follow',
+            metaRobotsRaw: metaRobotsValue,
             siteOwner: this.renderer.cachedItems.authors[1],
             menus: this.menus,
             unassignedMenus: this.unassignedMenus
