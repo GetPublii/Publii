@@ -56,6 +56,10 @@ module.exports = [
         code: 'en-ie'
     },
     {
+        name: 'English (Israel)',
+        code: 'en-il'
+    },
+    {
         name: 'English (United Kingdom)',
         code: 'en-gb'
     },
@@ -66,6 +70,10 @@ module.exports = [
     {
         name: 'English (USA)',
         code: 'en-us'
+    },
+    {
+        name: 'English (South Africa)',
+        code: 'en-za'
     },
     {
         name: 'Estonian',
