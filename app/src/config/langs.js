@@ -96,6 +96,10 @@ module.exports = [
         code: 'fr'
     },
     {
+        name: 'French (Belgium)',
+        code: 'fr-be'
+    },
+    {
         name: 'French (Canada)',
         code: 'fr-ca'
     },
