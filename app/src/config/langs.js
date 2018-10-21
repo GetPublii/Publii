@@ -52,8 +52,16 @@ module.exports = [
         code: 'en-ca'
     },
     {
+        name: 'English (India)',
+        code: 'en-in'
+    },
+    {
         name: 'English (Ireland)',
         code: 'en-ie'
+    },
+    {
+        name: 'English (Israel)',
+        code: 'en-il'
     },
     {
         name: 'English (United Kingdom)',
@@ -66,6 +74,10 @@ module.exports = [
     {
         name: 'English (USA)',
         code: 'en-us'
+    },
+    {
+        name: 'English (South Africa)',
+        code: 'en-za'
     },
     {
         name: 'Estonian',
@@ -96,8 +108,16 @@ module.exports = [
         code: 'fr'
     },
     {
+        name: 'French (Belgium)',
+        code: 'fr-be'
+    },
+    {
         name: 'French (Canada)',
         code: 'fr-ca'
+    },
+    {
+        name: 'French (Luxembourg)',
+        code: 'fr-lu'
     },
     {
         name: 'French (Switzerland)',
