@@ -80,6 +80,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .search {
+    max-width: 700px;
     padding-left: 1rem;
     position: relative;
     width: 100%;
@@ -93,42 +94,51 @@ export default {
         z-index: 1;
     }
 
-    & > input {
+    & > input { 
+        border: 0;
+        border-radius: 30px;
+        box-shadow: none;
         font-size: 1.6rem;
         height: 4.6rem;
         opacity: 0;
-        padding: 0 2rem 0 6rem;
+        padding: 0 5rem 0 6rem;
         pointer-events: none;
         position: relative;
         top: -0.125rem;
         transition: all .25s ease-out;
         transform: scaleX(.25);
         transform-origin: left center;
-        width: calc(100% - 3rem);
+        width: calc(100% - 3rem); 
     }
 
     & > span {
         animation: close-delay .3s ease-out .3s forwards;
-        color: $color-3;
+        border-radius: 50%;
+        color: $color-7;
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 2rem;
-        line-height: 1.7rem;
+        height: 3rem;
+        line-height: 1.1;       
         opacity: 0;
         padding: 0;
         position: absolute;
         right: 4.4rem;
-        text-align: center;
-        top: 1.2rem;
+        text-align: center;       
         transition: all .3s ease-out;
-        transition-delay: .3s;
-        width: 2rem;
+        transition-delay: .3s;  
+        top: 50%;
+        transform: translate(0, -50%);       
+        width: 3rem;
 
         &:active,
         &:focus,
         &:hover {
             color: $color-4;
+        }
+        
+        &:hover {
+            background: $color-helper-8;
         }
     }
 
@@ -138,6 +148,7 @@ export default {
         }
 
         & > input {
+            background: $color-9;           
             opacity: 1;
             pointer-events: auto;
             transform: scaleX(1);

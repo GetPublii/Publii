@@ -1,18 +1,20 @@
 <template>
     <li
         class="single-site"
-        @click="showWebsite(site)">
-        <span class="single-site-icon" :data-color="siteLogoColor">
-            <icon
-                :name="siteLogoIcon"
-                primaryColor="color-10"
-                customHeight="18"
-                customWidth="18" />
+        @click="showWebsite(site)">    
+        
+        <span class="single-site-icon">
+            <icon 
+                :data-color="siteLogoColor"
+                :name="siteLogoIcon"                
+                customHeight="22"
+                customWidth="22" />
         </span>
-
-        <strong class="single-site-name">
+        
+        <strong class="single-site-name" :title="displayName">
             {{ displayName }}
-        </strong>
+        </strong>        
+        
     </li>
 </template>
 
@@ -57,10 +59,9 @@ export default {
     border-top: 1px solid rgba($color-8, 0.2);
     border-radius: 4px;
     cursor: pointer;   
-    display: flex; 
-    flex-direction: row-reverse;
+    display: flex;    
     margin: 0 2rem;
-    padding: 0.9rem 0 0.9rem 1rem;    
+    padding: 0.9rem 0 0.9rem 0.4rem;    
 
     &:first-child {
         border-top: none;
@@ -73,24 +74,28 @@ export default {
         display: flex;
         height: 3.3rem;
         justify-content: center;
+        margin-right: 1.8rem;
         position: relative;
         transition: all .25s ease-out;
         will-change: transform;
         width: 3.3rem;  
 
-        @include logoColors();
+        svg {
+            @include logoSVGColors();
+        }
 
     }
 
     &:hover {      
-        background: linear-gradient(to left, rgba(255,255,255,0) 0%,$color-9 100%); 
+        will-change: transform;       
        
         .single-site-icon {
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
         
         .single-site-name {
-            color: $color-4;
+            color: $color-4;  
+            transform: translateX(3px)
            
         }
     }
@@ -106,8 +111,9 @@ export default {
         text-align: left;
         text-overflow: ellipsis; 
         transition: all .25s ease-out;
-        white-space: nowrap;
-        width: 80%;
+        white-space: nowrap;  
+        max-width: 75%;
+        
     }
 }
 </style>

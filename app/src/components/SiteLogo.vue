@@ -4,12 +4,11 @@
         class="site-logo">
         <span
             v-if="logoColor"
-            class="site-logo-bg"
-            :data-color="logoColor">
-            <icon
-                :name="logoIcon"
-                primaryColor="color-10"
-                size="xs" />
+            class="site-logo-bg">
+            <icon 
+                :data-color="logoColor"
+                :name="logoIcon"               
+                size="m" />
         </span>
 
         <span class="site-logo-name">
@@ -123,11 +122,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/mixins.scss';
 
 .site-logo {
-    align-items: center;
-    background: $color-9;
-    border-radius: 3px;
+    align-items: center;   
     display: flex;
     padding-left: 0.8rem;
     width: 32rem;
@@ -162,18 +160,15 @@ export default {
         height: 3rem;
         justify-content: center;
         width: 3rem;
-
-        @for $i from 1 through 16 {
-            &[data-color="#{$i}"] {
-                background: #{map-get($logo-colors, #{'bg' + $i})};
-                color: #{map-get($logo-colors, #{'color' + $i})};
-            }
-        }
+        
+         svg {
+            @include logoSVGColors();
+        }        
     }
 
     &-name {
-        margin: 0 0 0 1.6rem;
-        width: calc(100% - 7.2rem);
+        margin: 0 0 0 1.2rem;
+        width: calc(100% - 9rem);
     }
 
     &-link {
@@ -200,9 +195,10 @@ export default {
     &-icon-open {
         fill: $color-7;
         position: absolute;
-        right: 1.4rem;
+        right: 3rem;
         top: 50%;
         transform: translateY(-50%);
+        
     }
 }
 </style>
