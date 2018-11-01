@@ -6,14 +6,12 @@
                 <template v-if="menuItemID === ''">Add new menu item</template>
             </h2>
 
-            <a
-                href="#"
+            <span
                 class="menu-item-editor-close"
+                name="sidebar-close"
                 @click.prevent="hide()">
-                <icon
-                    size="m"
-                    name="sidebar-close" />
-            </a>
+                &times;
+            </span>
 
             <label
                 :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
@@ -475,20 +473,31 @@ export default {
         }
     }
 
-    &-close {
+    &-close {                   
+        border-radius: 50%;
+        color: $color-7;
+        cursor: pointer;
+        font-size: 2.4rem;
+        font-weight: 300;
+        height: 3rem;                   
+        line-height: 1.1; 
+        padding: 0;
         position: absolute;
-        right: 3.6rem;
-        top: 2rem;
-
-        .icon {
-            fill: $color-3;
-        }
-
+        right: 3.5rem;
+        text-align: center;       
+        transition: all .3s ease-out;         
+        top: 2.1rem;        
+        width: 3rem;
+                                
+        &:active,
+        &:focus,
         &:hover {
-            .icon {
-                fill: $color-5;
-            }
+            color: $color-4;
         }
+        
+        &:hover {
+            background: $color-helper-8;
+        }  
     }
 
     &-buttons {

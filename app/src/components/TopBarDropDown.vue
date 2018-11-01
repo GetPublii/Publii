@@ -76,7 +76,7 @@ export default {
 
 .topbar {
     &-app-settings {
-        color: $color-4;
+        color: $color-7;
         cursor: pointer;
         display: block;
         height: 6rem;
@@ -86,7 +86,7 @@ export default {
 
 
         &:hover {
-            color: $color-1;
+            color: $color-4;
         }
 
         &-icon {

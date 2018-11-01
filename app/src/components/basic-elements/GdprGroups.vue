@@ -19,9 +19,9 @@
 
             <icon
                 size="m"
-                name="sidebar-close"
-                primaryColor="color-3"
+                name="sidebar-close"                
                 @click.native="removeGroup(index)" />
+            
         </div>
 
         <p-button
@@ -99,6 +99,12 @@ export default {
 
         .icon {
             cursor: pointer;
+            fill: $color-3;
+            transition: all .3s ease-out;
+            
+            &:hover {
+                fill: $color-4;
+            }
         }
     }
 

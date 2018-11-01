@@ -17,11 +17,12 @@
                 {{ siteName }}
             </strong>
         </span>
-
-        <icon
+        
+        <span
             class="site-logo-icon-open"
-            size="s"
-            name="sidebar-arrow" />
+            name="sidebar-arrow">                        
+        </span>
+        
     </div>
 </template>
 
@@ -135,12 +136,12 @@ export default {
     &:hover {
 
         .site-logo-link {
-            color: $color-6;
-            transition: all .25s ease-out;
+            color: $color-4;
+            
         }
         .site-logo-icon-open {
-            fill: $color-5;
-            transition: all .25s ease-out;
+            border-top-color: $color-4;
+            
         }
     }
 
@@ -168,7 +169,7 @@ export default {
 
     &-name {
         margin: 0 0 0 1.2rem;
-        width: calc(100% - 9rem);
+        width: calc(100% - 10rem);
     }
 
     &-link {
@@ -180,6 +181,7 @@ export default {
         padding: 1rem 0;
         position: relative;
         text-overflow: ellipsis;
+        transition: all .3s ease-out;
         white-space: nowrap;
 
         & > span {
@@ -193,12 +195,22 @@ export default {
     }
 
     &-icon-open {
-        fill: $color-7;
+        border-top: solid 6px $color-7;
+        border-left: solid 6px transparent;
+        border-right: solid 6px transparent;                    
+        opacity: 1;                     
+        cursor: pointer;                   
+        height: 6px;
+        left: auto;
+        line-height: 1.1; 
+        padding: 0;
         position: absolute;
-        right: 3rem;
+        right: calc(3rem + 8px);
+        width: 12px;
+        text-align: center;       
+        transition: all .3s ease-out;         
         top: 50%;
-        transform: translateY(-50%);
-        
+        transform: translateY(-50%);        
     }
 }
 </style>

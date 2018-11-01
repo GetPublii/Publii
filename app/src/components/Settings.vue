@@ -1019,7 +1019,7 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled"
-                            type="small"
+                            type="big"
                             :is-line="true"
                             label="Cookie Groups" />
 
@@ -1042,8 +1042,17 @@
                             <label slot="field">
                                 <switcher
                                     id="html-compression"
-                                    v-model="advanced.htmlCompression" />
-                                Compress HTML code for faster load times
+                                    v-model="advanced.htmlCompression" />                                
+                            </label>
+                        </field>
+                        
+                        <field
+                            id="css-compression"
+                            label="Enable CSS compression">
+                            <label slot="field">
+                                <switcher
+                                    id="css-compression"
+                                    v-model="advanced.cssCompression" />                               
                             </label>
                         </field>
 
@@ -1054,20 +1063,8 @@
                                 <switcher
                                     id="html-compression-remove-comments"
                                     v-model="advanced.htmlCompressionRemoveComments" />
-                                Comments will be removed during compression
                             </label>
-                        </field>
-
-                        <field
-                            id="css-compression"
-                            label="Enable CSS compression">
-                            <label slot="field">
-                                <switcher
-                                    id="css-compression"
-                                    v-model="advanced.cssCompression" />
-                                Compress CSS code for faster load times
-                            </label>
-                        </field>
+                        </field>                        
 
                         <field
                             id="version-suffix"
@@ -1076,12 +1073,13 @@
                                 <switcher
                                     id="version-suffix"
                                     v-model="advanced.versionSuffix" />
-                                Add version parameter in CSS/JS URLs to skip browser cache
+                                
                             </label>
 
                             <small
                                 slot="note"
                                 class="note">
+                                Add version parameter in CSS/JS URLs to skip browser cache.
                                 This option can cause that more files than usual will be required to sync during deployment
                             </small>
                         </field>
@@ -1132,9 +1130,15 @@
                             <label slot="field">
                                 <switcher
                                     id="feed-show-full-text"
-                                    v-model="advanced.feed.showFullText" />
-                                Display full text of the post in the feed
+                                    v-model="advanced.feed.showFullText" />                                
                             </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                Display full text of the post in the feed
+                            </small>
+                            
                         </field>
 
                         <field
@@ -1157,9 +1161,15 @@
                             <label slot="field">
                                 <switcher
                                     id="feed-show-featured-image"
-                                    v-model="advanced.feed.showFeaturedImage" />
-                                Display a post's featured image in the feed
+                                    v-model="advanced.feed.showFeaturedImage" />                               
                             </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                 Display a post's featured image in the feed
+                            </small>
+                            
                         </field>
                     </div>
 

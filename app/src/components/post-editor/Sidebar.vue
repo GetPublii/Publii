@@ -12,23 +12,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-status"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
-
-                    <icon
+                    
+                    <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
-
-                    <icon
+                        name="sidebar-arrow">                        
+                    </span>
+                    
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -127,23 +125,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-image"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
 
-                    <icon
+                   <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
+                        name="sidebar-arrow">                        
+                    </span>
 
-                    <icon
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -188,23 +184,21 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="m"
-                            name="sidebar-tags"
-                            primaryColor="grey-icon-color" />
+                            name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-open"
-                            size="m"
-                            name="sidebar-arrow"
-                            primaryColor="color-1" />
+                            name="sidebar-arrow">                        
+                        </span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-close"
-                            size="m"
-                            name="sidebar-close"
-                            primaryColor="color-3"
-                            @click.native="closeItem" />
+                            name="sidebar-arrow"
+                            @click.native="closeItem">
+                            &times;
+                        </span>
                     </div>
 
                     <div
@@ -244,23 +238,21 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="m"
-                            name="sidebar-seo"
-                            primaryColor="grey-icon-color" />
+                            name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">SEO</span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-open"
-                            size="m"
-                            name="sidebar-arrow"
-                            primaryColor="color-1" />
+                            name="sidebar-arrow">                        
+                        </span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-close"
-                            size="m"
-                            name="sidebar-close"
-                            primaryColor="color-3"
-                            @click.native="closeItem" />
+                            name="sidebar-arrow"
+                            @click.native="closeItem">
+                            &times;
+                        </span>
                     </div>
 
                     <div
@@ -325,23 +317,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-options"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
 
-                    <icon
+                    <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
-
-                    <icon
+                        name="sidebar-arrow">                        
+                    </span>
+  
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -716,11 +706,10 @@ export default {
 
                     .post-editor-settings {
                         &-icon {
-                            fill: $color-4;
+                            fill: $color-5;
 
-                            &-open,
-                            &-close {
-                                fill: $color-4;
+                            &-open {
+                                border-top-color: $color-5;
                             }
                         }
                     }
@@ -739,6 +728,7 @@ export default {
 
                         &-icon {
                             left: -1.6rem;
+                            position: relative;
                             opacity: 0;
 
                             &-open {
@@ -746,7 +736,7 @@ export default {
                             }
 
                             &-close {
-                                opacity: 1;
+                                opacity: 1;                                
                             }
                         }
                     }
@@ -762,7 +752,7 @@ export default {
             }
 
             &-icon {
-                fill: $grey-icon-color;
+                fill: $grey-icon-color; 
                 left: 0;
                 height: 2.4rem;
                 margin-right: 2.4rem;
@@ -784,19 +774,53 @@ export default {
                     }
                 }
 
-                &-open {
-                    fill: $color-1;
-                    opacity: 1;
+                &-open {  
+                    border-top: solid 6px $color-8;
+                    border-left: solid 6px transparent;
+                    border-right: solid 6px transparent;                    
+                    opacity: 1;                     
+                    cursor: pointer;                   
+                    height: 6px;
+                    left: auto;
+                    line-height: 1.1; 
+                    padding: 0;
+                    position: absolute;
+                    right: calc(4.5rem - 6px);
+                    width: 12px;
+                    text-align: center;       
+                    transition: all .3s ease-out;         
+                    top: 50%;
+                    transform: translate(0, -50%);                     
                 }
 
                 &-close {
-                    fill: $danger-color;
-                    height: 2.8rem;
                     opacity: 0;
-                    right: 3.8rem;
-                    top: 1.9rem;
-                    pointer-events: none;
-                    width: 2.8rem;
+                    border-radius: 50%;
+                    color: $color-7;
+                    cursor: pointer;
+                    font-size: 2.4rem;
+                    font-weight: 300;
+                    height: 3rem;
+                    left: auto;
+                    line-height: 1.1; 
+                    padding: 0;
+                    position: absolute;
+                    right: 3rem;
+                    text-align: center;       
+                    transition: all .3s ease-out;         
+                    top: 50%;
+                    transform: translate(0, -50%); 
+                    width: 3rem;
+                                
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        color: $color-4;
+                    }
+        
+                    &:hover {
+                        background: $color-helper-8;
+                    }  
                 }
             }
 
