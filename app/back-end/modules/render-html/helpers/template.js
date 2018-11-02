@@ -235,7 +235,7 @@ class TemplateHelper {
      * Compress the output HTML if necessary
      */
     compressHTML(content) {
-        if(this.siteConfig.advanced.htmlCompression === 0) {
+        if(!this.siteConfig.advanced.htmlCompression) {
             return content;
         }
 
