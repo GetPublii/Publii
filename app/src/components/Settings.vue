@@ -142,7 +142,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                If this option is enabled your homepage pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
+                                If this option is enabled your homepage pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
                             </small>
                         </field>
 
@@ -267,7 +267,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                If this option is enabled your tags pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
+                                If this option is enabled your tags pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
                             </small>
                         </field>
 
@@ -343,7 +343,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex,nofollow</strong> robots metatag.
+                                If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
                             </small>
                         </field>
 
@@ -1042,17 +1042,17 @@
                             <label slot="field">
                                 <switcher
                                     id="html-compression"
-                                    v-model="advanced.htmlCompression" />                                
+                                    v-model="advanced.htmlCompression" />
                             </label>
                         </field>
-                        
+
                         <field
                             id="css-compression"
                             label="Enable CSS compression">
                             <label slot="field">
                                 <switcher
                                     id="css-compression"
-                                    v-model="advanced.cssCompression" />                               
+                                    v-model="advanced.cssCompression" />
                             </label>
                         </field>
 
@@ -1064,7 +1064,7 @@
                                     id="html-compression-remove-comments"
                                     v-model="advanced.htmlCompressionRemoveComments" />
                             </label>
-                        </field>                        
+                        </field>
 
                         <field
                             id="version-suffix"
@@ -1073,7 +1073,7 @@
                                 <switcher
                                     id="version-suffix"
                                     v-model="advanced.versionSuffix" />
-                                
+
                             </label>
 
                             <small
@@ -1130,15 +1130,15 @@
                             <label slot="field">
                                 <switcher
                                     id="feed-show-full-text"
-                                    v-model="advanced.feed.showFullText" />                                
+                                    v-model="advanced.feed.showFullText" />
                             </label>
-                            
+
                             <small
                                 slot="note"
                                 class="note">
                                 Display full text of the post in the feed
                             </small>
-                            
+
                         </field>
 
                         <field
@@ -1161,15 +1161,15 @@
                             <label slot="field">
                                 <switcher
                                     id="feed-show-featured-image"
-                                    v-model="advanced.feed.showFeaturedImage" />                               
+                                    v-model="advanced.feed.showFeaturedImage" />
                             </label>
-                            
+
                             <small
                                 slot="note"
                                 class="note">
                                  Display a post's featured image in the feed
                             </small>
-                            
+
                         </field>
                     </div>
 
