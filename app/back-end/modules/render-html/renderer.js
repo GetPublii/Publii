@@ -248,14 +248,10 @@ class Renderer {
     }
 
     /*
-     * Make the output dir empty before generating the output files
+     * Make sure the output dir exists and is empty before generating the output files
      */
     emptyOutputDir() {
-        if(UtilsHelper.dirExists(this.outputDir)) {
-            fs.removeSync(this.outputDir);
-        }
-
-        fs.mkdirSync(this.outputDir);
+        fs.emptyDirSync(this.outputDir);
     }
 
     /*
