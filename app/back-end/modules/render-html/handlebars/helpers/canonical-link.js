@@ -13,7 +13,25 @@ function canonicalLinkHelper(rendererInstance, Handlebars) {
         if (context.data.root.metaRobotsRaw.indexOf('noindex') > -1) {
             return '';
         }
-        
+
+        if (
+            Array.isArray(context.data.context) &&
+            context.data.context[0] && (
+                (
+                    rendererInstance.siteConfig.advanced.homepageNoIndexPagination &&
+                    context.data.context.indexOf('index-pagination') !== -1
+                ) || (
+                    rendererInstance.siteConfig.advanced.tagNoIndexPagination &&
+                    context.data.context.indexOf('tag-pagination') !== -1
+                ) || (
+                    rendererInstance.siteConfig.advanced.authorNoIndexPagination &&
+                    context.data.context.indexOf('author-pagination') !== -1
+                )
+            )
+        ) {
+            return '';
+        }
+
         let pageUrl = context.data.website.pageUrl;
 
         // If current page is a post - check for canonical URL
