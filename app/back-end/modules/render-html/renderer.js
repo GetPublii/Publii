@@ -252,10 +252,10 @@ class Renderer {
      */
     emptyOutputDir() {
         if(UtilsHelper.dirExists(this.outputDir)) {
-            fs.removeSync(this.outputDir);
+            fs.emptyDirSync(this.outputDir);
+        } else {
+            fs.mkdirSync(this.outputDir);
         }
-
-        fs.mkdirSync(this.outputDir);
     }
 
     /*
