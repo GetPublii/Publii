@@ -342,7 +342,7 @@ export default {
 
     &-wrapper {
         background: $post-editor-sidebar-color;
-        box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.075);
+        box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
         height: 100%;
         overflow: auto;
         position: absolute;

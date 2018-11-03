@@ -111,7 +111,7 @@ export default {
         height: calc(100% - 84px);
         opacity: 1;
         position: absolute;
-        right: 279px;
+        right: 281px;
         text-align: center;
         transform: translateX(0);
         transform-origin: 0 0;
@@ -126,7 +126,7 @@ export default {
             transform: translateX(-100px);
 
             & + .post-editor-sidebar {
-                box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.075);
+                box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
             }
         }
 
@@ -194,7 +194,7 @@ body[data-os="linux"] {
  */
 @media (max-height: 900px) {
     .post-editor-writers-panel {
-        right: 179px;
+        right: 181px;
 
         dl {
             margin: 4.8rem 15% 0 15%;
@@ -208,7 +208,7 @@ body[data-os="linux"] {
 
 @media (max-width: 1400px) {
     .post-editor-writers-panel {
-        right: 179px;
+        right: 181px;
     }
 }
 </style>
