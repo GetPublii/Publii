@@ -16,7 +16,7 @@ export default {
 .header {
     align-items: center;
     background: $color-10;
-    border-bottom: 1px solid rgba($color-8, .8);
+    border-bottom: 1px solid $color-helper-9;
     display: flex;
     position: relative;
     user-select: none;
