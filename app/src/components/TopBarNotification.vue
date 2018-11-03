@@ -59,7 +59,7 @@ export default {
 
             let self = this;
 
-            ipcRenderer.send('app-notifications-retrieve', this.shouldRetrieveNotifications);
+            ipcRenderer.send('app-notifications-retrieve', this.shouldRetrieveNotifications());
 
             ipcRenderer.once('app-notifications-retrieved', function(event, data) {
                 if(data.status === true) {
