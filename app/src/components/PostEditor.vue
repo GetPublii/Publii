@@ -597,7 +597,7 @@ export default {
         position: absolute;
         top: 2.2rem;
         width: 100%;
-        z-index: 103;
+        z-index: 102;
     }
 
     &-title {
