@@ -775,7 +775,7 @@ export default {
                 }
 
                 &-open {  
-                    border-top: solid 6px $color-8;
+                    border-top: solid 6px $color-7;
                     border-left: solid 6px transparent;
                     border-right: solid 6px transparent;                    
                     opacity: 1;                     

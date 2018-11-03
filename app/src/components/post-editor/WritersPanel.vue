@@ -1,13 +1,12 @@
 <template>
     <div :class="{ 'post-editor-writers-panel': true, 'is-hidden': !isVisible }">
-        <a
-            href="#"
+        
+        <span
             class="post-editor-writers-panel-close"
-            @click.prevent="close" >
-            <icon
-                size="m"
-                name="sidebar-close" />
-        </a>
+            name="sidebar-close"
+            @click.prevent="close">
+            &times;
+        </span>
 
         <dl>
             <dt id="counter-words">{{ words }}</dt>
@@ -105,13 +104,13 @@ export default {
 .post-editor {
     &-writers-panel {
         background: $color-10;
-        border-left: 1px solid rgba($color-8, .4);
+        border-left: 1px solid $color-8;
         bottom: 0;
         box-shadow: 4px 0 12px rgba(0, 0, 0, 0.075);
         height: calc(100% - 84px);
         opacity: 1;
         position: absolute;
-        right: 279px;
+        right: 281px;
         text-align: center;
         transform: translateX(0);
         transform-origin: 0 0;
@@ -126,31 +125,37 @@ export default {
             transform: translateX(-100px);
 
             & + .post-editor-sidebar {
-                box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.075);
+                box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
             }
         }
 
         &-close {
-            height: 24px;
-            position: absolute;
-            right: 2rem;
-            top: 2rem;
-            width: 24px;
-
-            & > svg {
-                fill: $color-3;
-                pointer-events: none;
-                transition: all .25s ease-out;
-            }
-
-            &:active,
-            &:focus,
-            &:hover {
-                & > svg {
-                   fill: $color-4;
+                border-radius: 50%;
+                color: $color-7;
+                cursor: pointer;
+                font-size: 2.4rem;
+                font-weight: 300;
+                height: 3rem;
+                left: auto;
+                line-height: 1.1; 
+                padding: 0;
+                position: absolute;
+                right: 2rem;
+                text-align: center;       
+                transition: all .3s ease-out;         
+                top: 2rem;
+                width: 3rem;
+                                
+                &:active,
+                &:focus,
+                &:hover {
+                    color: $color-4;
                 }
-            }
-        }
+        
+                &:hover {
+                    background: $color-helper-8;
+                    }  
+                }
 
         dl {
             margin: 6.4rem 15% 0 15%;
@@ -194,7 +199,7 @@ body[data-os="linux"] {
  */
 @media (max-height: 900px) {
     .post-editor-writers-panel {
-        right: 179px;
+        right: 181px;
 
         dl {
             margin: 4.8rem 15% 0 15%;
@@ -208,7 +213,7 @@ body[data-os="linux"] {
 
 @media (max-width: 1400px) {
     .post-editor-writers-panel {
-        right: 179px;
+        right: 181px;
     }
 }
 </style>

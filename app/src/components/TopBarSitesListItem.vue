@@ -74,7 +74,7 @@ export default {
         display: flex;
         height: 3.3rem;
         justify-content: center;
-        margin-right: 1.8rem;
+        margin-right: 1.2rem;
         position: relative;
         transition: all .25s ease-out;
         will-change: transform;
@@ -105,14 +105,14 @@ export default {
         font-size: 1.5rem;
         font-weight: 400;
         line-height: 3.6rem;
-        margin: 0 1.6rem 0 0;
+        margin: 0;
         overflow: hidden;
         padding: 0;
         text-align: left;
         text-overflow: ellipsis; 
         transition: all .25s ease-out;
         white-space: nowrap;  
-        max-width: 75%;
+        max-width: 82%;
         
     }
 }

@@ -59,7 +59,7 @@ export default {
 
     & > .topbar-inner {
         background: $color-10;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         display: flex;
         align-items: center;
         padding: 0 5rem;

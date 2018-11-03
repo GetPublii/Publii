@@ -588,7 +588,7 @@ export default {
     &-topbar {
         align-items: center;
         background: $color-10;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         font-size: 2.4rem;
         display: flex;
         height: 6.2rem;
@@ -597,7 +597,7 @@ export default {
         position: absolute;
         top: 2.2rem;
         width: 100%;
-        z-index: 103;
+        z-index: 102;
     }
 
     &-title {
