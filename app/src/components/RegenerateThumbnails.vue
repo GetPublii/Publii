@@ -116,7 +116,9 @@ export default {
                     this.resultLabel = 'Progress: ' + data.value + '%';
 
                     for(let file of data.files) {
-                        this.files.unshift(file);
+                        if (file) {
+                            this.files.unshift(file);
+                        }
                     }
                 });
 
