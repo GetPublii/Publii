@@ -283,18 +283,32 @@ class Image extends Model {
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
-                        sharp(originalPath)
-                            .withoutEnlargement()
-                            .resize(finalWidth, finalHeight)
-                            .quality(imagesQuality)
-                            .toBuffer()
-                            .then(function (outputBuffer) {
-                                let wstream = fs.createWriteStream(destinationPath);
-                                wstream.write(outputBuffer);
-                                wstream.end();
+                        if (extension.toLowerCase() === '.png') {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
 
-                                resolve(destinationPath);
-                            }).catch(err => reject(err))
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err))
+                        } else {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .jpeg({
+                                    quality: imagesQuality
+                                })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err))
+                        }
                     }).catch(err => console.log(err));
                 }
             } else {
@@ -317,18 +331,30 @@ class Image extends Model {
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
-                        sharp(originalPath)
-                            .withoutEnlargement()
-                            .resize(finalWidth, finalHeight)
-                            .max()
-                            .quality(imagesQuality)
-                            .toBuffer()
-                            .then(function (outputBuffer) {
-                                let wstream = fs.createWriteStream(destinationPath);
-                                wstream.write(outputBuffer);
-                                wstream.end();
-                                resolve(destinationPath);
-                            }).catch(err => reject(err))
+                        if (extension.toLowerCase() === '.png') {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err));
+                        } else {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .jpeg({
+                                    quality: imagesQuality
+                                })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err));
+                        }
                     }).catch(err => console.log(err));
                 }
             }
