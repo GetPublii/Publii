@@ -150,12 +150,10 @@ class Renderer {
     async renderFullPreview() {
         console.time("RENDERING");
         this.preparePageToRender();
-        await this.generateWWW().then(() => {
-            this.generateAMP();
-            console.timeEnd("RENDERING");
-
-            this.sendProgress(100, 'Website files are ready to upload');
-        });
+        await this.generateWWW();
+        this.generateAMP();
+        console.timeEnd("RENDERING");
+        this.sendProgress(100, 'Website files are ready to upload');
     }
 
     /**
@@ -203,9 +201,8 @@ class Renderer {
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
         this.copyFiles();
-        await this.generateSitemap().then(() => {
-            this.sendProgress(90, 'Finishing the render process');
-        });
+        await this.generateSitemap();
+        this.sendProgress(90, 'Finishing the render process');
     }
 
     /**
