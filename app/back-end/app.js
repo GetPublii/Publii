@@ -416,11 +416,19 @@ class App {
 
         let displays = electron.screen.getAllDisplays();
         let externalDisplay = displays.find((display) => {
-            return display.bounds.x !== 0 || display.bounds.y !== 0
+            return display.bounds.x !== 0 || display.bounds.y !== 0;
         });
 
         // Detect case when Publii was displayed on the external display which is now unavailable
-        if (!externalDisplay && (windowParams.x < 0 || windowParams.x > electron.screen.getPrimaryDisplay().workAreaSize.width)) {
+        if (
+            !externalDisplay &&
+            (
+                windowParams.x < 0 ||
+                windowParams.x > electron.screen.getPrimaryDisplay().workAreaSize.width ||
+                windowParams.y < 0 ||
+                windowParams.y > electron.screen.getPrimaryDisplay().workAreaSize.height
+            )
+        ) {
             windowParams.x = 50;
             windowParams.y = 50;
         }
