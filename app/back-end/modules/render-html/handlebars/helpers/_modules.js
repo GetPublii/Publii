@@ -37,5 +37,6 @@ module.exports = {
     jsonify: require('./jsonify.js'),
     reverse: require('./reverse.js'),
     orderby: require('./orderby.js'),
-    getPostHelper: require('./get-post.js')
+    getPostHelper: require('./get-post.js'),
+    getPostsHelper: require('./get-posts.js')
 };
