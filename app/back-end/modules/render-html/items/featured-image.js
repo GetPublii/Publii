@@ -54,7 +54,11 @@ class FeaturedImageItem {
         credits = data.credits;
 
         try {
-            imageDimensions = sizeOf(imagePath);
+            if (this.image[2]) {
+                imageDimensions = sizeOf(imagePath);
+            } else {
+                this.imageData = false;
+            }
         } catch(err) {
             console.log('[WARNING] renderer-context.js: wrong image path - missing dimensions for: ' + imagePath);
             this.imageData = false;

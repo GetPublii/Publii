@@ -100,9 +100,16 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                 };
 
                 try {
-                    imageDimensions = sizeOf(imagePath);
+                    if (path.extname(imageUrl)) {
+                        imageDimensions = sizeOf(imagePath);
+                    } else {
+                        imageDimensions = {
+                            height: false,
+                            width: false
+                        };
+                    }
                 } catch(e) {
-                    console.log('JSON-LD HBS helper: wrong image path - missing dimensions');
+                    console.log('JSON-LD HBS helper: wrong image path - missing dimensions: ', imageUrl);
 
                     imageDimensions = {
                         height: false,
