@@ -560,7 +560,6 @@ class Post extends Model {
 
         let imagesDir = path.join(this.siteDir, 'input', 'media', 'posts', (postDir).toString());
         let galleryImagesDir = path.join(imagesDir, 'gallery');
-        let featuredImage = path.parse(this.featuredImageFilename).base;
         let postDirectoryExists = true;
 
         try {
@@ -611,6 +610,24 @@ class Post extends Model {
     cleanImages(images, imagesDir, cancelEvent) {
         let postDir = this.id;
         let featuredImage = path.parse(this.featuredImageFilename).base;
+
+        // If post is cancelled - get the previous featured image
+        if (cancelEvent && this.id !== 0) {
+            let featuredImageSqlQuery = `
+                    SELECT
+                        url
+                    FROM
+                        posts_images
+                    WHERE
+                        post_id = ${this.id}
+                `;
+
+            let featuredImageResult = this.db.exec(featuredImageSqlQuery);
+
+            if(featuredImageResult[0] && featuredImageResult[0].values) {
+                featuredImage = featuredImageResult[0].values[0][0];
+            }
+        }
 
         if(this.id === 0) {
             postDir = 'temp';
