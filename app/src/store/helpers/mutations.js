@@ -83,6 +83,10 @@ export default {
         Vue.set(state.sites, siteData.siteConfig.name, Object.assign({}, siteData.siteConfig));
     },
     switchSite (state, data) {
+        state.currentSite = {
+            config: JSON.parse(JSON.stringify(state.currentSite.config))
+        };
+
         Utils.deepMerge(state.currentSite, {
             posts: data ? data.posts : [],
             tags: data ? data.tags : [],
