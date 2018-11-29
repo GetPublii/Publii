@@ -65,6 +65,10 @@ class FeaturedImageItem {
             return;
         }
 
+        if (!this.imageData) {
+            return;
+        }
+
         if(this.renderer.ampMode) {
             url = url.replace('/amp/', '/');
         }
