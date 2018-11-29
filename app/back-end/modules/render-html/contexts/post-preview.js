@@ -339,7 +339,7 @@ class RendererContextPostPreview extends RendererContext {
             `);
         }
 
-        if (postImage[0]) {
+        if (postImage[0] && postImage[0].values[0][1]) {
             let url = '';
             let alt = '';
             let caption = '';
