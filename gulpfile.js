@@ -44,7 +44,7 @@ gulp.task('build', function() {
     buildData = JSON.stringify(buildData);
     fs.writeFileSync('app/back-end/builddata.json', buildData);
 
-    exec('node_modules/.bin/electron app/', function (err, stdout, stderr) {
+    exec('"./node_modules/.bin/electron" app/', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
