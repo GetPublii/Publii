@@ -73,6 +73,7 @@
                         :items="availableMenus"
                         :selected="item.position"
                         :noBorder="true"
+                        :disabledValues="usedMenus"
                         @change.native="changeMenu($event, index)">
                     </dropdown>
                 </collection-cell>
@@ -188,6 +189,9 @@ export default {
             let menus = JSON.parse(JSON.stringify(this.$store.state.currentSite.themeSettings.menus));
             menus[''] = 'Unassigned';
             return menus;
+        },
+        usedMenus () {
+            return this.items.map(item => item.position);
         }
     },
     mounted () {
