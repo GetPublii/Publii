@@ -69,7 +69,7 @@ export default {
             type: Boolean
         },
         disabledValues: {
-            default: [],
+            default: () => [],
             type: Array
         }
     },
