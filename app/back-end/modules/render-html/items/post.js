@@ -21,11 +21,20 @@ class PostItem {
     prepareData() {
         let postURL = this.siteConfig.domain + '/' + this.post[3] + '.html';
         let preparedText = ContentHelper.prepareContent(this.post[0], this.post[4], this.siteConfig.domain, this.themeConfig, this.renderer);
+        let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         let hasCustomExcerpt = false;
         let readmoreMatches = this.post[4].match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
 
         if (readmoreMatches && readmoreMatches.length) {
             hasCustomExcerpt = true;
+
+            // Detect if hide of the custom excerpt is enabled
+            if (this.renderer.siteConfig.advanced.postUseTextWithoutCustomExcerpt) {
+                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+                preparedText = preparedText[1];
+            } else {
+                preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
+            }
         }
 
         if(this.siteConfig.advanced.urls.cleanUrls) {
@@ -42,8 +51,8 @@ class PostItem {
             author: this.renderer.cachedItems.authors[this.post[2]],
             slug: this.post[3],
             url: postURL,
-            text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, ''),
-            excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText),
+            text: preparedText,
+            excerpt: preparedExcerpt,
             createdAt: this.post[6],
             modifiedAt: this.post[7],
             status: this.post[8],

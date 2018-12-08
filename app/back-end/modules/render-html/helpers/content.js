@@ -38,16 +38,6 @@ class ContentHelper {
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
 
-        // Detect if hide of the custom excerpt is enabled
-        if (renderer.siteConfig.advanced.postUseTextWithoutCustomExcerpt) {
-            let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
-
-            if(readmoreMatches && readmoreMatches.length) {
-                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
-                preparedText = preparedText[1];
-            }
-        }
-
         // Remove content for AMP or non-AMP depending from ampMode value
         if(ampMode) {
             preparedText = preparedText.replace(/<publii-non-amp>[\s\S]*?<\/publii-non-amp>/gmi, '');
