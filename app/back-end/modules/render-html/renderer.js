@@ -312,7 +312,7 @@ class Renderer {
         }
 
         // Include the helpers from the helpers.js file
-        const themeHelpers = this.requireWithNoCache(helpersFilePath);
+        const themeHelpers = this.requireWithNoCache(helpersFilePath)(Handlebars);
 
         // Check if the returned value is an object
         if(themeHelpers.constructor !== Object) {
@@ -1569,8 +1569,13 @@ class Renderer {
         return output;
     }
 
-    requireWithNoCache(module) {
+    requireWithNoCache(module, params = false) {
         delete require.cache[require.resolve(module)];
+
+        if (params) {
+            return require(module)(params);
+        }
+
         return require(module);
     }
 }
