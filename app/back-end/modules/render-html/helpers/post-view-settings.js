@@ -17,15 +17,19 @@ class PostViewSettings {
                     defaultField.value === '0'
                 ) {
                     outputConfig[defaultViewFields[i]] = false;
-                }
-
-                if (
+                } else if (
                     defaultField === 1 ||
                     defaultField === '1' ||
                     defaultField.value === 1 ||
                     defaultField.value === '1'
                 ) {
                     outputConfig[defaultViewFields[i]] = true;
+                } else {
+                    if (typeof defaultField.value !== 'undefined') {
+                        outputConfig[defaultViewFields[i]] = defaultField.value;
+                    } else if (typeof defaultField !== 'object') {
+                        outputConfig[defaultViewFields[i]] = defaultField;
+                    }
                 }
             } else {
                 if (defaultField === '0') {
@@ -62,15 +66,19 @@ class PostViewSettings {
                     field.value === '0'
                 ) {
                     outputConfig[postViewFields[i]] = false;
-                }
-
-                if(
+                } else if(
                     field === 1 ||
                     field === '1' ||
                     field.value === 1 ||
                     field.value === '1'
                 ) {
                     outputConfig[postViewFields[i]] = true;
+                } else {
+                    if (typeof field.value !== 'undefined' && field.value !== '') {
+                        outputConfig[postViewFields[i]] = JSON.stringify(field.value);
+                    } else if (typeof field !== 'object' && field !== '') {
+                        outputConfig[postViewFields[i]] = JSON.stringify(field);
+                    }
                 }
             }
         }
