@@ -42,7 +42,8 @@ export default {
                 'progress-bar': true,
                 'is-stopped': this.stopped,
                 'is-error': this.color === 'red',
-                'is-success': this.color === 'green'
+                'is-success': this.color === 'green',
+                'is-warning': this.color === 'orange'
             };
         }
     }
@@ -103,6 +104,14 @@ export default {
 
         &.is-error {
             background: $color-3;
+
+            &:after {
+                display: none;
+            }
+        }
+
+        &.is-warning {
+            background: $color-helper-6;
 
             &:after {
                 display: none;
