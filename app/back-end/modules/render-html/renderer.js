@@ -312,7 +312,13 @@ class Renderer {
         }
 
         // Include the helpers from the helpers.js file
-        const themeHelpers = this.requireWithNoCache(helpersFilePath)(Handlebars);
+        let themeHelpers;
+        
+        if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
+            this.requireWithNoCache(helpersFilePath, Handlebars);
+        } else {
+            this.requireWithNoCache(helpersFilePath);
+        }
 
         // Check if the returned value is an object
         if(themeHelpers.constructor !== Object) {
