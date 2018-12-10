@@ -315,9 +315,9 @@ class Renderer {
         let themeHelpers;
         
         if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
-            this.requireWithNoCache(helpersFilePath, Handlebars);
+            themeHelpers = this.requireWithNoCache(helpersFilePath, Handlebars);
         } else {
-            this.requireWithNoCache(helpersFilePath);
+            themeHelpers = this.requireWithNoCache(helpersFilePath);
         }
 
         // Check if the returned value is an object
