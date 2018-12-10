@@ -31,7 +31,7 @@
             <p-button
                 slot="button"
                 :onClick="goToSettings">
-                Set backup location
+                Set the backup location
             </p-button>
         </empty-state>
 
@@ -48,7 +48,7 @@
                 type="icon"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">Create first backup</template>
+                <template v-if="!operationInProgress">Create the first backup</template>
                 <template v-if="operationInProgress">Creating backup&hellip;</template>
             </p-button>
         </empty-state>
