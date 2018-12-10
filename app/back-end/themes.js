@@ -377,7 +377,15 @@ class Themes {
 
         // Load theme config overrides
         if(UtilsHelper.fileExists(themeConfigPath)) {
-            let themeSavedConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+            let themeSavedConfig;
+            
+            try {
+                themeSavedConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+            } catch (err) {
+                console.log('(!) The saved theme config is malformed. Loading default theme config instead.');
+                return;
+            }
+
             let optionGroups = ['config', 'customConfig', 'postConfig'];
 
             for(let k = 0; k < optionGroups.length; k++) {
