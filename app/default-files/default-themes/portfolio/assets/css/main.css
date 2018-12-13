@@ -110,31 +110,38 @@ img {
 .footer__social .buffer:hover .icon {
   fill: #222222; }
 
-.post__share .stumbleupon:hover {
-  background: #eb4924;
-  border-color: #eb4924; }
+.post__share .mix:hover {
+  background: #f77e25;
+  border-color: #f77e25; }
 
-.footer__social .stumbleupon:hover .icon {
-  fill: #eb4924; }
+.footer__social .mix:hover .icon {
+  fill: #f77e25; }
 
 /* Typography
    ========================================================================== 
 */
 html {
-  font-size: 1rem; }
-  @media screen and (min-width: 20rem) {
-    html {
-      font-size: calc(1rem + 0.2 * ((100vw - 20rem) / 113)); } }
-  @media screen and (min-width: 133rem) {
-    html {
-      font-size: 1.2rem; } }
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; }
+  html {
+    font-size: 1rem; }
+    @media screen and (min-width: 20rem) {
+      html {
+        font-size: calc(1rem + 0.2 * ((100vw - 20rem) / 113)); } }
+    @media screen and (min-width: 133rem) {
+      html {
+        font-size: 1.2rem; } }
 
 body {
   background: #fff;
   color: #4e5360;
   font-family: "Muli", sans-serif;
   font-weight: 400;
-  line-height: 1.6; }
+  line-height: 1.6;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   color: #D6496C;
@@ -157,12 +164,12 @@ p,
 ul,
 ol,
 dl,
-table,
-hr {
+table {
   margin-top: calc(1.5rem + 0.25vw); }
 
 blockquote,
-figure {
+figure,
+hr {
   margin-top: calc(1.5rem + 1vw);
   margin-bottom: calc(1.5rem + 1vw); }
 
@@ -316,10 +323,19 @@ figcaption {
   text-align: center; }
 
 hr {
-  border: 0;
-  height: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  background: 0 0;
+  border: none;
+  height: auto;
+  line-height: 1;
+  max-width: none;
+  text-align: center; }
+  hr::before {
+    content: "\00b7 \00b7 \00b7";
+    color: #4e5360;
+    font-size: 1.26562rem;
+    font-weight: 600;
+    letter-spacing: 1rem;
+    padding-left: 1rem; }
 
 .btn, [type=button],
 [type=submit],
@@ -1276,6 +1292,21 @@ main {
     margin-left: -23.14815%;
     margin-right: -23.14815%; } }
 
+.post__toc ul {
+  counter-reset: item;
+  list-style: decimal;
+  margin: calc(0.5rem + 0.25vw) 0 0 1rem; }
+  .post__toc ul li {
+    counter-increment: item;
+    padding: 0; }
+  .post__toc ul ul {
+    margin-top: 0; }
+    .post__toc ul ul li {
+      display: block; }
+      .post__toc ul ul li:before {
+        content: counters(item, ".") ". ";
+        margin-left: -20px; }
+
 .post__footer {
   clear: both; }
   @media all and (min-width: 56.25em) {
@@ -1390,7 +1421,7 @@ main {
     margin: 0 auto;
     opacity: 1 !important;
     pointer-events: none;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     width: 0.79012rem; }
 
 @media all and (min-width: 56.25em) {

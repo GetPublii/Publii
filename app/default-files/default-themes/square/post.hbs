@@ -105,12 +105,8 @@
                             {{else}}
                                {{{text}}}
                             {{/if}}
-                            {{#if @config.post.displayShareButtons}}
-                                <aside class="post__share">
-                                    {{> share-buttons}}
-                                </aside>
-                            {{/if}}
-                            {{#checkIfAny @config.post.displayTags @config.post.displayAuthorBio}}
+                           
+                            {{#checkIfAny @config.post.displayShareButtons @config.post.displayTags @config.post.displayAuthorBio}}
                                 <footer>
                                     {{#if @config.post.displayTags}}
                                         {{#if tags}}
@@ -123,6 +119,13 @@
                                             </ul>
                                         {{/if}}
                                     {{/if}}
+                                    
+                                    {{#if @config.post.displayShareButtons}}
+                                        <div class="post__share">
+                                            {{> share-buttons}}
+                                        </div>
+                                    {{/if}}
+                                    
                                     {{#if @config.post.displayAuthorBio}}
                                         {{#author}}
                                             <div class="post__bio">

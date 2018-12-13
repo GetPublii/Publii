@@ -1,6 +1,6 @@
 {
     "name": "Portfolio",
-    "version": "1.1.9.0",
+    "version": "1.2.1.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -563,14 +563,14 @@
             "name": "shareFacebook",
             "group": "Share buttons",
             "label": "Facebook",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareTwitter",
             "group": "Share buttons",
             "label": "Twitter",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
@@ -588,35 +588,35 @@
             "name": "shareGoogleplus",
             "group": "Share buttons",
             "label": "Google+",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "sharePinterest",
             "group": "Share buttons",
             "label": "Pinterest",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
-            "name": "shareStumbleupon",
+            "name": "shareMix",
             "group": "Share buttons",
-            "label": "StumbleUpon",
-            "value": true,
+            "label": "Mix (formerly StumbleUpon)",
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareLinkedin",
             "group": "Share buttons",
             "label": "LinkedIn",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareBuffer",
             "group": "Share buttons",
             "label": "Buffer",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
 
