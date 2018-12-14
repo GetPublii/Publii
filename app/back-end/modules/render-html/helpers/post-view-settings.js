@@ -75,9 +75,9 @@ class PostViewSettings {
                     outputConfig[postViewFields[i]] = true;
                 } else {
                     if (typeof field.value !== 'undefined' && field.value !== '') {
-                        outputConfig[postViewFields[i]] = JSON.stringify(field.value);
+                        outputConfig[postViewFields[i]] = JSON.stringify(field.value).replace(/"/g, '');
                     } else if (typeof field !== 'object' && field !== '') {
-                        outputConfig[postViewFields[i]] = JSON.stringify(field);
+                        outputConfig[postViewFields[i]] = JSON.stringify(field).replace(/"/g, '');
                     }
                 }
             }
