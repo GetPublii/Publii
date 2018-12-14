@@ -508,6 +508,8 @@ export default {
             if (this.closeEditorOnSave) {
                 this.closeEditor();
                 return;
+            } else {
+                this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/' + this.postID);

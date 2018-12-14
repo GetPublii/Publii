@@ -15,6 +15,12 @@ class EditorBridge {
         this.init();
     }
 
+    updatePostID (newPostID) {
+        this.postID = newPostID;
+        let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.postID + '/');
+        this.tinymceEditor.setContent(contentToUpdate);
+    }
+
     init() {
         let customFormats = this.loadCustomFormatsFromTheme();
         let editorConfig = Object.assign({}, EditorConfig, {
