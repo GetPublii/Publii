@@ -431,14 +431,37 @@ class EditorBridge {
         let body = doc.body;
         window.app.$bus.$emit('init-inline-editor', customFormats);
 
-        $(doc.querySelector('html')).on('mouseup', () => {
+        $(doc.querySelector('html')).on('mouseup', (e) => {
             let sel = win.getSelection();
             let text = sel.toString();
-            window.app.$bus.$emit('update-inline-editor', {
-                sel,
-                text
-            });
+            
+            if (this.checkInlineTrigger(e.target)) {
+                window.app.$bus.$emit('update-inline-editor', {
+                    sel,
+                    text
+                });
+            }
         });
+    }
+
+    checkInlineTrigger (target) {
+        let excludedTags = ['FIGURE', 'FIGCAPTION', 'IMG'];
+
+        if (excludedTags.indexOf(target.tagName) > -1) {
+            return false;
+        }
+
+        if (target.tagName === 'DIV' && target.classList.contains('gallery')) {
+            return false;
+        }
+
+        for ( ; target && target !== document; target = target.parentNode) {
+            if (target.matches && target.matches('.post__toc')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     addLinkEditor(iframe) {
