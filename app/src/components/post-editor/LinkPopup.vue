@@ -99,6 +99,12 @@
                         v-model="title"
                         class="link-popup-field-title" />
                 </field>
+
+                <field label="Nofollow link:">
+                    <switcher
+                        slot="field"
+                        v-model="rel" />
+                </field>
             </div>
 
             <div class="buttons">
@@ -134,7 +140,8 @@ export default {
             external: '',
             target: '',
             label: '',
-            title: ''
+            title: '',
+            rel: false
         };
     },
     computed: {
@@ -211,6 +218,7 @@ export default {
             this.target = '';
             this.label = '';
             this.title = '';
+            this.rel = false;
         },
         parseContent (content) {
             if(!content) {
@@ -222,6 +230,7 @@ export default {
             let titleContent = content.match(/title="(.*?)"/);
             let targetContent = content.match(/target="(.*?)"/);
             let urlContent = content.match(/href="(.*?)"/);
+            let relContent = content.match(/rel="(.*?)"/);
 
             this.type = 'post';
 
@@ -259,13 +268,18 @@ export default {
                     this.external = urlContent[1];
                 }
             }
+
+            if (relContent && relContent[1]) {
+                this.rel = true;
+            }
         },
         setLink () {
             let response = {
                 url: '',
                 title: '',
                 target: '',
-                text: this.label
+                text: this.label,
+                rel: this.rel
             };
 
             if (this.type !== 'external') {
@@ -329,6 +343,13 @@ h1 {
     position: absolute;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+
+    .field {
+        .switcher {
+            float: left;
+            top: -4px;
+        }
+    }
 }
 
 .message {

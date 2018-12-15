@@ -244,3 +244,11 @@ input[type="range"] {
     background: $color-9;
     color: $color-5;
 }
+
+.multiselect__placeholder {
+    font-size: 16px;
+    height: 45px;
+    line-height: 45px;
+    margin: 0;
+    padding: 0;
+}
