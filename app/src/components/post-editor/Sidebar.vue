@@ -75,42 +75,53 @@
                                 </dd>
                             </dl>
                         </div>
-
-                        <label
+                        
+                        <div
                             v-if="!isEdit"
-                            class="post-author-selector">
-                            Post author:
+                            class="post-info post-info--nogrid">
+                            
+                            <dl>
+                                <dt>Post author</dt>
+                                <dd>
+                                    <dropdown
+                                        id="post-author-id"
+                                        v-model="$parent.postData.author"
+                                        :items="authors"></dropdown>
+                                </dd>
+                            </dl>
+                            
+                            <dl class="post-date">
+                                <dt>Published</dt>
+                                <dd>
+                                    <a
+                                        href="#"
+                                        @click.prevent="changeDate">
+                                        
+                                        <template v-if="!$parent.postData.creationDate.text">
+                                            Set custom post date
+                                        </template>
 
-                            <dropdown
-                                id="post-author-id"
-                                v-model="$parent.postData.author"
-                                :items="authors"></dropdown>
-                        </label>
+                                        <template v-if="$parent.postData.creationDate.text">
+                                            Change custom post date 
 
-                        <label 
-                            v-if="!isEdit"
-                            class="post-date">
-                            <a
-                                href="#"
-                                @click.prevent="changeDate">
-                                <template v-if="!$parent.postData.creationDate.text">
-                                    Set custom post date
-                                </template>
+                                            <small>
+                                                ({{ $parent.postData.creationDate.text }})
+                                            </small>
 
-                                <template v-if="$parent.postData.creationDate.text">
-                                    Change custom post date 
-                                    <small>
-                                        ({{ $parent.postData.creationDate.text }})
-                                    </small>
-                                    <a 
-                                        href="#" 
-                                        class="post-date-reset"
-                                        @click.stop.prevent="resetCreationDate()">
-                                        &times;
+                                            <a 
+                                                href="#" 
+                                                class="post-date-reset"
+                                                @click.stop.prevent="resetCreationDate()">
+                                                
+                                                <icon
+                                                    size="m"
+                                                    name="sidebar-close"/>
+                                            </a>
+                                        </template>
                                     </a>
-                                </template>
-                            </a>
-                        </label>
+                                </dd>
+                            </dl>                        
+                        </div>
 
                         <label id="post-featured-wrapper">
                             <switcher
@@ -124,7 +135,6 @@
                                 size="xs"
                                 primaryColor="color-helper-1" />
                         </label>
-
 
                         <label id="post-hidden-wrapper">
                             <switcher
@@ -651,6 +661,10 @@ export default {
             grid-template-columns: 50% 50%;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
+            
+            &--nogrid {
+                 display: block;
+            }
 
             dl {
                 margin: 0 0 3rem 0;
@@ -677,6 +691,10 @@ export default {
 
             .post-date {
                 margin-bottom: 2rem;
+                
+                dd {
+                    font-size: 1.6rem;
+                }
 
                 small {
                     color: $color-6;
@@ -691,6 +709,18 @@ export default {
                     line-height: 1;
                     position: relative;
                     top: 1px;
+                    vertical-align: middle;
+                    
+                    .icon {
+                        cursor: pointer;
+                        fill: $color-3;
+                        transition: all .3s ease-out;
+                    }
+                    
+                    
+                    &:hover .icon {
+                        fill: $color-4;
+                    }
                 }
             }
         }
@@ -736,8 +766,8 @@ export default {
 
             &-header {
                 align-items: center;
-                border-top: 1px solid rgba($color-8, .25);
-                border-bottom: 1px solid rgba($color-8, .25);
+                border-top: 1px solid rgba($color-8, .45);
+                border-bottom: 1px solid rgba($color-8, .45);
                 color: $link-color;
                 cursor: pointer;
                 display: flex;
