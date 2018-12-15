@@ -211,7 +211,12 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('date-popup-display', timestamp => {
-            this.timestamp = timestamp;
+            if (timestamp) {
+                this.timestamp = timestamp;
+            } else {
+                this.timestamp = +new Date();
+            }
+
             this.calculateTimeFromTimestamp();
 
             setTimeout(() => {

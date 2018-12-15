@@ -87,6 +87,30 @@
                                 :items="authors"></dropdown>
                         </label>
 
+                        <label 
+                            v-if="!isEdit"
+                            class="post-date">
+                            <a
+                                href="#"
+                                @click.prevent="changeDate">
+                                <template v-if="!$parent.postData.creationDate.text">
+                                    Set custom post date
+                                </template>
+
+                                <template v-if="$parent.postData.creationDate.text">
+                                    Change custom post date 
+                                    <small>
+                                        ({{ $parent.postData.creationDate.text }})
+                                    </small>
+                                    <a 
+                                        href="#" 
+                                        class="post-date-reset"
+                                        @click.stop.prevent="resetCreationDate()">
+                                        &times;
+                                    </a>
+                                </template>
+                            </a>
+                        </label>
 
                         <label id="post-featured-wrapper">
                             <switcher
@@ -572,6 +596,10 @@ export default {
             }
 
 			return 'Leave it blank to use default value';
+        },
+        resetCreationDate () {
+            this.$parent.postData.creationDate.timestamp = 0;
+            this.$parent.postData.creationDate.text = '';
         }
     },
     beforeDestroy () {
@@ -644,7 +672,26 @@ export default {
             .post-author-selector {
                 border-bottom: 1px solid $color-9;
                 margin-bottom: 2rem;
-                padding-bottom: 3rem;
+                padding-bottom: 0;
+            }
+
+            .post-date {
+                margin-bottom: 2rem;
+
+                small {
+                    color: $color-6;
+                    padding: 0 .5rem;
+                    position: relative;
+                    top: -1px;
+                }
+
+                &-reset {
+                    color: $color-3;
+                    font-size: 2.4rem;
+                    line-height: 1;
+                    position: relative;
+                    top: 1px;
+                }
             }
         }
 
