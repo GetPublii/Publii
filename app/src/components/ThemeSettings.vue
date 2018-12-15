@@ -145,6 +145,7 @@
                                 <switcher
                                     v-if="field.type === 'checkbox'"
                                     v-model="custom[field.name]"
+                                    :lower-zindex="true"
                                     slot="field"></switcher>
 
                                 <color-picker
@@ -152,6 +153,25 @@
                                     v-model="custom[field.name]"
                                     :data-field="field.name"
                                     slot="field"></color-picker>
+
+                                <posts-dropdown
+                                    v-if="field.type === 'posts-dropdown'"
+                                    v-model="custom[field.name]"
+                                    :allowed-post-status="field.allowedPostStatus || ['any']"
+                                    :returned-value="field.returnedValue || 'id'"
+                                    slot="field"></posts-dropdown>
+
+                                <tags-dropdown
+                                    v-if="field.type === 'tags-dropdown'"
+                                    v-model="custom[field.name]"
+                                    :returned-value="field.returnedValue || 'id'"
+                                    slot="field"></tags-dropdown>
+
+                                <authors-dropdown
+                                    v-if="field.type === 'authors-dropdown'"
+                                    v-model="custom[field.name]"
+                                    :returned-value="field.returnedValue || 'id'"
+                                    slot="field"></authors-dropdown>
 
                                 <text-input
                                     v-if="isNormalInput(field.type)"
@@ -274,10 +294,16 @@ import fs from 'fs';
 import Vue from 'vue';
 import { ipcRenderer } from 'electron';
 import ExternalLinks from './mixins/ExternalLinks';
+import PostsDropDown from './basic-elements/PostsDropDown';
+import TagsDropDown from './basic-elements/TagsDropDown';
+import AuthorsDropDown from './basic-elements/AuthorsDropDown';
 import Utils from './../helpers/utils.js';
 
 export default {
     name: 'site-settings',
+    components: {
+        'posts-dropdown': PostsDropDown
+    },
     mixins: [
         ExternalLinks
     ],
@@ -436,7 +462,10 @@ export default {
                 'upload',
                 'smallupload',
                 'checkbox',
-                'colorpicker'
+                'colorpicker',
+                'posts-dropdown',
+                'authors-dropdown',
+                'tags-dropdown'
             ].indexOf(type) === -1;
         },
         getDropdownOptions (inputOptions) {

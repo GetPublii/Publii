@@ -237,7 +237,8 @@ input[type="range"] {
  */
 
 .multiselect__tags {
-    padding: 1.2rem 4rem 1rem 1.8rem;
+    min-height: 47px;
+    padding: 0 4rem 0 1.8rem;
 }
 
 .multiselect__option--highlight {
@@ -245,10 +246,16 @@ input[type="range"] {
     color: $color-5;
 }
 
+.multiselect__input,
+.multiselect__single {
+    height: 47px;
+    line-height: 47px;
+}
+
 .multiselect__placeholder {
     font-size: 16px;
-    height: 45px;
-    line-height: 45px;
+    height: 47px;
+    line-height: 47px;
     margin: 0;
     padding: 0;
 }
