@@ -509,7 +509,7 @@ class Themes {
         if(UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'optionImages');
 
-            if(dimensions !== false) {
+            if(dimensions === false) {
                 dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'contentImages');
             }
 
