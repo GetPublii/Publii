@@ -179,10 +179,12 @@ class EditorBridge {
                     range.selectNode(clickedElement);
                     selection.addRange(range);
 
-                    window.app.$bus.$emit('update-link-editor', {
-                        sel: selection,
-                        text: clickedElement
-                    });
+                    if (this.checkInlineLinkTrigger(clickedElement)) {
+                        window.app.$bus.$emit('update-link-editor', {
+                            sel: selection,
+                            text: clickedElement
+                        });
+                    }
                 } else {
                     window.app.$bus.$emit('update-link-editor', {
                         sel: false,
@@ -467,6 +469,16 @@ class EditorBridge {
             return false;
         }
 
+        for ( ; target && target !== document; target = target.parentNode) {
+            if (target.matches && target.matches('.post__toc')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    checkInlineLinkTrigger (target) {
         for ( ; target && target !== document; target = target.parentNode) {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
