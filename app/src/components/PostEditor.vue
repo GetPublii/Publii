@@ -53,21 +53,22 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <input
-                        id="post-title"
-                        ref="post-title"
-                        class="post-editor-form-title"
-                        placeholder="Add post title"
-                        v-model="postData.title"
-                        @keyup="updateSlug" />
-
                     <p-button
+                        id="post-preview-button"
                         type="outline"
                         :disabled="!themeConfigured"
                         :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
                         @click.native="generatePostPreview">
                         Preview
                     </p-button>
+                    
+                    <input
+                        id="post-title"
+                        ref="post-title"
+                        class="post-editor-form-title"
+                        placeholder="Add post title"
+                        v-model="postData.title"
+                        @keyup="updateSlug" />                    
 
                     <editor ref="tinymceEditor" />
 
@@ -644,21 +645,23 @@ export default {
         #post-title {
             border: none;
             box-shadow: none;
-            font-size: 2.8rem;
+            display: block;
+            font-size: 3.5rem;
+            font-weight: 600;
             line-height: 1.2;
-            margin: 0 0 3rem 0;
+            margin: 0 10% 2.6rem;
             padding: 0;
-            width: 85%;
-
-            & + .button {
-                position: absolute;
-                right: 4rem;
-                top: 3.6rem;
+            text-align: center;
+            width: 80%;
+            
+            &::placeholder {
+                color: rgba($color-helper-7, .5); 
             }
-
-            & + .button + div {
-                clear: both;
-            }
+        }
+        
+        #post-preview-button {
+            float: right;
+            margin-top: -4px;
         }
 
         &-content {
@@ -830,6 +833,7 @@ body[data-os="linux"] {
 }
 
 @media (max-width: 1400px) {
+
     .post-editor-form {
         width: calc(100vw - 40rem);
 
@@ -837,8 +841,33 @@ body[data-os="linux"] {
             padding: 3rem 3rem 3rem 4rem;
         }
 
-        #post-title + a {
-            top: 2.6rem;
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+        
+            & + a {
+                top: 2.6rem;
+            }
+        }
+    }
+}
+    
+@media (max-width: 1600px) {
+    
+    .post-editor .mce-flow-layout {
+        text-align: left !important;
+    }
+    
+    .post-editor-form {
+      
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+            text-align: left;
+        
+            & + a {
+                top: 2.6rem;
+            }
         }
     }
 }
