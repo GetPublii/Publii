@@ -212,6 +212,10 @@ class EditorBridge {
             });
 
             $('#post-editor-fake-image-uploader').on('change', () => {
+                if (!$('#post-editor-fake-image-uploader')[0].value) {
+                    return;
+                }
+
                 setTimeout(() => {
                     if(this.callbackForTinyMCE) {
                         let filePath = false;
@@ -238,6 +242,8 @@ class EditorBridge {
                                 width: data.baseImage.size[0]
                             });
                         });
+
+                        $('#post-editor-fake-image-uploader')[0].value = '';
                     }
                 }, 50);
             });
