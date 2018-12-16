@@ -937,7 +937,11 @@ publii-non-amp:before {
     outline: 2px dashed #42a5f5;
 }
 
-.mce-content-body *[contentEditable=false]:hover {
+.mce-content-body img[data-mce-selected], 
+.mce-content-body hr[data-mce-selected], 
+.mce-content-body *[contentEditable=false]:hover,
+.mce-content-body img:hover {
+    cursor: default;
     outline: 2px dashed #42a5f5;
 }
 
