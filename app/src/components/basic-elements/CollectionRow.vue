@@ -15,7 +15,7 @@ export default {
 
 .item {
     align-items: center;
-    border-bottom: 1px solid $color-8;
+    border-bottom: 1px solid $color-helper-8;
     display: flex;
     flex-wrap: wrap;
     transition: all 1s ease-in;
