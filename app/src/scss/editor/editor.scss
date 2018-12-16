@@ -721,6 +721,22 @@ select[multiple] {
     margin-left: -2rem;
 }
 
+@media all and (min-width: 63.4375em) {
+    img.post__image--full {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        max-width: 100vw;
+        width: 99vw;
+        max-width: 99vw;
+    }
+
+    img.post__image--wide {
+        margin-left: -5.86667rem;
+        margin-right: -5.86667rem;
+        max-width: calc(100% + 11.73333rem);
+    }
+}
+
 .msg {
     border-radius: 3px;
     padding: 1.06667rem 1.6rem;
@@ -921,7 +937,11 @@ publii-non-amp:before {
     outline: 2px dashed #42a5f5;
 }
 
-.mce-content-body *[contentEditable=false]:hover {
+.mce-content-body img[data-mce-selected], 
+.mce-content-body hr[data-mce-selected], 
+.mce-content-body *[contentEditable=false]:hover,
+.mce-content-body img:hover {
+    cursor: default;
     outline: 2px dashed #42a5f5;
 }
 
@@ -933,7 +953,7 @@ script {
     border: 2px dashed #cbcdd4;
     border-radius: 3px;
     display: block;
-    font-size: .75rem;
+    font-size: 0.79012rem;
     height: 2rem;
     pading: 2rem;
     overflow: hidden;
