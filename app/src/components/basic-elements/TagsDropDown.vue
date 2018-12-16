@@ -18,10 +18,7 @@ export default {
             type: String,
             default: 'Select tag page'
         },
-        value: {},
-        returnedValue: {
-            default: 'id'
-        }
+        value: {}
     },
     data () {
         return {
@@ -30,12 +27,15 @@ export default {
     },
     computed: {
         tagPages () {
-            return this.$store.state.currentSite.tags.map(tag => tag[this.returnedValue]);
+            return [''].concat(this.$store.state.currentSite.tags.map(tag => tag.id));
         }
     },
     watch: {
         value: function (newValue, oldValue) {
             this.selectedTag = newValue;
+        },
+        selectedTag: function (newValue, oldValue) {
+            this.$emit('input', newValue);
         }
     },
     mounted () {
@@ -45,10 +45,9 @@ export default {
     },
     methods: {
         tagLabels (value) {
-            return this.$store.state.currentSite.tags.filter(tag => tag[this.returnedValue] === value).map(tag => tag.name)[0];
+            return this.$store.state.currentSite.tags.filter(tag => tag.id === value).map(tag => tag.name)[0];
         },
         closeDropdown () {
-            this.$emit('input', this.selectedTag);
             this.$refs['dropdown'].isOpen = false;
         }
     }

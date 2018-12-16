@@ -21,9 +21,6 @@ export default {
         value: {},
         allowedPostStatus: {
             default: ['any']
-        },
-        returnedValue: {
-            default: 'id'
         }
     },
     data () {
@@ -33,18 +30,21 @@ export default {
     },
     computed: {
         postPages () {
-            return this.$store.state.currentSite.posts.filter(post => {
+            return [''].concat(this.$store.state.currentSite.posts.filter(post => {
                 if (this.allowedPostStatus[0] === 'any') {
                     return true;
                 }
 
                 return this.allowedPostStatus.indexOf(post.status) > -1;                
-            }).map(post => post[this.returnedValue]);
+            }).map(post => post.id));
         }
     },
     watch: {
         value: function (newValue, oldValue) {
             this.selectedPost = newValue;
+        },
+        selectedPost: function (newValue, oldValue) {
+            this.$emit('input', newValue);
         }
     },
     mounted () {
@@ -54,10 +54,9 @@ export default {
     },
     methods: {
         postLabels (value) {
-            return this.$store.state.currentSite.posts.filter(post => post[this.returnedValue] === value).map(post => post.title)[0];
+            return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
         },
         closeDropdown () {
-            this.$emit('input', this.selectedPost);
             this.$refs['dropdown'].isOpen = false;
         }
     }

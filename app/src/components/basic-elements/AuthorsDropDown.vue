@@ -18,10 +18,7 @@ export default {
             type: String,
             default: 'Select author'
         },
-        value: {},
-        returnedValue: {
-            default: 'id'
-        }
+        value: {}
     },
     data () {
         return {
@@ -30,12 +27,15 @@ export default {
     },
     computed: {
         authors () {
-            return this.$store.state.currentSite.authors.map(author => author[this.returnedValue]);
+            return [''].concat(this.$store.state.currentSite.authors.map(author => author.id));
         }
     },
     watch: {
         value: function (newValue, oldValue) {
             this.selectedAuthor = newValue;
+        },
+        selectedAuthor: function (newValue, oldValue) {
+            this.$emit('input', this.selectedAuthor);
         }
     },
     mounted () {
@@ -45,10 +45,9 @@ export default {
     },
     methods: {
         authorLabels (value) {
-            return this.$store.state.currentSite.authors.filter(author => author[this.returnedValue] === value).map(author => author.name)[0];
+            return this.$store.state.currentSite.authors.filter(author => author.id === value).map(author => author.name)[0];
         },
         closeDropdown () {
-            this.$emit('input', this.selectedAuthor);
             this.$refs['dropdown'].isOpen = false;
         }
     }

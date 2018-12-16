@@ -2,7 +2,9 @@
     <section
         class="content"
         ref="content">
-        <div class="theme-settings" v-if="siteHasTheme">
+        <div 
+            class="theme-settings"
+            v-if="siteHasTheme">
             <p-header title="Theme Settings">
                 <p-button
                     @click.native="save"
@@ -158,19 +160,16 @@
                                     v-if="field.type === 'posts-dropdown'"
                                     v-model="custom[field.name]"
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
-                                    :returned-value="field.returnedValue || 'id'"
                                     slot="field"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
-                                    :returned-value="field.returnedValue || 'id'"
                                     slot="field"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
-                                    :returned-value="field.returnedValue || 'id'"
                                     slot="field"></authors-dropdown>
 
                                 <text-input
@@ -301,8 +300,10 @@ import Utils from './../helpers/utils.js';
 
 export default {
     name: 'site-settings',
-    components: {
-        'posts-dropdown': PostsDropDown
+    components: { 
+        'authors-dropdown': AuthorsDropDown,
+        'posts-dropdown': PostsDropDown,
+        'tags-dropdown': TagsDropDown
     },
     mixins: [
         ExternalLinks
