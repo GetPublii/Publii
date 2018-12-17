@@ -213,6 +213,7 @@ class EditorBridge {
                 }
             });
 
+            /*
             let linkToolbar = $('#link-toolbar');
             let inlineToolbar = $('#inline-toolbar');
             let hideToolbars = function () {
@@ -221,6 +222,7 @@ class EditorBridge {
             };
             let throttledToolbarsHide = Utils.throttledFunction(hideToolbars, 1000);
             iframe.contentWindow.window.addEventListener("scroll", throttledToolbarsHide);
+            */
 
             $('#post-editor-fake-image-uploader').on('change', () => {
                 if (!$('#post-editor-fake-image-uploader')[0].value) {
