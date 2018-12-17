@@ -168,12 +168,22 @@ export default {
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.authors.orderBy;
+        this.order = this.$store.state.ordering.authors.order;
+
         this.$bus.$on('authors-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
         this.$bus.$on('hide-author-item-editor', () => {
             this.editorVisible = false;
+        });
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.authors.orderBy;
+                this.order = this.$store.state.ordering.authors.order;
+            }, 500);
         });
     },
     methods: {
@@ -253,6 +263,12 @@ export default {
                     this.order = 'DESC';
                 }
             }
+
+            this.$store.commit('setOrdering', {
+                type: 'authors',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {

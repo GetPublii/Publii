@@ -350,6 +350,9 @@ export default {
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.posts.orderBy;
+        this.order = this.$store.state.ordering.posts.order;
+
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
@@ -365,6 +368,13 @@ export default {
                 this.setFilter(newFilterValue);
             }, 0);
         }
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.posts.orderBy;
+                this.order = this.$store.state.ordering.posts.order;
+            }, 500);
+        });
     },
     methods: {
         addNewPost: function() {
@@ -536,6 +546,12 @@ export default {
                     this.order = 'DESC';
                 }
             }
+
+            this.$store.commit('setOrdering', {
+                type: 'posts',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {

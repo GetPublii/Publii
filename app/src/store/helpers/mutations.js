@@ -107,6 +107,22 @@ export default {
 
         state.currentSite = Object.assign({}, state.currentSite);
         state.components.sidebar.status = state.currentSite.config.synced;
+        
+        // Reset ordering after website switch
+        state.ordering = {
+            posts: {
+                orderBy: 'id',
+                order: 'DESC'
+            },
+            tags: {
+                orderBy: 'id',
+                order: 'DESC'
+            },
+            authors: {
+                orderBy: 'id',
+                order: 'DESC'
+            }
+        };
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);
@@ -249,6 +265,10 @@ export default {
     },
     setEditorOpenState (state, isOpened) {
         state.editorOpened = isOpened;
+    },
+    setOrdering (state, data) {
+        state.ordering[data.type].orderBy = data.orderBy;
+        state.ordering[data.type].order = data.order;
     }
 };
 

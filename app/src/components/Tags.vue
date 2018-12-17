@@ -156,8 +156,8 @@ export default {
         return {
             editorVisible: false,
             filterValue: '',
-            orderBy: 'id',
-            order: 'DESC',
+            orderBy: this.$store.state.ordering.tags.orderBy,
+            order: this.$store.state.ordering.tags.order,
             selectedItems: []
         };
     },
@@ -176,12 +176,22 @@ export default {
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.tags.orderBy;
+        this.order = this.$store.state.ordering.tags.order;
+
         this.$bus.$on('tags-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
         this.$bus.$on('hide-tag-item-editor', () => {
             this.editorVisible = false;
+        });
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.tags.orderBy;
+                this.order = this.$store.state.ordering.tags.order;
+            }, 500);
         });
     },
     methods: {
@@ -248,6 +258,12 @@ export default {
                     this.order = 'DESC';
                 }
             }
+
+            this.$store.commit('setOrdering', {
+                type: 'tags',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {

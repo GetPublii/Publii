@@ -40,6 +40,7 @@ export default {
     methods: {
         showWebsite: function(siteToDisplay) {
             window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
+            this.$bus.$emit('site-switched');
             this.$router.push({ path: `/site/${siteToDisplay}` });
         }
     }

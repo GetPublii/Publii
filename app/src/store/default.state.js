@@ -36,5 +36,20 @@ export default {
         menuStructure: [],
         themeSettings: [],
         siteDir: ''
+    },
+    // ordering temporary data
+    ordering: {
+        posts: {
+            orderBy: 'id',
+            order: 'DESC'
+        },
+        tags: {
+            orderBy: 'id',
+            order: 'DESC'
+        },
+        authors: {
+            orderBy: 'id',
+            order: 'DESC'
+        }
     }
 };
