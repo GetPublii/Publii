@@ -286,6 +286,7 @@ export default {
             content: "";
             display: inline-block;
             height: 0;
+            opacity: .75;
             position: relative;
             top: -2px;
             width: 0;
