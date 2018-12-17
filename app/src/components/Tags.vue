@@ -28,7 +28,7 @@
                 </collection-cell>
 
                 <collection-cell 
-                    width="calc(100% - 140px)"
+                    width="calc(100% - 180px)"
                     @click.native="ordering('name')">
                     <template v-if="orderBy === 'name'">
                         <strong>Name</strong>
@@ -40,7 +40,8 @@
                 </collection-cell>
 
                 <collection-cell 
-                    width="60px"
+                    textAlign="center"
+                    width="100px"
                     @click.native="ordering('postsCounter')">
                     <template v-if="orderBy === 'postsCounter'">
                         <strong>Posts</strong>
@@ -52,7 +53,6 @@
                 </collection-cell>
 
                 <collection-cell 
-                    textAlign="right"
                     width="40px"
                     @click.native="ordering('id')">
                     <template v-if="orderBy === 'id'">
@@ -87,7 +87,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 140px)">
+                <collection-cell width="calc(100% - 180px)">
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
@@ -95,9 +95,9 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell
+                <collection-cell 
                     textAlign="center"
-                    width="60px">
+                    width="100px">
                     <a
                         @click.prevent.stop="showPostsConnectedWithTag(item.name)"
                         href="#">
@@ -105,8 +105,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell
-                    textAlign="right"
+                <collection-cell                    
                     width="40px">
                     {{ item.id }}
                 </collection-cell>
@@ -289,31 +288,34 @@ export default {
             cursor: pointer;
         }
     }
-
+    
     .order-ascending,
     .order-descending {
+        position: relative;
         &:after {
-            border: 8px solid $color-7;
-            border-left-width: 4px;
-            border-right-width: 4px;
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-top-color: transparent;
+            border-top: solid 5px rgba($color-7, .7);
+            border-left: solid 5px transparent;
+            border-right: solid 5px transparent;
             content: "";
+            cursor: pointer;
             display: inline-block;
-            height: 0;
-            opacity: .75;
-            position: relative;
-            top: -2px;
-            width: 0;
+            height: 4px;
+            left: 6px;
+            line-height: 1.1;
+            opacity: 1;
+            padding: 0;
+            position: absolute;
+            text-align: center;
+            top: 7px;
+            width: 8px;        
         }
     }
 
     .order-descending {
         &:after {
-            border-bottom-color: transparent;
-            border-top-color: $color-7;
-            top: 6px;
+            border-top-color: transparent; 
+            border-bottom: solid 5px rgba($color-7, .7);   
+            top: 0;        
         }
     }
 }

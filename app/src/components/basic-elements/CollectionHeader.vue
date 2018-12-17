@@ -18,6 +18,7 @@ export default {
     background: $color-10;
     border-bottom: 1px solid $color-helper-8;
     display: flex;
+    overflow-y: scroll; 
     position: relative;
     user-select: none;
 
