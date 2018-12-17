@@ -71,22 +71,53 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 480px)">
-                    Title
+                <collection-cell 
+                    width="calc(100% - 480px)"
+                    @click.native="ordering('title')">
+                    <template v-if="orderBy === 'title'">
+                        <strong>Title</strong>
+                    </template>
+                    <template v-else>Title</template>
+
+                    <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Publication date
+                <collection-cell 
+                    width="200px"
+                    @click.native="ordering('created')">
+                    <template v-if="orderBy === 'created'">
+                        <strong>Publication date</strong>
+                    </template>
+                    <template v-else>Publication date</template>
+
+                    <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Author
+                <collection-cell 
+                    width="200px"
+                    @click.native="ordering('author')">
+                    <template v-if="orderBy === 'author'">
+                        <strong>Author</strong>
+                    </template>
+                    <template v-else>Author</template>
+
+                    <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <collection-cell 
                     textAlign="right"
-                    width="40px">
-                    ID
+                    width="40px"
+                    @click.native="ordering('id')">
+                    <template v-if="orderBy === 'id'">
+                        <strong>ID</strong>
+                    </template>
+                    <template v-else>ID</template>
+
+                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <div
@@ -260,12 +291,15 @@ export default {
     data: function() {
         return {
             filterValue: '',
-            selectedItems: []
+            selectedItems: [],
+            orderBy: 'id',
+            order: 'DESC'
         };
     },
     computed: {
         items: function() {
-            let items = this.$store.getters.sitePosts(this.filterValue);
+            let items = this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
+
             items.forEach((item, i) => {
                 if (item.tags.length) {
                     item.tags.sort((tagA, tagB) => {
@@ -490,6 +524,18 @@ export default {
             setTimeout(() => {
                 this.setFilter('');
             }, 0);
+        },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
         }
     },
     beforeDestroy () {
@@ -501,6 +547,39 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.header {
+    .col {
+        cursor: pointer;
+    }
+}
+
+.order-ascending,
+.order-descending {
+    &:after {
+        border: 8px solid $color-7;
+        border-left-width: 4px;
+        border-right-width: 4px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        content: "";
+        display: inline-block;
+        height: 0;
+        opacity: .75;
+        position: relative;
+        top: -2px;
+        width: 0;
+    }
+}
+
+.order-descending {
+    &:after {
+        border-bottom-color: transparent;
+        border-top-color: $color-7;
+        top: 6px;
+    }
+}
 
 .filters {
     font-size: 1.4rem;
