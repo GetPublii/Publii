@@ -331,7 +331,7 @@ strong {
 
 blockquote {
     font-family: Georgia, Times New Roman, Times, Serif;
-    padding: 3.2rem 0 2.13333rem;
+    padding: 3.73333rem 2rem 0.8rem;
     position: relative;
     text-align: center;
 }
@@ -349,12 +349,6 @@ blockquote {
 @media screen and (min-width: 100rem) {
     blockquote {
         font-size: 1.26562rem;
-    }
-}
-
-@media all and (min-width: 37.5em) {
-    blockquote {
-        padding: 3.73333rem 2rem 2.13333rem;
     }
 }
 
@@ -937,8 +931,8 @@ publii-non-amp:before {
     outline: 2px dashed #42a5f5;
 }
 
-.mce-content-body img[data-mce-selected], 
-.mce-content-body hr[data-mce-selected], 
+.mce-content-body img[data-mce-selected],
+.mce-content-body hr[data-mce-selected],
 .mce-content-body *[contentEditable=false]:hover,
 .mce-content-body img:hover {
     cursor: default;
