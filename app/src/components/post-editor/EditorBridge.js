@@ -213,16 +213,26 @@ class EditorBridge {
                 }
             });
 
-            /*
             let linkToolbar = $('#link-toolbar');
             let inlineToolbar = $('#inline-toolbar');
-            let hideToolbars = function () {
-                linkToolbar.css('display', 'none');
-                inlineToolbar.css('display', 'none');
+            let lastScroll = -1;
+            let hideToolbars = function (e) {
+                if (linkToolbar.css('display') !== 'block' && inlineToolbar.css('display') !== 'block') {
+                    return;
+                }
+                
+                let iframeScrollOffset = iframe.contentWindow.document.body.parentNode.scrollTop;
+
+                if (lastScroll !== -1 && Math.abs(iframeScrollOffset - lastScroll) > 20) {
+                    lastScroll = -1;
+                    linkToolbar.css('display', 'none');
+                    inlineToolbar.css('display', 'none');
+                } else if (lastScroll === -1) {
+                    lastScroll = iframeScrollOffset;
+                }
             };
-            let throttledToolbarsHide = Utils.throttledFunction(hideToolbars, 1000);
-            iframe.contentWindow.window.addEventListener("scroll", throttledToolbarsHide);
-            */
+
+            iframe.contentWindow.window.addEventListener("scroll", hideToolbars);
 
             $('#post-editor-fake-image-uploader').on('change', () => {
                 if (!$('#post-editor-fake-image-uploader')[0].value) {
