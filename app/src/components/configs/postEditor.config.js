@@ -1,7 +1,7 @@
 export default {
     selector: '#post-editor',
     file_picker_types: 'image',
-    plugins: "advlist anchor autolink autosave link image lists hr anchor pagebreak searchreplace media table paste autoresize autosave textpattern toc",
+    plugins: "advlist autolink autosave link image lists hr anchor pagebreak searchreplace media table paste autoresize autosave textpattern toc",
     toolbar1: "bold italic underline strikethrough link unlink anchor blockquote alignleft aligncenter alignright bullist numlist image gallery media table toc",
     toolbar2: "styleselect formatselect searchreplace hr readmore sourcecode removeformat undo redo restoredraft",
     toolbar3: "",
