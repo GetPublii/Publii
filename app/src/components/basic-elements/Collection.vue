@@ -59,7 +59,7 @@ export default {
     .content {
         bottom: 0;
         left: 0;
-        overflow: auto;
+        overflow-y: scroll;
         padding: 0 0 5rem 0;
         position: absolute;
         right: 0;
