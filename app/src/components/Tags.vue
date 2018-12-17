@@ -27,12 +27,18 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 130px)">
                     Name
                 </collection-cell>
 
                 <collection-cell width="50px">
                     Posts
+                </collection-cell>
+
+                <collection-cell 
+                    textAlign="right"
+                    width="40px">
+                    ID
                 </collection-cell>
 
                 <div
@@ -58,11 +64,10 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 130px)">
                     <a
                         href="#"
-                        @click.prevent.stop="editTag(item)"
-                        :title="'Tag ID:' + item.id">
+                        @click.prevent.stop="editTag(item)">
                         {{ item.name }}
                     </a>
                 </collection-cell>
@@ -75,6 +80,12 @@
                         href="#">
                         {{ item.postsCounter }}
                     </a>
+                </collection-cell>
+
+                <collection-cell
+                    textAlign="right"
+                    width="40px">
+                    {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>

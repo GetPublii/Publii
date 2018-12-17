@@ -24,12 +24,18 @@
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 130px)">
                     Name
                 </collection-cell>
 
                 <collection-cell width="50px">
                     Posts
+                </collection-cell>
+
+                <collection-cell 
+                    textAlign="right"
+                    width="40px">
+                    ID
                 </collection-cell>
 
                 <div
@@ -66,11 +72,10 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 130px)">
                     <a
                         href="#"
-                        @click.prevent.stop="editAuthor(item)"
-                        :title="'Author ID:' + item.id">
+                        @click.prevent.stop="editAuthor(item)">
                         {{ item.name }}
 
                         <em
@@ -89,6 +94,12 @@
                         href="#">
                         {{ item.postsCounter }}
                     </a>
+                </collection-cell>
+
+                <collection-cell
+                    textAlign="right"
+                    width="40px">
+                    {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>

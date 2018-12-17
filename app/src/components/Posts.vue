@@ -71,7 +71,7 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 440px)">
+                <collection-cell width="calc(100% - 480px)">
                     Title
                 </collection-cell>
 
@@ -81,6 +81,12 @@
 
                 <collection-cell width="200px">
                     Author
+                </collection-cell>
+
+                <collection-cell 
+                    textAlign="right"
+                    width="40px">
+                    ID
                 </collection-cell>
 
                 <div
@@ -146,12 +152,11 @@
 
                 <collection-cell
                     type="titles"
-                    width="calc(100% - 440px)">
+                    width="calc(100% - 480px)">
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id)"
-                            :title="'Post ID:' + item.id">
+                            @click.prevent.stop="editPost(item.id)">
                             <icon
                                 v-if="item.isTrashed"
                                 size="xs"
@@ -211,6 +216,12 @@
                         @click.prevent.stop="setFilter('author:' + item.author)">
                         {{ item.author }}
                     </a>
+                </collection-cell>
+
+                <collection-cell
+                    text-align="right"
+                    width="40px">
+                    {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>
