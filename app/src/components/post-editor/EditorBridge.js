@@ -431,6 +431,7 @@ class EditorBridge {
         this.tinymceEditor.addButton("sourcecode", {
             icon:"code",
             tooltip: "Source code",
+            text: "HTML",
             onclick: () => {
                 let content = this.tinymceEditor.getContent({
                     source_view: true
