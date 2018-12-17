@@ -27,18 +27,41 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 130px)">
-                    Name
+                <collection-cell 
+                    width="calc(100% - 140px)"
+                    @click.native="ordering('name')">
+                    <template v-if="orderBy === 'name'">
+                        <strong>Name</strong>
+                    </template>
+                    <template v-else>Name</template>
+
+                    <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="50px">
-                    Posts
+                <collection-cell 
+                    width="60px"
+                    @click.native="ordering('postsCounter')">
+                    <template v-if="orderBy === 'postsCounter'">
+                        <strong>Posts</strong>
+                    </template>
+                    <template v-else>Posts</template>
+
+                    <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <collection-cell 
                     textAlign="right"
-                    width="40px">
-                    ID
+                    width="40px"
+                    @click.native="ordering('id')">
+                    <template v-if="orderBy === 'id'">
+                        <strong>ID</strong>
+                    </template>
+                    <template v-else>ID</template>
+
+                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <div
@@ -64,7 +87,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 130px)">
+                <collection-cell width="calc(100% - 140px)">
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
@@ -74,7 +97,7 @@
 
                 <collection-cell
                     textAlign="center"
-                    width="50px">
+                    width="60px">
                     <a
                         @click.prevent.stop="showPostsConnectedWithTag(item.name)"
                         href="#">
@@ -133,12 +156,14 @@ export default {
         return {
             editorVisible: false,
             filterValue: '',
+            orderBy: 'id',
+            order: 'DESC',
             selectedItems: []
         };
     },
     computed: {
         items: function() {
-            return this.$store.getters.siteTags(this.filterValue);
+            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order);
         },
         hasTags: function() {
             return this.$store.state.currentSite.tags && !!this.$store.state.currentSite.tags.length;
@@ -211,6 +236,18 @@ export default {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'tag:' + name);
             this.$router.push({ path: '/site/' + siteName + '/posts' });
+        },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
         }
     },
     beforeDestroy () {
@@ -229,6 +266,38 @@ export default {
 
     &.no-scroll {
         overflow: hidden;
+    }
+
+    .header {
+        .col {
+            cursor: pointer;
+        }
+    }
+
+    .order-ascending,
+    .order-descending {
+        &:after {
+            border: 8px solid $color-7;
+            border-left-width: 4px;
+            border-right-width: 4px;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: inline-block;
+            height: 0;
+            position: relative;
+            top: -2px;
+            width: 0;
+        }
+    }
+
+    .order-descending {
+        &:after {
+            border-bottom-color: transparent;
+            border-top-color: $color-7;
+            top: 6px;
+        }
     }
 }
 

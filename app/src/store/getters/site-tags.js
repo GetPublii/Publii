@@ -7,7 +7,7 @@
  * @returns {array}
  */
 
-export default (state, getters) => (filterValue) => {
+export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
     let tags = state.currentSite.tags.filter(tag => {
         if(!filterValue) {
             return true;
@@ -18,6 +18,22 @@ export default (state, getters) => (filterValue) => {
         }
 
         return false;
+    });
+
+    tags.sort((tagA, tagB) => {
+        if (orderBy === 'name') {
+            if (order === 'DESC') {
+                return -(tagA.name.localeCompare(tagB.name))
+            }
+
+            return tagA.name.localeCompare(tagB.name);
+        }
+        
+        if (order === 'DESC') {
+            return tagB[orderBy] - tagA[orderBy];
+        }
+
+        return tagA[orderBy] - tagB[orderBy];
     });
 
     tags = tags.map(tag => {
