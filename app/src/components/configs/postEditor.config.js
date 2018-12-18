@@ -22,7 +22,7 @@ export default {
     paste_as_text: false,
     keep_styles: false,
     image_class_list: [
-        {title: 'None', value: ''},
+        {title: 'None', value: 'post__image'},
         {title: 'Full image', value: 'post__image--full'},
         {title: 'Wide image', value: 'post__image--wide'},
         {title: 'Left-aligned image', value: 'post__image--left'},
