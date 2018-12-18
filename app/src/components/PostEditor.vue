@@ -10,20 +10,45 @@
             <div
                 v-if="!sourceCodeEditorVisible"
                 class="post-editor-actions">
-                <p-button
-                    type="primary"
-                    :disabled="postData.title === ''"
-                    @click.native="publishPost">
-                    <template v-if="!isEdit || isDraft">Publish post</template>
-                    <template v-if="isEdit && !isDraft">Publish changes</template>
-                </p-button>
+                <div class="post-editor-button">
+                    <span 
+                        class="post-editor-button-trigger"
+                        @click.stop="doCurrentAction()">
+                        {{ currentActionName }}
+                    </span>
 
-                <p-button
-                    :disabled="postData.title === ''"
-                    @click.native="draftPost">
-                    <template v-if="(!isEdit && !isDraft) || (isEdit && !isDraft)">Save as draft</template>
-                    <template v-else>Save draft</template>
-                </p-button>
+                    <span 
+                        class="post-editor-button-toggle"
+                        @click.stop="toggleButtonDropdown()">
+                    </span>
+
+                    <div 
+                        v-if="buttonDropdownVisible"
+                        class="post-editor-button-dropdown">
+                        <div
+                            class="post-editor-button-dropdown-item" 
+                            @click="setCurrentAction('save-and-close')">
+                            Save and close
+                        </div>
+                        <div 
+                            class="post-editor-button-dropdown-item" 
+                            @click="setCurrentAction('save')">
+                            Save
+                        </div>
+                        <div 
+                            class="post-editor-button-dropdown-item" 
+                            @click="setCurrentAction('save-as-draft')"
+                            v-if="!isDraft">
+                            Save as draft
+                        </div>
+                        <div 
+                            class="post-editor-button-dropdown-item" 
+                            @click="setCurrentAction('publish-post')"
+                            v-if="isDraft">
+                            Publish post
+                        </div>
+                    </div>
+                </div>
 
                 <p-button
                     type="outline"
@@ -163,7 +188,9 @@ export default {
                     credits: ''
                 },
                 postViewOptions: {}
-            }
+            },
+            currentAction: '',
+            buttonDropdownVisible: false
         };
     },
     computed: {
@@ -183,9 +210,6 @@ export default {
         themeConfigured () {
             return !!this.$store.state.currentSite.config.theme;
         },
-        closeEditorOnSave () {
-            return this.$store.state.app.config.closeEditorOnSave;
-        },
         extensionsPath () {
             return [
                 'file:///',
@@ -194,6 +218,16 @@ export default {
                 this.$store.state.currentSite.config.theme,
                 '/'
             ].join('');
+        },
+        currentActionName () {
+            switch (this.currentAction) {
+                case 'save': return 'Save';
+                case 'save-and-close': return 'Save and close';
+                case 'save-as-draft': return 'Save as draft';
+                case 'publish-post': return 'Publish post';
+            }
+
+            return '';
         }
     },
     mounted () {
@@ -228,6 +262,16 @@ export default {
         this.$bus.$on('post-editor-possible-data-loss', () => {
             this.possibleDataLoss = true;
         });
+
+        this.$bus.$on('topbar-close-submenu-dropdown', () => {
+            this.buttonDropdownVisible = false;
+        });
+
+        this.$bus.$on('update-inline-editor', () => {
+            this.buttonDropdownVisible = false;
+        });
+
+        this.retrieveCurrentAction();
     },
     methods: {
         cancelPost () {
@@ -407,7 +451,7 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost (newPostStatus, preview = false) {
+        savePost (newPostStatus, preview = false, closeEditor = false) {
             tinymce.triggerSave();
             let finalStatus = newPostStatus;
             let mediaPath = this.getMediaPath();
@@ -481,12 +525,12 @@ export default {
             };
 
             if(!preview) {
-                this.savingPost(newPostStatus, postData);
+                this.savingPost(newPostStatus, postData, closeEditor);
             } else {
                 return postData;
             }
         },
-        savingPost (newStatus, postData) {
+        savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
             ipcRenderer.send('app-post-save', postData);
 
@@ -497,16 +541,16 @@ export default {
                 }
 
                 if (data.posts) {
-                    this.savedPost(newStatus, data);
+                    this.savedPost(newStatus, data, closeEditor);
                 } else {
                     alert('An error occurred - please try again.');
                 }
             });
         },
-        savedPost (newStatus, updatedData) {
+        savedPost (newStatus, updatedData, closeEditor = false) {
             this.$store.commit('refreshAfterPostUpdate', updatedData);
 
-            if (this.closeEditorOnSave) {
+            if (closeEditor) {
                 this.closeEditor();
                 return;
             } else {
@@ -535,12 +579,6 @@ export default {
             this.loadPostData();
             this.possibleDataLoss = false;
         },
-        publishPost () {
-            this.savePost('published');
-        },
-        draftPost () {
-            this.savePost('draft');
-        },
         sourceCodeApply () {
             this.$refs['source-code-editor'].applyChanges();
         },
@@ -555,6 +593,49 @@ export default {
                 postID,
                 postData
             });
+        },
+        setCurrentAction (actionName) {
+            if (actionName !== 'publish-post' && actionName !== 'save-as-draft') {
+                localStorage.setItem('publii-post-editor-current-action', actionName);
+            }
+
+            this.currentAction = actionName;
+            this.buttonDropdownVisible = false;
+        },
+        retrieveCurrentAction () {
+            this.currentAction = localStorage.getItem('publii-post-editor-current-action');
+
+            if (!this.currentAction) {
+                if (this.$store.state.app.config.closeEditorOnSave) {
+                    this.currentAction = 'save-and-close';
+                } else {
+                    this.currentAction = 'save';
+                }
+            }
+        },
+        doCurrentAction () {
+            this.buttonDropdownVisible = false;
+
+            if (this.currentAction === 'save-and-close' || this.currentAction === 'save') {
+                if (this.postData.status.indexOf('draft') > -1) {
+                    this.savePost('draft', false, this.currentAction === 'save-and-close');
+                } else {
+                    this.savePost('published', false, this.currentAction === 'save-and-close');
+                }
+            }
+
+            if (this.currentAction === 'save-as-draft') {
+                this.savePost('draft');
+                this.retrieveCurrentAction();
+            }
+
+            if (this.currentAction === 'publish-post') {
+                this.savePost('published');
+                this.retrieveCurrentAction();
+            }
+        },
+        toggleButtonDropdown () {
+            this.buttonDropdownVisible = !this.buttonDropdownVisible;
         }
     },
     beforeDestroy () {
@@ -611,18 +692,13 @@ export default {
     }
 
     &-actions {
+        display: flex;
+
         .button {
             text-align: center;
 
-            &:nth-child(1) {
-                width: 170px;
-            }
-
             &:nth-child(2) {
-                width: 140px;
-            }
-
-            &:nth-child(3) {
+                margin-left: 2rem;
                 width: 90px;
             }
         }
@@ -693,6 +769,81 @@ export default {
         .mce-container,
         .mce-container-body {
             background: $color-10;
+        }
+    }
+
+    &-button {
+        background: $color-1;
+        border: none;
+        border-radius: 3px;
+        box-shadow: none;
+        color: $color-10;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 500;
+        height: 4.4rem;
+        line-height: 4.3rem;
+        padding: 0 1.6rem;
+        position: relative;
+        transition: all .25s ease-out;
+        user-select: none;
+        white-space: nowrap;
+        width: 204px;
+
+        &-trigger {
+            height: 100%;
+            left: 0;
+            padding-left: 2rem;
+            position: absolute;
+            top: 0;
+            width: 200px;
+        }
+
+        &-toggle {
+            background: darken($color-1, 5%);
+            border-radius: 0 3px 3px 0;
+            cursor: pointer;
+            height: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 44px;
+
+            &:after {
+                border: 5px solid $color-10;
+                border-left-color: transparent;
+                border-left-width: 6px;
+                border-right-color: transparent;
+                border-right-width: 6px;
+                border-bottom-color: transparent; 
+                content: "";
+                pointer-events: none;
+                left: 50%;
+                position: absolute;
+                top: 50%;
+                transform: translateX(-50%) translateY(-2.5px);
+            }
+        }
+
+        &-dropdown {
+            background: $color-10;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
+            left: 0;
+            position: absolute;
+            top: 44px;
+            width: 100%;
+
+            &-item {
+                border-top: 1px solid lighten($color-8, 10%);
+                color: $color-5;
+                padding: .5rem 2rem;
+
+                &:hover {
+                    background: $color-9;
+                }
+            }
         }
     }
 }
@@ -834,7 +985,6 @@ body[data-os="linux"] {
 }
 
 @media (max-width: 1400px) {
-
     .post-editor-form {
         width: calc(100vw - 40rem);
 
@@ -854,7 +1004,6 @@ body[data-os="linux"] {
 }
     
 @media (max-width: 1600px) {
-    
     .post-editor .mce-flow-layout {
         text-align: left !important;
     }
