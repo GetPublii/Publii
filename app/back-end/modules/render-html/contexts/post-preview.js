@@ -38,10 +38,17 @@ class RendererContextPostPreview extends RendererContext {
     prepareData() {
         let postURL = this.siteConfig.domain + '/preview.html';
         let preparedText = this.prepareContent(this.renderer.postData.text, this.renderer.postData.id);
+        let hasCustomExcerpt = false;
+        let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+
+        if (readmoreMatches && readmoreMatches.length) {
+            hasCustomExcerpt = true;
+        }
 
         this.post = {
             id: this.renderer.postData.id,
             title: this.renderer.postData.title,
+            slug: this.renderer.postData.slug,
             author: this.renderer.cachedItems.authors[this.renderer.postData.author],
             url: postURL,
             text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, ''),
@@ -50,7 +57,12 @@ class RendererContextPostPreview extends RendererContext {
             modifiedAt: this.renderer.postData.modificationDate,
             status: this.renderer.postData.status,
             featuredImage: {},
-            hasGallery: preparedText.indexOf('class="gallery') !== -1
+            hasGallery: preparedText.indexOf('class="gallery') !== -1,
+            isFeatured: this.renderer.postData.status.indexOf('featured') > -1,
+            isHidden: this.renderer.postData.status.indexOf('hidden') > -1,
+            hasGallery: preparedText.indexOf('class="gallery') !== -1,
+            template: this.renderer.postData.template,
+            hasCustomExcerpt: hasCustomExcerpt
         };
 
         if(this.postImage) {
@@ -86,7 +98,6 @@ class RendererContextPostPreview extends RendererContext {
         this.metaTitle = 'It is an example value for the preview mode';
         this.metaDescription = 'It is an example value for the preview mode';
         this.metaRobots = 'It is an example value for the preview mode';
-
         this.post.tags = this.tags;
 
         // load related posts
