@@ -32,13 +32,14 @@
 </a>
 {{/if}}
 
-{{#if @config.custom.shareStumbleupon}}
-<a href="http://www.stumbleupon.com/submit?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}" class="js-share stumbleupon" title="{{ translate 'partials.shareButtons.shareWithStumbleUpon' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#stumbleupon" />
-    </svg> StumbleUpon
+{{#if @config.custom.shareMix}}
+<a href="https://mix.com/add?url={{encodeUrlFragment url}}" class="js-share mix" title="{{ translate 'partials.shareButtons.shareWithMix' }}" rel="nofollow">
+    <svg  class="icon">
+        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#mix" />
+    </svg>  Mix    
 </a>
 {{/if}}
+
 
 {{#if @config.custom.shareLinkedin}}
 <a href="http://www.linkedin.com/shareArticle?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}" class="js-share linkedin" title="{{ translate 'partials.shareButtons.shareWithLinkedIn' }}" rel="nofollow">

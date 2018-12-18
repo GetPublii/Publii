@@ -81,6 +81,7 @@ export default {
 
 .site-switch {
     -webkit-app-region: no-drag; // Make the buttons clickable again
+    border-right: 1px solid $color-helper-8;
     color: $color-5;
     cursor: pointer;
     display: block;

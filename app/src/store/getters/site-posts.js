@@ -11,7 +11,7 @@ import postGetTags from '../helpers/post-get-tags.js';
  * @returns {array}
  */
 
-export default (state, getters) => (filterValue) => {
+export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
     if(!state.currentSite.posts) {
         return [];
     }
@@ -36,6 +36,30 @@ export default (state, getters) => (filterValue) => {
             author_id: post.authors,
             author: postGetAuthor(state, post.id)
         }
+    });
+
+    posts.sort((postA, postB) => {
+        if (orderBy === 'title') {
+            if (order === 'DESC') {
+                return -(postA.title.localeCompare(postB.title))
+            }
+
+            return postA.title.localeCompare(postB.title);
+        }
+
+        if (orderBy === 'author') {
+            if (order === 'DESC') {
+                return -(postA.author.localeCompare(postB.author))
+            }
+
+            return postA.author.localeCompare(postB.author);
+        }
+        
+        if (order === 'DESC') {
+            return postB[orderBy] - postA[orderBy];
+        }
+
+        return postA[orderBy] - postB[orderBy];
     });
 
     return posts;

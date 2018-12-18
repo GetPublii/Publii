@@ -46,7 +46,7 @@
                     :slot="'tab-' + index"
                     :key="'note-' + editor">
                     <span>
-                        Run a find:
+                        Find:
                         <template v-if="!isMac">Ctrl + F</template>
                         <template v-if="isMac">Cmd + F</template>
                     </span>

@@ -6,14 +6,12 @@
                 <template v-if="!authorData.id">Add new author</template>
             </h2>
 
-            <a
-                href="#"
+           <span
                 class="author-form-close"
+                name="sidebar-close"
                 @click.prevent="close()">
-                <icon
-                    size="m"
-                    name="sidebar-close" />
-            </a>
+                &times;
+            </span>
 
             <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
                 <span>Name:</span>
@@ -344,7 +342,7 @@ export default {
 
     &-wrapper {
         background: $post-editor-sidebar-color;
-        box-shadow: -4px 0px 6px rgba(0, 0, 0, 0.075);
+        box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
         height: 100%;
         overflow: auto;
         position: absolute;
@@ -392,20 +390,31 @@ export default {
         padding: 2rem 0 0 0;
     }
 
-    &-close {
+   &-close {                   
+        border-radius: 50%;
+        color: $color-7;
+        cursor: pointer;
+        font-size: 2.4rem;
+        font-weight: 300;
+        height: 3rem;                   
+        line-height: 1.1; 
+        padding: 0;
         position: absolute;
-        right: 3.6rem;
-        top: 2rem;
-
-        .icon {
-            fill: $color-3;
-        }
-
+        right: 3.5rem;
+        text-align: center;       
+        transition: all .3s ease-out;         
+        top: 2.1rem;        
+        width: 3rem;
+                                
+        &:active,
+        &:focus,
         &:hover {
-            .icon {
-                fill: $color-5;
-            }
+            color: $color-4;
         }
+        
+        &:hover {
+            background: $color-helper-8;
+        }  
     }
 
     .use-gravatar {

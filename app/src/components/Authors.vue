@@ -24,12 +24,41 @@
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
-                    Name
+                <collection-cell 
+                    width="calc(100% - 180px)"
+                    @click.native="ordering('name')">
+                    <template v-if="orderBy === 'name'">
+                        <strong>Name</strong>
+                    </template>
+                    <template v-else>Name</template>
+
+                    <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="50px">
-                    Posts
+                <collection-cell 
+                    textAlign="center"
+                    width="100px"
+                    @click.native="ordering('postsCounter')">
+                    <template v-if="orderBy === 'postsCounter'">
+                        <strong>Posts</strong>
+                    </template>
+                    <template v-else>Posts</template>
+
+                    <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                </collection-cell>
+
+                <collection-cell 
+                    width="40px"
+                    @click.native="ordering('id')">
+                    <template v-if="orderBy === 'id'">
+                        <strong>ID</strong>
+                    </template>
+                    <template v-else>ID</template>
+
+                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <div
@@ -66,11 +95,10 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 180px)">
                     <a
                         href="#"
-                        @click.prevent.stop="editAuthor(item)"
-                        :title="'Author ID:' + item.id">
+                        @click.prevent.stop="editAuthor(item)">
                         {{ item.name }}
 
                         <em
@@ -83,12 +111,17 @@
 
                 <collection-cell
                     textAlign="center"
-                    width="50px">
+                    width="100px">
                     <a
                         @click.prevent.stop="showPostsConnectedWithAuthor(item.name)"
                         href="#">
                         {{ item.postsCounter }}
                     </a>
+                </collection-cell>
+
+                <collection-cell 
+                    width="40px">
+                    {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>
@@ -120,24 +153,36 @@ export default {
         return {
             editorVisible: false,
             filterValue: '',
-            selectedItems: []
+            selectedItems: [],
+            orderBy: 'id',
+            order: 'DESC'
         };
     },
     computed: {
         items: function() {
-            return this.$store.getters.siteAuthors(this.filterValue);
+            return this.$store.getters.siteAuthors(this.filterValue, this.orderBy, this.order);
         },
         emptySearchResults: function() {
             return this.filterValue !== '' && !this.items.length;
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.authors.orderBy;
+        this.order = this.$store.state.ordering.authors.order;
+
         this.$bus.$on('authors-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
         this.$bus.$on('hide-author-item-editor', () => {
             this.editorVisible = false;
+        });
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.authors.orderBy;
+                this.order = this.$store.state.ordering.authors.order;
+            }, 500);
         });
     },
     methods: {
@@ -205,6 +250,24 @@ export default {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'author:' + name);
             this.$router.push({ path: '/site/' + siteName + '/posts' });
+        },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
+
+            this.$store.commit('setOrdering', {
+                type: 'authors',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {
@@ -232,6 +295,42 @@ export default {
     .main-author-icon {
         position: relative;
         top: 2px;
+    }
+
+    .header {
+        .col {
+            cursor: pointer;
+        }
+    }
+
+    .order-ascending,
+    .order-descending {
+        position: relative;
+        &:after {
+            border-top: solid 5px rgba($color-7, .7);
+            border-left: solid 5px transparent;
+            border-right: solid 5px transparent;
+            content: "";
+            cursor: pointer;
+            display: inline-block;
+            height: 4px;
+            left: 6px;
+            line-height: 1.1;
+            opacity: 1;
+            padding: 0;
+            position: absolute;
+            text-align: center;
+            top: 7px;
+            width: 8px;        
+        }
+    }
+
+    .order-descending {
+        &:after {
+            border-top-color: transparent; 
+            border-bottom: solid 5px rgba($color-7, .7);   
+            top: 0;        
+        }
     }
 
     .author-form-wrapper {

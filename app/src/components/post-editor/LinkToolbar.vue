@@ -42,7 +42,13 @@ export default {
             }
 
             if(response) {
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}>${response.text}</a>`;
+                let relAttr = '';
+
+                if (response.rel) {
+                    relAttr = ' rel="nofollow"';
+                }
+
+                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
                 tinymce.activeEditor.selection.setContent(linkHTML);
             } else {
                 let sel = this.win.getSelection();

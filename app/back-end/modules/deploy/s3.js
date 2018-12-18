@@ -16,6 +16,8 @@ class S3 {
         this.debugOutput = [];
         this.econnresetCounter = 0;
         this.waitForTimeout = false;
+        this.softUploadErrors = {};
+        this.hardUploadErrors = [];
     }
 
     async initConnection() {
@@ -201,7 +203,8 @@ class S3 {
                     type: 'sender',
                     message: 'app-deploy-uploaded',
                     value: {
-                        status: true
+                        status: true,
+                        issues: self.hardUploadErrors.length > 0
                     }
                 });
 
@@ -259,6 +262,7 @@ class S3 {
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,
+                CacheControl: fileExtension === 'html' ? 'no-cache, no-store' : 'public, max-age=2592000',
                 ContentType: mime.getType(fileExtension)
             };
 
@@ -458,8 +462,12 @@ class S3 {
 
     saveConnectionDebugLog() {
         let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
+        let softUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'soft-upload-errors-log.txt');
+        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'hard-upload-errors-log.txt');
 
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
+        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors));
+        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors));
     }
 }
 

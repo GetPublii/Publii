@@ -377,7 +377,15 @@ class Themes {
 
         // Load theme config overrides
         if(UtilsHelper.fileExists(themeConfigPath)) {
-            let themeSavedConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+            let themeSavedConfig;
+            
+            try {
+                themeSavedConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+            } catch (err) {
+                console.log('(!) The saved theme config is malformed. Loading default theme config instead.');
+                return;
+            }
+
             let optionGroups = ['config', 'customConfig', 'postConfig'];
 
             for(let k = 0; k < optionGroups.length; k++) {
@@ -412,6 +420,7 @@ class Themes {
         let authorsData = authors.load();
         let authorAvatars = [];
         let ampFallbackImage = '';
+        let ogFallbackImage = '';
 
         if(authorsData && authorsData.length) {
             for(let i = 0; i < authorsData.length; i++) {
@@ -435,6 +444,11 @@ class Themes {
         if(siteData && siteData.advanced && siteData.advanced.ampImage) {
             ampFallbackImage = siteData.advanced.ampImage;
         }
+
+        if(siteData && siteData.advanced && siteData.advanced.openGraphImage) {
+            ogFallbackImage = siteData.advanced.openGraphImage;
+        }
+
         // Make sure that all slashes are in the same direction
         configString = normalizePath(configString);
 
@@ -461,7 +475,8 @@ class Themes {
             if(
                 configString.indexOf('/' + imagePath) === -1 &&
                 authorAvatars.indexOf(imagePath) === -1 &&
-                imagePath !== ampFallbackImage
+                imagePath !== ampFallbackImage &&
+                imagePath !== ogFallbackImage
             ) {
                 try {
                     fs.unlinkSync(fullPath);
@@ -494,7 +509,7 @@ class Themes {
         if(UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'optionImages');
 
-            if(dimensions !== false) {
+            if(dimensions === false) {
                 dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'contentImages');
             }
 

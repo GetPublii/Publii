@@ -12,23 +12,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-status"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
-
-                    <icon
+                    
+                    <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
-
-                    <icon
+                        name="sidebar-arrow">                        
+                    </span>
+                    
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -77,18 +75,53 @@
                                 </dd>
                             </dl>
                         </div>
-
-                        <label
+                        
+                        <div
                             v-if="!isEdit"
-                            class="post-author-selector">
-                            Post author:
+                            class="post-info post-info--nogrid">
+                            
+                            <dl>
+                                <dt>Post author</dt>
+                                <dd>
+                                    <dropdown
+                                        id="post-author-id"
+                                        v-model="$parent.postData.author"
+                                        :items="authors"></dropdown>
+                                </dd>
+                            </dl>
+                            
+                            <dl class="post-date">
+                                <dt>Published</dt>
+                                <dd>
+                                    <a
+                                        href="#"
+                                        @click.prevent="changeDate">
+                                        
+                                        <template v-if="!$parent.postData.creationDate.text">
+                                            Set custom post date
+                                        </template>
 
-                            <dropdown
-                                id="post-author-id"
-                                v-model="$parent.postData.author"
-                                :items="authors"></dropdown>
-                        </label>
+                                        <template v-if="$parent.postData.creationDate.text">
+                                            Change custom post date 
 
+                                            <small>
+                                                ({{ $parent.postData.creationDate.text }})
+                                            </small>
+
+                                            <a 
+                                                href="#" 
+                                                class="post-date-reset"
+                                                @click.stop.prevent="resetCreationDate()">
+                                                
+                                                <icon
+                                                    size="m"
+                                                    name="sidebar-close"/>
+                                            </a>
+                                        </template>
+                                    </a>
+                                </dd>
+                            </dl>                        
+                        </div>
 
                         <label id="post-featured-wrapper">
                             <switcher
@@ -102,7 +135,6 @@
                                 size="xs"
                                 primaryColor="color-helper-1" />
                         </label>
-
 
                         <label id="post-hidden-wrapper">
                             <switcher
@@ -127,23 +159,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-image"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
 
-                    <icon
+                   <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
+                        name="sidebar-arrow">                        
+                    </span>
 
-                    <icon
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -188,23 +218,21 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="m"
-                            name="sidebar-tags"
-                            primaryColor="grey-icon-color" />
+                            name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-open"
-                            size="m"
-                            name="sidebar-arrow"
-                            primaryColor="color-1" />
+                            name="sidebar-arrow">                        
+                        </span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-close"
-                            size="m"
-                            name="sidebar-close"
-                            primaryColor="color-3"
-                            @click.native="closeItem" />
+                            name="sidebar-arrow"
+                            @click.native="closeItem">
+                            &times;
+                        </span>
                     </div>
 
                     <div
@@ -244,23 +272,21 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="m"
-                            name="sidebar-seo"
-                            primaryColor="grey-icon-color" />
+                            name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">SEO</span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-open"
-                            size="m"
-                            name="sidebar-arrow"
-                            primaryColor="color-1" />
+                            name="sidebar-arrow">                        
+                        </span>
 
-                        <icon
+                        <span
                             class="post-editor-settings-icon-close"
-                            size="m"
-                            name="sidebar-close"
-                            primaryColor="color-3"
-                            @click.native="closeItem" />
+                            name="sidebar-arrow"
+                            @click.native="closeItem">
+                            &times;
+                        </span>
                     </div>
 
                     <div
@@ -325,23 +351,21 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="m"
-                        name="sidebar-options"
-                        primaryColor="grey-icon-color" />
+                        name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
 
-                    <icon
+                    <span
                         class="post-editor-settings-icon-open"
-                        size="m"
-                        name="sidebar-arrow"
-                        primaryColor="color-1" />
-
-                    <icon
+                        name="sidebar-arrow">                        
+                    </span>
+  
+                    <span
                         class="post-editor-settings-icon-close"
-                        size="m"
-                        name="sidebar-close"
-                        primaryColor="color-3"
-                        @click.native="closeItem" />
+                        name="sidebar-arrow"
+                        @click.native="closeItem">
+                        &times;
+                    </span>
                 </div>
 
                 <div
@@ -582,6 +606,10 @@ export default {
             }
 
 			return 'Leave it blank to use default value';
+        },
+        resetCreationDate () {
+            this.$parent.postData.creationDate.timestamp = 0;
+            this.$parent.postData.creationDate.text = '';
         }
     },
     beforeDestroy () {
@@ -633,6 +661,10 @@ export default {
             grid-template-columns: 50% 50%;
             margin-bottom: 3rem;
             padding-bottom: 1rem;
+            
+            &--nogrid {
+                 display: block;
+            }
 
             dl {
                 margin: 0 0 3rem 0;
@@ -654,7 +686,42 @@ export default {
             .post-author-selector {
                 border-bottom: 1px solid $color-9;
                 margin-bottom: 2rem;
-                padding-bottom: 3rem;
+                padding-bottom: 0;
+            }
+
+            .post-date {
+                margin-bottom: 2rem;
+                
+                dd {
+                    font-size: 1.6rem;
+                }
+
+                small {
+                    color: $color-6;
+                    padding: 0 .5rem;
+                    position: relative;
+                    top: -1px;
+                }
+
+                &-reset {
+                    color: $color-3;
+                    font-size: 2.4rem;
+                    line-height: 1;
+                    position: relative;
+                    top: 1px;
+                    vertical-align: middle;
+                    
+                    .icon {
+                        cursor: pointer;
+                        fill: $color-3;
+                        transition: all .3s ease-out;
+                    }
+                    
+                    
+                    &:hover .icon {
+                        fill: $color-4;
+                    }
+                }
             }
         }
 
@@ -699,8 +766,8 @@ export default {
 
             &-header {
                 align-items: center;
-                border-top: 1px solid rgba($color-8, .25);
-                border-bottom: 1px solid rgba($color-8, .25);
+                border-top: 1px solid rgba($color-8, .45);
+                border-bottom: 1px solid rgba($color-8, .45);
                 color: $link-color;
                 cursor: pointer;
                 display: flex;
@@ -716,11 +783,10 @@ export default {
 
                     .post-editor-settings {
                         &-icon {
-                            fill: $color-4;
+                            fill: $color-5;
 
-                            &-open,
-                            &-close {
-                                fill: $color-4;
+                            &-open {
+                                border-top-color: $color-5;
                             }
                         }
                     }
@@ -739,6 +805,7 @@ export default {
 
                         &-icon {
                             left: -1.6rem;
+                            position: relative;
                             opacity: 0;
 
                             &-open {
@@ -746,7 +813,7 @@ export default {
                             }
 
                             &-close {
-                                opacity: 1;
+                                opacity: 1;                                
                             }
                         }
                     }
@@ -762,7 +829,7 @@ export default {
             }
 
             &-icon {
-                fill: $grey-icon-color;
+                fill: $grey-icon-color; 
                 left: 0;
                 height: 2.4rem;
                 margin-right: 2.4rem;
@@ -784,19 +851,53 @@ export default {
                     }
                 }
 
-                &-open {
-                    fill: $color-1;
-                    opacity: 1;
+                &-open {  
+                    border-top: solid 6px $color-7;
+                    border-left: solid 6px transparent;
+                    border-right: solid 6px transparent;                    
+                    opacity: 1;                     
+                    cursor: pointer;                   
+                    height: 6px;
+                    left: auto;
+                    line-height: 1.1; 
+                    padding: 0;
+                    position: absolute;
+                    right: calc(4.5rem - 6px);
+                    width: 12px;
+                    text-align: center;       
+                    transition: all .3s ease-out;         
+                    top: 50%;
+                    transform: translate(0, -50%);                     
                 }
 
                 &-close {
-                    fill: $danger-color;
-                    height: 2.8rem;
                     opacity: 0;
-                    right: 3.8rem;
-                    top: 1.9rem;
-                    pointer-events: none;
-                    width: 2.8rem;
+                    border-radius: 50%;
+                    color: $color-7;
+                    cursor: pointer;
+                    font-size: 2.4rem;
+                    font-weight: 300;
+                    height: 3rem;
+                    left: auto;
+                    line-height: 1.1; 
+                    padding: 0;
+                    position: absolute;
+                    right: 3rem;
+                    text-align: center;       
+                    transition: all .3s ease-out;         
+                    top: 50%;
+                    transform: translate(0, -50%); 
+                    width: 3rem;
+                                
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        color: $color-4;
+                    }
+        
+                    &:hover {
+                        background: $color-helper-8;
+                    }  
                 }
             }
 

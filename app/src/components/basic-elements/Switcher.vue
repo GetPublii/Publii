@@ -18,6 +18,10 @@ export default {
         onToggle: {
             default: () => false,
             type: Function
+        },
+        lowerZindex: {
+            default: false,
+            type: Boolean
         }
     },
     data: function() {
@@ -29,7 +33,8 @@ export default {
         cssClasses: function() {
             return {
                 'switcher': true,
-                'is-checked': this.isChecked
+                'is-checked': this.isChecked,
+                'lower-zindex': this.lowerZindex
             };
         }
     },
@@ -72,6 +77,9 @@ export default {
     width: 32px;
     z-index: 1;
 
+    &.lower-zindex {
+        z-index: 0;
+    }
 
     &:after {
         position: absolute;

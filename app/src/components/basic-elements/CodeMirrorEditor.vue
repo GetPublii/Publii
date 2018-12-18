@@ -87,7 +87,7 @@ export default {
     background: $color-10;
     border: none;
     bottom: 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+    box-shadow: 0 0 1px $color-8;
     display: block;
     left: 0;
     padding: 2rem 5rem 1rem;
@@ -107,10 +107,14 @@ export default {
         }
 
         & > input {
+            background: $color-9;
+            border: 0;
+            border-radius: 30px;
+            box-shadow: none!important;            
             float: left;
             font-family: $secondary-font;
             margin: 0;
-            padding: 9px;
+            padding: 1rem 2rem;
             width: calc(100% - 80px);
         }
 
@@ -143,14 +147,14 @@ export default {
             cursor: pointer;
             display: inline-block;
             font: {
-                size: 100%;
+                size: 1.4rem;
                 family: $secondary-font;
                 weight: 500;
             }
-            height: 3.9rem;
+            height: 3.8rem;
             line-height: 3.8rem;
-            margin: 2px 5px 30px 5px;
-            padding: 0 1rem;
+            margin: 2px 2px 30px;
+            padding: 0 1.4rem;
             position: relative;
             transition: all .25s ease-out;
             user-select: none;

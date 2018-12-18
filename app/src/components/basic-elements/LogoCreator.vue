@@ -5,7 +5,7 @@
             :data-color="activeColor"
             :data-icon="activeIcon">
             <icon
-                primaryColor="color-10"
+                :data-color="activeColor"
                 size="xl"
                 :name="icons[activeIcon - 1]" />
         </div>
@@ -46,21 +46,37 @@ export default {
             activeColor: 1,
             icons: [
                 'web-pizza',
-                'web-glass',
-                'web-apple',
-                'web-shoe',
+                'web-ice-cream',
+                'web-school',
+                'web-leaf',
                 'web-bag',
                 'web-shirt',
                 'web-note',
                 'web-mic',
                 'web-headphone',
-                'web-billard',
+                'web-american-football',
                 'web-racket',
                 'web-car',
                 'web-camera',
                 'web-doc',
-                'web-money',
-                'web-gear'
+                'web-credit-card',
+                'web-gear',
+                'web-palette',
+                'web-boat',
+                'web-cut',
+                'web-film',
+                'web-flask',
+                'web-heart',
+                'web-journal',
+                'web-rocket',
+                'web-glass',
+                'web-pie',
+                'web-paw',
+                'web-fire',
+                'web-planet',
+                'web-watch',
+                'web-idea',
+                'web-pulse'
             ]
         };
     },
@@ -115,7 +131,8 @@ export default {
     text-align: center;
 
     &-preview {
-        border-radius: 4px;
+        border-radius: 50%;
+        border: 1px solid $color-helper-8;
         float: left;
         height: 9rem;
         line-height: 100%;
@@ -127,7 +144,7 @@ export default {
             margin: 2rem;
         }
 
-        @include logoColors();
+        @include logoSVGColors();
     }
 
     &-color {
@@ -140,11 +157,12 @@ export default {
             cursor: pointer;
             display: block;
             float: left;
-            height: 3.5rem;
+            height: 3.2rem;
             list-style-type: none;
+            margin: 0 0.15rem;
             padding: 0;
             transition: all .2s ease-out;
-            width: 3.5rem;
+            width: 3.2rem;
 
             @include logoColors();
 
@@ -160,14 +178,15 @@ export default {
 
     &-icon {
         float: right;
-        margin: 0 0 1rem 1rem;
-        padding: 0;       
+        margin: 0 0 0 1rem;
+        padding: 0;  
+        max-width: 560px;
 
         &-block {
             cursor: pointer;
             display: block;
             float: left;
-            height: 3.5rem;
+            height: 3rem;
             list-style-type: none;
             padding: 0;
             transition: all .2s ease-out;

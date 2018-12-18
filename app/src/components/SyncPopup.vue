@@ -2,7 +2,7 @@
     <div class="overlay" v-if="isVisible">
         <div class="popup sync">
             <div
-                v-if="isInSync"
+                v-if="isInSync && noIssues"
                 class="sync-success">
                 <icon
                     size="xl"
@@ -42,6 +42,35 @@
                         type="primary medium no-border-radius half-width"
                         :onClick="showFolder">
                         Get website files
+                    </p-button>
+
+                    <p-button
+                        :onClick="close"
+                        type="cancel-popup medium half-width no-border-radius">
+                        OK
+                    </p-button>
+                </div>
+            </div>
+
+            <div
+                v-if="isInSync && !noIssues"
+                class="sync-success">
+                <icon
+                    size="xl"
+                    name="warning"
+                    primaryColor="color-helper-6" />
+
+                <h2>Some files were not synced properly.</h2>
+
+                <p class="description">
+                    Please check hard-upload-errors-log.txt files using the Tools -&gt; Log Viewer tool.
+                </p>
+
+                <div class="buttons">
+                    <p-button
+                        type="primary medium no-border-radius half-width"
+                        :onClick="openWebsite">
+                        Visit your website
                     </p-button>
 
                     <p-button
@@ -168,7 +197,8 @@ export default {
             syncInProgress: false,
             isInSync: false,
             manualFilePath: '',
-            uploadError: false
+            uploadError: false,
+            noIssues: true
         };
     },
     computed: {
@@ -253,6 +283,7 @@ export default {
             this.isInSync = false;
             this.manualFilePath = '';
             this.uploadError = false;
+            this.noIssues = true;
         });
 
         ipcRenderer.on('app-rendering-progress', this.renderingProgressUpdate);
@@ -490,10 +521,17 @@ export default {
                 }
 
                 this.uploadingProgress = 100;
-                this.uploadingProgressColor = 'green';
                 this.uploadingProgressIsStopped = true;
-                this.messageFromUploader = 'Your website is now in sync';
                 this.syncInProgress = false;
+
+                if (typeof data.issues !== 'undefined' && data.issues) {
+                    this.noIssues = false;
+                    this.uploadingProgressColor = 'orange';
+                    this.messageFromUploader = '';
+                } else {
+                    this.uploadingProgressColor = 'green';
+                    this.messageFromUploader = 'Your website is now in sync';
+                }
 
                 if (data.status) {
                     ipcRenderer.send('app-sync-is-done', {

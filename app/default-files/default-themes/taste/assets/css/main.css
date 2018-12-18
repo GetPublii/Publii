@@ -57,20 +57,25 @@ textarea {
 .buffer {
   background: #222222; }
 
-.stumbleupon {
-  background: #eb4924; }
+.mix {
+  background: #f77e25; }
 
 /* Typography
    ========================================================================== 
 */
 html {
-  font-size: 1rem; }
-  @media screen and (min-width: 20rem) {
-    html {
-      font-size: calc(1rem + 0.3 * ((100vw - 20rem) / 220)); } }
-  @media screen and (min-width: 240rem) {
-    html {
-      font-size: 1.3rem; } }
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; }
+  html {
+    font-size: 1rem; }
+    @media screen and (min-width: 20rem) {
+      html {
+        font-size: calc(1rem + 0.3 * ((100vw - 20rem) / 220)); } }
+    @media screen and (min-width: 240rem) {
+      html {
+        font-size: 1.3rem; } }
 
 body {
   background: #ffffff;
@@ -78,7 +83,9 @@ body {
   font-family: "Nunito", serif;
   font-weight: 300;
   line-height: 1.6;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   color: #02bb80;
@@ -119,12 +126,12 @@ p,
 ul,
 ol,
 dl,
-table,
-hr {
+table {
   margin-top: calc(1rem + 0.25vw); }
 
 blockquote,
-figure {
+figure,
+hr {
   margin-top: calc(1.5rem + 1vw);
   margin-bottom: calc(1.5rem + 1vw); }
 
@@ -292,10 +299,19 @@ figcaption {
   text-align: center; }
 
 hr {
-  border: 0;
-  height: 0;
-  border-top: 1px solid #dedede;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  background: 0 0;
+  border: none;
+  height: auto;
+  line-height: 1;
+  max-width: none;
+  text-align: center; }
+  hr::before {
+    content: "\00b7 \00b7 \00b7";
+    color: #111111;
+    font-size: 1.26562rem;
+    font-weight: 600;
+    letter-spacing: 1rem;
+    padding-left: 1rem; }
 
 .btn, [type=button],
 [type=submit],
@@ -1135,6 +1151,28 @@ textarea {
     text-decoration: underline;
     -webkit-text-decoration-skip: ink;
     text-decoration-skip: ink; }
+  .post__toc h3 {
+    font-size: 0.88889rem; }
+    @media screen and (min-width: 20rem) {
+      .post__toc h3 {
+        font-size: calc(0.88889rem + 0.23611 * ((100vw - 20rem) / 220)); } }
+    @media screen and (min-width: 240rem) {
+      .post__toc h3 {
+        font-size: 1.125rem; } }
+  .post__toc ul {
+    counter-reset: item;
+    list-style: decimal;
+    margin: calc(0.5rem + 0.25vw) 0 calc(1.5rem + 0.25vw) 1rem; }
+    .post__toc ul li {
+      counter-increment: item;
+      padding: 0; }
+    .post__toc ul ul {
+      margin-top: 0; }
+      .post__toc ul ul li {
+        display: block; }
+        .post__toc ul ul li:before {
+          content: counters(item, ".") ". ";
+          margin-left: -20px; }
   .post__last-updated {
     color: #888888;
     font-size: 0.79012rem;

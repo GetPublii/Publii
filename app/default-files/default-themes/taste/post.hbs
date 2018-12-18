@@ -51,20 +51,7 @@
                   <figure
                      class="post__featured-image"
                      style="padding-bottom: calc(({{height}}/{{width}}) * 100%)">
-                     {{#if @config.custom.lazyLoad}}
-                        <img
-                           class="lazyload"
-                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                               src="{{urlXs}}"
-                           {{else}}
-                               data-src="{{url}}"
-                           {{/checkIf}}
-                           data-srcset="{{srcset}}"
-                           data-sizes="auto"
-                           height="{{height}}"
-                           width="{{width}}"
-                           alt="{{alt}}">
-                     {{else}}
+                    
                         <img
                            src="{{url}}"
                            sizes="{{sizes}}"
@@ -72,7 +59,7 @@
                            alt="{{alt}}"
                            height="{{height}}"
                            width="{{width}}">
-                     {{/if}}
+                     
                      <figcaption>{{caption}}
                         {{credits}}
                      </figcaption>
@@ -81,20 +68,7 @@
                   <div
                      class="post__featured-image"
                      style="padding-bottom: calc(({{height}}/{{width}}) * 100%)">
-                     {{#if @config.custom.lazyLoad}}
-                        <img
-                           class="lazyload"
-                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                               src="{{urlXs}}"
-                           {{else}}
-                               data-src="{{url}}"
-                           {{/checkIf}}
-                           data-srcset="{{srcset}}"
-                           data-sizes="auto"
-                           height="{{height}}"
-                           width="{{width}}"
-                           alt="{{alt}}">
-                     {{else}}
+                     
                         <img
                            src="{{url}}"
                            sizes="{{sizes}}"
@@ -102,7 +76,7 @@
                            alt="{{alt}}"
                            height="{{height}}"
                            width="{{width}}">
-                     {{/if}}
+                    
                   </div>
                {{/checkIfAny}}
             {{/if}}

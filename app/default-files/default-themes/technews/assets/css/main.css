@@ -57,24 +57,31 @@ textarea {
 .buffer {
   background: #222222; }
 
-.stumbleupon {
-  background: #eb4924; }
+.mix {
+  background: #f77e25; }
 
 html {
-  font-size: 1.1rem; }
-  @media screen and (min-width: 20rem) {
-    html {
-      font-size: calc(1.1rem + 0.2 * ((100vw - 20rem) / 220)); } }
-  @media screen and (min-width: 240rem) {
-    html {
-      font-size: 1.3rem; } }
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; }
+  html {
+    font-size: 1.1rem; }
+    @media screen and (min-width: 20rem) {
+      html {
+        font-size: calc(1.1rem + 0.2 * ((100vw - 20rem) / 220)); } }
+    @media screen and (min-width: 240rem) {
+      html {
+        font-size: 1.3rem; } }
 
 body {
   background: #ffffff;
   color: #2c2e35;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
-  line-height: 1.8; }
+  line-height: 1.8;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   text-decoration: none; }
@@ -266,10 +273,19 @@ sup {
   font-size: 65%; }
 
 hr {
-  border: 0;
-  height: 0;
-  border-top: 1px solid #e1e2e3;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  background: 0 0;
+  border: none;
+  height: auto;
+  line-height: 1;
+  max-width: none;
+  text-align: center; }
+  hr::before {
+    content: "\2022 \2022 \2022";
+    color: #2c2e35;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1rem;
+    padding-left: 1rem; }
 
 .btn, [type=button],
 [type=submit],
@@ -1352,6 +1368,28 @@ textarea {
       text-decoration: underline;
       -webkit-text-decoration-skip: ink;
       text-decoration-skip: ink; }
+  .post__toc h3 {
+    font-size: 1.13778rem; }
+    @media screen and (min-width: 20rem) {
+      .post__toc h3 {
+        font-size: calc(1.13778rem + 0 * ((100vw - 20rem) / 220)); } }
+    @media screen and (min-width: 240rem) {
+      .post__toc h3 {
+        font-size: 1.13778rem; } }
+  .post__toc ul {
+    counter-reset: item;
+    list-style: decimal;
+    margin: calc(0.51429rem + 0.25vw) 0 0 1rem; }
+    .post__toc ul li {
+      counter-increment: item;
+      padding: 0; }
+    .post__toc ul ul {
+      margin-top: 0; }
+      .post__toc ul ul li {
+        display: block; }
+        .post__toc ul ul li:before {
+          content: counters(item, ".") ". ";
+          margin-left: -20px; }
   .post__lead {
     font-size: 1.13778rem; }
     @media screen and (min-width: 20rem) {

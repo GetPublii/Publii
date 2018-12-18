@@ -49,6 +49,11 @@ class ContentHelper {
             preparedText = preparedText.replace(/<\/publii-non-amp>/gmi, '');
         }
 
+        // Remove TOC plugin ID attributes when TOC does not exist
+        if (preparedText.indexOf('class="post__toc') === -1) {
+           preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, ''); 
+        }
+    
         // Remove contenteditable attributes
         preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
 

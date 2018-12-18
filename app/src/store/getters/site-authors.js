@@ -9,7 +9,7 @@
 
 import Utils from '../../helpers/utils.js';
 
-export default (state, getters) => (filterValue) => {
+export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
     let authors = state.currentSite.authors.map(author => {
         let indexingOptionsEnabled = true;
         let authorTemplates = [];
@@ -62,6 +62,22 @@ export default (state, getters) => (filterValue) => {
             authorTemplates: authorTemplates,
             visibleIndexingOptions: indexingOptionsEnabled
         };
+    });
+
+    authors.sort((authorA, authorB) => {
+        if (orderBy === 'name') {
+            if (order === 'DESC') {
+                return -(authorA.name.localeCompare(authorB.name))
+            }
+
+            return authorA.name.localeCompare(authorB.name);
+        }
+        
+        if (order === 'DESC') {
+            return authorB[orderBy] - authorA[orderBy];
+        }
+
+        return authorA[orderBy] - authorB[orderBy];
     });
 
     authors = authors.filter(author => {

@@ -27,12 +27,41 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
-                    Name
+                <collection-cell 
+                    width="calc(100% - 180px)"
+                    @click.native="ordering('name')">
+                    <template v-if="orderBy === 'name'">
+                        <strong>Name</strong>
+                    </template>
+                    <template v-else>Name</template>
+
+                    <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="50px">
-                    Posts
+                <collection-cell 
+                    textAlign="center"
+                    width="100px"
+                    @click.native="ordering('postsCounter')">
+                    <template v-if="orderBy === 'postsCounter'">
+                        <strong>Posts</strong>
+                    </template>
+                    <template v-else>Posts</template>
+
+                    <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                </collection-cell>
+
+                <collection-cell 
+                    width="40px"
+                    @click.native="ordering('id')">
+                    <template v-if="orderBy === 'id'">
+                        <strong>ID</strong>
+                    </template>
+                    <template v-else>ID</template>
+
+                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <div
@@ -58,23 +87,27 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 90px)">
+                <collection-cell width="calc(100% - 180px)">
                     <a
                         href="#"
-                        @click.prevent.stop="editTag(item)"
-                        :title="'Tag ID:' + item.id">
+                        @click.prevent.stop="editTag(item)">
                         {{ item.name }}
                     </a>
                 </collection-cell>
 
-                <collection-cell
+                <collection-cell 
                     textAlign="center"
-                    width="50px">
+                    width="100px">
                     <a
                         @click.prevent.stop="showPostsConnectedWithTag(item.name)"
                         href="#">
                         {{ item.postsCounter }}
                     </a>
+                </collection-cell>
+
+                <collection-cell                    
+                    width="40px">
+                    {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>
@@ -122,12 +155,14 @@ export default {
         return {
             editorVisible: false,
             filterValue: '',
+            orderBy: this.$store.state.ordering.tags.orderBy,
+            order: this.$store.state.ordering.tags.order,
             selectedItems: []
         };
     },
     computed: {
         items: function() {
-            return this.$store.getters.siteTags(this.filterValue);
+            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order);
         },
         hasTags: function() {
             return this.$store.state.currentSite.tags && !!this.$store.state.currentSite.tags.length;
@@ -140,12 +175,22 @@ export default {
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.tags.orderBy;
+        this.order = this.$store.state.ordering.tags.order;
+
         this.$bus.$on('tags-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
         this.$bus.$on('hide-tag-item-editor', () => {
             this.editorVisible = false;
+        });
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.tags.orderBy;
+                this.order = this.$store.state.ordering.tags.order;
+            }, 500);
         });
     },
     methods: {
@@ -200,6 +245,24 @@ export default {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'tag:' + name);
             this.$router.push({ path: '/site/' + siteName + '/posts' });
+        },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
+
+            this.$store.commit('setOrdering', {
+                type: 'tags',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {
@@ -218,6 +281,42 @@ export default {
 
     &.no-scroll {
         overflow: hidden;
+    }
+
+    .header {
+        .col {
+            cursor: pointer;
+        }
+    }
+    
+    .order-ascending,
+    .order-descending {
+        position: relative;
+        &:after {
+            border-top: solid 5px rgba($color-7, .7);
+            border-left: solid 5px transparent;
+            border-right: solid 5px transparent;
+            content: "";
+            cursor: pointer;
+            display: inline-block;
+            height: 4px;
+            left: 6px;
+            line-height: 1.1;
+            opacity: 1;
+            padding: 0;
+            position: absolute;
+            text-align: center;
+            top: 7px;
+            width: 8px;        
+        }
+    }
+
+    .order-descending {
+        &:after {
+            border-top-color: transparent; 
+            border-bottom: solid 5px rgba($color-7, .7);   
+            top: 0;        
+        }
     }
 }
 

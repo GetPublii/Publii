@@ -15,6 +15,12 @@ class EditorBridge {
         this.init();
     }
 
+    updatePostID (newPostID) {
+        this.postID = newPostID;
+        let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.postID + '/');
+        this.tinymceEditor.setContent(contentToUpdate);
+    }
+
     init() {
         let customFormats = this.loadCustomFormatsFromTheme();
         let editorConfig = Object.assign({}, EditorConfig, {
@@ -173,10 +179,12 @@ class EditorBridge {
                     range.selectNode(clickedElement);
                     selection.addRange(range);
 
-                    window.app.$bus.$emit('update-link-editor', {
-                        sel: selection,
-                        text: clickedElement
-                    });
+                    if (this.checkInlineLinkTrigger(clickedElement)) {
+                        window.app.$bus.$emit('update-link-editor', {
+                            sel: selection,
+                            text: clickedElement
+                        });
+                    }
                 } else {
                     window.app.$bus.$emit('update-link-editor', {
                         sel: false,
@@ -205,7 +213,32 @@ class EditorBridge {
                 }
             });
 
+            let linkToolbar = $('#link-toolbar');
+            let inlineToolbar = $('#inline-toolbar');
+            let lastScroll = -1;
+            let hideToolbars = function (e) {
+                if (linkToolbar.css('display') !== 'block' && inlineToolbar.css('display') !== 'block') {
+                    return;
+                }
+                
+                let iframeScrollOffset = iframe.contentWindow.document.body.parentNode.scrollTop;
+
+                if (lastScroll !== -1 && Math.abs(iframeScrollOffset - lastScroll) > 20) {
+                    lastScroll = -1;
+                    linkToolbar.css('display', 'none');
+                    inlineToolbar.css('display', 'none');
+                } else if (lastScroll === -1) {
+                    lastScroll = iframeScrollOffset;
+                }
+            };
+
+            iframe.contentWindow.window.addEventListener("scroll", hideToolbars);
+
             $('#post-editor-fake-image-uploader').on('change', () => {
+                if (!$('#post-editor-fake-image-uploader')[0].value) {
+                    return;
+                }
+
                 setTimeout(() => {
                     if(this.callbackForTinyMCE) {
                         let filePath = false;
@@ -232,6 +265,8 @@ class EditorBridge {
                                 width: data.baseImage.size[0]
                             });
                         });
+
+                        $('#post-editor-fake-image-uploader')[0].value = '';
                     }
                 }, 50);
             });
@@ -406,6 +441,7 @@ class EditorBridge {
         this.tinymceEditor.addButton("sourcecode", {
             icon:"code",
             tooltip: "Source code",
+            text: "HTML",
             onclick: () => {
                 let content = this.tinymceEditor.getContent({
                     source_view: true
@@ -431,14 +467,47 @@ class EditorBridge {
         let body = doc.body;
         window.app.$bus.$emit('init-inline-editor', customFormats);
 
-        $(doc.querySelector('html')).on('mouseup', () => {
+        $(doc.querySelector('html')).on('mouseup', (e) => {
             let sel = win.getSelection();
             let text = sel.toString();
-            window.app.$bus.$emit('update-inline-editor', {
-                sel,
-                text
-            });
+            
+            if (this.checkInlineTrigger(e.target)) {
+                window.app.$bus.$emit('update-inline-editor', {
+                    sel,
+                    text
+                });
+            }
         });
+    }
+
+    checkInlineTrigger (target) {
+        let excludedTags = ['FIGURE', 'FIGCAPTION', 'IMG'];
+
+        if (excludedTags.indexOf(target.tagName) > -1) {
+            return false;
+        }
+
+        if (target.tagName === 'DIV' && target.classList.contains('gallery')) {
+            return false;
+        }
+
+        for ( ; target && target !== document; target = target.parentNode) {
+            if (target.matches && target.matches('.post__toc')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    checkInlineLinkTrigger (target) {
+        for ( ; target && target !== document; target = target.parentNode) {
+            if (target.matches && target.matches('.post__toc')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     addLinkEditor(iframe) {

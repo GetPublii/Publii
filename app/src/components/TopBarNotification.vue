@@ -1,5 +1,5 @@
 <template>
-    <span
+    <div
         class="topbar-notification"
         v-if="notification.visible"
         :data-timestamp="notification.timestamp" >
@@ -12,13 +12,9 @@
             class="topbar-notification-close"
             title="Hide this notification"
             @click="closeNotification">
-            <icon
-                primaryColor="color-10"
-                properties="not-clickable"
-                size="xxxs"
-                name="win-close" />
+            &times;
         </span>
-    </span>
+    </div>
 </template>
 
 <script>
@@ -59,7 +55,7 @@ export default {
 
             let self = this;
 
-            ipcRenderer.send('app-notifications-retrieve', this.shouldRetrieveNotifications);
+            ipcRenderer.send('app-notifications-retrieve', this.shouldRetrieveNotifications());
 
             ipcRenderer.once('app-notifications-retrieved', function(event, data) {
                 if(data.status === true) {
@@ -113,42 +109,42 @@ export default {
 
 .topbar {
     &-notification {
-        -webkit-app-region: no-drag; // Make the links clickable again
-        background: $color-helper-5;
-        float: right;
+        -webkit-app-region: no-drag; // Make the links clickable again   
+        align-items: center;
+        border-right: 1px solid $color-helper-8;
+        display: inline-flex;
         font-size: 1.4rem;
         font-weight: 400;
-        margin: 0 7.5rem 0 0;
+        margin: 0 2rem 0 0;
         order: 1;
-        padding: .2rem .75rem;
+        padding: .9rem 2rem;
         position: relative;
 
-        a {
-            border-bottom: 1px solid currentColor;
-        }
-
         &-close {
-            -webkit-app-region: no-drag; // Make the button clickable again
-            background: $color-8;
+            -webkit-app-region: no-drag; // Make the button clickable again   
+            background: $color-9;
             border-radius: 50%;
+            color: $color-7;
             cursor: pointer;
-            height: 16px;
-            position: absolute;
-            right: -24px;
-            top: 6px;
-            transition: all .2s ease-out;
-            width: 16px;
-
-            & > svg {
-                display: block;
-                margin: 4px;
-            }
-
+            font-size: 2.1rem;
+            font-weight: 300;
+            height: 2.4rem;
+            left: auto;
+            line-height: 1.1; 
+            margin: 0 1.9rem;
+            text-align: center;       
+            transition: all .3s ease-out;            
+            width: 2.4rem;
+                                
             &:active,
             &:focus,
             &:hover {
-                background: $color-3;
+                color: $color-4;
             }
+        
+            &:hover {
+                background: $color-helper-8;
+            }  
         }
     }
 }

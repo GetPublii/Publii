@@ -31,6 +31,7 @@
 .mce-window * {
     font-size: 1.6rem !important;
 }
+
 .mce-menu-item {
 
     &-normal {
@@ -51,7 +52,7 @@
         color: $color-5 !important;
 
         .mce-text {
-                color: $color-5 !important;
+            color: $color-5 !important;
         }
     }
 }
@@ -73,8 +74,46 @@
     }
 
     &.mce-active {
-        background: $color-1!important;
+        background: $color-1 !important;
         color: $color-10;
+    }
+}
+
+.mce-arrow.mce-arrow-up {
+
+    &:before,
+    &:after {
+        border-bottom-color: $color-4 !important;
+    }
+}
+
+div.mce-tinymce-inline {
+    &.mce-panel {
+        background: $color-4;
+        border-color: $color-4;
+        border-radius: 3px;
+    }
+
+    .mce-btn-group:not(:first-child) {
+        border-color: $color-5;
+    }
+
+    .mce-btn {
+        background-color: $color-4;
+
+        &:hover,
+        &:focus,
+        &:active {
+            border-color: transparent;
+
+            .mce-ico {
+                color: $color-10;
+            }
+        }
+
+        .mce-ico {
+            color: rgba($color-10, .7);
+        }
     }
 }
 
@@ -116,19 +155,28 @@
 
         .mce-btn,
         .mce-panel {
-            background: $color-10;
+            //background: $color-9;
         }
 
         .mce-btn {
+            background: $post-editor-sidebar-color;
+            border-radius: 2px;
+            border-width: 1px;
+            padding: 2px;
+
             &:active,
             &:focus,
             &:hover {
                 background: $color-9;
-                border: 1px solid $color-9;
+                border-color: $color-8;
 
                 & > button {
                     background: transparent;
                 }
+            }
+
+            &.mce-active {
+                background: $color-10;
             }
         }
 
@@ -144,7 +192,7 @@
 
             &:before {
                 background: linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+                    linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
                 content: "";
                 height: 40px;
                 left: 0;
@@ -157,14 +205,13 @@
         }
 
         .mce-toolbar-grp {
-            border-bottom: 1px solid $color-8;
-            padding-bottom: 1.2rem;
+            padding-bottom: 3.2rem;
             position: relative;
 
             &:before {
                 background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-                bottom: -41px;
+                    linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+                bottom: -34px;
                 content: "";
                 height: 40px;
                 left: 0;
@@ -174,6 +221,14 @@
                 z-index: 1;
             }
         }
+    }
+
+    .mce-flow-layout {
+        text-align: center;
+    }
+
+    .mce-path {
+        float: left;
     }
 
 
@@ -204,18 +259,25 @@
             background: $color-4 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
             background-size: 9px;
             border: none;
+            border-left: 1px solid $color-5;
             border-radius: 3px;
             box-shadow: none;
-            color: $color-9;
+            box-sizing: content-box;
+            color: rgba($color-10, .8);
             font: 400 1.6rem/1.5 $secondary-font;
             margin-left: 15px;
-            max-width: 150px!important;
+            max-width: 150px !important;
             min-width: 125px;
             min-height: 24px;
             outline: none;
-            padding: 6px 18px 6px 6px;
+            padding: 6px 18px;
             position: relative;
             top: 2px;
+            
+            &:hover {
+                background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>');
+                color: $color-10;
+            }
 
             &:focus {
                 box-shadow: none;
@@ -227,12 +289,17 @@
         }
 
         .mce-ico {
-            color: $color-9;
+            color: rgba($color-10, .8);
+            
+            &:hover {
+                color: $color-10;
+            }
         }
     }
 
     // Hacky way to achieve "images" icon ;)
     .mce-i-images {
+
         &:before,
         &:after {
             content: "\e014";
@@ -242,8 +309,8 @@
             background: $color-10;
             line-height: 10px;
             position: absolute;
-            left: 10px;
-            top: 11px;
+            left: 12px;
+            top: 13px;
         }
     }
 }
@@ -281,6 +348,7 @@ body[data-os="win"] {
         &:focus {
             color: $color-1;
         }
+
         &:hover {
             color: $color-4;
         }
@@ -295,33 +363,33 @@ body[data-os="win"] {
 }
 
 #mce-modal-block.mce-in {
-    opacity: .35!important;
+    opacity: .35 !important;
 }
 
 .mce-window {
-    border: none!important;
-    border-radius: .6rem!important;
-    padding: 4rem!important;
+    border: none !important;
+    border-radius: .6rem !important;
+    padding: 4rem !important;
 
     &[role="alertdialog"] {
-        padding: 4rem 4rem 1.6rem 4rem!important;
+        padding: 4rem 4rem 1.6rem 4rem !important;
     }
 
     .mce-reset .mce-window-head {
         border: none;
         margin: 0 0 4rem 0;
-        padding: 0!important;
+        padding: 0 !important;
         text-transform: none;
 
         .mce-close {
-            right: -12px!important;
-            top: -8px!important;
+            right: -12px !important;
+            top: -8px !important;
 
             &:active,
             &:focus,
             &:hover {
-                background: $color-10!important;
-                color: $color-5!important;
+                background: $color-10 !important;
+                color: $color-5 !important;
             }
 
             i {
@@ -332,48 +400,48 @@ body[data-os="win"] {
 
         .mce-title {
             color: $color-4;
-            font-family: $secondary-font!important;
-            font-size: 1.8rem!important;
-            font-weight: 600!important;
+            font-family: $secondary-font !important;
+            font-size: 1.8rem !important;
+            font-weight: 600 !important;
             text-align: center;
         }
     }
 
     .mce-textbox.mce-multiline {
         box-sizing: border-box;
-        height: 100%!important;
-        left: 0!important;
+        height: 100% !important;
+        left: 0 !important;
         padding: 1.2rem 1.8rem !important;
-        top: 0!important;
-        width: 100%!important;
+        top: 0 !important;
+        width: 100% !important;
     }
 
     .mce-foot {
         border: none;
         border-radius: 0 0 .6rem .6rem;
-        height: 4.8rem!important;
-        margin: 4rem -4rem 0 -4rem!important;
-        width: auto!important;
+        height: 4.8rem !important;
+        margin: 4rem -4rem 0 -4rem !important;
+        width: auto !important;
 
         .mce-container-body {
             border-radius: 0 0 .6rem .6rem;
-            height: 5.6rem!important;
-            width: 100%!important;
+            height: 5.6rem !important;
+            width: 100% !important;
 
             .mce-btn {
-                background: $color-1!important;
-                border-radius: 0 0 0 .6rem!important;
-                box-shadow: none!important;
-                color: $color-10!important;
+                background: $color-1 !important;
+                border-radius: 0 0 0 .6rem !important;
+                box-shadow: none !important;
+                color: $color-10 !important;
                 font-size: 1.6rem;
                 height: 5.6rem;
-                left: 0!important;
+                left: 0 !important;
                 line-height: 5.6rem;
-                top: 0!important;
-                width: 50%!important;
+                top: 0 !important;
+                width: 50% !important;
 
                 &:nth-child(2):last-child {
-                    width: 100%!important;
+                    width: 100% !important;
                 }
 
                 & > button {
@@ -381,32 +449,32 @@ body[data-os="win"] {
                 }
 
                 &.mce-disabled > button {
-                    color: $color-10!important;
+                    color: $color-10 !important;
                 }
 
                 &:active,
                 &:focus,
                 &:hover {
-                    background: lighten($color-1, 10%)!important;
-                    color: $color-10!important;
+                    background: lighten($color-1, 10%) !important;
+                    color: $color-10 !important;
                 }
 
                 & + .mce-btn {
-                    background: $color-10!important;
-                    border-top: 1px solid $color-8!important;
-                    border-radius: 0 0 .6rem 0!important;
-                    color: $color-6!important;
-                    left: 50%!important;
+                    background: $color-10 !important;
+                    border-top: 1px solid $color-8 !important;
+                    border-radius: 0 0 .6rem 0 !important;
+                    color: $color-6 !important;
+                    left: 50% !important;
 
                     &.mce-disabled > button {
-                        color: $color-6!important;
+                        color: $color-6 !important;
                     }
 
                     &:active > button,
                     &:focus > button,
                     &:hover > button {
-                        background: $color-9!important;
-                        color: $color-6!important;
+                        background: $color-9 !important;
+                        color: $color-6 !important;
                     }
                 }
             }
@@ -417,49 +485,49 @@ body[data-os="win"] {
         .mce-foot {
             .mce-container-body {
                 .mce-btn {
-                    background: $color-1!important;
-                    border-top: none!important;
-                    border-radius: 0 0 0 .6rem!important;
-                    box-shadow: none!important;
-                    color: $color-10!important;
+                    background: $color-1 !important;
+                    border-top: none !important;
+                    border-radius: 0 0 0 .6rem !important;
+                    box-shadow: none !important;
+                    color: $color-10 !important;
                     font-size: 1.6rem;
                     height: 5.6rem;
-                    left: 0!important;
+                    left: 0 !important;
                     line-height: 5.6rem;
-                    top: 0!important;
-                    width: 20%!important;
+                    top: 0 !important;
+                    width: 20% !important;
 
                     & > button {
-                        color: $color-10!important;
+                        color: $color-10 !important;
                     }
 
                     &.mce-disabled > button {
-                        color: $color-10!important;
+                        color: $color-10 !important;
                     }
 
                     &:active,
                     &:focus,
                     &:hover {
-                        background: lighten($color-1, 10%)!important;
-                        color: $color-10!important;
+                        background: lighten($color-1, 10%) !important;
+                        color: $color-10 !important;
                     }
 
                     + .mce-btn {
-                        border-top: none!important;
-                        left: 20%!important;
-                        border-radius: 0!important;
+                        border-top: none !important;
+                        left: 20% !important;
+                        border-radius: 0 !important;
 
                         + .mce-btn {
-                            left: 40%!important;
-                            border-radius: 0 0 0 0!important;
+                            left: 40% !important;
+                            border-radius: 0 0 0 0 !important;
 
                             ~ .mce-btn {
-                                left: 60%!important;
-                                border-radius: 0 0 0 0!important;
+                                left: 60% !important;
+                                border-radius: 0 0 0 0 !important;
 
                                 ~ .mce-btn {
-                                    left: 80%!important;
-                                    border-radius: 0 0 .6rem 0!important;
+                                    left: 80% !important;
+                                    border-radius: 0 0 .6rem 0 !important;
                                 }
                             }
                         }
@@ -483,7 +551,7 @@ body[data-os="win"] {
 
         &[size="3"] {
             text-align: center;
-            width: 70px!important;
+            width: 70px !important;
         }
     }
 
@@ -503,20 +571,20 @@ body[data-os="win"] {
 
     .mce-listbox {
         border-radius: 3px;
-        height: 48px!important;
-        width: 360px!important;
+        height: 48px !important;
+        width: 360px !important;
 
         button {
-            background: $color-10!important;
+            background: $color-10 !important;
             border-radius: 3px;
-            height: 48px!important;
-            line-height: 46px!important;
-            padding: 0 1.8rem!important;
+            height: 48px !important;
+            line-height: 46px !important;
+            padding: 0 1.8rem !important;
         }
     }
 
     label + input,
     label + div > input {
-        width: 360px!important;
+        width: 360px !important;
     }
 }

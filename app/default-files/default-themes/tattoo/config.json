@@ -1,6 +1,6 @@
 {
     "name": "Tattoo",
-    "version": "1.5.8.0",
+    "version": "1.5.9.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -516,14 +516,14 @@
             "name": "shareFacebook",
             "group": "Share Buttons",
             "label": "Facebook share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareTwitter",
             "group": "Share Buttons",
             "label": "Twitter share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
@@ -541,35 +541,35 @@
             "name": "shareGoogleplus",
             "group": "Share Buttons",
             "label": "Google+ share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "sharePinterest",
             "group": "Share Buttons",
             "label": "Pinterest share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
-            "name": "shareStumbleupon",
+            "name": "shareMix",
             "group": "Share Buttons",
-            "label": "StumbleUpon share button",
-            "value": true,
+            "label": "Mix (formerly StumbleUpon)",
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareLinkedin",
             "group": "Share Buttons",
             "label": "LinkedIn share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareBuffer",
             "group": "Share Buttons",
             "label": "Buffer share button",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
 

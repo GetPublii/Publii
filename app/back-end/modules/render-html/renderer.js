@@ -150,12 +150,10 @@ class Renderer {
     async renderFullPreview() {
         console.time("RENDERING");
         this.preparePageToRender();
-        await this.generateWWW().then(() => {
-            this.generateAMP();
-            console.timeEnd("RENDERING");
-
-            this.sendProgress(100, 'Website files are ready to upload');
-        });
+        await this.generateWWW();
+        this.generateAMP();
+        console.timeEnd("RENDERING");
+        this.sendProgress(100, 'Website files are ready to upload');
     }
 
     /**
@@ -203,9 +201,8 @@ class Renderer {
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
         this.copyFiles();
-        await this.generateSitemap().then(() => {
-            this.sendProgress(90, 'Finishing the render process');
-        });
+        await this.generateSitemap();
+        this.sendProgress(90, 'Finishing the render process');
     }
 
     /**
@@ -251,7 +248,11 @@ class Renderer {
      * Make sure the output dir exists and is empty before generating the output files
      */
     emptyOutputDir() {
-        fs.emptyDirSync(this.outputDir);
+        if(UtilsHelper.dirExists(this.outputDir)) {
+            fs.emptyDirSync(this.outputDir);
+        } else {
+            fs.mkdirSync(this.outputDir);
+        }
     }
 
     /*
@@ -311,7 +312,13 @@ class Renderer {
         }
 
         // Include the helpers from the helpers.js file
-        const themeHelpers = this.requireWithNoCache(helpersFilePath);
+        let themeHelpers;
+        
+        if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
+            themeHelpers = this.requireWithNoCache(helpersFilePath, Handlebars);
+        } else {
+            themeHelpers = this.requireWithNoCache(helpersFilePath);
+        }
 
         // Check if the returned value is an object
         if(themeHelpers.constructor !== Object) {
@@ -547,6 +554,7 @@ class Renderer {
             postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
             for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
+                globalContext.context = ['index'];
                 let context = contextGenerator.getContext(offset, postsPerPage);
 
                 // Add pagination data to the global context
@@ -678,6 +686,7 @@ class Renderer {
 
         // Render post sites
         for (let i = 0; i < postIDs.length; i++) {
+            globalContext.context = ['post'];
             let contextGenerator = new RendererContextPost(this);
             let context = contextGenerator.getContext(postIDs[i]);
             let fileSlug = 'DEFAULT';
@@ -890,6 +899,7 @@ class Renderer {
 
         // Render tag sites
         for (let i = 0; i < tagsData.length; i++) {
+            globalContext.context = ['tag'];
             let contextGenerator = new RendererContextTag(this);
             let fileSlug = 'DEFAULT';
 
@@ -940,6 +950,7 @@ class Renderer {
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
                 for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
+                    globalContext.context = ['tag'];
                     let context = contextGenerator.getContext(tagIDs[i], offset, postsPerPage);
 
                     // Add pagination data to the global context
@@ -1132,6 +1143,7 @@ class Renderer {
 
         // Render author sites
         for (let i = 0; i < authorsData.length; i++) {
+            globalContext.context = ['author'];
             let contextGenerator = new RendererContextAuthor(this);
             let fileSlug = 'DEFAULT';
 
@@ -1176,6 +1188,7 @@ class Renderer {
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
                 for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
+                    globalContext.context = ['author'];
                     let context = contextGenerator.getContext(authorsIDs[i], offset, postsPerPage);
 
                     // Add pagination data to the global context
@@ -1568,8 +1581,13 @@ class Renderer {
         return output;
     }
 
-    requireWithNoCache(module) {
+    requireWithNoCache(module, params = false) {
         delete require.cache[require.resolve(module)];
+
+        if (params) {
+            return require(module)(params);
+        }
+
         return require(module);
     }
 }

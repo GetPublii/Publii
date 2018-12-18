@@ -58,27 +58,34 @@ textarea {
 .buffer:hover .icon {
   fill: #222222; }
 
-.stumbleupon:hover .icon {
-  fill: #eb4924; }
+.mix:hover .icon {
+  fill: #f77e25; }
 
 /* Typography
    ========================================================================== 
 */
 html {
-  font-size: 1rem; }
-  @media screen and (min-width: 20rem) {
-    html {
-      font-size: calc(1rem + 0.1 * ((100vw - 20rem) / 113)); } }
-  @media screen and (min-width: 133rem) {
-    html {
-      font-size: 1.1rem; } }
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; }
+  html {
+    font-size: 1rem; }
+    @media screen and (min-width: 20rem) {
+      html {
+        font-size: calc(1rem + 0.1 * ((100vw - 20rem) / 113)); } }
+    @media screen and (min-width: 133rem) {
+      html {
+        font-size: 1.1rem; } }
 
 body {
   background: #ffffff;
   color: #343434;
   font-family: "Arimo", sans-serif;
   font-weight: 400;
-  line-height: 1.6; }
+  line-height: 1.6;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   color: #dd2c00;
@@ -116,8 +123,7 @@ p,
 ul,
 ol,
 dl,
-table,
-hr {
+table {
   margin-top: calc(1.06667rem + 0.25vw); }
 
 blockquote,
@@ -309,10 +315,21 @@ sup {
   font-size: 65%; }
 
 hr {
-  border: 0;
-  height: 0;
-  border-top: 1px solid #e3e3e3;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  background: 0 0;
+  border: none;
+  height: auto;
+  line-height: 1;
+  margin-top: calc(1.6rem + 0.25vw);
+  margin-bottom: calc(1.6rem + 0.25vw);
+  max-width: none;
+  text-align: center; }
+  hr::before {
+    content: "\2022 \2022 \2022";
+    color: #343434;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1rem;
+    padding-left: 1rem; }
 
 .btn, [type=button],
 [type=submit],
@@ -1337,6 +1354,21 @@ main {
   text-decoration: underline;
   -webkit-text-decoration-skip: ink;
   text-decoration-skip: ink; }
+
+.post__toc ul {
+  counter-reset: item;
+  list-style: decimal;
+  margin: calc(0.53333rem + 0.25vw) 0 0 1rem; }
+  .post__toc ul li {
+    counter-increment: item;
+    padding: 0; }
+  .post__toc ul ul {
+    margin-top: 0; }
+    .post__toc ul ul li {
+      display: block; }
+      .post__toc ul ul li:before {
+        content: counters(item, ".") ". ";
+        margin-left: -20px; }
 
 .post__footer {
   margin-top: 3.2rem; }

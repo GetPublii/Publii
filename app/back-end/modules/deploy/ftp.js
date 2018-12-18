@@ -241,7 +241,8 @@ class FTP {
                     type: 'sender',
                     message: 'app-deploy-uploaded',
                     value: {
-                        status: true
+                        status: true,
+                        issues: self.hardUploadErrors.length > 0
                     }
                 });
 

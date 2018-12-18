@@ -99,6 +99,7 @@ export default {
                 }
             });
 
+            ipcRenderer.removeListener('app-preview-render-error', this.renderError);
             ipcRenderer.once('app-preview-render-error', this.renderError);
         },
         renderingProgress: function(event, data) {

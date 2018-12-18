@@ -9,7 +9,7 @@
 [Publii](https://getpublii.com/) is a desktop-based CMS for Windows, Mac and Linux that makes creating static websites fast
 and hassle-free, even for beginners.
 
-**Current version: 0.31.3 (build 11117)**
+**Current version: 0.32.3 (build 11248)**
 
 ## Why Publii?
 Unlike static-site generators that are often unwieldy and difficult to use, Publii provides an
@@ -36,8 +36,8 @@ servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
 
 For app build you will need the following software installed:
 
-* **node.js** (8.*)
-* **npm (>= 5.*)**
+* **node.js** (10.*)
+* **npm (>= 6.*)**
 * **python** (>= 2.5.0 && < 3.0.0)
 * **electron** (in version used by Publii), **electron-packager**, **node-gyp** and **gulp** node.js modules installed globally
 

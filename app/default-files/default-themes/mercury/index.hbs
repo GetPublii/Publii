@@ -19,7 +19,7 @@
                     {{/if}}
                     {{#each tags}}
                         <li>
-                            <button class="filter__item" data-filter=".{{name}}">{{name}}</button>
+                            <button class="filter__item" data-filter=".{{slug}}">{{name}}</button>
                         </li>
                     {{/each}}
                 </ul>
@@ -30,7 +30,7 @@
                 class="layout layout{{@config.custom.layoutFrontpage}}">
                 {{#each posts}}
                     <div
-                        class="card{{#isFeatured}} card--compact card--featured{{/isFeatured}} {{#each tags}}{{name}} {{/each}}">
+                        class="card{{#isFeatured}} card--compact card--featured{{/isFeatured}} {{#each tags}}{{slug}} {{/each}}">
                         <a href="{{url}}">
                             {{#featuredImage}}
                                 {{#if @config.custom.lazyLoad}}
@@ -83,7 +83,7 @@
                 class="layout layout{{@config.custom.layoutFrontpage}}">
                 {{#each posts}}
                     <div
-                        class="card{{#isFeatured}} card--featured{{/isFeatured}} {{#each tags}}{{name}} {{/each}}">
+                        class="card{{#isFeatured}} card--featured{{/isFeatured}} {{#each tags}}{{slug}} {{/each}}">
                         <a href="{{url}}">
                             {{#featuredImage}}
                                 {{#if @config.custom.lazyLoad}}

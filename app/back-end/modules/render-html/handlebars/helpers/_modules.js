@@ -36,5 +36,7 @@ module.exports = {
     math: require('./math.js'),
     jsonify: require('./jsonify.js'),
     reverse: require('./reverse.js'),
-    orderby: require('./orderby.js')
+    orderby: require('./orderby.js'),
+    getPostHelper: require('./get-post.js'),
+    getPostsHelper: require('./get-posts.js')
 };

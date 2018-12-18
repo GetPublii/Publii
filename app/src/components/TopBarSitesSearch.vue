@@ -34,15 +34,16 @@ export default {
 @import '../scss/variables.scss';
 
 .site-switch {
-    .search {       
+    .search {   
+        position: relative;
 
         .input-wrapper {            
 
             input {
                 background: $color-9;
-                border-radius: 6px;
+                border-radius: 30px;
                 box-shadow: none!important;
-                padding: 1.2rem 3rem 1.2rem 4.4rem!important;
+                padding: 1.1rem 4.4rem!important;
             }
 
             svg {
@@ -54,24 +55,31 @@ export default {
         }
 
         & > span {
-            color: $color-3;
-            cursor: pointer;
-            font-size: 2.4rem;
-            font-weight: 300;
-            height: 2rem;
-            line-height: 1.7rem;
-            padding: 0;
-            position: absolute;
-            right: 3rem;
-            text-align: center;
-            top: 2.36rem;
-            width: 2rem;
+        border-radius: 50%;
+        color: $color-7;
+        cursor: pointer;
+        font-size: 2.4rem;
+        font-weight: 300;
+        height: 3rem;
+        line-height: 1.1; 
+        padding: 0;
+        position: absolute;
+        right: 3rem;
+        text-align: center;       
+        transition: all .3s ease-out;         
+        top: 50%;
+        transform: translate(0, -50%);        
+        width: 3rem;
 
-            &:active,
-            &:focus,
-            &:hover {
-                color: $color-4;
-            }
+        &:active,
+        &:focus,
+        &:hover {
+            color: $color-4;
+        }
+        
+        &:hover {
+            background: $color-helper-8;
+        }
         }
     }
 }

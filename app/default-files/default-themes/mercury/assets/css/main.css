@@ -58,10 +58,14 @@ textarea {
 .buffer:hover .icon {
   fill: #222222; }
 
-.stumbleupon:hover .icon {
-  fill: #eb4924; }
+.mix:hover .icon {
+  fill: #fd8235; }
 
 html {
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
   overflow-y: scroll; }
   html {
     font-size: 1rem; }
@@ -77,7 +81,9 @@ body {
   color: #111111;
   font-family: "Heebo", sans-serif;
   font-weight: 400;
-  line-height: 1.6; }
+  line-height: 1.6;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   color: #ff80ab;
@@ -115,11 +121,11 @@ p,
 ul,
 ol,
 dl,
-table,
-hr {
+table {
   margin-top: 1.5rem; }
 
-figure {
+figure,
+hr {
   margin-top: 2.25rem;
   margin-bottom: 2.25rem; }
 
@@ -305,10 +311,19 @@ sup {
   font-size: 65%; }
 
 hr {
-  border: 0;
-  height: 0;
-  border-top: 1px solid #dedede;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  background: 0 0;
+  border: none;
+  height: auto;
+  line-height: 1;
+  max-width: none;
+  text-align: center; }
+  hr::before {
+    content: "\00b7 \00b7 \00b7";
+    color: #111111;
+    font-size: 1.26562rem;
+    font-weight: 500;
+    letter-spacing: 1rem;
+    padding-left: 1rem; }
 
 .btn, [type=button],
 [type=submit],
@@ -1164,6 +1179,30 @@ main {
   text-decoration: underline;
   -webkit-text-decoration-skip: ink;
   text-decoration-skip: ink; }
+
+.post__toc h3 {
+  font-size: 1.125rem; }
+  @media screen and (min-width: 20rem) {
+    .post__toc h3 {
+      font-size: calc(1.125rem + 0 * ((100vw - 20rem) / 113)); } }
+  @media screen and (min-width: 133rem) {
+    .post__toc h3 {
+      font-size: 1.125rem; } }
+
+.post__toc ul {
+  counter-reset: item;
+  list-style: decimal;
+  margin: 0.75rem 0 0 1rem; }
+  .post__toc ul li {
+    counter-increment: item;
+    padding: 0; }
+  .post__toc ul ul {
+    margin-top: 0; }
+    .post__toc ul ul li {
+      display: block; }
+      .post__toc ul ul li:before {
+        content: counters(item, ".") ". ";
+        margin-left: -20px; }
 
 .post__footer {
   margin-top: 3rem; }

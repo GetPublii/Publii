@@ -71,16 +71,53 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 440px)">
-                    Title
+                <collection-cell 
+                    width="calc(100% - 480px)"
+                    @click.native="ordering('title')">
+                    <template v-if="orderBy === 'title'">
+                        <strong>Title</strong>
+                    </template>
+                    <template v-else>Title</template>
+
+                    <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Publication date
+                <collection-cell 
+                    width="200px"
+                    @click.native="ordering('created')">
+                    <template v-if="orderBy === 'created'">
+                        <strong>Publication date</strong>
+                    </template>
+                    <template v-else>Publication date</template>
+
+                    <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Author
+                <collection-cell 
+                    width="200px"
+                    @click.native="ordering('author')">
+                    <template v-if="orderBy === 'author'">
+                        <strong>Author</strong>
+                    </template>
+                    <template v-else>Author</template>
+
+                    <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                </collection-cell>
+
+                <collection-cell 
+                    
+                    width="40px"
+                    @click.native="ordering('id')">
+                    <template v-if="orderBy === 'id'">
+                        <strong>ID</strong>
+                    </template>
+                    <template v-else>ID</template>
+
+                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <div
@@ -146,12 +183,11 @@
 
                 <collection-cell
                     type="titles"
-                    width="calc(100% - 440px)">
+                    width="calc(100% - 480px)">
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id)"
-                            :title="'Post ID:' + item.id">
+                            @click.prevent.stop="editPost(item.id)">
                             <icon
                                 v-if="item.isTrashed"
                                 size="xs"
@@ -212,6 +248,11 @@
                         {{ item.author }}
                     </a>
                 </collection-cell>
+
+                <collection-cell
+                    width="40px">
+                    {{ item.id }}
+                </collection-cell>
             </collection-row>
         </collection>
 
@@ -249,12 +290,15 @@ export default {
     data: function() {
         return {
             filterValue: '',
-            selectedItems: []
+            selectedItems: [],
+            orderBy: 'id',
+            order: 'DESC'
         };
     },
     computed: {
         items: function() {
-            let items = this.$store.getters.sitePosts(this.filterValue);
+            let items = this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
+
             items.forEach((item, i) => {
                 if (item.tags.length) {
                     item.tags.sort((tagA, tagB) => {
@@ -305,6 +349,9 @@ export default {
         }
     },
     mounted: function() {
+        this.orderBy = this.$store.state.ordering.posts.orderBy;
+        this.order = this.$store.state.ordering.posts.order;
+
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
@@ -320,6 +367,13 @@ export default {
                 this.setFilter(newFilterValue);
             }, 0);
         }
+
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.orderBy = this.$store.state.ordering.posts.orderBy;
+                this.order = this.$store.state.ordering.posts.order;
+            }, 500);
+        });
     },
     methods: {
         addNewPost: function() {
@@ -479,6 +533,24 @@ export default {
             setTimeout(() => {
                 this.setFilter('');
             }, 0);
+        },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
+
+            this.$store.commit('setOrdering', {
+                type: 'posts',
+                orderBy: this.orderBy,
+                order: this.order
+            });
         }
     },
     beforeDestroy () {
@@ -490,6 +562,42 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.header {
+    .col {
+        cursor: pointer;
+    }
+}
+
+.order-ascending,
+.order-descending {
+    position: relative;
+    &:after {
+        border-top: solid 5px rgba($color-7, .7);
+        border-left: solid 5px transparent;
+        border-right: solid 5px transparent;
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        height: 4px;
+        left: 6px;
+        line-height: 1.1;
+        opacity: 1;
+        padding: 0;
+        position: absolute;
+        text-align: center;
+        top: 7px;
+        width: 8px;        
+    }
+}
+
+.order-descending {
+    &:after {
+        border-top-color: transparent; 
+        border-bottom: solid 5px rgba($color-7, .7);   
+        top: 0;        
+    }
+}
 
 .filters {
     font-size: 1.4rem;

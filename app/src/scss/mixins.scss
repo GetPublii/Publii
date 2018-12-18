@@ -20,3 +20,11 @@
         }
     }
 }
+
+@mixin logoSVGColors() {
+    @for $i from 1 through 16 {
+        &[data-color="#{$i}"] {
+            fill: #{map-get($logo-colors, #{'bg' + $i})};           
+        }
+    }
+}

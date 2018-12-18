@@ -17,7 +17,8 @@
         "authorsFeaturedPostsNumber": 0,
         "create404page": false,
         "createSearchPage": false,
-        "customHTML": false
+        "customHTML": false,
+        "includeHandlebarsInHelpers": false
     },
     "extensions": {
         "postEditorConfigOverride": false,

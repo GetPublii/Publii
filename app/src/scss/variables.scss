@@ -9,8 +9,8 @@ $color-4: #2a2e30;
 $color-5: #3d464e;
 $color-6: #707277;
 $color-7: #8e929d;
-$color-8: #cbcdd4;
-$color-9: #f8f9fa;
+$color-8: #dddddd;
+$color-9: #f6f9fa;
 $color-10: #fff;
 
 $color-helper-1: #FFD54F;
@@ -21,13 +21,14 @@ $color-helper-5: #FFF8E1;
 $color-helper-6: #ffc400;
 $color-helper-7: #1d2a38;
 $color-helper-8: #e5e6e8;
+$color-helper-9: #d5d5d5;
 
 $link-color: #328ed8;
 $link-hover-color: #2a2e30;
 
-$grey-icon-color: #a2a2a2;
+$grey-icon-color: $color-7; 
 $danger-color: #ef5350;
-$post-editor-sidebar-color: #f8f9fa;
+$post-editor-sidebar-color: #f6f9fa; 
 
 /*
  * Logo color sets

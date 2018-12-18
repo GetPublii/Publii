@@ -12,6 +12,7 @@
             v-for="(item, index) in items"
             :value="item.value"
             :key="'author-' + index"
+            :disabled="disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== ''"
             :selected="item.value == selectedValue">
             {{item.label}}
         </option>
@@ -20,6 +21,7 @@
             v-for="(item, key) in items"
             :value="key"
             :key="key"
+            :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
             :selected="key == selectedValue">
             {{item}}
         </option>
@@ -65,6 +67,10 @@ export default {
         noBorder: {
             default: false,
             type: Boolean
+        },
+        disabledValues: {
+            default: () => [],
+            type: Array
         }
     },
     data: function() {

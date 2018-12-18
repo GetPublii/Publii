@@ -1,0 +1,1 @@
+humps is copyright © 2012+ Dom Christie and released under the MIT license.

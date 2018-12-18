@@ -99,8 +99,8 @@
          </header>
 
          <div class="post__entry u-inner">
-            {{#if @config.custom.lazyLoad}}
-               {{{lazyLoadForContentImages text}}}
+           {{#if @config.custom.lazyLoad}}
+               {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
             {{else}}
                {{{text}}}
             {{/if}}

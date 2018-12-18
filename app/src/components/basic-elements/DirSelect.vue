@@ -106,22 +106,31 @@ export default {
     }
 
     .clear {
-        color: $color-3;
+       border-radius: 50%;
+        color: $color-7;
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 2rem;
-        line-height: 1.9rem;
+        height: 3rem; 
+        line-height: 1.1;
         position: absolute;
         right: 1.5rem;
         text-align: center;
-        top: 1.4rem;
-        transition: all .3s ease-out;
-        width: 2rem;
+        transition: all .3s ease-out;         
+                    top: 50%;
+                    transform: translateY(-50%); 
+                    width: 3rem;
 
-        &:hover {
-            color: $color-4;
-        }
+        &:active,
+                    &:focus,
+                    &:hover {
+                        color: $color-4;
+                    }
+        
+                     &:hover {
+                        background: $color-helper-8;
+                    } 
+                      
     }
 
     svg {
