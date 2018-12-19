@@ -45,7 +45,8 @@
                             class="post-editor-button-dropdown-item" 
                             @click="setCurrentAction('publish-post')"
                             v-if="isDraft">
-                            Publish post
+                            <template v-if="!this.$store.state.app.config.closeEditorOnSave">Publish post</template>
+                            <template v-else>Publish and close</template>
                         </div>
                     </div>
                 </div>
@@ -601,6 +602,7 @@ export default {
 
             this.currentAction = actionName;
             this.buttonDropdownVisible = false;
+            this.doCurrentAction();
         },
         retrieveCurrentAction () {
             this.currentAction = localStorage.getItem('publii-post-editor-current-action');
@@ -630,7 +632,7 @@ export default {
             }
 
             if (this.currentAction === 'publish-post') {
-                this.savePost('published');
+                this.savePost('published', false, this.$store.state.app.config.closeEditorOnSave);
                 this.retrieveCurrentAction();
             }
         },
