@@ -73,7 +73,7 @@ export default {
         background: $color-10;
         border-radius: 3px;
         display: flex;
-        height: 3.3rem;
+        height: auto;
         justify-content: center;
         margin-right: 1.2rem;
         position: relative;
