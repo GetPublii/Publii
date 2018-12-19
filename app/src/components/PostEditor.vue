@@ -783,7 +783,7 @@ export default {
         font-size: 16px;
         font-weight: 500;
         height: 4.4rem;
-        line-height: 4.3rem;
+        line-height: 4.3rem;      
         padding: 0 1.6rem;
         position: relative;
         transition: all .25s ease-out;
@@ -792,12 +792,21 @@ export default {
         width: 204px;
 
         &-trigger {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+            border-right: 1px inset $color-1;
             height: 100%;
             left: 0;
             padding-left: 2rem;
             position: absolute;
             top: 0;
-            width: 200px;
+            transition: all .25s ease-out;
+            width: 160px;            
+             
+            &:hover {
+                 background: darken($color-1, 5%);
+                 
+            }
         }
 
         &-toggle {
@@ -808,9 +817,14 @@ export default {
             position: absolute;
             right: 0;
             top: 0;
+            transition: all .25s ease-out;
             width: 44px;
+            
+            &:hover {
+                 background: darken($color-1, 9%);
+            }
 
-            &:after {
+            &::after {
                 border: 5px solid $color-10;
                 border-left-color: transparent;
                 border-left-width: 6px;
