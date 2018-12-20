@@ -194,7 +194,14 @@ class Site {
         this.totalProgress = 0;
 
         // For each image - create a new thumbnails (detect featured images)
-        let regenerateProcess = childProcess.fork(__dirname + '/workers/thumbnails/regenerate');
+        let regenerateProcess = childProcess.fork(__dirname + '/workers/thumbnails/regenerate', {
+            stdio: [
+                null,
+                fs.openSync(this.application.appDir + "/logs/regenerate-process.log", "w"),
+                fs.openSync(this.application.appDir + "/logs/regenerate-errors.log", "w"),
+                'ipc'
+            ]
+        });
 
         regenerateProcess.send({
             type: 'dependencies',

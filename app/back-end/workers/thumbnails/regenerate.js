@@ -79,27 +79,39 @@ function regenerateImage(images, fullPath, catalog) {
         return;
     }
 
-    Promise.all(promises).then(results => {
-        // Send a +1 signal for the total progress
-        context.totalProgress++;
-        console.log('PROGRESS: ' + context.totalProgress, context.numberOfImages);
+    if (promises) {
+        Promise.all(promises).then(results => {
+            // Send a +1 signal for the total progress
+            context.totalProgress++;
+            console.log('PROGRESS: ' + context.totalProgress, context.numberOfImages);
 
-        process.send({
-            type: 'progress',
-            value: parseInt((context.totalProgress / context.numberOfImages) * 100),
-            files: results
+            process.send({
+                type: 'progress',
+                value: parseInt((context.totalProgress / context.numberOfImages) * 100),
+                files: results
+            });
+
+            if(context.totalProgress >= context.numberOfImages) {
+                finishProcess();
+                return;
+            }
+
+            regenerateImage(images, fullPath, catalog);
+        }).catch(err => {
+            console.log(err);
+            context.totalProgress++;
+            regenerateImage(images, fullPath, catalog);
         });
+    } else {
+        context.totalProgress++;
 
-        if(context.totalProgress >= context.numberOfImages) {
+        if (context.totalProgress >= context.numberOfImages) {
             finishProcess();
             return;
+        } else {
+            regenerateImage(images, fullPath, catalog);
         }
-
-        regenerateImage(images, fullPath, catalog);
-    }).catch(err => {
-        console.log(err);
-        context.totalProgress++;
-    });
+    }
 }
 
 /**

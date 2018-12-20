@@ -56,7 +56,7 @@
     "node-expat": "^2.3.17",
     "node-version-compare": "^1.0.1",
     "normalize-path": "^2.0.1",
-    "sharp": "^0.21.0",
+    "sharp": "^0.20.8",
     "shuffle-array": "^1.0.1",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",

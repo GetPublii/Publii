@@ -17,9 +17,9 @@
     "build": "cross-env NODE_ENV=development gulp build",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/js/**/*.spec.js --reporter dot",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=3.0.8 --overwrite --symlinks --app-version=0.32.3 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.32.3 --version-string.FileVersion=0.32.3 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
-    "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=3.0.8 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
-    "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --ignore=app/node_modules/electron-* --electron-version=3.0.8 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
+    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=3.0.11 --overwrite --symlinks --app-version=0.32.3 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.32.3 --version-string.FileVersion=0.32.3 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --ignore=app/node_modules/electron-* --electron-version=3.0.11 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
+    "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --ignore=app/node_modules/electron-* --electron-version=3.0.11 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
     "postinstall": "opencollective postinstall",
     "dist": "build"
   },
@@ -56,7 +56,7 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^3.0.8",
+    "electron": "^3.0.11",
     "handlebars": "^4.0.5",
     "opencollective": "^1.0.3"
   },
