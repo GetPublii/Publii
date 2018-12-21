@@ -453,6 +453,14 @@ export default {
             }, { deep: true });
         },
         savePost (newPostStatus, preview = false, closeEditor = false) {
+            if (this.postData.title.trim() === '') {
+                this.$bus.$emit('alert-display', {
+                    message: 'You cannot save a post with empty title.'
+                });
+
+                return;
+            }
+
             tinymce.triggerSave();
             let finalStatus = newPostStatus;
             let mediaPath = this.getMediaPath();
