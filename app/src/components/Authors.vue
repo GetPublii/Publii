@@ -299,7 +299,9 @@ export default {
 
     .header {
         .col {
-            cursor: pointer;
+             align-items: center;
+             cursor: pointer;
+             display: flex;
         }
     }
 
@@ -307,29 +309,29 @@ export default {
     .order-descending {
         position: relative;
         &:after {
-            border-top: solid 5px rgba($color-7, .7);
-            border-left: solid 5px transparent;
-            border-right: solid 5px transparent;
-            content: "";
-            cursor: pointer;
-            display: inline-block;
-            height: 4px;
-            left: 6px;
-            line-height: 1.1;
-            opacity: 1;
-            padding: 0;
-            position: absolute;
-            text-align: center;
-            top: 7px;
-            width: 8px;        
+             border-top: solid 5px rgba($color-7, .7);
+             border-left: solid 5px transparent;
+             border-right: solid 5px transparent;
+             content: "";
+             cursor: pointer;
+             display: inline-block;
+             height: 4px;
+             left: 6px;
+             line-height: 1.1;
+             opacity: 1;
+             padding: 0;
+             position: relative;
+             text-align: center;
+             top: 50%;
+             transform: translateY(-50%);
+             width: 8px;       
         }
     }
 
     .order-descending {
         &:after {
             border-top-color: transparent; 
-            border-bottom: solid 5px rgba($color-7, .7);   
-            top: 0;        
+            border-bottom: solid 5px rgba($color-7, .7);                     
         }
     }
 
