@@ -565,7 +565,9 @@ export default {
 
 .header {
     .col {
+        align-items: center;
         cursor: pointer;
+        display: flex;
     }
 }
 
@@ -584,9 +586,10 @@ export default {
         line-height: 1.1;
         opacity: 1;
         padding: 0;
-        position: absolute;
+        position: relative;
         text-align: center;
-        top: 7px;
+        top: 50%;
+        transform: translateY(-50%);
         width: 8px;        
     }
 }
@@ -594,8 +597,7 @@ export default {
 .order-descending {
     &:after {
         border-top-color: transparent; 
-        border-bottom: solid 5px rgba($color-7, .7);   
-        top: 0;        
+        border-bottom: solid 5px rgba($color-7, .7);                 
     }
 }
 
