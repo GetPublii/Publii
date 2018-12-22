@@ -410,8 +410,10 @@ class Image extends Model {
      */
     shouldUseJimp() {
         return (
-            this.appInstance.appConfig.resizeEngine &&
-            this.appInstance.appConfig.resizeEngine === 'jimp'
+            process.platform === 'linux' || (
+                this.appInstance.appConfig.resizeEngine &&
+                this.appInstance.appConfig.resizeEngine === 'jimp'
+            )
         );
     }
 }
