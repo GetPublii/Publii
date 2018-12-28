@@ -117,12 +117,26 @@ class RendererContextPost extends RendererContext {
         this.post.id = parseInt(this.post.id, 10);
 
         let tagsCondition = '';
+        let sortColumn = this.siteConfig.advanced.postsListingOrderBy;
+        let sortField = sortColumn;
+
+        if (sortColumn === 'modified_at') {
+            sortField = 'modifiedAt';
+        } else if (sortColumn === 'created_at') {
+            sortField = 'createdAt';
+        }
 
         if(similarPost) {
             let tags = this.post.tags ? this.post.tags.map(tag => parseInt(tag.id, 10)) : [];
 
             if(tags.length) {
                 tagsCondition = ' AND pt.tag_id IN(' + tags.join(',') + ') ';
+            }
+
+            let sortCondition = `p.${sortColumn} ${operator} ${this.post[sortField]}`;
+
+            if (sortColumn === 'title') {
+                sortCondition = `p.${sortColumn} ${operator} "${this.post[sortField].replace(/"/gmi, '')}"`;
             }
 
             // Retrieve post
@@ -136,7 +150,7 @@ class RendererContextPost extends RendererContext {
                     ON
                     p.id = pt.post_id
                 WHERE
-                    p.created_at ${operator} ${this.post.createdAt} AND
+                    ${sortCondition} AND
                     p.id != ${this.post.id} AND
                     p.status LIKE "%published%" AND
                     p.status NOT LIKE "%trashed%" AND
@@ -150,21 +164,31 @@ class RendererContextPost extends RendererContext {
             `);
         } else {
             // Retrieve post
-            postData = this.db.exec(`
-                SELECT
-                    id
-                FROM
-                    posts
-                WHERE
-                    created_at ${operator} ${this.post.createdAt} AND
-                    id != ${this.post.id} AND
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%trashed%" AND
-                    status NOT LIKE "%hidden%"
-                ORDER BY
-                    ${temporaryPostsOrdering}
-                LIMIT 1
-            `);
+            let sortCondition = `${sortColumn} ${operator} ${this.post[sortField]}`;
+
+            if (sortColumn === 'title') {
+                sortCondition = `${sortColumn} ${operator} "${this.post[sortField].replace(/"/gmi, '')}"`;
+            }
+
+            try {
+                postData = this.db.exec(`
+                    SELECT
+                        id
+                    FROM
+                        posts
+                    WHERE
+                        ${sortCondition} AND
+                        id != ${this.post.id} AND
+                        status LIKE "%published%" AND
+                        status NOT LIKE "%trashed%" AND
+                        status NOT LIKE "%hidden%"
+                    ORDER BY
+                        ${temporaryPostsOrdering}
+                    LIMIT 1
+                `);
+            } catch (err) {
+                console.log('ERR', err);
+            }
         }
 
         postData = postData[0] ? postData[0].values[0] : false;
