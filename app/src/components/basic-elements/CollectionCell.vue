@@ -18,6 +18,10 @@ export default {
             default: 'left',
             type: String
         },
+        justifyContent: {
+            default: 'left',
+            type: String
+        },
         type: {
             default: '',
             type: String
@@ -38,7 +42,8 @@ export default {
         cellStyle: function() {
             let styles = [
                 'width: ' + this.width,
-                'text-align: ' + this.textAlign
+                'text-align: ' + this.textAlign,
+                'justify-content: ' + this.justifyContent
             ];
 
             return styles.join(';');

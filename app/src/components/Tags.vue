@@ -40,6 +40,7 @@
                 </collection-cell>
 
                 <collection-cell 
+                    justifyContent="center"
                     textAlign="center"
                     width="100px"
                     @click.native="ordering('postsCounter')">
@@ -96,6 +97,7 @@
                 </collection-cell>
 
                 <collection-cell 
+                    justifyContent="center"
                     textAlign="center"
                     width="100px">
                     <a
