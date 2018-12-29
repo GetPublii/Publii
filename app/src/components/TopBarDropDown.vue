@@ -25,6 +25,10 @@
                 title="View Publii on Github"
                 path="https://github.com/getpublii/publii" />
             <topbar-dropdown-item
+                label="Donate"
+                title="Support Publii and donate today!"
+                path="https://getpublii.com/donate/" />
+            <topbar-dropdown-item
                 label="About Publii"
                 title="More informations about Publii"
                 path="/about" />
