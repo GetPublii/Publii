@@ -15,7 +15,8 @@ const AstAppConfig = {
     startScreen: "",
     timeFormat: 12,
     closeEditorOnSave: true,
-    wideScrollbars: false
+    wideScrollbars: false,
+    showModificationDateAsColumn: false
 };
 
 module.exports = AstAppConfig;

@@ -72,7 +72,7 @@
                 </collection-cell>
 
                 <collection-cell 
-                    width="calc(100% - 480px)"
+                    :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'"
                     @click.native="ordering('title')">
                     <template v-if="orderBy === 'title'">
                         <strong>Title</strong>
@@ -93,6 +93,19 @@
 
                     <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
                     <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                </collection-cell>
+
+                <collection-cell 
+                    v-if="showModificationDateAsColumn"
+                    width="200px"
+                    @click.native="ordering('modified')">
+                    <template v-if="orderBy === 'modified'">
+                        <strong>Modification date</strong>
+                    </template>
+                    <template v-else>Modification date</template>
+
+                    <span class="order-descending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
+                    <span class="order-ascending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
                 </collection-cell>
 
                 <collection-cell 
@@ -183,7 +196,7 @@
 
                 <collection-cell
                     type="titles"
-                    width="calc(100% - 480px)">
+                    :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
                     <h2 class="title">
                         <a
                             href="#"
@@ -224,7 +237,7 @@
                             href="#"
                             class="tag"
                             :key="'tag-' + tag.id"
-                            @click.post.prevent="setFilter('tag:' + tag.name)">
+                            @click.stop.prevent="setFilter('tag:' + tag.name)">
                             #{{ tag.name }}
                         </a>
                     </template>
@@ -234,8 +247,19 @@
                     type="publish-dates"
                     width="200px">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
-                    <span class="modify-date">
+                    <span 
+                        v-if="!showModificationDateAsColumn"
+                        class="modify-date">
                         Last modified: {{ getModificationDate(item.modified) }}
+                    </span>
+                </collection-cell>
+
+                <collection-cell
+                    v-if="showModificationDateAsColumn"
+                    type="modification-dates"
+                    width="200px">
+                    <span class="modify-date">
+                        {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
@@ -346,6 +370,9 @@ export default {
                 drafts: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
             }
+        },
+        showModificationDateAsColumn () {
+            return this.$store.state.app.config.showModificationDateAsColumn;
         }
     },
     mounted: function() {
