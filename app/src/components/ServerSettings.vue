@@ -249,7 +249,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-user"
-                    label="Username">
+                    label="Username / Organization">
                     <text-input
                         slot="field"
                         id="gh-user"
