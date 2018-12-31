@@ -91,7 +91,7 @@ class EditorBridge {
                 if(
                     e.keyCode === 40 &&
                     node.tagName === 'PRE' &&
-                    node.parentNode.nextSibling === null
+                    node.nextSibling === null
                 ) {
                     this.tinymceEditor.execCommand('mceInsertContent', false, '<p></p>');
                     return;
