@@ -18,7 +18,7 @@
         </p>
 
         <p class="about-copyright">
-            Copyright 2018 <a href="https://tidycustoms.net" target="_blank">TidyCustoms</a>. All rights reserved.<br>
+            Copyright 2019 <a href="https://tidycustoms.net" target="_blank">TidyCustoms</a>. All rights reserved.<br>
             Publli is designed and maintained by core team with cooperation with Dev Zen and is made possible by the <a href="http://electron.atom.io" target="_blank">Electron</a>
             Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
         </p>
