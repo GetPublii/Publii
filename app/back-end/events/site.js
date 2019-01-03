@@ -5,7 +5,7 @@ const passwordSafeStorage = require('keytar');
 const ipcMain = require('electron').ipcMain;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
-const sql = require('../vendor/sql.js');
+const sqlite = require('better-sqlite3');
 const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');
 const URLHelper = require('../modules/render-html/helpers/url.js');
@@ -323,8 +323,7 @@ class SiteEvents {
             // Load newly created db
             let siteDir = path.join(appInstance.sitesDir, config.name);
             let dbPath = path.join(siteDir, 'input', 'db.sqlite');
-            let input = fs.readFileSync(dbPath);
-            appInstance.db = new sql.Database(input);
+            appInstance.db = new sqlite(dbPath);
 
             if(result !== false) {
                 result = {

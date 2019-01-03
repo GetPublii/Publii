@@ -25,8 +25,11 @@ class ImageHelper {
      */
     save() {
         // Detect old image if existed
-        let sqlQuery = `SELECT featured_image_id FROM posts WHERE id = ${this.postID}`;
-        let featuredImageId = parseInt(this.db.exec(sqlQuery)[0].values[0][0], 10);
+        let stmt = this.db.prepare('SELECT featured_image_id FROM posts WHERE id = @id');
+        let result = stmt.run({
+            id: this.postID
+        });
+        let featuredImageId = parseInt(result.featured_image_id, 10);
 
         // Check if user removed image or image was empty
         if(this.featuredImage === '' && featuredImageId > 0) {
@@ -77,8 +80,7 @@ class ImageHelper {
 
         let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, ?, ?, "", "", ?)`);
         imagesSqlQuery.run([this.postID, simplifiedFilePath, JSON.stringify(this.featuredImageData)]);
-        imagesSqlQuery.free();
-        let featuredImageId = this.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
+        let featuredImageId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
 
         // Update post entry in DB
         let postsSqlQuery = `UPDATE posts SET featured_image_id = ${featuredImageId} WHERE id = ${this.postID}`;
@@ -96,8 +98,6 @@ class ImageHelper {
             JSON.stringify(this.featuredImageData),
             this.postID
         ]);
-
-        imageSqlQuery.free();
     }
 
     /*

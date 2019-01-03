@@ -8,7 +8,7 @@ const normalizePath = require('normalize-path');
 
 // Internal packages
 const slug = require('./../../helpers/slug');
-const sql = require('../../vendor/sql.js');
+const sqlite = require('better-sqlite3');
 const URLHelper = require('./helpers/url.js');
 const FilesHelper = require('./helpers/files.js');
 const PostViewSettingsHelper = require('./helpers/post-view-settings.js');
@@ -414,8 +414,7 @@ class Renderer {
      */
     loadDataFromDB() {
         const dbPath = path.join(this.inputDir, 'db.sqlite');
-        const input = fs.readFileSync(dbPath);
-        this.db = new sql.Database(input);
+        this.db = new sqlite(dbPath);
     }
 
     /*

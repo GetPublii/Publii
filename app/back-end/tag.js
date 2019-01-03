@@ -79,12 +79,6 @@ class Tag extends Model {
             JSON.stringify(this.additionalData)
         ]);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
-
         return {
             status: true,
             message: 'tag-added',
@@ -112,12 +106,6 @@ class Tag extends Model {
             this.id
         ]);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
-
         return {
             status: true,
             message: 'tag-updated',
@@ -142,33 +130,29 @@ class Tag extends Model {
      * Check if the tag name is unique
      */
     isTagNameUnique() {
-        let sqlQuery = `SELECT * FROM tags WHERE name LIKE "${this.escape(this.name)}" AND id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let stmt = this.db.prepare('SELECT * FROM tags WHERE name LIKE @name AND id != @id');
+        stmt.run({
+            name: this.escape(this.name),
+            id: this.id
+        });
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
-
-        results = results[0].values;
-
-        if(results.indexOf(this.name) > -1) {
-            return false;
+        for (const tag of stmt.iterate()) {
+            if (tag.name === this.name) {
+                return false;
+            }
         }
 
         return true;
     }
 
     isTagSlugUnique() {
-        let sqlQuery = `SELECT slug FROM tags WHERE id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let stmt = this.db.prepare('SELECT slug FROM tags WHERE id != @id');
+        stmt.run({
+            id: this.id
+        });
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
-
-        // Check every tag and its slug
-        for(let tagName of results[0].values) {
-            if(this.createSlug(this.slug) === this.createSlug(tagName)) {
+        for (const tag of stmt.iterate()) {
+            if (this.slug === tag.slug) {
                 return false;
             }
         }
@@ -205,11 +189,7 @@ class Tag extends Model {
         let postTagsSqlQuery = `DELETE FROM posts_tags WHERE tag_id=${this.id}`;
         this.db.run(tagsSqlQuery);
         this.db.run(postTagsSqlQuery);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
+        
         return {
             status: true,
             message: 'tag-deleted'

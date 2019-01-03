@@ -193,7 +193,6 @@ class Post extends Model {
                 this.status,
                 this.template
             ]);
-            sqlQuery.free();
         } else {
             // Update post data
             sqlQuery = this.db.prepare(`UPDATE posts
@@ -219,7 +218,6 @@ class Post extends Model {
                 this.template,
                 this.id
             ]);
-            sqlQuery.free();
         }
 
         // Get the newly added item ID if necessary
@@ -254,7 +252,6 @@ class Post extends Model {
                     this.text,
                     this.id
                 ]);
-                sqlQuery.free();
             }
         }
 
@@ -265,17 +262,9 @@ class Post extends Model {
         if(this.featuredImage) {
             let image = new ImageHelper(this);
             image.save();
-
-            if(this.storeMode) {
-                this.storeDB();
-            }
         } else if(this.id > 0) {
             let image = new ImageHelper(this);
             image.delete();
-
-            if(this.storeMode) {
-                this.storeDB();
-            }
         }
 
         // Save additional data
@@ -312,10 +301,6 @@ class Post extends Model {
         this.db.run(additionalDataSqlQuery);
         ImageHelper.deleteImagesDirectory(this.siteDir, this.id);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
         return true;
     }
 
@@ -348,7 +333,6 @@ class Post extends Model {
                 postToDuplicate[8],
                 postToDuplicate[9]
             ]);
-            newCopyPostSqlQuery.free();
         } else {
             return false;
         }
@@ -366,7 +350,6 @@ class Post extends Model {
                     postTagsToDuplicate[0].values[i][0],
                     copiedPostId
                 ]);
-                newCopyPostTagsSqlQuery.free();
             }
         }
 
@@ -383,7 +366,6 @@ class Post extends Model {
                     postImagesToDuplicate[0].values[i][4],
                     postImagesToDuplicate[0].values[i][5]
                 ]);
-                newCopyPostImagesSqlQuery.free();
             }
         }
 
@@ -398,13 +380,7 @@ class Post extends Model {
                     postAdditionalDataToDuplicate[0].values[i][2],
                     postAdditionalDataToDuplicate[0].values[i][3],
                 ]);
-                newCopyPostAdditionalDataSqlQuery.free();
             }
-        }
-
-        // Save changes in the database
-        if(this.storeMode) {
-            this.storeDB();
         }
 
         // Copy images
@@ -443,12 +419,6 @@ class Post extends Model {
             this.id
         ]);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        updateQuery.free();
-
         return true;
     }
 
@@ -473,11 +443,6 @@ class Post extends Model {
             for (let tagName of tagsToSave) {
                 this.saveTag(tagName);
             }
-
-            // Save the changes
-            if(this.storeMode) {
-                this.storeDB();
-            }
         }
     }
 
@@ -501,7 +466,6 @@ class Post extends Model {
         // Save binding between post and tag
         sqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(?, ?)`);
         sqlQuery.run([tagID, this.id]);
-        sqlQuery.free();
     }
 
     /*
@@ -726,12 +690,6 @@ class Post extends Model {
         // Store the data
         let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "_core", ?)`);
         storeSqlQuery.run([this.id, additionalDataToSave]);
-        storeSqlQuery.free();
-
-        // Save the changes
-        if(this.storeMode) {
-            this.storeDB();
-        }
     }
 
     /*
@@ -752,12 +710,6 @@ class Post extends Model {
         // Store the data
         let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "postViewSettings", ?)`);
         storeSqlQuery.run([this.id, dataToSave]);
-        storeSqlQuery.free();
-
-        // Save the changes
-        if(this.storeMode) {
-            this.storeDB();
-        }
     }
 }
 

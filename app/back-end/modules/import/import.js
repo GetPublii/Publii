@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const WxrParser = require('./wxr-parser');
-const sql = require('../../vendor/sql.js');
+const sqlite = require('better-sqlite3');
 
 class Import {
     /**
@@ -33,9 +33,8 @@ class Import {
             return;
         }
 
-        const dbFilePath = path.join(this.appInstance.sitesDir, this.siteName, 'input', 'db.sqlite');
-        const input = fs.readFileSync(dbFilePath);
-        this.appInstance.db = new sql.Database(input);
+        const dbPath = path.join(this.appInstance.sitesDir, this.siteName, 'input', 'db.sqlite');
+        this.appInstance.db = new sqlite(dbPath);
     }
 
     /**

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const slug = require('./../helpers/slug');
-const sql = require('./../vendor/sql.js');
+const sqlite = require('better-sqlite3');
 
 class SiteConfigMigrator {
     static moveOldAuthorData(appInstance, siteConfig) {
@@ -16,8 +16,7 @@ class SiteConfigMigrator {
         // If yes - save them in database as author with ID = 1
         let siteDir = path.join(appInstance.sitesDir, siteConfig.name);
         let dbPath = path.join(siteDir, 'input', 'db.sqlite');
-        let input = fs.readFileSync(dbPath);
-        let db = new sql.Database(input);
+        let db = new sqlite(dbPath);
         let newAuthorName = siteConfig.author.name;
         let newAuthorUsername = slug(newAuthorName);
         let newAuthorConfig = {
@@ -44,13 +43,6 @@ class SiteConfigMigrator {
             newAuthorUsername,
             newAuthorConfig
         ]);
-
-        sqlQuery.free();
-
-        // Store data in DB file
-        let data = db.export();
-        let buffer = new Buffer(data);
-        fs.writeFileSync(path.join(siteDir, 'input', 'db.sqlite'), buffer);
 
         // Remove from the config author data
         delete siteConfig.author;

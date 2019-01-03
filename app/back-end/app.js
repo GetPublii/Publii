@@ -7,7 +7,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const passwordSafeStorage = require('keytar');
 const fileExists = require('file-exists');
-const sql = require('./vendor/sql.js');
+const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
@@ -193,9 +193,7 @@ class App {
             };
         }
 
-        const input = fs.readFileSync(dbPath);
-        this.db = new sql.Database(input);
-
+        this.db = new sqlite(dbPath);
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
         let authors = new Authors(this, {site});

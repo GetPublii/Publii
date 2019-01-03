@@ -83,12 +83,6 @@ class Author extends Model {
             this.additionalData
         ]);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
-
         return {
             status: true,
             message: 'author-added',
@@ -120,12 +114,6 @@ class Author extends Model {
             this.id
         ]);
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
-
         return {
             status: true,
             message: 'author-updated',
@@ -153,17 +141,17 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorNameUnique() {
-        let sqlQuery = `SELECT * FROM authors WHERE name LIKE "${this.escape(this.name)}" AND id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let stmt = this.db.prepare('SELECT * FROM authors WHERE name LIKE @name AND id != @id');
+        
+        stmt.run({
+            name: this.escape(this.name),
+            id: this.id
+        });
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
-
-        results = results[0].values;
-
-        if(results.indexOf(this.name) > -1) {
-            return false;
+        for (const author of stmt.iterate()) {
+            if (author.name === this.name) {
+                return false;
+            }
         }
 
         return true;
@@ -175,16 +163,14 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorUsernameUnique() {
-        let sqlQuery = `SELECT username FROM authors WHERE id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let stmt = this.db.prepare('SELECT username FROM authors WHERE id != @id');
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
+        stmt.run({
+            id: this.id
+        });
 
-        // Check every author and its slug
-        for(let authorName of results[0].values) {
-            if(slug(this.username) === slug(authorName)) {
+        for (const author of stmt.iterate()) {
+            if (author.username === slug(authorName)) {
                 return false;
             }
         }
@@ -209,10 +195,6 @@ class Author extends Model {
         let postsSqlQuery = `UPDATE posts SET authors = "1" WHERE authors = "${this.id}"`;
         this.db.run(authorsSqlQuery);
         this.db.run(postsSqlQuery);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
 
         return {
             status: true,

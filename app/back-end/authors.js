@@ -24,24 +24,20 @@ class Authors extends Model {
             name,
             username,
             config,
-            additional_data
+            additional_data AS additionalData
         FROM
             authors
         GROUP BY
             id
         ORDER BY
             id ASC`;
-        let results = this.getResults(this.db.exec(sqlQuery));
-
-        results = results.map(function(author) {
-            return {
-                id: author[0],
-                name: author[1],
-                username: author[2],
-                config: author[3],
-                additionalData: author[4]
-            };
-        });
+            
+        let rows = this.db.prepare(sqlQuery).get();
+        let results = [];
+        
+        for (const author of rows.iterate()) {
+           results.push(author);
+        }
 
         return results;
     }

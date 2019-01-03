@@ -4,7 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const sql = require('./vendor/sql.js');
+const sqlite = require('better-sqlite3');
 const Themes = require('./themes.js');
 const Image = require('./image.js');
 const UtilsHelper = require('./helpers/utils');
@@ -91,10 +91,10 @@ class Site {
      * Create database
      */
     createDB() {
-        let db = new sql.Database();
+        let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
+        let db = new sqlite(dbPath);
         let sqlQueries = fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8');
         db.run(sqlQueries);
-        this.storeDB(db);
     }
 
     /*
@@ -102,12 +102,9 @@ class Site {
      */
     createAuthor(authorName) {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
-        let input = fs.readFileSync(dbPath);
-        let db = new sql.Database(input);
+        let db = new sqlite(dbPath);
         let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, ?, ?, '', '{}', '{}')`);
         sqlQuery.run([authorName, slug(authorName).toLowerCase()]);
-        this.storeDB(db);
-        sqlQuery.free();
     }
 
     /*
@@ -119,8 +116,7 @@ class Site {
         let themesHelper = new Themes(this.application, { site: this.name });
         let themeName = themesHelper.currentTheme();
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
-        let input = fs.readFileSync(dbPath);
-        let db = new sql.Database(input);
+        let db = new sqlite(dbPath);
 
         // If there is no theme selected - abort
         if(themeName === 'not selected') {
@@ -304,15 +300,6 @@ class Site {
         }
 
         return numberOfImages;
-    }
-
-    /*
-     * Store DB data
-     */
-    storeDB(db) {
-        let data = db.export();
-        let buffer = new Buffer(data);
-        fs.writeFileSync(path.join(this.siteDir, 'input', 'db.sqlite'), buffer);
     }
 
     /*
