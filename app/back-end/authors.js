@@ -32,14 +32,7 @@ class Authors extends Model {
         ORDER BY
             id ASC`;
             
-        let rows = this.db.prepare(sqlQuery).get();
-        let results = [];
-        
-        for (const author of rows.iterate()) {
-           results.push(author);
-        }
-
-        return results;
+        return this.db.prepare(sqlQuery).all();
     }
 }
 

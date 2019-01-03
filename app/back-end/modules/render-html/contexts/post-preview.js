@@ -156,7 +156,7 @@ class RendererContextPostPreview extends RendererContext {
             }
 
             // Retrieve post
-            postData = this.db.exec(`
+            postData = this.db.prepare(`
                 SELECT
                     p.id AS id
                 FROM
@@ -167,7 +167,7 @@ class RendererContextPostPreview extends RendererContext {
                     p.id = pt.post_id
                 WHERE
                     p.created_at ${operator} ${this.post.createdAt} AND
-                    p.id != ${this.post.id} AND
+                    p.id != @postID AND
                     p.status LIKE "%published%" AND
                     p.status NOT LIKE "%trashed%" AND
                     p.status NOT LIKE "%hidden%"
@@ -177,33 +177,35 @@ class RendererContextPostPreview extends RendererContext {
                 ORDER BY
                     ${temporaryPostsOrdering}
                 LIMIT 1
-            `);
+            `).get({
+                postID: this.post.id
+            });
         } else {
             // Retrieve post
-            postData = this.db.exec(`
+            postData = this.db.prepare(`
                 SELECT
                     id
                 FROM
                     posts
                 WHERE
                     created_at ${operator} ${this.post.createdAt} AND
-                    id != ${this.post.id} AND
+                    id != @postID AND
                     status LIKE "%published%" AND
                     status NOT LIKE "%trashed%" AND
                     status NOT LIKE "%hidden%"
                 ORDER BY
                     ${temporaryPostsOrdering}
                 LIMIT 1
-            `);
+            `).get({
+                postID: this.post.id
+            });
         }
 
-        postData = postData[0] ? postData[0].values[0] : false;
-
-        if(!postData) {
+        if(!postData || !postData.id) {
             return false;
         }
 
-        this[postType] = this.renderer.cachedItems.posts[postData[0]];
+        this[postType] = this.renderer.cachedItems.posts[postData.id];
     }
 
     loadRelatedPosts() {
@@ -252,7 +254,7 @@ class RendererContextPostPreview extends RendererContext {
         }
 
         // Retrieve post
-        let postsData = this.db.exec(`
+        let postsData = this.db.prepare(`
             SELECT
                 p.id AS id
             FROM
@@ -262,26 +264,27 @@ class RendererContextPostPreview extends RendererContext {
                 ON
                 p.id = pt.post_id
             WHERE
-                p.id != ${this.post.id} AND
+                p.id != @postID AND
                 p.status LIKE "%published%" AND
                 p.status NOT LIKE "%trashed%" AND
                 p.status NOT LIKE "%hidden%"
                 ${conditions}
             GROUP BY
                 p.id
-            LIMIT ${relatedPostsNumber}
-        `);
-
-        postsData = postsData[0] ? postsData[0].values : false;
+            LIMIT @relatedPostsNumber
+        `).all({
+            postID: this.post.id,
+            relatedPostsNumber: relatedPostsNumber
+        });
 
         this.relatedPosts = [];
 
-        if(!postsData) {
+        if(!postsData || !postsData.length) {
             return false;
         }
 
         for(let i = 0; i < postsData.length; i++) {
-            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i][0]];
+            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i].id];
         }
     }
 
@@ -321,21 +324,17 @@ class RendererContextPostPreview extends RendererContext {
 
         // Retrieve post image
         if(mainPost === true) {
-            postImage = [{
-                values: [
-                    [
-                        0,
-                        this.renderer.postData.featuredImageFilename,
-                        JSON.stringify(this.renderer.postData.featuredImageData)
-                    ]
-                ]
-            }];
+            postImage = {
+                id: 0,
+                url: this.renderer.postData.featuredImageFilename,
+                additional_data: JSON.stringify(this.renderer.postData.featuredImageData)
+            };
         } else {
-            postImage = this.db.exec(`
+            postImage = this.db.prepare(`
                 SELECT
-                    pi.id,
-                    pi.url,
-                    pi.additional_data
+                    pi.id AS id,
+                    pi.url AS url,
+                    pi.additional_data AS additional_data
                 FROM
                     posts as p
                 LEFT JOIN
@@ -343,32 +342,34 @@ class RendererContextPostPreview extends RendererContext {
                     ON
                     p.featured_image_id = pi.id
                 WHERE
-                    p.id = ${postID}
+                    p.id = @postID
                 ORDER BY
                     pi.id DESC
                 LIMIT 1
-            `);
+            `).get({
+                postID: postID
+            });
         }
 
-        if (postImage[0] && postImage[0].values[0][1]) {
+        if (postImage && postImage.url) {
             let url = '';
             let alt = '';
             let caption = '';
             let credits = '';
             let imageDimensions = false;
 
-            if (postImage[0].values[0][2]) {
-                let data = JSON.parse(postImage[0].values[0][2]);
+            if (postImage.additional_data) {
+                let data = JSON.parse(postImage.additional_data);
                 let postDirectory = postID;
 
                 if(postDirectory === 0) {
                     postDirectory = 'temp';
                 }
 
-                let imagePath = URLHelper.createImageURL(this.inputDir, postDirectory, postImage[0].values[0][1]);
+                let imagePath = URLHelper.createImageURL(this.inputDir, postDirectory, postImage.url);
                 let domain = this.siteConfig.domain;
 
-                url = URLHelper.createImageURL(domain, postDirectory, postImage[0].values[0][1]);
+                url = URLHelper.createImageURL(domain, postDirectory, postImage.url);
                 alt = data.alt;
                 caption = data.caption;
                 credits = data.credits;
@@ -394,7 +395,7 @@ class RendererContextPostPreview extends RendererContext {
             }
 
             let featuredImageData = {
-                id: postImage[0].values[0][0],
+                id: postImage.id,
                 url: url,
                 alt: alt,
                 caption: caption,

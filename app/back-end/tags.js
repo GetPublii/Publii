@@ -26,14 +26,7 @@ class Tags extends Model {
         ORDER BY
             id DESC`;
 
-        let rows = this.db.prepare(sqlQuery).get();
-        let results = [];
-        
-        for (const tag of rows.iterate()) {
-           results.push(tag);
-        }
-
-        return results;
+        return this.db.prepare(sqlQuery).all();
     }
 }
 

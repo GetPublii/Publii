@@ -184,7 +184,7 @@ class Site {
         }
 
         // Create featured images post reference
-        this.postImagesRef = db.exec(`SELECT post_id, url FROM posts_images`);
+        this.postImagesRef = db.prepare(`SELECT post_id, url FROM posts_images`).all();
         // Calculate how many images should be created
         this.numberOfImages = numberOfImagesToRegenerate;
         this.totalProgress = 0;

@@ -26,7 +26,7 @@ class RendererContextHome extends RendererContext {
         if(this.postsNumber === 0) {
             this.posts = false;
         } else {
-            this.posts = this.db.exec(`
+            this.posts = this.db.prepare(`
                 SELECT
                     *
                 FROM
@@ -39,10 +39,13 @@ class RendererContextHome extends RendererContext {
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
-                    ${this.postsNumber}
+                    @postsNumber
                 OFFSET
-                    ${this.offset}
-            `);
+                    @offset
+            `).all({
+                postsNumber: postsNumber,
+                offset: this.offset  
+            });
         }
 
         let siteName = this.siteConfig.name;
@@ -64,12 +67,9 @@ class RendererContextHome extends RendererContext {
 
     prepareData() {
         this.title = this.siteConfig.name;
-        this.posts = this.posts[0] ? this.posts[0].values : [];
-        this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.featuredPosts = this.featuredPosts[0] ? this.featuredPosts[0].values : [];
-        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.hiddenPosts = this.hiddenPosts[0] ? this.hiddenPosts[0].values : [];
-        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
+        this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
 
         // Remove featured posts from posts if featured posts not allowed
         if(
@@ -126,7 +126,7 @@ class RendererContextHome extends RendererContext {
             includeFeaturedPosts = 'AND status NOT LIKE "%featured%"';
         }
 
-        let results = this.db.exec(`
+        let results = this.db.prepare(`
             SELECT
                 COUNT(id)
             FROM
@@ -140,13 +140,13 @@ class RendererContextHome extends RendererContext {
                 ${includeFeaturedPosts}
             GROUP BY
                 id
-        `);
+        `).all();
 
-        if(!results[0] || !results[0].values) {
+        if(!results || !results.length) {
             return 0;
         }
 
-        return results[0].values.length;
+        return results.length;
     }
 }
 

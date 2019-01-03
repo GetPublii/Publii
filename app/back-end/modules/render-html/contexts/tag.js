@@ -28,7 +28,7 @@ class RendererContextTag extends RendererContext {
         if(this.postsNumber === 0) {
             this.posts = false;
         } else {
-            this.posts = this.db.exec(`
+            this.posts = this.db.prepare(`
                 SELECT
                     id
                 FROM
@@ -42,14 +42,18 @@ class RendererContextTag extends RendererContext {
                     p.status NOT LIKE "%hidden%" AND
                     p.status NOT LIKE "%trashed%" AND
                     ${includeFeaturedPosts}
-                    pt.tag_id = ${this.tagID}
+                    pt.tag_id = @tagID
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
-                    ${this.postsNumber}
+                    @postsNumber
                 OFFSET
-                    ${this.offset}
-            `);
+                    @offset
+            `).all({
+                tagID: this.tagID,
+                postsNumber: this.postsNumber,
+                offset: this.offset
+            });
         }
 
         this.tags = this.renderer.commonData.tags;
@@ -62,10 +66,6 @@ class RendererContextTag extends RendererContext {
 
     prepareData() {
         let self = this;
-        this.posts = this.posts[0] ? this.posts[0].values : [];
-        this.featuredPosts = this.featuredPosts[0] ? this.featuredPosts[0].values : [];
-        this.hiddenPosts = this.hiddenPosts[0] ? this.hiddenPosts[0].values : [];
-
         let siteName = this.siteConfig.name;
 
         if(this.siteConfig.displayName) {
@@ -76,9 +76,9 @@ class RendererContextTag extends RendererContext {
                                                     .replace(/%tagname/g, this.tag.name)
                                                     .replace(/%sitename/g, siteName);
 
-        this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
+        this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
 
         // Remove featured posts from posts if featured posts allowed
         if(

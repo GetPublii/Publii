@@ -38,7 +38,7 @@ class RendererCache {
      */
     getTags() {
         console.time('TAGS - QUERY');
-        let tags = this.db.exec(`
+        let tags = this.db.prepare(`
             SELECT
                 t.id AS id,
                 t.name AS name,
@@ -48,11 +48,10 @@ class RendererCache {
             FROM
                 tags AS t
             ;
-        `);
+        `).all();
         console.timeEnd('TAGS - QUERY');
 
         console.time('TAGS - STORE');
-        tags = tags[0] ? tags[0].values : [];
         // Data are automatically stored in the this.renderer.cachedItems
         tags.map(tag => new Tag(tag, this.renderer));
         console.timeEnd('TAGS - STORE');
@@ -69,7 +68,7 @@ class RendererCache {
             includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
         }
 
-        let tagsPostCount = this.db.exec(`
+        let tagsPostCount = this.db.prepare(`
             SELECT
                 pt.tag_id AS id,
                 COUNT(p.id) AS count
@@ -86,14 +85,12 @@ class RendererCache {
                 ${includeFeaturedPosts}
             GROUP BY
                 pt.tag_id;
-        `);
+        `).all();
         console.timeEnd('TAGS POST COUNT - QUERY');
 
         console.time('TAGS POST COUNT - STORE');
-        tagsPostCount = tagsPostCount[0] ? tagsPostCount[0].values : [];
-
         for(let tagPostCount of tagsPostCount) {
-            this.renderer.cachedItems.tagsPostCounts[tagPostCount[0]] = tagPostCount[1];
+            this.renderer.cachedItems.tagsPostCounts[tagPostCount.id] = tagPostCount.count;
         }
         console.timeEnd('TAGS POST COUNT - STORE');
     }
@@ -103,7 +100,7 @@ class RendererCache {
      */
     getAuthors() {
         console.time('AUTHORS - QUERY');
-        let authors = this.db.exec(`
+        let authors = this.db.prepare(`
             SELECT
                 id,
                 name,
@@ -115,7 +112,6 @@ class RendererCache {
         console.timeEnd('AUTHORS - QUERY');
 
         console.time('AUTHORS - STORE');
-        authors = authors[0] ? authors[0].values : [];
         // Data are automatically stored in the this.renderer.cachedItems
         authors.map(author => new Author(author, this.renderer));
         console.timeEnd('AUTHORS - STORE');
@@ -132,7 +128,7 @@ class RendererCache {
             includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
         }
 
-        let authorPostCounts = this.db.exec(`
+        let authorPostCounts = this.db.prepare(`
             SELECT
                 a.id AS id,
                 COUNT(p.id) AS count
@@ -149,14 +145,12 @@ class RendererCache {
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id
-        `);
+        `).all();
         console.timeEnd('AUTHORS POST COUNT - QUERY');
 
         console.time('AUTHORS POST COUNT - STORE');
-        authorPostCounts = authorPostCounts[0] ? authorPostCounts[0].values : [];
-
-        for(let count of authorPostCounts) {
-            this.renderer.cachedItems.authorsPostCounts[count[0]] = count[1];
+        for(let countData of authorPostCounts) {
+            this.renderer.cachedItems.authorsPostCounts[countData.id] = countData.count;
         }
         console.timeEnd('AUTHORS POST COUNT - STORE');
     }
@@ -166,7 +160,7 @@ class RendererCache {
      */
     getFeaturedImages() {
         console.time('FEATURED IMAGES - QUERY');
-        let featuredImages = this.db.exec(`
+        let featuredImages = this.db.prepare(`
             SELECT
                 pi.id,
                 pi.post_id,
@@ -180,11 +174,10 @@ class RendererCache {
                 p.featured_image_id = pi.id
             ORDER BY
                 pi.id DESC
-        `);
+        `).all();
         console.timeEnd('FEATURED IMAGES - QUERY');
 
         console.time('FEATURED IMAGES - STORE');
-        featuredImages = featuredImages[0] ? featuredImages[0].values : [];
         featuredImages.map(image => new FeaturedImage(image, this.renderer));
         console.timeEnd('FEATURED IMAGES - STORE');
     }
@@ -195,7 +188,7 @@ class RendererCache {
     getPostTags() {
         console.time('POST TAGS - QUERY');
         // Retrieve post tags
-        let postTags = this.db.exec(`
+        let postTags = this.db.prepare(`
             SELECT
                 pt.post_id AS postID,
                 t.id AS tagID
@@ -207,17 +200,15 @@ class RendererCache {
                 t.id = pt.tag_id
             ORDER BY
                 t.id ASC
-        `);
+        `).all();
         console.timeEnd('POST TAGS - QUERY');
 
         console.time('POST TAGS - STORE');
-        postTags = postTags[0] ? postTags[0].values : [];
-
         for(let postTag of postTags) {
-            if(this.renderer.cachedItems.postTags[postTag[0]]) {
-                this.renderer.cachedItems.postTags[postTag[0]].push(postTag[1]);
+            if(this.renderer.cachedItems.postTags[postTag.postID]) {
+                this.renderer.cachedItems.postTags[postTag.postID].push(postTag.tagID);
             } else {
-                this.renderer.cachedItems.postTags[postTag[0]] = [postTag[1]];
+                this.renderer.cachedItems.postTags[postTag.postID] = [postTag.tagID];
             }
         }
 
@@ -229,7 +220,7 @@ class RendererCache {
      */
     getPosts() {
         console.time('POSTS - QUERY');
-        let posts = this.db.exec(`
+        let posts = this.db.prepare(`
             SELECT
                 *
             FROM
@@ -238,15 +229,14 @@ class RendererCache {
                 status NOT LIKE "%trashed%"
             ORDER BY
                 id ASC;
-        `);
+        `).all();
         console.timeEnd('POSTS - QUERY');
 
         console.time('POSTS - STORE');
-        posts = posts[0] ? posts[0].values : [];
         let postViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
 
         posts = posts.map(post => {
-            let postViewConfig = this.getPostViewSettings(postViewConfigObject, post[0]);
+            let postViewConfig = this.getPostViewSettings(postViewConfigObject, post.id);
             let newPost = new Post(post, this.renderer);
             newPost.setPostViewConfig(postViewConfig);
 
@@ -269,21 +259,24 @@ class RendererCache {
      */
     getPostViewSettings(defaultPostViewConfig, postID) {
         let postViewData = false;
-        let postViewSettings = false;
-        let outputConfig = {};
+        let postViewSettings = {};
 
-        postViewData = this.db.exec(`
+        postViewData = this.db.prepared(`
             SELECT
                 value
             FROM
                 posts_additional_data
             WHERE
-                post_id = ${postID}
+                post_id = @postID
                 AND
                 key = "postViewSettings"
-        `);
+        `).get({
+            postID: postID
+        });
 
-        postViewSettings = postViewData[0] ? JSON.parse(postViewData[0].values[0]) : {};
+        if (postViewData && postViewData.value) {
+            postViewSettings = JSON.parse(postViewData.value);
+        }
 
         return PostViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
     }

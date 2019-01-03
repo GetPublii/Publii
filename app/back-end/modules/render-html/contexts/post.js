@@ -10,8 +10,8 @@ const sqlString = require('sqlstring');
 class RendererContextPost extends RendererContext {
     loadData() {
         // Retrieve meta data
-        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = ? AND key = "_core"`);
-        this.metaData = metaDataQuery.get([this.postID]);
+        let metaDataQuery = this.db.prepare('SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = "_core"');
+        this.metaData = metaDataQuery.get({ postID: this.postID});
         this.allTags = this.renderer.commonData.tags;
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
@@ -22,17 +22,15 @@ class RendererContextPost extends RendererContext {
 
     prepareData() {
         this.post = this.renderer.cachedItems.posts[this.postID];
-        this.featuredPosts = this.featuredPosts[0] ? this.featuredPosts[0].values : [];
-        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.hiddenPosts = this.hiddenPosts[0] ? this.hiddenPosts[0].values : [];
-        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
+        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.metaTitle = this.siteConfig.advanced.postMetaTitle;
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
         this.canonicalUrl = this.post.url;
         this.metaRobots = '';
 
-        if(this.metaData && this.metaData[0]) {
-            let results = JSON.parse(this.metaData[0]);
+        if(this.metaData && this.metaData.value) {
+            let results = JSON.parse(this.metaData.value);
 
             if (results.metaTitle) {
                 this.metaTitle = results.metaTitle;
@@ -143,7 +141,7 @@ class RendererContextPost extends RendererContext {
             }
 
             // Retrieve post
-            postData = this.db.exec(`
+            postData = this.db.prepare(`
                 SELECT
                     p.id AS id
                 FROM
@@ -154,7 +152,7 @@ class RendererContextPost extends RendererContext {
                     p.id = pt.post_id
                 WHERE
                     ${sortCondition} AND
-                    p.id != ${this.post.id} AND
+                    p.id != @postID AND
                     p.status LIKE "%published%" AND
                     p.status NOT LIKE "%trashed%" AND
                     p.status NOT LIKE "%hidden%"
@@ -164,7 +162,9 @@ class RendererContextPost extends RendererContext {
                 ORDER BY
                     ${temporaryPostsOrdering}
                 LIMIT 1
-            `);
+            `).get({
+                postID: this.post.id
+            });
         } else {
             // Retrieve post
             let sortCondition = `${sortColumn} ${operator} ${this.post[sortField]}`;
@@ -174,33 +174,33 @@ class RendererContextPost extends RendererContext {
             }
 
             try {
-                postData = this.db.exec(`
+                postData = this.db.prepare(`
                     SELECT
                         id
                     FROM
                         posts
                     WHERE
                         ${sortCondition} AND
-                        id != ${this.post.id} AND
+                        id != @postID AND
                         status LIKE "%published%" AND
                         status NOT LIKE "%trashed%" AND
                         status NOT LIKE "%hidden%"
                     ORDER BY
                         ${temporaryPostsOrdering}
                     LIMIT 1
-                `);
+                `).get({
+                    postID: this.post.id
+                });
             } catch (err) {
                 console.log('ERR', err);
             }
         }
 
-        postData = postData[0] ? postData[0].values[0] : false;
-
-        if(!postData) {
+        if(!postData || !postData.id) {
             return false;
         }
 
-        this[postType] = this.renderer.cachedItems.posts[postData[0]];
+        this[postType] = this.renderer.cachedItems.posts[postData.id];
     }
 
     loadRelatedPosts() {
@@ -249,7 +249,7 @@ class RendererContextPost extends RendererContext {
         }
 
         // Retrieve post
-        let postsData = this.db.exec(`
+        let postsData = this.db.prepare(`
             SELECT
                 p.id AS id
             FROM
@@ -259,26 +259,27 @@ class RendererContextPost extends RendererContext {
                 ON
                 p.id = pt.post_id
             WHERE
-                p.id != ${this.post.id} AND
+                p.id != @postID AND
                 p.status LIKE "%published%" AND
                 p.status NOT LIKE "%trashed%" AND
                 p.status NOT LIKE "%hidden%"
                 ${conditions}
             GROUP BY
                 p.id
-            LIMIT ${relatedPostsNumber}
-        `);
-
-        postsData = postsData[0] ? postsData[0].values : false;
+            LIMIT @relatedPostsNumber
+        `).all({
+            postID: this.post.id,
+            relatedPostsNumber: relatedPostsNumber
+        });
 
         this.relatedPosts = [];
 
-        if(!postsData) {
+        if(!postsData || !postsData.length) {
             return false;
         }
 
         for(let i = 0; i < postsData.length; i++) {
-            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i][0]];
+            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i].id];
         }
     }
 

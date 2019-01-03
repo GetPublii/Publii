@@ -109,7 +109,7 @@ class RendererContext {
 
     getTagsMenuData() {
         // Retrieve all tags
-        let tags = this.db.exec(`
+        let tags = this.db.prepare(`
             SELECT
                 t.id AS id,
                 t.slug AS slug
@@ -117,23 +117,14 @@ class RendererContext {
                 tags AS t
             ORDER BY
                 id ASC
-        `);
-
-        tags = tags[0] ? tags[0].values : [];
-
-        tags = tags.map(tag => {
-            return {
-                id: tag[0],
-                slug: tag[1]
-            };
-        });
+        `).all();
 
         return tags;
     }
 
     getPostsMenuData() {
         // Retrieve all tags
-        let posts = this.db.exec(`
+        let posts = this.db.prepare(`
             SELECT
                 p.id AS id,
                 p.slug AS slug,
@@ -142,24 +133,14 @@ class RendererContext {
                 posts AS p
             ORDER BY
                 id ASC
-        `);
-
-        posts = posts[0] ? posts[0].values : [];
-
-        posts = posts.map(post => {
-            return {
-                id: post[0],
-                slug: post[1],
-                status: post[2]
-            };
-        });
+        `).all();
 
         return posts;
     }
 
     getAllTags() {
         // Retrieve post tags
-        let tags = this.db.exec(`
+        let tags = this.db.prepare(`
             SELECT
                 id
             FROM
@@ -168,8 +149,7 @@ class RendererContext {
                 name ASC
         `);
 
-        tags = tags[0] ? tags[0].values : [];
-        tags = tags.map(tag => this.renderer.cachedItems.tags[tag[0]]);
+        tags = tags.map(tag => this.renderer.cachedItems.tags[tag.id]);
 
         if(!this.siteConfig.advanced.displayEmptyTags) {
             tags = tags.filter(tag => tag.postsNumber > 0);
@@ -179,12 +159,11 @@ class RendererContext {
     }
 
     getAuthors() {
-        let authorSqlQuery = this.db.exec(`SELECT id FROM authors ORDER BY id ASC;`);
-        let authorData = authorSqlQuery[0] ? authorSqlQuery[0].values : false;
+        let authorData = this.db.prepare(`SELECT id FROM authors ORDER BY id ASC;`).all();
         let authors = [];
 
         for(let i = 0; i < authorData.length; i++) {
-            authors.push(this.renderer.cachedItems.authors[authorData[i][0]]);
+            authors.push(this.renderer.cachedItems.authors[authorData[i].id]);
         }
 
         if(!this.siteConfig.advanced.displayEmptyAuthors) {
@@ -341,7 +320,7 @@ class RendererContext {
                             this.siteConfig.advanced.postsListingOrder;
         }
 
-        let posts = this.db.exec(`
+        let posts = this.db.prepare(`
                 SELECT
                     id
                 FROM
@@ -352,17 +331,13 @@ class RendererContext {
                     status NOT LIKE "%trashed%"
                 ORDER BY
                     ${postsOrdering}
-        `);
-        let tags = this.db.exec(`SELECT id FROM tags`);
-        let authors = this.db.exec(`SELECT id FROM authors`);
+        `).all();
+        let tags = this.db.prepare(`SELECT id FROM tags`).all();
+        let authors = this.db.prepare(`SELECT id FROM authors`).all();
 
-        posts = posts[0] ? posts[0].values : [];
-        tags = tags[0] ? tags[0].values : [];
-        authors = authors[0] ? authors[0].values : [];
-
-        posts = posts.map(post => JSON.parse(JSON.stringify(this.renderer.cachedItems.posts[post[0]])));
-        tags = tags.map(tag => JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[tag[0]])));
-        authors = authors.map(author => JSON.parse(JSON.stringify(this.renderer.cachedItems.authors[author[0]])));
+        posts = posts.map(post => JSON.parse(JSON.stringify(this.renderer.cachedItems.posts[post.id])));
+        tags = tags.map(tag => JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[tag.id])));
+        authors = authors.map(author => JSON.parse(JSON.stringify(this.renderer.cachedItems.authors[author.id])));
 
         for(let i = 0; i < tags.length; i++) {
             tags[i].posts = this.getContentStructureTagPosts(tags[i].id);
@@ -390,7 +365,7 @@ class RendererContext {
                 this.siteConfig.advanced.postsListingOrder;
         }
 
-        let posts = this.db.exec(`
+        let posts = this.db.prepare(`
                 SELECT
                     posts_tags.post_id AS id
                 FROM
@@ -400,17 +375,17 @@ class RendererContext {
                 ON
                     posts_tags.post_id = posts.id
                 WHERE
-                    posts_tags.tag_id = ${tagID} AND
+                    posts_tags.tag_id = @tagID AND
                     posts.status LIKE "%published%" AND
                     posts.status NOT LIKE "%hidden%" AND
                     posts.status NOT LIKE "%trashed%"
                 ORDER BY
                     ${postsOrdering}
-        `);
+        `).all({
+            tagID: tagID
+        });
 
-        posts = posts[0] ? posts[0].values : [];
-        posts = posts.map(post => this.renderer.cachedItems.posts[post[0]]);
-
+        posts = posts.map(post => this.renderer.cachedItems.posts[post.id]);
         return posts;
     }
 
@@ -425,7 +400,7 @@ class RendererContext {
                 this.siteConfig.advanced.postsListingOrder;
         }
 
-        let posts = this.db.exec(`
+        let posts = this.db.prepare(`
                 SELECT
                     id
                 FROM
@@ -434,14 +409,14 @@ class RendererContext {
                     status LIKE "%published%" AND
                     status NOT LIKE "%hidden%" AND
                     status NOT LIKE "%trashed%" AND
-                    authors = "${authorID}"
+                    authors = @authorID
                 ORDER BY
                     ${postsOrdering}
-        `);
+        `).all({
+            authorID: authorID
+        });
 
-        posts = posts[0] ? posts[0].values : [];
-        posts = posts.map(post => this.renderer.cachedItems.posts[post[0]]);
-
+        posts = posts.map(post => this.renderer.cachedItems.posts[post.id]);
         return posts;
     }
 
@@ -467,7 +442,7 @@ class RendererContext {
             }
         }
 
-        let results = this.db.exec(`
+        let results = this.db.prepare(`
             SELECT
                 id
             FROM
@@ -480,13 +455,13 @@ class RendererContext {
             ORDER BY
                 ${this.featuredPostsOrdering}
             ${postsLimit}
-        `);
+        `).all();
 
         return results;
     }
 
     getHiddenPosts() {
-        let results = this.db.exec(`
+        let results = this.db.prepare(`
             SELECT
                 id
             FROM
@@ -497,7 +472,7 @@ class RendererContext {
                 status NOT LIKE "%trashed%"
             ORDER BY
                 ${this.hiddenPostsOrdering}
-        `);
+        `).all();
 
         return results;
     }

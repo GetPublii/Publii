@@ -635,7 +635,7 @@ class Renderer {
         let inputFile = ampMode ? 'amp-post.hbs' : 'post.hbs';
 
         // Get posts
-        let postData = this.db.exec(`
+        let postData = this.db.prepare(`
             SELECT
                 id,
                 slug,
@@ -647,11 +647,17 @@ class Renderer {
                 status NOT LIKE "%trashed%"
             ORDER BY
                 id ASC
-        `);
+        `).all();
 
-        postIDs = postData[0] ? postData[0].values.map(col => col[0]) : [];
-        postSlugs = postData[0] ? postData[0].values.map(col => col[1]) : [];
-        postTemplates = postData[0] ? postData[0].values.map(col => col[2]) : [];
+        if (postData && postData.length) { 
+            postIDs = postData.map(row => row.id);
+            postSlugs = postData.map(row => row.slug);
+            postTemplates = postData.map(row => row.template);
+        } else {
+            postIDs = [];
+            postSlugs = [];
+            postTemplates = [];
+        }
 
         // Load templates
         let compiledTemplates = {};
@@ -800,23 +806,27 @@ class Renderer {
      */
     overridePostViewSettings(defaultPostViewConfig, postID, postPreview = false) {
         let postViewData = false;
-        let postViewSettings = false;
+        let postViewSettings = {};
 
         if(postPreview) {
             postViewSettings = this.postData.postViewSettings;
         } else {
-            postViewData = this.db.exec(`
+            postViewData = this.db.prepare(`
                 SELECT
                     value
                 FROM
                     posts_additional_data
                 WHERE
-                    post_id = ${postID}
+                    post_id = @postID
                     AND
                     key = "postViewSettings"
-            `);
+            `).get({
+                postID: postID
+            });
 
-            postViewSettings = postViewData[0] ? JSON.parse(postViewData[0].values[0]) : {};
+            if (postViewData && postViewData.length) {
+                postViewSettings = JSON.parse(postViewData.value);
+            }
         }
 
         return PostViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
@@ -829,16 +839,15 @@ class Renderer {
         console.time(ampMode ? 'TAGS-AMP' : 'TAGS');
         // Get tags
         let inputFile = ampMode ? 'amp-tag.hbs' : 'tag.hbs';
-        let tagsData = this.db.exec(`
+        let tagsData = this.db.prepare(`
             SELECT
                 t.id AS id
             FROM
                 tags AS t
             ORDER BY
                 name ASC
-        `);
-        tagsData = tagsData[0] ? tagsData[0].values : [];
-        tagsData = tagsData.map(tag => this.cachedItems.tags[tag[0]]);
+        `).all();
+        tagsData = tagsData.map(tag => this.cachedItems.tags[tag.id]);
 
         // Remove empty tags - without posts
         if (!this.siteConfig.advanced.displayEmptyTags) {
@@ -1062,7 +1071,7 @@ class Renderer {
         let authorsUsernames = [];
         let inputFile = ampMode ? 'amp-author.hbs' : 'author.hbs';
         let authorTemplates = [];
-        let authorsData = this.db.exec(`
+        let authorsData = this.db.prepare(`
             SELECT
                 a.id AS id,
                 a.username AS slug,
@@ -1079,14 +1088,14 @@ class Renderer {
                 a.id
             ORDER BY
                 a.username ASC
-        `);
-        authorsData = authorsData[0] ? authorsData[0].values : [];
+        `).all();
+        
         authorsData = authorsData.map(authorData => {
             try {
-                authorData[2] = JSON.parse(authorData[2]);
+                authorData.config = JSON.parse(authorData.config);
             } catch (e) {
-                authorData[2] = '';
-                console.log('[WARNING] Wrong author #' + authorData[0] + ' config - invalid JSON value');
+                authorData.config = '';
+                console.log('[WARNING] Wrong author #' + authorData.id + ' config - invalid JSON value');
             }
 
             return authorData;
@@ -1095,19 +1104,19 @@ class Renderer {
         // Remove empty authors - without posts
         if (!this.siteConfig.advanced.displayEmptyAuthors) {
             authorsData = authorsData.filter(authorData => {
-                return authorData[4] > 0;
+                return authorData.posts_number > 0;
             });
         }
 
         // Simplify the structure - change arrays into single value
-        authorsIDs = authorsData.map(authorData => authorData[0]);
-        authorsUsernames = authorsData.map(authorData => authorData[1]);
+        authorsIDs = authorsData.map(authorData => authorData.id);
+        authorsUsernames = authorsData.map(authorData => authorData.slug);
         authorTemplates = authorsData.map(authorData => {
-            if (authorData[2] && authorData[2].template) {
-                if (authorData[2].template === '' || !this.themeConfig.authorTemplates[authorData[2].template]) {
+            if (authorData.config && authorData.config.template) {
+                if (authorData.config.template === '' || !this.themeConfig.authorTemplates[authorData.config.template]) {
                     return 'DEFAULT';
                 } else {
-                    return authorData[2].template;
+                    return authorData.config.template;
                 }
             }
 
