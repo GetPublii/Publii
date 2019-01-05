@@ -35,7 +35,7 @@
     "electron-load-devtool": "^1.0.0",
     "fast-memoize": "^2.2.7",
     "file-exists": "^1.0.0",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^7.0.1",
     "ftp": "^0.3.10",
     "github": "^9.2.0",
     "gitlab": "^3.5.1",

@@ -81,8 +81,12 @@ class App {
             fs.mkdirSync(path.join(this.appDir, 'themes'));
             fs.mkdirSync(path.join(this.appDir, 'logs'));
             fs.copySync(
-                path.join(__dirname, '..', 'default-files', 'default-themes'),
-                path.join(this.appDir, 'themes')
+                path.join(__dirname, '..', 'default-files', 'default-themes').replace('app.asar', 'app.asar.unpacked'),
+                path.join(this.appDir, 'themes'),
+                { 
+                    filter: this.skipSystemFiles,
+                    dereference: true
+                }
             );
         }
 
@@ -110,10 +114,19 @@ class App {
             // Detect missing themes
             if(!fs.existsSync(path.join(userThemesPath, file))) {
                 fs.mkdirSync(path.join(userThemesPath, file));
-                fs.copySync(
-                    path.join(appThemesPath, file),
-                    path.join(userThemesPath, file)
-                );
+
+                try {
+                    fs.copySync(
+                        path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
+                        path.join(userThemesPath, file),
+                        { 
+                            filter: this.skipSystemFiles,
+                            dereference: true
+                        }
+                    );
+                } catch (err) {
+                    fs.appendFile(this.appDir + '/logs/themes-copy-errors.txt', JSON.stringify(err));
+                }
             } else {
                 // For existing themes - compare versions
                 let appThemeConfig = path.join(appThemesPath, file, 'config.json');
@@ -131,8 +144,12 @@ class App {
 
                         // Copy updated theme files
                         fs.copySync(
-                            path.join(appThemesPath, file),
-                            path.join(userThemesPath, file)
+                            path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
+                            path.join(userThemesPath, file),
+                            { 
+                                filter: this.skipSystemFiles,
+                                dereference: true
+                            }
                         );
                     }
                 }
@@ -506,6 +523,17 @@ class App {
      */
     getMainWindow() {
         return this.mainWindow;
+    }
+
+    /**
+     * Function used to filter unnecessary files
+     */
+    skipSystemFiles (src, dest) {
+        if (src.indexOf('.DS_Store') > -1) {
+            return false;
+        }
+
+        return true;
     }
 }
 
