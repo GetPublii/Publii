@@ -127,8 +127,7 @@ export default {
 
 .site-logo {
     align-items: center;   
-    display: flex;
-    padding-left: 0.8rem;
+    display: flex;    
     width: 32rem;
 
     &:active,
