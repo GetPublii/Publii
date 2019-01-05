@@ -103,13 +103,13 @@ body[data-os="linux"] {
 
 @media (max-height: 900px) {
     .topbar > .topbar-inner {
-        padding: 0 3rem;
+        padding: 0 4rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar > .topbar-inner {
-        padding: 0 3rem;
+        padding: 0 4rem;
     }
 }
 </style>

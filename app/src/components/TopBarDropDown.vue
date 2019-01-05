@@ -84,9 +84,10 @@ export default {
         cursor: pointer;
         display: block;
         height: 6rem;
+        margin-left: 1rem;
         order: 3;
-        padding: 0 2rem;
-        width: 3rem;
+        padding: 0 1rem;
+        width: 4px;
 
 
         &:hover {
@@ -101,6 +102,7 @@ export default {
             margin-top: -2px;
             pointer-events: none;
             position: relative;
+            right: -1px;
             top: 50%;
             width: 4px;
             transition: all .25s ease-out;
@@ -141,7 +143,7 @@ export default {
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
-        right: 6.5rem;
+        right: 5.5rem;
         top: 4.5rem;
     }
 }

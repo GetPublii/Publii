@@ -152,7 +152,7 @@ export default {
         background: $color-10;
         bottom: 0;
         overflow: scroll;
-        padding: 4.4rem 6rem;
+        padding: 4.4rem 5rem;
         right: 0;
         width: calc(100% - 35rem);
 

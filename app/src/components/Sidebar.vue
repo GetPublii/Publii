@@ -24,7 +24,7 @@ export default {
 .sidebar {
     background: $color-1;
     height: 100%;
-    padding: 5.6rem 5rem;
+    padding: 4.4rem 5rem;
     position: absolute;
     -webkit-app-region: no-drag;
     -webkit-user-select: none;
@@ -36,20 +36,20 @@ export default {
  */
 @media (max-height: 736px) {
     .sidebar {
-        padding: 5rem 4rem 3rem;
+        padding: 4rem 4rem 3rem;
     }
 }
 
 @media (min-height: 737px) and (max-height: 900px) {
     .sidebar {
-        padding: 5rem 4rem 3rem;
+        padding: 4rem 4rem 3rem;
     }
 }
 
 
 @media (max-width: 1400px) {
     .sidebar {
-        padding: 5rem 4rem 3rem;
+        padding: 4rem 4rem 3rem;
     }
 }
 </style>
