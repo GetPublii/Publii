@@ -34,9 +34,9 @@
             @change="applyStyle">
             <option value="">Select style</option>
             <option value="p">Paragraph</option>
-            <option value="h2">Header 2</option>
-            <option value="h3">Header 3</option>
-            <option value="h4">Header 4</option>
+            <option value="h2">Heading 2</option>
+            <option value="h3">Heading 3</option>
+            <option value="h4">Heading 4</option>
             <option value="code">Code</option>
             <option value="pre">Pre</option>
             <option value="blockquote">Blockquote</option>
