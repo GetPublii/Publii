@@ -676,6 +676,23 @@ select[multiple] {
     }
 }
 
+.post__video {
+    background: #f6f9fa;
+    border: 2px dashed #cbcdd4;
+    position: relative;
+}
+
+.post__video > img.mce-object {
+    background: #f6f9fa;
+    border: 5px solid #ffffff;
+    position: relative;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='utf-8'?%3e%3csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 68 48' xml:space='preserve'%3e%3cpath fill='%23cbcdd4' d='M64.82,6.36c-0.58-2.21-2.97-4.3-5.17-4.61C50.94,0.58,42.22,0,33.5,0S16.06,0.58,7.34,1.75 c-2.2,0.31-4.59,2.4-5.17,4.61c-2.9,11.43-2.9,22.85,0,34.28c0.58,2.21,2.97,4.3,5.17,4.61C16.06,46.42,24.78,47,33.5,47 s17.44-0.58,26.16-1.75c2.2-0.31,4.59-2.4,5.17-4.61C67.73,29.21,67.73,17.79,64.82,6.36z M43.21,24.78l-16.14,8.07 C26.12,33.32,25,32.63,25,31.57V23.5v-8.07c0-1.06,1.12-1.76,2.07-1.28l16.14,8.07C44.26,22.75,44.26,24.25,43.21,24.78z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-size: 68px 48px;
+    background-position: 50% 50%;
+    max-height: 17rem;
+}
+
 .post__toc {
     margin-top: 1.6rem;
 }
