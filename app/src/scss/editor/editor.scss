@@ -141,14 +141,14 @@ body#tinymce {
     line-height: 1.6;
     margin: 0;
     max-width: 39rem;
-    width: 100%;
+    overflow-y: initial !important;
     padding: 1.4rem 0 !important;
+    width: 100%;
 }
 
 @media (min-width: 1015px) {
     body#tinymce {
         margin: 0 auto;
-        overflow-y: initial !important;
     }
 }
 
@@ -727,6 +727,7 @@ select[multiple] {
         margin-left: -5.86667rem;
         margin-right: -5.86667rem;
         max-width: calc(100% + 11.73333rem);
+        width: calc(100% + 11.73333rem);
     }
 }
 
