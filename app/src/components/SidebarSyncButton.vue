@@ -13,7 +13,7 @@
             :class="cssClasses"
             @click.prevent.stop="syncWebsite"
         >
-            <span v-html="icon"></span>
+            <span v-html="icon" class="sidebar-sync-link-icon"></span>
             {{ status }}
         </a>
 
@@ -58,7 +58,7 @@ export default {
                     case 'preparing':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.PREPARING;
-                        return 'Preparing';
+                        return 'Preparing files';
                     case 'prepared':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.PREPARED;
@@ -80,7 +80,7 @@ export default {
             } else if(!this.checkDeploymentConfig()) {
                 this.redirectTo = 'site-settings';
                 this.icon = SidebarIcons.PROVIDE_ACCESS;
-                return 'Provide access data';
+                return 'Configure Server';
             } else {
                 this.redirectTo = 'sync';
                 this.icon = SidebarIcons.SYNC;
@@ -215,12 +215,16 @@ export default {
             display: block;
             font-size: 1.6rem;
             font-weight: 500;
-            padding: 1.4rem 2.4rem 1.4rem 5rem;
-            text-align: center;
-
+            padding: 1.4rem 2.4rem 1.4rem 6.5rem;
+            position: relative;  
+            
+            // sync cloud icon
             .sidebar-sync-icon {
                 height: 2.2rem;
-                margin-left: -2.5rem;
+                left: 2.05rem;
+                position: absolute;   
+                top: 50%;
+                transform: translate(0, -50%);
                 width: 3rem;
 
                 path {
@@ -238,12 +242,11 @@ export default {
             &:focus .sidebar-sync-icon,
             &:hover .sidebar-sync-icon {
                 path {
-                    fill: $color-1;
+                    fill: $color-10;
                 }
 
                 polygon {
-                    fill: $color-10;
-                    animation: pulse 1s infinite;
+                    fill: $color-helper-6;
                 }
             }
 
@@ -253,23 +256,41 @@ export default {
                         animation: pulse 1s infinite;
                     }
                 }
+            }
+            
+            // interjection mark icon
+            .sidebar-interjection-icon {
+                height: 2.3rem;
+                left: 2.05rem;
+                margin-top: 0;
+                position: absolute;   
+                top: 50%;
+                transform: translate(0, -50%);
+                width: 2.4rem;
 
-                &.is-rotating {
-                    animation: spin 2s linear infinite;
-                    height: 1.6rem;
-                    width: 1.9rem;
+                path {
+                    fill: $color-10;                   
                 }
             }
 
             &:active,
             &:focus,
             &:hover {
-                background: $color-10;
-                color: $color-4;
+                background: $color-helper-6;
+                color: $color-10;
 
                 .sidebar-sync-icon {
-                    fill: $color-10;
+                    fill: $color-helper-6;
                 }
+            }
+            
+            &-icon {               
+                display: inline-block;
+                height: 100%;               
+                left: 0; 
+                position: absolute;
+                top: 0; 
+                width: 100%;
             }
         }
 
@@ -280,6 +301,34 @@ export default {
         &-syncing {}
         &-not-prepared,
         &-noftp {}
+        
+        &-preparing { 
+            display: inline-block;            
+            left: 2.5rem;    
+            height: 2.1rem;
+            position: absolute;   
+            top: 50%;
+            transform: translate(0, -50%);
+            width: 2.1rem;
+            
+            & > span {
+                animation: spin .9s infinite linear;
+                border-top: 2px solid rgba($color-10, 0.2);
+                border-right: 2px solid rgba($color-10, 0.2);
+                border-bottom: 2px solid rgba($color-10, 0.2);
+                border-left: 2px solid $color-10;
+                border-radius: 50%;
+                display: inline-block;   
+                height: 2.1rem;
+                width: 2.1rem;                 
+                
+                &::after {
+                    border-radius: 50%;
+                    content: "";
+                    display: block;                                      
+                }
+            }
+        }
     }
 
     &-preview-link {
