@@ -237,14 +237,14 @@ export default {
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The menu name is in use. Please try to create a new menu again with a different name.',
+                        message: 'The menu name supplied already exists. Please use a different name.',
                         type: 'warning',
                         lifeTime: 3
                     });
                 }
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'The field menu name should not be left empty. Please create a new menu again.',
+                    message: 'The menu name field must be non-empty. Please create a new menu again.',
                     type: 'warning',
                     lifeTime: 3
                 });
