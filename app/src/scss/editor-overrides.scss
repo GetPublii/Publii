@@ -205,21 +205,8 @@ div.mce-tinymce-inline {
         }
 
         .mce-toolbar-grp {
-            padding-bottom: 3.2rem;
+            padding-bottom: 3.4rem;
             position: relative;
-
-            &:before {
-                background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                    linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-                bottom: -34px;
-                content: "";
-                height: 40px;
-                left: 0;
-                pointer-events: none;
-                position: absolute;
-                right: 10px;
-                z-index: 1;
-            }
         }
     }
 
