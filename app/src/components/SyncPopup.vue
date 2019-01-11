@@ -658,7 +658,7 @@ export default {
     svg {
         display: block;
         float: none;
-        margin: 2.5rem auto;
+        margin: 2.6rem auto;
     }
 }
 
