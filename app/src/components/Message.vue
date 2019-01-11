@@ -134,7 +134,7 @@ export default {
              background: $color-10;
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
              border-radius: 6px;
-             color: $color-6;
+             color: $color-5;
              font-size: 1.5rem;            
              display: flex;
              justify-content: center;  
