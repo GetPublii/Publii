@@ -202,6 +202,7 @@ class RendererContext {
         let logoUrl = normalizePath(this.themeConfig.config.logo);
         let assetsUrl = normalizePath(this.siteConfig.domain) + '/' +
                         normalizePath(this.themeConfig.files.assetsPath);
+        let postsOrdering = this.siteConfig.advanced.postsListingOrder;
 
         assetsUrl = URLHelper.fixProtocols(assetsUrl);
 
@@ -238,6 +239,7 @@ class RendererContext {
                 name: siteNameValue,
                 logo: logoUrl,
                 assetsUrl: assetsUrl,
+                postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
                 contentStructure: {}
             },
