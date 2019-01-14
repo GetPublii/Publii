@@ -118,6 +118,11 @@ class RendererContextPost extends RendererContext {
 
         let tagsCondition = '';
         let sortColumn = this.siteConfig.advanced.postsListingOrderBy;
+
+        if (typeof sortColumn !== 'string') {
+            sortColumn = 'created_at';
+        }
+
         let sortField = sortColumn;
 
         if (sortColumn === 'modified_at') {
