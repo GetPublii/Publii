@@ -174,6 +174,7 @@ export default {
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
             closeEditorOnSave: true,
+            showModificationDateAsColumn: false,
             locations: {
                 sites: '',
                 backups: '',
