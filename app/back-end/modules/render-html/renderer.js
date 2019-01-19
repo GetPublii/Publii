@@ -456,6 +456,7 @@ class Renderer {
      * Generate partials
      */
     generatePartials() {
+        console.time('PARTIALS GENERATION');
         let requiredPartials = ['header', 'footer'];
         let optionalPartials = [
             'pagination',
@@ -490,6 +491,8 @@ class Renderer {
                 });
             }
         }
+
+        console.timeEnd('PARTIALS GENERATION');
     }
 
     /*
@@ -1515,7 +1518,7 @@ class Renderer {
             },
             hiddenPosts: globalContextGenerator.getHiddenPosts()
         };
-        console.time("COMMON DATA");
+        console.timeEnd("COMMON DATA");
     }
 
     createGlobalContext(context) {
