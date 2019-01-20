@@ -71,66 +71,76 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell 
-                    :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'"
-                    @click.native="ordering('title')">
-                    <template v-if="orderBy === 'title'">
-                        <strong>Title</strong>
-                    </template>
-                    <template v-else>Title</template>
+                <collection-cell :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('title')">
+                        <template v-if="orderBy === 'title'">
+                            <strong>Title</strong>
+                        </template>
+                        <template v-else>Title</template>
 
-                    <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    width="200px"
-                    @click.native="ordering('created')">
-                    <template v-if="orderBy === 'created'">
-                        <strong>Publication date</strong>
-                    </template>
-                    <template v-else>Publication date</template>
+                <collection-cell width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('created')">
+                        <template v-if="orderBy === 'created'">
+                            <strong>Publication date</strong>
+                        </template>
+                        <template v-else>Publication date</template>
 
-                    <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell 
                     v-if="showModificationDateAsColumn"
-                    width="200px"
-                    @click.native="ordering('modified')">
-                    <template v-if="orderBy === 'modified'">
-                        <strong>Modification date</strong>
-                    </template>
-                    <template v-else>Modification date</template>
+                    width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('modified')">
+                        <template v-if="orderBy === 'modified'">
+                            <strong>Modification date</strong>
+                        </template>
+                        <template v-else>Modification date</template>
 
-                    <span class="order-descending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    width="200px"
-                    @click.native="ordering('author')">
-                    <template v-if="orderBy === 'author'">
-                        <strong>Author</strong>
-                    </template>
-                    <template v-else>Author</template>
+                <collection-cell width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('author')">
+                        <template v-if="orderBy === 'author'">
+                            <strong>Author</strong>
+                        </template>
+                        <template v-else>Author</template>
 
-                    <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    
-                    width="40px"
-                    @click.native="ordering('id')">
-                    <template v-if="orderBy === 'id'">
-                        <strong>ID</strong>
-                    </template>
-                    <template v-else>ID</template>
+                <collection-cell width="40px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('id')">
+                        <template v-if="orderBy === 'id'">
+                            <strong>ID</strong>
+                        </template>
+                        <template v-else>ID</template>
 
-                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <div
@@ -593,8 +603,11 @@ export default {
 .header {
     .col {
         align-items: center;
-        cursor: pointer;
         display: flex;
+
+        .col-sortable-title {
+            cursor: pointer;
+        }
     }
 }
 
