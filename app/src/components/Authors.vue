@@ -319,6 +319,7 @@ export default {
 
     .order-ascending,
     .order-descending {
+        margin-left: 3px;
         position: relative;
         &:after {
              border-top: solid 5px rgba($color-7, .7);
@@ -328,7 +329,7 @@ export default {
              cursor: pointer;
              display: inline-block;
              height: 4px;
-             left: 6px;
+             left: 0;
              line-height: 1.1;
              opacity: 1;
              padding: 0;
