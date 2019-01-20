@@ -9,7 +9,7 @@
             ref="submenu"
             :class="cssClasses">
             <topbar-dropdown-item
-                label="Settings"
+                label="Global settings"
                 title="Application configuration"
                 path="/app-settings" />
             <topbar-dropdown-item
