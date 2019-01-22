@@ -361,22 +361,22 @@ class ContentHelper {
     static _prepareAmpContent(text) {
         text = text.replace(/style=".*?"/gmi, '');
 
-        text = text.replace(/(<img).*?(\/?>)/gmi, function(whole, start, end) {
+        text = text.replace(/(<img)[\s\S]*?(\/?>)/gmi, function(whole, start, end) {
             return whole.replace(start, '<amp-img')
                         .replace(end, ' layout="responsive"></amp-img>');
         });
 
-        text = text.replace(/(<video).*?(<\/video>)/gmi, function(whole, start, end) {
+        text = text.replace(/(<video)[\s\S]*?(<\/video>)/gmi, function(whole, start, end) {
             return whole.replace(start, '<amp-video')
                         .replace(end, '<div fallback><p>Your browser doesn\'t support HTML5 video</p></div></amp-video>');
         });
 
-        text = text.replace(/(<audio).*?(<\/audio>)/gmi, function(whole, start, end) {
+        text = text.replace(/(<audio)[\s\S]*?(<\/audio>)/gmi, function(whole, start, end) {
             return whole.replace(start, '<amp-audio')
                         .replace(end, '<div fallback><p>Your browser doesn\'t support HTML5 audio</p></div></amp-audio>');
         });
 
-        text = text.replace(/(<iframe).*?(<\/iframe>)/gmi, function(whole, start, end) {
+        text = text.replace(/(<iframe)[\s\S]*?(<\/iframe>)/gmi, function(whole, start, end) {
             return whole.replace(start, '<amp-iframe layout="responsive" ')
                         .replace(end, '</amp-iframe>');
         });
