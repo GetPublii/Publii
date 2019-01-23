@@ -66,7 +66,11 @@
                 
                 <p class="card-meta">                    
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                        {{date createdAt @config.custom.formatDate}}
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                            {{date createdAt @config.custom.formatDate}}
+                        {{else}}
+                            {{date createdAt @config.custom.formatDateCustom}}
+                        {{/checkIf}}
                     </time>
                 </p>
                
