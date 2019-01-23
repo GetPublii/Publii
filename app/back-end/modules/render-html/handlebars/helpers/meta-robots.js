@@ -11,6 +11,10 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('metaRobots', function (options) {
         let output = '';
 
+        if (rendererInstance.ampMode) {
+            return '';
+        }
+
         if (options.data.root.metaRobotsRaw !== '') {
             output = '<meta name="robots" content="' + options.data.root.metaRobotsRaw + '" />';
         }

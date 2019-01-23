@@ -10,11 +10,12 @@ const Handlebars = require('handlebars');
 function canonicalLinkHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('canonicalLink', function (context) {
         // If current page is not indexed - skip canonical link
-        if (context.data.root.metaRobotsRaw.indexOf('noindex') > -1) {
+        if (!rendererInstance.ampMode && context.data.root.metaRobotsRaw.indexOf('noindex') > -1) {
             return '';
         }
 
         if (
+            !rendererInstance.ampMode && 
             Array.isArray(context.data.context) &&
             context.data.context[0] && (
                 (
