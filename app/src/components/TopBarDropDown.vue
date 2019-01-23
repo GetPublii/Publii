@@ -13,6 +13,10 @@
                 title="Application configuration"
                 path="/app-settings" />
             <topbar-dropdown-item
+                label="Themes"
+                title="Go to the themes manager"
+                path="/app-themes" />
+            <topbar-dropdown-item
                 label="Help"
                 title="Check Publii documentation"
                 path="https://getpublii.com/docs/" />

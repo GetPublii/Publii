@@ -137,10 +137,6 @@
             </field>
         </fields-group>
 
-        <fields-group title="Available themes">
-            <themes-list />
-        </fields-group>
-
         <p-footer>
             <p-button
                 :onClick="save"
@@ -154,7 +150,6 @@
 <script>
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
-import ThemesList from './ThemesList';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -163,9 +158,6 @@ export default {
     mixins: [
         GoToLastOpenedWebsite
     ],
-    components: {
-        'themes-list': ThemesList
-    },
     data () {
         return {
             screensSelected: '',
@@ -220,7 +212,6 @@ export default {
         }
     },
     mounted () {
-        this.$bus.$emit('sites-list-reset');
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;

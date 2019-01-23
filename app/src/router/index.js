@@ -20,6 +20,7 @@ import CustomHtml from '../components/CustomHtml';
 import FileManager from '../components/FileManager';
 import ServerSettings from '../components/ServerSettings';
 import Settings from '../components/Settings';
+import AppThemes from '../components/AppThemes';
 import ThemeSettings from '../components/ThemeSettings';
 
 Vue.use(Router)
@@ -121,6 +122,11 @@ export default new Router({
             path: '/app-settings',
             name: 'AppSettings',
             component: AppSettings
+        },
+        {
+            path: '/app-themes',
+            name: 'AppThemes',
+            component: AppThemes
         },
         {
             path: '/site/:name/posts/editor/:post_id?',
