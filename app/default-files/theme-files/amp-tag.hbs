@@ -49,10 +49,14 @@
                 
                 <p class="card-meta">                     
                    {{#author}}
-                    by <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
                     {{/author}} 
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                        {{date createdAt @config.custom.formatDate}}
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                            {{date createdAt @config.custom.formatDate}}
+                        {{else}}
+                            {{date createdAt @config.custom.formatDateCustom}}
+                        {{/checkIf}}
                     </time>
                 </p>
                
