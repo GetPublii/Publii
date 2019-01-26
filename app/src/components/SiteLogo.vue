@@ -168,7 +168,7 @@ export default {
 
     &-name {
         margin: 0 0 0 1.2rem;
-        width: calc(100% - 9.4rem);
+        width: calc(100% - 7.6rem);
     }
 
     &-link {
@@ -205,7 +205,7 @@ export default {
         line-height: 1.1; 
         padding: 0;
         position: absolute;
-        right: calc(3rem + 8px);
+        right: calc(1rem + 8px);
         width: 8px;
         text-align: center;       
         transition: all .3s ease-out;         
