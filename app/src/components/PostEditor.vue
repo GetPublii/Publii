@@ -790,16 +790,16 @@ export default {
         color: $color-10;
         cursor: pointer;
         display: inline-block;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 500;
-        height: 4.4rem;
-        line-height: 4.3rem;      
+        height: 4.2rem;
+        line-height: 4.1rem;      
         padding: 0 1.6rem;
         position: relative;
         transition: all .25s ease-out;
         user-select: none;
         white-space: nowrap;
-        width: 204px;
+        width: 196px;
 
         &-trigger {
             border-top-left-radius: 3px;
@@ -835,11 +835,11 @@ export default {
             }
 
             &::after {
-                border: 5px solid $color-10;
+                border: 4px solid $color-10;
                 border-left-color: transparent;
-                border-left-width: 6px;
+                border-left-width: 5px;
                 border-right-color: transparent;
-                border-right-width: 6px;
+                border-right-width: 5px;
                 border-bottom-color: transparent; 
                 content: "";
                 pointer-events: none;
@@ -856,7 +856,7 @@ export default {
             box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
             left: 0;
             position: absolute;
-            top: 44px;
+            top: 42px;
             width: 100%;
 
             &-item {

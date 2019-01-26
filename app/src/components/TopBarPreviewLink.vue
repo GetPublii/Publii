@@ -78,7 +78,7 @@ export default {
     display: flex;
     font-size: 1.4rem;
     justify-content: center;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.2rem;
     order: 2;
     transition: all .25s ease-out;
     
