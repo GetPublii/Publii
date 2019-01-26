@@ -196,8 +196,8 @@ export default {
 
     &-icon-open {
         border-top: solid 4px $color-7;
-        border-left: solid 4px transparent;
-        border-right: solid 4px transparent;                    
+        border-left: solid 5px transparent;
+        border-right: solid 5px transparent;                    
         opacity: 1;                     
         cursor: pointer;                   
         height: 4px;
@@ -205,8 +205,8 @@ export default {
         line-height: 1.1; 
         padding: 0;
         position: absolute;
-        right: calc(1rem + 8px);
-        width: 8px;
+        right: calc(1rem + 5px);
+        width: 5px;
         text-align: center;       
         transition: all .3s ease-out;         
         top: 50%;

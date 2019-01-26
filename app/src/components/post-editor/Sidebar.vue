@@ -765,7 +765,7 @@ export default {
             }
 
             &-header {
-                align-items: center;
+                align-items: center;               
                 border-top: 1px solid rgba($color-8, .45);
                 border-bottom: 1px solid rgba($color-8, .45);
                 color: $link-color;
@@ -779,6 +779,7 @@ export default {
                 user-select: none;
 
                 &:hover {
+                    background: $post-editor-sidebar-color;
                     color: $color-4;
 
                     .post-editor-settings {
@@ -852,18 +853,18 @@ export default {
                 }
 
                 &-open {  
-                    border-top: solid 6px $color-7;
-                    border-left: solid 6px transparent;
-                    border-right: solid 6px transparent;                    
+                    border-top: solid 4px $color-7;
+                    border-left: solid 5px transparent;
+                    border-right: solid 5px transparent;                    
                     opacity: 1;                     
                     cursor: pointer;                   
-                    height: 6px;
+                    height: 5px;
                     left: auto;
                     line-height: 1.1; 
                     padding: 0;
                     position: absolute;
-                    right: calc(4.5rem - 6px);
-                    width: 12px;
+                    right: calc(4.5rem - 5px);
+                    width: 5px;
                     text-align: center;       
                     transition: all .3s ease-out;         
                     top: 50%;
