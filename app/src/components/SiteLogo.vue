@@ -174,7 +174,7 @@ export default {
     &-link {
         color: $color-5;
         display: block;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-weight: 500;
         margin: 0;
         overflow: hidden;
