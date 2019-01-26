@@ -811,7 +811,7 @@ export default {
             position: absolute;
             top: 0;
             transition: all .25s ease-out;
-            width: 160px;            
+            width: 152px;            
              
             &:hover {
                  background: darken($color-1, 5%);
