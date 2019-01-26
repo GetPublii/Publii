@@ -126,7 +126,7 @@
                         <label id="post-featured-wrapper">
                             <switcher
                                 v-model="$parent.postData.isFeatured" />
-                            Feature this post in listings
+                            Mark as featured 
 
                             <icon
                                 title="Mark this post as featured"
@@ -139,7 +139,7 @@
                         <label id="post-hidden-wrapper">
                             <switcher
                                 v-model="$parent.postData.isHidden" />
-                            Hide this post in listings
+                           Hide everywhere page is listed
 
                             <icon
                                 title="Mark this post as hidden"
@@ -626,7 +626,7 @@ export default {
 .post-editor {
     &-sidebar {
         background: $color-10;
-        height: calc(100vh - 8.4rem);
+        height: calc(100vh - 7.8rem);
         overflow: auto;
         position: relative;
         width: 50rem;
@@ -955,13 +955,13 @@ export default {
 
 body[data-os="win"] {
     .post-editor-sidebar {
-        height: calc(100vh - 10rem);
+        height: calc(100vh - 9.4rem);
     }
 }
 
 body[data-os="linux"] {
     .post-editor-sidebar {
-        height: calc(100vh - 6.2rem);
+        height: calc(100vh - 5.6rem);
     }
 }
 

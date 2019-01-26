@@ -670,7 +670,7 @@ export default {
         display: flex;
         height: 100vh;
         overflow: hidden;
-        padding-top: 8.4rem;
+        padding-top: 7.8rem;
     }
 
     .appbar {
@@ -685,9 +685,9 @@ export default {
         box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         font-size: 2.4rem;
         display: flex;
-        height: 6.2rem;
+        height: 5.6rem;
         justify-content: space-between;
-        padding: 0 5rem;
+        padding: 0 4rem;
         position: absolute;
         top: 2.2rem;
         width: 100%;
@@ -708,7 +708,7 @@ export default {
             text-align: center;
 
             &:nth-child(2) {
-                margin-left: 2rem;
+                margin-left: 1rem;
                 width: 90px;
             }
         }
@@ -719,7 +719,7 @@ export default {
     }
 
     &-form {
-        height: calc(100vh - 8.4rem);
+        height: calc(100vh - 7.8rem);
         overflow: hidden;
         position: relative;
         width: calc(100vw - 50rem);
@@ -918,7 +918,7 @@ body[data-os="win"] {
     }
 
     .post-editor-form {
-        height: calc(100vh - 10rem);
+        height: calc(100vh - 9.4rem);
 
         &-content {
             height: calc( 100vh - 34rem );
@@ -950,11 +950,11 @@ body[data-os="win"] {
 body[data-os="linux"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 6.2rem;
+        padding-top: 5.6rem;
     }
 
     .post-editor-form {
-        height: calc(100vh - 6.2rem);
+        height: calc(100vh - 5.6rem);
 
         &-content {
             height: calc( 100vh - 29.8rem );
@@ -1009,6 +1009,10 @@ body[data-os="linux"] {
 }
 
 @media (max-width: 1400px) {
+    .post-editor-topbar {
+        padding: 0 3.6rem 0 4rem;
+    }
+    
     .post-editor-form {
         width: calc(100vw - 40rem);
 

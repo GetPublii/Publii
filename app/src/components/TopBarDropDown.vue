@@ -13,6 +13,7 @@
                 title="Application configuration"
                 path="/app-settings" />
             <topbar-dropdown-item
+                class="topbar-app-submenu-separator" 
                 label="Themes"
                 title="Go to the themes manager"
                 path="/app-themes" />
@@ -87,11 +88,11 @@ export default {
         color: $color-7;
         cursor: pointer;
         display: block;
-        height: 6rem;
+        height: 4rem;
         margin-left: 1rem;
         order: 3;
         padding: 0 1rem;
-        width: 4px;
+        width: 3px; 
 
 
         &:hover {
@@ -100,31 +101,31 @@ export default {
 
         &-icon {
             background: currentColor;
-            border-radius: 2px;
+            border-radius: 50%;
             display: block;
-            height: 4px;
+            height: 3px;
             margin-top: -2px;
             pointer-events: none;
             position: relative;
             right: -1px;
             top: 50%;
-            width: 4px;
+            width: 3px;
             transition: all .25s ease-out;
 
             &:after,
             &:before {
                 background: currentcolor;
-                border-radius: 2px;
+                 border-radius: 50%;
                 content: "";
                 display: block;
-                height: 4px;
+                height: 3px;
                 position: absolute;
-                top: -8px;
-                width: 4px;
+                top: -6px;
+                width: 3px;
             }
 
             &:before {
-                top: 8px;
+                top: 6px;
             }
         }
     }
@@ -143,12 +144,20 @@ export default {
 
     &-app-submenu {
         background: $color-10;
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.125);
+         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
+                     0 8px 16px rgba(29, 39, 52, 0.07);
+        font-size: 1.5rem;
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
         right: 5.5rem;
-        top: 4.5rem;
+        top: 4rem;
+        
+        &-separator {
+            border-bottom: 1px solid $color-helper-8;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
     }
 }
 

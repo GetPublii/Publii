@@ -8,7 +8,7 @@
             <icon 
                 :data-color="logoColor"
                 :name="logoIcon"               
-                size="m" />
+                size="s" />
         </span>
 
         <span class="site-logo-name">
@@ -128,7 +128,7 @@ export default {
 .site-logo {
     align-items: center;   
     display: flex;    
-    width: 32rem;
+    width: 30rem;
 
     &:active,
     &:focus,
@@ -168,13 +168,14 @@ export default {
 
     &-name {
         margin: 0 0 0 1.2rem;
-        width: calc(100% - 10rem);
+        width: calc(100% - 9.4rem);
     }
 
     &-link {
         color: $color-5;
         display: block;
-        font-weight: 600;
+        font-size: 1.4rem;
+        font-weight: 500;
         margin: 0;
         overflow: hidden;
         padding: 1rem 0;
@@ -194,18 +195,18 @@ export default {
     }
 
     &-icon-open {
-        border-top: solid 6px $color-7;
-        border-left: solid 6px transparent;
-        border-right: solid 6px transparent;                    
+        border-top: solid 4px $color-7;
+        border-left: solid 4px transparent;
+        border-right: solid 4px transparent;                    
         opacity: 1;                     
         cursor: pointer;                   
-        height: 6px;
+        height: 4px;
         left: auto;
         line-height: 1.1; 
         padding: 0;
         position: absolute;
         right: calc(3rem + 8px);
-        width: 12px;
+        width: 8px;
         text-align: center;       
         transition: all .3s ease-out;         
         top: 50%;

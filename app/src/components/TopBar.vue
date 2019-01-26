@@ -50,7 +50,7 @@ export default {
 .topbar {
     background: $color-9;
     font-size: 1.6rem;
-    height: 8.4rem;
+    height: 7.8rem;
     position: absolute;
     top: 0;
     -webkit-app-region: no-drag;
@@ -71,25 +71,25 @@ export default {
 
     &-logo {
         display: block;
-        height: 6.2rem;
+        height: 5.6rem;
         margin-right: auto;
-        width: 11.7rem;
+        width: auto;
     }
 }
 
 body[data-os="win"] {
     .topbar {
-        height: 9.8rem;
+        height: 9.2rem;
 
         & > .topbar-inner {
-            top: 3.6rem;
+            top: 3rem;
         }
     }
 }
 
 body[data-os="linux"] {
     .topbar {
-        height: 6.2rem;
+        height: 5.6rem;
 
         & > .topbar-inner {
             top: 0;

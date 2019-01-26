@@ -7,6 +7,7 @@
             size="s"
             :primaryColor="iconColor"
             :name="previewIconName" />
+        Live Preview
     </span>
 </template>
 
@@ -41,7 +42,7 @@ export default {
         },
         iconColor: function() {
             if(this.isOnline) {
-                return 'color-2';
+                return 'color-helper-6';
             }
 
             return 'color-7';
@@ -71,19 +72,26 @@ export default {
 
 .preview-link {
     align-items: center;
+    background: rgba($color-helper-8, 0.5);
+    border-radius: 4px;
     cursor: not-allowed;
     display: flex;
+    font-size: 1.4rem;
     justify-content: center;
+    padding: 0.8rem 1.5rem;
     order: 2;
     transition: all .25s ease-out;
-    width: 4.8rem;
+    
+    & > svg {
+        margin-right: 0.6rem; 
+    }
 
     &.is-online {
         cursor: pointer;
     }
 
     &:hover {
-        transform: scale(1.25);
+        background: $color-helper-8;
     }
 }
 </style>

@@ -7,8 +7,7 @@
             <icon 
                 :data-color="siteLogoColor"
                 :name="siteLogoIcon"                
-                customHeight="22"
-                customWidth="22" />
+                 size="s" />
         </span>
         
         <strong class="single-site-name" :title="displayName">
@@ -62,7 +61,7 @@ export default {
     cursor: pointer;   
     display: flex;    
     margin: 0 2rem;
-    padding: 0.9rem 0 0.9rem 0.4rem;    
+    padding: 0.7rem 0 0.7rem 0.2rem;    
 
     &:first-child {
         border-top: none;
@@ -75,7 +74,7 @@ export default {
         display: flex;
         height: auto;
         justify-content: center;
-        margin-right: 1.2rem;
+        margin-right: 0.8rem;
         position: relative;
         transition: all .25s ease-out;
         will-change: transform;
@@ -103,7 +102,7 @@ export default {
 
     &-name {
         display: block;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 400;
         line-height: 3.6rem;
         margin: 0;

@@ -107,7 +107,7 @@ export default {
         border-left: 1px solid $color-8;
         bottom: 0;
         box-shadow: 4px 0 12px rgba(0, 0, 0, 0.075);
-        height: calc(100% - 84px);
+        height: calc(100% - 7.8rem);
         opacity: 1;
         position: absolute;
         right: 281px;
@@ -188,8 +188,8 @@ body[data-os="win"] {
 body[data-os="linux"] {
     .post-editor {
         &-writers-panel {
-            height: calc(100vh - 6.2rem);
-            top: 6.2rem;
+            height: calc(100vh - 5.6rem);
+            top: 5.6rem;
         }
     }
 }
