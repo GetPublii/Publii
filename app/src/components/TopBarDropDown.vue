@@ -150,7 +150,7 @@ export default {
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
-        right: 5.5rem;
+        right: 3.5rem;
         top: 4rem;
         
         &-separator {
@@ -167,13 +167,13 @@ export default {
 
 @media (max-height: 900px) {
     .topbar-app-submenu {
-        right: 4.5rem;
+        right: 2.5rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar-app-submenu {
-        right: 4.5rem;
+        right: 2.5rem;
     }
 }
 </style>
