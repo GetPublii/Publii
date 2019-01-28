@@ -72,8 +72,9 @@ export default {
 
 .preview-link {
     align-items: center;
-    background: rgba($color-helper-8, 0.5);
+    background: $color-helper-10;
     border-radius: 4px;
+    color: $color-7;
     cursor: not-allowed;
     display: flex;
     font-size: 1.4rem;
@@ -87,6 +88,7 @@ export default {
     }
 
     &.is-online {
+        color: $color-5;
         cursor: pointer;
     }
 

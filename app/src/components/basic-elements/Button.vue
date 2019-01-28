@@ -330,7 +330,7 @@ export default {
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: $color-9;
+        background-color: $color-helper-10;
         border-color: $color-8;
         color: $color-7;
         cursor: not-allowed;

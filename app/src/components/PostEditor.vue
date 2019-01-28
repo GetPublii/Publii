@@ -862,7 +862,7 @@ export default {
             &-item {
                 border-top: 1px solid lighten($color-8, 10%);
                 color: $color-5;
-                padding: .5rem 2rem;
+                padding: .2rem 2rem;
 
                 &:hover {
                     background: $color-9;

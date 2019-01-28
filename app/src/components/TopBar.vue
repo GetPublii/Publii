@@ -62,7 +62,7 @@ export default {
         box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         display: flex;
         align-items: center;
-        padding: 0 5rem;
+        padding: 0 calc(3rem - 3px) 0 5rem;
         position: absolute;
         top: 2.2rem;
         width: 100%;
@@ -103,13 +103,13 @@ body[data-os="linux"] {
 
 @media (max-height: 900px) {
     .topbar > .topbar-inner {
-        padding: 0 4rem;
+        padding: 0 calc(2rem - 3px) 0 4rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar > .topbar-inner {
-        padding: 0 4rem;
+        padding: 0 calc(2rem - 3px) 0 4rem;
     }
 }
 </style>
