@@ -129,7 +129,7 @@
                             Mark as featured 
 
                             <icon
-                                title="Mark this post as featured"
+                                title="Mark as featured"
                                 class="switcher-item-icon-helper"
                                 name="featured-post"
                                 size="xs"
@@ -137,12 +137,17 @@
                         </label>
 
                         <label id="post-hidden-wrapper">
-                            <switcher
+                          
+                            <switcher 
+                                title="Post will not appear in any generated post lists such as tag or author pages"
                                 v-model="$parent.postData.isHidden" />
-                           Hide everywhere page is listed
+                           <span 
+                                 title="Post will not appear in any generated post lists such as tag or author pages">
+                               Hide post
+                           </span>
 
                             <icon
-                                title="Mark this post as hidden"
+                                title="Hide Post"
                                 class="switcher-item-icon-helper"
                                 name="hidden-post"
                                 size="xs"
