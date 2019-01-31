@@ -8,6 +8,17 @@
         @dragend.stop.prevent
         @dragenter.stop.prevent
         class="themes">
+        <div 
+            class="add-more-theme">
+                <a href="https://marketplace.getpublii.com/" target="_blank">
+                    <icon                   
+                        size="l"
+                        properties="not-clickable"
+                        name="add-site-mono" />
+                
+                    <h3>Get more themes</h3>  
+                </a>
+        </div>
         <theme-item
             v-for="(theme, index) in themes"
             :themeData="theme"
@@ -90,5 +101,35 @@ export default {
     grid-gap: 5rem 3rem; 
     overflow: hidden;
     position: relative;
+}
+
+.add-more-theme {   
+    background: $color-1;   
+    border-radius: 4px;
+    margin: 0;   
+    
+    &:hover {
+         background: $color-2;
+    }
+    
+    & > a {  
+         align-items: center;
+         display: flex;
+         flex-direction: column;
+         height: 100%;
+         justify-content: center;        
+         width: 100%;
+    }
+    
+    h3 {
+         color: $color-10;  
+         font-size: 1.7rem; 
+         font-weight: 500; 
+         margin-bottom: 0;          
+    }
+    
+    svg {
+        fill: $color-10;         
+    }
 }
 </style>
