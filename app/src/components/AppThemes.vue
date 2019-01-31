@@ -9,9 +9,9 @@
             </p-button>
         </p-header>
 
-        <fields-group title="Available themes">
+        <div>
             <themes-list />
-        </fields-group>
+        </div>
     </section>
 </template>
 

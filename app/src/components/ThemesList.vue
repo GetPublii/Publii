@@ -85,6 +85,9 @@ export default {
 @import '../scss/variables.scss';
 
 .themes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5rem 3rem; 
     overflow: hidden;
     position: relative;
 }

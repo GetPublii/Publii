@@ -5,18 +5,25 @@
             class="theme-thumbnail"
             alt="">
 
-        <a
-            href="#"
-            class="theme-delete"
-            @click.stop.prevent="deleteTheme(name, directory)">
-            &times;
-        </a>
+       
 
         <figcaption class="theme-name">
-            {{ name }}
-            <span class="theme-version">
-                (v.{{ version }})
-            </span>
+            <h3> 
+                {{ name }}
+                <span class="theme-version">
+                    {{ version }}
+                </span>
+             </h3>
+            <a
+                href="#"
+                class="theme-delete"
+                title="Delete theme"
+                @click.stop.prevent="deleteTheme(name, directory)">
+                    <icon                   
+                        size="xs"
+                        properties="not-clickable"
+                        name="trash" />
+            </a>
         </figcaption>
     </figure>
 </template>
@@ -75,68 +82,63 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 
-.theme {
-    float: left;
-    margin: 1%;
-    position: relative;
-    width: 31.333333%;
-
-    &:nth-child(3n+1) {
-        clear: both;
-    }
-
+.theme {    
+    margin: 0;
+    position: relative;        
+    
     &-thumbnail {
-        box-shadow: 0 0 1px rgba(0,0,0,0.3);
+        border: 1px solid $color-helper-10;
+        border-radius: 4px;
         display: block;
-        height: auto;
-        margin-bottom: 1rem;
-        max-width: 100%;
+        height: auto;       
+        max-width: 100%;        
+        transition: all .25s ease-out;        
     }
 
-    &-delete {
-        background: $color-3;
+    &-delete {      
+        background: $color-10;
         border-radius: 50%;
-        color: transparent;
-        font-size: 1rem;
-        height: 2rem;
-        line-height: 2.1rem;
+        height: 3rem;
+        display: inline-block;
+        fill: $color-7;
         position: absolute;
-        right: 10px;
-        text-align: center;
-        top: 10px;
-        width: 2rem;
-
-        &:before,
-        &:after {
-            background: $color-10;
-            content: "";
-            display: block;
-            height: .2rem;
-            left: 4px;
-            position: absolute;
-            top: 9px;
-            transform: rotate(45deg);
-            width: 1.2rem;
-        }
-
-        &:after {
-            transform: rotate(-45deg);
-        }
-
+        right: 1.4rem;
+        text-align: center;        
+        width: 3rem;
+        
         &:hover {
-            opacity: .75;
+            fill: $color-3;           
+        }
+        
+        & > svg {
+            vertical-align: bottom;
         }
     }
 
-    &-name {
-        display: block;
-        font-size: 1.6rem;
-        text-align: center;
+    &-name { 
+        align-items: center;
+        background: $color-9;
+        border-radius: 0 0 4px 4px;
+        display: flex;        
+        justify-content: space-between;
+        padding: 0 2rem; 
+        position: relative;
+        text-align: left;   
+        
+        & > h3 {
+             font-size: 1.5rem; 
+             font-weight: 500; 
+             line-height: 1.4;
+             margin: 1.2rem 0;
+        }
     }
 
     &-version {
         color: $color-7;
-        font-size: 1.4rem;
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 400;
+        margin: 0 4rem 0 auto;
     }
 }
 </style>
