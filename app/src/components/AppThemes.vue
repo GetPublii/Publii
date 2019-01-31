@@ -9,7 +9,7 @@
             </p-button>
         </p-header>
 
-        <div>
+        <div ref="content">
             <themes-list />
         </div>
     </section>
@@ -18,10 +18,12 @@
 <script>
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import ExternalLinks from './mixins/ExternalLinks';
 
 export default {
     name: 'app-themes',
     mixins: [
+        ExternalLinks,
         GoToLastOpenedWebsite
     ],
     components: {
