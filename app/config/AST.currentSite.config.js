@@ -127,7 +127,8 @@ const AstCurrentSiteConfig = {
             key: '',
             bucket: '',
             region: '',
-            prefix: ''
+            prefix: '',
+            acl: 'public-read'
         },
         github: {
             user: '',

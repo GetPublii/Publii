@@ -544,6 +544,18 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 's3'"
+                    id="s3-acl"
+                    label="ACL">
+                    <dropdown
+                        slot="field"
+                        id="s3-acl"
+                        :items="s3acls"
+                        key="s3-acl"
+                        v-model="deploymentSettings.s3.acl"></dropdown>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-key"
                     label="Your JSON key">
@@ -672,6 +684,7 @@ import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
+import s3ACLs from './configs/s3ACLs.js';
 
 export default {
     name: 'server-settings',
@@ -701,6 +714,7 @@ export default {
             deploymentMethodSelected: '',
             deploymentSettings: defaultDeploymentSettings,
             s3Regions: s3RegionsList,
+            s3acls: s3ACLs,
             testInProgress: false,
             errors: []
         };
