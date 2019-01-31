@@ -4,9 +4,7 @@
             :src="thumbnail"
             class="theme-thumbnail"
             alt="">
-
-       
-
+        
         <figcaption class="theme-name">
             <h3> 
                 {{ name }}
