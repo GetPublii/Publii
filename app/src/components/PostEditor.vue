@@ -914,11 +914,11 @@ body[data-os="linux"] {
 body[data-os="win"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 10rem;
+        padding-top: 9.2rem;
     }
 
     .post-editor-form {
-        height: calc(100vh - 9.4rem);
+        height: calc(100vh - 9.2rem);
 
         &-content {
             height: calc( 100vh - 34rem );
