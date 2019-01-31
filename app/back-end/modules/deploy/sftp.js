@@ -369,7 +369,43 @@ class SFTP {
         client.connect(connectionSettings).then(() => {
             return client.list('/');
         }).then(data => {
-            client.end();
+            fs.writeFileSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')), 'It is a test file. You can remove it.');
+
+            client.put(
+                normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')),
+                normalizePath(path.join(deploymentConfig.path, 'publii.test'))
+            ).then(err => { 
+                if (err) {
+                    app.mainWindow.webContents.send('app-deploy-test-write-error');
+                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    client.end();
+                    return;   
+                }
+                
+                client.delete(
+                    normalizePath(path.join(deploymentConfig.path, 'publii.test'))
+                ).then(err => {
+                    if (err) {
+                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+                        fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                        client.end();
+                        return;
+                    }
+
+                    app.mainWindow.webContents.send('app-deploy-test-success');
+                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    client.end();
+                }).catch(err => {
+                    app.mainWindow.webContents.send('app-deploy-test-write-error');
+                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    client.end();
+                });
+            }).catch(err => {
+                app.mainWindow.webContents.send('app-deploy-test-write-error');
+                fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                client.end();
+            });
+
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-success');
         }).catch(err => {

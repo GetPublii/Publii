@@ -909,6 +909,15 @@ export default {
                 this.testInProgress = false;
             });
 
+            ipcRenderer.once('app-deploy-test-write-error', (event, data) => {
+                this.$bus.$emit('alert-display', {
+                    message: 'Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server.',
+                    buttonStyle: 'danger'
+                });
+
+                this.testInProgress = false;
+            });
+
             ipcRenderer.once('app-deploy-test-error', (event, data) => {
                 if(data && data.message) {
                     this.$bus.$emit('alert-display', {
