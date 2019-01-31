@@ -272,8 +272,8 @@ export default {
 body[data-os="win"] {
     #app {
         & > .topbar + section {
-            height: calc(100vh - 9.2rem);
-            top: 9.2rem;
+            height: calc(100vh - 8.7rem);
+            top: 8.7rem;
         }
     }
 
@@ -284,7 +284,7 @@ body[data-os="win"] {
         }
 
         &-site-sidebar {
-            top: 9.2rem;
+            top: 8.7rem;
         }
     }
 }
