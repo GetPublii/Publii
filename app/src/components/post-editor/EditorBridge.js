@@ -50,7 +50,7 @@ class EditorBridge {
         this.addEditorButtons();
 
         editor.on('init', () => {
-            $('.mce-tinymce').append($('<div class="tinymce-overlay">Drag your image here</div>'));
+            $('.mce-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
             $('.mce-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
@@ -602,7 +602,7 @@ class EditorBridge {
         }
 
         $('.mce-tinymce').addClass('is-loading-image');
-        $('.tinymce-overlay').html('<img src="' + preloaderImages.blue + '" class="loader"/> ' + 'Image upload in progress...');
+        $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
         ipcRenderer.send('app-image-upload', {
             "id": this.postID,
@@ -621,7 +621,7 @@ class EditorBridge {
 
             $('.mce-tinymce').removeClass('is-hovered');
             $('.mce-tinymce').removeClass('is-loading-image');
-            $('.tinymce-overlay').text('Drag your image here');
+            $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
 
             this.contentImageUploading = false;
         });

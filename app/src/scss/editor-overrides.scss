@@ -122,29 +122,75 @@ div.mce-tinymce-inline {
         border: none;
 
         .tinymce-overlay {
-            background: $color-1;
-            color: $color-10;
-            display: none;
-            font-size: 2.4rem;
-            font-weight: 600;
-            height: 100%;
-            line-height: calc(100vh - 20rem);
+            border: 2px solid $color-1;
+            background: rgba($color-1, .17);           
+            display: none;           
+            height: 100%;            
             left: 0;
-            opacity: .85;
+            opacity: 1;
             position: absolute;
             text-align: center;
             top: 0;
             width: 100%;
             z-index: 10000;
+            
+            & > div {
+                box-shadow: 0 0 3px rgba(black, .2);
+                background: $color-1;
+                border-radius: 3px;
+                color: $color-10;
+                font-size: 1.6rem;
+                font-weight: 500;
+                height: auto;
+                left: 50%;
+                line-height: 1.5;                
+                padding: 1.8rem 6rem 1.8rem 4rem;
+                position: absolute;
+                top: 50%; 
+                transform: translateX(-50%) translateY(-50%);
+                width: auto;              
+            }
+            
+            .upload-icon {
+                display: inline-block; 
+                fill: $color-10;
+                height: 2.4rem;
+                margin-right: 2rem;
+                width: 2.4rem;
+            }
 
             .loader {
-                line-height: calc(100vh - 20rem);
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translateX(-50%) translateY(-50%);
-                margin-top: -32px;
-            }
+                display: inline-block;               
+                height: 2.4rem;
+                margin-right: 2rem;
+                width: 2.4rem;
+            
+            & > span {
+                animation: spin .9s infinite linear;
+                border-top: 2px solid rgba($color-10, 0.2);
+                border-right: 2px solid rgba($color-10, 0.2);
+                border-bottom: 2px solid rgba($color-10, 0.2);
+                border-left: 2px solid $color-10;
+                border-radius: 50%;
+                display: inline-block;   
+                height: 2.1rem;
+                width: 2.1rem;                 
+                
+                &::after {
+                    border-radius: 50%;
+                    content: "";
+                    display: block;                                      
+                }
+            
+                @at-root {
+                    @keyframes spin {
+                       100% { 
+                          transform: rotate(360deg);
+                       }                  
+                    }
+                 }
+              }                
+           }
         }
 
         &.is-hovered {
@@ -205,7 +251,7 @@ div.mce-tinymce-inline {
         }
 
         .mce-toolbar-grp {
-            padding-bottom: 3.4rem;
+            padding-bottom: 2.4rem;
             position: relative;
         }
     }

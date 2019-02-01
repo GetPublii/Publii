@@ -139,7 +139,7 @@ body#tinymce {
     font-size: inherit;
     font-weight: 400;
     line-height: 1.6;
-    margin: 0;
+    margin: 1rem 0 0;
     max-width: 39rem;
     overflow-y: initial !important;
     padding: 0 0 1.4rem !important;
@@ -148,7 +148,7 @@ body#tinymce {
 
 @media (min-width: 1015px) {
     body#tinymce {
-        margin: 0 auto;
+        margin: 1rem auto 0;
     }
 }
 
