@@ -1,7 +1,6 @@
 import EditorConfig from './../configs/postEditor.config.js';
 import { ipcRenderer } from 'electron';
 import Utils from './../../helpers/utils';
-import preloaderImages from './../configs/preloaderImages.js';
 
 class EditorBridge {
     constructor(postID) {

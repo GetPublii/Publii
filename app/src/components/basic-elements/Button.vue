@@ -312,13 +312,17 @@ export default {
             clear: both;
             display: block;
             height: 2rem;
-            margin: 1.4rem auto;
+            margin: 1.1rem auto;
             width: 2rem;
 
             &-white {
                 border-color: rgba(255, 255, 255, .5);
                 border-top-color: rgba(255, 255, 255, 1);
-            }
+            }           
+        }
+        
+        & > svg {
+            display: none;
         }
 
         &.button-small {

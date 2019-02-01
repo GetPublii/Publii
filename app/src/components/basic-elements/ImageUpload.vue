@@ -29,8 +29,8 @@
                     v-if="isUploading"
                     class="upload-uploading-overlay">
                     <div>
-                        <img :src="loaderImage" class="loader">
-                        Image upload in progress...
+                        <div class="loader"><span></span></div>
+                        Upload in progress...
                     </div>
                 </div>
             </div>
@@ -49,7 +49,6 @@
 <script>
 import normalizePath from 'normalize-path';
 import { ipcRenderer } from 'electron';
-import PreloaderImages from './../configs/preloaderImages';
 
 export default {
     name: 'image-upload',
@@ -75,8 +74,7 @@ export default {
         }
     },
     data () {
-        return {
-            loaderImage: PreloaderImages.gray,
+        return {          
             isEmpty: true,
             filePath: '',
             isUploading: false,
@@ -386,13 +384,41 @@ export default {
             position: absolute;
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
-            width: 100%;
-
-            img {
-                display: block;
-                margin: 1rem auto;
-            }
+            width: 100%;               
         }
+        
+        .loader {
+            display: block;               
+            height: 2.8rem;
+            margin: 0 auto 1rem;
+            width: 2.8rem;
+            
+            & > span {
+                animation: spin .9s infinite linear;
+                border-top: 2px solid rgba($color-1, 0.2);
+                border-right: 2px solid rgba($color-1, 0.2);
+                border-bottom: 2px solid rgba($color-1, 0.2);
+                border-left: 2px solid $color-1;
+                border-radius: 50%;
+                display: block;   
+                height: 2.5rem;
+                width: 2.5rem;                 
+                
+                &::after {
+                    border-radius: 50%;
+                    content: "";
+                    display: block;                                      
+                }
+            
+                @at-root {
+                    @keyframes spin {
+                       100% { 
+                          transform: rotate(360deg);
+                       }                  
+                    }
+                }
+          }                
+       }
     }
 }
 
