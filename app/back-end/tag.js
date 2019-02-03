@@ -130,13 +130,13 @@ class Tag extends Model {
      * Check if the tag name is unique
      */
     isTagNameUnique() {
-        let stmt = this.db.prepare('SELECT * FROM tags WHERE name LIKE @name AND id != @id');
-        stmt.run({
+        let query = this.db.prepare('SELECT * FROM tags WHERE name LIKE @name AND id != @id');
+        let queryParams = {
             name: this.escape(this.name),
             id: this.id
-        });
+        };
 
-        for (const tag of stmt.iterate()) {
+        for (const tag of query.iterate(queryParams)) {
             if (tag.name === this.name) {
                 return false;
             }
@@ -146,12 +146,12 @@ class Tag extends Model {
     }
 
     isTagSlugUnique() {
-        let stmt = this.db.prepare('SELECT slug FROM tags WHERE id != @id');
-        stmt.run({
+        let query = this.db.prepare('SELECT slug FROM tags WHERE id != @id');
+        let queryParams = {
             id: this.id
-        });
+        };
 
-        for (const tag of stmt.iterate()) {
+        for (const tag of query.iterate(queryParams)) {
             if (this.slug === tag.slug) {
                 return false;
             }

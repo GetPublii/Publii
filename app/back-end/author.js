@@ -141,14 +141,13 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorNameUnique() {
-        let stmt = this.db.prepare('SELECT * FROM authors WHERE name LIKE @name AND id != @id');
-        
-        stmt.run({
+        let query = this.db.prepare('SELECT * FROM authors WHERE name LIKE @name AND id != @id');
+        let queryParams = {
             name: this.escape(this.name),
             id: this.id
-        });
+        };
 
-        for (const author of stmt.iterate()) {
+        for (const author of query.iterate(queryParams)) {
             if (author.name === this.name) {
                 return false;
             }
@@ -163,13 +162,12 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorUsernameUnique() {
-        let stmt = this.db.prepare('SELECT username FROM authors WHERE id != @id');
-
-        stmt.run({
+        let query = this.db.prepare('SELECT username FROM authors WHERE id != @id');
+        let queryParams = {
             id: this.id
-        });
+        };
 
-        for (const author of stmt.iterate()) {
+        for (const author of query.iterate(queryParams)) {
             if (author.username === slug(authorName)) {
                 return false;
             }

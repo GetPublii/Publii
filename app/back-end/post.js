@@ -381,7 +381,7 @@ class Post extends Model {
      */
     changeStatus(status, inverse = false) {
         let selectQuery = this.db.prepare(`SELECT status FROM posts WHERE id = @id`).all({ id: this.id });
-        let currentStatus = selectQuery.status.split(',');
+        let currentStatus = selectQuery[0].status.split(',');
 
         if(!inverse) {
             if(currentStatus.indexOf(status) === -1) {
