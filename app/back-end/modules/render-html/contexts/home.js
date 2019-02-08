@@ -43,7 +43,7 @@ class RendererContextHome extends RendererContext {
                 OFFSET
                     @offset
             `).all({
-                postsNumber: postsNumber,
+                postsNumber: this.postsNumber,
                 offset: this.offset  
             });
         }

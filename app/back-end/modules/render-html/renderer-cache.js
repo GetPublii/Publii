@@ -108,7 +108,7 @@ class RendererCache {
                 config
             FROM
                 authors;
-        `);
+        `).all();
         console.timeEnd('AUTHORS - QUERY');
 
         console.time('AUTHORS - STORE');
@@ -162,10 +162,10 @@ class RendererCache {
         console.time('FEATURED IMAGES - QUERY');
         let featuredImages = this.db.prepare(`
             SELECT
-                pi.id,
-                pi.post_id,
-                pi.url,
-                pi.additional_data
+                pi.id AS id,
+                pi.post_id AS post_id,
+                pi.url AS url,
+                pi.additional_data AS additional_data
             FROM
                 posts as p
             LEFT JOIN
@@ -234,12 +234,11 @@ class RendererCache {
 
         console.time('POSTS - STORE');
         let postViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
-
+        
         posts = posts.map(post => {
             let postViewConfig = this.getPostViewSettings(postViewConfigObject, post.id);
             let newPost = new Post(post, this.renderer);
             newPost.setPostViewConfig(postViewConfig);
-
             return newPost;
         });
 
@@ -261,18 +260,16 @@ class RendererCache {
         let postViewData = false;
         let postViewSettings = {};
 
-        postViewData = this.db.prepared(`
+        postViewData = this.db.prepare(`
             SELECT
                 value
             FROM
                 posts_additional_data
             WHERE
-                post_id = @postID
+                post_id = ?
                 AND
                 key = "postViewSettings"
-        `).get({
-            postID: postID
-        });
+        `).get(postID);
 
         if (postViewData && postViewData.value) {
             postViewSettings = JSON.parse(postViewData.value);

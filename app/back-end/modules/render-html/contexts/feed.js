@@ -41,7 +41,7 @@ class RendererContextFeed extends RendererContext {
         this.posts = this.posts.map(post => {
             let postURL = self.siteConfig.domain + '/' + post.slug + '.html';
             let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post.id + '/';
-            let preparedText = post.test.split('#DOMAIN_NAME#').join(domainMediaPath);
+            let preparedText = post.text.split('#DOMAIN_NAME#').join(domainMediaPath);
             let contentMode = self.siteConfig.advanced.feed.showFullText ? 'fullText' : 'excerpt';
             let text = this.cleanUpText(preparedText);
             let excerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);

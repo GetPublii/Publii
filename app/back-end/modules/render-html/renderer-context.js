@@ -147,7 +147,7 @@ class RendererContext {
                 tags
             ORDER BY
                 name ASC
-        `);
+        `).all();
 
         tags = tags.map(tag => this.renderer.cachedItems.tags[tag.id]);
 
