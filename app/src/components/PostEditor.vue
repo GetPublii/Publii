@@ -342,9 +342,9 @@ export default {
             ipcRenderer.once('app-post-loaded', (event, data) => {
                 if(data !== false && this.postID !== 0) {
                     // Set post elements
-                    this.postData.title = data.posts[1];
+                    this.postData.title = data.posts[0].title;
                     let mediaPath = this.getMediaPath();
-                    let preparedText = data.posts[4];
+                    let preparedText = data.posts[0].text;
                     preparedText = preparedText.split('#DOMAIN_NAME#').join(mediaPath);
 
                     this.postData.text = preparedText;
@@ -353,14 +353,14 @@ export default {
                     // Set tags
                     this.postData.tags = [];
 
-                    if (data.tags[0]) {
-                        for (let i = 0; i < data.tags[0].values.length; i++) {
-                            this.postData.tags.push(data.tags[0].values[i][1]);
+                    if (data.tags.length) {
+                        for (let i = 0; i < data.tags.length; i++) {
+                            this.postData.tags.push(data.tags[i].name);
                         }
                     }
 
                     // Set author
-                    this.postData.author = data.author.id;
+                    this.postData.author = data.author[0].id;
 
                     // Dates
                     let format = 'MMM DD, YYYY  HH:mm';
@@ -369,40 +369,40 @@ export default {
                         format = 'MMM DD, YYYY  hh:mm a';
                     }
 
-                    this.postData.creationDate.text = this.$moment(data.posts[6]).format(format);
-                    this.postData.modificationDate.text = this.$moment(data.posts[7]).format(format);
-                    this.postData.creationDate.timestamp = data.posts[6];
-                    this.postData.modificationDate.timestamp = data.posts[7];
-                    this.postData.status = data.posts[8].split(',').join(', ');
-                    this.postData.isHidden = data.posts[8].indexOf('hidden') > -1;
-                    this.postData.isFeatured = data.posts[8].indexOf('featured') > -1;
+                    this.postData.creationDate.text = this.$moment(data.posts[0].created_at).format(format);
+                    this.postData.modificationDate.text = this.$moment(data.posts[0].modified_at).format(format);
+                    this.postData.creationDate.timestamp = data.posts[0].created_at;
+                    this.postData.modificationDate.timestamp = data.posts[0].modified_at;
+                    this.postData.status = data.posts[0].status.split(',').join(', ');
+                    this.postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
+                    this.postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
 
                     // Set image
-                    if (data.featuredImage[0] && data.featuredImage[0].values[0][0]) {
-                        this.postData.featuredImage.path = data.featuredImage[0].values[0][0];
+                    if (data.featuredImage) {
+                        this.postData.featuredImage.path = data.featuredImage.url;
 
-                        if(data.featuredImage[0].values[0][1]) {
+                        if(data.featuredImage.additional_data) {
                             try {
-                                let imageData = JSON.parse(data.featuredImage[0].values[0][1]);
+                                let imageData = JSON.parse(data.featuredImage.additional_data);
                                 this.postData.featuredImage.alt = imageData.alt;
                                 this.postData.featuredImage.caption = imageData.caption;
                                 this.postData.featuredImage.credits = imageData.credits;
                             } catch(e) {
                                 console.warning('Unable to load featured image data: ');
-                                console.warning(data.featuredImage[0].values[0][1]);
+                                console.warning(data.featuredImage.additional_data);
                             }
                         }
                     }
 
                     // Set SEO
-                    this.postData.slug = data.posts[3];
+                    this.postData.slug = data.posts[0].slug;
                     this.postData.metaTitle = data.additionalData.metaTitle || "";
                     this.postData.metaDescription = data.additionalData.metaDesc || "";
                     this.postData.metaRobots = data.additionalData.metaRobots || "";
                     this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
                     // Update post template
-                    this.postData.template = data.posts[9];
+                    this.postData.template = data.posts[0].template;
 
                     // Update post view settings
                     let postViewFields = Object.keys(data.postViewSettings);
