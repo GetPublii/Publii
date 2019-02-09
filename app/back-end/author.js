@@ -168,7 +168,7 @@ class Author extends Model {
         };
 
         for (const author of query.iterate(queryParams)) {
-            if (author.username === slug(authorName)) {
+            if (slug(this.username) === slug(author.username)) {
                 return false;
             }
         }

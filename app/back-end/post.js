@@ -437,15 +437,14 @@ class Post extends Model {
      */
     saveTag(tagName) {
         // Check if the tag exists
-        let sqlQuery = `SELECT id FROM tags WHERE name = @name OR slug = @slug`;
-        let result = this.db.prepare(sqlQuery).all({
+        let result = this.db.prepare(`SELECT id FROM tags WHERE name = @name OR slug = @slug`).all({
             name: this.escape(tagName),
             slug: this.escape(slug(tagName))
         });
         let tagID = 0;
         // If not - add the tag
         if(result && result.length) {
-            tagID = result.id;
+            tagID = result[0].id;
         } else {
             let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, @name, @slug, "", "")`);
             sqlQuery.run({
@@ -456,7 +455,7 @@ class Post extends Model {
         }
 
         // Save binding between post and tag
-        sqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(@tagID, @postID)`);
+        let sqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(@tagID, @postID)`);
         sqlQuery.run({
             tagID: tagID, 
             postID: this.id

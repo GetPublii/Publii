@@ -93,8 +93,7 @@ class Site {
     createDB() {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
         let db = new sqlite(dbPath);
-        let sqlQueries = fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8');
-        db.run(sqlQueries);
+        db.exec(fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
     }
 
     /*
