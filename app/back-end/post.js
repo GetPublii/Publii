@@ -233,13 +233,13 @@ class Post extends Model {
                 this.text = this.text.split(normalizePath(tempImagesDir)).join('#DOMAIN_NAME#');
                 sqlQuery = this.db.prepare(`UPDATE posts
                         SET
-                            text = ?
+                            text = @text
                         WHERE
-                            id = ?`);
-                sqlQuery.run([
-                    this.text,
-                    this.id
-                ]);
+                            id = @id`);
+                sqlQuery.run({
+                    text: this.text,
+                    id: this.id
+                });
             }
         }
 
@@ -279,14 +279,14 @@ class Post extends Model {
      * Delete post
      */
     delete() {
-        let postSqlQuery = `DELETE FROM posts WHERE id=${this.id}`;
-        let tagsSqlQuery = `DELETE FROM posts_tags WHERE post_id=${this.id}`;
-        let imagesSqlQuery = `DELETE FROM posts_images WHERE post_id=${this.id}`;
-        let additionalDataSqlQuery = `DELETE FROM posts_additional_data WHERE post_id=${this.id}`;
-        this.db.run(postSqlQuery);
-        this.db.run(tagsSqlQuery);
-        this.db.run(imagesSqlQuery);
-        this.db.run(additionalDataSqlQuery);
+        let postSqlQuery = this.db.prepare(`DELETE FROM posts WHERE id = @id`);
+        let tagsSqlQuery = this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`);
+        let imagesSqlQuery = this.db.prepare(`DELETE FROM posts_images WHERE post_id = @id`);
+        let additionalDataSqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id`);
+        postSqlQuery.run({ id: this.id });
+        tagsSqlQuery.run({ id: this.id });
+        imagesSqlQuery.run({ id: this.id });
+        additionalDataSqlQuery.run({ id: this.id });
         ImageHelper.deleteImagesDirectory(this.siteDir, this.id);
 
         return true;
@@ -492,7 +492,7 @@ class Post extends Model {
             return;
         }
 
-        let result = this.db.prepare(`SELECT slug FROM posts WHERE slug LIKE @postSlug AND id != @id`).all({
+        let result = this.db.prepare(`SELECT slug FROM posts WHERE slug LIKE @slug AND id != @id`).all({
             slug: postSlug,
             id: this.id
         });
@@ -677,8 +677,8 @@ class Post extends Model {
      */
     saveAdditionalData() {
         // Remove old _core additional data
-        let sqlQuery = `DELETE FROM posts_additional_data WHERE post_id = ${this.id} AND key = "_core"`;
-        this.db.run(sqlQuery);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "_core"`);
+        sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
         if(typeof this.additionalData !== 'object') {
@@ -688,8 +688,11 @@ class Post extends Model {
         let additionalDataToSave = JSON.stringify(this.additionalData);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "_core", ?)`);
-        storeSqlQuery.run([this.id, additionalDataToSave]);
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "_core", @data)`);
+        storeSqlQuery.run({
+            id: this.id, 
+            data: additionalDataToSave
+        });
     }
 
     /*
@@ -697,8 +700,8 @@ class Post extends Model {
      */
     savePostViewSettings() {
         // Remove old _core additional data
-        let sqlQuery = `DELETE FROM posts_additional_data WHERE post_id = ${this.id} AND key = "postViewSettings"`;
-        this.db.run(sqlQuery);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "postViewSettings"`);
+        sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
         if(typeof this.postViewSettings !== 'object') {
@@ -708,8 +711,11 @@ class Post extends Model {
         let dataToSave = JSON.stringify(this.postViewSettings);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "postViewSettings", ?)`);
-        storeSqlQuery.run([this.id, dataToSave]);
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "postViewSettings", @data)`);
+        storeSqlQuery.run({
+            id: this.id, 
+            data: dataToSave
+        });
     }
 }
 

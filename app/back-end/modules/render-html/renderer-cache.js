@@ -266,10 +266,12 @@ class RendererCache {
             FROM
                 posts_additional_data
             WHERE
-                post_id = ?
+                post_id = @id
                 AND
                 key = "postViewSettings"
-        `).get(postID);
+        `).get({
+            id: postID
+        });
 
         if (postViewData && postViewData.value) {
             postViewSettings = JSON.parse(postViewData.value);

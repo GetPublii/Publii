@@ -103,8 +103,11 @@ class Site {
     createAuthor(authorName) {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
         let db = new sqlite(dbPath);
-        let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, ?, ?, '', '{}', '{}')`);
-        sqlQuery.run([authorName, slug(authorName).toLowerCase()]);
+        let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, @name, @slug, '', '{}', '{}')`);
+        sqlQuery.run({
+            name: authorName, 
+            slug: slug(authorName).toLowerCase()
+        });
     }
 
     /*

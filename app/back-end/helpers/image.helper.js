@@ -25,8 +25,7 @@ class ImageHelper {
      */
     save() {
         // Detect old image if existed
-        let stmt = this.db.prepare('SELECT featured_image_id FROM posts WHERE id = @id');
-        let result = stmt.run({
+        let result = this.db.prepare('SELECT featured_image_id FROM posts WHERE id = @id').get({
             id: this.postID
         });
         let featuredImageId = parseInt(result.featured_image_id, 10);
@@ -56,10 +55,16 @@ class ImageHelper {
      */
     delete() {
         if(this.postID > 0) {
-            let updateSqlQuery = `UPDATE posts SET featured_image_id = 0 WHERE id = ${this.postID}`;
-            let updateRefsSqlQuery = `DELETE FROM posts_images WHERE post_id = ${this.postID}`;
-            this.db.run(updateSqlQuery);
-            this.db.run(updateRefsSqlQuery);
+            let updateSqlQuery = this.db.prepare(`UPDATE posts SET featured_image_id = 0 WHERE id = @id`);
+            let updateRefsSqlQuery = this.db.prepare(`DELETE FROM posts_images WHERE post_id = @id`);
+            
+            updateSqlQuery.run({
+                id: this.postID
+            });
+
+            updateRefsSqlQuery.run({
+                id: this.postID
+            });
         }
     }
 
@@ -78,13 +83,20 @@ class ImageHelper {
         let simplifiedFilePath = normalizePath(finalFilePath).replace(this.getMediaPath(), '');
         simplifiedFilePath = simplifiedFilePath.replace('/', '').replace('\\', '');
 
-        let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, ?, ?, "", "", ?)`);
-        imagesSqlQuery.run([this.postID, simplifiedFilePath, JSON.stringify(this.featuredImageData)]);
+        let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, @id, @path, "", "", @data)`);
+        imagesSqlQuery.run({
+            id: this.postID, 
+            path: simplifiedFilePath, 
+            data: JSON.stringify(this.featuredImageData)
+        });
         let featuredImageId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
 
         // Update post entry in DB
-        let postsSqlQuery = `UPDATE posts SET featured_image_id = ${featuredImageId} WHERE id = ${this.postID}`;
-        this.db.run(postsSqlQuery);
+        let postsSqlQuery = this.db.prepare(`UPDATE posts SET featured_image_id = @imageID WHERE id = @id`);
+        postsSqlQuery.run({
+            imageID: featuredImageId,
+            id: this.postID
+        });
     }
 
     /*
@@ -92,12 +104,12 @@ class ImageHelper {
      */
     storeImageAdditionalData() {
         // Update featured image entry in DB
-        let imageSqlQuery = this.db.prepare(`UPDATE posts_images SET additional_data = ? WHERE post_id = ?`);
+        let imageSqlQuery = this.db.prepare(`UPDATE posts_images SET additional_data = @data WHERE post_id = @id`);
 
-        imageSqlQuery.run([
-            JSON.stringify(this.featuredImageData),
-            this.postID
-        ]);
+        imageSqlQuery.run({
+            data: JSON.stringify(this.featuredImageData),
+            id: this.postID
+        });
     }
 
     /*

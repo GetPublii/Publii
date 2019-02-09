@@ -31,18 +31,18 @@ class SiteConfigMigrator {
             UPDATE 
                 authors 
             SET 
-                name = ?, 
-                username = ?, 
-                config = ? 
+                name = @name, 
+                username = @username, 
+                config = @config 
             WHERE 
                 id = 1;
         `);
 
-        sqlQuery.run([
-            newAuthorName,
-            newAuthorUsername,
-            newAuthorConfig
-        ]);
+        sqlQuery.run({
+            name: newAuthorName,
+            username: newAuthorUsername,
+            config: newAuthorConfig
+        });
 
         // Remove from the config author data
         delete siteConfig.author;

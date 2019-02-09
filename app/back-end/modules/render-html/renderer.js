@@ -186,6 +186,7 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
+        //try {
         this.sendProgress(11, 'Generating frontpage');
         this.generateFrontpage();
         this.sendProgress(20, 'Generating posts');
@@ -203,6 +204,9 @@ class Renderer {
         this.copyFiles();
         await this.generateSitemap();
         this.sendProgress(90, 'Finishing the render process');
+        //} catch (err) {
+        //    console.log('E!', err);
+        //}
     }
 
     /**

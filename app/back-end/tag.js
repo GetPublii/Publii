@@ -71,13 +71,13 @@ class Tag extends Model {
      * Add new tag
      */
     addTag() {
-        let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, ?, ?, ?, ?)`);
-        sqlQuery.run([
-            this.name,
-            this.createSlug(this.slug),
-            this.description,
-            JSON.stringify(this.additionalData)
-        ]);
+        let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, @name, @slug, @desc, @data)`);
+        sqlQuery.run({
+            name: this.name,
+            slug: this.createSlug(this.slug),
+            desc: this.description,
+            data: JSON.stringify(this.additionalData)
+        });
 
         return {
             status: true,
@@ -92,19 +92,19 @@ class Tag extends Model {
     updateTag() {
         let sqlQuery = this.db.prepare(`UPDATE tags
                         SET
-                            name = ?,
-                            slug = ?,
-                            description = ?,
-                            additional_data = ?
+                            name = @name,
+                            slug = @slug,
+                            description = @desc,
+                            additional_data = @data
                         WHERE
-                            id = ?`);
-        sqlQuery.run([
-            this.name,
-            this.createSlug(this.slug),
-            this.description,
-            JSON.stringify(this.additionalData),
-            this.id
-        ]);
+                            id = @id`);
+        sqlQuery.run({
+            name: this.name,
+            slug: this.createSlug(this.slug),
+            desc: this.description,
+            data: JSON.stringify(this.additionalData),
+            id: this.id
+        });
 
         return {
             status: true,
@@ -185,10 +185,16 @@ class Tag extends Model {
      * Delete tag
      */
     delete() {
-        let tagsSqlQuery = `DELETE FROM tags WHERE id=${this.id}`;
-        let postTagsSqlQuery = `DELETE FROM posts_tags WHERE tag_id=${this.id}`;
-        this.db.run(tagsSqlQuery);
-        this.db.run(postTagsSqlQuery);
+        let tagsSqlQuery = this.db.prepare(`DELETE FROM tags WHERE id = @id`);
+        let postTagsSqlQuery = this.db.prepare(`DELETE FROM posts_tags WHERE tag_id = @id`);
+        
+        tagsSqlQuery.run({
+            id: this.id
+        });
+
+        postTagsSqlQuery.run({
+            id: this.id
+        });
         
         return {
             status: true,

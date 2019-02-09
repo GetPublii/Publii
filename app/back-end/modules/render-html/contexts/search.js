@@ -41,10 +41,10 @@ class RendererContextSearch extends RendererContext {
      */
     prepareData() {
         this.title = this.siteConfig.name;
-        this.featuredPosts = this.featuredPosts[0] ? this.featuredPosts[0].values : [];
-        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
-        this.hiddenPosts = this.hiddenPosts[0] ? this.hiddenPosts[0].values : [];
-        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post[0]]);
+        this.featuredPosts = this.featuredPosts || [];
+        this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts || [];
+        this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
     }
 
     /**
