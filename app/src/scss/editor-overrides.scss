@@ -361,6 +361,7 @@ body[data-os="win"] {
 .mce-label.mce-publii-text-stats {
     float: right;
     padding: 1rem 0;
+    user-select: none;
 
     svg {
         fill: $color-7;
@@ -368,13 +369,14 @@ body[data-os="win"] {
         left: 0;
         margin-right: .5rem;
         position: relative;
-        top: -1px;
+        top: -1px; 
         width: 1.6rem;
     }
 
     a {
         border-bottom: 1px solid currentColor;
         color: $link-color;
+        cursor: pointer;
         transition: all .25s ease-out;
 
         &:active,
