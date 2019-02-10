@@ -454,8 +454,9 @@ class GithubPages {
 
                                      if(!this.isBinaryFile(file.path)) {
                                          let fileContent = fs.readFileSync(file.path);
+                                         fileSize = fileContent.length;
                                          calculatedHash = crypto.createHash('sha1')
-                                                                .update("blob " + fileSize + "\0" + fileContent.toString('binary'))
+                                                                .update("blob " + fileSize + "\0" + fileContent)
                                                                 .digest('hex');
                                      }
 
@@ -480,6 +481,7 @@ class GithubPages {
 
     createBlob(filePath) {
         let fileContent = fs.readFileSync(filePath, { encoding: 'base64' });
+        console.log('CREATE BLOB:', filePath);
 
         return this.apiRequest(
             {
