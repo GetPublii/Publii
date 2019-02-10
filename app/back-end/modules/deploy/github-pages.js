@@ -47,18 +47,14 @@ class GithubPages {
         this.waitForTimeout = true;
         let account = slug(this.deployment.siteConfig.name);
 
-        if(this.token === 'publii-gh-token ' + account) {
+        if (this.token === 'publii-gh-token ' + account) {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
-
-        console.log('BEFORE AUTH');
 
         this.client.authenticate({
             type: "token",
             token: this.token
         });
-
-        console.log('AFTER AUTH');
 
         process.send({
             type: 'web-contents',
@@ -69,19 +65,13 @@ class GithubPages {
             }
         });
 
-        console.log('AFTER MSG 1');
-
         process.send({
             type: 'web-contents',
             message: 'app-connection-in-progress'
         });
 
-        console.log('AFTER MSG 2');
-
         self.deployment.setInput();
         self.deployment.setOutput(true);
-
-        console.log('AFTER I/O SETUP');
 
         /*
          * Create CNAME file if necessary
@@ -94,11 +84,7 @@ class GithubPages {
             );
         }
 
-        console.log('AFTER CNAME');
-
-        console.log('BEFORE COUNT');
         countFiles(self.deployment.inputDir, async function (err, results) {
-            console.log(results);
             let numberOfFiles = parseInt(results.files + results.dirs, 10);
 
             if(numberOfFiles > 1000) {
@@ -113,36 +99,41 @@ class GithubPages {
                 return;
             }
 
-            let result = self.getAPIRateLimit();
+            try {
+                let result = self.getAPIRateLimit();
 
-            console.log('API LIMITS', result);
+                if(result.remaining < 10) {
+                    process.send({
+                        type: 'web-contents',
+                        message: 'app-connection-error',
+                        value: {
+                            additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                        }
+                    });
 
-            if(result.remaining < 10) {
+                    return;
+                }
+
+                await self.deploy();
+            } catch (err) {
+                self.deployment.outputLog.push('- - - GH ERROR  - - -');
+                self.deployment.outputLog.push(err);
+                self.deployment.outputLog.push('- - - - - - - - - - -');
+                self.deployment.saveConnectionErrorLog(err);
+                self.saveConnectionDebugLog();
+
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                        additionalMessage: err
                     }
                 });
 
-                return;
+                setTimeout(function () {
+                    process.exit();
+                }, 1000); 
             }
-
-            console.log('DEPLOY');
-            await self.deploy();
-            console.log('AFTER DEPLOY');
-            /*
-            }).catch(err => {
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: 'Request timeout'
-                    }
-                });
-            });
-            */
         });
 
         setTimeout(function() {
@@ -221,85 +212,56 @@ class GithubPages {
     }
 
     async deploy() {
-        console.log('D START');
         let self = this;
-        let commitSHA;
-        this.uploadedBlobs = {};
-        console.log('D BEFORE');
-        commitSHA = await this.getLatestSHA();
-        console.log('D AFTER getLatestSHA');
-        let treeSHA = await this.getTreeSHA(commitSHA);
-        console.log('D AFTER getTreeSHA');
-        let remoteTree = await this.getTreeData(treeSHA);
-        console.log('D AFTER getTreeData');
-        let trees = await this.listFolderFiles(remoteTree);
-        console.log('D AFTER listFolderFiles');
-        let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
-        console.log('D AFTER getNewTreeBasedOnDiffs');
-        finalTree = await this.createBlobs(finalTree, false);
-        console.log('D AFTER createBlobs');
-        finalTree = await this.updateBlobsList(finalTree);
-        console.log('D AFTER updateBlobsList');
-        let sha = await this.createTree(finalTree);
-        console.log('D AFTER createTree');
-        sha = await this.createCommit(sha, commitSHA);
-        console.log('D AFTER createCommit');
-        let result = await this.createReference(sha);
-        console.log('D AFTER createReference');
-        
-        if(result === false) {
+
+        try {
+            let commitSHA;
+            this.uploadedBlobs = {};
+            commitSHA = await this.getLatestSHA();
+            let treeSHA = await this.getTreeSHA(commitSHA);
+            let remoteTree = await this.getTreeData(treeSHA);
+            let trees = await this.listFolderFiles(remoteTree);
+            let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
+            finalTree = await this.createBlobs(finalTree, false);
+            finalTree = await this.updateBlobsList(finalTree);
+            let sha = await this.createTree(finalTree);
+            sha = await this.createCommit(sha, commitSHA);
+            let result = await this.createReference(sha);
+            
+            if(result === false) {
+                self.deployment.saveConnectionLog();
+
+                setTimeout(function () {
+                    process.exit();
+                }, 1000);
+
+                return;
+            }
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-uploading-progress',
+                value: {
+                    progress: 100,
+                    operations: false
+                }
+            });
+
+            process.send({
+                type: 'sender',
+                message: 'app-deploy-uploaded',
+                value: {
+                    progress: 100,
+                    status: true
+                }
+            });
+
             self.deployment.saveConnectionLog();
 
             setTimeout(function () {
                 process.exit();
             }, 1000);
-
-            return;
-        }
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 100,
-                operations: false
-            }
-        });
-
-        process.send({
-            type: 'sender',
-            message: 'app-deploy-uploaded',
-            value: {
-                progress: 100,
-                status: true
-            }
-        });
-
-        self.deployment.saveConnectionLog();
-
-        setTimeout(function () {
-            process.exit();
-        }, 1000);
-                    /*}).catch(err => {
-                        self.deployment.outputLog.push('- - - GH ERROR  - - -');
-                        self.deployment.outputLog.push(err);
-                        self.deployment.outputLog.push('- - - - - - - - - - -');
-                        self.deployment.saveConnectionErrorLog(err);
-                        self.saveConnectionDebugLog();
-
-                        process.send({
-                            type: 'web-contents',
-                            message: 'app-connection-error',
-                            value: {
-                                additionalMessage: err.message
-                            }
-                        });
-
-                        setTimeout(function () {
-                            process.exit();
-                        }, 1000);
-                    });*/
-        /*}).catch(err => {
+        } catch (err) {
             self.deployment.outputLog.push('- - - GH ERROR  - - -');
             self.deployment.outputLog.push(err);
             self.deployment.outputLog.push('- - - - - - - - - - -');
@@ -310,14 +272,14 @@ class GithubPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: err.message
+                    additionalMessage: err
                 }
             });
 
             setTimeout(function () {
                 process.exit();
             }, 1000);
-        });*/
+        }
     }
 
     apiRequest(requestData, method, extractor) {
@@ -427,8 +389,6 @@ class GithubPages {
     }
 
     async getNewTreeBasedOnDiffs(remoteTree, localTree) {
-        console.log('R TREE', remoteTree);
-        console.log('L TREE', localTree);
         process.send({
             type: 'web-contents',
             message: 'app-uploading-progress',
@@ -519,7 +479,6 @@ class GithubPages {
 
     createBlob(filePath) {
         let fileContent = fs.readFileSync(filePath, { encoding: 'base64' });
-        console.log('CREATE BLOB: ', filePath);
 
         return this.apiRequest(
             {
@@ -550,10 +509,8 @@ class GithubPages {
     }
 
     updateBlobsList(files) {
-        console.log('FILES:', files);
         let counterOfFilesToUpload = 0;
         let output = files.map(file => {
-            console.log('UPDATE BLOBS LIST: ', file);
             if(this.uploadedBlobs[file.fullPath]) {
                 file.sha = this.uploadedBlobs[file.fullPath];
                 file.getBlob = false;
