@@ -761,7 +761,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                background: $post-editor-sidebar-color;
+                background: $color-9;
                 padding: 0 3.6rem 3.6rem 3.6rem;
 
                 .image-uploader {
@@ -784,7 +784,7 @@ export default {
                 user-select: none;
 
                 &:hover {
-                    background: $post-editor-sidebar-color;
+                    background: rgba($color-9, .5);
                     color: $color-4;
 
                     .post-editor-settings {
@@ -799,8 +799,8 @@ export default {
                 }
 
                 &.is-open {
-                    background: $post-editor-sidebar-color;
-                    border-bottom-color: $post-editor-sidebar-color;
+                    background: $color-9;
+                    border-bottom-color: $color-9;
 
                     .post-editor-settings {
                         &-label {
