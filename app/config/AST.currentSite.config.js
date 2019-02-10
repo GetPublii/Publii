@@ -134,7 +134,8 @@ const AstCurrentSiteConfig = {
             user: '',
             repo: '',
             branch: '',
-            token: ''
+            token: '',
+            parallelOperations: 3
         },
         gitlab: {
             server: 'https://gitlab.com/',

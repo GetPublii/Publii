@@ -44,6 +44,7 @@ class GithubPages {
         this.repository = this.deployment.siteConfig.deployment.github.repo;
         this.user = this.deployment.siteConfig.deployment.github.user;
         this.branch = 'heads/' + this.deployment.siteConfig.deployment.github.branch;
+        this.parallelOperations = parseInt(this.deployment.siteConfig.deployment.github.parallelOperations, 10);
         this.waitForTimeout = true;
         let account = slug(this.deployment.siteConfig.name);
 
@@ -551,10 +552,10 @@ class GithubPages {
             }
         }
 
-        for (let i = 0; i < filesToUpdate.length; i += 5) {
+        for (let i = 0; i < filesToUpdate.length; i += this.parallelOperations) {
             let requests = [];
 
-            for (let j = 0; j < 5; j++) {
+            for (let j = 0; j < this.parallelOperations; j++) {
                 let index = filesToUpdate[i + j];
 
                 if (index) {
@@ -695,7 +696,6 @@ class GithubPages {
 
     saveConnectionDebugLog() {
         let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }

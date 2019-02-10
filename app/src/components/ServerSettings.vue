@@ -329,6 +329,23 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-parallel-operations"
+                    label="Parallel uploads">
+                    <dropdown
+                        slot="field"
+                        id="gh-parallel-operations"
+                        :items="Array.from(Array(25).keys()).map(n => ({value: n + 1, label: n + 1}))"
+                        key="gh-parallel-operations"
+                        v-model="deploymentSettings.github.parallelOperations"></dropdown>
+                    <small
+                        slot="note"
+                        class="note">
+                        More parallel operations can lead to upload errors on slow internet connections.
+                    </small>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-server"
                     label="Server">
