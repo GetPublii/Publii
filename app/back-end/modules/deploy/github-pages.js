@@ -117,16 +117,16 @@ class GithubPages {
                 await self.deploy();
             } catch (err) {
                 self.deployment.outputLog.push('- - - GH ERROR  - - -');
-                self.deployment.outputLog.push(err);
+                self.deployment.outputLog.push(JSON.stringify(err));
                 self.deployment.outputLog.push('- - - - - - - - - - -');
-                self.deployment.saveConnectionErrorLog(err);
+                self.deployment.saveConnectionErrorLog(JSON.stringify(err));
                 self.saveConnectionDebugLog();
 
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: err
+                        additionalMessage: 'E2 ' + JSON.stringify(err)
                     }
                 });
 
@@ -263,16 +263,16 @@ class GithubPages {
             }, 1000);
         } catch (err) {
             self.deployment.outputLog.push('- - - GH ERROR  - - -');
-            self.deployment.outputLog.push(err);
+            self.deployment.outputLog.push(JSON.stringify(err));
             self.deployment.outputLog.push('- - - - - - - - - - -');
-            self.deployment.saveConnectionErrorLog(err);
+            self.deployment.saveConnectionErrorLog(JSON.stringify(err));
             self.saveConnectionDebugLog();
 
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: err
+                    additionalMessage: 'E1 ' + JSON.stringify(err)
                 }
             });
 
@@ -541,63 +541,37 @@ class GithubPages {
             return [];
         }
 
-        /*let promiseSerial = funcs => funcs.reduce(
-            (promise, func) => 
-                promise.then(result => 
-                    func().then(Array.prototype.concat.bind(result))), 
-                    Promise.resolve([]));
-
-        let promiseSerial = funcs =>
-                funcs.reduce((promise, func) =>
-                    promise.then(result => func().then(Array.prototype.concat.bind(result))),
-                    Promise.resolve([]));
-
-        let funcs = files.map(file => () => {
-            if(file.getBlob) {
-                return this.createBlob(file.fullPath).then((sha) => {
-                    Object.assign({}, file, {
-                        sha: sha,
-                        getBlob: false
-                    });
-                });
-            }
-
-            return Promise.resolve(file);
-        });
-
-        return promiseSerial(funcs);*/
+        let filesToUpdate = [];
 
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
 
             if(file.getBlob) {
-                file = await this.createBlob(file.fullPath).then((sha) => {
-                    Object.assign({}, file, {
-                        sha: sha,
-                        getBlob: false
-                    });
-                });
+                filesToUpdate.push(i);
             }
         }
 
-        return files;
-        /*
-        }).catch(err => {
-            console.log('ERR CREATE BLOB: ', err);
+        for (let i = 0; i < filesToUpdate.length; i += 5) {
+            let requests = [];
 
-            if(reuploadSession) {
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: 'Request timeout'
-                    }
-                });
+            for (let j = 0; j < 5; j++) {
+                let index = filesToUpdate[i + j];
+
+                if (index) {
+                    let file = files[index];
+                    requests.push(this.createBlob(file.fullPath).then((sha) => {
+                        file = Object.assign({}, file, {
+                            sha: sha,
+                            getBlob: false
+                        });
+                    }));
+                }
             }
 
-            return files;
-        });
-        */
+            await Promise.all(requests);
+        }
+
+        return files;
     }
 
     createTree(tree) {
