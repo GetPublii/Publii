@@ -56,20 +56,15 @@ export default {
 .single-site {
     align-items: center;
     background: $color-10;   
-    border-top: 1px solid rgba($color-8, 0.2);
+    border-top: 1px solid rgba($color-8, .45);
     border-radius: 4px;
     cursor: pointer;   
     display: flex;    
-    margin: 0 2rem;
-    padding: 0.7rem 0 0.7rem 0.2rem;    
-
-    &:first-child {
-        border-top: none;
-    }
+    margin: 0;
+    padding: 0.7rem 2rem;    
    
     &-icon {
-        align-items: center;
-        background: $color-10;
+        align-items: center;       
         border-radius: 3px;
         display: flex;
         height: auto;
@@ -83,21 +78,15 @@ export default {
         svg {
             @include logoSVGColors();
         }
-
     }
 
-    &:hover {      
+    &:hover {  
+         background: rgba($color-9, .5);
         will-change: transform;       
        
         .single-site-icon {
             transform: scale(1.2);
-        }
-        
-        .single-site-name {
-            color: $color-4;  
-            transform: translateX(3px)
-           
-        }
+        }      
     }
 
     &-name {
@@ -112,8 +101,7 @@ export default {
         text-overflow: ellipsis; 
         transition: all .25s ease-out;
         white-space: nowrap;  
-        max-width: 82%;
-        
+        max-width: 82%;        
     }
 }
 </style>
