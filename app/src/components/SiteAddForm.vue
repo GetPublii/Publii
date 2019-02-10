@@ -60,7 +60,10 @@
         </div>
 
         <overlay v-if="overlayIsVisible">
-            Creating new website&hellip;
+            <div>
+                <div class="loader"><span></span></div>
+                Creation in progress...
+            </div>
         </overlay>
     </div>
 </template>
@@ -286,6 +289,41 @@ export default {
                 }
             }
         }
+    }
+    
+    &-wrapper {
+        .loader {
+            display: block;               
+            height: 2.8rem;
+            margin: -5.6rem auto 2rem;
+            width: 2.8rem;
+            
+            & > span {
+                animation: spin .9s infinite linear;
+                border-top: 2px solid rgba($color-7, 0.2);
+                border-right: 2px solid rgba($color-7, 0.2);
+                border-bottom: 2px solid rgba($color-7, 0.2);
+                border-left: 2px solid $color-7;
+                border-radius: 50%;
+                display: block;   
+                height: 3.5rem;
+                width: 3.5rem;                 
+                
+                &::after {
+                    border-radius: 50%;
+                    content: "";
+                    display: block;                                      
+                }
+            
+                @at-root {
+                    @keyframes spin {
+                       100% { 
+                          transform: rotate(360deg);
+                       }                  
+                    }
+                }
+          }                
+       }
     }
 }
 </style>

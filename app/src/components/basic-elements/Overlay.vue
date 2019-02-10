@@ -35,8 +35,7 @@ export default {
     background: rgba(255, 255, 255, .85);
     bottom: 0;
     color: $color-7;
-    display: flex;
-    font-size: 2.4rem;
+    display: flex;   
     font-weight: bold;
     justify-content: center;
     left: 0;
