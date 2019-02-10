@@ -182,7 +182,7 @@ export default {
                         self.siteNameError = true;
                     }
                 });
-            }, 250000);
+            }, 250);
         },
         setBaseConfig () {
             let baseConfig = {
