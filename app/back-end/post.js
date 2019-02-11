@@ -328,44 +328,44 @@ class Post extends Model {
         let copiedPostId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
 
         // Add tags row
-        if(postTagsToDuplicate[0] && postTagsToDuplicate[0].values[0]) {
-            let tagsCount = postTagsToDuplicate[0].values.length;
+        if(postTagsToDuplicate.length) {
+            let tagsCount = postTagsToDuplicate.length;
 
             for(let i = 0; i < tagsCount; i++) {
                 let newCopyPostTagsSqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(@tag_id, @copied_post_id)`);
                 newCopyPostTagsSqlQuery.run({
-                    tag_id: postTagsToDuplicate.tag_id,
+                    tag_id: postTagsToDuplicate[i].tag_id,
                     copied_post_id: copiedPostId
                 });
             }
         }
 
         // Add posts_images row
-        if(postImagesToDuplicate[0] && postImagesToDuplicate[0].values[0]) {
-            let imagesCount = postImagesToDuplicate[0].values.length;
+        if(postImagesToDuplicate.length) {
+            let imagesCount = postImagesToDuplicate.length;
 
             for(let i = 0; i < imagesCount; i++) {
                 let newCopyPostImagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(NULL, @copied_post_id, @url, @title, @caption, @additional_data)`);
                 newCopyPostImagesSqlQuery.run({
                     copied_post_id: copiedPostId,
-                    url: postImagesToDuplicate.url,
-                    title: postImagesToDuplicate.title,
-                    caption: postImagesToDuplicate.caption,
-                    additional_data: postImagesToDuplicate.additional_data
+                    url: postImagesToDuplicate[i].url,
+                    title: postImagesToDuplicate[i].title,
+                    caption: postImagesToDuplicate[i].caption,
+                    additional_data: postImagesToDuplicate[i].additional_data
                 });
             }
         }
 
         // Add posts_additional_data
-        if(postAdditionalDataToDuplicate[0] && postAdditionalDataToDuplicate[0].values[0]) {
-            let additionalDataCount = postAdditionalDataToDuplicate[0].values.length;
+        if(postAdditionalDataToDuplicate.length) {
+            let additionalDataCount = postAdditionalDataToDuplicate.length;
 
             for(let i = 0; i < additionalDataCount; i++) {
                 let newCopyPostAdditionalDataSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(NULL, @copied_post_id, @key, @value)`);
                 newCopyPostAdditionalDataSqlQuery.run({
                     copied_post_id: copiedPostId,
-                    key: postAdditionalDataToDuplicate.key,
-                    value: postAdditionalDataToDuplicate.value
+                    key: postAdditionalDataToDuplicate[i].key,
+                    value: postAdditionalDataToDuplicate[i].value
                 });
             }
         }
