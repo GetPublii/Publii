@@ -167,7 +167,7 @@ export default {
     }
 
     &-name {
-        margin: 0 0 0 1.2rem;
+        margin: 0 0 0 .8rem;
         width: calc(100% - 7.6rem);
     }
 
