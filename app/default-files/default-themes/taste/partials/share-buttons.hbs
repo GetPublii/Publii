@@ -24,8 +24,7 @@
 {{/if}}
 
 {{#if @config.custom.sharePinterest}}
-<a href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featured_image.url}}
-&amp;description={{encodeUrlFragment title}}" class="js-share pinterest" title="{{ translate 'partials.shareButtons.shareWithPinterest' }}" rel="nofollow">
+<a href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featuredImage.url}}&amp;description={{encodeUrlFragment title}}" class="js-share pinterest" title="{{ translate 'partials.shareButtons.shareWithPinterest' }}" rel="nofollow">
     <svg class="icon">
         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest" />
     </svg>

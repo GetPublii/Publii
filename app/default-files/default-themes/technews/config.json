@@ -1,6 +1,6 @@
 {
     "name": "Technews",
-    "version": "1.0.6.0",
+    "version": "1.7.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu",
@@ -11,7 +11,7 @@
         "renderRelatedPosts": true,
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
-        "createContentStructure": false,
+        "createContentStructure": true,
         "create404page": true,
         "nameFor404page": "404.html",
         "createSearchPage": true,
@@ -1638,6 +1638,16 @@
                         "width": 240,
                         "height": 240,
                         "crop": true
+                    }
+                }
+            },
+            
+             "galleryImages": {
+                "sizes": "",
+                "dimensions": {
+                    "thumbnail": {
+                         "width": 768,
+                         "height": "auto"                       
                     }
                 }
             }

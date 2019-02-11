@@ -64,20 +64,27 @@ textarea {
    ========================================================================== 
 */
 html {
-  font-size: 1rem; }
-  @media screen and (min-width: 20rem) {
-    html {
-      font-size: calc(1rem + 0.3 * ((100vw - 20rem) / 100)); } }
-  @media screen and (min-width: 120rem) {
-    html {
-      font-size: 1.3rem; } }
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth; }
+  html {
+    font-size: 1rem; }
+    @media screen and (min-width: 20rem) {
+      html {
+        font-size: calc(1rem + 0.3 * ((100vw - 20rem) / 100)); } }
+    @media screen and (min-width: 120rem) {
+      html {
+        font-size: 1.3rem; } }
 
 body {
   background: #f4f5f6;
   color: #61666c;
   font-family: "Roboto", sans-serif;
   font-weight: normal;
-  line-height: 1.6; }
+  line-height: 1.6;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: none; }
 
 a {
   color: #d73a42;
