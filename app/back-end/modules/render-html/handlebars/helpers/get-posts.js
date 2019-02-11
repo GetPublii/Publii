@@ -27,6 +27,7 @@ function getPostsHelper(rendererInstance, Handlebars) {
             let postData = rendererInstance.contentStructure.posts.filter(post => post.id === postIDs[i]);
 
             if (postData.length) {
+                options.data.index = i;
                 content += options.fn(postData[0]);
             }
         }
