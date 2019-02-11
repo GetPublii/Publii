@@ -163,6 +163,7 @@
                         {{#checkIf @index '<' @config.custom.authorsAmount}}
                             <li>
                                 {{#if @config.custom.authorsAvatar}}
+                                  {{#if avatar}}
                                     <a href="{{url}}">
                                         {{#if @config.custom.lazyLoad}}
                                             <img data-src="{{avatar}}" class="lazyload authors__img" alt="{{name}}">
@@ -170,6 +171,7 @@
                                             <img src="{{avatar}}" class="authors__img" alt="{{name}}">
                                         {{/if}}
                                     </a>
+                                  {{/if}}
                                 {{/if}}
                                 <div>
                                     <a href="{{url}}" class="authors__title">{{name}}</a>
