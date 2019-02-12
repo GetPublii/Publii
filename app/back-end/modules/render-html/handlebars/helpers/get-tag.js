@@ -4,6 +4,10 @@
  * {{#getTag TAG_ID}}
  *    <p>{{ name }}</p>
  * {{/getTag}}
+ * 
+ * {{#getTag "TAG_SLUG"}}
+ *    <p>{{ name }}</p>
+ * {{/getTag}}
  *
  * IMPORTANT: It requires availability of the @website.contentStructure global variable
  */
