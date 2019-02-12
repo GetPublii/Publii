@@ -80,13 +80,11 @@ export default {
 @import '../scss/variables.scss';
 
 .site-switch {
-    -webkit-app-region: no-drag; // Make the buttons clickable again
-    border-right: 1px solid $color-helper-8;
+    -webkit-app-region: no-drag; // Make the buttons clickable again   
     color: $color-5;
     cursor: pointer;
     display: block;
-    font-weight: 500;
-    margin-right: 2rem;
+    font-weight: 500;  
     position: relative;
     order: 1;
 
@@ -117,12 +115,18 @@ export default {
 
 .sites-switcher {
     background: $color-10;
-    box-shadow: 0 3px 0 1px rgba(100, 115, 135, 0.1),
+    box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                 0 8px 16px rgba(29, 39, 52, 0.07);
     left: 0;
     max-height: 48rem;
     position: absolute;
-    top: 5.3rem;
-    width: 32rem;
+    top: 4.8rem;
+    width: 30rem;
+    
+    .button {
+        font-size: 1.5rem;
+        height: 5.2rem;
+        line-height: 5.2rem;
+    }
 }
 </style>

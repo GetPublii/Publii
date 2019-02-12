@@ -55,19 +55,14 @@ class Post extends Model {
             "author": ''
         };
         // Get post data
-        let postsSqlQuery = `SELECT * FROM posts WHERE id = ${this.id}`;
-        let postsResult = this.db.exec(postsSqlQuery);
-        results.posts = [];
-
-        if(postsResult[0] && postsResult[0].values) {
-            results.posts = postsResult[0].values[0];
-        }
+        let postsSqlQuery = `SELECT * FROM posts WHERE id = @id`;
+        results.posts = this.db.prepare(postsSqlQuery).all({ id: this.id });
 
         // Get author data
         let authorSqlQuery = `
             SELECT
-                a.id,
-                a.name
+                a.id AS id,
+                a.name AS name
             FROM
                 authors AS a
             LEFT JOIN
@@ -75,23 +70,16 @@ class Post extends Model {
                 ON
                 p.authors = a.id
             WHERE
-                p.id = ${this.id}
+                p.id = @id
         `;
 
-        let authorResult = this.db.exec(authorSqlQuery);
-
-        if(authorResult[0] && authorResult[0].values) {
-            results.author = {
-                id: authorResult[0].values[0][0],
-                name: authorResult[0].values[0][1]
-            };
-        }
+        results.author = this.db.prepare(authorSqlQuery).all({ id: this.id });
 
         // Get tags data
         let tagsSqlQuery = `
             SELECT
-                t.id,
-                t.name
+                t.id AS id,
+                t.name AS name
             FROM
                 tags AS t
             LEFT JOIN
@@ -103,17 +91,17 @@ class Post extends Model {
                 ON
                     p.id = pt.post_id
             WHERE
-                p.id = ${this.id}
+                p.id = @id
             ORDER BY
                 t.name ASC;
         `;
-        let tagsResult = this.db.exec(tagsSqlQuery);
-        results.tags = tagsResult;
+        results.tags = this.db.prepare(tagsSqlQuery).all({ id: this.id });
+
         // Get image data
         let imageSqlQuery = `
             SELECT
-                pi.url,
-                pi.additional_data
+                pi.url AS url,
+                pi.additional_data AS additional_data
             FROM
                 posts AS p
             LEFT JOIN
@@ -121,10 +109,10 @@ class Post extends Model {
                 ON
                     p.featured_image_id = pi.id
             WHERE
-                p.id = ${this.id};
+                p.id = @id;
         `;
-        let imageResult = this.db.exec(imageSqlQuery);
-        results.featuredImage = imageResult;
+        results.featuredImage = this.db.prepare(imageSqlQuery).get({ id: this.id });
+
         // Get the additional data
         let additionalDataSqlQuery = `
             SELECT
@@ -132,14 +120,14 @@ class Post extends Model {
             FROM
                 posts_additional_data
             WHERE
-                post_id = ${this.id}
+                post_id = @id
                 AND
                 key = "_core"
         `;
-        let additionalDataResult = this.db.exec(additionalDataSqlQuery);
+        let additionalDataResult = this.db.prepare(additionalDataSqlQuery).get({ id: this.id });
 
-        if(additionalDataResult[0] && additionalDataResult[0].values[0]) {
-            results.additionalData = JSON.parse(additionalDataResult[0].values[0][3]);
+        if(additionalDataResult && additionalDataResult.value) {
+            results.additionalData = JSON.parse(additionalDataResult.value);
         } else {
             results.additionalData = {};
         }
@@ -150,14 +138,14 @@ class Post extends Model {
             FROM
                 posts_additional_data
             WHERE
-                post_id = ${this.id}
+                post_id = @id
                 AND
                 key = "postViewSettings"
         `;
-        let postViewResult = this.db.exec(postViewSqlQuery);
+        let postViewResult = this.db.prepare(postViewSqlQuery).get({ id: this.id });
 
-        if(postViewResult[0] && postViewResult[0].values[0]) {
-            results.postViewSettings = JSON.parse(postViewResult[0].values[0][3]);
+        if(postViewResult && postViewResult.value) {
+            results.postViewSettings = JSON.parse(postViewResult.value);
             let postViewSettingsKeys = Object.keys(results.postViewSettings);
 
             for(let i = 0; i < postViewSettingsKeys.length; i++) {
@@ -182,49 +170,47 @@ class Post extends Model {
 
         if(this.id === 0) {
             // Add post data
-            sqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, ?, ?, ?, ?, 0, ?, ?, ?, ?)`);
-            sqlQuery.run([
-                this.title,
-                this.author,
-                this.slug,
-                this.text,
-                this.creationDate,
-                this.modificationDate,
-                this.status,
-                this.template
-            ]);
-            sqlQuery.free();
+            sqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, @title, @author, @slug, @text, 0, @creationDate, @modificationDate, @status, @template)`);
+            sqlQuery.run({
+                title: this.title,
+                author: this.author,
+                slug: this.slug,
+                text: this.text,
+                creationDate: this.creationDate,
+                modificationDate: this.modificationDate,
+                status: this.status,
+                template: this.template
+            });
         } else {
             // Update post data
             sqlQuery = this.db.prepare(`UPDATE posts
                         SET
-                            title = ?,
-                            authors = ?,
-                            slug = ?,
-                            text = ?,
-                            status = ?,
-                            created_at = ?,
-                            modified_at = ?,
-                            template = ?
+                            title = @title,
+                            authors = @author,
+                            slug = @slug,
+                            text = @text,
+                            status = @status,
+                            created_at = @createdAt,
+                            modified_at = @modifiedAt,
+                            template = @template
                         WHERE
-                            id = ?`);
-            sqlQuery.run([
-                this.title,
-                this.author,
-                this.slug,
-                this.text,
-                this.status,
-                this.creationDate,
-                this.modificationDate,
-                this.template,
-                this.id
-            ]);
-            sqlQuery.free();
+                            id = @id`);
+            sqlQuery.run({
+                title: this.title,
+                author: this.author,
+                slug: this.slug,
+                text: this.text,
+                status: this.status,
+                createdAt: this.creationDate,
+                modifiedAt: this.modificationDate,
+                template: this.template,
+                id: this.id
+            });
         }
 
         // Get the newly added item ID if necessary
         if(this.id === 0) {
-            this.id = this.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
+            this.id = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
 
             // Move images from the temp directory
             let tempDirectoryExists = true;
@@ -247,14 +233,13 @@ class Post extends Model {
                 this.text = this.text.split(normalizePath(tempImagesDir)).join('#DOMAIN_NAME#');
                 sqlQuery = this.db.prepare(`UPDATE posts
                         SET
-                            text = ?
+                            text = @text
                         WHERE
-                            id = ?`);
-                sqlQuery.run([
-                    this.text,
-                    this.id
-                ]);
-                sqlQuery.free();
+                            id = @id`);
+                sqlQuery.run({
+                    text: this.text,
+                    id: this.id
+                });
             }
         }
 
@@ -265,17 +250,9 @@ class Post extends Model {
         if(this.featuredImage) {
             let image = new ImageHelper(this);
             image.save();
-
-            if(this.storeMode) {
-                this.storeDB();
-            }
         } else if(this.id > 0) {
             let image = new ImageHelper(this);
             image.delete();
-
-            if(this.storeMode) {
-                this.storeDB();
-            }
         }
 
         // Save additional data
@@ -302,19 +279,15 @@ class Post extends Model {
      * Delete post
      */
     delete() {
-        let postSqlQuery = `DELETE FROM posts WHERE id=${this.id}`;
-        let tagsSqlQuery = `DELETE FROM posts_tags WHERE post_id=${this.id}`;
-        let imagesSqlQuery = `DELETE FROM posts_images WHERE post_id=${this.id}`;
-        let additionalDataSqlQuery = `DELETE FROM posts_additional_data WHERE post_id=${this.id}`;
-        this.db.run(postSqlQuery);
-        this.db.run(tagsSqlQuery);
-        this.db.run(imagesSqlQuery);
-        this.db.run(additionalDataSqlQuery);
+        let postSqlQuery = this.db.prepare(`DELETE FROM posts WHERE id = @id`);
+        let tagsSqlQuery = this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`);
+        let imagesSqlQuery = this.db.prepare(`DELETE FROM posts_images WHERE post_id = @id`);
+        let additionalDataSqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id`);
+        postSqlQuery.run({ id: this.id });
+        tagsSqlQuery.run({ id: this.id });
+        imagesSqlQuery.run({ id: this.id });
+        additionalDataSqlQuery.run({ id: this.id });
         ImageHelper.deleteImagesDirectory(this.siteDir, this.id);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
 
         return true;
     }
@@ -324,87 +297,77 @@ class Post extends Model {
      */
     duplicate() {
         // Get the post data
-        let postToDuplicate = this.db.exec(`SELECT * FROM posts WHERE id = ${this.id} LIMIT 1`);
-        let postTagsToDuplicate = this.db.exec(`SELECT * FROM posts_tags WHERE post_id = ${this.id}`);
-        let postImagesToDuplicate = this.db.exec(`SELECT * FROM posts_images WHERE post_id = ${this.id}`);
-        let postAdditionalDataToDuplicate = this.db.exec(`SELECT * FROM posts_additional_data WHERE post_id = ${this.id}`);
+        let postToDuplicate = this.db.prepare(`SELECT * FROM posts WHERE id = @id LIMIT 1`).get({ id: this.id });
+        let postTagsToDuplicate = this.db.prepare(`SELECT * FROM posts_tags WHERE post_id = @id`).all({ id: this.id });
+        let postImagesToDuplicate = this.db.prepare(`SELECT * FROM posts_images WHERE post_id = @id`).all({ id: this.id });
+        let postAdditionalDataToDuplicate = this.db.prepare(`SELECT * FROM posts_additional_data WHERE post_id = @id`).all({ id: this.id });
 
         // Add duplicate post row
-        if(postToDuplicate[0] && postToDuplicate[0].values[0]) {
-            postToDuplicate = postToDuplicate[0].values[0];
+        if(postToDuplicate && postToDuplicate.id) {
             // Change title (suffix with " Copy")
-            let modifiedTitle = postToDuplicate[1] + " Copy";
-            let modifiedSlug = postToDuplicate[3] + '-copy';
+            let modifiedTitle = postToDuplicate.title + " Copy";
+            let modifiedSlug = postToDuplicate.slug + '-copy';
 
-            let newCopyPostSqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-            newCopyPostSqlQuery.run([
-                modifiedTitle,
-                postToDuplicate[2],
-                modifiedSlug,
-                postToDuplicate[4],
-                postToDuplicate[5],
-                Date.now(),
-                Date.now(),
-                postToDuplicate[8],
-                postToDuplicate[9]
-            ]);
-            newCopyPostSqlQuery.free();
+            let newCopyPostSqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, @title, @authors, @slug, @text, @featured_image_id, @created_at, @modified_at, @status, @template)`);
+            newCopyPostSqlQuery.run({
+                title: modifiedTitle,
+                authors: postToDuplicate.authors,
+                slug: modifiedSlug,
+                text: postToDuplicate.text,
+                featured_image_id: postToDuplicate.featured_image_id,
+                created_at: Date.now(),
+                modified_at: Date.now(),
+                status: postToDuplicate.status,
+                template: postToDuplicate.template
+            });
         } else {
             return false;
         }
 
         // Get newly inserted post ID
-        let copiedPostId = this.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
+        let copiedPostId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
 
         // Add tags row
-        if(postTagsToDuplicate[0] && postTagsToDuplicate[0].values[0]) {
-            let tagsCount = postTagsToDuplicate[0].values.length;
+        if(postTagsToDuplicate.length) {
+            let tagsCount = postTagsToDuplicate.length;
 
             for(let i = 0; i < tagsCount; i++) {
-                let newCopyPostTagsSqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(?, ?)`);
-                newCopyPostTagsSqlQuery .run([
-                    postTagsToDuplicate[0].values[i][0],
-                    copiedPostId
-                ]);
-                newCopyPostTagsSqlQuery.free();
+                let newCopyPostTagsSqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(@tag_id, @copied_post_id)`);
+                newCopyPostTagsSqlQuery.run({
+                    tag_id: postTagsToDuplicate[i].tag_id,
+                    copied_post_id: copiedPostId
+                });
             }
         }
 
         // Add posts_images row
-        if(postImagesToDuplicate[0] && postImagesToDuplicate[0].values[0]) {
-            let imagesCount = postImagesToDuplicate[0].values.length;
+        if(postImagesToDuplicate.length) {
+            let imagesCount = postImagesToDuplicate.length;
 
             for(let i = 0; i < imagesCount; i++) {
-                let newCopyPostImagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(NULL, ?, ?, ?, ?, ?)`);
-                newCopyPostImagesSqlQuery.run([
-                    copiedPostId,
-                    postImagesToDuplicate[0].values[i][2],
-                    postImagesToDuplicate[0].values[i][3],
-                    postImagesToDuplicate[0].values[i][4],
-                    postImagesToDuplicate[0].values[i][5]
-                ]);
-                newCopyPostImagesSqlQuery.free();
+                let newCopyPostImagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(NULL, @copied_post_id, @url, @title, @caption, @additional_data)`);
+                newCopyPostImagesSqlQuery.run({
+                    copied_post_id: copiedPostId,
+                    url: postImagesToDuplicate[i].url,
+                    title: postImagesToDuplicate[i].title,
+                    caption: postImagesToDuplicate[i].caption,
+                    additional_data: postImagesToDuplicate[i].additional_data
+                });
             }
         }
 
         // Add posts_additional_data
-        if(postAdditionalDataToDuplicate[0] && postAdditionalDataToDuplicate[0].values[0]) {
-            let additionalDataCount = postAdditionalDataToDuplicate[0].values.length;
+        if(postAdditionalDataToDuplicate.length) {
+            let additionalDataCount = postAdditionalDataToDuplicate.length;
 
             for(let i = 0; i < additionalDataCount; i++) {
-                let newCopyPostAdditionalDataSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(NULL, ?, ?, ?)`);
-                newCopyPostAdditionalDataSqlQuery.run([
-                    copiedPostId,
-                    postAdditionalDataToDuplicate[0].values[i][2],
-                    postAdditionalDataToDuplicate[0].values[i][3],
-                ]);
-                newCopyPostAdditionalDataSqlQuery.free();
+                let newCopyPostAdditionalDataSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(NULL, @copied_post_id, @key, @value)`);
+                newCopyPostAdditionalDataSqlQuery.run({
+                    copied_post_id: copiedPostId,
+                    key: postAdditionalDataToDuplicate[i].key,
+                    value: postAdditionalDataToDuplicate[i].value
+                });
             }
-        }
-
-        // Save changes in the database
-        if(this.storeMode) {
-            this.storeDB();
         }
 
         // Copy images
@@ -417,8 +380,8 @@ class Post extends Model {
      * Change post status
      */
     changeStatus(status, inverse = false) {
-        let selectQuery = this.db.exec(`SELECT status FROM posts WHERE id = ${this.id}`);
-        let currentStatus = selectQuery[0].values[0][0].split(',');
+        let selectQuery = this.db.prepare(`SELECT status FROM posts WHERE id = @id`).all({ id: this.id });
+        let currentStatus = selectQuery[0].status.split(',');
 
         if(!inverse) {
             if(currentStatus.indexOf(status) === -1) {
@@ -435,19 +398,13 @@ class Post extends Model {
         let updateQuery = this.db.prepare(`UPDATE
                                         posts
                                     SET
-                                        status = ?
+                                        status = @status
                                     WHERE
-                                        id = ?`);
-        updateQuery.run([
-            currentStatus.join(','),
-            this.id
-        ]);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        updateQuery.free();
+                                        id = @id`);
+        updateQuery.run({
+            status: currentStatus.join(','),
+            id: this.id
+        });
 
         return true;
     }
@@ -457,8 +414,7 @@ class Post extends Model {
      */
     saveTags() {
         // Remove tags connected previously with an item
-        let sqlQuery = `DELETE FROM posts_tags WHERE post_id = ${this.id}`;
-        this.db.run(sqlQuery);
+        this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`).run({ id: this.id });
 
         // For case when there is no tags - check it
         if(this.tags) {
@@ -473,11 +429,6 @@ class Post extends Model {
             for (let tagName of tagsToSave) {
                 this.saveTag(tagName);
             }
-
-            // Save the changes
-            if(this.storeMode) {
-                this.storeDB();
-            }
         }
     }
 
@@ -486,22 +437,29 @@ class Post extends Model {
      */
     saveTag(tagName) {
         // Check if the tag exists
-        let sqlQuery = `SELECT id FROM tags WHERE name = "${this.escape(tagName)}" OR slug = "${this.escape(slug(tagName))}"`;
-        let result = this.db.exec(sqlQuery);
+        let result = this.db.prepare(`SELECT id FROM tags WHERE name = @name OR slug = @slug`).all({
+            name: this.escape(tagName),
+            slug: this.escape(slug(tagName))
+        });
         let tagID = 0;
         // If not - add the tag
-        if(!result[0] || result[0].values.length === 0) {
-            let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, ?, ?, "", "")`);
-            sqlQuery.run([tagName, slug(tagName)]);
-            tagID = this.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
+        if(result && result.length) {
+            tagID = result[0].id;
         } else {
-            tagID = result[0].values[0][0];
+            let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, @name, @slug, "", "")`);
+            sqlQuery.run({
+                name: tagName, 
+                slug: slug(tagName)
+            });
+            tagID = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
         }
 
         // Save binding between post and tag
-        sqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(?, ?)`);
-        sqlQuery.run([tagID, this.id]);
-        sqlQuery.free();
+        let sqlQuery = this.db.prepare(`INSERT INTO posts_tags VALUES(@tagID, @postID)`);
+        sqlQuery.run({
+            tagID: tagID, 
+            postID: this.id
+        });
     }
 
     /*
@@ -533,9 +491,12 @@ class Post extends Model {
             return;
         }
 
-        let result = this.db.exec(`SELECT slug FROM posts WHERE slug LIKE "${postSlug}" AND id != ${this.id}`);
+        let result = this.db.prepare(`SELECT slug FROM posts WHERE slug LIKE @slug AND id != @id`).all({
+            slug: postSlug,
+            id: this.id
+        });
 
-        if(result[0] && result[0].values) {
+        if(result && result.length) {
             if(suffix === 0) {
                 suffix = 2;
             } else {
@@ -587,13 +548,13 @@ class Post extends Model {
                     FROM
                         posts
                     WHERE
-                        id = ${postDir}
+                        id = @id
                 `;
 
-            let textResult = this.db.exec(textSqlQuery);
+            let textResult = this.db.prepare(textSqlQuery).get({ id: postDir });
 
-            if(textResult[0] && textResult[0].values) {
-                this.text = textResult[0].values[0][0];
+            if(textResult && textResult.text) {
+                this.text = textResult.text;
             }
         }
 
@@ -619,13 +580,15 @@ class Post extends Model {
                     FROM
                         posts_images
                     WHERE
-                        post_id = ${this.id}
+                        post_id = @id
                 `;
 
-            let featuredImageResult = this.db.exec(featuredImageSqlQuery);
+            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
+                id: this.id 
+            });
 
-            if(featuredImageResult[0] && featuredImageResult[0].values) {
-                featuredImage = featuredImageResult[0].values[0][0];
+            if(featuredImageResult && featuredImageResult.url) {
+                featuredImage = featuredImageResult.url;
             }
         }
 
@@ -713,8 +676,8 @@ class Post extends Model {
      */
     saveAdditionalData() {
         // Remove old _core additional data
-        let sqlQuery = `DELETE FROM posts_additional_data WHERE post_id = ${this.id} AND key = "_core"`;
-        this.db.run(sqlQuery);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "_core"`);
+        sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
         if(typeof this.additionalData !== 'object') {
@@ -724,14 +687,11 @@ class Post extends Model {
         let additionalDataToSave = JSON.stringify(this.additionalData);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "_core", ?)`);
-        storeSqlQuery.run([this.id, additionalDataToSave]);
-        storeSqlQuery.free();
-
-        // Save the changes
-        if(this.storeMode) {
-            this.storeDB();
-        }
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "_core", @data)`);
+        storeSqlQuery.run({
+            id: this.id, 
+            data: additionalDataToSave
+        });
     }
 
     /*
@@ -739,8 +699,8 @@ class Post extends Model {
      */
     savePostViewSettings() {
         // Remove old _core additional data
-        let sqlQuery = `DELETE FROM posts_additional_data WHERE post_id = ${this.id} AND key = "postViewSettings"`;
-        this.db.run(sqlQuery);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "postViewSettings"`);
+        sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
         if(typeof this.postViewSettings !== 'object') {
@@ -750,14 +710,11 @@ class Post extends Model {
         let dataToSave = JSON.stringify(this.postViewSettings);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, ?, "postViewSettings", ?)`);
-        storeSqlQuery.run([this.id, dataToSave]);
-        storeSqlQuery.free();
-
-        // Save the changes
-        if(this.storeMode) {
-            this.storeDB();
-        }
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "postViewSettings", @data)`);
+        storeSqlQuery.run({
+            id: this.id, 
+            data: dataToSave
+        });
     }
 }
 

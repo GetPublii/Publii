@@ -15,6 +15,7 @@
         <regenerate-thumbnails-popup />
         <error-popup />
         <sync-popup />
+        <subscription-popup />
     </div>
 </template>
 
@@ -28,6 +29,7 @@ import RenderingPopup from './RenderingPopup';
 import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
+import SubscriptionPopup from './SubscriptionPopup';
 const mainProcess = remote.require('./main');
 const Menu = remote.Menu;
 
@@ -43,7 +45,8 @@ export default {
         'rendering-popup': RenderingPopup,
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
-        'sync-popup': SyncPopup
+        'sync-popup': SyncPopup,
+        'subscription-popup': SubscriptionPopup
     },
     computed: {
         ...mapGetters([
@@ -250,7 +253,7 @@ export default {
         font-size: 1.6rem;
         left: 0;
         position: absolute;
-        top: 8.4rem;
+        top: 7.8rem;
         width: 35rem;
         z-index: 1;
     }
@@ -258,10 +261,10 @@ export default {
 
 #app {
     & > .topbar + section {
-        height: calc(100vh - 8.4rem);
+        height: calc(100vh - 7.8rem);
         overflow: auto;
         position: absolute;
-        top: 8.4rem;
+        top: 7.8rem;
         width: 100%;
     }
 }
@@ -269,8 +272,8 @@ export default {
 body[data-os="win"] {
     #app {
         & > .topbar + section {
-            height: calc(100vh - 9.8rem);
-            top: 9.8rem;
+            height: calc(100vh - 8.7rem);
+            top: 8.7rem;
         }
     }
 
@@ -281,7 +284,7 @@ body[data-os="win"] {
         }
 
         &-site-sidebar {
-            top: 9.8rem;
+            top: 8.7rem;
         }
     }
 }
@@ -289,8 +292,8 @@ body[data-os="win"] {
 body[data-os="linux"] {
     #app {
         & > .topbar + section {
-            height: calc(100vh - 6.2rem);
-            top: 6.2rem;
+            height: calc(100vh - 5.6rem);
+            top: 5.6rem;
         }
     }
 
@@ -301,7 +304,7 @@ body[data-os="linux"] {
         }
 
         &-site-sidebar {
-            top: 6.2rem;
+            top: 5.6rem;
         }
     }
 }

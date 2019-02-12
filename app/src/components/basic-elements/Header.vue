@@ -57,6 +57,7 @@ export default {
 }
 
 .buttons {
+    display: inline-flex;
     margin-left: auto;
     white-space: nowrap;
 

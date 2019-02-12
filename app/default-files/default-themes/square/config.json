@@ -1,6 +1,6 @@
 {
     "name": "Square",
-    "version": "1.5.1.0",
+    "version": "1.6.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -998,9 +998,8 @@
                 "sizes": "",
                 "dimensions": {
                     "thumbnail": {
-                        "width": 240,
-                        "height": 240,
-                        "crop": true
+                        "width": 768,
+                        "height": "auto"
                     }
                 }
             }

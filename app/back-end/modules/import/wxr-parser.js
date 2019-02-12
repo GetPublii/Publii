@@ -426,25 +426,20 @@ class WxrParser {
             }
 
             if(fileName) {
-                let featuredPostImageSqlQuery = newPost.db.prepare(`INSERT INTO posts_images VALUES(NULL, ?, ?, ?, ?, ?)`);
-                featuredPostImageSqlQuery.run([
-                    newPostID,
-                    fileName,
-                    '',
-                    '',
-                    '{"alt":"","caption":"","credits":""}'
-                ]);
-                featuredPostImageSqlQuery.free();
+                let featuredPostImageSqlQuery = newPost.db.prepare(`INSERT INTO posts_images VALUES(NULL, @newPostID, @fileName, '', '', @config)`);
+                featuredPostImageSqlQuery.run({
+                    newPostID: newPostID,
+                    fileName: fileName,
+                    config: '{"alt":"","caption":"","credits":""}'
+                });
 
-                let featuredPostID = newPost.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
-                let featuredPostIdUpdate = newPost.db.prepare(`UPDATE posts SET featured_image_id = ? WHERE id = ?`);
+                let featuredPostID = newPost.db.prepare('SELECT last_insert_rowid() AS id').get().id;
+                let featuredPostIdUpdate = newPost.db.prepare(`UPDATE posts SET featured_image_id = @featuredPostID WHERE id = @newPostID`);
 
-                featuredPostIdUpdate.run([
+                featuredPostIdUpdate.run({
                     featuredPostID,
                     newPostID
-                ]);
-
-                featuredPostIdUpdate.free();
+                });
             }
 
             process.send({
@@ -453,11 +448,6 @@ class WxrParser {
             });
 
             console.log('-> Imported post (' + (i+1) + ' / ' + posts.length + '): ' + postTitle);
-
-            if(i === posts.length - 1) {
-                // Store all changes at the end
-                newPost.storeDB();
-            }
         }
     }
 

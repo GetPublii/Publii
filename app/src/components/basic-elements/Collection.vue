@@ -38,7 +38,7 @@ export default {
     bottom: 0;
     position: absolute;
     top: 13rem;
-    width: calc(100% - 12rem);
+    width: calc(100% - 10rem);
 
     &:after {
         background: linear-gradient(transparent, #fff);

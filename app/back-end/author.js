@@ -75,19 +75,13 @@ class Author extends Model {
      * @returns {{status: boolean, message: string, authors: *}}
      */
     addAuthor() {
-        let sqlQuery = this.db.prepare(`INSERT INTO authors VALUES(null, ?, ?, "", ?, ?)`);
-        sqlQuery.run([
-            this.name,
-            slug(this.username),
-            this.config,
-            this.additionalData
-        ]);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
+        let sqlQuery = this.db.prepare(`INSERT INTO authors VALUES(null, @name, @slug, "", @config, @additionalData)`);
+        sqlQuery.run({
+            name: this.name,
+            slug: slug(this.username),
+            config: this.config,
+            additionalData: this.additionalData
+        });
 
         return {
             status: true,
@@ -105,26 +99,20 @@ class Author extends Model {
     updateAuthor() {
         let sqlQuery = this.db.prepare(`UPDATE authors
                         SET
-                            name = ?,
-                            username = ?,
+                            name = @name,
+                            username = @slug,
                             password = "",
-                            config = ?,
-                            additional_data = ?
+                            config = @config,
+                            additional_data = @additionalData
                         WHERE
-                            id = ?`);
-        sqlQuery.run([
-            this.name,
-            slug(this.username),
-            this.config,
-            this.additionalData,
-            this.id
-        ]);
-
-        if(this.storeMode) {
-            this.storeDB();
-        }
-
-        sqlQuery.free();
+                            id = @id`);
+        sqlQuery.run({
+            name: this.name,
+            slug: slug(this.username),
+            config: this.config,
+            additionalData: this.additionalData,
+            id: this.id
+        });
 
         return {
             status: true,
@@ -153,17 +141,16 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorNameUnique() {
-        let sqlQuery = `SELECT * FROM authors WHERE name LIKE "${this.escape(this.name)}" AND id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let query = this.db.prepare('SELECT * FROM authors WHERE name LIKE @name AND id != @id');
+        let queryParams = {
+            name: this.escape(this.name),
+            id: this.id
+        };
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
-
-        results = results[0].values;
-
-        if(results.indexOf(this.name) > -1) {
-            return false;
+        for (const author of query.iterate(queryParams)) {
+            if (author.name === this.name) {
+                return false;
+            }
         }
 
         return true;
@@ -175,16 +162,13 @@ class Author extends Model {
      * @returns {boolean}
      */
     isAuthorUsernameUnique() {
-        let sqlQuery = `SELECT username FROM authors WHERE id != ${this.id}`;
-        let results = this.db.exec(sqlQuery);
+        let query = this.db.prepare('SELECT username FROM authors WHERE id != @id');
+        let queryParams = {
+            id: this.id
+        };
 
-        if(!results[0] || !results[0].values.length) {
-            return true;
-        }
-
-        // Check every author and its slug
-        for(let authorName of results[0].values) {
-            if(slug(this.username) === slug(authorName)) {
+        for (const author of query.iterate(queryParams)) {
+            if (slug(this.username) === slug(author.username)) {
                 return false;
             }
         }
@@ -205,14 +189,16 @@ class Author extends Model {
             };
         }
 
-        let authorsSqlQuery = `DELETE FROM authors WHERE id=${this.id}`;
-        let postsSqlQuery = `UPDATE posts SET authors = "1" WHERE authors = "${this.id}"`;
-        this.db.run(authorsSqlQuery);
-        this.db.run(postsSqlQuery);
+        let authorsSqlQuery = this.db.prepare(`DELETE FROM authors WHERE id = @id`);
+        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = "1" WHERE authors = @id`);
+        
+        authorsSqlQuery.run({
+            id: this.id
+        });
 
-        if(this.storeMode) {
-            this.storeDB();
-        }
+        postsSqlQuery.run({
+            id: '"' + this.id + '"'
+        });
 
         return {
             status: true,

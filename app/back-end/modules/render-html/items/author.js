@@ -17,7 +17,7 @@ class AuthorItem {
      */
     constructor(author, rendererInstance) {
         this.author = author;
-        this.authorID = parseInt(author[0], 10);
+        this.authorID = parseInt(author.id, 10);
         this.renderer = rendererInstance;
         this.db = this.renderer.db;
         this.themeConfig = this.renderer.themeConfig;
@@ -35,19 +35,19 @@ class AuthorItem {
 
         this.authorData = {
             id: this.authorID,
-            name: this.author[1],
-            username: this.author[2],
+            name: this.author.name,
+            username: this.author.username,
             avatar: '',
             avatarImage: '',
             email: '',
             description: '',
             postsNumber: 0,
             url: '',
-            config: this.author[3] ? JSON.parse(this.author[3]) : {},
+            config: this.author.config ? JSON.parse(this.author.config) : {},
         };
 
         try {
-            UtilsHelper.mergeObjects(this.authorData, JSON.parse(this.author[3]));
+            UtilsHelper.mergeObjects(this.authorData, JSON.parse(this.author.config));
         } catch(e) {
             console.log('[WARNING] renderer-context.js: wrong author JSON config data for author with ID: ' + this.authorID);
         }

@@ -126,10 +126,10 @@
                         <label id="post-featured-wrapper">
                             <switcher
                                 v-model="$parent.postData.isFeatured" />
-                            Feature this post in listings
+                            Mark as featured 
 
                             <icon
-                                title="Mark this post as featured"
+                                title="Mark as featured"
                                 class="switcher-item-icon-helper"
                                 name="featured-post"
                                 size="xs"
@@ -137,12 +137,17 @@
                         </label>
 
                         <label id="post-hidden-wrapper">
-                            <switcher
+                          
+                            <switcher 
+                                title="Post will not appear in any generated post lists such as tag or author pages"
                                 v-model="$parent.postData.isHidden" />
-                            Hide this post in listings
+                           <span 
+                                 title="Post will not appear in any generated post lists such as tag or author pages">
+                               Hide post
+                           </span>
 
                             <icon
-                                title="Mark this post as hidden"
+                                title="Hide Post"
                                 class="switcher-item-icon-helper"
                                 name="hidden-post"
                                 size="xs"
@@ -626,7 +631,7 @@ export default {
 .post-editor {
     &-sidebar {
         background: $color-10;
-        height: calc(100vh - 8.4rem);
+        height: calc(100vh - 7.8rem);
         overflow: auto;
         position: relative;
         width: 50rem;
@@ -756,7 +761,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                background: $post-editor-sidebar-color;
+                background: $color-9;
                 padding: 0 3.6rem 3.6rem 3.6rem;
 
                 .image-uploader {
@@ -765,7 +770,7 @@ export default {
             }
 
             &-header {
-                align-items: center;
+                align-items: center;               
                 border-top: 1px solid rgba($color-8, .45);
                 border-bottom: 1px solid rgba($color-8, .45);
                 color: $link-color;
@@ -779,6 +784,7 @@ export default {
                 user-select: none;
 
                 &:hover {
+                    background: rgba($color-9, .5);
                     color: $color-4;
 
                     .post-editor-settings {
@@ -793,8 +799,8 @@ export default {
                 }
 
                 &.is-open {
-                    background: $post-editor-sidebar-color;
-                    border-bottom-color: $post-editor-sidebar-color;
+                    background: $color-9;
+                    border-bottom-color: $color-9;
 
                     .post-editor-settings {
                         &-label {
@@ -852,18 +858,18 @@ export default {
                 }
 
                 &-open {  
-                    border-top: solid 6px $color-7;
-                    border-left: solid 6px transparent;
-                    border-right: solid 6px transparent;                    
+                    border-top: solid 4px $color-7;
+                    border-left: solid 5px transparent;
+                    border-right: solid 5px transparent;                    
                     opacity: 1;                     
                     cursor: pointer;                   
-                    height: 6px;
+                    height: 5px;
                     left: auto;
                     line-height: 1.1; 
                     padding: 0;
                     position: absolute;
-                    right: calc(4.5rem - 6px);
-                    width: 12px;
+                    right: calc(4.5rem - 5px);
+                    width: 5px;
                     text-align: center;       
                     transition: all .3s ease-out;         
                     top: 50%;
@@ -955,13 +961,13 @@ export default {
 
 body[data-os="win"] {
     .post-editor-sidebar {
-        height: calc(100vh - 10rem);
+        height: calc(100vh - 9.4rem);
     }
 }
 
 body[data-os="linux"] {
     .post-editor-sidebar {
-        height: calc(100vh - 6.2rem);
+        height: calc(100vh - 5.6rem);
     }
 }
 

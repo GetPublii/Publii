@@ -57,6 +57,16 @@
             </field>
 
             <field
+                id="show-modification-date-as-column"
+                label="Show modification date as column"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="show-modification-date-as-column"
+                    v-model="showModificationDateAsColumn" />
+            </field>
+
+            <field
                 id="open-devtools-in-main"
                 label="Open DevTools automatically in the Main Window"
                 :labelSeparated="false">
@@ -127,10 +137,6 @@
             </field>
         </fields-group>
 
-        <fields-group title="Available themes">
-            <themes-list />
-        </fields-group>
-
         <p-footer>
             <p-button
                 :onClick="save"
@@ -144,7 +150,6 @@
 <script>
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
-import ThemesList from './ThemesList';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -153,9 +158,6 @@ export default {
     mixins: [
         GoToLastOpenedWebsite
     ],
-    components: {
-        'themes-list': ThemesList
-    },
     data () {
         return {
             screensSelected: '',
@@ -164,6 +166,7 @@ export default {
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
             closeEditorOnSave: true,
+            showModificationDateAsColumn: false,
             locations: {
                 sites: '',
                 backups: '',
@@ -209,7 +212,6 @@ export default {
         }
     },
     mounted () {
-        this.$bus.$emit('sites-list-reset');
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;
@@ -219,6 +221,7 @@ export default {
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
         this.screensSelected = this.$store.state.app.config.startScreen;
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
+        this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
     },
     methods: {
         goBack () {
@@ -246,7 +249,8 @@ export default {
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
-                closeEditorOnSave: this.closeEditorOnSave
+                closeEditorOnSave: this.closeEditorOnSave,
+                showModificationDateAsColumn: this.showModificationDateAsColumn
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

@@ -96,13 +96,13 @@ export default {
     cursor: pointer;
     display: inline-block;
     font: {
-        size: 16px;
+        size: 1.5rem;
         family: $secondary-font;
         weight: 500;
     }
-    height: 4.4rem;
-    line-height: 4.3rem;
-    padding: 0 1.6rem;
+    height: 4.2rem;
+    line-height: 4.1rem;
+    padding: 0 1.3rem;
     position: relative;
     transition: all .25s ease-out;
     user-select: none;
@@ -253,7 +253,7 @@ export default {
     &-medium {
         font-weight: 500;
         height: 5.6rem;
-        line-height: 5.6rem;
+        line-height: 5.5rem;
         padding: 0 2rem;
     }
 
@@ -280,8 +280,8 @@ export default {
     }
 
     &-icon {
-        padding-left: 4.7rem;
-        padding-right: 1.7rem;
+        padding-left: 4.3rem;
+        padding-right: 1.3rem;
 
         & > svg {
             left: 1.4rem;
@@ -312,13 +312,17 @@ export default {
             clear: both;
             display: block;
             height: 2rem;
-            margin: 1.4rem auto;
+            margin: 1.1rem auto;
             width: 2rem;
 
             &-white {
                 border-color: rgba(255, 255, 255, .5);
                 border-top-color: rgba(255, 255, 255, 1);
-            }
+            }           
+        }
+        
+        & > svg {
+            display: none;
         }
 
         &.button-small {
@@ -330,7 +334,7 @@ export default {
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: $color-9;
+        background-color: $color-helper-10;
         border-color: $color-8;
         color: $color-7;
         cursor: not-allowed;

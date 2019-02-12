@@ -38,5 +38,9 @@ module.exports = {
     reverse: require('./reverse.js'),
     orderby: require('./orderby.js'),
     getPostHelper: require('./get-post.js'),
-    getPostsHelper: require('./get-posts.js')
+    getPostsHelper: require('./get-posts.js'),
+    getPostByTagsHelper: require('./get-post-by-tags.js'),
+    getPostsByTagsHelper: require('./get-posts-by-tags.js'),
+    getTagHelper: require('./get-tag.js'),
+    getTagsHelper: require('./get-tags.js')
 };

@@ -71,53 +71,76 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell 
-                    width="calc(100% - 480px)"
-                    @click.native="ordering('title')">
-                    <template v-if="orderBy === 'title'">
-                        <strong>Title</strong>
-                    </template>
-                    <template v-else>Title</template>
+                <collection-cell :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('title')">
+                        <template v-if="orderBy === 'title'">
+                            <strong>Title</strong>
+                        </template>
+                        <template v-else>Title</template>
 
-                    <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                    </span>
+                </collection-cell>
+
+                <collection-cell width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('created')">
+                        <template v-if="orderBy === 'created'">
+                            <strong>Publication date</strong>
+                        </template>
+                        <template v-else>Publication date</template>
+
+                        <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell 
-                    width="200px"
-                    @click.native="ordering('created')">
-                    <template v-if="orderBy === 'created'">
-                        <strong>Publication date</strong>
-                    </template>
-                    <template v-else>Publication date</template>
+                    v-if="showModificationDateAsColumn"
+                    width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('modified')">
+                        <template v-if="orderBy === 'modified'">
+                            <strong>Modification date</strong>
+                        </template>
+                        <template v-else>Modification date</template>
 
-                    <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    width="200px"
-                    @click.native="ordering('author')">
-                    <template v-if="orderBy === 'author'">
-                        <strong>Author</strong>
-                    </template>
-                    <template v-else>Author</template>
+                <collection-cell width="200px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('author')">
+                        <template v-if="orderBy === 'author'">
+                            <strong>Author</strong>
+                        </template>
+                        <template v-else>Author</template>
 
-                    <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    
-                    width="40px"
-                    @click.native="ordering('id')">
-                    <template v-if="orderBy === 'id'">
-                        <strong>ID</strong>
-                    </template>
-                    <template v-else>ID</template>
+                <collection-cell width="40px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('id')">
+                        <template v-if="orderBy === 'id'">
+                            <strong>ID</strong>
+                        </template>
+                        <template v-else>ID</template>
 
-                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <div
@@ -183,7 +206,7 @@
 
                 <collection-cell
                     type="titles"
-                    width="calc(100% - 480px)">
+                    :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
                     <h2 class="title">
                         <a
                             href="#"
@@ -224,7 +247,7 @@
                             href="#"
                             class="tag"
                             :key="'tag-' + tag.id"
-                            @click.post.prevent="setFilter('tag:' + tag.name)">
+                            @click.stop.prevent="setFilter('tag:' + tag.name)">
                             #{{ tag.name }}
                         </a>
                     </template>
@@ -234,8 +257,19 @@
                     type="publish-dates"
                     width="200px">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
-                    <span class="modify-date">
+                    <span 
+                        v-if="!showModificationDateAsColumn"
+                        class="modify-date">
                         Last modified: {{ getModificationDate(item.modified) }}
+                    </span>
+                </collection-cell>
+
+                <collection-cell
+                    v-if="showModificationDateAsColumn"
+                    type="modification-dates"
+                    width="200px">
+                    <span class="modify-date">
+                        {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
@@ -346,6 +380,9 @@ export default {
                 drafts: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
             }
+        },
+        showModificationDateAsColumn () {
+            return this.$store.state.app.config.showModificationDateAsColumn;
         }
     },
     mounted: function() {
@@ -566,13 +603,17 @@ export default {
 .header {
     .col {
         align-items: center;
-        cursor: pointer;
         display: flex;
+
+        .col-sortable-title {
+            cursor: pointer;
+        }
     }
 }
 
 .order-ascending,
 .order-descending {
+    margin-left: 3px;
     position: relative;
     &:after {
         border-top: solid 5px rgba($color-7, .7);
@@ -582,7 +623,7 @@ export default {
         cursor: pointer;
         display: inline-block;
         height: 4px;
-        left: 6px;
+        left: 0;
         line-height: 1.1;
         opacity: 1;
         padding: 0;

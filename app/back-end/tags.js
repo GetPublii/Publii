@@ -18,7 +18,7 @@ class Tags extends Model {
             name,
             slug,
             description,
-            additional_data
+            additional_data AS additionalData
         FROM
             tags
         GROUP BY
@@ -26,19 +26,7 @@ class Tags extends Model {
         ORDER BY
             id DESC`;
 
-        let results = this.getResults(this.db.exec(sqlQuery));
-
-        results = results.map(function(tag) {
-            return {
-                id: tag[0],
-                name: tag[1],
-                slug: tag[2],
-                description: tag[3],
-                additionalData: tag[4]
-            }
-        });
-
-        return results;
+        return this.db.prepare(sqlQuery).all();
     }
 }
 

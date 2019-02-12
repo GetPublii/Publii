@@ -252,13 +252,18 @@ class S3 {
         fs.readFile(path.join(this.deployment.inputDir, input), (err, fileContent) => {
             let fileName = input;
             let fileExtension = path.parse(fileName).ext.substr(1);
+            let fileACL = 'public-read';
+
+            if (this.deployment.siteConfig.deployment.s3.acl) {
+                fileACL = this.deployment.siteConfig.deployment.s3.acl;
+            }
 
             if(typeof this.prefix === 'string' && this.prefix !== '') {
                 fileName = this.prefix + fileName;
             }
 
             let params = {
-                ACL: "public-read",
+                ACL: fileACL,
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,

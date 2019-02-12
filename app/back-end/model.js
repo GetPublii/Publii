@@ -22,16 +22,6 @@ class Model {
     }
 
     /**
-     * Saves DB into file
-     */
-    storeDB() {
-        // Save db
-        let data = this.db.export();
-        let output = new Buffer(data);
-        fs.writeFileSync(this.dbPath, output);
-    }
-
-    /**
      * Escapes given string
      *
      * @param stringToEscape
@@ -50,20 +40,6 @@ class Model {
             .replace(/\r/g, "\\\r")
             .replace(/\x00/g, "\\\x00")
             .replace(/\x1a/g, "\\\x1a");
-    }
-
-    /**
-     * Get results array or empty array
-     *
-     * @param results
-     * @returns {Array}
-     */
-    getResults(results) {
-        if(results[0]) {
-            return results[0].values;
-        }
-
-        return [];
     }
 }
 

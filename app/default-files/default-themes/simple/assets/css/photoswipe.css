@@ -529,7 +529,7 @@ a.pswp__share--download:hover {
 }
 
 .pswp__caption__center {
-	text-align: left;
+	text-align: center;
 	max-width: calc(38rem + 8%);
 	margin: 0 auto;
 	font-size: 13px;

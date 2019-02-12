@@ -15,7 +15,7 @@ class RendererContextFeed extends RendererContext {
         this.postsNumber = parseInt(this.postsNumber, 10);
         this.offset = parseInt(this.offset, 10);
         // Retrieve post
-        this.posts = this.db.exec(`
+        this.posts = this.db.prepare(`
             SELECT
                 *
             FROM
@@ -27,31 +27,32 @@ class RendererContextFeed extends RendererContext {
             ORDER BY
                 created_at DESC
             LIMIT
-                ${this.postsNumber}
+                @postsNumber
             OFFSET
-                ${this.offset}
-        `);
+                @offset
+        `).all({
+            postsNumber: this.postsNumber,
+            offset: this.offset
+        });
     }
 
     prepareData() {
         let self = this;
-        this.posts = this.posts[0] ? this.posts[0].values : [];
-
         this.posts = this.posts.map(post => {
-            let postURL = self.siteConfig.domain + '/' + post[3] + '.html';
-            let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post[0] + '/';
-            let preparedText = post[4].split('#DOMAIN_NAME#').join(domainMediaPath);
+            let postURL = self.siteConfig.domain + '/' + post.slug + '.html';
+            let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post.id + '/';
+            let preparedText = post.text.split('#DOMAIN_NAME#').join(domainMediaPath);
             let contentMode = self.siteConfig.advanced.feed.showFullText ? 'fullText' : 'excerpt';
             let text = this.cleanUpText(preparedText);
             let excerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
-            let authorData = this.getAuthor('post', post[0]);
+            let authorData = this.getAuthor('post', post.id);
 
             if(contentMode !== 'fullText') {
                 text = false;
             }
 
             if(self.siteConfig.advanced.urls.cleanUrls) {
-                postURL = self.siteConfig.domain + '/' + post[3] + '/';
+                postURL = self.siteConfig.domain + '/' + post.slug + '/';
 
                 if(self.renderer.previewMode || self.siteConfig.advanced.urls.addIndex) {
                     postURL += 'index.html';
@@ -59,16 +60,16 @@ class RendererContextFeed extends RendererContext {
             }
 
             return {
-                title: post[1],
+                title: post.title,
                 url: postURL,
                 author: authorData,
                 text: text,
                 excerpt: excerpt,
-                createdAt: post[6],
+                createdAt: post.created_at,
                 // Get higher date - created_at or modified_at
-                modifiedAt: post[6] > post[7] ? post[6] : post[7],
-                categories: this.getPostCategories(post[0]),
-                thumbnail: this.getPostThumbnail(post[0])
+                modifiedAt: post.created_at > post.modified_at ? post.created_at : post.modified_at,
+                categories: this.getPostCategories(post.id),
+                thumbnail: this.getPostThumbnail(post.id)
             }
         });
     }
@@ -136,9 +137,9 @@ class RendererContextFeed extends RendererContext {
     }
 
     getPostCategories(postID) {
-        let tags = this.db.exec(`
+        let tags = this.db.prepare(`
             SELECT
-                t.name
+                t.name AS name
             FROM
                 tags AS t
             LEFT JOIN
@@ -146,13 +147,12 @@ class RendererContextFeed extends RendererContext {
                 ON
                 pt.tag_id = t.id
             WHERE
-                pt.post_id = ${postID}
+                pt.post_id = @postID
             ORDER BY
                 name DESC
-        `);
-
-        tags = tags[0] ? tags[0].values : [];
-        tags = tags.map(tag => ({name: tag[0]}));
+        `).all({
+            postID: this.postID
+        });
 
         return tags;
     }
@@ -164,25 +164,25 @@ class RendererContextFeed extends RendererContext {
 
         let thumbnailUrl = '';
         let thumbnailAlt = '';
-        let thumbnail = this.db.exec(`
+        let thumbnail = this.db.prepare(`
             SELECT
-                pi.url,
-                pi.additional_data
+                pi.url AS url,
+                pi.additional_data AS additionalData
             FROM
                 posts_images AS pi
             WHERE
-                pi.post_id = ${postID}
+                pi.post_id = @postID
             LIMIT 1
-        `);
+        `).get({
+            postID: postID            
+        });
 
-        let thumbnailResults = thumbnail[0] ? thumbnail[0].values : false;
-
-        if(thumbnailResults[0]) {
+        if(thumbnail && thumbnail.url) {
             let additionalData = { alt: '' };
-            thumbnailUrl = this.siteConfig.domain + '/media/posts/' + postID + '/' + thumbnailResults[0][0];
+            thumbnailUrl = this.siteConfig.domain + '/media/posts/' + postID + '/' + thumbnail.url;
 
             try {
-                additionalData = JSON.parse(thumbnailResults[0][1]);
+                additionalData = JSON.parse(thumbnail.additionalData);
                 thumbnailAlt = additionalData.alt;
             } catch (e) {
                 console.log('Malformed thumnail additional data');
@@ -212,8 +212,13 @@ class RendererContextFeed extends RendererContext {
         let authorID = id;
 
         if(dataType === 'post') {
-            postSqlQuery = this.db.exec(`SELECT authors FROM posts WHERE id = ${id} LIMIT 1;`);
-            authorID = postSqlQuery[0] ? postSqlQuery[0].values[0][0] : 1;
+            let result = this.db.prepare(`SELECT authors FROM posts WHERE id = @id LIMIT 1;`).get({ id: id });
+            
+            if (result && result.id) {
+                authorID = result.id;
+            } else {
+                authorID = 1;
+            }
         }
 
         return this.renderer.cachedItems.authors[authorID];

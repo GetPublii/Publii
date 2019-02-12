@@ -127,13 +127,15 @@ const AstCurrentSiteConfig = {
             key: '',
             bucket: '',
             region: '',
-            prefix: ''
+            prefix: '',
+            acl: 'public-read'
         },
         github: {
             user: '',
             repo: '',
             branch: '',
-            token: ''
+            token: '',
+            parallelOperations: 3
         },
         gitlab: {
             server: 'https://gitlab.com/',

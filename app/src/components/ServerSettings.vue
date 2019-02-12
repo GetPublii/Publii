@@ -249,7 +249,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-user"
-                    label="Username">
+                    label="Username / Organization">
                     <text-input
                         slot="field"
                         id="gh-user"
@@ -325,6 +325,23 @@
                         v-if="errors.indexOf('github-token') > -1"
                         class="note">
                         The token field cannot be empty
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-parallel-operations"
+                    label="Parallel uploads">
+                    <dropdown
+                        slot="field"
+                        id="gh-parallel-operations"
+                        :items="Array.from(Array(25).keys()).map(n => ({value: n + 1, label: n + 1}))"
+                        key="gh-parallel-operations"
+                        v-model="deploymentSettings.github.parallelOperations"></dropdown>
+                    <small
+                        slot="note"
+                        class="note">
+                        More parallel operations can lead to upload errors on slow internet connections.
                     </small>
                 </field>
 
@@ -544,6 +561,18 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 's3'"
+                    id="s3-acl"
+                    label="ACL">
+                    <dropdown
+                        slot="field"
+                        id="s3-acl"
+                        :items="s3acls"
+                        key="s3-acl"
+                        v-model="deploymentSettings.s3.acl"></dropdown>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-key"
                     label="Your JSON key">
@@ -672,6 +701,7 @@ import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
+import s3ACLs from './configs/s3ACLs.js';
 
 export default {
     name: 'server-settings',
@@ -701,6 +731,7 @@ export default {
             deploymentMethodSelected: '',
             deploymentSettings: defaultDeploymentSettings,
             s3Regions: s3RegionsList,
+            s3acls: s3ACLs,
             testInProgress: false,
             errors: []
         };
@@ -890,6 +921,15 @@ export default {
                 this.$bus.$emit('alert-display', {
                     message: 'Success! Application was able to connect with your server.',
                     buttonStyle: 'success'
+                });
+
+                this.testInProgress = false;
+            });
+
+            ipcRenderer.once('app-deploy-test-write-error', (event, data) => {
+                this.$bus.$emit('alert-display', {
+                    message: 'Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server.',
+                    buttonStyle: 'danger'
                 });
 
                 this.testInProgress = false;

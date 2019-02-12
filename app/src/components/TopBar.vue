@@ -50,7 +50,7 @@ export default {
 .topbar {
     background: $color-9;
     font-size: 1.6rem;
-    height: 8.4rem;
+    height: 7.8rem;
     position: absolute;
     top: 0;
     -webkit-app-region: no-drag;
@@ -62,7 +62,7 @@ export default {
         box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         display: flex;
         align-items: center;
-        padding: 0 5rem;
+        padding: 0 calc(3rem - 3px) 0 5rem;
         position: absolute;
         top: 2.2rem;
         width: 100%;
@@ -71,25 +71,25 @@ export default {
 
     &-logo {
         display: block;
-        height: 6.2rem;
+        height: 5.6rem;
         margin-right: auto;
-        width: 11.7rem;
+        width: auto;
     }
 }
 
 body[data-os="win"] {
     .topbar {
-        height: 9.8rem;
+        height: 8.7rem;
 
         & > .topbar-inner {
-            top: 3.6rem;
+            top: 3rem;
         }
     }
 }
 
 body[data-os="linux"] {
     .topbar {
-        height: 6.2rem;
+        height: 5.6rem;
 
         & > .topbar-inner {
             top: 0;
@@ -103,13 +103,13 @@ body[data-os="linux"] {
 
 @media (max-height: 900px) {
     .topbar > .topbar-inner {
-        padding: 0 3rem;
+        padding: 0 calc(2rem - 3px) 0 4rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar > .topbar-inner {
-        padding: 0 3rem;
+        padding: 0 calc(2rem - 3px) 0 4rem;
     }
 }
 </style>

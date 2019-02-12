@@ -16,7 +16,7 @@ export default {
     props: {
         placeholder: {
             type: String,
-            default: 'Select tag page'
+            default: 'Select tag'
         },
         value: {}
     },

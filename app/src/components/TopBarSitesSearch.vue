@@ -43,6 +43,7 @@ export default {
                 background: $color-9;
                 border-radius: 30px;
                 box-shadow: none!important;
+                font-size: 1.5rem;
                 padding: 1.1rem 4.4rem!important;
             }
 

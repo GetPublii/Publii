@@ -342,9 +342,9 @@ export default {
             ipcRenderer.once('app-post-loaded', (event, data) => {
                 if(data !== false && this.postID !== 0) {
                     // Set post elements
-                    this.postData.title = data.posts[1];
+                    this.postData.title = data.posts[0].title;
                     let mediaPath = this.getMediaPath();
-                    let preparedText = data.posts[4];
+                    let preparedText = data.posts[0].text;
                     preparedText = preparedText.split('#DOMAIN_NAME#').join(mediaPath);
 
                     this.postData.text = preparedText;
@@ -353,14 +353,14 @@ export default {
                     // Set tags
                     this.postData.tags = [];
 
-                    if (data.tags[0]) {
-                        for (let i = 0; i < data.tags[0].values.length; i++) {
-                            this.postData.tags.push(data.tags[0].values[i][1]);
+                    if (data.tags.length) {
+                        for (let i = 0; i < data.tags.length; i++) {
+                            this.postData.tags.push(data.tags[i].name);
                         }
                     }
 
                     // Set author
-                    this.postData.author = data.author.id;
+                    this.postData.author = data.author[0].id;
 
                     // Dates
                     let format = 'MMM DD, YYYY  HH:mm';
@@ -369,40 +369,40 @@ export default {
                         format = 'MMM DD, YYYY  hh:mm a';
                     }
 
-                    this.postData.creationDate.text = this.$moment(data.posts[6]).format(format);
-                    this.postData.modificationDate.text = this.$moment(data.posts[7]).format(format);
-                    this.postData.creationDate.timestamp = data.posts[6];
-                    this.postData.modificationDate.timestamp = data.posts[7];
-                    this.postData.status = data.posts[8].split(',').join(', ');
-                    this.postData.isHidden = data.posts[8].indexOf('hidden') > -1;
-                    this.postData.isFeatured = data.posts[8].indexOf('featured') > -1;
+                    this.postData.creationDate.text = this.$moment(data.posts[0].created_at).format(format);
+                    this.postData.modificationDate.text = this.$moment(data.posts[0].modified_at).format(format);
+                    this.postData.creationDate.timestamp = data.posts[0].created_at;
+                    this.postData.modificationDate.timestamp = data.posts[0].modified_at;
+                    this.postData.status = data.posts[0].status.split(',').join(', ');
+                    this.postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
+                    this.postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
 
                     // Set image
-                    if (data.featuredImage[0] && data.featuredImage[0].values[0][0]) {
-                        this.postData.featuredImage.path = data.featuredImage[0].values[0][0];
+                    if (data.featuredImage) {
+                        this.postData.featuredImage.path = data.featuredImage.url;
 
-                        if(data.featuredImage[0].values[0][1]) {
+                        if(data.featuredImage.additional_data) {
                             try {
-                                let imageData = JSON.parse(data.featuredImage[0].values[0][1]);
+                                let imageData = JSON.parse(data.featuredImage.additional_data);
                                 this.postData.featuredImage.alt = imageData.alt;
                                 this.postData.featuredImage.caption = imageData.caption;
                                 this.postData.featuredImage.credits = imageData.credits;
                             } catch(e) {
                                 console.warning('Unable to load featured image data: ');
-                                console.warning(data.featuredImage[0].values[0][1]);
+                                console.warning(data.featuredImage.additional_data);
                             }
                         }
                     }
 
                     // Set SEO
-                    this.postData.slug = data.posts[3];
+                    this.postData.slug = data.posts[0].slug;
                     this.postData.metaTitle = data.additionalData.metaTitle || "";
                     this.postData.metaDescription = data.additionalData.metaDesc || "";
                     this.postData.metaRobots = data.additionalData.metaRobots || "";
                     this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
                     // Update post template
-                    this.postData.template = data.posts[9];
+                    this.postData.template = data.posts[0].template;
 
                     // Update post view settings
                     let postViewFields = Object.keys(data.postViewSettings);
@@ -670,7 +670,7 @@ export default {
         display: flex;
         height: 100vh;
         overflow: hidden;
-        padding-top: 8.4rem;
+        padding-top: 7.8rem;
     }
 
     .appbar {
@@ -685,9 +685,9 @@ export default {
         box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         font-size: 2.4rem;
         display: flex;
-        height: 6.2rem;
+        height: 5.6rem;
         justify-content: space-between;
-        padding: 0 5rem;
+        padding: 0 4rem;
         position: absolute;
         top: 2.2rem;
         width: 100%;
@@ -708,7 +708,7 @@ export default {
             text-align: center;
 
             &:nth-child(2) {
-                margin-left: 2rem;
+                margin-left: 1rem;
                 width: 90px;
             }
         }
@@ -719,7 +719,7 @@ export default {
     }
 
     &-form {
-        height: calc(100vh - 8.4rem);
+        height: calc(100vh - 7.8rem);
         overflow: hidden;
         position: relative;
         width: calc(100vw - 50rem);
@@ -790,16 +790,16 @@ export default {
         color: $color-10;
         cursor: pointer;
         display: inline-block;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 500;
-        height: 4.4rem;
-        line-height: 4.3rem;      
+        height: 4.2rem;
+        line-height: 4.1rem;      
         padding: 0 1.6rem;
         position: relative;
         transition: all .25s ease-out;
         user-select: none;
         white-space: nowrap;
-        width: 204px;
+        width: 196px;
 
         &-trigger {
             border-top-left-radius: 3px;
@@ -811,7 +811,7 @@ export default {
             position: absolute;
             top: 0;
             transition: all .25s ease-out;
-            width: 160px;            
+            width: 152px;            
              
             &:hover {
                  background: darken($color-1, 5%);
@@ -835,11 +835,11 @@ export default {
             }
 
             &::after {
-                border: 5px solid $color-10;
+                border: 4px solid $color-10;
                 border-left-color: transparent;
-                border-left-width: 6px;
+                border-left-width: 5px;
                 border-right-color: transparent;
-                border-right-width: 6px;
+                border-right-width: 5px;
                 border-bottom-color: transparent; 
                 content: "";
                 pointer-events: none;
@@ -856,13 +856,13 @@ export default {
             box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
             left: 0;
             position: absolute;
-            top: 44px;
+            top: 42px;
             width: 100%;
 
             &-item {
                 border-top: 1px solid lighten($color-8, 10%);
                 color: $color-5;
-                padding: .5rem 2rem;
+                padding: .2rem 2rem;
 
                 &:hover {
                     background: $color-9;
@@ -914,11 +914,11 @@ body[data-os="linux"] {
 body[data-os="win"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 10rem;
+        padding-top: 9.2rem;
     }
 
     .post-editor-form {
-        height: calc(100vh - 10rem);
+        height: calc(100vh - 9.2rem);
 
         &-content {
             height: calc( 100vh - 34rem );
@@ -950,11 +950,11 @@ body[data-os="win"] {
 body[data-os="linux"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 6.2rem;
+        padding-top: 5.6rem;
     }
 
     .post-editor-form {
-        height: calc(100vh - 6.2rem);
+        height: calc(100vh - 5.6rem);
 
         &-content {
             height: calc( 100vh - 29.8rem );
@@ -1009,6 +1009,10 @@ body[data-os="linux"] {
 }
 
 @media (max-width: 1400px) {
+    .post-editor-topbar {
+        padding: 0 3.6rem 0 4rem;
+    }
+    
     .post-editor-form {
         width: calc(100vw - 40rem);
 

@@ -16,7 +16,7 @@ class FeaturedImageItem {
      */
     constructor(image, rendererInstance) {
         this.image = image;
-        this.postID = parseInt(image[1], 10);
+        this.postID = parseInt(image.post_id, 10);
         this.renderer = rendererInstance;
         this.db = this.renderer.db;
         this.themeConfig = this.renderer.themeConfig;
@@ -44,17 +44,17 @@ class FeaturedImageItem {
             height: 0
         };
 
-        let data = JSON.parse(this.image[3]);
-        let imagePath = URLHelper.createImageURL(this.renderer.inputDir, this.postID, this.image[2]);
+        let data = JSON.parse(this.image.additional_data);
+        let imagePath = URLHelper.createImageURL(this.renderer.inputDir, this.postID, this.image.url);
         let domain = this.renderer.siteConfig.domain;
 
-        url = URLHelper.createImageURL(domain, this.postID, this.image[2]);
+        url = URLHelper.createImageURL(domain, this.postID, this.image.url);
         alt = data.alt;
         caption = data.caption;
         credits = data.credits;
 
         try {
-            if (this.image[2]) {
+            if (this.image.url) {
                 imageDimensions = sizeOf(imagePath);
             } else {
                 this.imageData = false;
@@ -94,7 +94,7 @@ class FeaturedImageItem {
         }
 
         let featuredImageData = {
-            id: this.image[0],
+            id: this.image.id,
             url: url,
             alt: alt,
             caption: caption,

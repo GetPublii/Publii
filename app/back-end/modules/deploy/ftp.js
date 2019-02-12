@@ -476,13 +476,43 @@ class FTP {
             pasvTimeout: 10000
         };
 
+        fs.writeFileSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')), 'It is a test file. You can remove it.');
         client.connect(connectionParams);
 
-        client.on('ready', function() {
+        client.on('ready', () => {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
-            client.destroy();
+
+            client.put(
+                normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')),
+                normalizePath(path.join(deploymentConfig.path, 'publii.test')),
+                (err) => {   
+                    if (err) {
+                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+                        fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                        client.destroy();
+                        return;   
+                    }
+                    
+                    client.delete(
+                        normalizePath(path.join(deploymentConfig.path, 'publii.test')),
+                        (err) => {
+                            if (err) {
+                                app.mainWindow.webContents.send('app-deploy-test-write-error');
+                                fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                                client.destroy();
+                                return;
+                            }
+
+                            app.mainWindow.webContents.send('app-deploy-test-success');
+                            fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                            client.destroy();
+                        }
+                    );
+                }
+            );
         });
+
+        fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
 
         client.on('error', function(err) {
             if(waitForTimeout) {

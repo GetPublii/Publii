@@ -242,18 +242,38 @@ export default {
             this.time.minutes = date.getMinutes();
 
             if (!this.format24isActive) {
-                this.time.ampm = this.time.hours >= 12 ? 'pm' : 'am';
-                this.time.hours = this.time.hours % 12;
+                let ampmMode = date.toLocaleString('en-GB', { hour: 'numeric', hour12: true });
+                this.time.ampm = ampmMode.split(' ')[1];
+                this.time.hours = parseInt(ampmMode.split(' ')[0], 10);
             }
         },
         calculateTimestampFromTime () {
             this.timestamp = new Date(
                 this.time.year,
-                this.time.month -1,
+                this.time.month - 1,
                 this.time.day,
-                this.time.ampm === 'pm' ? this.time.hours + 12 : this.time.hours,
+                parseInt(this.convertHoursFrom12to24(), 10),
                 this.time.minutes
             ).getTime();
+        },
+        convertHoursFrom12to24 () {
+            if (this.format24isActive) {
+                return this.time.hours;
+            }
+
+            if (this.time.ampm === 'pm') {
+                if (parseInt(this.time.hours, 10) === 12) {
+                    return 12;
+                }
+                
+                return parseInt(this.time.hours, 10) + 12;
+            }
+            
+            if (parseInt(this.time.hours, 10) === 12) {
+                return 0;
+            } 
+
+            return this.time.hours;
         }
     },
     beforeDestroy () {

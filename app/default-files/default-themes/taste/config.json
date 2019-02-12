@@ -1,6 +1,6 @@
 {
     "name": "Taste",
-    "version": "1.6.1.0",
+    "version": "1.7.0.0",
     "author": "TidyCustoms <bob@tidycustoms.net>",
     "menus": {
         "mainMenu": "Main menu"
@@ -1133,9 +1133,8 @@
                 "sizes": "",
                 "dimensions": {
                     "thumbnail": {
-                        "width": 240,
-                        "height": 240,
-                        "crop": true
+                        "width": 768,
+                        "height": "auto"
                     }
                 }
             }

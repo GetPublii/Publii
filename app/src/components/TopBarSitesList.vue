@@ -63,20 +63,18 @@ export default {
 @import '../scss/variables.scss';
 
 .sites {
-    &-list {
-        &-wrapper {
-           
-            max-height: 350px;
-            overflow-y: scroll;
-        }
-    }
-
+   
     &-list {
         clear: both;
         list-style-type: none;
-        margin: 0;
+        margin: 0.5rem 0 0;
         padding: 0;
         text-align: center;
+        
+        &-wrapper {           
+            max-height: 350px;
+            overflow-y: auto;
+        }
     }
 }
 

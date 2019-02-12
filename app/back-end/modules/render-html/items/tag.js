@@ -12,7 +12,7 @@ class TagItem {
      */
     constructor(tag, rendererInstance) {
         this.tag = tag;
-        this.tagID = parseInt(tag[0], 10);
+        this.tagID = parseInt(tag.id, 10);
         this.renderer = rendererInstance;
         this.db = this.renderer.db;
         this.themeConfig = this.renderer.themeConfig;
@@ -28,13 +28,13 @@ class TagItem {
     prepareData() {
         let addIndexHtml = this.renderer.previewMode;
         this.tagData = {
-            id: this.tag[0],
-            name: this.tag[1],
-            slug: this.tag[2],
-            description: this.tag[3],
-            additionalData: this.tag[4] ? JSON.parse(this.tag[4]) : {},
+            id: this.tag.id,
+            name: this.tag.name,
+            slug: this.tag.slug,
+            description: this.tag.description,
+            additionalData: this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {},
             postsNumber: this.getPostsNumber(),
-            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag[2], addIndexHtml)
+            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml)
         };
     }
 

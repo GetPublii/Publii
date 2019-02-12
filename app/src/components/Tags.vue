@@ -27,41 +27,49 @@
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell 
-                    width="calc(100% - 180px)"
-                    @click.native="ordering('name')">
-                    <template v-if="orderBy === 'name'">
-                        <strong>Name</strong>
-                    </template>
-                    <template v-else>Name</template>
+                <collection-cell width="calc(100% - 180px)">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('name')">
+                        <template v-if="orderBy === 'name'">
+                            <strong>Name</strong>
+                        </template>
+                        <template v-else>Name</template>
 
-                    <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell 
+                    justifyContent="center"
                     textAlign="center"
-                    width="100px"
-                    @click.native="ordering('postsCounter')">
-                    <template v-if="orderBy === 'postsCounter'">
-                        <strong>Posts</strong>
-                    </template>
-                    <template v-else>Posts</template>
+                    width="100px">
+                    <span 
+                        class="col-sortable-title"
+                        @click="ordering('postsCounter')">
+                        <template v-if="orderBy === 'postsCounter'">
+                            <strong>Posts</strong>
+                        </template>
+                        <template v-else>Posts</template>
 
-                    <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
-                <collection-cell 
-                    width="40px"
-                    @click.native="ordering('id')">
-                    <template v-if="orderBy === 'id'">
-                        <strong>ID</strong>
-                    </template>
-                    <template v-else>ID</template>
+                <collection-cell width="40px">
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('id')">
+                        <template v-if="orderBy === 'id'">
+                            <strong>ID</strong>
+                        </template>
+                        <template v-else>ID</template>
 
-                    <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                    </span>
                 </collection-cell>
 
                 <div
@@ -96,6 +104,7 @@
                 </collection-cell>
 
                 <collection-cell 
+                    justifyContent="center"
                     textAlign="center"
                     width="100px">
                     <a
@@ -286,13 +295,17 @@ export default {
     .header {
         .col {
              align-items: center;
-             cursor: pointer;
              display: flex;
+
+             .col-sortable-title {
+                 cursor: pointer;
+             }
         }
     }
     
     .order-ascending,
     .order-descending {
+        margin-left: 3px;
         position: relative;
         &:after {
              border-top: solid 5px rgba($color-7, .7);
@@ -302,7 +315,7 @@ export default {
              cursor: pointer;
              display: inline-block;
              height: 4px;
-             left: 6px;
+             left: 0;
              line-height: 1.1;
              opacity: 1;
              padding: 0;

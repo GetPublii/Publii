@@ -289,7 +289,9 @@ class GoogleCloud {
             app.mainWindow.webContents.send('app-deploy-test-success');
         }).catch(err => {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error');
+            app.mainWindow.webContents.send('app-deploy-test-error', {
+                message: err.message
+            });
         });
 
         setTimeout(function() {

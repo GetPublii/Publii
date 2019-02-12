@@ -161,10 +161,10 @@ function getImageType(context, image, catalog) {
     let preparedCatalog = catalog.replace('posts/', '');
 
     if(context.postImagesRef && context.postImagesRef[0]) {
-        featuredImage = context.postImagesRef[0].values.filter(pair => pair[0] == preparedCatalog);
+        featuredImage = context.postImagesRef.filter(xref => xref.id == preparedCatalog);
     }
 
-    if(featuredImage && featuredImage[0] && image === featuredImage[0][1]) {
+    if(featuredImage && featuredImage.id && image === featuredImage.url) {
         imageType = 'featuredImages';
     }
 

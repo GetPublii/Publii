@@ -7,7 +7,7 @@ const ContentHelper = require('./../helpers/content');
 class PostItem {
     constructor(post, rendererInstance) {
         this.post = post;
-        this.postID = parseInt(post[0], 10);
+        this.postID = parseInt(post.id, 10);
         this.renderer = rendererInstance;
         this.db = this.renderer.db;
         this.themeConfig = this.renderer.themeConfig;
@@ -19,11 +19,11 @@ class PostItem {
     }
 
     prepareData() {
-        let postURL = this.siteConfig.domain + '/' + this.post[3] + '.html';
-        let preparedText = ContentHelper.prepareContent(this.post[0], this.post[4], this.siteConfig.domain, this.themeConfig, this.renderer);
+        let postURL = this.siteConfig.domain + '/' + this.post.slug + '.html';
+        let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         let hasCustomExcerpt = false;
-        let readmoreMatches = this.post[4].match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+        let readmoreMatches = this.post.text.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
 
         if (readmoreMatches && readmoreMatches.length) {
             hasCustomExcerpt = true;
@@ -38,7 +38,7 @@ class PostItem {
         }
 
         if(this.siteConfig.advanced.urls.cleanUrls) {
-            postURL = this.siteConfig.domain + '/' + this.post[3] + '/';
+            postURL = this.siteConfig.domain + '/' + this.post.slug + '/';
 
             if(this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
                 postURL += 'index.html';
@@ -46,20 +46,20 @@ class PostItem {
         }
 
         this.postData = {
-            id: this.post[0],
-            title: this.post[1],
-            author: this.renderer.cachedItems.authors[this.post[2]],
-            slug: this.post[3],
+            id: this.post.id,
+            title: this.post.title,
+            author: this.renderer.cachedItems.authors[this.post.authors],
+            slug: this.post.slug,
             url: postURL,
             text: preparedText,
             excerpt: preparedExcerpt,
-            createdAt: this.post[6],
-            modifiedAt: this.post[7],
-            status: this.post[8],
-            isFeatured: this.post[8].indexOf('featured') > -1,
-            isHidden: this.post[8].indexOf('hidden') > -1,
+            createdAt: this.post.created_at,
+            modifiedAt: this.post.modified_at,
+            status: this.post.status,
+            isFeatured: this.post.status.indexOf('featured') > -1,
+            isHidden: this.post.status.indexOf('hidden') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
-            template: this.post[9],
+            template: this.post.template,
             hasCustomExcerpt: hasCustomExcerpt
         };
 

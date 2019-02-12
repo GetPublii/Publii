@@ -70,7 +70,7 @@ export default {
             if(this.lifeTime > 0) {
                 this.timer = setTimeout(() => {
                     this.hideMessage();
-                }, this.lifeTime * 1000);
+                }, this.lifeTime * 1100);
             }
         },
         onClick: function(e) {
@@ -100,13 +100,16 @@ export default {
      pointer-events: none;
      position: absolute;
      left: 50%;
-     top: 2.2rem;
+     top: 4.2rem;
      transform: translate(-50%, 0);
-     width: 46rem;
+     max-width: 48rem;
+     width: 100%;
      z-index: 100003;
 
      .message {
-         animation: messages-animation .3s cubic-bezier(0,.68,.38,.98) forwards;
+         animation: messages-animation .24s cubic-bezier(.17,.67,.6,1.34) forwards;
+         display: flex;
+         justify-content: center;
          margin: 0;
          opacity: 1;
          padding: 0;
@@ -117,7 +120,7 @@ export default {
                   @keyframes messages-animation {
                      from {
                           opacity: 0;
-                          transform: scale(0.5);
+                          transform: scale(0.6);
                      }
                      to {
                           opacity: 1;
@@ -129,18 +132,18 @@ export default {
          &-content {
              align-items: center;
              background: $color-10;
-             box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
-             border-radius: 0 0 .6rem .6rem;
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+             border-radius: 6px;
              color: $color-5;
-             font-size: 1.6rem;
-             font-weight: 500;
+             font-size: 1.5rem;            
              display: flex;
-             justify-content: center;
+             justify-content: center;  
+             line-height: 1.4;
              margin: 0;
-             padding: 3rem 1rem;
+             padding: 2rem;
              pointer-events: all;
              position: absolute;
-             width: 46rem;
+             max-width: 48rem;            
 
              a {
                  color: $color-10;
@@ -155,13 +158,16 @@ export default {
              }
 
              p {
-                 margin: 0 0 0 3rem;
-                 width: 75%;
+                 margin: 0 0 0 2rem;
+             }
+             
+             .icon {
+                 flex-shrink: 0;
              }
          }
 
          &-icon {
-             display: block;
+             display: block;            
              margin: 0;
          }
      }
@@ -169,13 +175,13 @@ export default {
 
 body[data-os="win"] {
     .messages {
-        top: 3.6rem;
+        top: 5.6rem;
     }
 }
 
 body[data-os="linux"] {
     .messages {
-        top: 2.4rem;
+        top: 4.4rem;
     }
 }
 </style>
