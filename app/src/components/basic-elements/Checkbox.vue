@@ -4,6 +4,7 @@
         :id="id || value"
         :value="value"
         :checked="checked"
+        :class="{ 'is-checked': checked }"
         @click.prevent.stop="onClick(value)" />
 </template>
 
@@ -26,6 +27,11 @@ export default {
         onClick: {
             default: () => false,
             type: Function
+        }
+    },
+    computed: {
+        isChecked () {
+            return this.checked;
         }
     }
 }
@@ -54,7 +60,7 @@ input[type="checkbox"] {
         cursor: pointer;
     }
 
-    &:checked {
+    &.is-checked {
         background: $color-1;
         border-color: $color-1;
 
