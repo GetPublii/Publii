@@ -65,7 +65,6 @@ class RendererContextTag extends RendererContext {
     }
 
     prepareData() {
-        let self = this;
         let siteName = this.siteConfig.name;
 
         if(this.siteConfig.displayName) {
@@ -76,8 +75,11 @@ class RendererContextTag extends RendererContext {
                                                     .replace(/%tagname/g, this.tag.name)
                                                     .replace(/%sitename/g, siteName);
 
+        this.posts = this.posts || [];
         this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.featuredPosts = this.featuredPosts || [];
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
 
         // Remove featured posts from posts if featured posts allowed

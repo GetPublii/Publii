@@ -33,7 +33,7 @@ function getPostsHelper(rendererInstance, Handlebars) {
         }
 
         if(content === '') {
-            return 'Error: posts with given IDs are not exits.';
+            return '';
         }
 
         content = [prefix, content, suffix].join('');

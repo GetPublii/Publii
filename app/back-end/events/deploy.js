@@ -80,7 +80,7 @@ class DeployEvents {
                     let errorDesc = 'Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer. ';
                     let errorTitle = 'Rendering process crashed';
 
-                    if (data.result[0] && data.result[0].message) {
+                    if (data.result && data.result[0] && data.result[0].message) {
                         errorTitle = 'Rendering process failed';
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }

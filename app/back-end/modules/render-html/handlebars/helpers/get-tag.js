@@ -26,7 +26,7 @@ function getTagHelper(rendererInstance, Handlebars) {
         }
 
         if(!tagData.length) {
-            return 'Error: tag with given ID not exits.';
+            return '';
         }
 
         return options.fn(tagData[0]);

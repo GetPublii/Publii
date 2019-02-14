@@ -161,20 +161,27 @@ function getImageType(context, image, catalog) {
     let preparedCatalog = catalog.replace('posts/', '');
 
     if(context.postImagesRef && context.postImagesRef[0]) {
-        featuredImage = context.postImagesRef.filter(xref => xref.id == preparedCatalog);
+        featuredImage = context.postImagesRef.filter(xref => xref.post_id == preparedCatalog);
     }
 
-    if(featuredImage && featuredImage.id && image === featuredImage.url) {
+    if(featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
+        console.log('(i) Featured image detected (' + image + ')', preparedCatalog);
         imageType = 'featuredImages';
     }
 
     if(catalog === 'website') {
+        console.log('(i) Website image detected (' + image + ')', preparedCatalog);
         imageType = 'optionImages';
     }
 
     // Check if "gallery" is at the end of catalog path
     if(catalog.indexOf('gallery') === catalog.length - 7) {
+        console.log('(i) Gallery image detected (' + image + ')', preparedCatalog);
         imageType = 'galleryImages';
+    }
+
+    if (imageType === 'contentImages') {
+        console.log('(i) Content image detected (' + image + ')', preparedCatalog);
     }
 
     return imageType;
