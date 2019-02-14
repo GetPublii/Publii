@@ -62,7 +62,11 @@
     "opencollective": "^1.0.3"
   },
   "build": {
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+        "*.+(dylib|node|dll)",
+        "default-files/default-themes/**/*"
+    ],
     "files": [
       "**/*",
       "dist/**/*"
