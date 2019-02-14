@@ -38,6 +38,7 @@ class RendererContextFeed extends RendererContext {
 
     prepareData() {
         let self = this;
+        this.posts = this.posts || [];
         this.posts = this.posts.map(post => {
             let postURL = self.siteConfig.domain + '/' + post.slug + '.html';
             let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post.id + '/';

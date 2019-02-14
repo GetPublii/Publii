@@ -22,7 +22,9 @@ class RendererContextPost extends RendererContext {
 
     prepareData() {
         this.post = this.renderer.cachedItems.posts[this.postID];
+        this.featuredPosts = this.featuredPosts || [];
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.metaTitle = this.siteConfig.advanced.postMetaTitle;
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
