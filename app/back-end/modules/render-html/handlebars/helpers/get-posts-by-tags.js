@@ -62,7 +62,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         }
 
         if (content === '') {
-            return 'Error: posts with given tags are not exits.';
+            return '';
         }
 
         return content;

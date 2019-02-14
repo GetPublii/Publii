@@ -30,7 +30,7 @@ function getTagsHelper(rendererInstance, Handlebars) {
         }
 
         if(content === '') {
-            return 'Error: tags with given IDs are not exits.';
+            return '';
         }
 
         content = [prefix, content, suffix].join('');

@@ -52,7 +52,7 @@ function getPostByTagsHelper (rendererInstance, Handlebars) {
         }
 
         if(!postData.length) {
-            return 'Error: post with given tags not exits.';
+            return '';
         }
 
         return options.fn(postData[0]);

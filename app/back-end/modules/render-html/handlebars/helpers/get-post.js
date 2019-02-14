@@ -17,7 +17,7 @@ function getPostHelper(rendererInstance, Handlebars) {
         let postData = rendererInstance.contentStructure.posts.filter(post => post.id === postID);
 
         if(!postData.length) {
-            return 'Error: post with given ID not exits.';
+            return '';
         }
 
         return options.fn(postData[0]);
