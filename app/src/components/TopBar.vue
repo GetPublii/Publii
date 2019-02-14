@@ -79,10 +79,10 @@ export default {
 
 body[data-os="win"] {
     .topbar {
-        height: 8.7rem;
+        height: 9.2rem;
 
         & > .topbar-inner {
-            top: 3rem;
+            top: 3.6rem;
         }
     }
 }
