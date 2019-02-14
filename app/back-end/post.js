@@ -354,6 +354,14 @@ class Post extends Model {
                     additional_data: postImagesToDuplicate[i].additional_data
                 });
             }
+
+            // Get newly inserted post ID
+            let copiedFeaturedImageId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
+            
+            this.db.prepare(`UPDATE posts SET featured_image_id = @featuredImageID WHERE id = @postID`).run({
+                featuredImageID: copiedFeaturedImageId,
+                postID: copiedPostId
+            });
         }
 
         // Add posts_additional_data
