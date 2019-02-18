@@ -366,18 +366,24 @@ class SFTP {
             connectionSettings.privateKey = fs.readFileSync(keyPath);
         }
 
+        let testFilePath = normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test'));
+
         client.connect(connectionSettings).then(() => {
             return client.list('/');
         }).then(data => {
-            fs.writeFileSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')), 'It is a test file. You can remove it.');
+            fs.writeFileSync(testFilePath, 'It is a test file. You can remove it.');
 
             client.put(
-                normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')),
+                testFilePath,
                 normalizePath(path.join(deploymentConfig.path, 'publii.test'))
             ).then(err => { 
                 if (err) {
                     app.mainWindow.webContents.send('app-deploy-test-write-error');
-                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    
+                    if (fs.existsSync(testFilePath)) {
+                        fs.unlinkSync(testFilePath);
+                    }
+
                     client.end();
                     return;   
                 }
@@ -387,22 +393,38 @@ class SFTP {
                 ).then(err => {
                     if (err) {
                         app.mainWindow.webContents.send('app-deploy-test-write-error');
-                        fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                        
+                        if (fs.existsSync(testFilePath)) {
+                            fs.unlinkSync(testFilePath);
+                        }
+
                         client.end();
                         return;
                     }
 
                     app.mainWindow.webContents.send('app-deploy-test-success');
-                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    
+                    if (fs.existsSync(testFilePath)) {
+                        fs.unlinkSync(testFilePath);
+                    }
+
                     client.end();
                 }).catch(err => {
                     app.mainWindow.webContents.send('app-deploy-test-write-error');
-                    fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+                    
+                    if (fs.existsSync(testFilePath)) {
+                        fs.unlinkSync(testFilePath);
+                    }
+
                     client.end();
                 });
             }).catch(err => {
                 app.mainWindow.webContents.send('app-deploy-test-write-error');
-                fs.unlinkSync(normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test')));
+               
+                if (fs.existsSync(testFilePath)) {
+                    fs.unlinkSync(testFilePath);
+                }
+
                 client.end();
             });
 
