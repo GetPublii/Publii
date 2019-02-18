@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.33.1",
+  "version": "0.33.2",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -17,7 +17,7 @@
     "build": "cross-env NODE_ENV=development gulp build",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/js/**/*.spec.js --reporter dot",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\"  --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=3.1.3 --overwrite --symlinks --app-version=0.33.1 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.33.1 --version-string.FileVersion=0.33.1 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\"  --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=3.1.3 --overwrite --symlinks --app-version=0.33.2 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.33.2 --version-string.FileVersion=0.33.2 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
     "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=3.1.3 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
     "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=3.1.3 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
     "postinstall": "opencollective postinstall",
