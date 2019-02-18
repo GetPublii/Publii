@@ -24,6 +24,10 @@
         </p>
 
         <p>
+            <strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track,  we do not allow third parties to collect personally identifiable information about you. 
+        </p>
+
+        <p>
             <a href="https://getpublii.com/license.html" target="_blank">Licensing information</a>
         </p>
     </div>
