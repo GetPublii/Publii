@@ -254,7 +254,7 @@ class Image extends Model {
                     finalHeight = Jimp.AUTO;
                 }
             }
-
+            
             if(finalWidth === 'auto') {
                 finalWidth = null;
 
@@ -271,6 +271,7 @@ class Image extends Model {
                                 reject(err);
                             }
 
+                            console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
                             image.cover(finalWidth, finalHeight)
                                  .quality(imagesQuality)
                                  .write(destinationPath, function() {
@@ -319,6 +320,7 @@ class Image extends Model {
                                 reject(err);
                             }
 
+                            console.log('JIMP SCALE TO FIT', finalWidth, ' x ', finalHeight);
                             image.scaleToFit(finalWidth, finalHeight)
                                  .quality(imagesQuality)
                                  .write(destinationPath, function() {

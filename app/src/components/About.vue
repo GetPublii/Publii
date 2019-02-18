@@ -19,8 +19,12 @@
 
         <p class="about-copyright">
             Copyright 2019 <a href="https://tidycustoms.net" target="_blank">TidyCustoms</a>. All rights reserved.<br>
-            Publli is designed and maintained by core team with cooperation with Dev Zen and is made possible by the <a href="http://electron.atom.io" target="_blank">Electron</a>
+            Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank">Dev Zen</a> and is made possible by the <a href="http://electron.atom.io" target="_blank">Electron</a>
             Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
+        </p>
+
+        <p>
+            <strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track,  we do not allow third parties to collect personally identifiable information about you. 
         </p>
 
         <p>
