@@ -190,14 +190,14 @@ class Author extends Model {
         }
 
         let authorsSqlQuery = this.db.prepare(`DELETE FROM authors WHERE id = @id`);
-        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = "1" WHERE authors = @id`);
+        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = "1" WHERE authors LIKE @id`);
         
         authorsSqlQuery.run({
-            id: this.id
+            id: this.id.toString()
         });
 
         postsSqlQuery.run({
-            id: '"' + this.id + '"'
+            id: this.id.toString()
         });
 
         return {

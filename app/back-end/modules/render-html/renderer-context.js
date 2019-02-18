@@ -409,11 +409,11 @@ class RendererContext {
                     status LIKE "%published%" AND
                     status NOT LIKE "%hidden%" AND
                     status NOT LIKE "%trashed%" AND
-                    authors = @authorID
+                    authors LIKE @authorID
                 ORDER BY
                     ${postsOrdering}
         `).all({
-            authorID: authorID
+            authorID: authorID.toString()
         });
 
         posts = posts.map(post => this.renderer.cachedItems.posts[post.id]);

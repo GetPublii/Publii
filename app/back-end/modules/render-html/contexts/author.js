@@ -42,7 +42,7 @@ class RendererContextAuthor extends RendererContext {
                     status NOT LIKE "%hidden%" AND
                     status NOT LIKE "%trashed%" AND
                     ${includeFeaturedPosts}
-                    authors = @authorID
+                    authors LIKE @authorID
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
@@ -50,7 +50,7 @@ class RendererContextAuthor extends RendererContext {
                 OFFSET
                     @offset
             `).all({
-                authorID: this.authorID,
+                authorID: this.authorID.toString(),
                 postsNumber: this.postsNumber,
                 offset: this.offset
             });
