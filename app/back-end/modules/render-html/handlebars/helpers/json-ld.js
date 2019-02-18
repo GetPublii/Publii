@@ -126,10 +126,14 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             }
 
             jsonLDObject['description'] = context.data.root.post.excerpt;
-            jsonLDObject['author'] = {
-                "@type": "Person",
-                "name": context.data.root.post.author.name
-            };
+
+            if (context.data.config.post.displayAuthor) {
+                jsonLDObject['author'] = {
+                    "@type": "Person",
+                    "name": context.data.root.post.author.name
+                };
+            }
+
             jsonLDObject['publisher'] = {
                 "@type": "Organization",
                 "name": context.data.root.siteOwner.name
