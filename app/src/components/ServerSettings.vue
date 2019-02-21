@@ -35,6 +35,12 @@
                         id="domain"
                         key="domain"
                         v-model="domain" />
+                    <small
+                        v-if="httpProtocolSelected === 'file'"
+                        class="note"
+                        slot="note">
+                        The "file://"" protocol is useful only if you are using manual deployment method for the intranet websites.
+                    </small>
                 </field>
 
                 <field
@@ -713,7 +719,8 @@ export default {
             domain: '',
             httpProtocols: {
                 'http': 'http://',
-                'https': 'https://'
+                'https': 'https://',
+                'file': 'file://'
             },
             httpProtocolSelected: '',
             deploymentMethods: {
@@ -738,10 +745,16 @@ export default {
     },
     computed: {
         currentDomain () {
-            return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '');
+            return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file://', '');
         },
         currentHttpProtocol () {
-            return this.$store.state.currentSite.config.domain.indexOf('https') === 0 ? 'https' : 'http';
+            if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
+                return 'https';
+            } else if (this.$store.state.currentSite.config.domain.indexOf('http') === 0) {
+                return 'http';
+            } else {
+                return 'file';
+            }
         },
         siteIsOnline () {
             if(
@@ -804,7 +817,7 @@ export default {
             }
         },
         prepareDomain () {
-            return this.domain.replace('http://', '').replace('https://', '').replace(/\/$/, '');
+            return this.domain.replace('http://', '').replace('https://', '').replace('file://', '').replace(/\/$/, '');
         },
         fullDomainName () {
             let domain = this.prepareDomain();
@@ -819,6 +832,10 @@ export default {
                 if(domain.indexOf('gitlab.io') > -1) {
                     this.httpProtocolSelected = 'https';
                 }
+            }
+
+            if (this.httpProtocolSelected === 'file' && this.deploymentMethodSelected !== 'manual') {
+                this.httpProtocolSelected = 'https';
             }
 
             return this.httpProtocolSelected + '://' + domain;
