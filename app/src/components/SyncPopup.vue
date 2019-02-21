@@ -538,7 +538,7 @@ export default {
                         'site': this.$store.state.currentSite.config.name
                     });
 
-                    this.$store.state.currentSite.config.syncDate = Date.now();
+                    this.$store.commit('setSyncDate', Date.now());
                 }
             });
 

@@ -269,6 +269,11 @@ export default {
     setOrdering (state, data) {
         state.ordering[data.type].orderBy = data.orderBy;
         state.ordering[data.type].order = data.order;
+    },
+    setSyncDate (state, date) {
+        Vue.set(state.currentSite.config, 'syncDate', date);
+        Vue.set(state.currentSite.config, 'synced', 'synced');
+        Vue.set(state.components.sidebar, 'status', state.currentSite.config.synced);
     }
 };
 
