@@ -598,10 +598,12 @@ export default {
             let postID = this.postID;
             let postData = this.savePost('published', true);
 
-            this.$bus.$emit('rendering-popup-display', {
-                postID,
-                postData
-            });
+            if (postData) {
+                this.$bus.$emit('rendering-popup-display', {
+                    postID,
+                    postData
+                });
+            }
         },
         setCurrentAction (actionName) {
             if (actionName !== 'publish-post' && actionName !== 'save-as-draft') {

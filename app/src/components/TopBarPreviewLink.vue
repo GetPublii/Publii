@@ -22,7 +22,7 @@ export default {
         };
     },
     computed: {
-        isOnline: function() {
+        isOnline () {
             if(!this.$store.state.currentSite.config) {
                 return false;
             }
@@ -33,21 +33,21 @@ export default {
 
             return !!this.$store.state.currentSite.config.syncDate;
         },
-        title: function() {
+        title () {
             if(this.isOnline) {
                 return 'Visit your website';
             } else {
                 return 'After the initial sync, your website will be available online';
             }
         },
-        iconColor: function() {
+        iconColor () {
             if(this.isOnline) {
                 return 'color-helper-6';
             }
 
             return 'color-7';
         },
-        previewIconName: function() {
+        previewIconName () {
             if(this.isOnline) {
                 return 'on-live-preview';
             }

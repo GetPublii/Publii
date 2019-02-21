@@ -494,6 +494,7 @@ class GithubPages {
             (api) => api.gitdata.createBlob,
             (result) => {
                 this.uploadedBlobs[filePath] = result.data.sha;
+                console.log('CREATED BLOB:', filePath, result.data.sha);
 
                 process.send({
                     type: 'web-contents',
@@ -560,7 +561,7 @@ class GithubPages {
             for (let j = 0; j < this.parallelOperations; j++) {
                 let index = filesToUpdate[i + j];
 
-                if (index) {
+                if (typeof index === 'number') {
                     let file = files[index];
                     requests.push(this.createBlob(file.fullPath).then((sha) => {
                         file = Object.assign({}, file, {
@@ -599,6 +600,9 @@ class GithubPages {
                 message: 'Creating the new remote tree of files...'
             }
         });
+
+        let logPath = path.join(this.deployment.appDir, 'logs', 'github-tree.txt');
+        fs.writeFileSync(logPath, JSON.stringify(tree));
 
         return this.apiRequest(
             {

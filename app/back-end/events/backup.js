@@ -61,7 +61,7 @@ class BackupEvents {
     }
 
     loadBackupsList(siteName, event) {
-        let backups = Backup.loadList(siteName, this.app.appConfig.backupsLocation);
+        let backups = Backup.loadList(siteName, this.app.appConfig.backupsLocation || '');
 
         event.sender.send('app-backups-list-loaded', {
             status: true,
