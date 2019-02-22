@@ -3,7 +3,9 @@
         class="content"
         ref="content">
         <div class="server-settings">
-            <p-header title="Server Settings">
+            <p-header 
+                v-if="deploymentMethodSelected !== ''" 
+                title="Server Settings">
                 <p-button
                     @click.native="visitWebsite"
                     slot="buttons"
@@ -19,7 +21,23 @@
                 </p-button>
             </p-header>
 
-            <fields-group title="Destination Server">
+            <div 
+                v-if="deploymentMethodSelected === ''"
+                class="server-settings-intro">
+                INTRO
+
+                <div @click="deploymentMethodSelected = 'github-pages'">
+                    Select Github Pages
+                </div>
+
+                <div @click="deploymentMethodSelected = 's3'">
+                    Select S3
+                </div>
+            </div>
+
+            <fields-group 
+                v-if="deploymentMethodSelected !== ''"
+                title="Destination Server">
                 <field
                     id="domain"
                     label="Domain">
@@ -680,7 +698,7 @@
                 </field>
             </fields-group>
 
-            <p-footer>
+            <p-footer v-if="deploymentMethodSelected !== ''">
                 <p-button
                     :onClick="save"
                     slot="buttons">
@@ -748,12 +766,12 @@ export default {
             return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file://', '');
         },
         currentHttpProtocol () {
-            if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
-                return 'https';
+            if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {
+                return 'file';
             } else if (this.$store.state.currentSite.config.domain.indexOf('http') === 0) {
                 return 'http';
             } else {
-                return 'file';
+                return 'https';
             }
         },
         siteIsOnline () {
@@ -784,7 +802,7 @@ export default {
     mounted () {
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
-        this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || 'github-pages';
+        this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
         this.deploymentSettings = Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment)));
 
         setTimeout(() => {
