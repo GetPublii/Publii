@@ -474,7 +474,7 @@ class Post extends Model {
      * Check and prepare post slug
      */
     checkAndPrepareSlug(suffix = 0) {
-        let postSlug = this.slug.substr(0, 220);
+        let postSlug = this.slug;
         let restrictedSlugs = [];
 
         if(this.application.sites[this.site].advanced.urls.cleanUrls) {

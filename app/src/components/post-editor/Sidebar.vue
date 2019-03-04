@@ -279,7 +279,15 @@
                             size="m"
                             name="sidebar-seo"/>
 
-                        <span class="post-editor-settings-label">SEO</span>
+                        <span class="post-editor-settings-label">
+                            SEO
+
+                            <span 
+                                v-if="$parent.postData.slug.length > 250"
+                                class="post-editor-settings-label-warning">
+                                Post slug is too long
+                            </span>
+                        </span>
 
                         <span
                             class="post-editor-settings-icon-open"
@@ -306,6 +314,11 @@
                                         type="text"
                                         v-model="$parent.postData.slug"
                                         @keyup="$parent.slugUpdated">
+                                    <small 
+                                        v-if="$parent.postData.slug.length > 250"
+                                        class="note is-warning">
+                                        The post slug longer than 250 characters can lead to creation of broken files during the website rendering.
+                                    </small>
                                 </label>
 
                                 <label class="with-char-counter">
@@ -832,6 +845,12 @@ export default {
                 position: relative;
                 transition: left .25s ease-out, color .0s ease-out;
                 width: calc(100% - 5.8rem);
+
+                &-warning {
+                    color: $color-3;
+                    font-size: 1.2rem;
+                    margin-left: 1rem;
+                }
             }
 
             &-icon {
@@ -945,6 +964,11 @@ export default {
             line-height: 1.4;
             opacity: .6;
             padding-top: .5rem;
+
+            &.is-warning {
+                color: $color-3;
+                opacity: 1;
+            }
         }
 
         .switcher-item-icon-helper {
