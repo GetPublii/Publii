@@ -413,6 +413,7 @@ export default {
             });
 
             ipcRenderer.once('app-deploy-aborted', (event) => {
+                this.$store.commit('setSidebarStatus', 'not-synced');
                 this.close();
             });
         },
