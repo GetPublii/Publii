@@ -236,7 +236,10 @@ class RendererContext {
             bodyCustomCode: this.siteConfig.advanced.customBodyCode || '',
             footerCustomCode: this.siteConfig.advanced.customFooterCode || '',
             footerAmpCustomCode: this.siteConfig.advanced.customFooterAmpCode || '',
-            customHTML: this.siteConfig.advanced.customHTML || false
+            customHTML: this.siteConfig.advanced.customHTML || false,
+            utils: {
+                currentYear: new Date().getFullYear()
+            }
         };
 
         // In AMP mode create special global @amp variable
