@@ -96,11 +96,11 @@ export default {
                     return;
                 }
 
-                this.$refs.content.addEventListener('click', function(e) {
+                this.$refs.content.addEventListener('click', e => {
                     if(e.target.tagName === 'A') {
                         e.preventDefault();
                         shell.openExternal(e.target.getAttribute('href'));
-                        self.closeNotification();
+                        this.closeNotification();
                     }
                 });
 
