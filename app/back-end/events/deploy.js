@@ -35,8 +35,14 @@ class DeployEvents {
                     self.deploymentProcess.send({
                         type: 'abort'
                     });
-                } catch(e) {
 
+                    setTimeout(() => {
+                        if (this.deploymentProcess) {
+                            this.deploymentProcess.kill();
+                        }
+                    }, 2000);
+                } catch(e) {
+                    
                 }
             }
 
