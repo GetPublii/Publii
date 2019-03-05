@@ -49,8 +49,12 @@ class DeployEvents {
             event.sender.send('app-deploy-aborted', true);
         });
 
-        ipcMain.on('app-deploy-test', function(event, data) {
-            self.testConnection(data.deploymentConfig, data.siteName);
+        ipcMain.on('app-deploy-test', async (event, data) => {
+            try {
+                await this.testConnection(data.deploymentConfig, data.siteName);
+            } catch (err) {
+                console.log('Test connection error:', err);
+            }
         });
     }
 
