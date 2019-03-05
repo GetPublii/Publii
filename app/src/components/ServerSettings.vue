@@ -768,10 +768,10 @@ export default {
         currentHttpProtocol () {
             if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {
                 return 'file';
-            } else if (this.$store.state.currentSite.config.domain.indexOf('http') === 0) {
-                return 'http';
-            } else {
+            } else if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
                 return 'https';
+            } else {
+                return 'http';
             }
         },
         siteIsOnline () {
@@ -937,8 +937,6 @@ export default {
                 return;
             }
 
-            this.save();
-
             let deploymentSettings = this.getDeploymentSettings().deployment;
 
             if(password) {
@@ -959,6 +957,7 @@ export default {
                 });
 
                 this.testInProgress = false;
+                this.save();
             });
 
             ipcRenderer.once('app-deploy-test-write-error', (event, data) => {
