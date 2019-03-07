@@ -21,64 +21,62 @@
                 </p-button>
             </p-header>
 
+            <p-header 
+                v-if="deploymentMethodSelected === ''" 
+                title="Select a server type">
+            </p-header>
+
             <div 
                 v-if="deploymentMethodSelected === ''"
                 class="server-settings-intro">               
 
-                <div @click="deploymentMethodSelected = 'ftp'">
+                <div @click="deploymentMethodSelected = 'ftp'" title="FTP">
                 <icon
                       customWidth="69"
                       customHeight="42"                   
-                      name="sftp"                      
-                      title="This post is hidden" />
+                      name="sftp" />
                 </div>
 
-                <div @click="deploymentMethodSelected = 's3'">
+                <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
                    <icon
                       customWidth="48"
                       customHeight="48"                    
-                      name="aws"                      
-                      title="This post is hidden" />
+                      name="aws" />
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'github-pages'">
+                <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages">
                     <icon
                       customWidth="129"
                       customHeight="42"                     
-                      name="githubpages"                      
-                      title="This post is hidden" />
+                      name="githubpages" />
                 </div>
 
-                <div @click="deploymentMethodSelected = 'gitlab-pages'">
+                <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages">
                     <icon
                       customWidth="113"
                       customHeight="40"                     
-                      name="gitlab"                      
-                      title="This post is hidden" />
+                      name="gitlab" />
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'netlify'">
+                <div @click="deploymentMethodSelected = 'netlify'" title="Netlify">
                    <icon
                       customWidth="102"
                       customHeight="48"                     
-                      name="netlify"                      
-                      title="This post is hidden" />
+                      name="netlify" />
                 </div>
 
-                <div @click="deploymentMethodSelected = 'google-cloud'">
+                <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud">
                     <icon
                       customWidth="167"
                       customHeight="40"                     
-                      name="googlecloud"                      
-                      title="This post is hidden" />
+                      name="googlecloud" />
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'zip'">
+                <div @click="deploymentMethodSelected = 'zip'" title="Manual deployment">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
-                      name="zip"                      
-                      title="This post is hidden" />
+                      name="zip" />
                 </div>
                 
             </div>
