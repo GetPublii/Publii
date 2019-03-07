@@ -23,19 +23,26 @@
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
-                title="Select a server type">
+                title="Select a server type:">
             </p-header>
 
             <div 
                 v-if="deploymentMethodSelected === ''"
-                class="server-settings-intro">               
+                class="server-settings-intro">   
+                
+                 <div @click="deploymentMethodSelected = 'ftp'" title="FTP">
+                   <icon
+                      customWidth="69"
+                      customHeight="42"                   
+                      name="ftp" />
+                </div>
 
-                <div @click="deploymentMethodSelected = 'ftp'" title="FTP">
-                <icon
+                <div @click="deploymentMethodSelected = 'sftp'" title="SFTP">
+                   <icon
                       customWidth="69"
                       customHeight="42"                   
                       name="sftp" />
-                </div>
+                </div>               
 
                 <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
                    <icon
