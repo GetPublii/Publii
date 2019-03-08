@@ -272,7 +272,7 @@ class Image extends Model {
                             }
 
                             console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
-                            image.cover(finalWidth, finalHeight)
+                            image.resize(finalWidth, finalHeight)
                                  .quality(imagesQuality)
                                  .write(destinationPath, function() {
                                      resolve(destinationPath);
