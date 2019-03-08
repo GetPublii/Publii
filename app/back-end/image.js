@@ -272,11 +272,20 @@ class Image extends Model {
                             }
 
                             console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
-                            image.resize(finalWidth, finalHeight)
-                                 .quality(imagesQuality)
-                                 .write(destinationPath, function() {
-                                     resolve(destinationPath);
-                                 });
+
+                            if (finalWidth === Jimp.AUTO || finalHeight === Jimp.AUTO) {
+                                image.resize(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
+                            } else {
+                                image.cover(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
+                            }
                         }).catch(err => {
                             console.log(err);
                             reject(err);
