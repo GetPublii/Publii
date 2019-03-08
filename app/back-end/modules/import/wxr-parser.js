@@ -85,6 +85,7 @@ class WxrParser {
             results = xmlParser.toJson(this.fileContent);
             results = JSON.parse(results);
         } catch(e) {
+            console.log('An error occurred:', e);
             return false;
         }
 
