@@ -177,6 +177,9 @@
                         id="port"
                         type="number"
                         key="port"
+                        min="1"
+                        max="65535"
+                        step="1"
                         :class="{ 'is-invalid': errors.indexOf('port') > -1 }"
                         @keyup.native="cleanError('port')"
                         v-model="deploymentSettings.port" />
@@ -184,7 +187,7 @@
                         slot="note"
                         v-if="errors.indexOf('port') > -1"
                         class="note">
-                        The port field cannot be empty.
+                        The port field cannot be empty and must be a positive integer between 1 and 65535.
                     </small>
                 </field>
 
@@ -1071,7 +1074,9 @@ export default {
             return !this.errors.length;
         },
         validateFtp () {
-            if (this.deploymentSettings.port.trim() === '') {
+            let portValue = parseInt(this.deploymentSettings.port.trim(), 10)
+            
+            if (this.deploymentSettings.port.trim() === '' || isNaN(portValue) || portValue < 1 || portValue > 65535) {
                 this.errors.push('port');
             }
 
