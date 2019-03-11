@@ -4,6 +4,10 @@ module.exports = [
         code: 'en'
     },
     {
+        name: 'Custom language code',
+        code: 'custom'
+    },
+    {
         name: 'Belarusian',
         code: 'be'
     },

@@ -50,6 +50,18 @@
                 </field>
 
                 <field
+                    v-if="language === 'custom'"
+                    id="customLanguage"
+                    label="Custom language code:">
+                    <text-input
+                        slot="field"
+                        id="customLanguage"
+                        ref="customLanguage"
+                        key="customLanguage"
+                        v-model="customLanguage" />
+                </field>
+
+                <field
                     id="theme"
                     label="Current theme:">
                     <strong
@@ -1303,6 +1315,7 @@ export default {
                 icon: ''
             },
             language: '',
+            customLanguage: '',
             name: '',
             theme: '',
             currentTheme: '',
@@ -1396,6 +1409,12 @@ export default {
         this.logo.color = this.$store.state.currentSite.config.logo.color;
         this.logo.icon = this.$store.state.currentSite.config.logo.icon;
         this.language = this.$store.state.currentSite.config.language;
+
+        if (!this.availableLanguages[this.language]) {
+            this.customLanguage = this.language;
+            this.language = 'custom';
+        }
+
         this.name = this.$store.state.currentSite.config.displayName;
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
@@ -1433,7 +1452,12 @@ export default {
                 icon: this.$refs['logo-creator'].getActiveIcon(),
                 color: this.$refs['logo-creator'].getActiveColor()
             };
-            newSettings.language = this.language;
+
+            if (this.language === 'custom') {
+                newSettings.language = this.customLanguage;
+            } else {
+                newSettings.language = this.language;
+            }
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {
                 if (group.name === '') {
