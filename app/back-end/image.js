@@ -295,7 +295,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
@@ -306,7 +306,7 @@ class Image extends Model {
                                 }).catch(err => reject(err))
                         } else {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
                                 })
@@ -344,7 +344,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
@@ -354,7 +354,7 @@ class Image extends Model {
                                 }).catch(err => reject(err));
                         } else {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
                                 })
