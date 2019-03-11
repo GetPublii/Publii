@@ -71,17 +71,7 @@ class PostItem {
 
         if(this.renderer.cachedItems.postTags[this.postID]) {
             this.postData.tags = this.renderer.cachedItems.postTags[this.postID].map(tagID => this.renderer.cachedItems.tags[tagID]);
-            this.postData.tags.sort((tagA, tagB) => {
-                if(tagA.name.toLowerCase() < tagB.name.toLowerCase()) {
-                    return -1;
-                }
-
-                if(tagA.name.toLowerCase() > tagB.name.toLowerCase()) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            this.postData.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
         } else {
             this.postData.tags = [];
         }
