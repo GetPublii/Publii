@@ -82,17 +82,7 @@ class RendererContextPostPreview extends RendererContext {
                 };
             });
 
-            this.tags.sort((tagA, tagB) => {
-                if(tagA.name < tagB.name) {
-                    return -1;
-                }
-
-                if(tagA.name > tagB.name) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            this.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
         }
 
         this.metaTitle = 'It is an example value for the preview mode';

@@ -6,7 +6,6 @@ const sqlString = require('sqlstring');
  * Class used create context
  * for the single post theme views
  */
-
 class RendererContextPost extends RendererContext {
     loadData() {
         // Retrieve meta data

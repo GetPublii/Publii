@@ -37,10 +37,10 @@ class PostItem {
             }
         }
 
-        if(this.siteConfig.advanced.urls.cleanUrls) {
+        if (this.siteConfig.advanced.urls.cleanUrls) {
             postURL = this.siteConfig.domain + '/' + this.post.slug + '/';
 
-            if(this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
                 postURL += 'index.html';
             }
         }
@@ -65,11 +65,11 @@ class PostItem {
 
         this.postData.featuredImage = {};
 
-        if(this.renderer.cachedItems.featuredImages[this.postData.id]) {
+        if (this.renderer.cachedItems.featuredImages[this.postData.id]) {
             this.postData.featuredImage = this.renderer.cachedItems.featuredImages[this.postData.id];
         }
 
-        if(this.renderer.cachedItems.postTags[this.postID]) {
+        if (this.renderer.cachedItems.postTags[this.postID]) {
             this.postData.tags = this.renderer.cachedItems.postTags[this.postID].map(tagID => this.renderer.cachedItems.tags[tagID]);
             this.postData.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
         } else {
