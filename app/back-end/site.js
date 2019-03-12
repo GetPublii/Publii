@@ -94,6 +94,7 @@ class Site {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
         let db = new sqlite(dbPath);
         db.exec(fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
+        db.close();
     }
 
     /*
@@ -107,6 +108,7 @@ class Site {
             name: authorName, 
             slug: slug(authorName).toLowerCase()
         });
+        db.close();
     }
 
     /*
@@ -251,6 +253,8 @@ class Site {
                 sender.send('app-site-regenerate-thumbnails-success', true);
             }
         });
+
+        db.close();
     }
 
     /**
@@ -309,7 +313,14 @@ class Site {
      */
     static delete(appInstance, name) {
         let sitePath = path.join(appInstance.sitesDir, name);
-        fs.removeSync(sitePath);
+
+        if (appInstance.db) {
+            appInstance.db.close();
+        }
+
+        setTimeout(() => {
+            fs.removeSync(sitePath);
+        }, 500);
     }
 
     /*

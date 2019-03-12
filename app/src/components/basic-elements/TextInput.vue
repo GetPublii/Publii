@@ -195,7 +195,7 @@ export default {
 
     &.is-number {
         display: inline-block;
-        width: 8rem;
+        width: 12rem;
     }
 
     svg {

@@ -4,7 +4,7 @@
         v-if="notification.visible"
         :data-timestamp="notification.timestamp" >
         <span
-            ref="text"
+            ref="content"
             v-html="notification.text">
         </span>
 
@@ -22,6 +22,11 @@ import { ipcRenderer, shell } from 'electron';
 
 export default {
     name: 'topbar-notification',
+    data () {
+        return {
+            contentEventsAdded: false
+        }
+    },
     computed: {
         notification: function() {
             return this.$store.state.app.notification;
@@ -32,20 +37,6 @@ export default {
     },
     mounted: function() {
         let self = this;
-
-        setTimeout(() => {
-            if(!this.$refs.text) {
-                return;
-            }
-
-            this.$refs.text.addEventListener('click', function(e) {
-                if(e.target.tagName === 'A') {
-                    e.preventDefault();
-                    shell.openExternal(e.target.getAttribute('href'));
-                    self.closeNotification();
-                }
-            });
-        }, 0);
     },
     methods: {
         getNotifications() {
@@ -95,6 +86,26 @@ export default {
                     visible: false
                 });
             }
+
+            setTimeout(() => {
+                if(!this.$refs.content) {
+                    return;
+                }
+
+                if (this.contentEventsAdded) {
+                    return;
+                }
+
+                this.$refs.content.addEventListener('click', e => {
+                    if(e.target.tagName === 'A') {
+                        e.preventDefault();
+                        shell.openExternal(e.target.getAttribute('href'));
+                        this.closeNotification();
+                    }
+                });
+
+                this.contentEventsAdded = true;
+            }, 500);
         },
         closeNotification(event) {
             localStorage.setItem('publii-notification-close-timestamp', this.notification.timestamp);

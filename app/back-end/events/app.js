@@ -34,25 +34,32 @@ class AppEvents {
 
                 if(appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
-                    result = appFilesHelper.relocateSites(
-                        appInstance.appConfig.sitesLocation,
-                        config.sitesLocation,
-                        event
-                    );
-                }
+                    
+                    if (appInstance.db) {
+                        appInstance.db.close();
+                    }
 
-                if(result) {
-                    fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
-                    appInstance.appConfig = config;
-                }
+                    setTimeout(() => {
+                        result = appFilesHelper.relocateSites(
+                            appInstance.appConfig.sitesLocation,
+                            config.sitesLocation,
+                            event
+                        );
 
-                appInstance.loadSites().then(() => {
-                    event.sender.send('app-config-saved', {
-                        status: true,
-                        message: 'success-save',
-                        sites: appInstance.sites
-                    });
-                });
+                        if(result) {
+                            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
+                            appInstance.appConfig = config;
+                        }
+        
+                        appInstance.loadSites().then(() => {
+                            event.sender.send('app-config-saved', {
+                                status: true,
+                                message: 'success-save',
+                                sites: appInstance.sites
+                            });
+                        });
+                    }, 500);
+                }
 
                 return;
             }

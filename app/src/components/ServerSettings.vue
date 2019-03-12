@@ -21,17 +21,69 @@
                 </p-button>
             </p-header>
 
+            <p-header 
+                v-if="deploymentMethodSelected === ''" 
+                title="Select a server type:">
+            </p-header>
+
             <div 
                 v-if="deploymentMethodSelected === ''"
-                class="server-settings-intro">
-                INTRO
-
-                <div @click="deploymentMethodSelected = 'github-pages'">
-                    Select Github Pages
+                class="server-settings-intro">   
+                
+                 <div @click="deploymentMethodSelected = 'ftp'" title="FTP">
+                   <icon
+                      customWidth="69"
+                      customHeight="42"                   
+                      name="ftp" />
                 </div>
 
-                <div @click="deploymentMethodSelected = 's3'">
-                    Select S3
+                <div @click="deploymentMethodSelected = 'sftp'" title="SFTP">
+                   <icon
+                      customWidth="69"
+                      customHeight="42"                   
+                      name="sftp" />
+                </div>               
+
+                <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
+                   <icon
+                      customWidth="48"
+                      customHeight="48"                    
+                      name="aws" />
+                </div>
+                
+                <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages">
+                    <icon
+                      customWidth="129"
+                      customHeight="42"                     
+                      name="githubpages" />
+                </div>
+
+                <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages">
+                    <icon
+                      customWidth="113"
+                      customHeight="40"                     
+                      name="gitlab" />
+                </div>
+                
+                <div @click="deploymentMethodSelected = 'netlify'" title="Netlify">
+                   <icon
+                      customWidth="102"
+                      customHeight="48"                     
+                      name="netlify" />
+                </div>
+
+                <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud">
+                    <icon
+                      customWidth="167"
+                      customHeight="40"                     
+                      name="googlecloud" />
+                </div>
+                
+                <div @click="deploymentMethodSelected = 'zip'" title="Manual deployment">
+                   <icon
+                      customWidth="50"
+                      customHeight="50"                   
+                      name="zip" />
                 </div>
             </div>
 
@@ -83,35 +135,35 @@
                         class="note"
                         slot="note"
                         v-if="deploymentMethodSelected === 'netlify'">
-                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure Netlify website</a>.
+                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
                     </small>
 
                     <small
                         class="note"
                         slot="note"
                         v-if="deploymentMethodSelected === 'github-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a Github Pages website</a>.
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
                     </small>
 
                     <small
                         class="note"
                         slot="note"
                         v-if="deploymentMethodSelected === 'gitlab-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a GitLab Pages website</a>.
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
                     </small>
 
                     <small
                         class="note"
                         slot="note"
                         v-if="deploymentMethodSelected === 's3'">
-                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a S3 website</a>.
+                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
                     </small>
 
                     <small
                         class="note"
                         slot="note"
                         v-if="deploymentMethodSelected === 'google-cloud'">
-                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a Google Cloud website</a>.
+                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
                     </small>
                 </field>
 
@@ -124,6 +176,9 @@
                         id="port"
                         type="number"
                         key="port"
+                        min="1"
+                        max="65535"
+                        step="1"
                         :class="{ 'is-invalid': errors.indexOf('port') > -1 }"
                         @keyup.native="cleanError('port')"
                         v-model="deploymentSettings.port" />
@@ -131,7 +186,7 @@
                         slot="note"
                         v-if="errors.indexOf('port') > -1"
                         class="note">
-                        The port field cannot be empty.
+                        The port field cannot be empty and must be a positive integer between 1 and 65535.
                     </small>
                 </field>
 
@@ -768,10 +823,10 @@ export default {
         currentHttpProtocol () {
             if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {
                 return 'file';
-            } else if (this.$store.state.currentSite.config.domain.indexOf('http') === 0) {
-                return 'http';
-            } else {
+            } else if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
                 return 'https';
+            } else {
+                return 'http';
             }
         },
         siteIsOnline () {
@@ -937,8 +992,6 @@ export default {
                 return;
             }
 
-            this.save();
-
             let deploymentSettings = this.getDeploymentSettings().deployment;
 
             if(password) {
@@ -959,6 +1012,7 @@ export default {
                 });
 
                 this.testInProgress = false;
+                this.save();
             });
 
             ipcRenderer.once('app-deploy-test-write-error', (event, data) => {
@@ -1019,7 +1073,9 @@ export default {
             return !this.errors.length;
         },
         validateFtp () {
-            if (this.deploymentSettings.port.trim() === '') {
+            let portValue = parseInt(this.deploymentSettings.port.trim(), 10)
+            
+            if (this.deploymentSettings.port.trim() === '' || isNaN(portValue) || portValue < 1 || portValue > 65535) {
                 this.errors.push('port');
             }
 
@@ -1118,6 +1174,38 @@ export default {
 
     .is-invalid + .note {
         color: $color-3;
+    }
+    
+    &-intro {       
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 2rem;       
+        
+        & > div {
+            align-items: center;
+            background: $color-9;
+            border: 2px solid transparent;
+            display: flex;
+            justify-content: center;
+            min-height: calc(8rem + 8vh);
+            transition: all .25s ease-out;
+            
+            &:hover {
+                background: $color-10;
+                border-color: $color-0;
+                box-shadow: 0 0 26px rgba(black, .07);
+                cursor: pointer;
+                
+                & > svg {
+                    fill: $color-1;
+                }
+            }
+            
+            & > svg {
+                fill: $color-5;
+                transition: inherit;
+            }
+        }
     }
 }
 </style>

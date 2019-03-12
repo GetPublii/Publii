@@ -35,16 +35,26 @@ class DeployEvents {
                     self.deploymentProcess.send({
                         type: 'abort'
                     });
-                } catch(e) {
 
+                    setTimeout(() => {
+                        if (this.deploymentProcess) {
+                            this.deploymentProcess.kill();
+                        }
+                    }, 2000);
+                } catch(e) {
+                    
                 }
             }
 
             event.sender.send('app-deploy-aborted', true);
         });
 
-        ipcMain.on('app-deploy-test', function(event, data) {
-            self.testConnection(data.deploymentConfig, data.siteName);
+        ipcMain.on('app-deploy-test', async (event, data) => {
+            try {
+                await this.testConnection(data.deploymentConfig, data.siteName);
+            } catch (err) {
+                console.log('Test connection error:', err);
+            }
         });
     }
 

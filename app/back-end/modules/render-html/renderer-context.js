@@ -155,6 +155,8 @@ class RendererContext {
             tags = tags.filter(tag => tag.postsNumber > 0);
         }
 
+        tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
+
         return tags;
     }
 
@@ -169,6 +171,8 @@ class RendererContext {
         if(!this.siteConfig.advanced.displayEmptyAuthors) {
             authors = authors.filter(author => author.postsNumber > 0);
         }
+
+        authors.sort((authorA, authorB) => authorA.name.localeCompare(authorB.name));
 
         return authors;
     }
@@ -236,7 +240,10 @@ class RendererContext {
             bodyCustomCode: this.siteConfig.advanced.customBodyCode || '',
             footerCustomCode: this.siteConfig.advanced.customFooterCode || '',
             footerAmpCustomCode: this.siteConfig.advanced.customFooterAmpCode || '',
-            customHTML: this.siteConfig.advanced.customHTML || false
+            customHTML: this.siteConfig.advanced.customHTML || false,
+            utils: {
+                currentYear: new Date().getFullYear()
+            }
         };
 
         // In AMP mode create special global @amp variable

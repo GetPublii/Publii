@@ -335,17 +335,7 @@ export default {
 
             items.forEach((item, i) => {
                 if (item.tags.length) {
-                    item.tags.sort((tagA, tagB) => {
-                        if(tagA.name.toLowerCase() < tagB.name.toLowerCase()) {
-                            return -1;
-                        }
-
-                        if(tagA.name.toLowerCase() > tagB.name.toLowerCase()) {
-                            return 1;
-                        }
-
-                        return 0;
-                    });
+                    item.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
                 }
             });
 

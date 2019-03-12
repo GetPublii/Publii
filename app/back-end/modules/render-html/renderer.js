@@ -154,6 +154,7 @@ class Renderer {
         this.generateAMP();
         console.timeEnd("RENDERING");
         this.sendProgress(100, 'Website files are ready to upload');
+        this.db.close();
     }
 
     /**

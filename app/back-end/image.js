@@ -272,11 +272,20 @@ class Image extends Model {
                             }
 
                             console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
-                            image.cover(finalWidth, finalHeight)
-                                 .quality(imagesQuality)
-                                 .write(destinationPath, function() {
-                                     resolve(destinationPath);
-                                 });
+
+                            if (finalWidth === Jimp.AUTO || finalHeight === Jimp.AUTO) {
+                                image.resize(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
+                            } else {
+                                image.cover(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
+                            }
                         }).catch(err => {
                             console.log(err);
                             reject(err);
@@ -286,7 +295,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
@@ -297,7 +306,7 @@ class Image extends Model {
                                 }).catch(err => reject(err))
                         } else {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
                                 })
@@ -335,7 +344,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
@@ -345,7 +354,7 @@ class Image extends Model {
                                 }).catch(err => reject(err));
                         } else {
                             sharp(originalPath)
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true })
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
                                 })

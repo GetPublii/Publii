@@ -30,7 +30,7 @@
         </fields-group>
 
         <div
-            v-if="regeneratingThumbnails"
+            v-if="regeneratingStarted"
             class="regenerate-thumbnails-list">
             <p>List of the regenerated files:</p>
 
@@ -63,7 +63,8 @@ export default {
     ],
     data: function() {
         return {
-            regeneratingThumbnails: false,
+            regeneratingInProgress: false,
+            regeneratingStarted: false,
             resultLabel: '',
             resultCssClass: {
                 'error': false,
@@ -83,12 +84,13 @@ export default {
             return filePath.replace(this.$store.state.currentSite.siteDir, '');
         },
         regenerate: function() {
-            if(this.regeneratingThumbnails) {
+            if(this.regeneratingInProgress) {
                 return;
             }
 
             this.buttonStatus = 'disabled preloader';
-            this.regeneratingThumbnails = true;
+            this.regeneratingInProgress = true;
+            this.regeneratingStarted = true;
             this.files = [];
             this.resultLabel = 'Regenerating thumbnails...';
             this.resultCssClass = {
@@ -96,6 +98,10 @@ export default {
                 'error': false,
                 'success': false
             };
+
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
 
             setTimeout(() => {
                 ipcRenderer.send('app-site-regenerate-thumbnails', {
@@ -130,6 +136,7 @@ export default {
                     };
                     this.resultLabel = 'All thumbnails have been created.';
                     this.buttonStatus = '';
+                    this.regeneratingInProgress = false;
                 });
             }, 350);
         }

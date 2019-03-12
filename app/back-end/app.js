@@ -54,6 +54,7 @@ class App {
         this.sites = {};
         this.sitesDir = null;
         this.app.sitesDir = null;
+        this.db = false;
 
         /*
          * Run the app
@@ -191,6 +192,10 @@ class App {
             return {
                 status: false
             };
+        }
+
+        if (this.db) {
+            this.db.close();
         }
 
         this.db = new sqlite(dbPath);
