@@ -45,21 +45,21 @@ class AppEvents {
                             config.sitesLocation,
                             event
                         );
+
+                        if(result) {
+                            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
+                            appInstance.appConfig = config;
+                        }
+        
+                        appInstance.loadSites().then(() => {
+                            event.sender.send('app-config-saved', {
+                                status: true,
+                                message: 'success-save',
+                                sites: appInstance.sites
+                            });
+                        });
                     }, 500);
                 }
-
-                if(result) {
-                    fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
-                    appInstance.appConfig = config;
-                }
-
-                appInstance.loadSites().then(() => {
-                    event.sender.send('app-config-saved', {
-                        status: true,
-                        message: 'success-save',
-                        sites: appInstance.sites
-                    });
-                });
 
                 return;
             }
