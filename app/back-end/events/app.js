@@ -39,11 +39,13 @@ class AppEvents {
                         appInstance.db.close();
                     }
 
-                    result = appFilesHelper.relocateSites(
-                        appInstance.appConfig.sitesLocation,
-                        config.sitesLocation,
-                        event
-                    );
+                    setTimeout(() => {
+                        result = appFilesHelper.relocateSites(
+                            appInstance.appConfig.sitesLocation,
+                            config.sitesLocation,
+                            event
+                        );
+                    }, 500);
                 }
 
                 if(result) {
