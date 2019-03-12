@@ -34,6 +34,11 @@ class AppEvents {
 
                 if(appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
+                    
+                    if (appInstance.db) {
+                        appInstance.db.close();
+                    }
+
                     result = appFilesHelper.relocateSites(
                         appInstance.appConfig.sitesLocation,
                         config.sitesLocation,
