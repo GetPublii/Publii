@@ -323,6 +323,11 @@ class SiteEvents {
             // Load newly created db
             let siteDir = path.join(appInstance.sitesDir, config.name);
             let dbPath = path.join(siteDir, 'input', 'db.sqlite');
+
+            if (appInstance.db) {
+                appInstance.db.close();
+            }
+
             appInstance.db = new sqlite(dbPath);
 
             if(result !== false) {

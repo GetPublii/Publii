@@ -194,6 +194,10 @@ class App {
             };
         }
 
+        if (this.db) {
+            this.db.close();
+        }
+
         this.db = new sqlite(dbPath);
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
