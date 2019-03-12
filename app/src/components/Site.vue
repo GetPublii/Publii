@@ -187,8 +187,12 @@ export default {
 
 @media (max-width: 1400px) {
     .site {
+        .sidebar {        
+            width: 32rem;
+    }
         .content {
             padding: 4rem;
+            width: calc(100% - 32rem);
         }
     }
 }

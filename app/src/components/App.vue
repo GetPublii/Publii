@@ -308,4 +308,16 @@ body[data-os="linux"] {
         }
     }
 }
+    
+/*
+ * Responsive improvements
+ */
+
+@media (max-width: 1400px) {
+    .app {
+        &-site-sidebar {        
+            width: 32rem;
+        }
+    }
+}
 </style>
