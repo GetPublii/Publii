@@ -155,6 +155,8 @@ class RendererContext {
             tags = tags.filter(tag => tag.postsNumber > 0);
         }
 
+        tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
+
         return tags;
     }
 
@@ -169,6 +171,8 @@ class RendererContext {
         if(!this.siteConfig.advanced.displayEmptyAuthors) {
             authors = authors.filter(author => author.postsNumber > 0);
         }
+
+        authors.sort((authorA, authorB) => authorA.name.localeCompare(authorB.name));
 
         return authors;
     }
