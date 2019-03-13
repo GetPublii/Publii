@@ -62,7 +62,7 @@
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 515px)">
+                <collection-cell width="calc(100% - 485px)">
                     Filename
                 </collection-cell>
 
@@ -74,7 +74,7 @@
                     Creation date
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell width="170px">
                     Operations
                 </collection-cell>
 
@@ -102,7 +102,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 515px)">
+                <collection-cell width="calc(100% - 485px)">
                     <a
                         :href="item.url"
                         @click.prevent.stop="showFileInFolder(item.url)">
@@ -118,7 +118,7 @@
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell width="170px">
                     <p-button
                         :type="renameButtonType"
                         :onClick="renameFile.bind(this, item.name)">
@@ -168,17 +168,17 @@ export default {
         },
         renameButtonType: function() {
             if(this.operationInProgress) {
+                return 'disabled outline small';
+            }
+
+            return 'outline small';
+        },
+        restoreButtonType: function() {
+            if(this.operationInProgress) {
                 return 'disabled secondary small';
             }
 
             return 'secondary small';
-        },
-        restoreButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled primary small';
-            }
-
-            return 'primary small';
         },
         noBackups: function() {
             return this.items.length === 0;
