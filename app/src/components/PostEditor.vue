@@ -312,7 +312,7 @@ export default {
             this.$router.push('/site/' + siteName + '/posts/');
         },
         getMediaPath () {
-            let mediaPath = this.$store.state.currentSite.siteDir;
+            let mediaPath = this.$store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
             mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
             mediaPath += '/input/media/posts/';
             mediaPath += this.postID === 0 ? 'temp' : this.postID;
