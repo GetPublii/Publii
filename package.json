@@ -58,7 +58,6 @@
   },
   "dependencies": {
     "electron": "^3.1.7",
-    "g": "^2.0.1",
     "handlebars": "^4.0.5",
     "opencollective": "^1.0.3"
   },
