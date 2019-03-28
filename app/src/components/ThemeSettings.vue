@@ -160,16 +160,19 @@
                                     v-if="field.type === 'posts-dropdown'"
                                     v-model="custom[field.name]"
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
+                                    :multiple="field.multiple"
                                     slot="field"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
+                                    :multiple="field.multiple"
                                     slot="field"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
+                                    :multiple="field.multiple"
                                     slot="field"></authors-dropdown>
 
                                 <text-input

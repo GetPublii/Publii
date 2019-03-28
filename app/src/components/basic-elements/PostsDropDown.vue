@@ -6,6 +6,7 @@
         :custom-label="postLabels"
         :close-on-select="true"
         :show-labels="false"
+        :multiple="multiple"
         @select="closeDropdown()"
         :placeholder="placeholder"></v-select>
 </template>
@@ -17,6 +18,10 @@ export default {
         placeholder: {
             type: String,
             default: 'Select post page'
+        },
+        multiple: {
+            type: Boolean,
+            default: false
         },
         value: {},
         allowedPostStatus: {
@@ -62,3 +67,18 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.multiselect {
+    line-height: 2;
+}
+
+.multiselect,
+.multiselect__tags {
+    min-height: 52px;
+}
+
+.multiselect__input {
+    max-width: 120px;
+}
+</style>

@@ -7,6 +7,7 @@
         :close-on-select="true"
         :show-labels="false"
         @select="closeDropdown()"
+        :multiple="mutliple"
         :placeholder="placeholder"></v-select>
 </template>
 
@@ -14,6 +15,10 @@
 export default {
     name: 'authors-dropdown',
     props: {
+        multiple: {
+            type: Boolean,
+            default: false
+        },
         placeholder: {
             type: String,
             default: 'Select author'
@@ -53,3 +58,18 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.multiselect {
+    line-height: 2;
+}
+
+.multiselect,
+.multiselect__tags {
+    min-height: 52px;
+}
+
+.multiselect__input {
+    max-width: 120px;
+}
+</style>
