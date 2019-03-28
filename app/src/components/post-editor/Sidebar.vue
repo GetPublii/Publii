@@ -515,6 +515,15 @@ export default {
                 'noindex, nofollow': 'noindex, nofollow'
             };
         },
+        defaultPostTemplate () {
+            let defaultTemplate = this.$store.state.currentSite.themeSettings.defaultTemplates.post;
+
+            if (Object.keys(this.postTemplates).indexOf(defaultTemplate) > -1) {
+                return defaultTemplate;
+            }
+
+            return '';
+        },
         postTemplates () {
             return this.$store.state.currentSite.themeSettings.postTemplates;
         },
@@ -529,6 +538,10 @@ export default {
         this.$bus.$on('author-changed', (newAuthor) => {
             this.$parent.postData.author = parseInt(newAuthor, 10);
         });
+
+        if (!this.isEdit) {
+            this.$parent.postData.template = this.defaultPostTemplate;
+        }
     },
     methods: {
         openItem (itemName) {

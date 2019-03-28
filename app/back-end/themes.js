@@ -307,7 +307,8 @@ class Themes {
         let themeConfig = {
             config: newConfig.config,
             customConfig: newConfig.customConfig,
-            postConfig: newConfig.postConfig
+            postConfig: newConfig.postConfig,
+            defaultTemplates: newConfig.defaultTemplates
         };
 
         // Check all options for the media fields
@@ -404,6 +405,10 @@ class Themes {
                         }
                     }
                 }
+            }
+
+            if (themeSavedConfig.defaultTemplates) {
+                defaultThemeConfig.defaultTemplates = JSON.parse(JSON.stringify(themeSavedConfig.defaultTemplates));
             }
         }
 

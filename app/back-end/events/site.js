@@ -306,7 +306,8 @@ class SiteEvents {
                 newConfig: {
                     config: themeConfig.config,
                     customConfig: themeConfig.customConfig,
-                    postConfig: themeConfig.postConfig
+                    postConfig: themeConfig.postConfig,
+                    defaultTemplates: themeConfig.defaultTemplates
                 }
             });
         });

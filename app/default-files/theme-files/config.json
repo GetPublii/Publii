@@ -2,6 +2,9 @@
     "postTemplates": {},
     "tagTemplates": {},
     "authorTemplates": {},
+    "defaultTemplates": {
+        "post": ""
+    },
     "menus": {},
     "renderer": {
         "relatedPostsNumber": 5,
