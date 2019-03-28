@@ -1363,7 +1363,22 @@ export default {
             };
         },
         siteHasTheme () {
-            return !!this.$store.state.currentSite.config.theme;
+            if (
+                !this.$store.state.currentSite.config.theme && 
+                this.theme.indexOf('use-') !== 0 && 
+                this.theme.indexOf('install-use-') !== 0
+            ) {
+                return false;
+            }
+
+            if (
+                this.$store.state.currentSite.config.theme &&
+                this.theme === 'uninstall-' + this.$store.state.currentSite.config.theme
+            ) {
+                return false;
+            }
+
+            return true;
         },
         websiteName () {
             return this.$store.state.currentSite.config.name;
