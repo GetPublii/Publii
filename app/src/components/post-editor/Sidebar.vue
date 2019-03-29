@@ -403,6 +403,12 @@
                                     id="post-template">
                                     <option
                                         v-if="hasPostTemplates"
+                                        value="*"
+                                        slot="first-choice">
+                                        Use global configuration
+                                    </option>
+                                    <option
+                                        v-if="hasPostTemplates"
                                         value=""
                                         slot="first-choice">
                                         Default template
@@ -414,6 +420,12 @@
                                         Not available in your theme
                                     </option>
                                 </dropdown>
+
+                                <small
+                                    v-if="$parent.postData.template === '*'"
+                                    slot="note">
+                                    Current default template: {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                </small>
                             </label>
 
                             <template v-for="(field, index) of postViewThemeSettings">

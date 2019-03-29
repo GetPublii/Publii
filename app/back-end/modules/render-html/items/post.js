@@ -63,6 +63,10 @@ class PostItem {
             hasCustomExcerpt: hasCustomExcerpt
         };
 
+        if (this.postData.template === '*') {
+            this.postData.template = this.themeConfig.defaultTemplates.post;
+        }
+
         this.postData.featuredImage = {};
 
         if (this.renderer.cachedItems.featuredImages[this.postData.id]) {
