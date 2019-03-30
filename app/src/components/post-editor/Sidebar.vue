@@ -404,12 +404,14 @@
                                     <option
                                         v-if="hasPostTemplates"
                                         value="*"
+                                        :selected="$parent.postData.template === '*'"
                                         slot="first-choice">
                                         Use global configuration
                                     </option>
                                     <option
                                         v-if="hasPostTemplates"
                                         value=""
+                                        :selected="$parent.postData.template === ''"
                                         slot="first-choice">
                                         Default template
                                     </option>
@@ -424,7 +426,10 @@
                                 <small
                                     v-if="$parent.postData.template === '*'"
                                     slot="note">
-                                    Current default template: {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                    Current default template: 
+                                    <strong>
+                                        {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                    </strong>
                                 </small>
                             </label>
 

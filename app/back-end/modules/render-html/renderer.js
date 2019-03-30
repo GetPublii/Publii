@@ -657,7 +657,13 @@ class Renderer {
         if (postData && postData.length) { 
             postIDs = postData.map(row => row.id);
             postSlugs = postData.map(row => row.slug);
-            postTemplates = postData.map(row => row.template);
+            postTemplates = postData.map(row => {
+                if (row.template === '*') {
+                    return this.themeConfig.defaultTemplates.post
+                }
+
+                return row.template;
+            });
         } else {
             postIDs = [];
             postSlugs = [];
@@ -751,6 +757,10 @@ class Renderer {
         let postSlug = 'preview';
         let postTemplate = this.postData.template;
         let inputFile = 'post.hbs';
+
+        if (postTemplate === '*') {
+            postTemplate = this.themeConfig.defaultTemplates.post;
+        }
 
         // Load templates
         let compiledTemplates = {};
