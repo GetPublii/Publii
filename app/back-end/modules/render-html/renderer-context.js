@@ -334,7 +334,6 @@ class RendererContext {
                     posts
                 WHERE
                     status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
                     status NOT LIKE "%trashed%"
                 ORDER BY
                     ${postsOrdering}
