@@ -40,7 +40,8 @@ class Netlify {
             inputDir: localDir
         }, {
             onStart: this.onStart.bind(this),
-            onProgress: this.onProgress.bind(this)
+            onProgress: this.onProgress.bind(this),
+            onError: this.onError.bind(this)
         });
 
         process.send({
@@ -104,6 +105,17 @@ class Netlify {
         this.deployment.progressPerFile = 90.0 / this.deployment.operationsCounter;
         this.deployment.currentOperationNumber = 0;
         this.deployment.progressOfUploading = 0;
+    }
+
+    onError () {
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-error'
+        });
+
+        setTimeout(function () {
+            process.exit();
+        }, 1000); 
     }
 
     onProgress(currentFile) {

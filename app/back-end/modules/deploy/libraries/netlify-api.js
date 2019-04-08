@@ -32,7 +32,18 @@ class NetlifyAPI {
 
         for (let i = 0; i < filesToUpload.length; i++) {
             let filePath = filesToUpload[i];
-            await this.uploadFile(filePath, deployID);
+            
+            try {
+                await this.uploadFile(filePath, deployID);
+            } catch (e) {
+                try {
+                    await this.uploadFile(filePath, deployID);
+                } catch (e) {
+                    this.events.onError();
+                    return Promise.reject(false);
+                }
+            }
+
             this.events.onProgress(i);
         }
 
@@ -71,7 +82,8 @@ class NetlifyAPI {
             body: data,
             auth: {
                 'bearer': this.accessToken
-            }
+            },
+            timeout: 15000
         });
     }
 
@@ -89,7 +101,8 @@ class NetlifyAPI {
             body: fileContent,
             auth: {
                 'bearer': this.accessToken
-            }
+            },
+            timeout: 15000
         });
     }
 
