@@ -1251,6 +1251,17 @@
                                 v-model="advanced.hiddenPostsListingOrder"
                                 :items="orderOptions"></dropdown>
                         </field>
+
+                        <field
+                            id="related-posts-order-by"
+                            label="Related posts ordering:">
+                            <dropdown
+                                slot="field"
+                                id="related-posts-order-by"
+                                key="related-posts-order-by"
+                                v-model="advanced.relatedPostsOrder"
+                                :items="relatedPostsOrderingOptions"></dropdown>
+                        </field>
                     </div>
                 </tabs>
             </fields-group>
@@ -1360,6 +1371,13 @@ export default {
             return {
                 'DESC': 'Descending',
                 'ASC': 'Ascending'
+            };
+        },
+        relatedPostsOrderingOptions () {
+            return {
+                'default': 'By ID descending',
+                'id-asc': 'By ID ascending',
+                'random': 'Random'
             };
         },
         siteHasTheme () {
