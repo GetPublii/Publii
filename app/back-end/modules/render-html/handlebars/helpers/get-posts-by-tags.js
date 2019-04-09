@@ -30,6 +30,10 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
             return 'Error: @website.contentStructure global variable is not available.';
         }
 
+        if (count === -1) {
+            count = 999;
+        }
+
         let postsData;
         let content = '';
         let filteredPosts = JSON.parse(JSON.stringify(rendererInstance.contentStructure.posts));
