@@ -26,7 +26,7 @@ const AstCurrentSiteConfig = {
         twitterCardsEnabled: 1,
         twitterCardsType: 'summary',
         twitterUsername: '',
-        metaTitle: 'My blog - %sitename',
+        metaTitle: '%sitename',
         metaDescription: '',
         noIndexThisPage: false,
         homepageNoIndexPagination: false,
