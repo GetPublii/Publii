@@ -792,6 +792,10 @@ export default {
             .multiselect__tags {
                 min-height: 52px;
             }
+            
+            .multiselect__tags {
+                padding: 0 4rem 0 0.5rem;
+            }
 
             .multiselect__input {
                 max-width: 120px;
@@ -907,22 +911,21 @@ export default {
                 }
 
                 &-open {  
-                    border-top: solid 4px $color-7;
-                    border-left: solid 5px transparent;
-                    border-right: solid 5px transparent;                    
+                  border-color: $color-7 transparent transparent;
+                    border-style: solid;
+                    border-width: 6px 5px;
                     opacity: 1;                     
                     cursor: pointer;                   
-                    height: 5px;
+                    height: 3px;
                     left: auto;
                     line-height: 1.1; 
                     padding: 0;
                     position: absolute;
-                    right: calc(4.5rem - 5px);
-                    width: 5px;
+                    right: calc(4.5rem - 6px);
+                    width: 6px;
                     text-align: center;       
                     transition: all .3s ease-out;         
-                    top: 50%;
-                    transform: translate(0, -50%);                     
+                    top: calc(50% - 3px)                    
                 }
 
                 &-close {
