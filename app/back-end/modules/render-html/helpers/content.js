@@ -71,7 +71,7 @@ class ContentHelper {
         });
 
         // Wrap iframes into <div class="post__iframe">
-        preparedText = preparedText.replace(/(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
+        preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
             return '<div class="post__iframe">' + matches + '</div>';
         });
 
