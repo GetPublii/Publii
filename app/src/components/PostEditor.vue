@@ -837,12 +837,9 @@ export default {
             }
 
             &::after {
-                border: 4px solid $color-10;
-                border-left-color: transparent;
-                border-left-width: 5px;
-                border-right-color: transparent;
-                border-right-width: 5px;
-                border-bottom-color: transparent; 
+                border-color: $color-10 transparent transparent;
+                border-style: solid;
+                border-width: 5px;              
                 content: "";
                 pointer-events: none;
                 left: 50%;

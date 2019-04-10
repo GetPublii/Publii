@@ -75,9 +75,12 @@ export default {
 
 .multiselect,
 .multiselect__tags {
-    min-height: 52px;
+    min-height: 49px;
 }
-
+    
+.multiselect__tags {
+    padding: 0 4rem 0 1.8rem;
+}
 .multiselect__input {
     max-width: 120px;
 }
