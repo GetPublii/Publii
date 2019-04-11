@@ -183,6 +183,12 @@ class App {
      * @returns {object}
      */
     switchSite(site) {
+        if (!site) {
+            return {
+                status: false
+            };
+        }
+
         const siteDir = path.join(this.sitesDir, site);
         const menuConfigPath = path.join(siteDir, 'input', 'config', 'menu.config.json');
         const themeConfigPath = path.join(siteDir, 'input', 'config', 'theme.config.json');
