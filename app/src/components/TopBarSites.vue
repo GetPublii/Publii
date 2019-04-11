@@ -57,7 +57,9 @@ export default {
             }
 
             this.submenuIsOpen = !this.submenuIsOpen;
+            this.$bus.$off('document-body-clicked', this.hideSubmenu);
             this.$bus.$emit('document-body-clicked');
+            this.$bus.$on('document-body-clicked', this.hideSubmenu);
         },
         hideSubmenu () {
             this.submenuIsOpen = false;
