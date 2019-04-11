@@ -74,7 +74,7 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small danger icon"
+                        type="small light icon"
                         :onClick="bulkDelete">
                         Delete
                     </p-button>

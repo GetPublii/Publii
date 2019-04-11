@@ -115,7 +115,7 @@ export default {
             &:after,
             &:before {
                 background: currentcolor;
-                 border-radius: 50%;
+                border-radius: 50%;
                 content: "";
                 display: block;
                 height: 3px;
@@ -144,7 +144,7 @@ export default {
 
     &-app-submenu {
         background: $color-10;
-         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
+        box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                      0 8px 16px rgba(29, 39, 52, 0.07);
         font-size: 1.5rem;
         list-style-type: none;

@@ -149,14 +149,15 @@
                     <p-button
                         v-if="trashVisible"
                         icon="trash"
-                        type="small danger icon"
+                        type="small light icon"
                         :onClick="bulkDelete">
                         Delete
                     </p-button>
 
                     <p-button
                         v-if="trashVisible"
-                        type="small primary"
+                        icon="trash"
+                        type="small light icon"
                         :onClick="bulkRestore">
                         Restore
                     </p-button>
@@ -164,31 +165,64 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="trash"
-                        type="small danger icon"
+                        type="small light icon"
                         :onClick="bulkTrash">
                         Move to trash
                     </p-button>
 
                     <p-button
                         v-if="!trashVisible"
-                        type="small primary"
-                        :onClick="bulkPublish">
-                        Publish
-                    </p-button>
-
-                    <p-button
-                        v-if="!trashVisible"
-                        type="small outline"
-                        :onClick="bulkUnpublish">
-                        Unpublish
-                    </p-button>
-
-                    <p-button
-                        v-if="!trashVisible"
-                        type="small secondary"
+                        icon="trash"
+                        type="small light icon"
                         :onClick="bulkDuplicate">
                         Duplicate
                     </p-button>
+
+                    <div 
+                        v-if="!trashVisible"
+                        class="dropdown-wrapper">
+                        <p-button
+                            icon="trash"
+                            type="small light icon"
+                            @click.native.stop="toggleBulkDropdown">
+                            More
+                        </p-button>
+
+                        <ul 
+                            v-if="bulkDropdownVisible"
+                            class="dropdown">
+                            <li 
+                                v-if="selectedPostsNeedsStatus('published')"
+                                @click="bulkPublish">
+                                Publish
+                            </li>
+                            <li 
+                                v-if="selectedPostsNeedsStatus('draft')"
+                                @click="bulkUnpublish">
+                                Mark as draft
+                            </li>
+                            <li 
+                                v-if="selectedPostsNeedsStatus('featured')"
+                                @click="bulkFeatured">
+                                Mark as featured
+                            </li>
+                            <li 
+                                v-if="selectedPostsHaveStatus('featured')"
+                                @click="bulkUnfeatured">
+                                Mark as unfeatured
+                            </li>
+                            <li 
+                                v-if="selectedPostsNeedsStatus('hidden')"
+                                @click="bulkHide">
+                                Hide
+                            </li>
+                            <li 
+                                v-if="selectedPostsHaveStatus('hidden')"
+                                @click="bulkUnhide">
+                                Unhide
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </collection-header>
 
@@ -321,8 +355,9 @@ export default {
     mixins: [
         CollectionCheckboxes
     ],
-    data: function() {
+    data () {
         return {
+            bulkDropdownVisible: false,
             filterValue: '',
             selectedItems: [],
             orderBy: 'id',
@@ -330,7 +365,7 @@ export default {
         };
     },
     computed: {
-        items: function() {
+        items () {
             let items = this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
 
             items.forEach((item, i) => {
@@ -341,16 +376,16 @@ export default {
 
             return items;
         },
-        hasPosts: function() {
+        hasPosts () {
             return this.$store.state.currentSite.posts && !!this.$store.state.currentSite.posts.length;
         },
-        emptySearchResults: function() {
+        emptySearchResults () {
             return this.filterValue !== '' && !this.items.length;
         },
-        trashVisible: function() {
+        trashVisible () {
             return this.filterValue.indexOf('is:trashed') > -1;
         },
-        counters: function() {
+        counters () {
             if(!this.$store.state.currentSite || !this.$store.state.currentSite.posts) {
                 return {
                     all: 0,
@@ -375,7 +410,7 @@ export default {
             return this.$store.state.app.config.showModificationDateAsColumn;
         }
     },
-    mounted: function() {
+    mounted () {
         this.orderBy = this.$store.state.ordering.posts.orderBy;
         this.order = this.$store.state.ordering.posts.order;
 
@@ -384,6 +419,8 @@ export default {
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
+
+        this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
 
         // It is available when user comes from Tags/Authors views
         let newFilterValue = localStorage.getItem('publii-posts-search-value');
@@ -403,12 +440,12 @@ export default {
         });
     },
     methods: {
-        addNewPost: function() {
+        addNewPost () {
             let siteName = this.$route.params.name;
             this.$store.commit('setEditorOpenState', true);
             this.$router.push('/site/' + siteName + '/posts/editor/');
         },
-        editPost: function(id) {
+        editPost (id) {
             let siteName = this.$route.params.name;
 
             if(this.filterValue.trim() !== '') {
@@ -420,14 +457,14 @@ export default {
 
             return false;
         },
-        setFilter: function(newValue) {
+        setFilter (newValue) {
             if (this.$refs.search) {
                 this.$refs.search.isOpen = newValue !== '';
                 this.$refs.search.value = newValue;
                 this.$refs.search.updateValue();
             }
         },
-        filterCssClasses: function(type) {
+        filterCssClasses (type) {
             if(type !== 'all') {
                 return {
                     'filter-value': true,
@@ -440,23 +477,23 @@ export default {
                 'filter-active': this.filterValue.indexOf('is:') === -1
             };
         },
-        getModificationDate: function(timestamp) {
+        getModificationDate (timestamp) {
             return this.$moment(timestamp).fromNow();
         },
-        getCreationDate: function(timestamp) {
+        getCreationDate (timestamp) {
             if(this.$store.state.app.config.timeFormat == 12) {
                 return this.$moment(timestamp).format('MMM DD, YYYY  hh:mm a');
             } else {
                 return this.$moment(timestamp).format('MMM DD, YYYY  HH:mm');
             }
         },
-        bulkDelete: function() {
+        bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: 'Do you really want to remove selected posts? It cannot be undone.',
                 okClick: this.deleteSelected
             });
         },
-        deleteSelected: function() {
+        deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
 
             ipcRenderer.send('app-post-delete', {
@@ -479,18 +516,30 @@ export default {
                 }
             });
         },
-        bulkTrash: function() {
+        bulkTrash () {
             this.changeStateForSelected('trashed');
         },
-        bulkPublish: function() {
+        bulkPublish () {
             this.changeStateForSelected('published');
             this.changeStateForSelected('draft', true);
         },
-        bulkUnpublish: function() {
+        bulkUnpublish () {
             this.changeStateForSelected('published', true);
             this.changeStateForSelected('draft');
         },
-        bulkDuplicate: function() {
+        bulkFeatured () {
+            this.changeStateForSelected('featured');
+        },
+        bulkUnfeatured () {
+            this.changeStateForSelected('featured', true);
+        },
+        bulkHide () {
+            this.changeStateForSelected('hidden');
+        },
+        bulkUnhide () {
+            this.changeStateForSelected('hidden', true);
+        },
+        bulkDuplicate () {
             let itemsToDuplicate = this.getSelectedItems();
 
             ipcRenderer.send('app-post-duplicate', {
@@ -527,10 +576,10 @@ export default {
                 });
             });
         },
-        bulkRestore: function() {
+        bulkRestore () {
             this.changeStateForSelected('trashed', true);
         },
-        changeStateForSelected: function(status, inverse = false) {
+        changeStateForSelected (status, inverse = false) {
             let itemsToChange = this.getSelectedItems();
 
             this.$store.commit('changePostsStatus', {
@@ -578,11 +627,40 @@ export default {
                 orderBy: this.orderBy,
                 order: this.order
             });
+        },
+        toggleBulkDropdown () {
+            this.bulkDropdownVisible = !this.bulkDropdownVisible;
+        },
+        closeBulkDropdown () {
+            this.bulkDropdownVisible = false;
+        },
+        selectedPostsNeedsStatus (status) {
+            let selectedPosts = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedPosts.length) {
+                return false;
+            }
+
+            let postsWithoutGivenStatus = selectedPosts.filter(item => item.status.indexOf(status) === -1);
+
+            return !!postsWithoutGivenStatus.length;
+        },
+        selectedPostsHaveStatus (status) {
+            let selectedPosts = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedPosts.length) {
+                return false;
+            }
+
+            let postsWithGivenStatus = selectedPosts.filter(item => item.status.indexOf(status) > -1);
+
+            return !!postsWithGivenStatus.length;
         }
     },
     beforeDestroy () {
         this.$bus.$off('site-loaded', this.whenSiteLoaded);
         this.$bus.$off('posts-filter-value-changed');
+        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
     }
 }
 </script>
@@ -632,6 +710,10 @@ export default {
     }
 }
 
+.header {
+    overflow-y: visible!important;
+}
+
 .filters {
     font-size: 1.4rem;
     list-style-type: none;
@@ -663,6 +745,43 @@ export default {
 
         &:last-child {
             border-right: none;
+        }
+    }
+}
+
+.tools {
+    display: flex;
+
+    .dropdown-wrapper {
+        position: relative;
+
+        .dropdown {
+            background: $color-10;
+            border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(29, 39, 52, 0.15);
+            left: 0;
+            list-style-type: none;
+            margin: 0;
+            padding: 1.2rem 0;
+            position: absolute;
+            top: 4rem;
+            width: 20rem;
+            z-index: 1;
+
+            li {
+                color: $color-7;
+                cursor: pointer;
+                display: block;
+                font-size: 1.4rem;
+                height: 3rem;
+                line-height: 3rem;
+                padding: 0 2.4rem;
+
+                &:hover {
+                    background: $color-9;
+                    color: $color-5;
+                }
+            }
         }
     }
 }

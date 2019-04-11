@@ -73,7 +73,8 @@ export default {
                 'button-no-border-radius': types.indexOf('no-border-radius') > -1,
                 'button-disabled': types.indexOf('disabled') > -1 || this.disabled,
                 'button-disabled-with-events': types.indexOf('disabled-with-events') > -1,
-                'button-preloader': this.isPreloader
+                'button-preloader': this.isPreloader,
+                'button-light': types.indexOf('light') > -1
             }
         }
     }
@@ -328,6 +329,26 @@ export default {
         &.button-small {
             .preloader {
                 margin-top: 1rem;
+            }
+        }
+    }
+
+    &-light {
+        background: $color-10;
+        color: $color-7;
+
+        & > svg {
+            fill: $color-7;
+        }
+
+        &:active,
+        &:focus,
+        &:hover {
+            background: $color-9;
+            color: $color-5;
+
+            & > svg {
+                fill: $color-5;
             }
         }
     }
