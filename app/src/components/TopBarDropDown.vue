@@ -63,19 +63,19 @@ export default {
         }
     },
     mounted: function(e) {
-        this.$bus.$on('topbar-close-submenu-dropdown', () => {
-            this.submenuIsOpen = false;
-        });
+        this.$bus.$on('document-body-clicked', this.hideSubmenu);
     },
     methods: {
-        toggleSubmenu: function(e) {
+        hideSubmenu () {
+            this.submenuIsOpen = false;
+        },
+        toggleSubmenu (e) {
             e.stopPropagation();
-            this.$bus.$emit('topbar-close-submenu-sites');
             this.submenuIsOpen = !this.submenuIsOpen;
         }
     },
     beforeDestroy () {
-        this.$bus.$off('topbar-close-submenu-dropdown');
+        this.$bus.$off('document-body-clicked', this.hideSubmenu);
     }
 }
 </script>

@@ -264,7 +264,7 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.$bus.$on('topbar-close-submenu-dropdown', () => {
+        this.$bus.$on('document-body-clicked', () => {
             this.buttonDropdownVisible = false;
         });
 

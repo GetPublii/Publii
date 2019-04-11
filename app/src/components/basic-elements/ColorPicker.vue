@@ -65,7 +65,7 @@ export default {
         }, { immediate: true });
 
         this.pickerContent = this.value;
-        this.$bus.$on('topbar-close-submenu-dropdown', this.hide);
+        this.$bus.$on('document-body-clicked', this.hide);
     },
     methods: {
         getValue () {
@@ -76,9 +76,9 @@ export default {
             this.pickerVisible = !this.pickerVisible;
 
             if (this.pickerVisible) {
-                this.$bus.$off('topbar-close-submenu-dropdown', this.hide);
-                this.$bus.$emit('topbar-close-submenu-dropdown');
-                this.$bus.$on('topbar-close-submenu-dropdown', this.hide);
+                this.$bus.$off('document-body-clicked', this.hide);
+                this.$bus.$emit('document-body-clicked');
+                this.$bus.$on('document-body-clicked', this.hide);
             }
         },
         stopEventPropagation (e) {
@@ -89,7 +89,7 @@ export default {
         }
     },
     beforeDestroy () {
-        this.$bus.$off('topbar-close-submenu-dropdown', this.hide);
+        this.$bus.$off('document-body-clicked', this.hide);
     }
 }
 </script>

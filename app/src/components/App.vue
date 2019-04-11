@@ -208,11 +208,8 @@ export default {
 
         // Check for helper click events for TopBar
         integrateTopBar: function() {
-            let self = this;
-
-            document.body.addEventListener('click', function(e) {
-                self.$bus.$emit('topbar-close-submenu-sites');
-                self.$bus.$emit('topbar-close-submenu-dropdown');
+            document.body.addEventListener('click', e => {
+                this.$bus.$emit('document-body-clicked');
             });
         }
     },
