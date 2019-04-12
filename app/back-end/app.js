@@ -455,8 +455,8 @@ class App {
                 windowParams.y > electron.screen.getPrimaryDisplay().workAreaSize.height
             )
         ) {
-            windowParams.x = 50;
-            windowParams.y = 50;
+            windowParams.x = 0;
+            windowParams.y = 0;
         }
 
         if(!(/^win/).test(process.platform)) {
