@@ -1466,7 +1466,7 @@ class Renderer {
         }
 
         console.time("SITEMAP");
-        let sitemapGenerator = new Sitemap(this.outputDir, this.siteConfig, this.themeConfig);
+        let sitemapGenerator = new Sitemap(this.db, this.outputDir, this.siteConfig, this.themeConfig);
         await sitemapGenerator.create();
         console.timeEnd("SITEMAP");
     }
