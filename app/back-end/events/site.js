@@ -63,6 +63,10 @@ class SiteEvents {
                     !fs.existsSync(path.join(appInstance.sitesDir, config.settings.name)) &&
                     slug(config.settings.displayName) === config.settings.name
                 ) {
+                    if (appInstance.db) {
+                        appInstance.db.close();
+                    }
+
                     // If yes - rename the dir
                     delete appInstance.sites[siteName];
                     siteName = config.settings.name;
