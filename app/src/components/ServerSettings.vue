@@ -79,7 +79,7 @@
                       name="googlecloud" />
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'zip'" title="Manual deployment">
+                <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
