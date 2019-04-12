@@ -147,16 +147,17 @@
                     v-if="anyCheckboxIsSelected"
                     class="tools">
                     <p-button
-                        v-if="trashVisible"
-                        icon="trash"
+                        v-if="trashVisible"                        
+                        icon="delete"
                         type="small light icon"
+                        class="delete"
                         :onClick="bulkDelete">
                         Delete
                     </p-button>
 
                     <p-button
                         v-if="trashVisible"
-                        icon="trash"
+                        icon="restore"
                         type="small light icon"
                         :onClick="bulkRestore">
                         Restore
@@ -172,7 +173,7 @@
 
                     <p-button
                         v-if="!trashVisible"
-                        icon="trash"
+                        icon="duplicate"
                         type="small light icon"
                         :onClick="bulkDuplicate">
                         Duplicate
@@ -182,7 +183,7 @@
                         v-if="!trashVisible"
                         class="dropdown-wrapper">
                         <p-button
-                            icon="trash"
+                            icon="more"
                             type="small light icon"
                             @click.native.stop="toggleBulkDropdown">
                             More
@@ -244,15 +245,9 @@
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id)">
-                            <icon
-                                v-if="item.isTrashed"
-                                size="xs"
-                                name="trash"
-                                primaryColor="color-7"
-                                title="This post is trashed" />
+                            @click.prevent.stop="editPost(item.id)">                           
 
-                            {{ item.title }}
+                          {{ item.title }}
 
                             <icon
                                 v-if="item.isFeatured"
@@ -750,8 +745,52 @@ export default {
 }
 
 .tools {
+    background: $color-10;
     display: flex;
-
+    
+    .button {
+        padding-left: 4rem;
+        position: relative;
+        z-index: 0;
+        
+         &::before {
+             content: "";
+             background: $color-9;  border-radius: 3px;
+             display: block;
+             left: -2px;
+             opacity: 0;
+             position: absolute;
+             right: 0;           
+             height: 100%;
+             top: 0; 
+             transition: all .15s cubic-bezier(0.4,0.0,0.2,1);
+             transform: scale(.5);
+             width: calc(100% + 2px);
+             z-index: -1;
+        }
+        
+        & + .button {
+            margin: 0; position: relative;
+        }
+        
+        &:hover { 
+            background: none;
+            
+            &::before {
+                opacity: 1; 
+                transform: scale(1);
+            }
+        }   
+        
+        &.delete {
+            color: $danger-color;
+            
+           & > svg {
+                fill: $danger-color;
+            }
+        }
+    }
+    
     .dropdown-wrapper {
         position: relative;
 
@@ -762,10 +801,10 @@ export default {
             left: 0;
             list-style-type: none;
             margin: 0;
-            padding: 1.2rem 0;
+            padding: 1rem 0;
             position: absolute;
             top: 4rem;
-            width: 20rem;
+            width: auto;
             z-index: 1;
 
             li {
@@ -773,11 +812,11 @@ export default {
                 cursor: pointer;
                 display: block;
                 font-size: 1.4rem;
-                height: 3rem;
-                line-height: 3rem;
-                padding: 0 2.4rem;
+                font-weight: 500;
+                padding: .8rem 2.4rem;
+                white-space: nowrap;
 
-                &:hover {
+                &:hover { 
                     background: $color-9;
                     color: $color-5;
                 }

@@ -336,9 +336,12 @@ export default {
     &-light {
         background: $color-10;
         color: $color-7;
+        font-weight: 500;
+        padding-left: 3.8rem;
 
         & > svg {
             fill: $color-7;
+            transition: all .25s ease-out;
         }
 
         &:active,
@@ -350,7 +353,7 @@ export default {
             & > svg {
                 fill: $color-5;
             }
-        }
+        }      
     }
 
     &.button-disabled,
