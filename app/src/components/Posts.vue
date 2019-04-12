@@ -68,7 +68,8 @@
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, false)" />
+                        :onClick="toggleAllCheckboxes.bind(this, false)"
+                        @click.native="$bus.$emit('document-body-clicked')" />
                 </collection-cell>
 
                 <collection-cell :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
@@ -149,8 +150,7 @@
                     <p-button
                         v-if="trashVisible"                        
                         icon="delete"
-                        type="small light icon"
-                        class="delete"
+                        type="small light icon delete"
                         :onClick="bulkDelete">
                         Delete
                     </p-button>
@@ -184,7 +184,7 @@
                         class="dropdown-wrapper">
                         <p-button
                             icon="more"
-                            type="small light icon"
+                            :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
                             @click.native.stop="toggleBulkDropdown">
                             More
                         </p-button>
@@ -779,14 +779,6 @@ export default {
             &::before {
                 opacity: 1; 
                 transform: scale(1);
-            }
-        }   
-        
-        &.delete {
-            color: $danger-color;
-            
-           & > svg {
-                fill: $danger-color;
             }
         }
     }

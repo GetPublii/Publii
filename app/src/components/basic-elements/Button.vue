@@ -74,7 +74,9 @@ export default {
                 'button-disabled': types.indexOf('disabled') > -1 || this.disabled,
                 'button-disabled-with-events': types.indexOf('disabled-with-events') > -1,
                 'button-preloader': this.isPreloader,
-                'button-light': types.indexOf('light') > -1
+                'button-light': types.indexOf('light') > -1,
+                'button-active': types.indexOf('active') > -1,
+                'button-delete': types.indexOf('delete') > -1
             }
         }
     }
@@ -115,7 +117,8 @@ export default {
 
     &:active,
     &:focus,
-    &:hover {
+    &:hover,
+    &.button-active {
         background: lighten($color-1, 10%);
         color: $color-10;
     }
@@ -126,7 +129,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: $color-9;
             color: $color-1;
         }
@@ -138,7 +142,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: lighten($color-2, 10%);
             color: $color-10;
         }
@@ -152,7 +157,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: $color-9;
             color: $color-6;
         }
@@ -164,7 +170,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: lighten($color-3, 10%);
             color: $color-10;
         }
@@ -175,7 +182,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: $color-1;
             color: $color-10;
         }
@@ -188,7 +196,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: transparent;
             box-shadow: inset 0 0 0 2px darken($color-8, 20%);
             color: $color-5;
@@ -220,7 +229,8 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: $color-5;
         }
 
@@ -239,7 +249,8 @@ export default {
 
             &:active,
             &:focus,
-            &:hover {
+            &:hover,
+            &.button-active {
                 background: transparent;
                 box-shadow: inset 0 0 0 2px darken($color-8, 20%);
                 color: $color-5;
@@ -346,14 +357,23 @@ export default {
 
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &.button-active {
             background: $color-9;
             color: $color-5;
 
             & > svg {
                 fill: $color-5;
             }
-        }      
+        }  
+
+        &.button-delete {
+            color: $danger-color;
+            
+            & > svg {
+                fill: $danger-color;
+            }
+        }    
     }
 
     &.button-disabled,

@@ -31,7 +31,7 @@ export default {
 @media (max-width: 1350px) {
     .header {
         .tools {
-            & > .button {
+            .button {
                 &-small {
                     font-size: 1.3rem;
                     height: 3rem;
