@@ -111,8 +111,10 @@
 
                         <draggable
                             v-if="item.items.length"
-                            element="ol"
-                            :options="{ group: 'menu-items', chosenClass: 'is-chosen', ghostClass: 'is-ghost' }"
+                            tag="ol"
+                            group="menu-items"
+                            chosenClass="is-chosen"
+                            ghostClass="is-ghost"
                             class="menu-item-list"
                             v-model="$store.state.currentSite.menuStructure[index].items"
                             :key="'draggable-menu-items-levle0-' + index"

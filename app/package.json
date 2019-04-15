@@ -69,7 +69,7 @@
     "vue-color": "^2.4.5",
     "vue-multiselect": "^2.0.8",
     "vue-router": "^3.0.1",
-    "vuedraggable": "^2.16.0",
+    "vuedraggable": "^2.20.0",
     "vuex": "^3.0.1",
     "wpautop": "^1.0.0",
     "xml2json": "^0.11.0"

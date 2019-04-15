@@ -49,8 +49,10 @@
         </div>
 
         <draggable
-            element="ol"
-            :options="{ group: 'menu-items', chosenClass: 'is-chosen', ghostClass: 'is-ghost'  }"
+            tag="ol"
+            group="menu-items"
+            chosenClass="is-chosen"
+            ghostClass="is-ghost"
             :class="{ 'menu-item-list': true }"
             v-model="itemsList"
             :key="'draggable-menu-items-' + id"
