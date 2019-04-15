@@ -1,6 +1,7 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
 const sqlString = require('sqlstring');
+const stripTags = require('striptags');
 
 /**
  * Class used create context
@@ -29,6 +30,10 @@ class RendererContextPost extends RendererContext {
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
         this.canonicalUrl = this.post.url;
         this.metaRobots = '';
+
+        if (this.siteConfig.advanced.postMetaDescription === '') {
+            this.metaDescription = stripTags(this.post.excerpt).replace(/\n/gmi, '');
+        }
 
         if(this.metaData && this.metaData.value) {
             let results = JSON.parse(this.metaData.value);

@@ -62,6 +62,7 @@
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^1.0.5",
+    "striptags": "^3.1.1",
     "tar": "^2.2.1",
     "transliteration": "^1.6.2",
     "unzipper": "^0.9.10",
