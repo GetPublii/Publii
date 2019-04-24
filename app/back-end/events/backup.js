@@ -130,10 +130,14 @@ class BackupEvents {
         });
 
         backupProcess.on('message', function(data) {
-            if(data.type === 'app-backup-restore-success') {
+            if (data.type === 'app-backup-restore-success') {
                 event.sender.send('app-backup-restored', {
                     status: true
                 });
+            } else if (data.type === 'app-backup-restore-close-db') {
+                if (this.app.db) {
+                    this.app.db.close();
+                }
             } else {
                 event.sender.send('app-backup-restored', {
                     status: false,

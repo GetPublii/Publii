@@ -286,7 +286,12 @@ class Backup {
                     return;
                 }
 
-                // Remove site dir contents
+                // Close DB connection and remove site dir contents
+                process.send({
+                    type: 'app-backup-restore-close-db',
+                    status: true
+                });
+
                 fs.emptyDirSync(destinationPath);
 
                 // Move files from the temp dir to the site dir
