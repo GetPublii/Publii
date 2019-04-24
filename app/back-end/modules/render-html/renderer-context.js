@@ -215,10 +215,14 @@ class RendererContext {
             siteNameValue = this.siteConfig.displayName;
         }
 
+        if (fullURL.substr(-1) !== '/' && fullURL.substr(-5) !== '.html') {
+            fullURL = fullURL + '/';
+        }
+
         this.context = {
             website: {
                 url: fullURL,
-                baseUrl: fullURL.replace('/index.html', ''),
+                baseUrl: fullURL.replace('/index.html', '/'),
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
                 pageUrl: '',
