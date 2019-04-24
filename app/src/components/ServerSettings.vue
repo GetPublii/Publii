@@ -109,7 +109,19 @@
                         v-if="httpProtocolSelected === 'file'"
                         class="note"
                         slot="note">
-                        The "file://"" protocol is useful only if you are using manual deployment method for the intranet websites.
+                        The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
+                    </small>
+                    <small
+                        v-if="httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs'"
+                        class="note"
+                        slot="note">
+                        The "dat://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
+                    </small>
+                    <small
+                        v-if="httpProtocolSelected === '//'"
+                        class="note"
+                        slot="note">
+                        Please remember that while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. can not work properly.
                     </small>
                 </field>
 
@@ -793,7 +805,10 @@ export default {
             httpProtocols: {
                 'http': 'http://',
                 'https': 'https://',
-                'file': 'file://'
+                'file': 'file://',
+                'dat': 'dat://',
+                'ipfs': 'ipfs://',
+                '//': '//'
             },
             httpProtocolSelected: '',
             deploymentMethods: {
@@ -909,6 +924,10 @@ export default {
 
             if (this.httpProtocolSelected === 'file' && this.deploymentMethodSelected !== 'manual') {
                 this.httpProtocolSelected = 'https';
+            }
+
+            if (this.httpProtocolSelected === '//') {
+                return '//' + domain;
             }
 
             return this.httpProtocolSelected + '://' + domain;
