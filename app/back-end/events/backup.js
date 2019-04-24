@@ -129,7 +129,7 @@ class BackupEvents {
             tempDir: tempDir
         });
 
-        backupProcess.on('message', function(data) {
+        backupProcess.on('message', data => {
             if (data.type === 'app-backup-restore-success') {
                 event.sender.send('app-backup-restored', {
                     status: true
