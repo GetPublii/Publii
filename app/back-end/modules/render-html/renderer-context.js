@@ -236,7 +236,12 @@ class RendererContext {
             },
             renderer: {
                 previewMode: this.renderer.previewMode,
-                ampMode: this.renderer.ampMode
+                ampMode: this.renderer.ampMode,
+                theme: {
+                    name: this.themeConfig.name,
+                    version: this.themeConfig.version,
+                    author: this.themeConfig.author
+                }
             },
             pagination: false,
             headCustomCode: this.siteConfig.advanced.customHeadCode || '',
