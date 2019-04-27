@@ -112,6 +112,73 @@ class Site {
     }
 
     /*
+     * check if regenerate thumbnails is required
+     */
+    regenerateThumbnailsIsRequired(sender) {
+        let themesHelper = new Themes(this.application, { site: this.name });
+        let themeName = themesHelper.currentTheme();
+    
+        // If there is no theme selected
+        if(themeName === 'not selected') {
+            sender.send('app-site-regenerate-thumbnails-required-status', {
+                message: false
+            });
+
+            return;
+        }
+
+        // If there is no responsive images configuration
+        let themeConfig = UtilsHelper.loadThemeConfig(path.join(this.siteDir, 'input'), themeName);
+
+        if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
+            sender.send('app-site-regenerate-thumbnails-required-status', {
+                message: false
+            });
+
+            return;
+        }
+
+        // Remove all old responsive directories
+        let mediaPath = path.join(this.siteDir, 'input', 'media');
+        let catalogs = fs.readdirSync(path.join(mediaPath, 'posts'));
+        let galleryCatalogs = [];
+        catalogs = catalogs.map(catalog => 'posts/' + catalog);
+        catalogs.push('website');
+        catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
+
+        for(let catalog of catalogs) {
+            if(catalog.indexOf('/.') > -1) {
+                continue;
+            }
+
+            // Add gallery catalogs
+            let galleryFullPath = path.join(mediaPath, catalog, 'gallery');
+
+            if(UtilsHelper.dirExists(galleryFullPath)) {
+                let galleryShortPath = path.join(catalog, 'gallery');
+                galleryCatalogs.push(galleryShortPath);
+            }
+        }
+
+        // Add gallery catalogs
+        catalogs = catalogs.concat(galleryCatalogs);
+
+        // Count images for the process
+        let numberOfImagesToRegenerate = this.getNumberOfImagesToRegenerate(mediaPath, catalogs);
+
+        // If there is no posts - abort
+        if(numberOfImagesToRegenerate === 0) {
+            sender.send('app-site-regenerate-thumbnails-required-status', {
+                message: false
+            });
+        } else {
+            sender.send('app-site-regenerate-thumbnails-required-status', {
+                message: true
+            });
+        }
+    }
+
+    /*
      * Regenerate thumbnails
      */
     regenerateThumbnails(sender) {

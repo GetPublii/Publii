@@ -1537,12 +1537,30 @@ export default {
                 if(data.status === true) {
                     if(data.themeChanged && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
                         this.saved(newSettings, siteName, showPreview);
-                        this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: false });
+                        
+                        ipcRenderer.send('app-site-regenerate-thumbnails-required', {
+                            name: this.$store.state.currentSite.config.name
+                        });
+
+                        ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
+                            if (data.message) {
+                                this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: false });
+                            }
+                        });
                     } else {
                         this.saved(newSettings, siteName, showPreview);
 
                         if(this.previousQuality !== this.$store.state.currentSite.config.advanced.imagesQuality) {
-                            this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: true });
+                            ipcRenderer.send('app-site-regenerate-thumbnails-required', {
+                                name: this.$store.state.currentSite.config.name
+                            });
+
+                            ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
+                                if (data.message) {
+                                    this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: true });
+                                }
+                            });
+
                             this.previousQuality = this.$store.state.currentSite.config.advanced.imagesQuality;
                         }
                     }

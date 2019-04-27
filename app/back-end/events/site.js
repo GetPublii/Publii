@@ -355,6 +355,14 @@ class SiteEvents {
         });
 
         /*
+         * Regenerate thumbnails stauts
+         */
+        ipcMain.on('app-site-regenerate-thumbnails-required', function(event, config) {
+            let site = new Site(appInstance, config, true);
+            site.regenerateThumbnailsIsRequired(event.sender);
+        });
+
+        /*
          * Delete website
          */
         ipcMain.on('app-site-delete', function (event, config) {
