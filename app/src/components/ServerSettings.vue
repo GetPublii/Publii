@@ -122,13 +122,7 @@
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
-                        Please remember that while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. can not work properly.
-                    </small>
-                    <small
-                        v-if="deploymentSettings.relativeUrls"
-                        class="note"
-                        slot="note">
-                        Please remember that while using relative URLs, some features like Open Graph tags, sharing buttons etc. can not work properly.
+                        Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -139,10 +133,16 @@
                         slot="field"
                         id="relative-urls"
                         key="relative-urls"
-                        v-model="deploymentSettings.relativeUrls" />
+                        v-model="deploymentSettings.relativeUrls"
+                        @click.native="toggleDomainName" />
                     <template slot="second-label">
                         Use relative URLs
                     </template>
+                    <small
+                        class="note"
+                        slot="note">
+                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                    </small>
                 </field>
 
                 <field
@@ -807,6 +807,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { shell, ipcRenderer } from 'electron';
 import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
@@ -893,7 +894,7 @@ export default {
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
-        this.deploymentSettings = Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment)));
+        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment))));
 
         setTimeout(() => {
             this.setPortValue();
@@ -929,6 +930,14 @@ export default {
         },
         fullDomainName () {
             let domain = this.prepareDomain();
+
+            if (domain === '' && this.deploymentSettings.relativeUrls) {
+                domain = '/';
+            }
+
+            if (this.deploymentSettings.relativeUrls) {
+                return domain;
+            }
 
             if(this.deploymentMethodSelected === 'github-pages') {
                 if(domain.indexOf('github.io') > -1) {
@@ -1188,6 +1197,13 @@ export default {
 
             if (pos !== -1) {
                 this.errors.splice(pos, 1);
+            }
+        },
+        toggleDomainName () {
+            if (this.deploymentSettings.relativeUrls) {
+                this.domain = '/';
+            } else {
+                this.domain = '';
             }
         }
     }

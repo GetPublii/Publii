@@ -351,6 +351,8 @@ class Renderer {
 
         if(this.previewMode) {
             this.siteConfig.domain = 'file://' + this.outputDir;
+        } else if (this.siteConfig.domain === '/') {
+            this.siteConfig.domain = '';
         }
 
         if(
