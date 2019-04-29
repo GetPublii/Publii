@@ -115,6 +115,7 @@ const AstCurrentSiteConfig = {
     },
     deployment: {
         protocol: '',
+        relativeUrls: false,
         port: '',
         server: '',
         username: '',

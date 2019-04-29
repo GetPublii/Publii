@@ -94,6 +94,7 @@
                     id="domain"
                     label="Domain">
                     <dropdown
+                        v-if="!deploymentSettings.relativeUrls"
                         slot="field"
                         id="http-protocol"
                         key="httpProtocol"
@@ -106,23 +107,42 @@
                         key="domain"
                         v-model="domain" />
                     <small
-                        v-if="httpProtocolSelected === 'file'"
+                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
                         class="note"
                         slot="note">
                         The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
                     </small>
                     <small
-                        v-if="httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs'"
+                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs')"
                         class="note"
                         slot="note">
                         The "dat://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
                     </small>
                     <small
-                        v-if="httpProtocolSelected === '//'"
+                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
                         Please remember that while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. can not work properly.
                     </small>
+                    <small
+                        v-if="deploymentSettings.relativeUrls"
+                        class="note"
+                        slot="note">
+                        Please remember that while using relative URLs, some features like Open Graph tags, sharing buttons etc. can not work properly.
+                    </small>
+                </field>
+
+                <field
+                    id="relative-urls"
+                    label=" ">
+                    <switcher
+                        slot="field"
+                        id="relative-urls"
+                        key="relative-urls"
+                        v-model="deploymentSettings.relativeUrls" />
+                    <template slot="second-label">
+                        Use relative URLs
+                    </template>
                 </field>
 
                 <field
@@ -1225,6 +1245,10 @@ export default {
                 transition: inherit;
             }
         }
+    }
+
+    #relative-urls {
+        margin-top: 0;
     }
 }
 </style>
