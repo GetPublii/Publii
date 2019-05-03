@@ -32,7 +32,7 @@
  * * ordering - order direction
  * * tag_as - specify if we select by tag id or slug
  * 
- * {{#getPostsByTags "count=5&allowed=hidden,featured&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=asc"}}
+ * {{#getPostsByTags "count=5&allowed=hidden,featured&tag_as=id&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=asc"}}
  *    <h2>{{ title }}</h2>
  *    <div>{{{ excerpt }}}</div>
  * {{/getPostsByTags}}
