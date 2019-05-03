@@ -52,7 +52,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         let ordering = 'desc';
         let tagAs = 'slug';
 
-        if (typeof queryString === 'string') {
+        if (typeof queryString === 'string' && queryString.indexOf('=') > -1) {
             options = selectedTags; // have to override option with second argument as query string syntax uses only one argument
             queryString = queryString.split('&').map(pair => pair.split('='));
             let queryStringData = {};
