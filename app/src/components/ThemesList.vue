@@ -2,13 +2,13 @@
     <div
         @drop.stop.prevent="uploadTheme"
         @dragleave.stop.prevent="hideOverlay"
+        @dragenter.stop.prevent="showOverlay"
         @dragover.stop.prevent="showOverlay"
-        @drag.stop.prevent
+        @drag.stop.prevent="showOverlay"
         @dragstart.stop.prevent
         @dragend.stop.prevent
-        @dragenter.stop.prevent
-        class="themes">
-        <div 
+        :class="{ 'themes': true, 'theme-is-over': themeIsOver }">
+        <div
             class="add-more-theme">
                 <a href="https://marketplace.getpublii.com/" target="_blank">
                     <icon                   
@@ -19,6 +19,7 @@
                     <h3>Get more themes</h3>  
                 </a>
         </div>
+
         <theme-item
             v-for="(theme, index) in themes"
             :themeData="theme"
@@ -47,18 +48,20 @@ export default {
         'theme-item': ThemesListItem
     },
     computed: {
-        themes: function() {
+        themes () {
             return this.$store.getters.themes;
         }
     },
     methods: {
-        showOverlay: function(e) {
+        showOverlay (e) {
             this.themeIsOver = true;
         },
-        hideOverlay: function(e) {
-            this.themeIsOver = false;
+        hideOverlay (e) {
+            if (e.target.classList.contains('themes')) {
+                this.themeIsOver = false;
+            }
         },
-        uploadTheme: function(e) {
+        uploadTheme (e) {
             this.themeIsOver = false;
 
             ipcRenderer.send('app-theme-upload', {
@@ -67,7 +70,7 @@ export default {
 
             ipcRenderer.once('app-theme-uploaded', this.uploadedTheme);
         },
-        uploadedTheme: function(event, data) {
+        uploadedTheme (event, data) {
             this.$store.commit('replaceAppThemes', data.themes);
             this.$store.commit('updateSiteThemes');
 
@@ -101,6 +104,12 @@ export default {
     grid-gap: 5rem 3rem; 
     overflow: hidden;
     position: relative;
+
+    &.theme-is-over {
+        & > * {
+            pointer-events: none;
+        }
+    }
 }
 
 .add-more-theme {   
