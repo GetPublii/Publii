@@ -276,7 +276,6 @@ class WxrParser {
         }
 
         if(items && !items.length) {
-            this.createTag(items, i, 1);
             return;
         }
 
