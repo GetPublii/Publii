@@ -323,7 +323,8 @@ export default {
             return false;
         },
         createBackup: function() {
-            let defaultFilename = 'backup-' + this.$moment().format('MM-DD-YYYY-HH-mm-ss');
+            let siteNamePrefix = this.$store.state.currentSite.config.name;
+            let defaultFilename = siteNamePrefix + '-' + this.$moment().format('MM-DD-YYYY-HH-mm-ss');
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
