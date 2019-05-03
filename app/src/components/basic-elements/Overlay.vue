@@ -30,43 +30,30 @@ export default {
 /*
  * Overlay
  */
-.overlay {   
-    background: rgba($color-1, .17);    
-    border: 2px solid $color-1;
-    bottom: -2rem;
-    height: calc(100% + 4rem);         
-    left: -2rem;
-    opacity: 1;
+.overlay {
+    align-items: center;
+    background: rgba(255, 255, 255, .85);
+    bottom: 0;
+    color: $color-7;
+    display: flex;   
+    font-weight: bold;
+    justify-content: center;
+    left: 0;
     position: absolute;
-    right: -2rem;
-    text-align: center;
-    top: -2rem;
-    width: calc(100% + 4rem);
-    z-index: 10000;
-            
-    & > div {
-        box-shadow: 0 0 3px rgba(black, .2);
-        background: $color-1;
-        border-radius: 3px;
-        color: $color-10;
-        font-size: 1.6rem;
-        font-weight: 500;
-        height: auto;
+    right: 0;
+    top: 0;
+
+    &-icon {
+        font-size: 2rem;
         left: 50%;
-        line-height: 1.5;                
-        padding: 1.8rem 6rem 1.8rem 4rem;
         position: absolute;
-        top: 50%; 
+        top: 50%;
         transform: translateX(-50%) translateY(-50%);
-        width: auto;              
     }
-            
-    .upload-icon {
-        display: inline-block; 
-        fill: $color-10;                
-        margin-right: 2rem;                
-        vertical-align: bottom;
+
+    &.has-border {
+        border: 3px dashed $color-9;
+        border-radius: 10px;
     }
 }
-    
 </style>

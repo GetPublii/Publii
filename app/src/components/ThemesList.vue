@@ -26,13 +26,9 @@
             :key="index" />
 
         <overlay
-            v-if="themeIsOver">
-            <div>
-                <svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24">
-                    <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/>
-                </svg>
-                Drag your theme here
-            </div>
+            v-if="themeIsOver"
+            :hasBorder="true">
+            Drop your theme here
         </overlay>
     </div>
 </template>
@@ -105,7 +101,8 @@ export default {
 .themes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 5rem 3rem;     
+    grid-gap: 5rem 3rem; 
+    overflow: hidden;
     position: relative;
 
     &.theme-is-over {
