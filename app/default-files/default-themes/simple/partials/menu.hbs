@@ -1,22 +1,54 @@
 {{#unless level}}
-<nav class="navbar js-navbar">
-    <button class="navbar__toggle js-navbar__toggle">{{ translate 'partials.menu.label' }}</button>
-{{/unless}}
-    <ul{{#if level}} class="navbar__submenu" {{else}} class="navbar__menu"{{/if}}>
+   <nav class="navbar js-navbar">
+      <button
+         class="navbar__toggle js-toggle"
+         aria-label="{{ translate 'partials.menu.label' }}"
+         aria-haspopup="true"
+         aria-expanded="false">
+         <span class="navbar__toggle-box">
+            <span class="navbar__toggle-inner">{{ translate 'partials.menu.label' }}</span>
+         </span>
+      </button>
+   {{/unless}}
+    <ul{{#if level}} class="navbar__submenu" aria-hidden="true" {{else}} class="navbar__menu"{{/if}}>
         {{#each items}}
-            <li{{menuItemClasses}}>
+             <li{{menuItemClasses}}>
             {{#if link}}
-            <a href="{{menuUrl}}"{{#if title}} title="{{title}}"{{/if}}{{#if target}} target="{{target}}"{{/if}}{{#if rel}} rel="{{rel}}"{{/if}}>{{label}}</a>
+               <a
+                  href="{{menuUrl}}"
+                  {{#if title}}
+                     title="{{title}}"
+                  {{/if}}
+                  {{#if target}}
+                     target="{{target}}"
+                  {{/if}}
+                  {{#if rel}}
+                     rel="{{rel}}"
+                  {{/if}}
+                  {{#if items}} 
+                     aria-haspopup="true"
+                  {{/if}}>
+                  {{label}}
+              </a>
             {{else}}
-            <span{{#if title}} title="{{title}}"{{/if}}>{{label}}</span>
+               <span 
+                  class="is-separator"
+                  {{#if title}}
+                     title="{{title}}"
+                  {{/if}} 
+                  {{#if items}} 
+                     aria-haspopup="true"
+                  {{/if}}>
+                  {{label}}
+               </span>
             {{/if}}
 
             {{#if items}}
-                {{> menu}}
+               {{> menu}}
             {{/if}}
-        </li>
+         </li>
         {{/each}}
     </ul>
-{{#unless level}}
-</nav>
+   {{#unless level}}
+   </nav>
 {{/unless}}

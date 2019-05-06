@@ -26,7 +26,7 @@ const AstCurrentSiteConfig = {
         twitterCardsEnabled: 1,
         twitterCardsType: 'summary',
         twitterUsername: '',
-        metaTitle: 'My blog - %sitename',
+        metaTitle: '%sitename',
         metaDescription: '',
         noIndexThisPage: false,
         homepageNoIndexPagination: false,
@@ -110,10 +110,12 @@ const AstCurrentSiteConfig = {
             behaviour: 'badge',
             badgeLabel: 'Cookie Policy',
             behaviourLink: '#cookie-settings'
-        }
+        },
+        relatedPostsOrder: 'default'
     },
     deployment: {
         protocol: '',
+        relativeUrls: false,
         port: '',
         server: '',
         username: '',

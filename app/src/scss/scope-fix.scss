@@ -22,82 +22,80 @@
 }
 
 /**
- * vue-multiselect in post editor
+ * vue-multiselect
  */
-.post-editor {
-    .multiselect__tags {
-        padding: 0 4rem .5rem 0.5rem;
+.multiselect__tags {
+    padding: 0 4rem .5rem 0.5rem;
 
-        &-wrap {
-            display: inline;
-        }
+    &-wrap {
+        display: inline;
+    }
+}
+
+.multiselect__tag {
+    background: $color-helper-8;
+    border: none;
+    border-radius: 3px;
+    color: $color-4;
+    display: inline-block;
+    font-size: 1.4rem;
+    font-style: italic;
+    font-weight: 400;
+    margin: .5rem .5rem 0 0;
+    padding: 7px 10px;
+    vertical-align: middle;
+
+    & > span {
+        display: inline-block;
+        height: 2.4rem;
+        line-height: 2.4rem;
     }
 
-    .multiselect__tag {
-        background: $color-helper-8;
-        border: none;
-        border-radius: 3px;
-        color: $color-4;
+    &-icon {
+        cursor: pointer;
         display: inline-block;
-        font-size: 1.4rem;
-        font-style: italic;
-        font-weight: 400;
-        margin: .5rem .5rem 0 0;
-        padding: 7px 10px;
-        vertical-align: middle;
+        float: left;
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-left: 0;
+        margin-right: 5px;
+        position: static;
+        width: 10px;
 
-        & > span {
-            display: inline-block;
-            height: 2.4rem;
-            line-height: 2.4rem;
+        &:after {
+            color: #999!important;
         }
 
-        &-icon {
-            cursor: pointer;
-            display: inline-block;
-            float: left;
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin-left: 0;
-            margin-right: 5px;
-            position: static;
-            width: 10px;
+        &:focus,
+        &:hover {
+            background: transparent;
 
             &:after {
-                color: #999!important;
-            }
-
-            &:focus,
-            &:hover {
-                background: transparent;
-
-                &:after {
-                    color: #333!important;
-                }
+                color: #333!important;
             }
         }
     }
+}
 
-    .multiselect__input {
-        height: 45px;
-        line-height: 45px;
-        margin-top: .75rem;
+.multiselect__input {
+    height: 45px;
+    line-height: 45px;
+    margin-top: .75rem;
+}
+
+.multiselect__select {
+    top: 1px;
+    padding: 4px 6px 4px 0;
+
+    &:before {
+        border-color: $color-7 transparent transparent;
+        border-width: 6px 5px;
     }
+}
 
-    .multiselect__select {
-        top: 1px;
-        padding: 4px 6px 4px 0;
-
-        &:before {
-            border-color: $color-4 transparent transparent;
-            border-width: 6px 5px;
-        }
-    }
-
-    .multiselect__option--selected {
-        color: $color-5;
-        font-weight: 600;
-    }
+.multiselect__option--selected {
+    color: $color-5;
+    font-weight: 600;
 }
 
 /**

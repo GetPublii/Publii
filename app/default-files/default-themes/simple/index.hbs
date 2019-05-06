@@ -1,80 +1,163 @@
 {{> head}}
 {{> top}}
-<main>
-    <section class="hero">
-        {{#if @config.custom.uploadHero}}
+{{#checkIf @config.custom.frontSource '==' "post" }}
+   {{> frontpage-post}}
+{{else}}
+   <main>
+      <div class="hero">
+         {{#if @config.custom.uploadHero}}
             {{#if @config.custom.uploadHeroCaption}}
-                <figure class="hero__wrap">                    
+               {{#if @config.custom.lazyLoad}}
+                  <figure class="hero__image">
                      <img
-                            src="{{@config.custom.uploadHero}}"
-                            {{responsiveSrcSet @config.custom.uploadHero}}
-                            {{responsiveSizes}}
-                            alt="{{@config.custom.uploadHeroAlt}}">                    
-                    <figcaption>
+                        class="hero__image-img lazyload"
+                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        data-sizes="auto"
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                     <figcaption>
                         {{@config.custom.uploadHeroCaption}}
-                    </figcaption>
-                </figure>
+                     </figcaption>
+                  </figure>
+               {{else}}
+                  <figure class="hero__image hero__image--overlay">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                     <figcaption>
+                        {{@config.custom.uploadHeroCaption}}
+                     </figcaption>
+                  </figure>
+               {{/if}}
             {{else}}
-                <div class="hero__wrap">                   
-                        <img
-                            src="{{@config.custom.uploadHero}}"
-                            {{responsiveSrcSet @config.custom.uploadHero}}
-                            {{responsiveSizes}}
-                            alt="{{@config.custom.uploadHeroAlt}}">                    
-                </div>
+               {{#if @config.custom.lazyLoad}}
+                  <div class="hero__image">
+                     <img
+                        class="hero__image-img lazyload"
+                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        data-sizes="auto"
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{else}}
+                  <div class="hero__image hero__image--overlay">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{/if}}
             {{/if}}
-        {{/if}}
-        {{#if @config.custom.textHero}}
-            <header class="hero__text">
-                {{{@config.custom.textHero}}}
+         {{/if}}
+         {{#if @config.custom.textHero}}
+            <header class="hero__content">
+               <div class="wrapper">
+                  {{{@config.custom.textHero}}}
+                  {{#if @config.custom.siteOwner}}
+                     {{#siteOwner}}
+                        <div class="post__meta post__meta--author">
+                           {{#if avatar}}
+                              <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
+                           {{/if}}
+                           <a href="{{url}}" class="feed__author invert">{{name}}</a>
+                        </div>
+                     {{/siteOwner}}
+                  {{/if}}
+               </div>
             </header>
-        {{/if}}
-    </section>
-    <div class="category">
-        {{#each posts}}
-            <article>
-                <header>
-                    {{#checkIfAny @config.custom.frontAvatar @config.custom.frontAuthor @config.custom.frontDate}}
-                        <p class="category__post-meta">
-                            {{#author}}
-                                {{#if @config.custom.frontAvatar}}
-                                    {{#if avatar}}
-                                        <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
-                                    {{/if}}
-                                {{/if}}
-                                {{#if @config.custom.frontAuthor}}
-                                    <a href="{{url}}" class="inverse" title="{{name}}">{{name}}</a>,
-                                {{/if}}
-                            {{/author}}
-                            {{#if @config.custom.frontDate}}
-                                <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                                    {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                        {{date createdAt @config.custom.formatDate}}
-                                    {{else}}
-                                        {{date createdAt @config.custom.formatDateCustom}}
-                                    {{/checkIf}}
-                                </time>
-                            {{/if}}
-                        </p>
-                    {{/checkIfAny}}
-                    <h2>
-                        <a href="{{url}}" class="inverse">
-                            {{title}}
-                        </a>
-                    </h2>
-                </header>
-                {{#if hasCustomExcerpt}}
-                   {{{ excerpt }}}
-                {{else}}
-                   <p>{{{ excerpt }}}</p>
-                {{/if}}
-                {{#if @config.custom.frontReadMore}}
-                    <a href="{{url}}" class="u-readmore">
+         {{/if}}
+      </div>
+      <div class="feed">
+         {{#each posts}}
+            <article class="feed__item">
+               <header class="wrapper">
+                  {{#checkIfAny @config.custom.frontAvatar @config.custom.frontAuthor @config.custom.frontDate}}
+                     <div class="feed__meta">
+                        {{#author}}
+                           {{#if @config.custom.frontAvatar}}
+                              {{#if avatar}}
+                                 <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
+                              {{/if}}
+                           {{/if}}
+                           {{#if @config.custom.frontAuthor}}
+                              <a href="{{url}}" class="feed__author invert">{{name}}</a>
+                           {{/if}}
+                        {{/author}}
+                        {{#if @config.custom.frontDate}}
+                           <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
+                              {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                 {{date createdAt @config.custom.formatDate}}
+                              {{else}}
+                                 {{date createdAt @config.custom.formatDateCustom}}
+                              {{/checkIf}}
+                           </time>
+                        {{/if}}
+                     </div>
+                  {{/checkIfAny}}
+                  <h2>
+                     <a href="{{url}}" class="invert">
+                        {{title}}
+                     </a>
+                  </h2>
+               </header>
+               {{#if @config.custom.frontFeaturedImage}}
+                  {{#featuredImage}}
+                     {{#if url}}
+                        {{#if @config.custom.lazyLoad}}
+                           <div class="feed__image">
+                              <img
+                                 class="lazyload"
+                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                                    src="{{urlXs}}"
+                                 {{else}}
+                                    data-src="{{url}}"
+                                 {{/checkIf}}
+                                 data-srcset="{{srcset.post}}"
+                                 data-sizes="auto"
+                                 height="{{height}}"
+                                 width="{{width}}"
+                                 alt="{{alt}}">
+                           </div>
+                        {{else}}
+                           <div class="feed__image">
+                              <img
+                                 src="{{url}}"
+                                 sizes="{{sizes.post}}"
+                                 srcset="{{srcset.post}}"
+                                 alt="{{alt}}">
+                           </div>
+                        {{/if}}
+                     {{/if}}
+                  {{/featuredImage}}
+               {{/if}}
+               <div class="wrapper">
+                  {{#if hasCustomExcerpt}}
+                     {{{ excerpt }}}
+                  {{else}}
+                     <p>{{{ excerpt }}}</p>
+                  {{/if}}
+                  {{#if @config.custom.frontReadMore}}
+                     <a href="{{url}}" class="readmore feed__readmore invert">
                         {{ translate 'post.readMore' }}</a>
-                {{/if}}
+                  {{/if}}
+               </div>
             </article>
-        {{/each}}
-        {{> pagination}}
-    </div>
-</main>
+         {{/each}}
+         {{> pagination}}
+      </div>
+   </main>
+{{/checkIf}}
 {{> footer}}

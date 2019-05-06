@@ -27,6 +27,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             id: post.id,
             title: post.title,
             tags: postGetTags(state, post.id),
+            status: post.status,
             created: post.created_at,
             modified: post.modified_at,
             isHidden: post.status.indexOf('hidden') > -1,

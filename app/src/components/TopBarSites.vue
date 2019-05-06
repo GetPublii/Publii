@@ -38,21 +38,18 @@ export default {
         };
     },
     computed: {
-        submenuClasses: function() {
+        submenuClasses () {
             return {
                 'sites-switcher': true,
                 'is-hidden': !this.submenuIsOpen
             };
         }
     },
-    mounted: function(e) {
-        let self = this;
-        this.$bus.$on('topbar-close-submenu-sites', function() {
-            self.submenuIsOpen = false;
-        });
+    mounted () {
+        this.$bus.$on('document-body-clicked', this.hideSubmenu);
     },
     methods: {
-        toggle: function(e) {
+        toggle (e) {
             e.stopPropagation();
 
             if(this.isExcludedFromToggle(e.target)) {
@@ -60,18 +57,23 @@ export default {
             }
 
             this.submenuIsOpen = !this.submenuIsOpen;
-            this.$bus.$emit('topbar-close-submenu-dropdown');
+            this.$bus.$off('document-body-clicked', this.hideSubmenu);
+            this.$bus.$emit('document-body-clicked');
+            this.$bus.$on('document-body-clicked', this.hideSubmenu);
         },
-        isExcludedFromToggle: function(el) {
+        hideSubmenu () {
+            this.submenuIsOpen = false;
+        },
+        isExcludedFromToggle (el) {
             return el.tagName === 'INPUT' || (el.tagName === 'SPAN' && el.classList.contains('button'));
         },
-        addNewWebsite: function(e) {
+        addNewWebsite (e) {
             this.submenuIsOpen = false;
             this.$router.push('/site/!');
         }
     },
     beforeDestroy () {
-        this.$bus.$off('topbar-close-submenu-sites');
+        this.$bus.$off('document-body-clicked', this.hideSubmenu);
     }
 }
 </script>

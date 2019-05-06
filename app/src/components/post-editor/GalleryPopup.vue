@@ -8,8 +8,10 @@
             <div class="gallery-popup-images">
                 <draggable
                     v-if="!isUploading"
-                    element="ul"
-                    :options="{ group: 'gallery-items', chosenClass: 'is-chosen', ghostClass: 'is-ghost' }"
+                    tag="ul"
+                    group="gallery-items"
+                    chosenClass="is-chosen"
+                    ghostClass="is-ghost"
                     class="gallery-popup-images-list"
                     v-model="images">
                     <li

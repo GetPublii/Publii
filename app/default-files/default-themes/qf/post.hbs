@@ -269,19 +269,19 @@
             </footer>
          {{/checkIfAny}}
       </article>
+      {{#if @config.post.displayComments}}
+         <div class="comments u-wrapper">
+            <h3 class="u-h5">
+               {{ translate 'post.comments' }}
+            </h3>
+            {{> disqus}}
+         </div>
+      {{/if}}
+      {{#if @customHTML.afterPost}}
+         <div class="banner banner--after-post">
+            {{{@customHTML.afterPost}}}
+         </div>
+      {{/if}}
    {{/post}}
-   {{#if @config.post.displayComments}}
-      <div class="comments u-wrapper">
-         <h3 class="u-h5">
-            {{ translate 'post.comments' }}
-         </h3>
-         {{> disqus}}
-      </div>
-   {{/if}}
-   {{#if @customHTML.afterPost}}
-      <div class="banner banner--after-post">
-         {{{@customHTML.afterPost}}}
-      </div>
-   {{/if}}
 </main>
 {{> footer}}

@@ -7,7 +7,9 @@
                     {{@website.name}}
                 {{/if}}
             </a>
-            {{> menu menus.mainMenu}}
+            {{#if menus.mainMenu}}
+                {{> menu menus.mainMenu}}
+            {{/if}}
         </div>
     </header>
     <div class="content">

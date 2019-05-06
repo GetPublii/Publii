@@ -183,6 +183,12 @@ class App {
      * @returns {object}
      */
     switchSite(site) {
+        if (!site) {
+            return {
+                status: false
+            };
+        }
+
         const siteDir = path.join(this.sitesDir, site);
         const menuConfigPath = path.join(siteDir, 'input', 'config', 'menu.config.json');
         const themeConfigPath = path.join(siteDir, 'input', 'config', 'theme.config.json');
@@ -449,8 +455,8 @@ class App {
                 windowParams.y > electron.screen.getPrimaryDisplay().workAreaSize.height
             )
         ) {
-            windowParams.x = 50;
-            windowParams.y = 50;
+            windowParams.x = 0;
+            windowParams.y = 0;
         }
 
         if(!(/^win/).test(process.platform)) {

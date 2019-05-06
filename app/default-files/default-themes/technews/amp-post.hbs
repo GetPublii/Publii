@@ -52,11 +52,7 @@
                             {{/if}}
                             {{#if @config.post.displayDate}}
                                 <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                                    {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                        {{date createdAt @config.custom.formatDate}}
-                                    {{else}}
-                                        {{date createdAt @config.custom.formatDateCustom}}
-                                    {{/checkIf}}
+                                    {{date createdAt @config.custom.formatDate}}
                                 </time>
                             {{/if}}
                         </p>

@@ -160,16 +160,19 @@
                                     v-if="field.type === 'posts-dropdown'"
                                     v-model="custom[field.name]"
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
+                                    :multiple="field.multiple"
                                     slot="field"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
+                                    :multiple="field.multiple"
                                     slot="field"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
+                                    :multiple="field.multiple"
                                     slot="field"></authors-dropdown>
 
                                 <text-input
@@ -200,6 +203,23 @@
                                     class="note">
                                     The Post options section allows you to set global options for what extra information should be included in your posts. Changes made in this section will affect all posts on your site, but you can also override the global settings on the Post Edit screen for each individual post if necessary.<br><br>
                                 </small>
+                            </field>
+
+                            <field 
+                                v-if="hasPostTemplates"
+                                label="Default post template"
+                                key="tab-last-field-0">
+                                <dropdown
+                                    :items="postTemplates"
+                                    v-model="defaultTemplates.post"
+                                    id="post-template"
+                                    slot="field">
+                                    <option
+                                        value=""
+                                        slot="first-choice">
+                                        Default template
+                                    </option>
+                                </dropdown>
                             </field>
 
                             <field
@@ -311,6 +331,9 @@ export default {
     data: function() {
         return {
             buttonsLocked: false,
+            defaultTemplates: {
+                post: ''
+            },
             basic: {
                 postsPerPage: 4,
                 tagsPostsPerPage: 4,
@@ -341,6 +364,12 @@ export default {
         },
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig;
+        },
+        postTemplates () {
+            return this.$store.state.currentSite.themeSettings.postTemplates;
+        },
+        hasPostTemplates () {
+            return !!Object.keys(this.postTemplates).length;
         }
     },
     beforeMount () {
@@ -356,6 +385,7 @@ export default {
             this.loadBasicSettings();
             this.loadCustomSettings();
             this.loadPostViewSettings();
+            this.loadDefaultTemplates();
         },
         loadBasicSettings () {
             this.basic.postsPerPage = this.$store.state.currentSite.themeSettings.config.filter(field => field.name === 'postsPerPage')[0].value;
@@ -393,6 +423,11 @@ export default {
                     Vue.set(this.postView, setting[0], setting[1]);
                 }
             }
+        },
+        loadDefaultTemplates () {
+            this.defaultTemplates = {
+                post: this.$store.state.currentSite.themeSettings.defaultTemplates.post
+            };
         },
         checkDependencies (dependencies) {
             if (!dependencies || !dependencies.length) {
@@ -509,7 +544,8 @@ export default {
             let newConfig = {
                 config: Object.assign({}, this.basic),
                 customConfig: Object.assign({}, this.custom),
-                postConfig: Object.assign({}, this.postView)
+                postConfig: Object.assign({}, this.postView),
+                defaultTemplates: Object.assign({}, this.defaultTemplates)
             };
 
             // Send request to the back-end

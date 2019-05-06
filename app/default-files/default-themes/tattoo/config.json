@@ -1,6 +1,6 @@
 {
     "name": "Tattoo",
-    "version": "1.6.0.0",
+    "version": "1.7.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -10,7 +10,7 @@
         "renderRelatedPosts": true,
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
-        "createContentStructure": false,
+        "createContentStructure": true,
         "createSearchPage": true,
         "create404page": true,
         "customHTML": {
@@ -63,6 +63,56 @@
         {
             "name": "separator",
             "type": "separator",
+            "label": "Front page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "frontSource",
+            "label": "Front page displays",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Latest posts",
+                    "value": "default"
+                },
+                {
+                    "label": "Selected post",
+                    "value": "post"
+                }
+            ]
+        },  
+        {
+            "name": "frontPost",
+            "label": "Posts",
+            "group": "Layout",
+            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "value": "",
+            "type": "posts-dropdown", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
+            "name": "frontGallery",
+            "group": "Layout",
+            "label": "",
+            "note": "Enable if you want to display a post with image gallery",
+            "value": false,
+            "type": "checkbox", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+         {
+            "name": "separator",
+            "type": "separator",
             "label": "",
             "group": "Layout",
             "size": "small"
@@ -91,7 +141,12 @@
                 {
                     "label": "4",
                     "value": "category--layout-3"
-                }]
+                }], 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "layoutTags",
@@ -538,13 +593,6 @@
             }]
         },
         {
-            "name": "shareGoogleplus",
-            "group": "Share Buttons",
-            "label": "Google+ share button",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
             "name": "sharePinterest",
             "group": "Share Buttons",
             "label": "Pinterest share button",
@@ -620,19 +668,7 @@
                 "field": "socialButtons",
                 "value": "true"
             }]
-        },
-        {
-            "name": "socialGoogleplus",
-            "label": "Google+",
-            "group": "Footer",
-            "placeholder": "Please enter your Google+ URL",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
-        },
+        },       
         {
             "name": "socialInstagram",
             "label": "Instagram",

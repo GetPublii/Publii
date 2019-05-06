@@ -1,6 +1,6 @@
 {
     "name": "Technews",
-    "version": "1.7.0.0",
+    "version": "1.8.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu",
@@ -92,6 +92,82 @@
             "group": "Layout",
             "size": "big"
         },
+        {
+            "name": "frontSource",
+            "label": "Front page displays",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Latest posts",
+                    "value": "default"
+                },
+                {
+                    "label": "Selected post",
+                    "value": "post"
+                }
+            ]
+        },  
+        {
+            "name": "frontPost",
+            "label": "Posts",
+            "group": "Layout",
+            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "value": "",
+            "type": "posts-dropdown", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
+            "name": "frontGallery",
+            "group": "Layout",
+            "label": "",
+            "note": "Enable if you want to display a post with image gallery",
+            "value": false,
+            "type": "checkbox", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
+            "name": "frontPostTemplate",
+            "label": "Post template",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Default",
+                    "value": "default"
+                },
+                {
+                    "label": "Alternative (centered)",
+                    "value": "alternative"
+                }
+            ], 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
+        },
 
         {
             "name": "layoutFrontpage",
@@ -125,7 +201,11 @@
                 {
                     "label": "2 columns - 4 - 1",
                     "value": "cat--layout-2col-4-1"
-                }]
+                }],
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
 
         {
@@ -133,28 +213,44 @@
             "group": "Layout",
             "label": "Show author name",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontAuthorAvatar",
             "group": "Layout",
             "label": "Show author avatar",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontDate",
             "group": "Layout",
             "label": "Show date",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontTag",
             "group": "Layout",
             "label": "Show tag",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontCommentCount",
@@ -162,7 +258,11 @@
             "label": "Show comment count",
             "note": "Set the options in the Comments tab before enabling this option. Comment count link text can be customized at your Disqus Admin > Settings > <a href='https://disqus.com/admin/settings/community/' target='_blank'>Community page</a>.",
             "value": false,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontAd",
@@ -170,7 +270,11 @@
             "label": "Show ad",
             "note": "The ad position will be different depending on the chosen layout. To get the best visual effect, display 10 - 12 posts per page.",
             "value": false,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontAdCode",
@@ -179,10 +283,16 @@
             "note": "",
             "value": "",
             "type": "textarea",
-            "dependencies": [{
-                "field": "frontAd",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "frontAd",
+                    "value": "true"
+                },
+                {
+                    "field": "frontSource",
+                    "value": "default"
+                }
+            ]
         },
         {
             "name": "separator",
@@ -482,18 +592,7 @@
                 "field": "follow",
                 "value": "true"
             }]
-        },
-        {
-            "name": "followSidebarGoogleplus",
-            "group": "Sidebar",
-            "label": "Google +",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "follow",
-                "value": "true"
-            }]
-        },
+        },       
         {
             "name": "followSidebarInstagram",
             "group": "Sidebar",
@@ -850,14 +949,7 @@
                 "field": "shareTwitter",
                 "value": "true"
             }]
-        },
-        {
-            "name": "shareGoogleplus",
-            "group": "Share Buttons",
-            "label": "Google+ share button",
-            "value": false,
-            "type": "checkbox"
-        },
+        },       
         {
             "name": "sharePinterest",
             "group": "Share Buttons",
@@ -936,17 +1028,6 @@
             }]
         },
         {
-            "name": "socialFooterGoogleplus",
-            "group": "Footer",
-            "label": "Google +",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
-        },
-        {
             "name": "socialFooterInstagram",
             "group": "Footer",
             "label": "Instagram",
@@ -1015,15 +1096,6 @@
             "label": "Twitter",
             "group": "Follow us",
             "placeholder": "Please enter your Twitter URL",
-            "value": "",
-            "type": "text"
-        },
-
-        {
-            "name": "socialGoogleplus",
-            "label": "Google+",
-            "group": "Follow us",
-            "placeholder": "Please enter your Google+ URL",
             "value": "",
             "type": "text"
         },

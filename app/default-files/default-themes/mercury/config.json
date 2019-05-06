@@ -1,6 +1,6 @@
 {
     "name": "Mercury",
-    "version": "1.7.0.0",
+    "version": "1.8.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -10,7 +10,7 @@
         "renderRelatedPosts": true,
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
-        "createContentStructure": false,
+        "createContentStructure": true,
         "createSearchPage": true,
         "create404page": true,
         "customHTML": {
@@ -62,11 +62,126 @@
             "type": "text"
         },
         {
+            "name": "pageEntryWidth",
+            "label": "Content width",
+            "group": "Layout",
+            "note": "Width of post entry. Use of REM units recommended.",
+            "value": "36rem",
+            "type": "text"
+        },       
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Front page",
+            "group": "Layout",
+            "size": "big"
+        },
+         {
+            "name": "frontSource",
+            "label": "Front page displays",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Latest posts",
+                    "value": "default"
+                },
+                {
+                    "label": "Selected post",
+                    "value": "post"
+                }
+            ]
+        },  
+        {
+            "name": "frontPost",
+            "label": "Posts",
+            "group": "Layout",
+            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "value": "",
+            "type": "posts-dropdown", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+         {
+            "name": "frontGallery",
+            "group": "Layout",
+            "label": "",
+            "note": "Enable if you want to display a post with image gallery",
+            "value": false,
+            "type": "checkbox", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
             "name": "separator",
             "type": "separator",
             "label": "",
             "group": "Layout",
-            "size": "small"
+            "size": "small",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
+        },
+        {
+            "name": "filters",
+            "group": "Layout",
+            "label": "Enable filters",
+            "note": "Filter Items on the Front page",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
+        },
+        {
+            "name": "filtersLabel",
+            "label": "Label",
+            "group": "Layout",
+            "value": "",
+            "type": "text",
+            "dependencies": [
+                {
+                    "field": "filters",
+                    "value": true
+                },
+                {
+                    "field": "frontSource",
+                    "value": "default"
+                }
+            ]
+        },
+        {
+            "name": "filtersAllPhrase",
+            "label": "Phrase for 'All'",
+            "group": "Layout",
+            "value": "All",
+            "type": "text",
+            "dependencies": [
+                {
+                    "field": "filters",
+                    "value": true
+                },
+                {
+                    "field": "frontSource",
+                    "value": "default"
+                }
+            ]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Post listings",
+            "group": "Layout",
+            "size": "big"
         },
         {
             "name": "gridType",
@@ -148,7 +263,11 @@
                 {
                     "label": "4 columns",
                     "value": "--4"
-                }]
+                }],
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "layoutTags",
@@ -201,43 +320,6 @@
                     "label": "4 columns",
                     "value": "--4"
                 }]
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Front page",
-            "group": "Layout",
-            "size": "big"
-        },
-        {
-            "name": "filters",
-            "group": "Layout",
-            "label": "Enable filters",
-            "note": "Filter Items on the Front page",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "filtersLabel",
-            "label": "Label",
-            "group": "Layout",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "filters",
-                "value": true
-            }]
-        },
-        {
-            "name": "filtersAllPhrase",
-            "label": "Phrase for 'All'",
-            "group": "Layout",
-            "value": "All",
-            "type": "text",
-            "dependencies": [{
-                "field": "filters",
-                "value": true
-            }]
         },
         {
             "name": "primaryColor",
@@ -454,13 +536,7 @@
                 "value": "true"
             }]
         },
-        {
-            "name": "shareGoogleplus",
-            "group": "Share Buttons",
-            "label": "Google+ share button",
-            "value": false,
-            "type": "checkbox"
-        },
+       
         {
             "name": "sharePinterest",
             "group": "Share Buttons",
@@ -538,18 +614,7 @@
                 "value": "true"
             }]
         },
-        {
-            "name": "socialGoogleplus",
-            "label": "Google+",
-            "group": "Footer",
-            "placeholder": "Please enter your Google+ URL",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
-        },
+       
         {
             "name": "socialInstagram",
             "label": "Instagram",
@@ -632,7 +697,7 @@
             "group": "Gallery",
             "note": "Set the lightbox slideshow style by choosing dark or light overlay",
             "value": "pswp--dark",
-            "type": "select",
+            "type": "radio",
             "options": [
                 {
                     "label": "Dark",

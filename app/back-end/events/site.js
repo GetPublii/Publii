@@ -63,6 +63,10 @@ class SiteEvents {
                     !fs.existsSync(path.join(appInstance.sitesDir, config.settings.name)) &&
                     slug(config.settings.displayName) === config.settings.name
                 ) {
+                    if (appInstance.db) {
+                        appInstance.db.close();
+                    }
+
                     // If yes - rename the dir
                     delete appInstance.sites[siteName];
                     siteName = config.settings.name;
@@ -306,7 +310,8 @@ class SiteEvents {
                 newConfig: {
                     config: themeConfig.config,
                     customConfig: themeConfig.customConfig,
-                    postConfig: themeConfig.postConfig
+                    postConfig: themeConfig.postConfig,
+                    defaultTemplates: themeConfig.defaultTemplates
                 }
             });
         });
@@ -347,6 +352,14 @@ class SiteEvents {
         ipcMain.on('app-site-regenerate-thumbnails', function(event, config) {
             let site = new Site(appInstance, config, true);
             site.regenerateThumbnails(event.sender);
+        });
+
+        /*
+         * Regenerate thumbnails stauts
+         */
+        ipcMain.on('app-site-regenerate-thumbnails-required', function(event, config) {
+            let site = new Site(appInstance, config, true);
+            site.regenerateThumbnailsIsRequired(event.sender);
         });
 
         /*

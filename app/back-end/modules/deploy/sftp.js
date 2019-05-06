@@ -128,16 +128,13 @@ class SFTP {
             });
 
             let remoteFilesList = path.join(self.deployment.configDir, 'files-remote.json');
-            fileStream = fs.createWriteStream(remoteFilesList);
-            stream.pipe(fileStream);
+            fs.writeFileSync(remoteFilesList, stream);
 
-            stream.on('close', function() {
-                if(fs.readFileSync(remoteFilesList).length) {
-                    self.deployment.compareFilesList(true);
-                } else {
-                    self.deployment.compareFilesList(false);
-                }
-            });
+            if(fs.readFileSync(remoteFilesList).length) {
+                self.deployment.compareFilesList(true);
+            } else {
+                self.deployment.compareFilesList(false);
+            }
         }).catch(err => {
             console.log('ERR (2): ' + err + ' [<- files.publii.json]');
             self.deployment.compareFilesList(false);
@@ -159,13 +156,8 @@ class SFTP {
         this.connection.put(
             normalizePath(path.join(self.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(self.deployment.outputDir, 'files.publii.json'))
-        ).then(function(err) {
+        ).then(function(result) {
             self.deployment.outputLog.push('-> files.publii.json');
-
-            if (err) {
-                self.deployment.outputLog.push(err);
-            }
-
             self.connection.end();
 
             process.send({
@@ -192,8 +184,7 @@ class SFTP {
             }, 1000);
         }).catch(err => {
             this.connection.end();
-            console.log('ERR (3): ' + err + ' [-> files.publii.json]');
-
+            self.deployment.outputLog.push(err);
             self.deployment.saveConnectionLog();
 
             setTimeout(function () {
@@ -205,18 +196,9 @@ class SFTP {
     uploadFile(input, output) {
         let self = this;
 
-        this.connection.put(input, output).then(function (err) {
+        this.connection.put(input, output).then(function (result) {
             self.deployment.currentOperationNumber++;
             self.deployment.outputLog.push('UPL ' + input + ' -> ' + output);
-
-            if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR UPLOAD FILE - - -');
-                self.deployment.outputLog.push(normalizePath(path.join(self.outputDir, fileToUpload.path)));
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
-            }
-
             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
             process.send({
@@ -230,7 +212,10 @@ class SFTP {
 
             self.deployment.uploadFile();
         }).catch(err => {
-            console.log('ERR (4): ' + err + ' [' + output + ']');
+            self.deployment.outputLog.push('- - -ERROR UPLOAD FILE - - -');
+            self.deployment.outputLog.push(normalizePath(path.join(self.outputDir, fileToUpload.path)));
+            self.deployment.outputLog.push(err);
+            self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
             self.deployment.uploadFile();
         });
     }
@@ -238,18 +223,9 @@ class SFTP {
     uploadDirectory(input, output) {
         let self = this;
 
-        this.connection.mkdir(output, true).then(function (err) {
+        this.connection.mkdir(output, true).then(function (result) {
             self.deployment.currentOperationNumber++;
             self.deployment.outputLog.push('UPL ' + input + ' -> ' + output);
-
-            if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR UPLOAD DIR - - -');
-                self.deployment.outputLog.push(output);
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
-            }
-
             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
             process.send({
@@ -263,7 +239,10 @@ class SFTP {
 
             self.deployment.uploadFile();
         }).catch(err => {
-            console.log('ERR (5): ' + err + ' [' + output + ']');
+            self.deployment.outputLog.push('- - -ERROR UPLOAD DIR - - -');
+            self.deployment.outputLog.push(output);
+            self.deployment.outputLog.push(err);
+            self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
             self.deployment.uploadFile();
         });
     }
@@ -271,18 +250,9 @@ class SFTP {
     removeFile(input) {
         let self = this;
 
-        this.connection.delete(input).then(function (err) {
+        this.connection.delete(input).then(function (result) {
             self.deployment.currentOperationNumber++;
             self.deployment.outputLog.push('DEL ' + input);
-
-            if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR REMOVE FILE - - -');
-                self.deployment.outputLog.push(input);
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
-            }
-
             self.deployment.progressOfDeleting += self.deployment.progressPerFile;
 
             process.send({
@@ -296,7 +266,10 @@ class SFTP {
 
             self.deployment.removeFile();
         }).catch(err => {
-            console.log('ERR (6): ' + err + ' [' + input + ']');
+            self.deployment.outputLog.push('- - -ERROR REMOVE FILE - - -');
+            self.deployment.outputLog.push(input);
+            self.deployment.outputLog.push(err);
+            self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
             self.deployment.removeFile();
         });
     }
@@ -304,17 +277,9 @@ class SFTP {
     removeDirectory(input) {
         let self = this;
 
-        this.connection.rmdir(input, true).then(function (err) {
+        this.connection.rmdir(input, true).then(function (result) {
             self.deployment.currentOperationNumber++;
             self.deployment.outputLog.push('DEL ' + input);
-
-            if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR REMOVE DIR - - -');
-                self.deployment.outputLog.push(input);
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
-            }
             self.deployment.progressOfDeleting += self.deployment.progressPerFile;
 
             process.send({
@@ -328,7 +293,10 @@ class SFTP {
 
             self.deployment.removeFile();
         }).catch(err => {
-            console.log('ERR (7): ' + err + ' [' + input + ']');
+            self.deployment.outputLog.push('- - -ERROR REMOVE DIR - - -');
+            self.deployment.outputLog.push(input);
+            self.deployment.outputLog.push(err);
+            self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
             self.deployment.removeFile();
         });
     }
@@ -376,32 +344,10 @@ class SFTP {
             client.put(
                 testFilePath,
                 normalizePath(path.join(deploymentConfig.path, 'publii.test'))
-            ).then(err => { 
-                if (err) {
-                    app.mainWindow.webContents.send('app-deploy-test-write-error');
-                    
-                    if (fs.existsSync(testFilePath)) {
-                        fs.unlinkSync(testFilePath);
-                    }
-
-                    client.end();
-                    return;   
-                }
-                
+            ).then(result => { 
                 client.delete(
                     normalizePath(path.join(deploymentConfig.path, 'publii.test'))
-                ).then(err => {
-                    if (err) {
-                        app.mainWindow.webContents.send('app-deploy-test-write-error');
-                        
-                        if (fs.existsSync(testFilePath)) {
-                            fs.unlinkSync(testFilePath);
-                        }
-
-                        client.end();
-                        return;
-                    }
-
+                ).then(result => {
                     app.mainWindow.webContents.send('app-deploy-test-success');
                     
                     if (fs.existsSync(testFilePath)) {

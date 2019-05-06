@@ -264,7 +264,7 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.$bus.$on('topbar-close-submenu-dropdown', () => {
+        this.$bus.$on('document-body-clicked', () => {
             this.buttonDropdownVisible = false;
         });
 
@@ -312,7 +312,7 @@ export default {
             this.$router.push('/site/' + siteName + '/posts/');
         },
         getMediaPath () {
-            let mediaPath = this.$store.state.currentSite.siteDir;
+            let mediaPath = this.$store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
             mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
             mediaPath += '/input/media/posts/';
             mediaPath += this.postID === 0 ? 'temp' : this.postID;
@@ -837,12 +837,9 @@ export default {
             }
 
             &::after {
-                border: 4px solid $color-10;
-                border-left-color: transparent;
-                border-left-width: 5px;
-                border-right-color: transparent;
-                border-right-width: 5px;
-                border-bottom-color: transparent; 
+                border-color: $color-10 transparent transparent;
+                border-style: solid;
+                border-width: 5px;              
                 content: "";
                 pointer-events: none;
                 left: 50%;

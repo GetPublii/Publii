@@ -49,15 +49,15 @@
                      {{#if @config.custom.lazyLoad}}
                         <img
                            class="lazyload"
+                           data-sizes="{{sizes.post}}"
                            {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                               src="{{urlXs}}"
+                              src="{{urlXs}}"
                            {{else}}
-                               data-src="{{url}}"
+                              data-src="{{url}}"
                            {{/checkIf}}
                            data-srcset="{{srcset.post}}"
-                           data-sizes="{{sizes.post}}"
                            height="{{height}}"
-                           width="{{width}}"                          
+                           width="{{width}}"
                            alt="{{alt}}">
                      {{else}}
                         <img
@@ -80,6 +80,7 @@
                            src="{{@config.custom.uploadHero}}"
                            {{responsiveSrcSet @config.custom.uploadHero}}
                            {{responsiveSizes}}
+                           data-sizes="auto"
                            alt="{{@config.custom.uploadHeroAlt}}">
                         {{#if @config.custom.uploadHeroCaption}}
                            <figcaption>
@@ -93,7 +94,7 @@
          </div>
          <div class="post__entry">
             {{#if @config.custom.lazyLoad}}
-              {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
+               {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
             {{else}}
                {{{text}}}
             {{/if}}
@@ -199,9 +200,9 @@
                                              <img
                                                 class="lazyload"
                                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                                                    src="{{urlXs}}"
+                                                   src="{{urlXs}}"
                                                 {{else}}
-                                                    data-src="{{urlXs}}"
+                                                   data-src="{{urlXs}}"
                                                 {{/checkIf}}
                                                 data-srcset="{{urlXs}}"
                                                 data-expand="300"
@@ -235,19 +236,22 @@
             </footer>
          {{/checkIfAny}}
       </article>
+
+      {{#if @config.post.displayComments}}
+         <div class="comments u-innerwrap">
+            <h3>
+               {{ translate 'post.comments' }}
+            </h3>
+            {{> disqus}}
+         </div>
+      {{/if}}
+    
+      {{#if @customHTML.afterPost}}
+         <div class="banner banner--after-post">
+            {{{@customHTML.afterPost}}}
+         </div>
+      {{/if}}
+    
    {{/post}}
-   {{#if @config.post.displayComments}}
-      <div class="comments u-innerwrap">
-         <h3>
-            {{ translate 'post.comments' }}
-         </h3>
-         {{> disqus}}
-      </div>
-   {{/if}}
-   {{#if @customHTML.afterPost}}
-      <div class="banner banner--after-post">
-         {{{@customHTML.afterPost}}}
-      </div>
-   {{/if}}
 </main>
 {{> footer}}

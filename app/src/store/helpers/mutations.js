@@ -262,6 +262,7 @@ export default {
         state.currentSite.themeSettings.config = data.newConfig.config.slice();
         state.currentSite.themeSettings.customConfig = data.newConfig.customConfig.slice();
         state.currentSite.themeSettings.postConfig = data.newConfig.postConfig.slice();
+        state.currentSite.themeSettings.defaultTemplates = JSON.parse(JSON.stringify(data.newConfig.defaultTemplates));
     },
     setEditorOpenState (state, isOpened) {
         state.editorOpened = isOpened;

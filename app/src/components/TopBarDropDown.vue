@@ -63,19 +63,22 @@ export default {
         }
     },
     mounted: function(e) {
-        this.$bus.$on('topbar-close-submenu-dropdown', () => {
-            this.submenuIsOpen = false;
-        });
+        this.$bus.$on('document-body-clicked', this.hideSubmenu);
     },
     methods: {
-        toggleSubmenu: function(e) {
+        hideSubmenu () {
+            this.submenuIsOpen = false;
+        },
+        toggleSubmenu (e) {
             e.stopPropagation();
-            this.$bus.$emit('topbar-close-submenu-sites');
             this.submenuIsOpen = !this.submenuIsOpen;
+            this.$bus.$off('document-body-clicked', this.hideSubmenu);
+            this.$bus.$emit('document-body-clicked');
+            this.$bus.$on('document-body-clicked', this.hideSubmenu);
         }
     },
     beforeDestroy () {
-        this.$bus.$off('topbar-close-submenu-dropdown');
+        this.$bus.$off('document-body-clicked', this.hideSubmenu);
     }
 }
 </script>
@@ -115,7 +118,7 @@ export default {
             &:after,
             &:before {
                 background: currentcolor;
-                 border-radius: 50%;
+                border-radius: 50%;
                 content: "";
                 display: block;
                 height: 3px;
@@ -144,7 +147,7 @@ export default {
 
     &-app-submenu {
         background: $color-10;
-         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
+        box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                      0 8px 16px rgba(29, 39, 52, 0.07);
         font-size: 1.5rem;
         list-style-type: none;

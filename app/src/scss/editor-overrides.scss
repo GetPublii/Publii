@@ -235,19 +235,6 @@ div.mce-tinymce-inline {
         .mce-statusbar {
             border-top: 1px solid $color-8;
             position: relative;
-
-            &:before {
-                background: linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                    linear-gradient(-180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-                content: "";
-                height: 40px;
-                left: 0;
-                pointer-events: none;
-                position: absolute;
-                right: 10px;
-                top: -41px;
-                z-index: 1;
-            }
         }
 
         .mce-toolbar-grp {
@@ -281,7 +268,7 @@ div.mce-tinymce-inline {
         z-index: 10;
 
         em {
-            cursor: pointer;
+            cursor: pointer; 
             height: 24px;
             padding: 4px;
             width: 30px;

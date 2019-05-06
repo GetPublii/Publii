@@ -195,12 +195,12 @@ export default {
     }
 
     &-icon-open {
-        border-top: solid 4px $color-7;
-        border-left: solid 5px transparent;
-        border-right: solid 5px transparent;                    
+        border-color: $color-7 transparent transparent;
+        border-style: solid;
+        border-width: 5px;
         opacity: 1;                     
         cursor: pointer;                   
-        height: 4px;
+        height: 5px;
         left: auto;
         line-height: 1.1; 
         padding: 0;
@@ -209,8 +209,7 @@ export default {
         width: 5px;
         text-align: center;       
         transition: all .3s ease-out;         
-        top: 50%;
-        transform: translateY(-50%);        
+        top: calc(50% - 2px);
     }
 }
 </style>

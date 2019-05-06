@@ -4,21 +4,18 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const md5 = require('md5');
 const passwordSafeStorage = require('keytar');
-const netlify = require('./../custom-changes/netlify');
 const slug = require('./../../helpers/slug');
+const NetlifyAPI = require('./libraries/netlify-api');
 
 class Netlify {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
         this.debugOutput = [];
-        this.econnresetCounter = 0;
     }
 
     async initConnection() {
-        let self = this;
         let client;
         let localDir;
         let siteID = this.deployment.siteConfig.deployment.netlify.id;
@@ -33,8 +30,18 @@ class Netlify {
             token = await passwordSafeStorage.getPassword('publii-netlify-token', account);
         }
 
-        client = netlify.createClient({
-            access_token: token
+        this.deployment.setInput();
+        this.deployment.setOutput(true);
+        localDir = this.deployment.inputDir;
+
+        client = new NetlifyAPI({
+            accessToken: token,
+            siteID: siteID,
+            inputDir: localDir
+        }, {
+            onStart: this.onStart.bind(this),
+            onProgress: this.onProgress.bind(this),
+            onError: this.onError.bind(this)
         });
 
         process.send({
@@ -51,61 +58,36 @@ class Netlify {
             message: 'app-connection-in-progress'
         });
 
-        self.deployment.setInput();
-        self.deployment.setOutput(true);
-        localDir = self.deployment.inputDir;
-
-        client.site(siteID).then(function(site) {
-            site.createDeploy({
-                dir: localDir,
-                progress: self.onProgress.bind(self)
-            }).then(function(deploy) {
-                deploy.waitForReady().then(function() {
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-uploading-progress',
-                        value: {
-                            progress: 100,
-                            operations: false
-                        }
-                    });
-
-                    process.send({
-                        type: 'sender',
-                        message: 'app-deploy-uploaded',
-                        value: {
-                            status: true
-                        }
-                    });
-
-                    self.deployment.saveConnectionLog();
-
-                    setTimeout(function () {
-                        process.exit();
-                    }, 1000);
-                });
-            }).catch(err => {
-                self.deployment.outputLog.push('- - Netlify ERROR - -');
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - -');
-                self.deployment.saveConnectionErrorLog(err);
-                self.saveConnectionDebugLog();
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error'
-                });
-
-                setTimeout(function () {
-                    process.exit();
-                }, 1000);
+        let results = client.deploy();
+        results.then(res => {
+            process.send({
+                type: 'web-contents',
+                message: 'app-uploading-progress',
+                value: {
+                    progress: 100,
+                    operations: false
+                }
             });
+
+            process.send({
+                type: 'sender',
+                message: 'app-deploy-uploaded',
+                value: {
+                    status: true
+                }
+            });
+
+            this.deployment.saveConnectionLog();
+
+            setTimeout(function () {
+                process.exit();
+            }, 1000);
         }).catch(err => {
-            self.deployment.outputLog.push('- - Netlify ERROR - -');
-            self.deployment.outputLog.push(err);
-            self.deployment.outputLog.push('- - - - - - - - - - -');
-            self.deployment.saveConnectionErrorLog(err);
-            self.saveConnectionDebugLog();
+            this.deployment.outputLog.push('- - Netlify ERROR - -');
+            this.deployment.outputLog.push(err);
+            this.deployment.outputLog.push('- - - - - - - - - - -');
+            this.deployment.saveConnectionErrorLog(err);
+            this.saveConnectionDebugLog();
 
             process.send({
                 type: 'web-contents',
@@ -118,25 +100,31 @@ class Netlify {
         });
     }
 
-    onProgress(eventType, data) {
-        if(eventType === 'start') {
-            this.deployment.operationsCounter = parseInt(data.total, 10);
-            this.deployment.progressPerFile = 90.0 / this.deployment.operationsCounter;
-            this.deployment.currentOperationNumber = 0;
-            this.deployment.progressOfUploading = 0;
+    onStart (totalFiles) {
+        this.deployment.operationsCounter = parseInt(totalFiles, 10);
+        this.deployment.progressPerFile = 90.0 / this.deployment.operationsCounter;
+        this.deployment.currentOperationNumber = 0;
+        this.deployment.progressOfUploading = 0;
+    }
 
+    onError () {
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-error'
+        });
+
+        setTimeout(function () {
+            process.exit();
+        }, 1000); 
+    }
+
+    onProgress(currentFile) {
+        if (currentFile < this.deployment.currentOperationNumber) {
             return;
         }
 
-        if(eventType === 'upload' || eventType === 'uploadError') {
-            this.deployment.currentOperationNumber++;
-            this.deployment.progressOfUploading += this.deployment.progressPerFile;
-
-            if(eventType === 'uploadError') {
-                console.log('UPLOAD ERROR');
-                console.log(data);
-            }
-        }
+        this.deployment.currentOperationNumber = currentFile;
+        this.deployment.progressOfUploading = this.deployment.currentOperationNumber * this.deployment.progressPerFile;
 
         process.send({
             type: 'web-contents',
@@ -163,19 +151,22 @@ class Netlify {
             token = await passwordSafeStorage.getPassword('publii-netlify-token', account);
         }
 
-        client = netlify.createClient({
-            access_token: token
+        client = new NetlifyAPI({
+            accessToken: token,
+            siteID: siteID,
+            inputDir: ''
         });
 
-        client.site(siteID).then(function(site) {
+        try {
+            await client.testConnection();
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-success');
-        }).catch(err => {
+        } catch (err) {
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
                 message: err.message
             });
-        });
+        }
 
         setTimeout(function() {
             if(waitForTimeout === true) {
@@ -188,7 +179,6 @@ class Netlify {
 
     saveConnectionDebugLog() {
         let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }

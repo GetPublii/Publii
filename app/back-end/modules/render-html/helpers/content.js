@@ -70,6 +70,11 @@ class ContentHelper {
             return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
         });
 
+        // Wrap iframes into <div class="post__iframe">
+        preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
+            return '<div class="post__iframe">' + matches + '</div>';
+        });
+
         // Remove CDATA sections inside scripts added by TinyMCE
         preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         preparedText = preparedText.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');

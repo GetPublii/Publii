@@ -72,7 +72,7 @@ export default {
 
 .preview-link {
     align-items: center;
-    background: $color-helper-10;
+    background: $color-9;
     border-radius: 4px;
     color: $color-7;
     cursor: not-allowed;
@@ -93,7 +93,7 @@ export default {
     }
 
     &:hover {
-        background: $color-helper-8;
+        background: $color-helper-10;
     }
 }
 </style>

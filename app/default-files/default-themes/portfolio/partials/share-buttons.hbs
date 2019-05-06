@@ -12,25 +12,12 @@
 
 {{#if @config.custom.shareTwitter}}
     <a
-        href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}
-"
+        href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}"
         class="js-share twitter"
         title="{{ translate 'partials.shareButtons.shareWithTwitter' }}"
         rel="nofollow">
         <svg class="icon">
             <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter"/>
-        </svg>
-    </a>
-{{/if}}
-
-{{#if @config.custom.shareGoogleplus}}
-    <a
-        href="https://plus.google.com/share?url={{encodeUrlFragment url}}"
-        class="js-share gplus"
-        title="{{ translate 'partials.shareButtons.shareWithGooglePlus' }}"
-        rel="nofollow">
-        <svg class="icon">
-            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus"/>
         </svg>
     </a>
 {{/if}}

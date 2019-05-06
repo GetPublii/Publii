@@ -351,6 +351,8 @@ class Renderer {
 
         if(this.previewMode) {
             this.siteConfig.domain = 'file://' + this.outputDir;
+        } else if (this.siteConfig.domain === '/') {
+            this.siteConfig.domain = '';
         }
 
         if(
@@ -657,7 +659,13 @@ class Renderer {
         if (postData && postData.length) { 
             postIDs = postData.map(row => row.id);
             postSlugs = postData.map(row => row.slug);
-            postTemplates = postData.map(row => row.template);
+            postTemplates = postData.map(row => {
+                if (row.template === '*') {
+                    return this.themeConfig.defaultTemplates.post
+                }
+
+                return row.template;
+            });
         } else {
             postIDs = [];
             postSlugs = [];
@@ -751,6 +759,10 @@ class Renderer {
         let postSlug = 'preview';
         let postTemplate = this.postData.template;
         let inputFile = 'post.hbs';
+
+        if (postTemplate === '*') {
+            postTemplate = this.themeConfig.defaultTemplates.post;
+        }
 
         // Load templates
         let compiledTemplates = {};
@@ -1456,7 +1468,7 @@ class Renderer {
         }
 
         console.time("SITEMAP");
-        let sitemapGenerator = new Sitemap(this.outputDir, this.siteConfig, this.themeConfig);
+        let sitemapGenerator = new Sitemap(this.db, this.outputDir, this.siteConfig, this.themeConfig);
         await sitemapGenerator.create();
         console.timeEnd("SITEMAP");
     }

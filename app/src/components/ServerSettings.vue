@@ -79,7 +79,7 @@
                       name="googlecloud" />
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'zip'" title="Manual deployment">
+                <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
@@ -94,6 +94,7 @@
                     id="domain"
                     label="Domain">
                     <dropdown
+                        v-if="!deploymentSettings.relativeUrls"
                         slot="field"
                         id="http-protocol"
                         key="httpProtocol"
@@ -106,10 +107,41 @@
                         key="domain"
                         v-model="domain" />
                     <small
-                        v-if="httpProtocolSelected === 'file'"
+                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
                         class="note"
                         slot="note">
-                        The "file://"" protocol is useful only if you are using manual deployment method for the intranet websites.
+                        The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
+                    </small>
+                    <small
+                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs')"
+                        class="note"
+                        slot="note">
+                        The "dat://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
+                    </small>
+                    <small
+                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
+                        class="note"
+                        slot="note">
+                        Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                    </small>
+                </field>
+
+                <field
+                    id="relative-urls"
+                    label=" ">
+                    <switcher
+                        slot="field"
+                        id="relative-urls"
+                        key="relative-urls"
+                        v-model="deploymentSettings.relativeUrls"
+                        @click.native="toggleDomainName" />
+                    <template slot="second-label">
+                        Use relative URLs
+                    </template>
+                    <small
+                        class="note"
+                        slot="note">
+                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -775,6 +807,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { shell, ipcRenderer } from 'electron';
 import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
@@ -793,7 +826,10 @@ export default {
             httpProtocols: {
                 'http': 'http://',
                 'https': 'https://',
-                'file': 'file://'
+                'file': 'file://',
+                'dat': 'dat://',
+                'ipfs': 'ipfs://',
+                '//': '//'
             },
             httpProtocolSelected: '',
             deploymentMethods: {
@@ -858,7 +894,7 @@ export default {
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
-        this.deploymentSettings = Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment)));
+        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment))));
 
         setTimeout(() => {
             this.setPortValue();
@@ -895,6 +931,14 @@ export default {
         fullDomainName () {
             let domain = this.prepareDomain();
 
+            if (domain === '' && this.deploymentSettings.relativeUrls) {
+                domain = '/';
+            }
+
+            if (this.deploymentSettings.relativeUrls) {
+                return domain;
+            }
+
             if(this.deploymentMethodSelected === 'github-pages') {
                 if(domain.indexOf('github.io') > -1) {
                     this.httpProtocolSelected = 'https';
@@ -909,6 +953,10 @@ export default {
 
             if (this.httpProtocolSelected === 'file' && this.deploymentMethodSelected !== 'manual') {
                 this.httpProtocolSelected = 'https';
+            }
+
+            if (this.httpProtocolSelected === '//') {
+                return '//' + domain;
             }
 
             return this.httpProtocolSelected + '://' + domain;
@@ -1150,6 +1198,13 @@ export default {
             if (pos !== -1) {
                 this.errors.splice(pos, 1);
             }
+        },
+        toggleDomainName () {
+            if (this.deploymentSettings.relativeUrls) {
+                this.domain = '/';
+            } else {
+                this.domain = '';
+            }
         }
     }
 }
@@ -1206,6 +1261,10 @@ export default {
                 transition: inherit;
             }
         }
+    }
+
+    #relative-urls {
+        margin-top: 0;
     }
 }
 </style>

@@ -1,66 +1,62 @@
 <footer class="footer">
-    {{#if @config.custom.copyrightText}}
-    <div class="footer__copyright">
-        {{{@config.custom.copyrightText}}}
-    </div>
-    {{/if}}
-{{#if @config.custom.socialButtons}}
-    <div class="footer__social">
-        {{#if @config.custom.socialFacebook}}
-        <a href="{{@config.custom.socialFacebook}}" aria-label="Facebook">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook" />
-            </svg>
-        </a>
-        {{/if}} {{#if @config.custom.socialTwitter}}
-        <a href="{{@config.custom.socialTwitter}}" aria-label="Twitter">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter" />
-            </svg>
-        </a>
-        {{/if}} {{#if @config.custom.socialGoogleplus}}
-        <a href="{{@config.custom.social_googleplus}}" aria-label="Google +">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
-            </svg>
-        </a>
-        {{/if}} {{#if @config.custom.socialInstagram}}
-        <a href="{{@config.custom.socialInstagram}}" aria-label="Instagram">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#instagram" />
-            </svg>
-        </a>
-        {{/if}} {{#if @config.custom.socialLinkedin}}
-        <a href="{{@config.custom.socialLinkedin}}" aria-label="LinkedIn">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin" />
-            </svg>
-        </a>
-        {{/if}}
-        {{#if @config.custom.socialVimeo}}
-        <a href="{{@config.custom.socialVimeo}}" aria-label="Vimeo">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#vimeo" />
-            </svg>
-        </a>
-        {{/if}}
-        {{#if @config.custom.socialPinterest}}
-        <a href="{{@config.custom.socialPinterest}}" aria-label="Pinterest">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest" />
-            </svg>
-        </a>
-        {{/if}}
-        {{#if @config.custom.socialYoutube}}
-        <a href="{{@config.custom.socialYoutube}}" aria-label="Youtube">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#youtube" />
-            </svg>
-        </a>
-        {{/if}}
-    </div>
-{{/if}}
-
+   {{#if @config.custom.copyrightText}}
+      <div class="footer__copyright">
+         {{{@config.custom.copyrightText}}}
+      </div>
+   {{/if}}
+   {{#if @config.custom.socialButtons}}
+      <div class="footer__social">
+         {{#if @config.custom.socialFacebook}}
+            <a href="{{@config.custom.socialFacebook}}" aria-label="Facebook">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialTwitter}}
+            <a href="{{@config.custom.socialTwitter}}" aria-label="Twitter">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialInstagram}}
+            <a href="{{@config.custom.socialInstagram}}" aria-label="Instagram">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#instagram"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialLinkedin}}
+            <a href="{{@config.custom.socialLinkedin}}" aria-label="LinkedIn">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialVimeo}}
+            <a href="{{@config.custom.socialVimeo}}" aria-label="Vimeo">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#vimeo"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialPinterest}}
+            <a href="{{@config.custom.socialPinterest}}" aria-label="Pinterest">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest"/>
+               </svg>
+            </a>
+         {{/if}}
+         {{#if @config.custom.socialYoutube}}
+            <a href="{{@config.custom.socialYoutube}}" aria-label="Youtube">
+               <svg class="icon">
+                  <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#youtube"/>
+               </svg>
+            </a>
+         {{/if}}
+      </div>
+   {{/if}}
 </footer>
 </div>
 <script defer src="{{js "jquery-3.2.1.slim.min.js"}}"></script>
@@ -72,6 +68,13 @@
       {{/if}}
   {{/post}}
 {{/is}}
+{{#checkIf @config.custom.frontSource '==' "post"}}
+   {{#checkIf @config.custom.frontGallery '==' true}}
+      {{#is "index"}}
+          {{> photoswipe}}
+      {{/is}}
+   {{/checkIf}}
+{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg2js.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>

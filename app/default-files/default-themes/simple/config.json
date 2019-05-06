@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "1.7.0.0",
+    "version": "2.0.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -10,7 +10,7 @@
         "renderRelatedPosts": true,
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
-        "createContentStructure": false,
+        "createContentStructure": true,
         "createSearchPage": true,
         "create404page": true,
         "customHTML": {
@@ -22,13 +22,13 @@
         {
             "name": "postsPerPage",
             "label": "Posts per page",
-            "value": 4,
+            "value": 5,
             "type": "number"
         },
         {
             "name": "tagsPostsPerPage",
             "label": "Tags posts per page",
-            "value": 4,
+            "value": 5,
             "type": "number"
         },
         {
@@ -57,210 +57,266 @@
             "name": "pageWidth",
             "label": "Page width",
             "group": "Layout",
-            "note": "Page width defined with REM units",
-            "value": "38",
-            "type": "range"
+            "note": "Use of \"rem\" units recommended; also use others (px, vw, %); for full-screen set to 100%",
+            "value": "42rem",
+            "type": "text"
         },
-
         {
             "name": "separator",
             "type": "separator",
-            "label": "Frontpage",
+            "label": "Front page",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
+        },
+        {
+            "name": "frontSource",
+            "label": "Front page displays",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Latest posts",
+                    "value": "default"
+                },
+                {
+                    "label": "Selected post",
+                    "value": "post"
+                }
+            ]
+        },  
+        {
+            "name": "frontPost",
+            "label": "Posts",
+            "group": "Layout",
+            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "value": "",
+            "type": "posts-dropdown", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
+            "name": "frontGallery",
+            "group": "Layout",
+            "label": "",
+            "note": "Enable if you want to display a post with image gallery",
+            "value": false,
+            "type": "checkbox", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
+        },
+        {
+            "name": "frontFeaturedImage",
+            "group": "Layout",
+            "label": "Featured image",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontAuthor",
             "group": "Layout",
-            "label": "Show author",
+            "label": "Author name",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontAvatar",
             "group": "Layout",
-            "label": "Show author avatar",
+            "label": "Author avatar",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontDate",
             "group": "Layout",
-            "label": "Show date",
+            "label": "Date",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
         {
             "name": "frontReadMore",
             "group": "Layout",
-            "label": "Show Read more button",
+            "label": "Read more button",
             "value": true,
-            "type": "checkbox"
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "frontSource",
+                "value": "default"
+            }]
         },
-
         {
             "name": "separator",
             "type": "separator",
             "label": "Tag Page",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
+        },
+        {
+            "name": "tagFeaturedImage",
+            "group": "Layout",
+            "label": "Featured image",
+            "value": true,
+            "type": "checkbox"
         },
         {
             "name": "tagAuthor",
             "group": "Layout",
-            "label": "Show author",
+            "label": "Author name",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagAvatar",
             "group": "Layout",
-            "label": "Show author avatar",
+            "label": "Author avatar",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagDate",
             "group": "Layout",
-            "label": "Show date",
+            "label": "Date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagReadMore",
             "group": "Layout",
-            "label": "Show Read more button",
+            "label": "Read more button",
             "value": true,
             "type": "checkbox"
         },
-
         {
             "name": "separator",
             "type": "separator",
             "label": "Author page",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
+        },
+        {
+            "name": "authorFeaturedImage",
+            "group": "Layout",
+            "label": "Featured image",
+            "value": false,
+            "type": "checkbox"
         },
         {
             "name": "authorAuthor",
             "group": "Layout",
-            "label": "Show author",
-            "value": true,
+            "label": "Author name",
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAvatar",
             "group": "Layout",
-            "label": "Show author avatar",
-            "value": true,
+            "label": "Author avatar",
+            "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorDate",
             "group": "Layout",
-            "label": "Show date",
+            "label": "Date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "authorReadMore",
             "group": "Layout",
-            "label": "Show Read more button",
+            "label": "Read more button",
             "value": true,
             "type": "checkbox"
         },
-
         {
-            "name": "primaryColor",
-            "label": "Primary color",
-            "group": "Colors",
-            "value": "#d73a42",
+            "name": "separator",
+            "type": "separator",
+            "label": "Logo",
+            "group": "Navbar",
+            "size": "small"
+        },        
+        {
+            "name": "logoColor",
+            "label": "Color",
+            "group": "Navbar",
+            "value": "#FFFFFF",
             "type": "colorpicker"
-        },
+        },        
         {
-            "name": "headingColor",
-            "label": "Heading color",
-            "group": "Colors",
-            "value": "#2c3e50",
-            "type": "colorpicker"
-        },
-        {
-            "name": "textColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "#61666c",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkColor",
-            "label": "Link color",
-            "group": "Colors",
-            "value": "#d73a42",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkHoverColor",
-            "label": "Link hover color",
-            "group": "Colors",
-            "value": "#2c3e50",
-            "type": "colorpicker"
-        },
-        {
-            "name": "minFontSize",
-            "label": "Minimum font size",
-            "group": "Fonts",
-            "note": "The font-size of the root element in REM unit",
-            "value": "1",
-            "type": "range",
-            "min": 1,
-            "max": 3,
-            "step": 0.05
-        },
-        {
-            "name": "maxFontSize",
-            "label": "Maximum font size",
-            "group": "Fonts",
-            "note": "The font-size of the root element in REM unit",
-            "value": "1.3",
-            "type": "range",
-            "min": 1,
-            "max": 3,
-            "step": 0.05
-        },
-        {
-            "name": "backgroundMenu",
-            "label": "Menu background",
-            "group": "Menu",
-            "value": "#2c3e50",
-            "type": "colorpicker"
+            "name": "separator",
+            "type": "separator",
+            "label": "Main menu",
+            "group": "Navbar",
+            "size": "big"
         },
         {
             "name": "linkColorMenu",
-            "label": "Menu link color",
-            "group": "Menu",
-            "value": "#ffffff",
+            "label": "Link color",
+            "group": "Navbar",
+            "value": "#FFFFFF",
             "type": "colorpicker"
         },
         {
             "name": "linkHoverColorMenu",
-            "label": "Menu link hover color",
-            "group": "Menu",
-            "value": "#ffffff",
+            "label": "Link hover color",
+            "group": "Navbar",
+            "value": "rgba(255, 255, 255, 0.7)",
+            "type": "colorpicker"
+        },
+        {
+            "name": "backgroundMenu",
+            "label": "Background",
+            "group": "Navbar",
+            "note": "Visible while scrolling back to the top of the website.",
+            "value": "#17181E",
             "type": "colorpicker"
         },
         {
             "name": "separator",
             "type": "separator",
-            "label": "",
-            "group": "Menu",
-            "size": "small"
+            "label": "Dropdown menu",
+            "group": "Navbar",
+            "size": "big"
         },
         {
             "name": "submenu",
-            "label": "Submenu width",
-            "group": "Menu",
+            "label": "Width",
+            "group": "Navbar",
             "value": "auto",
-            "type": "select",
+            "type": "radio",
             "options": [
                 {
                     "label": "Auto",
@@ -276,18 +332,462 @@
         },
         {
             "name": "submenuWidth",
-            "group": "Menu",
-            "note": "The submenu width in REM unit",
+            "group": "Navbar",
+            "note": "The submenu width in PX unit",
             "label": "",
-            "value": "15",
+            "value": "240",
             "type": "range",
-            "min": 1,
-            "max": 100,
-            "step": 1,
+            "min": 0,
+            "max": 1000,
+            "step": 10,
             "dependencies": [{
                 "field": "submenu",
                 "value": "custom"
             }]
+        },       
+        {
+            "name": "submenuBg",
+            "label": "Background",
+            "group": "Navbar",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "submenuLinkColor",
+            "label": "Link color",
+             "group": "Navbar",
+            "value": "rgba(255, 255, 255, 0.7)",
+            "type": "colorpicker"
+        },
+        {
+            "name": "submenuLinkHoverColor",
+            "label": "Link hover color",
+             "group": "Navbar",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        },
+        {
+            "name": "submenuLinkHoverBgMenu",
+            "label": "Link hover background",
+             "group": "Navbar",
+            "value": "rgba(255, 255, 255, 0.05)",
+            "type": "colorpicker"
+        },
+        
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Mobile menu",
+            "group": "Navbar",
+            "size": "big"
+        },
+        {
+            "name": "mobilemenu",
+            "label": "Type",
+            "group": "Navbar",
+            "value": "sidebar",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Sidebar",
+                    "value": "sidebar"
+                },
+                {
+                    "label": "Overlay",
+                    "value": "overlay"
+                }
+            ]
+        },
+        {
+            "name": "mobilemenuExpandableSubmenus",
+            "label": "Expandable submenus",
+            "group": "Navbar",
+            "value": true,
+            "type": "checkbox"
+        },
+        
+        {
+            "name": "heightHero",
+            "label": "Height",
+            "group": "Hero section",
+            "note": "Use of VH units recommended; for full-screen set to 100vh",
+            "value": "80vh",
+            "type": "text"
+        },        
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Hero section",
+            "size": "small"
+        },
+        {
+            "name": "displayHeroImage",
+            "group": "Hero section",
+            "label": "Image assignment",
+            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
+            "value": false,
+            "type": "checkbox"
+        },
+
+        {
+            "name": "uploadHero",
+            "label": "Image",
+            "group": "Hero section",
+            "value": "",
+            "type": "upload",
+            "upload": true
+        },
+        {
+            "name": "uploadHeroAlt",
+            "label": "Image Alt text",
+            "group": "Hero section",
+            "placeholder": "Add an alternative text to the hero image",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "uploadHeroCaption",
+            "label": "Image Caption",
+            "group": "Hero section",
+            "placeholder": "Add text caption to the hero image",
+            "value": "",
+            "type": "text"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Hero section",
+            "size": "small"
+        },
+        {
+            "name": "textHero",
+            "label": "Text",
+            "group": "Hero section",
+            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "siteOwner",
+            "group": "Hero section",
+            "label": "Site owner",
+            "note": "Displays the avatar and the name of the website owner (Main author)",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Hero section",
+            "size": "small"
+        },
+         {
+            "name": "heroBackground",
+            "label": "Background",
+            "group": "Hero section",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },  
+        {
+            "name": "heroOverlay",
+            "label": "Overlay",
+            "group": "Hero section",
+            "note": "The overlay works with the image and only when it has been fully loaded.",
+            "value": "gradient",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Solid color",
+                    "value": "color"
+                },
+                {
+                    "label": "Gradient",
+                    "value": "gradient"
+                }
+            ]
+        },        
+        {
+            "name": "heroOverlayColor",
+            "label": "",
+            "group": "Hero section",
+            "value": "rgba(0, 0, 0, 0.64)",
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "heroOverlay",
+                "value": "color"
+            }]
+        },
+        {
+            "name": "heroOverlayGradient",
+            "label": "",
+            "group": "Hero section",
+            "value": "rgba(0, 0, 0, 0.64)",
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "heroOverlay",
+                "value": "gradient"
+            }]
+        },
+        {
+            "name": "heroOverlayGradientDirection",
+            "label": "",
+            "group": "Hero section",
+            "note": "Gradient direction",
+            "value": "bottom",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Top",
+                    "value": "Top"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Bottom",
+                    "value": "bottom"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "dependencies": [{
+                "field": "heroOverlay",
+                "value": "gradient"
+            }]
+        },
+        {
+            "name": "heroHeadingColor",
+            "label": "Heading (H1) color",
+            "group": "Hero section",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        },
+        {
+            "name": "heroTextColor",
+            "label": "Text color",
+            "group": "Hero section",
+            "value": "rgba(255, 255, 255, 0.75)",
+            "type": "colorpicker"
+        },
+        {
+            "name": "heroLink",
+            "label": "Link color",
+            "group": "Hero section",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        },
+        {
+            "name": "heroLinkHover",
+            "label": "Link hover color",
+            "group": "Hero section",
+            "value": "rgba(255, 255, 255, 0.75)",
+            "type": "colorpicker"
+        },
+        {
+            "name": "heroBorderColor",
+            "label": "Border color",
+            "group": "Hero section",
+            "value": "rgba(255, 255, 255, 0.3)",
+            "type": "colorpicker"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Main colors",
+            "group": "Colors",
+            "size": "small"
+        },
+        {
+            "name": "primaryColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#D73A42",
+            "type": "colorpicker"
+        },        
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Colors",
+            "size": "small"
+        },       
+        {
+            "name": "headingColor",
+            "label": "Headings color",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Colors",
+            "size": "small"
+         },
+        {
+            "name": "linkColor",
+            "label": "Link color",
+            "group": "Colors",
+            "value": "#D73A42",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColor",
+            "label": "Link hover color",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        }, 
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Colors",
+            "size": "small"
+         },
+         {
+            "name": "buttonBg",
+            "label": "Buttons background",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "buttonColor",
+            "label": "Buttons color",
+            "group": "Colors",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        },
+    
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Main font settings",
+            "group": "Fonts",
+            "size": "small"
+        },        
+        {
+            "name": "fontFamily",
+            "label": "Font family",
+            "group": "Fonts",
+            "note": "Select font family for headings and body section",
+            "value": "font-pair-1",
+            "type": "select",
+            "options": [
+                {
+                    "label": "OS Default Font + OS Default Font",
+                    "value": "font-pair-0"
+                },
+                {
+                    "label": "PT Serif + OS Default Font",
+                    "value": "font-pair-1"
+                },
+                {
+                    "label": "Lora + OS Default Font",
+                    "value": "font-pair-2"
+                },
+                {
+                    "label": "Playfair Display + OS Default Font",
+                    "value": "font-pair-3"
+                },
+                {
+                    "label": "Rubik + OS Default Font",
+                    "value": "font-pair-4"
+                },
+                {
+                    "label": "Ubuntu + OS Default Font",
+                    "value": "font-pair-5"
+                },
+                {
+                    "label": "Open Sans + Roboto",
+                    "value": "font-pair-6"
+                },
+                {
+                    "label": "Roboto Condensed + OS Default Font",
+                    "value": "font-pair-7"
+                },
+                {
+                    "label": "Cairo + Maitree",
+                    "value": "font-pair-8"
+                }
+            ]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Fonts",
+            "size": "small"
+        },
+        {
+            "name": "minFontSize",
+            "label": "Minimum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.1",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "maxFontSize",
+            "label": "Maximum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.2",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Headings",
+            "group": "Fonts",
+            "size": "big"
+        },        
+        {
+            "name": "fontH1Transform",
+            "label": "H1-H6 text transform",
+            "group": "Fonts",            
+            "value": "none",
+            "type": "select",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "none"
+                },
+                {
+                    "label": "Capitalize",
+                    "value": "capitalize"
+                },
+                {
+                    "label": "Lowercase",
+                    "value": "lowercase"
+                },
+                {
+                    "label": "Uppercase",
+                    "value": "uppercase"
+                }
+            ]
         },
 
         {
@@ -323,154 +823,6 @@
         },
 
         {
-            "name": "heightHero",
-            "label": "Height",
-            "group": "Hero section",
-            "note": "Use of VH units recommended; for full-screen set to 100vh",
-            "value": "80vh",
-            "type": "text"
-        },
-
-        {
-            "name": "backgroundHero",
-            "label": "Overlay color",
-            "group": "Hero section",
-            "value": "rgba(0, 0, 0, 0.64)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero section",
-            "size": "small"
-        },
-
-        {
-            "name": "displayHeroImage",
-            "group": "Hero section",
-            "label": "Image assignment",
-            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
-            "value": true,
-            "type": "checkbox"
-        },
-
-        {
-            "name": "uploadHero",
-            "label": "Image",
-            "group": "Hero section",
-            "value": "",
-            "type": "upload",
-            "upload": true
-        },
-        {
-            "name": "uploadHeroAlt",
-            "label": "Image Alt text",
-            "group": "Hero section",
-            "placeholder": "Add an alternative text to the hero image",
-            "value": "",
-            "type": "text"
-        },
-        {
-            "name": "uploadHeroCaption",
-            "label": "Image Caption",
-            "group": "Hero section",
-            "placeholder": "Add text caption to the hero image",
-            "value": "",
-            "type": "text"
-        },
-
-        {
-            "name": "imageEffects",
-            "group": "Hero section",
-            "label": "Image effect",
-            "note": "Adding these effects created with CSS filters might have an impact on the performance of your site.",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "imageFilter",
-            "label": "Filter",
-            "group": "Hero section",
-            "value": "saturate",
-            "type": "select",
-            "options": [
-                {
-                    "label": "saturate",
-                    "value": "saturate"
-
-            },
-                {
-                    "label": "grayscale",
-                    "value": "grayscale"
-
-            },
-                {
-                    "label": "sepia",
-                    "value": "sepia"
-            },
-                {
-                    "label": "invert",
-                    "value": "invert"
-            },
-                {
-                    "label": "brightness",
-                    "value": "brightness"
-            },
-                {
-                    "label": "contrast",
-                    "value": "contrast"
-            }],
-            "dependencies": [{
-                "field": "imageEffects",
-                "value": "true"
-            }]
-        },
-        {
-            "name": "imageFilterValue",
-            "label": "Value",
-            "group": "Hero section",
-            "value": "1",
-            "type": "range",
-            "min": 0,
-            "max": 100,
-            "step": 1,
-            "dependencies": [{
-                "field": "imageEffects",
-                "value": "true"
-            }]
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero section",
-            "size": "small"
-        },
-        {
-            "name": "textHero",
-            "label": "Text",
-            "group": "Hero section",
-            "value": "<h1>Simple - a blog style Publii theme</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
-            "type": "wysiwyg"
-        },
-        {
-            "name": "headingColorHero",
-            "label": "Heading H1 color",
-            "group": "Hero section",
-            "value": "#ffffff",
-            "type": "colorpicker"
-        },
-        {
-            "name": "textColorHero",
-            "label": "Text color",
-            "group": "Hero section",
-            "value": "rgba(255, 255, 255, 0.75)",
-            "type": "colorpicker"
-        },
-
-
-        {
             "name": "shareFacebook",
             "group": "Share Buttons",
             "label": "Facebook share button",
@@ -494,13 +846,6 @@
                 "field": "shareTwitter",
                 "value": "true"
             }]
-        },
-        {
-            "name": "shareGoogleplus",
-            "group": "Share Buttons",
-            "label": "Google+ share button",
-            "value": false,
-            "type": "checkbox"
         },
         {
             "name": "sharePinterest",
@@ -540,13 +885,19 @@
             "value": "",
             "type": "text"
         },
-
         {
-            "name": "copyrightText",
-            "label": "Copyright text",
+            "name": "backToTopButton",
             "group": "Footer",
-            "value": "Powered by Publii",
-            "type": "wysiwyg"
+            "label": "\"Back to top\" button",
+            "value": true,
+            "type": "checkbox"
+        },  
+         {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Footer",
+            "size": "small"
         },
         {
             "name": "socialButtons",
@@ -580,18 +931,6 @@
             }]
         },
 
-        {
-            "name": "socialGoogleplus",
-            "label": "Google+",
-            "group": "Footer",
-            "placeholder": "Please enter your Google+ URL",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
-        },
         {
             "name": "socialInstagram",
             "label": "Instagram",
@@ -652,13 +991,69 @@
                 "value": "true"
             }]
         },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Footer",
+            "size": "small"
+        },
+        {
+            "name": "copyrightText",
+            "label": "Copyright text",
+            "group": "Footer",
+            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii Static CMS</a>",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": " ",
+            "group": "Footer",
+            "size": "small"
+        },        
+        {
+            "name": "footerBg",
+            "label": "Background",
+            "group": "Footer",
+            "value": "#17181E",
+            "type": "colorpicker"
+        }, 
+        {
+            "name": "footerTextColor",
+            "label": "Text color",
+            "group": "Footer",
+            "value": "#747577",
+            "type": "colorpicker"
+        }, 
+        {
+            "name": "footerLinkColor",
+            "label": "Link color",
+            "group": "Footer",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        }, 
+        {
+            "name": "footerLinkHoverColor",
+            "label": "Link hover color",
+            "group": "Footer",
+            "value": "rgba(255, 255, 255, 0.7)",
+            "type": "colorpicker"
+        },
+        {
+            "name": "footerIconColor",
+            "label": "Follow buttons color",
+            "group": "Footer",
+            "value": "#FFFFFF",
+            "type": "colorpicker"
+        },
 
         {
             "name": "galleryItemGap",
             "label": "Item spacing",
             "group": "Gallery",
             "note": "Use of REM units recommended but you can also use others (px, vw,)",
-            "value": "0.53333rem",
+            "value": "0.28333rem",
             "type": "text"
         },
         {
@@ -666,7 +1061,7 @@
             "type": "separator",
             "label": " ",
             "group": "Gallery",
-            "size": "smaller"
+            "size": "small"
          },
         {
             "name": "galleryLightboxStyle",
@@ -702,7 +1097,7 @@
             "type": "separator",
             "label": " ",
             "group": "Gallery",
-            "size": "smaller"
+            "size": "small"
          },
         {
             "name": "galleryAdvanced",
@@ -959,26 +1354,9 @@
                     "value": "image/png"
                 }]
         }
-
     ],
     "postConfig": [
-        {
-            "name": "displayAuthor",
-            "label": "Display author name",
-            "value": 1,
-            "type": "select",
-            "options": [
-                {
-                    "label": "Enabled",
-                    "value": 1
-                },
-                {
-                    "label": "Disabled",
-                    "value": 0
-                }
-            ]
-        },
-        {
+         {
             "name": "displayDate",
             "label": "Display date",
             "value": 1,
@@ -995,8 +1373,8 @@
             ]
         },
         {
-            "name": "displayLastUpdatedDate",
-            "label": "Display last updated date",
+            "name": "displayAuthor",
+            "label": "Display author",
             "value": 1,
             "type": "select",
             "options": [
@@ -1009,10 +1387,10 @@
                     "value": 0
                 }
             ]
-        },
+        },       
         {
-            "name": "displayShareButtons",
-            "label": "Display share buttons",
+            "name": "displayLastUpdatedDate",
+            "label": "Display last updated date",
             "value": 1,
             "type": "select",
             "options": [
@@ -1042,6 +1420,23 @@
                 }
             ]
         },
+        {
+            "name": "displayShareButtons",
+            "label": "Display share buttons",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        
         {
             "name": "displayAuthorBio",
             "label": "Display author bio",
@@ -1127,6 +1522,18 @@
                     "md": {
                         "width": 768,
                         "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
                     }
                 }
             },
@@ -1201,20 +1608,29 @@
                     }
                 }
             },
-
+            
             "galleryImages": {
                 "sizes": "",
                 "dimensions": {
                     "thumbnail": {
-                        "width": 240,
-                        "height": 240,
-                        "crop": true
+                         "width": 720,
+                         "height": "auto"                       
                     }
                 }
             }
         }
     },
     "customElements": [
+         {
+            "label": "Ordered list",
+            "cssClasses": "ordered-list",
+            "selector": "ol"
+        },
+        {
+            "label": "Drop cap",
+            "cssClasses": "dropcap",
+            "selector": "p"
+        },        
         {
             "label": "Info",
             "cssClasses": "msg msg--info",
@@ -1231,9 +1647,24 @@
             "selector": "p"
         },
         {
-            "label": "Drop cap",
-            "cssClasses": "dropcap",
+            "label": "Warning",
+            "cssClasses": "msg msg--warning",
             "selector": "p"
+        },
+        {
+            "label": "Table bordered",
+            "cssClasses": "table-bordered",
+            "selector": "table"
+        },
+        {
+            "label": "Table striped",
+            "cssClasses": "table-striped",
+            "selector": "table"
+        },
+        {
+            "label": "Table title",
+            "cssClasses": "table-title",
+            "selector": "table"
         }
     ]
 }

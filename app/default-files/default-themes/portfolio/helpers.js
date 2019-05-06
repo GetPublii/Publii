@@ -11,15 +11,16 @@ let themeHelpers = {
                 return match;
             }
             
-            if (lazyLoadEffect === 'lqip') {{
-            	match = match.replace('src="', 'data-src="');
-                match = match.replace('srcset="', 'data-srcset="');               
-                if(match.indexOf('class="') > -1) {
+            if (lazyLoadEffect === 'lqip') {
+                match = match.replace('src="', 'data-src="');
+                match = match.replace('srcset="', 'data-srcset="');
+                if (match.indexOf('class="') > -1) {
                     match = match.replace('class="', 'class="lazyload ');
                 } else {
                     match = match.replace('<img', '<img class="lazyload"');
                 }
-            } return match; }
+                return match;
+            }
 
             // Create *-xs image path
             let image = url.split('.');
@@ -38,10 +39,21 @@ let themeHelpers = {
                 xsImage = xsImage.split('/');
                 xsImage[xsImage.length - 2] = xsImage[xsImage.length - 2] + '/responsive';
                 xsImage = xsImage.join('/');
-                // Replace src attribute with *-xs image path
-                match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
-                // change srcset to data-srcset
-                match = match.replace('srcset="', 'data-srcset="');
+                
+                if (lazyLoadEffect === 'blur') {
+                    // Replace src attribute with *-xs image path
+                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
+                    // change srcset to data-srcset
+                    match = match.replace('srcset="', 'data-srcset="');
+                }
+                
+                 if (lazyLoadEffect === 'fadein') {
+                    // Remove src attribute
+                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
+                    // change srcset to data-srcset
+                    match = match.replace('srcset="', 'data-srcset="');
+                }                
+                
                 // replace sizes with data-sizes
                 match = match.replace(/sizes=".*?"/i, 'data-sizes="auto"');
                 // add necessary CSS classes

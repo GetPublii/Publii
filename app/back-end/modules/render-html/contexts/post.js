@@ -1,6 +1,7 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
 const sqlString = require('sqlstring');
+const stripTags = require('striptags');
 
 /**
  * Class used create context
@@ -29,6 +30,10 @@ class RendererContextPost extends RendererContext {
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
         this.canonicalUrl = this.post.url;
         this.metaRobots = '';
+
+        if (this.siteConfig.advanced.postMetaDescription === '') {
+            this.metaDescription = stripTags(this.post.excerpt).replace(/\n/gmi, '');
+        }
 
         if(this.metaData && this.metaData.value) {
             let results = JSON.parse(this.metaData.value);
@@ -249,6 +254,15 @@ class RendererContextPost extends RendererContext {
             conditions = ' AND ' + conditions;
         }
 
+        // Get related posts ordering
+        let ordering = ' p.id DESC ';
+
+        if (this.siteConfig.advanced.relatedPostsOrder === 'id-asc') {
+            ordering = ' p.id ASC ';
+        } else if (this.siteConfig.advanced.relatedPostsOrder === 'random') {
+            ordering = ' RANDOM() ';
+        }
+
         // Retrieve post
         let postsData = this.db.prepare(`
             SELECT
@@ -267,6 +281,8 @@ class RendererContextPost extends RendererContext {
                 ${conditions}
             GROUP BY
                 p.id
+            ORDER BY
+                ${ordering}
             LIMIT @relatedPostsNumber
         `).all({
             postID: this.post.id,

@@ -215,10 +215,14 @@ class RendererContext {
             siteNameValue = this.siteConfig.displayName;
         }
 
+        if (fullURL.substr(-1) !== '/' && fullURL.substr(-5) !== '.html') {
+            fullURL = fullURL + '/';
+        }
+
         this.context = {
             website: {
                 url: fullURL,
-                baseUrl: fullURL.replace('/index.html', ''),
+                baseUrl: fullURL.replace('/index.html', '/'),
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
                 pageUrl: '',
@@ -232,7 +236,12 @@ class RendererContext {
             },
             renderer: {
                 previewMode: this.renderer.previewMode,
-                ampMode: this.renderer.ampMode
+                ampMode: this.renderer.ampMode,
+                theme: {
+                    name: this.themeConfig.name,
+                    version: this.themeConfig.version,
+                    author: this.themeConfig.author
+                }
             },
             pagination: false,
             headCustomCode: this.siteConfig.advanced.customHeadCode || '',
@@ -334,7 +343,6 @@ class RendererContext {
                     posts
                 WHERE
                     status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
                     status NOT LIKE "%trashed%"
                 ORDER BY
                     ${postsOrdering}

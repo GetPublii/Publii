@@ -7,6 +7,7 @@
         :close-on-select="true"
         :show-labels="false"
         @select="closeDropdown()"
+        :multiple="multiple"
         :placeholder="placeholder"></v-select>
 </template>
 
@@ -14,6 +15,10 @@
 export default {
     name: 'tags-dropdown',
     props: {
+        multiple: {
+            type: Boolean,
+            default: false
+        },
         placeholder: {
             type: String,
             default: 'Select tag'
@@ -53,3 +58,22 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.multiselect {
+    line-height: 2;
+}
+
+.multiselect,
+.multiselect__tags {
+    min-height: 49px;
+}
+    
+.multiselect__tags {
+    padding: 0 4rem 0 1.8rem;
+}
+
+.multiselect__input {
+    max-width: 120px;
+}
+</style>

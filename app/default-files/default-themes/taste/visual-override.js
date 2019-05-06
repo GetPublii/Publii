@@ -181,21 +181,21 @@ var generateOverride = function (params) {
         }`;    	 
 	 }
 	
-    if(params.lazyLoad) {
-	 if(params.lazyLoadEffect === 'fadein') {
-        output += ` 
+    if (params.lazyLoad) {
+        if (params.lazyLoadEffect === 'fadein') {
+            output += ` 
         .lazyload,
         .lazyloading {
                opacity: 0;
         }
         .lazyloaded {
                opacity: 1;
-               transition: opacity 2s cubic-bezier(0.215, 0.61, 0.355, 1); 
-          }`;    	 
+               transition: opacity .5s cubic-bezier(0.215, 0.61, 0.355, 1);  
+          }`;
         }
-        
-	 if(params.lazyLoadEffect === 'blur') {
-        output += ` 
+
+        if (params.lazyLoadEffect === 'blur') {
+            output += ` 
         .lazyload,
         .lazyloading {
                -webkit-filter: blur(5px);
@@ -205,11 +205,11 @@ var generateOverride = function (params) {
         .lazyloaded {
                -webkit-filter: blur(0);
                filter: blur(0);
-          }`;    	 
+          }`;
         }
-        
-	 if(params.lazyLoadEffect === 'lqip') {
-        output += ` 
+
+        if (params.lazyLoadEffect === 'lqip') {
+            output += ` 
         .lazyload {
              opacity: 0;
         }
@@ -218,10 +218,10 @@ var generateOverride = function (params) {
              transition: opacity 300ms;
              background: #f8f8f8;
  
-          }`;    	 
+          }`;
         }
-	 }	
-  
+    }
+    
     return output;
 }
 
