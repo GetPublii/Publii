@@ -1,0 +1,158 @@
+<main class="u-cutting">
+   {{#getPost @config.custom.frontPost}}
+      <article class="post {{#if @config.custom.postAside}}post--with-aside{{/if}}">
+         {{#featuredImage}}
+            {{#if url}}
+               {{#checkIfAny caption credits}}
+                  <figure class="post__featured-image post__image--full">
+                     {{#if @config.custom.lazyLoad}}
+                        <img
+                           class="lazyload"
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                              src="{{urlXs}}"
+                           {{else}}
+                              data-src="{{url}}"
+                           {{/checkIf}}
+                           data-srcset="{{srcset.post}}"
+                           data-sizes="auto"
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                     {{else}}
+                        <img
+                           src="{{url}}"
+                           sizes="{{sizes.post}}"
+                           srcset="{{srcset.post}}"
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                     {{/if}}
+                     <figcaption>{{caption}}
+                        {{credits}}</figcaption>
+                  </figure>
+               {{else}}
+                  <div class="post__featured-image post__image--full">
+                     {{#if @config.custom.lazyLoad}}
+                        <img
+                           class="lazyload"
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                              src="{{urlXs}}"
+                           {{else}}
+                              data-src="{{url}}"
+                           {{/checkIf}}
+                           data-srcset="{{srcset.post}}"
+                           data-sizes="auto"
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                     {{else}}
+                        <img
+                           src="{{url}}"
+                           sizes="{{sizes.post}}"
+                           srcset="{{srcset.post}}"
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                     {{/if}}
+                  </div>
+               {{/checkIfAny}}
+            {{/if}}
+         {{/featuredImage}}
+         <header class="post__header">
+            <h1>{{title}}</h1>
+            {{#checkIfAny postViewConfig.displayAuthor postViewConfig.displayDate}}
+               <p class="post__meta">
+                  {{#if postViewConfig.displayAuthor}}
+                     {{#author}}
+                        {{ translate 'post.publishedBy' }}
+                        <a href="{{url}}" rel="author" title="{{name}}">{{name}}</a>
+                     {{/author}}
+                  {{/if}}
+                  {{#if postViewConfig.displayDate}}
+                     <br/>{{ translate 'post.publishedOn' }}
+                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                           {{date createdAt @config.custom.formatDate}}
+                        {{else}}
+                           {{date createdAt @config.custom.formatDateCustom}}
+                        {{/checkIf}}
+                     </time>
+                  {{/if}}
+               </p>
+            {{/checkIfAny}}
+         </header>
+         <div class="post__entry">
+            {{#if @config.custom.lazyLoad}}
+               {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
+            {{else}}
+               {{{text}}}
+            {{/if}}
+         </div>
+         {{#if postViewConfig.displayShareButtons}}
+            <aside class="post__aside">
+
+               <div class="post__share">
+
+                  {{> share-buttons}}
+               </div>
+            </aside>
+         {{/if}}
+         {{#checkIfAny postViewConfig.displayTags postViewConfig.displayAuthorBio}}
+            <footer class="post__footer">
+               {{#if postViewConfig.displayTags}}
+                  {{#if tags}}
+                     <ul class="post__tag">
+                        {{#each tags}}
+                           <li>
+                              <a href="{{url}}">{{name}}</a>
+                           </li>
+                        {{/each}}
+                     </ul>
+                  {{/if}}
+               {{/if}}
+               {{#if postViewConfig.displayAuthorBio}}
+                  {{#author}}
+                     <div class="post__bio">
+                        {{#if avatar}}
+                           <div class="post__bio-thumb">
+                              {{#if @config.custom.lazyLoad}}
+                                 <img class="lazyload" data-src="{{avatar}}" alt="{{name}}">
+                              {{else}}
+                                 <img src="{{avatar}}" alt="{{name}}">
+                              {{/if}}
+                           </div>
+                        {{/if}}
+                        <div class="post__bio-text">
+                           {{#if name}}
+                              <h3>
+                                 <a href="{{url}}" title="{{name}}">{{name}}</a>
+                              </h3>
+                           {{/if}}
+
+                           {{#if description}}
+                              <p>{{description}}</p>
+                           {{/if}}
+                        </div>
+                     </div>
+                  {{/author}}
+               {{/if}}
+            </footer>
+         {{/checkIfAny}}
+      </article>     
+
+      {{#checkIfAny postViewConfig.displayComments @customHTML.afterPost}}
+         <div class="tank">
+            <div
+               class="tank__inner {{#if @config.custom.postAside}}tank__inner--with-aside{{/if}}">
+               {{#if postViewConfig.displayComments}}
+                  {{> disqus}}</div>
+            {{/if}}
+            {{#if @customHTML.afterPost}}
+               <div class="banner banner--after-post">
+                  {{{@customHTML.afterPost}}}
+               </div>
+            {{/if}}
+         </div>
+      {{/checkIfAny}}
+   {{/getPost}}
+</main>

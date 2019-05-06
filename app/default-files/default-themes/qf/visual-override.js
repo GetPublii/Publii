@@ -186,6 +186,9 @@ if(params.pageWidth !== '83rem') {
  .container > header  {
        max-width: ${params.pageWidth}; 
     }
+}
+.post__image--full > img {
+       max-width: calc(${params.pageWidth} + 8%);    
   }`;    	 
 }	
 	

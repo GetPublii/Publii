@@ -28,16 +28,7 @@
                             </svg>
                         </a>
                     {{/if}}
-                {{/if}}
-                {{#if @config.custom.socialFooterGoogleplus}}
-                    {{#if @config.custom.socialGoogleplus}}
-                        <a href="{{@config.custom.social_googleplus}}" aria-label="Google +">
-                            <svg>
-                                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
-                            </svg>
-                        </a>
-                    {{/if}}
-                {{/if}}
+                {{/if}}              
                 {{#if @config.custom.socialFooterInstagram}}
                     {{#if @config.custom.socialInstagram}}
                         <a href="{{@config.custom.socialInstagram}}" aria-label="Instagram">
@@ -104,6 +95,13 @@
       {{/if}}
   {{/post}}
 {{/is}}
+{{#checkIf @config.custom.frontSource '==' "post"}}
+   {{#checkIf @config.custom.frontGallery '==' true}}
+      {{#is "index"}}
+          {{> photoswipe}}
+      {{/is}}
+   {{/checkIf}}
+{{/checkIf}}
 {{#checkIfAny @config.custom.frontCommentCount @config.custom.tagCommentCount @config.custom.authorCommentCount @config.post.displayCommentCount}}
     <script id="dsq-count-scr" src="//{{@config.custom.commentDisqusShortname}}.disqus.com/count.js" async></script>
 {{/checkIfAny}}

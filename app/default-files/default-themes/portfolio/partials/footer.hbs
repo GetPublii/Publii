@@ -18,12 +18,6 @@
                 <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter" />
             </svg>
         </a>
-        {{/if}} {{#if @config.custom.socialGoogleplus}}
-        <a href="{{@config.custom.social_googleplus}}" aria-label="Google +">
-            <svg class="icon">
-                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
-            </svg>
-        </a>
         {{/if}} {{#if @config.custom.socialInstagram}}
         <a href="{{@config.custom.socialInstagram}}" aria-label="Instagram">
             <svg class="icon">
@@ -72,6 +66,13 @@
       {{/if}}
   {{/post}}
 {{/is}}
+{{#checkIf @config.custom.frontSource '==' "post"}}
+   {{#checkIf @config.custom.frontGallery '==' true}}
+      {{#is "index"}}
+          {{> photoswipe}}
+      {{/is}}
+   {{/checkIf}}
+{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg2js.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>

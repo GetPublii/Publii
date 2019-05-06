@@ -1,0 +1,221 @@
+<main>
+   {{#getPost @config.custom.frontPost}}
+      <article class="post">
+         <div class="hero">
+            {{#featuredImage}}
+               {{#if url}}
+                  {{#if @config.custom.lazyLoad}}
+                     <figure class="hero__image">
+                        <img
+                           class="hero__image-img lazyload"
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{urlXs}}"
+                           {{else}}
+                           data-src="{{url}}"
+                           {{/checkIf}}
+                           data-srcset="{{srcset.post}}"
+                           data-sizes="auto"
+                           alt="{{alt}}"
+                           height="{{height}}"
+                           width="{{width}}">
+                        {{#checkIfAny caption credits}}
+                           <figcaption>
+                              {{caption}}
+                              {{credits}}
+                           </figcaption>
+                        {{/checkIfAny}}
+                     </figure>
+                  {{else}}
+                     <figure class="hero__image hero__image--overlay">
+                        <img
+                           src="{{url}}"
+                           sizes="{{sizes.post}}"
+                           srcset="{{srcset.post}}"
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                        {{#checkIfAny caption credits}}
+                           <figcaption>
+                              {{caption}}
+                              {{credits}}
+                           </figcaption>
+                        {{/checkIfAny}}
+                     </figure>
+                  {{/if}}
+               {{else}}
+                  {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+                     {{#if @config.custom.uploadHeroCaption}}
+                        {{#if @config.custom.lazyLoad}}
+                           <figure class="hero__image">
+                              <img
+                                 class="hero__image-img lazyload"
+                                 src="{{@config.custom.uploadHero}}"
+                                 {{responsiveSrcSet @config.custom.uploadHero}}
+                                 {{responsiveSizes}}
+                                 data-sizes="auto"
+                                 alt="{{@config.custom.uploadHeroAlt}}"
+                                 height="{{height}}"
+                                 width="{{width}}">
+                              <figcaption>
+                                 {{@config.custom.uploadHeroCaption}}
+                              </figcaption>
+                           </figure>
+                        {{else}}
+                           <figure class="hero__image hero__image--overlay">
+                              <img
+                                 src="{{@config.custom.uploadHero}}"
+                                 {{responsiveSrcSet @config.custom.uploadHero}}
+                                 {{responsiveSizes}}
+                                 alt="{{@config.custom.uploadHeroAlt}}"
+                                 height="{{height}}"
+                                 width="{{width}}">
+                              <figcaption>
+                                 {{@config.custom.uploadHeroCaption}}
+                              </figcaption>
+                           </figure>
+                        {{/if}}
+                     {{else}}
+                        {{#if @config.custom.lazyLoad}}
+                           <div class="hero__image">
+                              <img
+                                 class="hero__image-img lazyload"
+                                 src="{{@config.custom.uploadHero}}"
+                                 {{responsiveSrcSet @config.custom.uploadHero}}
+                                 {{responsiveSizes}}
+                                 data-sizes="auto"
+                                 alt="{{@config.custom.uploadHeroAlt}}"
+                                 height="{{height}}"
+                                 width="{{width}}">
+                           </div>
+                        {{else}}
+                           <div class="hero__image hero__image--overlay">
+                              <img
+                                 src="{{@config.custom.uploadHero}}"
+                                 {{responsiveSrcSet @config.custom.uploadHero}}
+                                 {{responsiveSizes}}
+                                 alt="{{@config.custom.uploadHeroAlt}}"
+                                 height="{{height}}"
+                                 width="{{width}}">
+                           </div>
+                        {{/if}}
+                     {{/if}}
+                  {{/checkIfAll}}
+               {{/if}}
+            {{/featuredImage}}
+            <header class="hero__content">
+               <div class="wrapper">
+                  {{#if postViewConfig.displayDate}}
+                     <div class="post__meta">
+                        <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                           {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                              {{date createdAt @config.custom.formatDate}}
+                           {{else}}
+                              {{date createdAt @config.custom.formatDateCustom}}
+                           {{/checkIf}}
+                        </time>
+                     </div>
+                  {{/if}}
+                  <h1>
+                     {{title}}
+                  </h1>
+                  {{#if postViewConfig.displayAuthor}}
+                     <div class="post__meta post__meta--author">
+                        {{#author}}
+                           {{#if avatar}}
+                              <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
+                           {{/if}}
+
+                           <a href="{{url}}" class="feed__author invert">{{name}}</a>
+                        {{/author}}
+                     </div>
+                  {{/if}}
+               </div>
+            </header>
+         </div>
+
+         <div class="wrapper post__entry">
+            {{#if @config.custom.lazyLoad}}
+               {{{lazyLoadForContentImages text @config.custom.lazyLoadEffect}}}
+            {{else}}
+               {{{text}}}
+            {{/if}}
+         </div>
+
+         {{#checkIfAny postViewConfig.displayLastUpdatedDate postViewConfig.displayTags postViewConfig.displayShareButtons postViewConfig.displayAuthorBio}}
+            <footer class="wrapper post__footer">
+
+               {{#if postViewConfig.displayLastUpdatedDate}}
+                  {{#if modifiedAt}}
+                     <p class="post__last-updated">
+                        {{ translate 'post.lastUpdatedDate' }}
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                           {{date modifiedAt @config.custom.formatDate}}
+                        {{else}}
+                           {{date modifiedAt @config.custom.formatDateCustom}}
+                        {{/checkIf}}
+                     </p>
+                  {{/if}}
+               {{/if}}
+
+               {{#if postViewConfig.displayTags}}
+                  {{#if tags}}
+                     <ul class="post__tag">
+                        {{#each tags}}
+                           <li>
+                              <a href="{{url}}">{{name}}</a>
+                           </li>
+                        {{/each}}
+                     </ul>
+                  {{/if}}
+               {{/if}}
+
+               {{#if postViewConfig.displayShareButtons}}
+                  <div class="post__share">
+                     {{> share-buttons}}
+                  </div>
+               {{/if}}
+
+               {{#if postViewConfig.displayAuthorBio}}
+                  <div class="post__bio bio">
+                     {{#author}}
+                        {{#if avatar}}
+                           <img src="{{avatar}}" alt="{{name}}" class="bio__avatar"/>
+                        {{/if}}
+                        <div class="bio__info">
+                           <h3 class="bio__name">
+                              <a href="{{url}}" class="invert" rel="author">{{name}}</a>
+                           </h3>
+
+                           {{#if description}}
+                              <p>{{description}}
+                              </p>
+                           {{/if}}
+                        </div>
+                     {{/author}}
+                  </div>
+               {{/if}}
+            </footer>
+         {{/checkIfAny}}
+      </article>
+
+      {{#if postViewConfig.displayComments}}
+         <div class="post__comments">
+            <div class="wrapper">
+               <h2 class="h5">
+                  {{ translate 'post.comments' }}
+               </h2>
+               {{> disqus}}
+            </div>
+         </div>
+      {{/if}}
+
+      {{#if @customHTML.afterPost}}
+         <div class="banner banner--after-post">
+            <div class="wrapper">
+               {{{@customHTML.afterPost}}}
+            </div>
+         </div>
+      {{/if}}
+    
+   {{/getPost}}
+</main>

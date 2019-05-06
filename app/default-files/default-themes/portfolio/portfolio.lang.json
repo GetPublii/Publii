@@ -35,7 +35,8 @@
 		"nextPost": "Next Post"
 	},
 	"common": {
-		"readmore": "View more"
+		"readmore": "View more",
+        "notRefresh": "Do not refresh the page"
 	},
 	"error": {
 		"404": "404",			

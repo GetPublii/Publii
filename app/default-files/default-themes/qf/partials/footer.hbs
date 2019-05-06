@@ -110,7 +110,7 @@
     </div>
 {{/if}}
 <script defer src="{{js "jquery-3.2.1.slim.min.js"}}"></script>
-<script defer src="{{js "scripts.js"}}"></script>
+<script defer src="{{js "scripts.min.js"}}"></script>
 {{#is "post"}}
    {{#post}}
       {{#if hasGallery}}
@@ -118,6 +118,13 @@
       {{/if}}
   {{/post}}
 {{/is}}
+{{#checkIf @config.custom.frontSource '==' "post"}}
+   {{#checkIf @config.custom.frontGallery '==' true}}
+      {{#is "index"}}
+          {{> photoswipe}}
+      {{/is}}
+   {{/checkIf}}
+{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg2js.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>

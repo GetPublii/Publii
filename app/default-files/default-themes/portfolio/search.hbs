@@ -11,7 +11,9 @@
                 {{/if}}
             </a>
             <div class="top">
-                {{> menu menus.mainMenu}}
+                {{#if menus.mainMenu}}
+                    {{> menu menus.mainMenu}}
+                {{/if}}
                 {{> search}}
             </div>
         </header>

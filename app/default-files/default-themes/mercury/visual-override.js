@@ -152,28 +152,33 @@ var generateOverride = function (params) {
         .cookie-popup,
         .cookie-popup__save {
                background: ${params.primaryColor};      
-    }`;    	 
+        }`;    	 
     }
 
     if(params.pageWidth !== '66rem') {
         output += `
         .container {
                max-width: ${params.pageWidth};
-        }
-        @media all and (min-width: 56.25em) {
-                .container > header {
-                   max-width: calc(${params.pageWidth} - 8%);
-                 }
-        }
+        }       
 
         .post__image--wide > img {
-               width: calc(${params.pageWidth} - 8%);
+               width: calc(${params.pageWidth} - (4vw * 2));
         }
         .post__image--full > img {
                width: ${params.pageWidth};
 
         }`;
     }
+    
+     if(params.pageEntryWidth !== '36rem') {
+        output += `
+        @media all and (min-width: 56.25em) {
+               .u-wrapper {
+                   max-width: ${params.pageEntryWidth};                  
+               }        
+        }`;
+    }
+    
     if(params.submenu === 'custom') {
         output += `
         @media all and (min-width: 56.25em) {

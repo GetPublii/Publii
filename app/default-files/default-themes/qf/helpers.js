@@ -11,15 +11,16 @@ let themeHelpers = {
                 return match;
             }
             
-             if (lazyLoadEffect === 'lqip') {{
-            	match = match.replace('src="', 'data-src="');
-                match = match.replace('srcset="', 'data-srcset="');               
-                if(match.indexOf('class="') > -1) {
+            if (lazyLoadEffect === 'lqip') {
+                match = match.replace('src="', 'data-src="');
+                match = match.replace('srcset="', 'data-srcset="');
+                if (match.indexOf('class="') > -1) {
                     match = match.replace('class="', 'class="lazyload ');
                 } else {
                     match = match.replace('<img', '<img class="lazyload"');
                 }
-            } return match; }
+                return match;
+            }
 
             // Create *-xs image path
             let image = url.split('.');
@@ -38,22 +39,54 @@ let themeHelpers = {
                 xsImage = xsImage.split('/');
                 xsImage[xsImage.length - 2] = xsImage[xsImage.length - 2] + '/responsive';
                 xsImage = xsImage.join('/');
-                // Replace src attribute with *-xs image path
-                match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
-                // change srcset to data-srcset
-                match = match.replace('srcset="', 'data-srcset="');
+                
+                if (lazyLoadEffect === 'blur') {
+                    // Replace src attribute with *-xs image path
+                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
+                    // change srcset to data-srcset
+                    match = match.replace('srcset="', 'data-srcset="');
+                }
+                
+                 if (lazyLoadEffect === 'fadein') {
+                    // Remove src attribute
+                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
+                    // change srcset to data-srcset
+                    match = match.replace('srcset="', 'data-srcset="');
+                }                
+                
                 // replace sizes with data-sizes
                 match = match.replace(/sizes=".*?"/i, 'data-sizes="auto"');
                 // add necessary CSS classes
                 if(match.indexOf('class="') > -1) {
-                    match = match.replace('class="', 'class="lazyload blur-up ');
+                    match = match.replace('class="', 'class="lazyload ');
                 } else {
-                    match = match.replace('<img', '<img class="lazyload blur-up"');
+                    match = match.replace('<img', '<img class="lazyload"');
                 }
             }
             // return modified <img> tag
             return match;
         });
+        
+            // Select all iframes from the content
+        modifiedPostText = modifiedPostText.replace(/<iframe[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+            // Replace src attribute with data-src            
+            match = match.replace('src="', 'data-src="');
+            // Add class attribute            
+            match = match.replace('<iframe', '<iframe class="lazyload"');
+            // return modified <iframe> tag
+            return match;
+        });
+       
+        // Select all videos from the content
+        modifiedPostText = modifiedPostText.replace(/<video[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+            // Replace src attribute with data-src            
+            match = match.replace('src="', 'data-src="');
+            // Add class attribute            
+            match = match.replace('<video', '<video class="lazyload"');
+            // return modified <video> tag
+            return match;
+        });
+
 
         return modifiedPostText;
     }

@@ -14,5 +14,7 @@
                 </svg>
             </button>
         {{/if}}
-        {{> menu menus.mainMenu}}
+        {{#if menus.mainMenu}}
+            {{> menu menus.mainMenu}}
+        {{/if}}
     </header>

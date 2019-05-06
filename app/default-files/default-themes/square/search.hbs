@@ -1,6 +1,8 @@
 {{> head}}
 <div class="container">
-    {{> menu menus.mainMenu}}
+    {{#if menus.mainMenu}}
+        {{> menu menus.mainMenu}}
+    {{/if}}
     <div class="content js-content">
         <header>
             <div class="top">

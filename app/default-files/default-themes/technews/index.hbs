@@ -1,5 +1,12 @@
 {{> head}}
-    {{> top}}
+{{> top}}
+{{#checkIf @config.custom.frontSource '==' "post" }}
+    {{#checkIf @config.custom.frontPostTemplate '==' "default" }}
+        {{> frontpage-post}}
+    {{else}}
+        {{> frontpage-post-alternative}}
+    {{/checkIf}}
+{{else}}
     <main class="main cat {{@config.custom.layoutFrontpage}}">
         {{#each posts}}
 		   {{#if @config.custom.frontAd}}
@@ -149,4 +156,5 @@
         {{/if}}
     </main>
     {{> sidebar}}
-    {{> footer}}
+{{/checkIf}}
+{{> footer}}

@@ -30,7 +30,9 @@
                 </div>
             {{/if}}
 
-            {{> menu menus.mainMenu}}
+            {{#if menus.mainMenu}}
+                {{> menu menus.mainMenu}}
+            {{/if}}
 			
         </div>
     </header>
