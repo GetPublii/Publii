@@ -18,9 +18,9 @@
                      <img
                         class="lazyload"
                         {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                            src="{{urlXs}}"
+                           src="{{urlXs}}"
                         {{else}}
-                            data-src="{{url}}"
+                           data-src="{{url}}"
                         {{/checkIf}}
                         data-srcset="{{srcset.post}}"
                         data-sizes="auto"
@@ -184,14 +184,14 @@
                            <div class="post__nav__prev">
                               <a href="{{url}}" class="post__nav__link" rel="prev">
                                  {{#featuredImage}}
-                                     {{#if url}}
+                                    {{#if url}}
                                        {{#if @config.custom.lazyLoad}}
                                           <img
                                              class="lazyload"
                                              {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                                                 src="{{urlXs}}"
+                                                src="{{urlXs}}"
                                              {{else}}
-                                                 data-src="{{urlXs}}"
+                                                data-src="{{urlXs}}"
                                              {{/checkIf}}
                                              data-srcset="{{urlXs}}"
                                              data-expand="300"
@@ -225,9 +225,9 @@
                                           <img
                                              class="lazyload"
                                              {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                                                 src="{{urlXs}}"
+                                                src="{{urlXs}}"
                                              {{else}}
-                                                 data-src="{{urlXs}}"
+                                                data-src="{{urlXs}}"
                                              {{/checkIf}}
                                              data-srcset="{{urlXs}}"
                                              data-expand="300"
@@ -260,9 +260,9 @@
                                              <img
                                                 class="lazyload"
                                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                                                    src="{{urlXs}}"
+                                                   src="{{urlXs}}"
                                                 {{else}}
-                                                    data-src="{{urlXs}}"
+                                                   data-src="{{urlXs}}"
                                                 {{/checkIf}}
                                                 data-srcset="{{urlXs}}"
                                                 data-expand="300"
@@ -295,25 +295,23 @@
                {{/if}}
             </footer>
          {{/checkIfAny}}
-
       </article>
+
+      {{#if @config.post.displayComments}}
+         <div class="comments box">
+            <h3 class="box__title">
+               {{ translate 'post.comments' }}
+            </h3>
+            {{> disqus}}
+         </div>
+      {{/if}}
+
+      {{#if @customHTML.afterPost}}
+         <div class="banner banner--after-post">
+            {{{@customHTML.afterPost}}}
+         </div>
+      {{/if}}
    {{/post}}
-
-   {{#if @config.post.displayComments}}
-      <div class="comments box">
-         <h3 class="box__title">
-            {{ translate 'post.comments' }}
-         </h3>
-         {{> disqus}}
-      </div>
-   {{/if}}
-
-   {{#if @customHTML.afterPost}}
-      <div class="banner banner--after-post">
-         {{{@customHTML.afterPost}}}
-      </div>
-   {{/if}}
-
 </main>
 {{> sidebar}}
 {{> footer}}

@@ -1,35 +1,82 @@
 {{> head}}
 {{> top}}
-<main class="error">
-    <section class="hero error__hero">
-        {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+<main>
+   <article class="post">
+      <div class="hero">
+         {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
             {{#if @config.custom.uploadHeroCaption}}
-                <figure class="hero__wrap">
-                    <img                       
-                        src="{{@config.custom.uploadHero}}"
+               {{#if @config.custom.lazyLoad}}
+                  <figure class="hero__image">
+                     <img
+                        class="hero__image-img lazyload"
+                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
                         {{responsiveSrcSet @config.custom.uploadHero}}
                         {{responsiveSizes}}
+                        data-sizes="auto"
                         alt="{{@config.custom.uploadHeroAlt}}">
-                    <figcaption>
+                     <figcaption>
                         {{@config.custom.uploadHeroCaption}}
-                    </figcaption>
-                </figure>
-            {{else}}
-                <div class="hero__wrap">
-                    <img
+                     </figcaption>
+                  </figure>
+               {{else}}
+                  <figure class="hero__image hero__image--overlay">
+                     <img
                         src="{{@config.custom.uploadHero}}"
                         {{responsiveSrcSet @config.custom.uploadHero}}
                         {{responsiveSizes}}
                         alt="{{@config.custom.uploadHeroAlt}}">
-                </div>
+                     <figcaption>
+                        {{@config.custom.uploadHeroCaption}}
+                     </figcaption>
+                  </figure>
+               {{/if}}
+            {{else}}
+               {{#if @config.custom.lazyLoad}}
+                  <div class="hero__image">
+                     <img
+                        class="hero__image-img lazyload"
+                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        data-sizes="auto"
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{else}}
+                  <div class="hero__image hero__image--overlay">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{/if}}
             {{/if}}
-        {{/checkIfAll}}
-        <header class="hero__text error__text">
-            <hgroup>
-                <h1>{{ translate 'error.404' }}</h1>
-                <h2>{{ translate 'error.message1' }}</h2>
-            </hgroup>
-        </header>
-    </section>
+         {{/checkIfAll}}
+         <header class="hero__content">
+            <div class="wrapper">
+               <h1>{{ translate 'error.404' }}</h1>
+               <p>{{ translate 'error.message-1' }}</p>
+            </div>
+         </header>
+      </div>
+      <div class="wrapper post__entry">
+         <p>{{ translate 'error.message-2' }}</p>
+         <p>
+            <svg width="1.041em" height="0.416em" aria-hidden="true">
+               <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+            </svg>
+            <a href="{{@website.url}}" class="readmore">
+               {{ translate 'error.button' }}</a>
+         </p>
+      </div>
+   </article>
 </main>
 {{> footer}}

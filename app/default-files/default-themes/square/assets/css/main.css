@@ -644,6 +644,10 @@ textarea {
     .menu-toggle:before, .menu-toggle:hover, .menu-toggle:focus, .menu-toggle:active {
       border-color: #d4d4d4; } }
 
+img[data-sizes="auto"] {
+  display: block;
+  width: 100%; }
+
 .main:after {
   content: " ";
   display: block;
@@ -789,26 +793,39 @@ textarea {
   margin-right: auto;
   text-align: center; }
 
-.post__video {
-  height: 0;
-  overflow: hidden;
-  padding-top: 1.5rem;
-  padding-bottom: 56.25%;
-  position: relative; }
-  .post__video > iframe {
-    border: none;
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%; }
-
 .post__meta {
   color: #5c5c5c;
   font-size: 0.70233rem;
   line-height: 3.249;
   margin: 0;
   text-transform: uppercase; }
+
+.post__video, .post__iframe {
+  position: relative;
+  display: block;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  padding: 0;
+  width: 100%; }
+  .post__video::before, .post__iframe::before {
+    display: block;
+    content: "";
+    padding-top: 56.25%; }
+  .post__video--21by9::before, .post__iframe--21by9::before {
+    padding-top: 42.857143%; }
+  .post__video--4by3::before, .post__iframe--4by3::before {
+    padding-top: 75%; }
+  .post__video--1by1::before, .post__iframe--1by1::before {
+    padding-top: 100%; }
+  .post__video > iframe, .post__iframe > iframe {
+    border: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%; }
 
 .post__share {
   display: -webkit-box;
@@ -1131,7 +1148,4 @@ textarea {
   color: #262626; }
 
 .pswp--light .pswp__caption__center {
-  color: #262626;
-  text-align: center; }
-
-/*# sourceMappingURL=main.css.map */
+  color: #262626; }

@@ -37,33 +37,60 @@
               {{/if}}
            {{/post}}
         {{/is}}	
+        {{#checkIf @config.custom.frontSource '==' "post" }}
+           {{#checkIf @config.custom.frontGallery '==' true}}
+              {{#is "index"}}
+                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
+              {{/is}}
+           {{/checkIf}}
+        {{/checkIf}}
         {{jsonLD}}
         {{#if @config.custom.lazyLoad}}
             <script async src="{{js "lazysizes.min.js"}}"></script>
         {{/if}}
-		{{#if @config.custom.galleryLightboxStyle}}
-		    <style>
-				{{#is "post"}}
-                   {{#post}}
-                      {{#if hasGallery}}
-		                 {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
-				            .pswp--svg .pswp__button,
-				            .pswp--svg .pswp__button--arrow--left:before,
-				            .pswp--svg .pswp__button--arrow--right:before {
-					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
-			                }
-		                 {{else}}
-			                .pswp--svg .pswp__button,
-				            .pswp--svg .pswp__button--arrow--left:before,
-				            .pswp--svg .pswp__button--arrow--right:before {
-					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
-			                }		
-		                 {{/checkIf}}
-                      {{/if}}
-                   {{/post}}
-				{{/is}}		
-		    </style>
-		{{/if}}
+		{{#is "post"}}
+           {{#post}}
+              {{#if hasGallery}}
+		            <style>				
+		               {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+				          .pswp--svg .pswp__button,
+				          .pswp--svg .pswp__button--arrow--left:before,
+				          .pswp--svg .pswp__button--arrow--right:before {
+					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+			              }
+		              {{else}}
+			              .pswp--svg .pswp__button,
+				          .pswp--svg .pswp__button--arrow--left:before,
+				          .pswp--svg .pswp__button--arrow--right:before {
+					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+			              }		
+		              {{/checkIf}}
+		            </style>		        
+              {{/if}}
+           {{/post}}
+        {{/is}}
+        
+        {{#checkIf @config.custom.frontSource '==' "post"}}
+          {{#checkIf @config.custom.frontGallery '==' true}}
+            {{#is "index"}}
+               <style>	
+		            {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+		                 .pswp--svg .pswp__button,
+		                 .pswp--svg .pswp__button--arrow--left:before,
+		                 .pswp--svg .pswp__button--arrow--right:before {
+			                background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+		                 }
+		            {{else}}
+		                 .pswp--svg .pswp__button,
+		                 .pswp--svg .pswp__button--arrow--left:before,
+		                 .pswp--svg .pswp__button--arrow--right:before {
+			                background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+		                 }		
+		            {{/checkIf}}
+               </style>	
+            {{/is}}	
+          {{/checkIf}}
+        {{/checkIf}}        
         {{{@headCustomCode}}}
     </head>
     <body>

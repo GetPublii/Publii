@@ -1,56 +1,97 @@
 {{> head}}
 {{> top}}
 <main>
-    <section class="hero">
-        {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+   <article class="post search-page">
+      <div class="hero">
+         {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
             {{#if @config.custom.uploadHeroCaption}}
-                <figure class="hero__wrap">
-                    <img                       
-                        src="{{@config.custom.uploadHero}}"
+               {{#if @config.custom.lazyLoad}}
+                  <figure class="hero__image">
+                     <img
+                        class="hero__image-img lazyload"
+                         {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
                         {{responsiveSrcSet @config.custom.uploadHero}}
                         {{responsiveSizes}}
+                        data-sizes="auto"
                         alt="{{@config.custom.uploadHeroAlt}}">
-                    <figcaption>
+                     <figcaption>
                         {{@config.custom.uploadHeroCaption}}
-                    </figcaption>
-                </figure>
-            {{else}}
-                <div class="hero__wrap">
-                    <img
+                     </figcaption>
+                  </figure>
+               {{else}}
+                  <figure class="hero__image hero__image--overlay">
+                     <img
                         src="{{@config.custom.uploadHero}}"
                         {{responsiveSrcSet @config.custom.uploadHero}}
                         {{responsiveSizes}}
                         alt="{{@config.custom.uploadHeroAlt}}">
-                </div>
+                     <figcaption>
+                        {{@config.custom.uploadHeroCaption}}
+                     </figcaption>
+                  </figure>
+               {{/if}}
+            {{else}}
+               {{#if @config.custom.lazyLoad}}
+                  <div class="hero__image">
+                     <img
+                        class="hero__image-img lazyload"
+                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           src="{{@config.custom.uploadHero}}"
+                        {{else}}
+                           data-src="{{@config.custom.uploadHero}}"
+                        {{/checkIf}}
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        data-sizes="auto"
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{else}}
+                  <div class="hero__image hero__image--overlay">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{responsiveSrcSet @config.custom.uploadHero}}
+                        {{responsiveSizes}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
+                  </div>
+               {{/if}}
             {{/if}}
-        {{/checkIfAll}}
-        <header class="hero__text search">
-            <h1>
-                {{ translate 'search.title' }}
-            </h1>
-            <form action="{{@website.searchUrl}}" class="search__form">
-                <input
-                    type="search"
-                    name="{{@config.custom.searchParam}}"
-                    placeholder="{{ translate 'search.placeholder' }}"
-                    class="search__input"/>
-            </form>
-        </header>
-    </section>
+         {{/checkIfAll}}
+         <header class="hero__content">
+            <div class="wrapper">
+               <h1>
+                  {{ translate 'search.title' }}
+               </h1>               
+            </div>
+         </header>
+      </div>
+      <div class="wrapper post__entry">
+          
+         <form action="{{@website.searchUrl}}" class="search-page__form">
+            <input
+               type="search"
+               name="{{@config.custom.searchParam}}"
+               placeholder="{{ translate 'search.placeholder' }}"
+               class="search-page__input"/>
+            <button type="submit">{{ translate 'search.submit' }}</button>
+         </form>
 
-    <script>
-        (function () {
-            var cx = '{{@config.custom.searchId}}';
-            var gcse = document.createElement('script');
-            gcse.type  = 'text/javascript';
-            gcse.async = true;
-            gcse.src   = 'https://cse.google.com/cse.js?cx=' + cx;
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(gcse, s);
-        })();
-    </script>
-
-    <gcse:searchresults-only></gcse:searchresults-only>
-
+         <script>
+            (function () {
+               var cx = '{{@config.custom.searchId}}';
+               var gcse = document.createElement('script');
+               gcse.type  = 'text/javascript';
+               gcse.async = true;
+               gcse.src   = 'https://cse.google.com/cse.js?cx=' + cx;
+               var s = document.getElementsByTagName('script')[0];
+               s.parentNode.insertBefore(gcse, s);
+            })();
+         </script>
+         <gcse:searchresults-only></gcse:searchresults-only>
+      </div>
+   </article>
 </main>
 {{> footer}}

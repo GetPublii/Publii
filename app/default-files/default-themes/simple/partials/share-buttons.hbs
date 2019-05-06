@@ -1,56 +1,71 @@
 {{#if @config.custom.shareFacebook}}
- <a href="https://www.facebook.com/sharer/sharer.php?u={{encodeUrlFragment url}}" class="js-share facebook" title="{{ translate 'partials.shareButtons.shareWithFacebook' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook" />
-    </svg>
-</a>
+   <a
+      href="https://www.facebook.com/sharer/sharer.php?u={{encodeUrlFragment url}}"
+      class="js-share facebook"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithFacebook' }}</span>
+   </a>
 {{/if}}
 
 {{#if @config.custom.shareTwitter}}
-<a href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}
-" class="js-share twitter" title="{{ translate 'partials.shareButtons.shareWithTwitter' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter" />
-    </svg>
-</a>
-{{/if}}
-
-{{#if @config.custom.shareGoogleplus}}
-<a href="https://plus.google.com/share?url={{encodeUrlFragment url}}" class="js-share gplus" title="{{ translate 'partials.shareButtons.shareWithGooglePlus' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus" />
-    </svg>
-</a>
+   <a
+      href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}"
+      class="js-share twitter"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithTwitter' }}</span>
+   </a>
 {{/if}}
 
 {{#if @config.custom.sharePinterest}}
-<a href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featuredImage.url}}&amp;description={{encodeUrlFragment title}}" class="js-share pinterest" title="{{ translate 'partials.shareButtons.shareWith' }} {{ translate 'partials.shareButtons.shareWithPinterest' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest" />
-    </svg>
-</a>
+   <a
+      href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featuredImage.url}}&amp;description={{encodeUrlFragment title}}"
+      class="js-share pinterest"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithPinterest' }}</span>
+   </a>
 {{/if}}
 
 {{#if @config.custom.shareMix}}
-<a href="https://mix.com/add?url={{encodeUrlFragment url}}" class="js-share mix" title="{{ translate 'partials.shareButtons.shareWithMix' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#mix" />
-    </svg>
-</a>
+   <a
+      href="https://mix.com/add?url={{encodeUrlFragment url}}"
+      class="js-share mix"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#mix"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithMix' }}</span>
+   </a>
 {{/if}}
 
 {{#if @config.custom.shareLinkedin}}
-<a href="http://www.linkedin.com/shareArticle?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}" class="js-share linkedin" title="{{ translate 'partials.shareButtons.shareWithLinkedIn' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin" />
-    </svg>
-</a>
+   <a
+      href="http://www.linkedin.com/shareArticle?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}"
+      class="js-share linkedin"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithLinkedIn' }}</span>
+   </a>
 {{/if}}
 
 {{#if @config.custom.shareBuffer}}
-<a href="https://buffer.com/add?text={{encodeUrlFragment title}}&amp;url={{encodeUrlFragment url}}" class="js-share buffer" title="{{ translate 'partials.shareButtons.shareWithBuffer' }}" rel="nofollow">
-    <svg class="icon">
-        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#buffer" />
-    </svg>
-</a>
+   <a
+      href="https://buffer.com/add?text={{encodeUrlFragment title}}&amp;url={{encodeUrlFragment url}}"
+      class="js-share buffer"
+      rel="nofollow">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#buffer"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithBuffer' }}</span>
+   </a>
 {{/if}}

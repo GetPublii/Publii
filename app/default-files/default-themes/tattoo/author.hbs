@@ -1,7 +1,7 @@
 {{> head}}
 {{> top}}
 <main>
-   <section class="hero {{@config.custom.widthHero}}">
+   <div class="hero {{@config.custom.widthHero}}">
       <header>
          {{#author}}
             {{#if avatar}}
@@ -25,15 +25,16 @@
                {{/checkIf}}
                {{responsiveSrcSet @config.custom.uploadHero}}
                {{responsiveSizes}}
+               data-sizes="auto"
                alt="{{@config.custom.uploadHeroAlt}}">
-            {{#if @config.custom.uploadHeroCaption}}
-               <figcaption>
-                  {{@config.custom.uploadHeroCaption}}
-               </figcaption>
-            {{/if}}
+               {{#if @config.custom.uploadHeroCaption}}
+                  <figcaption>
+                     {{@config.custom.uploadHeroCaption}}
+                  </figcaption>
+               {{/if}}
          </figure>
       {{/checkIfAll}}
-   </section>
+   </div>
    <div class="category {{@config.custom.layoutAuthor}}">
       {{#each posts}}
          <article class="card">

@@ -1,8 +1,8 @@
 <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = '{{post.url}}';
-		this.page.identifier = '{{post.id}}';
+        this.page.url = '{{url}}';
+		this.page.identifier = '{{id}}';
         this.page.title = ' {{#if title}}{{title}}{{else}}{{@website.name}}{{/if}}';
     };
 
@@ -20,7 +20,7 @@
 
             (function () {
                 var d = document, s = d.createElement('script');
-                s.src = '//{{@config.custom.commentDisqusShortname}}.disqus.com/embed.js';
+                s.src = 'https://{{@config.custom.commentDisqusShortname}}.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();

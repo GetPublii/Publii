@@ -1,42 +1,58 @@
 {
     "partials": {
+        
         "disqus": {
             "noscript1": "Please enable JavaScript to view the",
             "noscript2": "comments powered by Disqus."
         },
+        
         "menu": {
             "label": "Menu"
         },
+        
         "pagination": {
             "prev": "Previous",
             "next": "Next"
         },
+        
         "shareButtons": {
-            "shareWithFacebook": "Share with Facebook",
-            "shareWithTwitter": "Share with Twitter",
-            "shareWithGooglePlus": "Share with Google Plus",
-            "shareWithPinterest": "Share with Pinterest",
-            "shareWithMix": "Share with Mix",
-            "shareWithLinkedIn": "Share with LinkedIn",
-            "shareWithBuffer": "Share with Buffer"
+            "shareWithFacebook": "Facebook",
+            "shareWithTwitter": "Twitter",
+            "shareWithGooglePlus": "Google Plus",
+            "shareWithPinterest": "Pinterest",
+            "shareWithMix": "Mix",
+            "shareWithLinkedIn": "LinkedIn",
+            "shareWithBuffer": "Buffer"
+        },
+        
+        "footer": {
+            "backToTop": "Back to top"
         }
     },
+    
     "post": {
         "publishedBy": "By",
-        "relatedPosts": "Related posts",
-        "readMore": "Read more",
+        "relatedPosts": "You should also read:",
+        "readMore": "Continue reading...",
         "lastUpdatedDate": "This article was updated on",
         "comments": "Comments",
-        "previousPost": "Previous Post",
-        "nextPost": "Next Post"
+        "previousPost": "Previous",
+        "nextPost": "Next"
     },
+    
     "error": {
         "404": "404",
-        "message1": "Ooops, something went wrong",
-        "message2": "Unfortunately, the page you've requested cannot be displayed"
+        "message-1": "Page not found",
+        "message-2": "The page you were looking for appears to have been moved, deleted or does not exist. You could go back to where you were or head straight to our home page.",
+        "button": "Go home"
+
     },
+    
     "search": {
         "placeholder": "search...",
-        "title": "Search"
+        "search": "Search",
+        "close": "Close",
+        "title": "Search",
+        "submit": "Submit"
     }
 }

@@ -27,8 +27,7 @@
                 <link rel="next" href="{{@pagination.nextPageUrl }}">
             {{/if}}
         {{/if}}
-        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700%7CRoboto+Condensed:400,700&amp;subset=latin-ext" rel="stylesheet">   
+        {{> fonts}}  
         <link rel="stylesheet" href="{{css "style.css" }}">
 		{{#is "post"}}
            {{#post}}
@@ -36,39 +35,61 @@
                  <link rel="stylesheet" href="{{css "photoswipe.css" }}">
               {{/if}}
            {{/post}}
-        {{/is}}		
+        {{/is}}	
+        {{#checkIf @config.custom.frontSource '==' "post" }}
+           {{#checkIf @config.custom.frontGallery '==' true}}
+              {{#is "index"}}
+                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
+              {{/is}}
+           {{/checkIf}}
+        {{/checkIf}}
         {{jsonLD}}
         {{#if @config.custom.lazyLoad}}
         	<script async src="{{js "lazysizes.min.js"}}"></script>
         {{/if}}
-		{{#checkIfAny @config.custom.search @config.custom.galleryLightboxStyle}}
-		    <style>
-				{{#if @config.custom.search}}
-				    .top__search [type=search] {
-						background-image: url({{@website.assetsUrl}}/svg/search.svg);
-				    }
-				{{/if}}
-				{{#is "post"}}
-                   {{#post}}
-                      {{#if hasGallery}}
-		                 {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
-				            .pswp--svg .pswp__button,
-				            .pswp--svg .pswp__button--arrow--left:before,
-				            .pswp--svg .pswp__button--arrow--right:before {
-					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
-			                }
-		                 {{else}}
-			                .pswp--svg .pswp__button,
-				            .pswp--svg .pswp__button--arrow--left:before,
-				            .pswp--svg .pswp__button--arrow--right:before {
-					            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
-			                }		
-		                 {{/checkIf}}
-                      {{/if}}
-                   {{/post}}
-				{{/is}}	
-		    </style>
-		{{/checkIfAny}}
+		{{#is "post"}}
+           {{#post}}
+              {{#if hasGallery}}
+		            <style>				
+		               {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+				          .pswp--svg .pswp__button,
+				          .pswp--svg .pswp__button--arrow--left:before,
+				          .pswp--svg .pswp__button--arrow--right:before {
+					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+			              }
+		              {{else}}
+			              .pswp--svg .pswp__button,
+				          .pswp--svg .pswp__button--arrow--left:before,
+				          .pswp--svg .pswp__button--arrow--right:before {
+					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+			              }		
+		              {{/checkIf}}
+		            </style>		        
+              {{/if}}
+           {{/post}}
+        {{/is}}
+        
+        {{#checkIf @config.custom.frontSource '==' "post"}}
+          {{#checkIf @config.custom.frontGallery '==' true}}
+            {{#is "index"}}
+               <style>	
+		            {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+		                 .pswp--svg .pswp__button,
+		                 .pswp--svg .pswp__button--arrow--left:before,
+		                 .pswp--svg .pswp__button--arrow--right:before {
+			                background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+		                 }
+		            {{else}}
+		                 .pswp--svg .pswp__button,
+		                 .pswp--svg .pswp__button--arrow--left:before,
+		                 .pswp--svg .pswp__button--arrow--right:before {
+			                background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+		                 }		
+		            {{/checkIf}}
+               </style>	
+            {{/is}}	
+          {{/checkIf}}
+        {{/checkIf}} 		
         {{{@headCustomCode}}}
     </head>
     <body>

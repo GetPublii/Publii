@@ -1,6 +1,6 @@
 {
     "name": "Square",
-    "version": "1.6.0.0",
+    "version": "1.7.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -10,7 +10,7 @@
          "renderRelatedPosts": false,
          "renderSimilarPosts": false,
          "renderPrevNextPosts": false,
-         "createContentStructure": false,
+         "createContentStructure": true,
          "createSearchPage": false,
          "customHTML": {
              "afterPost": "After every post"
@@ -51,108 +51,51 @@
         }
     ],
     "customConfig": [
-
+       
         {
-            "name": "primaryColor",
-            "label": "Primary color",
-            "group": "Colors",
-            "value": "#a6752e",
-            "type": "colorpicker"
-        },
+            "name": "frontSource",
+            "label": "Front page displays",
+            "group": "Layout",            
+            "value": "default",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Latest posts",
+                    "value": "default"
+                },
+                {
+                    "label": "Selected post",
+                    "value": "post"
+                }
+            ]
+        },  
         {
-            "name": "headingColor",
-            "label": "Headings color",
-            "group": "Colors",
-            "value": "#000000",
-            "type": "colorpicker"
-        },
+            "name": "frontPost",
+            "label": "Posts",
+            "group": "Layout",
+            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "value": "",
+            "type": "posts-dropdown", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
+        },        
         {
-            "name": "textColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "#262626",
-            "type": "colorpicker"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
+            "name": "frontGallery",
+            "group": "Layout",
             "label": "",
-            "group": "Colors",
-            "size": "small"
+            "note": "Enable if you want to display a post with image gallery",
+            "value": false,
+            "type": "checkbox", 
+            "dependencies": [
+            {
+                "field": "frontSource",
+                "value": "post"
+            }]
         },
-        {
-            "name": "linkColor",
-            "label": "Link color",
-            "group": "Colors",
-            "value": "#a6752e",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkHoverColor",
-            "label": "Link hover color",
-            "group": "Colors",
-            "value": "#a6752e",
-            "type": "colorpicker"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Colors",
-            "size": "small"
-        },
-        {
-            "name": "logoColor",
-            "label": "Logo color",
-            "group": "Colors",
-            "value": "#ffffff",
-            "type": "colorpicker"
-        },
-
-        {
-            "name": "minFontSize",
-            "label": "Minimum font size",
-            "group": "Fonts",
-            "note": "The font-size of the root element in REM unit",
-            "value": "1",
-            "type": "range",
-            "min": 1,
-            "max": 3,
-            "step": 0.05
-        },
-        {
-            "name": "maxFontSize",
-            "label": "Maximum font size",
-            "group": "Fonts",
-            "note": "The font-size of the root element in REM unit",
-            "value": "1.5",
-            "type": "range",
-            "min": 1,
-            "max": 3,
-            "step": 0.05
-        },
-        {
-            "name": "backgroundMenu",
-            "label": "Menu background",
-            "group": "Menu",
-            "value": "#262626",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkColorMenu",
-            "label": "Menu link color",
-            "group": "Menu",
-            "value": "gray",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkHoverColorMenu",
-            "label": "Menu link hover color",
-            "group": "Menu",
-            "value": "#fff",
-            "type": "colorpicker"
-        },
-
+        
         {
             "name": "heightHero",
             "label": "Min. height on mobile view",
@@ -309,6 +252,108 @@
             "type": "colorpicker"
         },
 
+
+        {
+            "name": "primaryColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#a6752e",
+            "type": "colorpicker"
+        },
+        {
+            "name": "headingColor",
+            "label": "Headings color",
+            "group": "Colors",
+            "value": "#000000",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#262626",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Colors",
+            "size": "small"
+        },
+        {
+            "name": "linkColor",
+            "label": "Link color",
+            "group": "Colors",
+            "value": "#a6752e",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColor",
+            "label": "Link hover color",
+            "group": "Colors",
+            "value": "#a6752e",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Colors",
+            "size": "small"
+        },
+        {
+            "name": "logoColor",
+            "label": "Logo color",
+            "group": "Colors",
+            "value": "#ffffff",
+            "type": "colorpicker"
+        },
+
+        {
+            "name": "minFontSize",
+            "label": "Minimum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "maxFontSize",
+            "label": "Maximum font size",
+            "group": "Fonts",
+            "note": "The font-size of the root element in REM unit",
+            "value": "1.5",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.05
+        },
+        {
+            "name": "backgroundMenu",
+            "label": "Menu background",
+            "group": "Menu",
+            "value": "#262626",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkColorMenu",
+            "label": "Menu link color",
+            "group": "Menu",
+            "value": "gray",
+            "type": "colorpicker"
+        },
+        {
+            "name": "linkHoverColorMenu",
+            "label": "Menu link hover color",
+            "group": "Menu",
+            "value": "#fff",
+            "type": "colorpicker"
+        },
+
         {
             "name": "shareFacebook",
             "group": "Share Buttons",
@@ -333,14 +378,7 @@
                 "field": "shareTwitter",
                 "value": "true"
             }]
-        },
-        {
-            "name": "shareGoogleplus",
-            "group": "Share Buttons",
-            "label": "Google+ share button",
-            "value": false,
-            "type": "checkbox"
-        },
+        },      
         {
             "name": "sharePinterest",
             "group": "Share Buttons",
@@ -412,18 +450,6 @@
             "label": "Twitter",
             "group": "Footer",
             "placeholder": "Please enter your Twitter URL",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
-        },
-        {
-            "name": "socialGoogleplus",
-            "label": "Google+",
-            "group": "Footer",
-            "placeholder": "Please enter your Google+ URL",
             "value": "",
             "type": "text",
             "dependencies": [{
@@ -513,7 +539,7 @@
             "group": "Gallery",
             "note": "Set the lightbox slideshow style by choosing dark or light overlay",
             "value": "pswp--dark",
-            "type": "select",            
+            "type": "radio",            
             "options": [
                 {
                     "label": "Dark",

@@ -42,14 +42,10 @@
                 
                 <p class="card-meta">                     
                    {{#author}}
-                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                    by <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
                     {{/author}} 
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                            {{date createdAt @config.custom.formatDate}}
-                        {{else}}
-                            {{date createdAt @config.custom.formatDateCustom}}
-                        {{/checkIf}}
+                        {{date createdAt @config.custom.formatDate}}
                     </time>
                 </p>
                
@@ -99,14 +95,10 @@
                 
                 <p class="card-meta">                     
                    {{#author}}
-                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                    by <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
                     {{/author}} 
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
-                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                            {{date createdAt @config.custom.formatDate}}
-                        {{else}}
-                            {{date createdAt @config.custom.formatDateCustom}}
-                        {{/checkIf}}
+                        {{date createdAt @config.custom.formatDate}}
                     </time>
                 </p>
                

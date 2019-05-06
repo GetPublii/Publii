@@ -3,56 +3,49 @@
         <div class="footer__social">
             {{#if @config.custom.socialFacebook}}
                 <a href="{{@config.custom.socialFacebook}}" aria-label="Facebook">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialTwitter}}
                 <a href="{{@config.custom.socialTwitter}}" aria-label="Twitter">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter"/>
-                    </svg>
-                </a>
-            {{/if}}
-            {{#if @config.custom.socialGoogleplus}}
-                <a href="{{@config.custom.social_googleplus}}" aria-label="Google +">
-                    <svg class="icon">
-                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#gplus"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialInstagram}}
                 <a href="{{@config.custom.socialInstagram}}" aria-label="Instagram">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#instagram"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialLinkedin}}
                 <a href="{{@config.custom.socialLinkedin}}" aria-label="LinkedIn">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialVimeo}}
                 <a href="{{@config.custom.socialVimeo}}" aria-label="Vimeo">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#vimeo"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialPinterest}}
                 <a href="{{@config.custom.socialPinterest}}" aria-label="Pinterest">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest"/>
                     </svg>
                 </a>
             {{/if}}
             {{#if @config.custom.socialYoutube}}
                 <a href="{{@config.custom.socialYoutube}}" aria-label="Youtube">
-                    <svg class="icon">
+                    <svg>
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#youtube"/>
                     </svg>
                 </a>
@@ -64,10 +57,34 @@
             {{{@config.custom.copyrightText}}}
         </div>
     {{/if}}
+    {{#if @config.custom.backToTopButton}}
+       <button class="footer__bttop js-footer__bttop" aria-label="{{ translate 'partials.footer.backToTop' }}"> 
+           <svg>
+               <title>{{ translate 'partials.footer.backToTop' }}</title>
+               <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#toparrow" />
+           </svg>
+       </button>   
+    {{/if}}
 </footer>
 </div>
-<script defer src="{{js "jquery-3.2.1.slim.min.js"}}"></script>
+
+<script>
+   window.publiiThemeMenuConfig = {    
+        mobileMenuMode: '{{@config.custom.mobilemenu}}',
+        animationSpeed: 300,
+        submenuWidth: {{#checkIf @config.custom.submenu '==' "auto" }}'auto'{{else}}{{@config.custom.submenuWidth}}{{/checkIf}},
+        doubleClickTime: 500,
+        mobileMenuExpandableSubmenus: {{@config.custom.mobilemenuExpandableSubmenus}}, 
+        relatedContainerForOverlayMenuSelector: '.top',
+   };
+</script>
 <script defer src="{{js "scripts.min.js"}}"></script>
+
+{{#if @config.custom.lazyLoad}}
+<script>
+      var lazyFeaturedImage=function lazyFeaturedImage(){var b=document.querySelectorAll(".hero__image-img");for(var a=0;a<b.length;a++){var c=b[a];c.addEventListener("lazyloaded",function(f){var d=f.target.parentNode;d.classList.add("hero__image--overlay")})}};lazyFeaturedImage();
+   </script>
+{{/if}}
 {{#is "post"}}
    {{#post}}
       {{#if hasGallery}}
@@ -75,6 +92,13 @@
       {{/if}}
   {{/post}}
 {{/is}}
+{{#checkIf @config.custom.frontSource '==' "post"}}
+   {{#checkIf @config.custom.frontGallery '==' true}}
+      {{#is "index"}}
+          {{> photoswipe}}
+      {{/is}}
+   {{/checkIf}}
+{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg2js.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>
