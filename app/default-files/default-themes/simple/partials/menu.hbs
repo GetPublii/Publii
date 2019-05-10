@@ -10,7 +10,7 @@
          </span>
       </button>
    {{/unless}}
-    <ul{{#if level}} class="navbar__submenu" aria-hidden="true" {{else}} class="navbar__menu"{{/if}}>
+    <ul{{#if level}} class="navbar__submenu level-{{level}}" aria-hidden="true" {{else}} class="navbar__menu"{{/if}}>
         {{#each items}}
              <li{{menuItemClasses}}>
             {{#if link}}

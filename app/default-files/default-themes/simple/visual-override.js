@@ -172,22 +172,14 @@ var generateOverride = function (params) {
 
     if (params.linkColorMenu !== '#FFFFFF') {
         output += `
-        .navbar .navbar__menu li a {
+        .navbar .navbar__menu li a,
+        .navbar .navbar__menu li span[aria-haspopup="true"] {
                color: ${params.linkColorMenu};
         }
 
         .navbar .navbar__menu li span {
                color: ${params.linkColorMenu};
-        }
-
-        .navbar .navbar__toggle-inner,
-        .navbar .navbar__toggle-inner::before,
-        .navbar .navbar__toggle-inner::after {
-               background-color: ${params.linkColorMenu};
-        }
-
-        .search__btn > svg {
-               fill: ${params.linkColorMenu};
+        
         }`;
     }
 
@@ -195,19 +187,17 @@ var generateOverride = function (params) {
         output += `
         .navbar .navbar__menu li a:active,
         .navbar .navbar__menu li a:focus,
-        .navbar .navbar__menu li a:hover  {
+        .navbar .navbar__menu li a:hover,
+        .navbar .navbar__menu li span[aria-haspopup="true"]:active,
+        .navbar .navbar__menu li span[aria-haspopup="true"]:focus,
+        .navbar .navbar__menu li span[aria-haspopup="true"]:hover   {
                color: ${params.linkHoverColorMenu};
         }      
 
         .navbar .navbar__menu > li:hover > a,
-        .navbar .navbar__menu > li:hover > span {
+        .navbar .navbar__menu > li:hover > span[aria-haspopup="true"] {
                color: ${params.linkHoverColorMenu};  
-        }
-
-        .search__btn:hover > svg,
-        .search__btn:focus > svg {
-               fill: ${params.linkHoverColorMenu};  
-        }`;
+                 }`;
     }
     
     if (params.submenu === 'custom') {
@@ -236,12 +226,13 @@ var generateOverride = function (params) {
     
     if(params.submenuLinkColor !== 'rgba(255, 255, 255, 0.7)') {
         output += `
-         .navbar .navbar__submenu li a {
-               color: ${params.submenuLinkColor};  
+         .navbar .navbar__submenu li a,
+         .navbar .navbar__submenu li span[aria-haspopup="true"] {
+               color: ${params.submenuLinkColor} !important;  
          }
 
          .navbar .navbar__submenu li span {
-               color: ${params.submenuLinkColor}; 
+               color: ${params.submenuLinkColor} !important; 
         }`;
     }
     
@@ -249,9 +240,17 @@ var generateOverride = function (params) {
         output += `
          .navbar .navbar__submenu li a:active,
          .navbar .navbar__submenu li a:focus,
-         .navbar .navbar__submenu li a:hover {
+         .navbar .navbar__submenu li a:hover,
+         .navbar .navbar__submenu li span[aria-haspopup="true"]:active,
+         .navbar .navbar__submenu li span[aria-haspopup="true"]:focus,
+         .navbar .navbar__submenu li span[aria-haspopup="true"]:hover {
                background: ${params.submenuLinkHoverBgMenu};     
-               color: ${params.submenuLinkHoverColor};             
+               color: ${params.submenuLinkHoverColor} !important;    
+         }
+
+         .navbar .navbar__submenu li:hover > a,
+         .navbar .navbar__submenu li:hover > span[aria-haspopup="true"] {
+               color: ${params.submenuLinkHoverColor} !important;  
         }`;
     }
 
