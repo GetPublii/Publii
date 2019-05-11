@@ -46,6 +46,12 @@ export default {
 
                 if (response.rel) {
                     relAttr = ' rel="nofollow"';
+
+                    if (response.target.indexOf('_blank') > -1) {
+                        relAttr = ' rel="nofollow noopener noreferrer"';
+                    }
+                } else if (response.target.indexOf('_blank') > -1) {
+                    relAttr = ' rel="noopener noreferrer"';
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;

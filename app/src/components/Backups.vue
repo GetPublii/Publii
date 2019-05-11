@@ -372,6 +372,12 @@ export default {
             ipcRenderer.once('app-backup-created', (event, data) => {
                 if (data.status) {
                     this.items = data.backups;
+
+                    this.$bus.$emit('message-display', {
+                        message: 'Backup has been created.',
+                        type: 'success',
+                        lifeTime: 3
+                    });
                 } else {
                     this.$bus.$emit('message-display', {
                         message: 'An error occurred during backup creation. Please try again.',

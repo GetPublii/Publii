@@ -145,7 +145,7 @@ class Sitemap {
      * Retrieves media path for the website
      */
     getMediaPath (postObject) {
-        return this.siteConfig.domain + '/' + path.join('media', 'posts', (postObject.id).toString());
+        return this.siteConfig.domain + '/' + path.join('media', 'posts', (postObject.id).toString()) + '/';
     }
 
     /**
@@ -450,7 +450,7 @@ class Sitemap {
                         this.fileList.push({
                             images: this.postData[file].images,
                             lastMod: this.postData[file].lastMod,
-                            url: file
+                            url: file + '/'
                         });
                     } else {
                         this.fileList.push(file + '/');
