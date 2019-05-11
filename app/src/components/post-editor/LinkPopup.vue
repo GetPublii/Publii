@@ -269,7 +269,7 @@ export default {
                 }
             }
 
-            if (relContent && relContent[1]) {
+            if (relContent && relContent[1].indexOf('nofollow') > -1) {
                 this.rel = true;
             }
         },
