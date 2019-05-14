@@ -213,7 +213,7 @@ class SFTP {
             self.deployment.uploadFile();
         }).catch(err => {
             self.deployment.outputLog.push('- - -ERROR UPLOAD FILE - - -');
-            self.deployment.outputLog.push(normalizePath(path.join(self.outputDir, fileToUpload.path)));
+            self.deployment.outputLog.push(normalizePath(path.join(self.outputDir, input)));
             self.deployment.outputLog.push(err);
             self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
             self.deployment.uploadFile();
@@ -260,7 +260,7 @@ class SFTP {
                 message: 'app-uploading-progress',
                 value: {
                     progress: 8 + Math.floor(self.deployment.progressOfDeleting),
-                    operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
+                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
                 }
             });
 
