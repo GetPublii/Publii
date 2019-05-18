@@ -30,7 +30,7 @@ servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
 
 ## Download
 
-Publii is available for Mac, Windows, and Linux and can be downloaded [from our website](https://getpublii.com/download/).
+Publii is available for Mac, Windows, and Linux and can be downloaded from our website:
 
 [Download Publii (.exe, .dmg, .deb, .rpm, .AppImage)](https://getpublii.com/download/)
 
