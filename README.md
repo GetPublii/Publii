@@ -25,64 +25,18 @@ can create, update and modify your site offline, then upload the site changes to
 the click of a button. Publii supports multiple upload options, including standard HTTP/HTTPS
 servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
 
-**Download installer:** [Publii (.exe .dmg)](https://getpublii.com/download/)
-
 
 ![Publii Open Source Static CMS](https://getpublii.com//publii-static-cms.svg)
 
+## Download
 
-## Installation
-### Required Software
+Publii is available for Mac, Windows, and Linux and can be downloaded [from our website](https://getpublii.com/download/).
 
-For app build you will need the following software installed:
+[Download Publii (.exe, .dmg, .deb, .rpm, .AppImage)](https://getpublii.com/download/)
 
-* **node.js** (10.*)
-* **npm (>= 6.*)**
-* **python** (>= 2.5.0 && < 3.0.0)
-* **electron** (in version used by Publii), **electron-packager**, **node-gyp** and **gulp** node.js modules installed globally
+## Developing
 
-Only for Windows:
-
-* `npm install --global --production windows-build-tools`
-
-Only for macOS:
-
-* Install XCode
-
-### Build Process
-
-In the root project directory run:
-
-```sh
-npm install
-cd app
-npm install
-cd ..
-npm run dev
-```
-
-When the files are compiled run:
-
-```sh
-gulp prepare-editor-css
-```
-Then create the **app/dist/vendor** catalog and copy the following catalogs to this newly created **vendor** catalog:
-
-- app/src/helpers/vendor/jquery
-- app/src/helpers/vendor/tinymce
-
-Now you can run the Publii app:
-
-```
-npm run build
-```
-Please remember to have running the dev command in the second terminal process:
-
-```
-npm run dev
-```
-
-It will allow you to refresh the app with changes without app restart - just click `Ctrl+R` shortcut to refresh the app.
+If you want to build newest version of Publii or contribute to the Publii code, please read about [app build process](https://github.com/GetPublii/Publii/wiki/App-build-process). 
 
 ## Getting Started
 You can learn more about getting started in our [User documentation](https://getpublii.com/docs/) or [Developer documentation](https://getpublii.com/dev/).
