@@ -689,11 +689,12 @@ class GithubPages {
 
     isNecessaryFile(filePath) {
         let filename = path.parse(filePath).base;
-        let necessaryHiddenFiles = [
-            '.CNAME'
+        let unnecessaryFiles = [
+            '.DS_Store',
+            'thumbs.db'
         ];
 
-        if(filename.substr(0,1) === '.' && necessaryHiddenFiles.indexOf(filename) === -1) {
+        if(unnecessaryFiles.indexOf(filename) > -1) {
             return false;
         }
 
