@@ -340,6 +340,10 @@ class ContentHelper {
      */
     static _imageIsLocal (url, domain) {
         if (url.toLowerCase().indexOf('http://') > -1 || url.toLowerCase().indexOf('https://') > -1) {
+            if (domain.indexOf('/') === 0 || domain === '') {
+                return false;
+            }
+
             if (url.indexOf(domain) > -1 || url.toLowerCase().indexOf(domain) > -1) {
                 return true;
             }
