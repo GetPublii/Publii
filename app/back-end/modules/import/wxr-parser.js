@@ -51,6 +51,7 @@ class WxrParser {
     loadFile(filePath) {
         this.filePath = filePath;
         this.fileContent = fs.readFileSync(this.filePath, 'utf8');
+        this.fileContent = this.fileContent.trim();
         this.parseFile();
     }
 
@@ -369,8 +370,12 @@ class WxrParser {
             let postTags = '';
             let postTitle = typeof posts[i].title === 'string' ? posts[i].title : 'Untitled';
 
-            if(posts[i]['category'] && posts[i]['category'].length) {
+            if(posts[i]['category'] && (posts[i]['category'].length || posts[i]['category'] instanceof Object)) {
                 let tags = false;
+
+                if (!posts[i]['category'].length) {
+                    posts[i]['category'] = [posts[i]['category']];
+                }
 
                 if(this.usedTaxonomy === 'tags') {
                     tags = posts[i]['category'].filter(item => item.domain === 'post_tag');
