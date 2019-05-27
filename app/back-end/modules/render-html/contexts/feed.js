@@ -45,7 +45,9 @@ class RendererContextFeed extends RendererContext {
             let preparedText = post.text.split('#DOMAIN_NAME#').join(domainMediaPath);
             let contentMode = self.siteConfig.advanced.feed.showFullText ? 'fullText' : 'excerpt';
             let text = this.cleanUpText(preparedText);
+            text = ContentHelper.setInternalLinks(text, self.renderer);
             let excerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
+            excerpt = ContentHelper.setInternalLinks(excerpt, self.renderer);
             let authorData = this.getAuthor('post', post.id);
 
             if(contentMode !== 'fullText') {
