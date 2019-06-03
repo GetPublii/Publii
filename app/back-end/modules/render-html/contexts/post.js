@@ -273,6 +273,30 @@ class RendererContextPost extends RendererContext {
             ordering = ' RANDOM() ';
         }
 
+        // Use second query
+        let secondQuery = '';
+
+        if (this.siteConfig.advanced.relatedPostsIncludeAllPosts) {
+            secondQuery = `
+                UNION
+                SELECT
+                    p.id AS id,
+                    2 AS priority
+                FROM
+                    posts AS p
+                LEFT JOIN
+                    posts_tags AS pt
+                    ON
+                    p.id = pt.post_id
+                WHERE
+                    p.id != @postID AND
+                    p.status LIKE "%published%" AND
+                    p.status NOT LIKE "%trashed%" AND
+                    p.status NOT LIKE "%hidden%"
+                    ${conditionsLowerPriority}
+            `;
+        }
+
         // Retrieve post
         let postsData = this.db.prepare(`
             SELECT
@@ -290,22 +314,7 @@ class RendererContextPost extends RendererContext {
                 p.status NOT LIKE "%trashed%" AND
                 p.status NOT LIKE "%hidden%"
                 ${conditions}
-            UNION
-            SELECT
-                p.id AS id,
-                2 AS priority
-            FROM
-                posts AS p
-            LEFT JOIN
-                posts_tags AS pt
-                ON
-                p.id = pt.post_id
-            WHERE
-                p.id != @postID AND
-                p.status LIKE "%published%" AND
-                p.status NOT LIKE "%trashed%" AND
-                p.status NOT LIKE "%hidden%"
-                ${conditionsLowerPriority}
+            ${secondQuery}
             GROUP BY
                 p.id
             ORDER BY

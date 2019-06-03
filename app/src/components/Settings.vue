@@ -1262,6 +1262,22 @@
                                 v-model="advanced.relatedPostsOrder"
                                 :items="relatedPostsOrderingOptions"></dropdown>
                         </field>
+
+                         <field
+                            id="related-posts-use-all-posts"
+                            label="Related posts - use all posts">
+                            <label slot="field">
+                                <switcher
+                                    id="related-posts-use-all-posts"
+                                    v-model="advanced.relatedPostsIncludeAllPosts" />
+                            </label>
+
+                            <small
+                                slot="note"
+                                class="note">
+                                Include in the related posts all possible posts (including posts from other tags). Disable this option to get related posts only from the same tags as the main post.
+                            </small>
+                        </field>
                     </div>
                 </tabs>
             </fields-group>

@@ -123,8 +123,6 @@ class Sitemap {
                 };
             });
         }
-
-        console.log(JSON.stringify(this.postData, null, 4));
     }
 
     /**

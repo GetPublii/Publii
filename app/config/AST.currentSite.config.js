@@ -111,7 +111,8 @@ const AstCurrentSiteConfig = {
             badgeLabel: 'Cookie Policy',
             behaviourLink: '#cookie-settings'
         },
-        relatedPostsOrder: 'default'
+        relatedPostsOrder: 'default',
+        relatedPostsIncludeAllPosts: true
     },
     deployment: {
         protocol: '',
