@@ -218,9 +218,9 @@ class RendererContextPost extends RendererContext {
         this.post.id = parseInt(this.post.id, 10);
         let tags = this.post.tags ? this.post.tags.map(tag => parseInt(tag.id, 10)) : [];
         let relatedPostsNumber = 5;
-        let tagsCondition = '';
         let postTitleConditions = [];
         let conditions = [];
+        let conditionsLowerPriority = [];
 
         if(this.themeConfig.renderer && this.themeConfig.renderer.relatedPostsNumber) {
             relatedPostsNumber = this.themeConfig.renderer.relatedPostsNumber;
@@ -228,8 +228,8 @@ class RendererContextPost extends RendererContext {
 
         // Get tags
         if(tags.length) {
-            tagsCondition = ' pt.tag_id IN(' + tags.join(',') + ') ';
-            conditions.push(tagsCondition);
+            conditions.push(' pt.tag_id IN(' + tags.join(',') + ') ');
+            conditionsLowerPriority.push(' pt.tag_id NOT IN(' + tags.join(',') + ') ');
         }
 
         // Get words to compare (with length bigger than 3 chars)
@@ -243,15 +243,25 @@ class RendererContextPost extends RendererContext {
 
             postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
             conditions.push(postTitleConditions);
+            conditionsLowerPriority.push(postTitleConditions);
         }
 
         if(conditions.length > 1) {
-            conditions = conditions.join(' OR ');
+            conditions = conditions.join(' AND ');
             conditions = ' ( ' + conditions + ' ) ';
         }
 
         if(conditions.length) {
             conditions = ' AND ' + conditions;
+        }
+
+        if(conditionsLowerPriority.length > 1) {
+            conditionsLowerPriority = conditionsLowerPriority.join(' AND ');
+            conditionsLowerPriority = ' ( ' + conditionsLowerPriority + ' ) ';
+        }
+
+        if(conditionsLowerPriority.length) {
+            conditionsLowerPriority = ' AND ' + conditionsLowerPriority;
         }
 
         // Get related posts ordering
@@ -266,7 +276,8 @@ class RendererContextPost extends RendererContext {
         // Retrieve post
         let postsData = this.db.prepare(`
             SELECT
-                p.id AS id
+                p.id AS id,
+                1 AS priority
             FROM
                 posts AS p
             LEFT JOIN
@@ -279,9 +290,26 @@ class RendererContextPost extends RendererContext {
                 p.status NOT LIKE "%trashed%" AND
                 p.status NOT LIKE "%hidden%"
                 ${conditions}
+            UNION
+            SELECT
+                p.id AS id,
+                2 AS priority
+            FROM
+                posts AS p
+            LEFT JOIN
+                posts_tags AS pt
+                ON
+                p.id = pt.post_id
+            WHERE
+                p.id != @postID AND
+                p.status LIKE "%published%" AND
+                p.status NOT LIKE "%trashed%" AND
+                p.status NOT LIKE "%hidden%"
+                ${conditionsLowerPriority}
             GROUP BY
                 p.id
             ORDER BY
+                priority ASC,
                 ${ordering}
             LIMIT @relatedPostsNumber
         `).all({
