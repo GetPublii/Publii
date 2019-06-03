@@ -251,7 +251,8 @@ class RendererContext {
             footerAmpCustomCode: this.siteConfig.advanced.customFooterAmpCode || '',
             customHTML: this.siteConfig.advanced.customHTML || false,
             utils: {
-                currentYear: new Date().getFullYear()
+                currentYear: new Date().getFullYear(),
+                buildDate: +new Date()
             }
         };
 
