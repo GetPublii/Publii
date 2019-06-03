@@ -68,6 +68,10 @@ module.exports = [
         code: 'en-il'
     },
     {
+        name: 'English (Nigeria)',
+        code: 'en-ng'
+    },
+    {
         name: 'English (United Kingdom)',
         code: 'en-gb'
     },
@@ -112,6 +116,10 @@ module.exports = [
         code: 'fr'
     },
     {
+        name: 'French (Algeria)',
+        code: 'fr-dz'
+    },
+    {
         name: 'French (Belgium)',
         code: 'fr-be'
     },
@@ -120,9 +128,18 @@ module.exports = [
         code: 'fr-ca'
     },
     {
+        name: 'French (Ivory Coast)',
+        code: 'fr-ci'
+    },
+    {
         name: 'French (Luxembourg)',
         code: 'fr-lu'
     },
+    {
+        name: 'French (Morocco)',
+        code: 'fr-ma'
+    },
+  
     {
         name: 'French (Switzerland)',
         code: 'fr-ch'
