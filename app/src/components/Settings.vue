@@ -1265,7 +1265,7 @@
 
                          <field
                             id="related-posts-use-all-posts"
-                            label="Related posts - use all posts">
+                            label="Related posts options">
                             <label slot="field">
                                 <switcher
                                     id="related-posts-use-all-posts"
@@ -1275,7 +1275,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                Include in the related posts all possible posts (including posts from other tags). Disable this option to get related posts only from the same tags as the main post.
+                                When enabled, related posts will be taken from all tags. Disable this option to only get related posts from the same tag as the main post.
                             </small>
                         </field>
                     </div>
