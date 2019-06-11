@@ -23,7 +23,7 @@ class GithubPages {
             protocol: "https",
             host: "api.github.com",
             pathPrefix: "",
-            timeout: 10000,
+            timeout: 30000,
             headers: {
                 "user-agent": "Publii"
             }
