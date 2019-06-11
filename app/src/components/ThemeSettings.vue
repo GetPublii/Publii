@@ -134,6 +134,7 @@
                                 <radio-buttons
                                     v-if="field.type === 'radio'"
                                     :items="field.options"
+                                    :name="field.name"
                                     v-model="custom[field.name]"
                                     slot="field" />
 
