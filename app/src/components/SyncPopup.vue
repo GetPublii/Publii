@@ -112,7 +112,8 @@
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
-                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'">
+                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'"
+                        :disabled="syncInProgress">
                         Sync your website
                     </p-button>
 
@@ -270,6 +271,10 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('sync-popup-display', (config) => {
+            if (this.isVisible) {
+                return;
+            }
+
             this.isVisible = true;
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
@@ -348,6 +353,7 @@ export default {
         });
 
         ipcRenderer.on('app-uploading-progress', this.uploadingProgressUpdate);
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         goToServerSettings: function() {
@@ -611,12 +617,29 @@ export default {
         },
         themeIsSelected() {
             return !(!this.$store.state.currentSite.config.theme || this.$store.state.currentSite.config.theme === '');
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter' && this.isVisible && !this.syncInProgress) {
+                this.onEnterKey();
+            }
+        },
+        onEnterKey () {
+            if (this.isInSync && !this.isManual) {
+                this.openWebsite();
+            } else if (this.isInSync && this.noIssues && this.isManual) {
+                this.showFolder();
+            } else if (this.properConfig && !this.isInSync) {
+                this.startSync();
+            } else if (this.noDomainConfig || (!this.noDomainConfig && this.noServerConfig)) {
+                this.goToServerSettings();
+            }
         }
     },
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
         ipcRenderer.removeAllListeners('app-preview-render-error');
         ipcRenderer.removeAllListeners('app-rendering-progress');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>

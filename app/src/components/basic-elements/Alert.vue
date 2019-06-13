@@ -48,26 +48,39 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('alert-display', (config) => {
-            this.isVisible = true;
-            this.message = config.message;
-            this.textCentered = config.textCentered || false;
-            this.buttonStyle = config.buttonStyle || 'normal';
+            setTimeout(() => {
+                this.isVisible = true;
+                this.message = config.message;
+                this.textCentered = config.textCentered || false;
+                this.buttonStyle = config.buttonStyle || 'normal';
 
-            if(config.okClick) {
-                this.okClick = config.okClick;
-            } else {
-                this.okClick = () => false;
-            }
+                if(config.okClick) {
+                    this.okClick = config.okClick;
+                } else {
+                    this.okClick = () => false;
+                }
+            }, 0);
         });
+
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         onOk: function() {
             this.isVisible = false;
             this.okClick();
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter' && this.isVisible) {
+                this.onEnterKey();
+            }
+        },
+        onEnterKey () {
+            this.onOk();
         }
     },
     beforeDestroy () {
         this.$bus.$off('alert-display');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>

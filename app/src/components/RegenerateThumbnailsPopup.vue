@@ -84,6 +84,8 @@ export default {
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
         });
+
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         skip () {
@@ -132,6 +134,18 @@ export default {
                     this.regenerateIsDone = true;
                 });
             }, 350);
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter' && this.isVisible && !this.regeneratingThumbnails) {
+                this.onEnterKey();
+            }
+        },
+        onEnterKey () {
+            if (this.regenerateIsDone) {
+                this.skip();
+            } else {
+                this.regenerate();
+            }
         }
     },
     beforeDestroy: function() {
@@ -139,6 +153,7 @@ export default {
         ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
         ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
         ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>
