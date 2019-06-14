@@ -76,7 +76,9 @@ import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
 export default {
     name: 'site-add-form',
-    mixins: [GoToLastOpenedWebsite],
+    mixins: [
+        GoToLastOpenedWebsite
+    ],
     data () {
         return {
             siteName: '',

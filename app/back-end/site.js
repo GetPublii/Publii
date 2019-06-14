@@ -39,6 +39,7 @@ class Site {
     create(authorName) {
         if(!this.siteExists()) {
             this.createDirectories();
+            this.copyDefaultTheme();
             this.createConfigFiles();
             this.createDB();
             this.createAuthor(authorName);
@@ -71,6 +72,16 @@ class Site {
     }
 
     /*
+     * Copy files of the default theme
+     */
+    copyDefaultTheme () {
+        fs.copySync(
+            path.join(this.application.appDir, 'themes', 'simple'),
+            path.join(this.siteDir, 'input', 'themes', 'simple')
+        );
+    }
+
+    /*
      * Create config file
      */
     createConfigFiles() {
@@ -79,7 +90,8 @@ class Site {
             'name': this.name,
             'displayName': this.displayName,
             'author': this.author,
-            'logo': this.logo
+            'logo': this.logo,
+            'theme': 'simple'
         };
 
         fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig));
