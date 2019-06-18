@@ -14,6 +14,7 @@ class SFTP {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
+        this.logTimer = false;
     }
 
     async initConnection() {
@@ -50,6 +51,10 @@ class SFTP {
 
             connectionSettings.privateKey = fs.readFileSync(keyPath);
         }
+
+        this.logTimer = setInterval(() => {
+            this.deployment.saveConnectionLog();
+        }, 5000);
 
         this.connection.connect(connectionSettings).then(() => {
             process.send({
@@ -88,7 +93,7 @@ class SFTP {
 
             self.downloadFilesList();
         }).catch(err => {
-            console.log('ERR (1): ' + err);
+            self.deployment.outputLog.push('ERR (1): ' + err);
             self.downloadFilesList();
         });
 
@@ -136,7 +141,7 @@ class SFTP {
                 self.deployment.compareFilesList(false);
             }
         }).catch(err => {
-            console.log('ERR (2): ' + err + ' [<- files.publii.json]');
+            self.deployment.outputLog.push('ERR (2): ' + err + ' [<- files.publii.json]');
             self.deployment.compareFilesList(false);
         });
     }
