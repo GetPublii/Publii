@@ -1,4 +1,8 @@
 export default (state, post, filterValue) => {
+    filterValue = filterValue.toLowerCase();
+    post.title = post.title.toLowerCase();
+    post.slug = post.slug.toLowerCase();
+
     // Check for author
     if(filterValue.indexOf('author:') === 0) {
         let authorToFind = filterValue.replace('author:', '');
@@ -42,28 +46,29 @@ export default (state, post, filterValue) => {
                                   .replace('is:draft', '')
                                   .replace('is:hidden', '')
                                   .trim();
+    searchPhrase = searchPhrase.toLowerCase();
 
-    // Check for trashed posts
+    // Check for published posts
     if(
         filterValue.indexOf('is:published') === 0 &&
         post.status.indexOf('draft') === -1 &&
         post.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {
-            return post.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1;
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
         }
 
         return true;
     }
 
-    // Check for trashed posts
+    // Check for featured posts
     if(
         filterValue.indexOf('is:featured') === 0 &&
         post.status.indexOf('featured') > -1 &&
         post.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {
-            return post.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1;
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
         }
 
         return true;
@@ -75,7 +80,7 @@ export default (state, post, filterValue) => {
         post.status.indexOf('trashed') > -1
     ) {
         if(searchPhrase !== '') {
-            return post.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1;
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
         }
 
         return true;
@@ -88,7 +93,7 @@ export default (state, post, filterValue) => {
         post.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {
-            return post.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1;
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
         }
 
         return true;
@@ -101,7 +106,7 @@ export default (state, post, filterValue) => {
         post.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {
-            return post.title.toLowerCase().indexOf(searchPhrase.toLowerCase()) > -1;
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
         }
 
         return true;
@@ -109,7 +114,11 @@ export default (state, post, filterValue) => {
 
     // Check the easy cases first
     if(
-        (filterValue.trim() === '' || post.title.toLowerCase().indexOf(filterValue.toLowerCase()) > -1) &&
+        (
+            filterValue.trim() === '' || 
+            post.title.indexOf(filterValue) > -1 ||
+            post.slug.indexOf(filterValue) > -1
+        ) &&
         post.status.indexOf('trashed') === -1
     ) {
         return true;
