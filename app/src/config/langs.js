@@ -124,12 +124,20 @@ module.exports = [
         code: 'fr-be'
     },
     {
+        name: 'French (Cameroon)',
+        code: 'fr-cm'
+    },
+    {
         name: 'French (Canada)',
         code: 'fr-ca'
     },
     {
         name: 'French (Central African Republic)',
         code: 'fr-cf'
+    },
+    {
+        name: 'French (DR Congo)',
+        code: 'fr-cd'
     },
     {
         name: 'French (Ivory Coast)',
@@ -140,10 +148,21 @@ module.exports = [
         code: 'fr-lu'
     },
     {
+        name: 'French (Madagascar)',
+        code: 'fr-mg'
+    },
+    {
         name: 'French (Morocco)',
         code: 'fr-ma'
     },
-  
+    {
+        name: 'French (Senegal)',
+        code: 'fr-sn'
+    },
+    {
+        name: 'French (Tunisia)',
+        code: 'fr-tn'
+    },
     {
         name: 'French (Switzerland)',
         code: 'fr-ch'
