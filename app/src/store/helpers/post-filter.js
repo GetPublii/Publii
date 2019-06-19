@@ -1,5 +1,6 @@
 export default (state, post, filterValue) => {
     filterValue = filterValue.toLowerCase();
+    post = JSON.parse(JSON.stringify(post));
     post.title = post.title.toLowerCase();
     post.slug = post.slug.toLowerCase();
 
