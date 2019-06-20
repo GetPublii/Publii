@@ -11,9 +11,6 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
-const pngquant = require('pngquant');
-const mozjpeg = require('mozjpeg-stream');
-const stream = require('stream');
 
 let sharp;
 
@@ -301,24 +298,24 @@ class Image extends Model {
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
-                                    let bufferStream = new stream.PassThrough();
-                                    bufferStream.end(outputBuffer);
-                                    bufferStream
-                                        .pipe(new pngquant([192, '--quality', '60-80', '--nofs', '-']))
-                                        .pipe(fs.createWriteStream(destinationPath));
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+
                                     resolve(destinationPath);
                                 }).catch(err => reject(err))
                         } else {
                             sharp(originalPath)
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .jpeg()
+                                .jpeg({
+                                    quality: imagesQuality
+                                })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
-                                    let bufferStream = new stream.PassThrough();
-                                    bufferStream.end(outputBuffer);
-                                    bufferStream
-                                        .pipe(mozjpeg({ quality: imagesQuality }))
-                                        .pipe(fs.createWriteStream(destinationPath));
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+
                                     resolve(destinationPath);
                                 }).catch(err => reject(err))
                         }
@@ -350,24 +347,22 @@ class Image extends Model {
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
-                                    let bufferStream = new stream.PassThrough();
-                                    bufferStream.end(outputBuffer);
-                                    bufferStream
-                                        .pipe(new pngquant([192, '--quality', '60-80', '--nofs', '-']))
-                                        .pipe(fs.createWriteStream(destinationPath));
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
                                     resolve(destinationPath);
                                 }).catch(err => reject(err));
                         } else {
                             sharp(originalPath)
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .jpeg()
+                                .jpeg({
+                                    quality: imagesQuality
+                                })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
-                                    let bufferStream = new stream.PassThrough();
-                                    bufferStream.end(outputBuffer);
-                                    bufferStream
-                                        .pipe(mozjpeg({ quality: imagesQuality }))
-                                        .pipe(fs.createWriteStream(destinationPath));
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
                                     resolve(destinationPath);
                                 }).catch(err => reject(err));
                         }
