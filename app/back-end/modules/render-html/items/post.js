@@ -22,6 +22,7 @@ class PostItem {
         let postURL = this.siteConfig.domain + '/' + this.post.slug + '.html';
         let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
+        preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
         let readmoreMatches = this.post.text.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
 
