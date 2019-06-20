@@ -281,7 +281,7 @@ class Sitemap {
 
             this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
 
-            if (this.siteConfig.advanced.authorNoIndexPagination) {
+            if (this.siteConfig.advanced.authorNoIndexPagination || this.siteConfig.advanced.authorNoPagination) {
                 continue;
             }
 
@@ -353,7 +353,7 @@ class Sitemap {
 
             this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/index.html');
 
-            if (this.siteConfig.advanced.tagNoIndexPagination) {
+            if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
                 continue;
             }
 
