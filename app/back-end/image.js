@@ -274,50 +274,20 @@ class Image extends Model {
                                 reject(err);
                             }
 
+                            console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
+
                             if (finalWidth === Jimp.AUTO || finalHeight === Jimp.AUTO) {
-                                if (extension.toLowerCase() === '.png') {
-                                    image.resize(finalWidth, finalHeight)
-                                        .getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-                                            let bufferStream = new stream.PassThrough();
-                                            bufferStream.end(buffer);
-                                            bufferStream
-                                                .pipe(new pngquant([192, '--quality', '60-80', '--nofs', '-']))
-                                                .pipe(fs.createWriteStream(destinationPath));
-                                            resolve(destinationPath)
-                                        });
-                                } else {
-                                    image.resize(finalWidth, finalHeight)
-                                        .getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
-                                            let bufferStream = new stream.PassThrough();
-                                            bufferStream.end(buffer);
-                                            bufferStream
-                                                .pipe(mozjpeg({ quality: imagesQuality }))
-                                                .pipe(fs.createWriteStream(destinationPath));
-                                            resolve(destinationPath);
-                                        });
-                                }
+                                image.resize(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
                             } else {
-                                if (extension.toLowerCase() === '.png') {
-                                    image.cover(finalWidth, finalHeight)
-                                        .getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-                                            let bufferStream = new stream.PassThrough();
-                                            bufferStream.end(buffer);
-                                            bufferStream
-                                                .pipe(new pngquant([192, '--quality', '60-80', '--nofs', '-']))
-                                                .pipe(fs.createWriteStream(destinationPath));
-                                            resolve(destinationPath)
-                                        });
-                                } else {
-                                    image.cover(finalWidth, finalHeight)
-                                        .getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
-                                            let bufferStream = new stream.PassThrough();
-                                            bufferStream.end(buffer);
-                                            bufferStream
-                                                .pipe(mozjpeg({ quality: imagesQuality }))
-                                                .pipe(fs.createWriteStream(destinationPath));
-                                            resolve(destinationPath);
-                                        });
-                                }
+                                image.cover(finalWidth, finalHeight)
+                                     .quality(imagesQuality)
+                                     .write(destinationPath, function() {
+                                         resolve(destinationPath);
+                                     });
                             }
                         }).catch(err => {
                             console.log(err);
@@ -362,27 +332,12 @@ class Image extends Model {
                                 reject(err);
                             }
 
-                            if (extension.toLowerCase() === '.png') {
-                                image.scaleToFit(finalWidth, finalHeight)
-                                    .getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-                                        let bufferStream = new stream.PassThrough();
-                                        bufferStream.end(buffer);
-                                        bufferStream
-                                            .pipe(new pngquant([192, '--quality', '60-80', '--nofs', '-']))
-                                            .pipe(fs.createWriteStream(destinationPath));
-                                        resolve(destinationPath)
-                                    });
-                            } else {
-                                image.scaleToFit(finalWidth, finalHeight)
-                                    .getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
-                                        let bufferStream = new stream.PassThrough();
-                                        bufferStream.end(buffer);
-                                        bufferStream
-                                            .pipe(mozjpeg({ quality: imagesQuality }))
-                                            .pipe(fs.createWriteStream(destinationPath));
-                                        resolve(destinationPath);
-                                    });
-                            }
+                            console.log('JIMP SCALE TO FIT', finalWidth, ' x ', finalHeight);
+                            image.scaleToFit(finalWidth, finalHeight)
+                                 .quality(imagesQuality)
+                                 .write(destinationPath, function() {
+                                     resolve(destinationPath)
+                                 });
                         });
                     }).catch(err => {
                         console.log(err);
