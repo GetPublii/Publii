@@ -99,10 +99,10 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
                 tagAs = queryStringData['tag_as'];
             }
         } else {
-            if (queryString === -1) {
+            if (queryString === -1 || queryString === '-1') {
                 count = 999;
             } else {
-                count = queryString;
+                count = parseInt(queryString, 10);
             }
         }
 
