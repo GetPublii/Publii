@@ -88,12 +88,12 @@ class GithubPages {
         countFiles(self.deployment.inputDir, async function (err, results) {
             let numberOfFiles = parseInt(results.files + results.dirs, 10);
 
-            if(numberOfFiles > 1000) {
+            if(numberOfFiles > 4000) {
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your website contains over 1000 items (' + numberOfFiles + ' files and directories). Currently our Github Pages implementation supports pages up to 1000 items'
+                        additionalMessage: 'Your website contains over 4000 items (' + numberOfFiles + ' files and directories). Currently our Github Pages implementation supports pages up to 4000 items'
                     }
                 });
 
