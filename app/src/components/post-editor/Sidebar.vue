@@ -278,6 +278,10 @@
                                         v-model="$parent.postData.mainTag"
                                         :items="tagsForDropdown">
                                     </dropdown>
+
+                                    <small class="note">
+                                        If the post has tags and the main tag is not set, the first tag in the alphabetical order will be used as a main tag.
+                                    </small>
                                 </label>
                             </div>
                         </div>
