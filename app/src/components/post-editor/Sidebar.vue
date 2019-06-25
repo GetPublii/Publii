@@ -266,6 +266,19 @@
                                     </small>
                                 </label>
                             </div>
+
+                            <div 
+                                v-if="$parent.postData.tags.length > 1"
+                                :class="{ 'post-main-tag': true, 'is-empty': $parent.postData.mainTag === '' }">
+                                <label>
+                                    Main post tag:
+                                    <dropdown
+                                        id="post-main-tag"
+                                        v-model="$parent.postData.mainTag"
+                                        :items="tagsForDropdown">
+                                    </dropdown>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -549,6 +562,15 @@ export default {
         },
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig;
+        },
+        tagsForDropdown () {
+            return [{
+                value: '',
+                label: 'Main tag not set'
+            }].concat(this.$parent.postData.tags.map(tag => ({
+                value: this.getTagIdByName(tag),
+                label: tag
+            })));
         }
     },
     mounted () {
@@ -621,6 +643,15 @@ export default {
             }
 
             this.$parent.postData.tags.push(newTag);
+        },
+        getTagIdByName (tagName) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.name === tagName);
+
+            if (foundedTag.length) {
+                return foundedTag[0].id;
+            }
+
+            return 0;
         },
         generateItems (arrayToConvert) {
             let options = {};
@@ -799,6 +830,14 @@ export default {
 
             .multiselect__input {
                 max-width: 120px;
+            }
+        }
+
+        .post-main-tag {
+            &.is-empty {
+                select {
+                    opacity: .66;
+                }
             }
         }
 

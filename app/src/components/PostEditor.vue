@@ -166,6 +166,7 @@ export default {
                 slug: '',
                 author: 1,
                 tags: [],
+                mainTag: '',
                 template: '',
                 creationDate: {
                     text: '',
@@ -359,6 +360,8 @@ export default {
                         }
                     }
 
+                    this.postData.mainTag = data.additionalData.mainTag || '';
+
                     // Set author
                     this.postData.author = data.author[0].id;
 
@@ -526,12 +529,15 @@ export default {
                     metaTitle: this.postData.metaTitle,
                     metaDesc: this.postData.metaDescription,
                     metaRobots: this.postData.metaRobots,
-                    canonicalUrl: this.postData.canonicalUrl
+                    canonicalUrl: this.postData.canonicalUrl,
+                    mainTag: this.postData.mainTag
                 },
                 'postViewSettings': postViewSettings,
                 'id': this.postID,
                 'author': parseInt(this.postData.author, 10)
             };
+
+            console.log('MTAG:', postData.additionalData.mainTag);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
