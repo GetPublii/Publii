@@ -13,9 +13,20 @@ class PostItem {
         this.themeConfig = this.renderer.themeConfig;
         this.siteConfig = this.renderer.siteConfig;
         this.postData = {};
+        this.metaData = {};
 
+        this.getMetaData();
         this.prepareData();
         this.storeData();
+    }
+
+    getMetaData () {
+        let metaDataQuery = this.db.prepare('SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = "_core"');
+        let metaData = metaDataQuery.get({ postID: this.post.id});
+
+        if (metaData && metaData.value) {
+            this.metaData = JSON.parse(metaData.value);
+        }
     }
 
     prepareData() {
@@ -77,8 +88,16 @@ class PostItem {
         if (this.renderer.cachedItems.postTags[this.postID]) {
             this.postData.tags = this.renderer.cachedItems.postTags[this.postID].map(tagID => this.renderer.cachedItems.tags[tagID]);
             this.postData.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
+
+            if (this.metaData.mainTag && !isNaN(parseInt(this.metaData.mainTag, 10))) {
+                let mainTagID = parseInt(this.metaData.mainTag, 10);
+                this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+            } else {
+                this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
+            }
         } else {
             this.postData.tags = [];
+            this.postData.mainTag = false;
         }
     }
 
