@@ -537,8 +537,6 @@ export default {
                 'author': parseInt(this.postData.author, 10)
             };
 
-            console.log('MTAG:', postData.additionalData.mainTag);
-
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
             } else {

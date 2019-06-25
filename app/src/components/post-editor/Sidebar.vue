@@ -257,6 +257,7 @@
                                         placeholder=""
                                         :multiple="true"
                                         :taggable="true"
+                                        @remove="removeTag"
                                         @tag="addTag"></v-select>
 
                                     <small
@@ -269,7 +270,7 @@
 
                             <div 
                                 v-if="$parent.postData.tags.length > 1"
-                                :class="{ 'post-main-tag': true, 'is-empty': $parent.postData.mainTag === '' }">
+                                class="post-main-tag">
                                 <label>
                                     Main post tag:
                                     <dropdown
@@ -580,6 +581,12 @@ export default {
 
         if (!this.isEdit) {
             this.$parent.postData.template = this.defaultPostTemplate;
+        } else if (!!this.$parent.postData.mainTag) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === this.$parent.postData.mainTag);
+
+            if (!foundedTag.length) {
+                this.$parent.postData.mainTag = '';
+            }
         }
     },
     methods: {
@@ -644,6 +651,29 @@ export default {
 
             this.$parent.postData.tags.push(newTag);
         },
+        removeTag (removedTagName) {
+            let removedTagID = this.getTagIdByName(removedTagName);
+            let mainTagName = this.getTagNameById(this.$parent.postData.mainTag);
+            
+            if (typeof removedTagID === 'string') {
+                if (mainTagName === removedTagName) {
+                    this.$parent.postData.mainTag = '';    
+                }
+            } else {
+                if (parseInt(removedTagID, 10) === parseInt(this.$parent.postData.mainTag, 10)) {
+                    this.$parent.postData.mainTag = '';
+                }
+            }
+        },
+        getTagNameById (tagID) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === tagID);
+
+            if (foundedTag.length) {
+                return foundedTag[0].name;
+            }
+
+            return '';
+        },
         getTagIdByName (tagName) {
             let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.name === tagName);
 
@@ -651,7 +681,7 @@ export default {
                 return foundedTag[0].id;
             }
 
-            return 0;
+            return tagName;
         },
         generateItems (arrayToConvert) {
             let options = {};
@@ -830,14 +860,6 @@ export default {
 
             .multiselect__input {
                 max-width: 120px;
-            }
-        }
-
-        .post-main-tag {
-            &.is-empty {
-                select {
-                    opacity: .66;
-                }
             }
         }
 

@@ -270,16 +270,18 @@
                         </a>
                     </h2>
 
-                    <template v-if="item.tags">
+                    <div 
+                        v-if="item.tags"
+                        class="post-tags">
                         <a
                             v-for="tag in item.tags"
                             href="#"
-                            class="tag"
+                            :class="{ 'tag': true, 'is-main-tag': tag.id === item.mainTag }"
                             :key="'tag-' + tag.id"
                             @click.stop.prevent="setFilter('tag:' + tag.name)">
                             #{{ tag.name }}
                         </a>
-                    </template>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -707,6 +709,22 @@ export default {
 
 .header {
     overflow-y: visible!important;
+}
+
+.item {
+    .post-tags {
+        display: flex;
+
+        a {
+            order: 2;
+            margin: .25rem .5rem .25rem 0;
+
+            &.is-main-tag {
+                order: 1;
+                font-weight: bold;
+            }
+        }
+    }
 }
 
 .filters {

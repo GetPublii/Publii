@@ -23,6 +23,13 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
 
         return true;
     }).map(post => {
+        let additionalData = JSON.parse(post.additional_data);
+        let mainTag = '';
+
+        if (additionalData && additionalData.mainTag) {
+            mainTag = parseInt(additionalData.mainTag, 10);
+        }
+
         return {
             id: post.id,
             title: post.title,
@@ -35,7 +42,8 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             isFeatured: post.status.indexOf('featured') > -1,
             isTrashed: post.status.indexOf('trashed') > -1,
             author_id: post.authors,
-            author: postGetAuthor(state, post.id)
+            author: postGetAuthor(state, post.id),
+            mainTag: mainTag
         }
     });
 
