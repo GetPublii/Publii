@@ -21,7 +21,8 @@
     "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=5.0.5 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1 --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
     "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=5.0.5 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
     "postinstall": "opencollective postinstall",
-    "dist": "build"
+    "dist": "build",
+    "osx-sign": "electron-osx-sign Publii-darwin-x64/Publii.app"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -38,6 +39,7 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "electron-installer-dmg": "^0.2.1",
+    "electron-osx-sign": "^0.4.11",
     "electron-rebuild": "^1.8.2",
     "electron-windows-installer": "^1.4.4",
     "file-loader": "^1.1.4",
