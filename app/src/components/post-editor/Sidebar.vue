@@ -272,7 +272,7 @@
                                 v-if="$parent.postData.tags.length > 1"
                                 class="post-main-tag">
                                 <label>
-                                    Main post tag:
+                                    Main tag:
                                     <dropdown
                                         id="post-main-tag"
                                         v-model="$parent.postData.mainTag"
@@ -280,7 +280,7 @@
                                     </dropdown>
 
                                     <small class="note">
-                                        If the post has tags and the main tag is not set, the first tag in the alphabetical order will be used as a main tag.
+                                        If the post has tags and the main tag is not set, the first tag in alphabetical order will be used as the main tag.
                                     </small>
                                 </label>
                             </div>
@@ -571,7 +571,7 @@ export default {
         tagsForDropdown () {
             return [{
                 value: '',
-                label: 'Main tag not set'
+                label: 'Not set'
             }].concat(this.$parent.postData.tags.map(tag => ({
                 value: this.getTagIdByName(tag),
                 label: tag

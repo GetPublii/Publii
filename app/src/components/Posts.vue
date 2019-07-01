@@ -721,7 +721,6 @@ export default {
 
             &.is-main-tag {
                 order: 1;
-                font-weight: bold;
             }
         }
     }
