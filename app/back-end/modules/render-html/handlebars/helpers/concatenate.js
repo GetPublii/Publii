@@ -1,3 +1,5 @@
+const Handlebars = require('handlebars');
+
 /**
  * Helper for concatenating values
  *
@@ -6,7 +8,10 @@
  * @returns {callback}
  */
 function concatenate () {
-    return Array.from(arguments).join('');
+    let inputs = Array.from(arguments);
+    inputs.pop();
+
+    return new Handlebars.SafeString(inputs.join(''));
 }
 
 module.exports = concatenate;

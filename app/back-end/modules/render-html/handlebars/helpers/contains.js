@@ -1,13 +1,17 @@
 /**
  * Helper for checking if a specifc value is inside comma-separated string
  *
- * {{#contains 'abc' (concatenate ['abc', 'def'])}}
+ * {{#contains 'abc' 'abc,def'}}
  *
  * @returns {callback}
  */
 function contains (needle, haystack, options) {
     if (needle === undefined || haystack === undefined) {
         return false;
+    }
+
+    if (typeof haystack === 'object' && haystack.string) {
+        haystack = haystack.string;
     }
 
     haystack = haystack.split(',');
