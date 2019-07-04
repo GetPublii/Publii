@@ -5,6 +5,7 @@ const slug = require('./../../helpers/slug');
 const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
 const RendererCache = require('./renderer-cache');
+const UtilsHelper = require('./../../helpers/utils');
 
 /*
  * Class used create global context variables
@@ -259,6 +260,12 @@ class RendererContext {
         // In AMP mode create special global @amp variable
         if(this.renderer.ampMode) {
             let ampImage = '';
+            let ampCustomCssPath = path.join(this.inputDir, 'config', 'custom-css-amp.css');
+            let ampCustomCss = '';
+            
+            if (UtilsHelper.fileExists(ampCustomCssPath)) {
+                ampCustomCss = fs.readFileSync(ampCustomCssPath);
+            }
 
             if(
                 this.siteConfig.advanced.ampImage !== '' &&
@@ -291,7 +298,8 @@ class RendererContext {
                     shareWhatsapp: this.siteConfig.advanced.ampShareWhatsapp,
                     footerText: this.siteConfig.advanced.ampFooterText || 'Powered by Publii',
                     GAID: this.siteConfig.advanced.ampGaId || '',
-                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, '')
+                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, ''),
+                    customCss: ampCustomCss
                 }
             } else {
                 // Default configuration for AMP
@@ -310,7 +318,8 @@ class RendererContext {
                     shareWhatsapp: 1,
                     footerText: 'Powered by Publii',
                     GAID: '',
-                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, '')
+                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, ''),
+                    customCss: ampCustomCss
                 }
             }
         }
