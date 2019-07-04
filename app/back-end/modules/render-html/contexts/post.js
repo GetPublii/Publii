@@ -323,17 +323,24 @@ class RendererContextPost extends RendererContext {
             LIMIT @relatedPostsNumber
         `).all({
             postID: this.post.id,
-            relatedPostsNumber: relatedPostsNumber
+            relatedPostsNumber: relatedPostsNumber * 2
         });
 
         this.relatedPosts = [];
 
-        if(!postsData || !postsData.length) {
+        if (!postsData || !postsData.length) {
             return false;
         }
 
+        postsData = postsData.map(postData => postData.id);
+        postsData = [...new Set(postsData)]; 
+
+        if (postsData.length > relatedPostsNumber) {
+            postsData = postsData.slice(0, relatedPostsNumber);
+        }
+
         for(let i = 0; i < postsData.length; i++) {
-            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i].id];
+            this.relatedPosts[i] = this.renderer.cachedItems.posts[postsData[i]];
         }
     }
 
