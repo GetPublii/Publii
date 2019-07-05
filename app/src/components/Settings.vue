@@ -848,17 +848,7 @@
                                 slot="field"
                                 id="amp-share-twitter"
                                 v-model="advanced.ampShareTwitter" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-googleplus"
-                            label="Google+">
-                            <switcher
-                                slot="field"
-                                id="amp-share-googleplus"
-                                v-model="advanced.ampShareGooglePlus" />
-                        </field>
+                        </field>                       
 
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
