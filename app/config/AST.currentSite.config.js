@@ -82,7 +82,6 @@ const AstCurrentSiteConfig = {
         ampShareFacebook: 1,
         ampShareFacebookId: '',
         ampShareTwitter: 1,
-        ampShareGooglePlus: 1,
         ampSharePinterest: 1,
         ampShareLinkedIn: 1,
         ampShareTumblr: 1,

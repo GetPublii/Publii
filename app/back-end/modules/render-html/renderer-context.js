@@ -291,7 +291,6 @@ class RendererContext {
                     shareFacebook: this.siteConfig.advanced.ampShareFacebook,
                     shareFacebookId: this.siteConfig.advanced.ampShareFacebookId,
                     shareTwitter: this.siteConfig.advanced.ampShareTwitter,
-                    shareGooglePlus: this.siteConfig.advanced.ampShareGooglePlus,
                     sharePinterest: this.siteConfig.advanced.ampSharePinterest,
                     shareLinkedIn: this.siteConfig.advanced.ampShareLinkedIn,
                     shareTumblr: this.siteConfig.advanced.ampShareTumblr,
