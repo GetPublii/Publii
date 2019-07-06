@@ -5,6 +5,7 @@
             v-model="value"
             icon="magnifier-small"
             properties="is-small has-padding"
+            ref="search-input"
             placeholder="Search..." />
         <span
             v-if="value !== ''"

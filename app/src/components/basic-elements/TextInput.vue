@@ -16,6 +16,7 @@
             :min="min"
             :max="max"
             :step="step"
+            ref="input"
             :pattern="pattern"
             @keyup="keyboardEvent"
             @keydown="keyboardEvent"

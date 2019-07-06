@@ -6,7 +6,7 @@
 
         <div
             :class="submenuClasses">
-            <sites-search />
+            <sites-search ref="search" />
 
             <sites-list />
 
@@ -60,6 +60,12 @@ export default {
             this.$bus.$off('document-body-clicked', this.hideSubmenu);
             this.$bus.$emit('document-body-clicked');
             this.$bus.$on('document-body-clicked', this.hideSubmenu);
+
+            if (this.submenuIsOpen) {
+                setTimeout(() => {
+                    this.$refs['search'].$refs['search-input'].$refs['input'].focus();
+                }, 100);
+            }
         },
         hideSubmenu () {
             this.submenuIsOpen = false;
