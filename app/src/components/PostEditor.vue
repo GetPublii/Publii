@@ -178,6 +178,7 @@ export default {
                 },
                 isFeatured: false,
                 isHidden: false,
+                isExcludedOnHomepage: false,
                 status: '',
                 metaTitle: '',
                 metaDescription: '',
@@ -379,6 +380,7 @@ export default {
                     this.postData.status = data.posts[0].status.split(',').join(', ');
                     this.postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
                     this.postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
+                    this.postData.isExcludedOnHomepage = data.posts[0].status.indexOf('excluded_homepage') > -1;
 
                     // Set image
                     if (data.featuredImage) {
@@ -477,6 +479,10 @@ export default {
 
             if(this.postData.isFeatured) {
                 finalStatus += ',featured';
+            }
+
+            if(this.postData.isExcludedOnHomepage) {
+                finalStatus += ',excluded_homepage';
             }
 
             let postViewSettings = {};

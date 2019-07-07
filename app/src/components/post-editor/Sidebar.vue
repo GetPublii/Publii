@@ -126,7 +126,9 @@
                         <label id="post-featured-wrapper">
                             <switcher
                                 v-model="$parent.postData.isFeatured" />
-                            Mark as featured 
+                            <span>
+                                Mark as featured 
+                            </span>
 
                             <icon
                                 title="Mark as featured"
@@ -137,14 +139,12 @@
                         </label>
 
                         <label id="post-hidden-wrapper">
-                          
                             <switcher 
                                 title="Post will not appear in any generated post lists such as tag or author pages"
                                 v-model="$parent.postData.isHidden" />
-                           <span 
-                                 title="Post will not appear in any generated post lists such as tag or author pages">
-                               Hide post
-                           </span>
+                            <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                Hide post
+                            </span>
 
                             <icon
                                 title="Hide Post"
@@ -152,6 +152,22 @@
                                 name="hidden-post"
                                 size="xs"
                                 primaryColor="color-6" />
+                        </label>
+
+                        <label id="post-excluded-homepage-wrapper">
+                            <switcher 
+                                title="Post will not appear on homepage listing"
+                                v-model="$parent.postData.isExcludedOnHomepage" />
+                            <span title="Post will not appear on homepage listing">
+                                Excluded on homepage
+                            </span>
+
+                            <icon
+                                title="Exclode on homepage"
+                                class="switcher-item-icon-helper"
+                                name="hidden-post"
+                                size="xs"
+                                primaryColor="color-3" />
                         </label>
                     </div>
                 </div>

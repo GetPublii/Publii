@@ -70,6 +70,7 @@ class PostItem {
             status: this.post.status,
             isFeatured: this.post.status.indexOf('featured') > -1,
             isHidden: this.post.status.indexOf('hidden') > -1,
+            isExcludedOnHomepage: this.post.status.indexOf('excluded_homepage') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
             template: this.post.template,
             hasCustomExcerpt: hasCustomExcerpt

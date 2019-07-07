@@ -46,6 +46,7 @@ export default (state, post, filterValue) => {
                                   .replace('is:trashed', '')
                                   .replace('is:draft', '')
                                   .replace('is:hidden', '')
+                                  .replace('is:excluded', '')
                                   .trim();
     searchPhrase = searchPhrase.toLowerCase();
 
@@ -104,6 +105,19 @@ export default (state, post, filterValue) => {
     if(
         filterValue.indexOf('is:hidden') === 0 &&
         post.status.indexOf('hidden') > -1 &&
+        post.status.indexOf('trashed') === -1
+    ) {
+        if(searchPhrase !== '') {
+            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        }
+
+        return true;
+    }
+
+    // Check for excluded posts
+    if(
+        filterValue.indexOf('is:excluded') === 0 &&
+        post.status.indexOf('excluded') > -1 &&
         post.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {

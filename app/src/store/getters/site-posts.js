@@ -38,6 +38,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             created: post.created_at,
             modified: post.modified_at,
             isHidden: post.status.indexOf('hidden') > -1,
+            isExcludedOnHomepage: post.status.indexOf('excluded_homepage') > -1,
             isDraft: post.status.indexOf('draft') > -1,
             isFeatured: post.status.indexOf('featured') > -1,
             isTrashed: post.status.indexOf('trashed') > -1,

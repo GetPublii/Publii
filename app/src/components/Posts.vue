@@ -48,6 +48,13 @@
             </li>
 
             <li
+                v-if="counters.excluded"
+                :class="filterCssClasses('excluded')"
+                @click="setFilter('is:excluded')">
+                Excluded <span class="filter-count">({{ counters.excluded }})</span>
+            </li>
+
+            <li
                 v-if="counters.drafts"
                 :class="filterCssClasses('draft')"
                 @click="setFilter('is:draft')">
@@ -262,6 +269,12 @@
                                 primaryColor="color-7"
                                 title="This post is hidden" />
                             <icon
+                                v-if="item.isExcludedOnHomepage"
+                                size="xs"
+                                name="hidden-post"
+                                primaryColor="color-3"
+                                title="This post is excluded on homepage" />
+                            <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
@@ -389,6 +402,7 @@ export default {
                     published: 0,
                     featured: 0,
                     hidden: 0,
+                    excluded: 0,
                     drafts: 0,
                     trashed: 0
                 };
@@ -399,6 +413,7 @@ export default {
                 published: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') === -1).length,
                 featured: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('featured') > -1).length,
                 hidden: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('hidden') > -1).length,
+                excluded: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('excluded_homepage') > -1).length,
                 drafts: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
             }
