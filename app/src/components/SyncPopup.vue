@@ -435,6 +435,8 @@ export default {
                     this.$store.commit('setSidebarStatus', 'not-synced');
                     this.close();
                 });
+            } else {
+                this.close();
             }
         },
         startRendering: function() {
