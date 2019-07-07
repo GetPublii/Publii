@@ -418,6 +418,10 @@ export default {
                 'site': this.$store.state.currentSite.config.name
             });
 
+            ipcRenderer.send('app-deploy-render-abort', {
+                'site': this.$store.state.currentSite.config.name
+            });
+
             ipcRenderer.once('app-deploy-aborted', (event) => {
                 this.$store.commit('setSidebarStatus', 'not-synced');
                 this.close();
