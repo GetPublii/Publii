@@ -187,6 +187,7 @@ export default {
     data: function() {
         return {
             isVisible: false,
+            renderingInProgress: false,
             messageFromRenderer: '',
             renderingProgress: 0,
             renderingProgressColor: 'blue',
@@ -393,6 +394,7 @@ export default {
             }
 
             this.syncInProgress = true;
+            this.renderingInProgress = false;
 
             if(!this.uploadError) {
                 this.messageFromRenderer = '';
@@ -414,20 +416,25 @@ export default {
             }
         },
         cancelSync: function() {
-            ipcRenderer.send('app-deploy-abort', {
-                'site': this.$store.state.currentSite.config.name
-            });
+            if (this.syncInProgress) {
+                ipcRenderer.send('app-deploy-abort', {
+                    'site': this.$store.state.currentSite.config.name
+                });
+            } else if (this.renderingInProgress) {
+                ipcRenderer.send('app-deploy-render-abort', {
+                    'site': this.$store.state.currentSite.config.name
+                });
+            }
 
-            ipcRenderer.send('app-deploy-render-abort', {
-                'site': this.$store.state.currentSite.config.name
-            });
-
-            ipcRenderer.once('app-deploy-aborted', (event) => {
-                this.$store.commit('setSidebarStatus', 'not-synced');
-                this.close();
-            });
+            if (this.syncInProgress || this.renderingInProgress) {
+                ipcRenderer.once('app-deploy-aborted', (event) => {
+                    this.$store.commit('setSidebarStatus', 'not-synced');
+                    this.close();
+                });
+            }
         },
         startRendering: function() {
+            this.renderingInProgress = true;
             this.$store.commit('setSidebarStatus', 'preparing');
             this.messageFromRenderer = '';
             this.renderingProgress = 0;

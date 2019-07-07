@@ -30,6 +30,7 @@ class DeployEvents {
                     self.rendererProcess = false;
                 } catch(e) {
                     console.log(e);
+                    self.rendererProcess = false;
                 }
             }
 
@@ -56,6 +57,7 @@ class DeployEvents {
                     self.deploymentProcess = false;
                 } catch(e) {
                     console.log(e);
+                    self.deploymentProcess = false;
                 }
             }
 
