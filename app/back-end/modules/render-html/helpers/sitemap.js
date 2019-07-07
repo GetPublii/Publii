@@ -29,6 +29,13 @@ class Sitemap {
         this.fileList = [];
         this.outputXML = '';
         this.postData = {};
+        this.excludedFiles = [];
+
+        if (this.siteConfig.advanced.sitemapExcludedFiles && this.siteConfig.advanced.sitemapExcludedFiles.trim() !== '') {
+            this.excludedFiles = this.siteConfig.advanced.sitemapExcludedFiles.split(',').map(file => {
+                return '/' + file.trim() + '/';
+            });
+        }
     }
 
     /**
@@ -152,15 +159,10 @@ class Sitemap {
     async getFilesList () {
         let files = fs.readdirSync(this.baseDirectory);
         let internals = this.getInternalsList();
-        let excludedFiles = [];
-
-        if (this.siteConfig.advanced.sitemapExcludedFiles && this.siteConfig.advanced.sitemapExcludedFiles.trim() !== '') {
-            excludedFiles = this.siteConfig.advanced.sitemapExcludedFiles.split(',').map(file => file.trim());
-        }
 
         for (let file of files) {
             // Skip hidden files and internal directories
-            if (file.indexOf('.') === 0 || internals.indexOf(file) > -1 || excludedFiles.indexOf(file) > -1) {
+            if (file.indexOf('.') === 0 || internals.indexOf(file) > -1) {
                 continue;
             }
 
@@ -485,6 +487,10 @@ class Sitemap {
                 images = item.images;
             }
 
+            if (this.isExcluded(url)) {
+                continue;
+            }
+
             this.outputXML += '<url>' + "\n";
             this.outputXML += '<loc>' + domain + url.replace(/index\.html$/, '') + '</loc>' + "\n";
 
@@ -516,6 +522,21 @@ class Sitemap {
         let sitemapFilePath = path.join(this.baseDirectory, 'sitemap.xml');
         fs.writeFileSync(sitemapFilePath, this.outputXML, 'utf8');
         fs.writeFileSync(xslFilePath, xslContent, 'utf8');
+    }
+
+    /**
+     * Check if the gived URL should be excluded from the sitemap
+     */
+    isExcluded (url) {
+        url = '/' + url + '/';
+
+        for (let i = 0; i < this.excludedFiles.length; i++) {
+            if (url.indexOf(this.excludedFiles[i]) > -1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
