@@ -220,6 +220,16 @@
                                 Mark as unfeatured
                             </li>
                             <li 
+                                v-if="selectedPostsNeedsStatus('excluded_homepage')"
+                                @click="bulkExclude">
+                                Exclude on homepage
+                            </li>
+                            <li 
+                                v-if="selectedPostsHaveStatus('excluded_homepage')"
+                                @click="bulkInclude">
+                                Include on homepage
+                            </li>
+                            <li 
                                 v-if="selectedPostsNeedsStatus('hidden')"
                                 @click="bulkHide">
                                 Hide
@@ -544,6 +554,12 @@ export default {
         },
         bulkUnfeatured () {
             this.changeStateForSelected('featured', true);
+        },
+        bulkExclude () {
+            this.changeStateForSelected('excluded_homepage');
+        },
+        bulkInclude () {
+            this.changeStateForSelected('excluded_homepage', true);
         },
         bulkHide () {
             this.changeStateForSelected('hidden');
