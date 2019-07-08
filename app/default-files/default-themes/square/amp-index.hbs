@@ -1,0 +1,60 @@
+{{> amp-head}}
+
+{{#checkIf @config.custom.frontSource '==' "post" }}
+   {{> amp-frontpage-post}}
+{{else}}
+    <main class="wrap-page">
+        {{#each posts}}
+       <article class="card">           
+           {{#featuredImage}}
+                {{#if url}}
+                <a href="{{../url}}">
+                    <amp-img
+                        src="{{url}}"
+                        alt="{{alt}}"
+                        {{#if srcset.amp}}
+                        srcset="{{srcset.amp}}"
+                        {{else}}
+                            {{#if srcset}}
+                        srcset="{{srcset}}"
+                            {{/if}}
+                        {{/if}}
+                        {{#if sizes.amp}}
+                        sizes="{{sizes.amp}}"
+                        {{else}}
+                            {{#if sizes}}
+                        sizes="{{sizes}}"
+                            {{/if}}
+                        {{/if}}
+                        height="{{height}}"
+                        layout="responsive"
+                        width="{{width}}">
+                    </amp-img>
+                </a>
+                {{/if}}
+            {{/featuredImage}}           
+           
+            <div class="card-text">
+                <h2>
+                    <a href="{{url}}"> {{title}} </a>
+                </h2>                
+                <p>{{{excerpt}}}</p>                
+                <p class="card-meta">                     
+                   {{#author}}
+                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                    {{/author}} 
+                    <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
+                        {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                            {{date createdAt @config.custom.formatDate}}
+                        {{else}}
+                            {{date createdAt @config.custom.formatDateCustom}}
+                        {{/checkIf}}
+                    </time>
+                </p>               
+            </div>          
+        </article>
+        {{/each}}
+        {{> amp-pagination}}        
+    </main>
+{{/checkIf}}	
+{{> amp-footer}}

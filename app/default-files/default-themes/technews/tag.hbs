@@ -113,14 +113,9 @@
                                         {{/if}}
                                     </div>
                                     {{#if @config.custom.tagTag}}
-                                        {{#if tags}}
-                                            <p>
-                                                {{#each tags}}
-                                                    {{#if @first}}
-                                                        <a href="{{url}}" class="cat__item-tag u-tag {{ getTagColor slug @config.custom.tagColors}}" title="{{name}}">{{name}}</a>
-                                                    {{/if}}
-                                                {{/each}}
-                                            </p>
+                                          {{#if mainTag}}
+                                              <a href="{{mainTag.url}}" class="{{#featuredImage}}
+                                                 {{#if url}}cat__item-tag{{/if}}{{/featuredImage}} u-tag {{ getTagColor slug @config.custom.tagColors}}">{{mainTag.name}}</a> 
                                         {{/if}}
                                     {{/if}}
                                 </div>

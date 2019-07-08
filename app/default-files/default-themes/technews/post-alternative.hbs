@@ -81,15 +81,10 @@
                      {{/if}}
 
                      {{#if @config.post.displayCategoryName}}
-                        {{#if tags}}
-                           {{#each tags}}
-                              {{#if @first}}
-                                 <a
-                                    href="{{url}}"
-                                    class="u-tag {{ getTagColor slug @config.custom.tagColors}}"
-                                    title="{{name}}">{{name}}</a>
-                              {{/if}}
-                           {{/each}}
+                         {{#if mainTag}}
+                           <a
+                              href="{{mainTag.url}}"
+                              class="u-tag {{getTagColor slug @config.custom.tagColors}}">{{mainTag.name}}</a>                            
                         {{/if}}
                      {{/if}}
                   </div>

@@ -1001,10 +1001,6 @@ textarea {
     transform: rotate(45deg);
     width: 8px; } }
 
-img[data-sizes="auto"] {
-  display: block;
-  width: 100%; }
-
 @media all and (min-width: 37.5em) {
   .u-wrapper, .newsletter {
     max-width: 36rem;

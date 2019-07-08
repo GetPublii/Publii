@@ -776,6 +776,8 @@ textarea {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
     list-style: none;
     margin: 0;
     padding: 0; }
@@ -785,7 +787,7 @@ textarea {
     .navbar .navbar__menu li {
       display: block;
       font-size: 0.77248rem;
-      line-height: 4;
+      line-height: 1.7;
       font-weight: 500;
       padding: 0;
       position: relative;
@@ -820,7 +822,16 @@ textarea {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
-    visibility: visible; }
+    visibility: visible;
+    margin-top: 0.85rem; }
+    .navbar .has-submenu:active > .navbar__submenu:before,
+    .navbar .has-submenu:focus > .navbar__submenu:before,
+    .navbar .has-submenu:hover > .navbar__submenu:before {
+      content: "";
+      height: 0.85rem;
+      position: absolute;
+      width: 100%;
+      top: -0.85rem; }
   .navbar .has-submenu:active > .navbar__submenu.is-right-submenu,
   .navbar .has-submenu:focus > .navbar__submenu.is-right-submenu,
   .navbar .has-submenu:hover > .navbar__submenu.is-right-submenu {
@@ -832,11 +843,13 @@ textarea {
   .navbar .has-submenu .has-submenu:active > .navbar__submenu,
   .navbar .has-submenu .has-submenu:focus > .navbar__submenu,
   .navbar .has-submenu .has-submenu:hover > .navbar__submenu {
-    top: 0; }
+    top: 0;
+    margin-top: 0; }
   .navbar .has-submenu .has-submenu:active > .navbar__submenu.is-right-submenu,
   .navbar .has-submenu .has-submenu:focus > .navbar__submenu.is-right-submenu,
   .navbar .has-submenu .has-submenu:hover > .navbar__submenu.is-right-submenu {
-    top: 0; }
+    top: 0;
+    margin-top: 0; }
   .navbar .navbar__submenu {
     background: #17181E;
     -webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
@@ -1129,10 +1142,6 @@ textarea {
   margin: 0 auto;
   padding: 0 6vw; }
 
-img[data-sizes="auto"] {
-  display: block;
-  width: 100%; }
-
 .readmore {
   display: inline-block;
   color: #747577;
@@ -1180,7 +1189,7 @@ img[data-sizes="auto"] {
         outline: none; }
   .hero__image {
     height: 100%;
-    margin: 0 calc(-50vw + 50%);
+    margin: 0;
     position: absolute;
     width: 100%; }
     .hero__image--overlay::after {
@@ -1192,10 +1201,11 @@ img[data-sizes="auto"] {
       top: 0;
       width: 100%; }
     .hero__image > img {
+      display: block;
       height: inherit;
       -o-object-fit: cover;
       object-fit: cover;
-      width: inherit; }
+      width: 100%; }
     .hero__image > figcaption {
       background: #17181E;
       border-radius: 2px;

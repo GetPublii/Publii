@@ -9,15 +9,12 @@
    {{#post}}
       <article class="post">
          <header class="hero">
-            {{#if @config.post.displayCategoryName}}
-               {{#if tags}}
+            {{#if @config.post.displayCategoryName}}               
+               {{#if mainTag}}
                   <p>
-                     {{#each tags}}
-                        {{#if @first}}{{name}}
-                        {{/if}}
-                     {{/each}}
-                  </p>
-               {{/if}}
+                     {{mainTag.name }}
+                  </p>                    
+               {{/if}}              
             {{/if}}
             <h1>
                {{title}}
