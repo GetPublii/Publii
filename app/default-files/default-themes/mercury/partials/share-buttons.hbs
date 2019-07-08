@@ -3,7 +3,7 @@
       href="https://www.facebook.com/sharer/sharer.php?u={{encodeUrlFragment url}}"
       class="js-share facebook"
       title="{{ translate 'partials.shareButtons.shareWithFacebook' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#facebook"/>
       </svg>
@@ -16,7 +16,7 @@
 "
       class="js-share twitter"
       title="{{ translate 'partials.shareButtons.shareWithTwitter' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#twitter"/>
       </svg>
@@ -28,7 +28,7 @@
       href="https://pinterest.com/pin/create/button/?url={{encodeUrlFragment url}}&amp;media={{encodeUrlFragment featuredImage.url}}&amp;description={{encodeUrlFragment title}}"
       class="js-share pinterest"
       title="{{ translate 'partials.shareButtons.shareWith' }} {{ translate 'partials.shareButtons.shareWithPinterest' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#pinterest"/>
       </svg>
@@ -40,7 +40,7 @@
       href="https://mix.com/add?url={{encodeUrlFragment url}}"
       class="js-share mix"
       title="{{ translate 'partials.shareButtons.shareWithMix' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#mix"/>
       </svg>
@@ -52,7 +52,7 @@
       href="http://www.linkedin.com/shareArticle?url={{encodeUrlFragment url}}&amp;title={{encodeUrlFragment title}}"
       class="js-share linkedin"
       title="{{ translate 'partials.shareButtons.shareWithLinkedIn' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#linkedin"/>
       </svg>
@@ -64,7 +64,7 @@
       href="https://buffer.com/add?text={{encodeUrlFragment title}}&amp;url={{encodeUrlFragment url}}"
       class="js-share buffer"
       title="{{ translate 'partials.shareButtons.shareWithBuffer' }}"
-      rel="nofollow">
+      rel="nofollow noopener noreferrer">
       <svg class="icon">
          <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#buffer"/>
       </svg>
