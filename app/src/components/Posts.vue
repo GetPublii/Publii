@@ -222,12 +222,12 @@
                             <li 
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
                                 @click="bulkExclude">
-                                Exclude on homepage
+                                Exclude from homepage
                             </li>
                             <li 
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
                                 @click="bulkInclude">
-                                Include on homepage
+                                Include in homepage
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('hidden')"
