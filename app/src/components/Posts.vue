@@ -222,12 +222,12 @@
                             <li 
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
                                 @click="bulkExclude">
-                                Exclude on homepage
+                                Exclude from homepage
                             </li>
                             <li 
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
                                 @click="bulkInclude">
-                                Include on homepage
+                                Include in homepage
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('hidden')"
@@ -279,11 +279,11 @@
                                 primaryColor="color-7"
                                 title="This post is hidden" />
                             <icon
-                                v-if="item.isExcludedOnHomepage"
+                                v-if="item.isExcludedOnHomepage"                               
+                                name="excluded-post"
                                 size="xs"
-                                name="hidden-post"
                                 primaryColor="color-3"
-                                title="This post is excluded on homepage" />
+                                title="This post is excluded from homepage" />
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"

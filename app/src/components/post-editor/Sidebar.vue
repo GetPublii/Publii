@@ -159,15 +159,15 @@
                                 title="Post will not appear on homepage listing"
                                 v-model="$parent.postData.isExcludedOnHomepage" />
                             <span title="Post will not appear on homepage listing">
-                                Excluded on homepage
+                                Exclude from homepage
                             </span>
 
                             <icon
-                                title="Exclode on homepage"
+                                title="Exclude from homepage"
                                 class="switcher-item-icon-helper"
-                                name="hidden-post"
+                                name="excluded-post"
                                 size="xs"
-                                primaryColor="color-3" />
+                                primaryColor="color-3"/>
                         </label>
                     </div>
                 </div>
