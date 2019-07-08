@@ -76,7 +76,9 @@ import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
 export default {
     name: 'site-add-form',
-    mixins: [GoToLastOpenedWebsite],
+    mixins: [
+        GoToLastOpenedWebsite
+    ],
     data () {
         return {
             siteName: '',
@@ -127,6 +129,7 @@ export default {
         });
 
         this.$bus.$emit('add-website-form-displayed');
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         checkWebsiteName () {
@@ -206,11 +209,20 @@ export default {
                 additionalData: "{}",
                 postCounter: 0
             }];
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter') {
+                this.addWebsite();
+            }
+        },
+        onEnterKey () {
+            this.onOk();
         }
     },
     beforeDestroy () {
         this.$bus.$off('add-website-name-changed');
         this.$bus.$off('add-website-author-changed');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>

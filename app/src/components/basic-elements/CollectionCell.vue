@@ -92,6 +92,7 @@ export default {
         }
 
         svg {
+            left: 0.3rem;
             position: relative;
             top: .1rem;
         }

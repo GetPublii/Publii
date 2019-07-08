@@ -34,7 +34,7 @@
 <script>
 export default {
     name: 'confirm',
-    data: function() {
+    data () {
         return {
             isVisible: false,
             hasInput: false,
@@ -49,39 +49,43 @@ export default {
         };
     },
     computed: {
-        cssClasses: function() {
+        cssClasses () {
             return {
                 'message': true,
                 'text-centered': this.textCentered
             };
         }
     },
-    mounted: function() {
+    mounted () {
         this.$bus.$on('confirm-display', (config) => {
-            this.isVisible = true;
-            this.message = config.message;
-            this.textCentered = config.textCentered || false;
-            this.hasInput = config.hasInput || false;
-            this.inputIsPassword = config.inputIsPassword || false;
-            this.okLabel = config.okLabel || "OK";
-            this.cancelLabel = config.cancelLabel || "Cancel";
-            this.defaultText = config.defaultText || "";
+            setTimeout(() => {
+                this.isVisible = true;
+                this.message = config.message;
+                this.textCentered = config.textCentered || false;
+                this.hasInput = config.hasInput || false;
+                this.inputIsPassword = config.inputIsPassword || false;
+                this.okLabel = config.okLabel || "OK";
+                this.cancelLabel = config.cancelLabel || "Cancel";
+                this.defaultText = config.defaultText || "";
 
-            if(config.okClick) {
-                this.okClick = config.okClick;
-            } else {
-                this.okClick = () => false;
-            }
+                if(config.okClick) {
+                    this.okClick = config.okClick;
+                } else {
+                    this.okClick = () => false;
+                }
 
-            if(config.cancelClick) {
-                this.cancelClick = config.cancelClick
-            } else {
-                this.cancelClick = () => false;
-            }
+                if(config.cancelClick) {
+                    this.cancelClick = config.cancelClick
+                } else {
+                    this.cancelClick = () => false;
+                }
+            }, 0);
         });
+
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
-        onOk: function() {
+        onOk () {
             this.isVisible = false;
 
             if(this.hasInput) {
@@ -90,13 +94,22 @@ export default {
                 this.okClick();
             }
         },
-        onCancel: function() {
+        onCancel () {
             this.isVisible = false;
             this.cancelClick();
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter' && this.isVisible) {
+                this.onEnterKey();
+            }
+        },
+        onEnterKey () {
+            this.onOk();
         }
     },
     beforeDestroy () {
         this.$bus.$off('confirm-display');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>

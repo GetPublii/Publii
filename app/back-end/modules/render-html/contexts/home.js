@@ -35,7 +35,8 @@ class RendererContextHome extends RendererContext {
                     ${includeFeaturedPosts}
                     status LIKE "%published%" AND
                     status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%"
+                    status NOT LIKE "%trashed%" AND
+                    status NOT LIKE "%excluded_homepage%"
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
@@ -140,6 +141,8 @@ class RendererContextHome extends RendererContext {
                 status NOT LIKE "%hidden%"
                 AND
                 status NOT LIKE "%trashed%"
+                AND 
+                status NOT LIKE "%excluded_homepage%"
                 ${includeFeaturedPosts}
             GROUP BY
                 id

@@ -32,4 +32,8 @@ process.on('message', async function(msg){
             process.exit();
         }, 1000);
     }
+
+    if(msg.type === 'abort') {
+        process.exit();
+    }
 });

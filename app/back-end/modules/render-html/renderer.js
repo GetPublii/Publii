@@ -944,7 +944,7 @@ class Renderer {
                 postsPerPage = 5;
             }
 
-            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
+            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.tagNoPagination) {
                 let context = contextGenerator.getContext(tagIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['tag', tagSlug];
@@ -1188,7 +1188,7 @@ class Renderer {
                 postsPerPage = 5;
             }
 
-            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
+            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.authorNoPagination) {
                 let context = contextGenerator.getContext(authorsIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['author', authorUsername];

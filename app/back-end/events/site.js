@@ -323,6 +323,7 @@ class SiteEvents {
             config.name = slug(config.name);
             let site = new Site(appInstance, config);
             let result = site.create(authorName);
+            config.theme = 'simple';
             appInstance.sites[config.name] = config;
 
             // Load newly created db

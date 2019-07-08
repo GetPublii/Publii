@@ -394,7 +394,19 @@ class App {
         }
 
         if (!this.windowBounds) {
-            const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+            let screens = electron.screen.getAllDisplays();
+            let width = screens[0].workAreaSize.width;
+            let height = screens[0].workAreaSize.height;
+           
+            for (let i = 0; i < screens.length; i++) {
+                if (screens[i].width < width) {
+                    width = screens[i].width;
+                }
+
+                if (screens[i].height < height) {
+                    height = screens[i].height;
+                }
+            }
 
             this.windowBounds = {
                 width: width,
@@ -439,6 +451,9 @@ class App {
         let windowParams = this.windowBounds;
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
+        windowParams.webPreferences = {
+            nodeIntegration: true
+        };
 
         let displays = electron.screen.getAllDisplays();
         let externalDisplay = displays.find((display) => {

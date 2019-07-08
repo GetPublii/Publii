@@ -166,6 +166,7 @@ export default {
                 slug: '',
                 author: 1,
                 tags: [],
+                mainTag: '',
                 template: '',
                 creationDate: {
                     text: '',
@@ -177,6 +178,7 @@ export default {
                 },
                 isFeatured: false,
                 isHidden: false,
+                isExcludedOnHomepage: false,
                 status: '',
                 metaTitle: '',
                 metaDescription: '',
@@ -359,6 +361,8 @@ export default {
                         }
                     }
 
+                    this.postData.mainTag = data.additionalData.mainTag || '';
+
                     // Set author
                     this.postData.author = data.author[0].id;
 
@@ -376,6 +380,7 @@ export default {
                     this.postData.status = data.posts[0].status.split(',').join(', ');
                     this.postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
                     this.postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
+                    this.postData.isExcludedOnHomepage = data.posts[0].status.indexOf('excluded_homepage') > -1;
 
                     // Set image
                     if (data.featuredImage) {
@@ -476,6 +481,10 @@ export default {
                 finalStatus += ',featured';
             }
 
+            if(this.postData.isExcludedOnHomepage) {
+                finalStatus += ',excluded_homepage';
+            }
+
             let postViewSettings = {};
 
             this.$store.state.currentSite.themeSettings.postConfig.forEach(field => {
@@ -526,7 +535,8 @@ export default {
                     metaTitle: this.postData.metaTitle,
                     metaDesc: this.postData.metaDescription,
                     metaRobots: this.postData.metaRobots,
-                    canonicalUrl: this.postData.canonicalUrl
+                    canonicalUrl: this.postData.canonicalUrl,
+                    mainTag: this.postData.mainTag
                 },
                 'postViewSettings': postViewSettings,
                 'id': this.postID,

@@ -207,7 +207,6 @@
                         </field>
 
                         <separator
-                            v-if="!advanced.noIndexThisPage"
                             type="medium"
                             label="Tag page" />
 
@@ -283,8 +282,21 @@
                             </small>
                         </field>
 
+                        <field
+                            id="tag-no-pagination"
+                            label="Disable tags pagination">
+                            <switcher
+                                slot="field"
+                                id="tag-no-pagination"
+                                v-model="advanced.tagNoPagination" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled your tags pagination won't be generated.
+                            </small>
+                        </field>
+
                         <separator
-                            v-if="!advanced.noIndexThisPage"
                             type="medium"
                             label="Author page" />
 
@@ -356,6 +368,20 @@
                                 slot="note"
                                 class="note">
                                 If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
+                            </small>
+                        </field>
+
+                        <field
+                            id="author-no-pagination"
+                            label="Disable authors pagination">
+                            <switcher
+                                slot="field"
+                                id="author-no-pagination"
+                                v-model="advanced.authorNoPagination" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled your authors pagination won't be generated.
                             </small>
                         </field>
 
@@ -822,17 +848,7 @@
                                 slot="field"
                                 id="amp-share-twitter"
                                 v-model="advanced.ampShareTwitter" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-googleplus"
-                            label="Google+">
-                            <switcher
-                                slot="field"
-                                id="amp-share-googleplus"
-                                v-model="advanced.ampShareGooglePlus" />
-                        </field>
+                        </field>                       
 
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
@@ -1261,6 +1277,22 @@
                                 key="related-posts-order-by"
                                 v-model="advanced.relatedPostsOrder"
                                 :items="relatedPostsOrderingOptions"></dropdown>
+                        </field>
+
+                         <field
+                            id="related-posts-use-all-posts"
+                            label="Related posts options">
+                            <label slot="field">
+                                <switcher
+                                    id="related-posts-use-all-posts"
+                                    v-model="advanced.relatedPostsIncludeAllPosts" />
+                            </label>
+
+                            <small
+                                slot="note"
+                                class="note">
+                                When enabled, related posts will be taken from all tags. Disable this option to only get related posts from the same tag as the main post.
+                            </small>
                         </field>
                     </div>
                 </tabs>

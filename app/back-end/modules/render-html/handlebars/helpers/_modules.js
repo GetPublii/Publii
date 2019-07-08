@@ -42,5 +42,8 @@ module.exports = {
     getPostByTagsHelper: require('./get-post-by-tags.js'),
     getPostsByTagsHelper: require('./get-posts-by-tags.js'),
     getTagHelper: require('./get-tag.js'),
-    getTagsHelper: require('./get-tags.js')
+    getTagsHelper: require('./get-tags.js'),
+    concatenate: require('./concatenate.js'),
+    contains: require('./contains.js'),
+    join: require('./join.js')
 };

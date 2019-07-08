@@ -10,16 +10,12 @@
       <article class="post u-innerwrap">
          <div class="hero {{@config.custom.widthHero}}">
             <header>
-               {{#if @config.post.displayCategoryName}}
-                  {{#if tags}}
+               {{#if @config.post.displayCategoryName}}                
+                  {{#if mainTag}}
                      <p>
-                        {{#each tags}}
-                           {{#if @first}}
-                              <a href="{{url}}" title="{{name}}">{{name}}</a>
-                           {{/if}}
-                        {{/each}}
-                     </p>
-                  {{/if}}
+                        <a href="{{mainTag.url}}" title="{{name}}">{{mainTag.name }}</a>
+                     </p>                    
+                  {{/if}} 
                {{/if}}
                <h1>
                   {{title}}

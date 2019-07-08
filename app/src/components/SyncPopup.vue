@@ -112,7 +112,8 @@
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
-                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'">
+                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'"
+                        :disabled="syncInProgress">
                         Sync your website
                     </p-button>
 
@@ -186,6 +187,8 @@ export default {
     data: function() {
         return {
             isVisible: false,
+            renderingInProgress: false,
+            uploadInProgress: false,
             messageFromRenderer: '',
             renderingProgress: 0,
             renderingProgressColor: 'blue',
@@ -270,6 +273,10 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('sync-popup-display', (config) => {
+            if (this.isVisible) {
+                return;
+            }
+
             this.isVisible = true;
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
@@ -348,6 +355,7 @@ export default {
         });
 
         ipcRenderer.on('app-uploading-progress', this.uploadingProgressUpdate);
+        document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         goToServerSettings: function() {
@@ -387,6 +395,8 @@ export default {
             }
 
             this.syncInProgress = true;
+            this.uploadInProgress = false;
+            this.renderingInProgress = false;
 
             if(!this.uploadError) {
                 this.messageFromRenderer = '';
@@ -408,16 +418,29 @@ export default {
             }
         },
         cancelSync: function() {
-            ipcRenderer.send('app-deploy-abort', {
-                'site': this.$store.state.currentSite.config.name
-            });
+            if (this.renderingInProgress) {
+                ipcRenderer.send('app-deploy-render-abort', {
+                    'site': this.$store.state.currentSite.config.name
+                });
+            } 
+            
+            if (this.syncInProgress) {
+                ipcRenderer.send('app-deploy-abort', {
+                    'site': this.$store.state.currentSite.config.name
+                });
+            }
 
-            ipcRenderer.once('app-deploy-aborted', (event) => {
-                this.$store.commit('setSidebarStatus', 'not-synced');
+            if (this.syncInProgress || this.renderingInProgress) {
+                ipcRenderer.once('app-deploy-aborted', (event) => {
+                    this.$store.commit('setSidebarStatus', 'not-synced');
+                    this.close();
+                });
+            } else {
                 this.close();
-            });
+            }
         },
         startRendering: function() {
+            this.renderingInProgress = true;
             this.$store.commit('setSidebarStatus', 'preparing');
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
@@ -465,6 +488,8 @@ export default {
             }
         },
         startUpload: function() {
+            this.renderingInProgress = false;
+            this.uploadInProgress = true;
             this.$store.commit('setSidebarStatus', 'syncing');
 
             if(
@@ -524,6 +549,7 @@ export default {
                 this.uploadingProgress = 100;
                 this.uploadingProgressIsStopped = true;
                 this.syncInProgress = false;
+                this.uploadInProgress = false;
 
                 if (typeof data.issues !== 'undefined' && data.issues) {
                     this.noIssues = false;
@@ -611,12 +637,29 @@ export default {
         },
         themeIsSelected() {
             return !(!this.$store.state.currentSite.config.theme || this.$store.state.currentSite.config.theme === '');
+        },
+        onDocumentKeyDown (e) {
+            if (e.code === 'Enter' && this.isVisible && !this.syncInProgress) {
+                this.onEnterKey();
+            }
+        },
+        onEnterKey () {
+            if (this.isInSync && !this.isManual) {
+                this.openWebsite();
+            } else if (this.isInSync && this.noIssues && this.isManual) {
+                this.showFolder();
+            } else if (this.properConfig && !this.isInSync) {
+                this.startSync();
+            } else if (this.noDomainConfig || (!this.noDomainConfig && this.noServerConfig)) {
+                this.goToServerSettings();
+            }
         }
     },
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
         ipcRenderer.removeAllListeners('app-preview-render-error');
         ipcRenderer.removeAllListeners('app-rendering-progress');
+        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
 </script>

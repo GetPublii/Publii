@@ -126,7 +126,9 @@
                         <label id="post-featured-wrapper">
                             <switcher
                                 v-model="$parent.postData.isFeatured" />
-                            Mark as featured 
+                            <span>
+                                Mark as featured 
+                            </span>
 
                             <icon
                                 title="Mark as featured"
@@ -137,14 +139,12 @@
                         </label>
 
                         <label id="post-hidden-wrapper">
-                          
                             <switcher 
                                 title="Post will not appear in any generated post lists such as tag or author pages"
                                 v-model="$parent.postData.isHidden" />
-                           <span 
-                                 title="Post will not appear in any generated post lists such as tag or author pages">
-                               Hide post
-                           </span>
+                            <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                Hide post
+                            </span>
 
                             <icon
                                 title="Hide Post"
@@ -152,6 +152,22 @@
                                 name="hidden-post"
                                 size="xs"
                                 primaryColor="color-6" />
+                        </label>
+
+                        <label id="post-excluded-homepage-wrapper">
+                            <switcher 
+                                title="Post will not appear on homepage listing"
+                                v-model="$parent.postData.isExcludedOnHomepage" />
+                            <span title="Post will not appear on homepage listing">
+                                Exclude from homepage
+                            </span>
+
+                            <icon
+                                title="Exclude from homepage"
+                                class="switcher-item-icon-helper"
+                                name="excluded-post"
+                                size="xs"
+                                primaryColor="color-3"/>
                         </label>
                     </div>
                 </div>
@@ -257,12 +273,30 @@
                                         placeholder=""
                                         :multiple="true"
                                         :taggable="true"
+                                        @remove="removeTag"
                                         @tag="addTag"></v-select>
 
                                     <small
                                         v-if="tagIsRestricted"
                                         class="post-tags-error">
                                         This tag is not allowed
+                                    </small>
+                                </label>
+                            </div>
+
+                            <div 
+                                v-if="$parent.postData.tags.length > 1"
+                                class="post-main-tag">
+                                <label>
+                                    Main tag:
+                                    <dropdown
+                                        id="post-main-tag"
+                                        v-model="$parent.postData.mainTag"
+                                        :items="tagsForDropdown">
+                                    </dropdown>
+
+                                    <small class="note">
+                                        If the post has tags and the main tag is not set, the first tag in alphabetical order will be used as the main tag.
                                     </small>
                                 </label>
                             </div>
@@ -549,6 +583,15 @@ export default {
         },
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig;
+        },
+        tagsForDropdown () {
+            return [{
+                value: '',
+                label: 'Not set'
+            }].concat(this.$parent.postData.tags.map(tag => ({
+                value: this.getTagIdByName(tag),
+                label: tag
+            })));
         }
     },
     mounted () {
@@ -558,6 +601,12 @@ export default {
 
         if (!this.isEdit) {
             this.$parent.postData.template = this.defaultPostTemplate;
+        } else if (!!this.$parent.postData.mainTag) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === this.$parent.postData.mainTag);
+
+            if (!foundedTag.length) {
+                this.$parent.postData.mainTag = '';
+            }
         }
     },
     methods: {
@@ -621,6 +670,38 @@ export default {
             }
 
             this.$parent.postData.tags.push(newTag);
+        },
+        removeTag (removedTagName) {
+            let removedTagID = this.getTagIdByName(removedTagName);
+            let mainTagName = this.getTagNameById(this.$parent.postData.mainTag);
+            
+            if (typeof removedTagID === 'string') {
+                if (mainTagName === removedTagName) {
+                    this.$parent.postData.mainTag = '';    
+                }
+            } else {
+                if (parseInt(removedTagID, 10) === parseInt(this.$parent.postData.mainTag, 10)) {
+                    this.$parent.postData.mainTag = '';
+                }
+            }
+        },
+        getTagNameById (tagID) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === tagID);
+
+            if (foundedTag.length) {
+                return foundedTag[0].name;
+            }
+
+            return '';
+        },
+        getTagIdByName (tagName) {
+            let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.name === tagName);
+
+            if (foundedTag.length) {
+                return foundedTag[0].id;
+            }
+
+            return tagName;
         },
         generateItems (arrayToConvert) {
             let options = {};

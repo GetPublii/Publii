@@ -37,11 +37,13 @@ const AstCurrentSiteConfig = {
         tagMetaTitle: 'Tag: %tagname - %sitename',
         tagMetaDescription: '',
         tagNoIndexPagination: false,
+        tagNoPagination: false,
         metaRobotsTags: 'noindex, follow',
         authorMetaTitle: 'Author: %authorname - %sitename',
         authorMetaDescription: '',
         metaRobotsAuthors: 'noindex, follow',
         authorNoIndexPagination: false,
+        authorNoPagination: false,
         displayEmptyAuthors: false,
         displayEmptyTags: false,
         errorMetaTitle: 'Error 404 - %sitename',
@@ -80,7 +82,6 @@ const AstCurrentSiteConfig = {
         ampShareFacebook: 1,
         ampShareFacebookId: '',
         ampShareTwitter: 1,
-        ampShareGooglePlus: 1,
         ampSharePinterest: 1,
         ampShareLinkedIn: 1,
         ampShareTumblr: 1,
@@ -111,7 +112,8 @@ const AstCurrentSiteConfig = {
             badgeLabel: 'Cookie Policy',
             behaviourLink: '#cookie-settings'
         },
-        relatedPostsOrder: 'default'
+        relatedPostsOrder: 'default',
+        relatedPostsIncludeAllPosts: true
     },
     deployment: {
         protocol: '',

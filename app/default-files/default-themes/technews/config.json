@@ -1,6 +1,6 @@
 {
     "name": "Technews",
-    "version": "1.8.0.0",
+    "version": "1.8.1.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu",
@@ -84,7 +84,6 @@
             "value": true,
             "type": "checkbox"
         },
-
         {
             "name": "separator",
             "type": "separator",
@@ -156,7 +155,7 @@
                 "field": "frontSource",
                 "value": "post"
             }]
-        },  
+        }, 
         {
             "name": "separator",
             "type": "separator",

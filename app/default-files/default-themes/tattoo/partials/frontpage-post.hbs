@@ -4,14 +4,10 @@
          <div class="hero {{@config.custom.widthHero}}">
             <header>
                {{#if postViewConfig.displayCategoryName}}
-                  {{#if tags}}
+                   {{#if mainTag}}
                      <p>
-                        {{#each tags}}
-                           {{#if @first}}
-                              <a href="{{url}}" title="{{name}}">{{name}}</a>
-                           {{/if}}
-                        {{/each}}
-                     </p>
+                        <a href="{{mainTag.url}}" title="{{name}}">{{mainTag.name }}</a>
+                     </p>                    
                   {{/if}}
                {{/if}}
                <h1>

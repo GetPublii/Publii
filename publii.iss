@@ -11,7 +11,7 @@ Type: filesandordirs; Name: "{app}\resources";
 
 [Setup]
 AppName=Publii
-AppVersion=0.34.1
+AppVersion=0.35.0
 DefaultDirName={pf}\Publii
 DefaultGroupName=Publii
 UninstallDisplayIcon={app}\Publii.exe
@@ -33,6 +33,7 @@ Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Add
 Source: "*"; Excludes: "publii.iss"; DestDir: "{app}"
 Source: "locales\*"; DestDir: "{app}\locales"; Flags: recursesubdirs
 Source: "resources\*"; DestDir: "{app}\resources"; Flags: recursesubdirs
+Source: "swiftshader\*"; DestDir: "{app}\swiftshader"; Flags: recursesubdirs
 
 [Icons]
 Name: "{group}\Publii"; Filename: "{app}\Publii.exe"

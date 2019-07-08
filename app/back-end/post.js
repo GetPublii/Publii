@@ -688,8 +688,25 @@ class Post extends Model {
         sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
-        if(typeof this.additionalData !== 'object') {
+        if (typeof this.additionalData !== 'object') {
             this.additionalData = {};
+        }
+
+        if (typeof this.additionalData.mainTag === 'string' && this.additionalData.mainTag !== '') {
+            let tagSqlQuery = `
+                    SELECT 
+                        id 
+                    FROM
+                        tags
+                    WHERE
+                        name = @name
+                `;
+
+            let tagResult = this.db.prepare(tagSqlQuery).get({ name: this.additionalData.mainTag });
+
+            if (tagResult && tagResult.id) {
+                this.additionalData.mainTag = parseInt(tagResult.id, 10);
+            }
         }
 
         let additionalDataToSave = JSON.stringify(this.additionalData);

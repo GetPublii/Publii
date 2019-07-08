@@ -60,6 +60,7 @@ class RendererContextPostPreview extends RendererContext {
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
             isFeatured: this.renderer.postData.status.indexOf('featured') > -1,
             isHidden: this.renderer.postData.status.indexOf('hidden') > -1,
+            isExcludedOnHomepage: this.renderer.postData.status.indexOf('excluded_homepage') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
             template: this.renderer.postData.template,
             hasCustomExcerpt: hasCustomExcerpt

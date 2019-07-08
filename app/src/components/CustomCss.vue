@@ -26,12 +26,37 @@
             </p-button>
         </p-header>
 
-        <codemirror-editor
-            id="custom-css-editor"
-            ref="codemirror"
-            mode="css"
-            editorLoadedEventName="custom-css-editor-loaded">
-        </codemirror-editor>
+        <ul class="filters">
+            <li
+                :class="filterCssClasses('normal')"
+                @click="setFilter('normal')">
+                Normal
+            </li>
+
+            <li
+                :class="filterCssClasses('amp')"
+                @click="setFilter('amp')">
+                AMP
+            </li>
+        </ul>
+
+        <div :class="{ 'editor-wrapper': true, 'is-active': filterValue === 'normal' }">
+            <codemirror-editor
+                id="custom-css-editor-normal"
+                ref="codemirrorNormal"
+                mode="css"
+                editorLoadedEventName="custom-css-editor-loaded">
+            </codemirror-editor>
+        </div>
+
+        <div :class="{ 'editor-wrapper': true, 'is-active': filterValue === 'amp' }">
+            <codemirror-editor
+                id="custom-css-editor-amp"
+                ref="codemirrorAmp"
+                mode="css"
+                editorLoadedEventName="custom-css-editor-loaded">
+            </codemirror-editor>
+        </div>
 
         <small class="editor-note">
             <span>
@@ -58,12 +83,27 @@ export default {
     mixins: [
         BackToTools
     ],
+    watch: {
+        filterValue (newValue) {
+            setTimeout(() => {
+                if (newValue === 'normal') {
+                    this.$refs.codemirrorNormal.editor.refresh();
+                } else if (newValue === 'amp') {
+                    this.$refs.codemirrorAmp.editor.refresh();
+                }
+            }, 0);
+        }
+    },
     data: function() {
         return {
             buttonsLocked: false,
-            editorValue: `/*
+            filterValue: 'normal',
+            editorValueNormal: `/*
  * Put your custom CSS code here
- */`
+ */`,
+            editorValueAmp: `/*
+ * Put your custom CSS code here (it will be used only in the AMP mode)
+ */`,       
         };
     },
     computed: {
@@ -86,21 +126,31 @@ export default {
             });
 
             ipcRenderer.once('app-site-css-loaded', (event, data) => {
-                if(data !== false) {
-                    this.editorValue = data;
+                if (data.normal !== false) {
+                    this.editorValueNormal = data.normal;
                 }
 
-                this.$refs.codemirror.editor.setValue(this.editorValue);
-                this.$refs.codemirror.editor.refresh();
+                if (data.amp !== false) {
+                    this.editorValueAmp = data.amp;
+                }
+
+                this.$refs.codemirrorNormal.editor.setValue(this.editorValueNormal);
+                this.$refs.codemirrorNormal.editor.refresh();
+                this.$refs.codemirrorAmp.editor.setValue(this.editorValueAmp);
+                this.$refs.codemirrorAmp.editor.refresh();
             });
         },
         save: function(e, showPreview = false) {
             e.preventDefault();
-            this.$refs.codemirror.editor.save();
+            this.$refs.codemirrorNormal.editor.save();
+            this.$refs.codemirrorAmp.editor.save();
 
             ipcRenderer.send('app-site-css-save', {
                 site: this.$store.state.currentSite.config.name,
-                code: document.getElementById('custom-css-editor').value
+                code: {
+                    normal: document.getElementById('custom-css-editor-normal').value,
+                    amp: document.getElementById('custom-css-editor-amp').value
+                }
             });
 
             ipcRenderer.once('app-site-css-saved', (event, data) => {
@@ -131,6 +181,15 @@ export default {
 
                 this.$bus.$emit('rendering-popup-display');
             }
+        },
+        filterCssClasses (type) {
+            return {
+                'filter-value': true,
+                'filter-active': this.filterValue === type
+            };
+        },
+        setFilter (newValue) {
+            this.filterValue = newValue;
         }
     },
     beforeDestroy () {
@@ -150,6 +209,49 @@ export default {
     span {
         display: inline-block;
         margin: .5rem 2rem 0 0;
+    }
+}
+
+.editor-wrapper {
+    display: none;
+
+    &.is-active {
+        display: block;
+    }
+}
+
+.filters {
+    font-size: 1.4rem;
+    list-style-type: none;
+    margin: -2rem 0 0 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+
+    .label {
+        color: $color-7;
+        float: left;
+        margin-right: 1rem;
+    }
+
+    .filter-value {
+        color: $color-7;
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 1rem;
+
+        &.filter-active {
+            color: $link-color;
+            cursor: default;
+        }
+
+        &:hover {
+            color: $link-color;
+        }
+
+        &:last-child {
+            border-right: none;
+        }
     }
 }
 </style>

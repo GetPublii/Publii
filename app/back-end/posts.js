@@ -15,15 +15,23 @@ class Posts extends Model {
     load() {
         let sqlQuery = `
             SELECT 
-                id, 
-                title, 
-                authors, 
-                slug, 
-                created_at, 
-                modified_at, 
-                status 
+                p.id AS id, 
+                p.title AS title, 
+                p.authors AS authors, 
+                p.slug AS slug, 
+                p.created_at AS created_at, 
+                p.modified_at AS modified_at, 
+                p.status AS status,
+                pad.value AS additional_data
             FROM 
-                posts 
+                posts AS p
+            LEFT JOIN
+                posts_additional_data AS pad
+                ON
+                pad.post_id = p.id
+            WHERE
+                pad.key = "_core" OR
+                pad.key IS NULL
             ORDER BY 
                 id DESC`;
 

@@ -644,10 +644,6 @@ textarea {
     .menu-toggle:before, .menu-toggle:hover, .menu-toggle:focus, .menu-toggle:active {
       border-color: #d4d4d4; } }
 
-img[data-sizes="auto"] {
-  display: block;
-  width: 100%; }
-
 .main:after {
   content: " ";
   display: block;

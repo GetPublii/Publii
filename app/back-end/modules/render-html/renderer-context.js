@@ -5,6 +5,7 @@ const slug = require('./../../helpers/slug');
 const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
 const RendererCache = require('./renderer-cache');
+const UtilsHelper = require('./../../helpers/utils');
 
 /*
  * Class used create global context variables
@@ -251,13 +252,20 @@ class RendererContext {
             footerAmpCustomCode: this.siteConfig.advanced.customFooterAmpCode || '',
             customHTML: this.siteConfig.advanced.customHTML || false,
             utils: {
-                currentYear: new Date().getFullYear()
+                currentYear: new Date().getFullYear(),
+                buildDate: +new Date()
             }
         };
 
         // In AMP mode create special global @amp variable
         if(this.renderer.ampMode) {
             let ampImage = '';
+            let ampCustomCssPath = path.join(this.inputDir, 'config', 'custom-css-amp.css');
+            let ampCustomCss = '';
+            
+            if (UtilsHelper.fileExists(ampCustomCssPath)) {
+                ampCustomCss = fs.readFileSync(ampCustomCssPath);
+            }
 
             if(
                 this.siteConfig.advanced.ampImage !== '' &&
@@ -283,14 +291,14 @@ class RendererContext {
                     shareFacebook: this.siteConfig.advanced.ampShareFacebook,
                     shareFacebookId: this.siteConfig.advanced.ampShareFacebookId,
                     shareTwitter: this.siteConfig.advanced.ampShareTwitter,
-                    shareGooglePlus: this.siteConfig.advanced.ampShareGooglePlus,
                     sharePinterest: this.siteConfig.advanced.ampSharePinterest,
                     shareLinkedIn: this.siteConfig.advanced.ampShareLinkedIn,
                     shareTumblr: this.siteConfig.advanced.ampShareTumblr,
                     shareWhatsapp: this.siteConfig.advanced.ampShareWhatsapp,
                     footerText: this.siteConfig.advanced.ampFooterText || 'Powered by Publii',
                     GAID: this.siteConfig.advanced.ampGaId || '',
-                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, '')
+                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, ''),
+                    customCss: ampCustomCss
                 }
             } else {
                 // Default configuration for AMP
@@ -309,7 +317,8 @@ class RendererContext {
                     shareWhatsapp: 1,
                     footerText: 'Powered by Publii',
                     GAID: '',
-                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, '')
+                    originalWebsiteUrl: this.siteConfig.domain.replace(/amp$/, ''),
+                    customCss: ampCustomCss
                 }
             }
         }

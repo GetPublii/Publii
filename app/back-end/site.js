@@ -39,6 +39,7 @@ class Site {
     create(authorName) {
         if(!this.siteExists()) {
             this.createDirectories();
+            this.copyDefaultTheme();
             this.createConfigFiles();
             this.createDB();
             this.createAuthor(authorName);
@@ -71,6 +72,16 @@ class Site {
     }
 
     /*
+     * Copy files of the default theme
+     */
+    copyDefaultTheme () {
+        fs.copySync(
+            path.join(this.application.appDir, 'themes', 'simple'),
+            path.join(this.siteDir, 'input', 'themes', 'simple')
+        );
+    }
+
+    /*
      * Create config file
      */
     createConfigFiles() {
@@ -79,7 +90,8 @@ class Site {
             'name': this.name,
             'displayName': this.displayName,
             'author': this.author,
-            'logo': this.logo
+            'logo': this.logo,
+            'theme': 'simple'
         };
 
         fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig));
@@ -394,21 +406,33 @@ class Site {
      * Load Custom CSS code
      */
     static loadCustomCSS(appInstance, name) {
-        let cssPath = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
+        let cssPathNormal = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
+        let cssPathAmp = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css-amp.css');
+        let cssNormal = false;
+        let cssAmp = false;
 
-        if(UtilsHelper.fileExists(cssPath)) {
-            return fs.readFileSync(cssPath, 'utf8');
+        if (UtilsHelper.fileExists(cssPathNormal)) {
+            cssNormal = fs.readFileSync(cssPathNormal, 'utf8');
         }
 
-        return false;
+        if (UtilsHelper.fileExists(cssPathAmp)) {
+            cssAmp = fs.readFileSync(cssPathAmp, 'utf8');
+        }
+
+        return {
+            normal: cssNormal,
+            amp: cssAmp
+        };
     }
 
     /*
      * Save Custom CSS code
      */
     static saveCustomCSS(appInstance, name, code) {
-        let cssPath = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
-        fs.writeFileSync(cssPath, code, 'utf8');
+        let cssPathNormal = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
+        let cssPathAmp = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css-amp.css');
+        fs.writeFileSync(cssPathNormal, code.normal, 'utf8');
+        fs.writeFileSync(cssPathAmp, code.amp, 'utf8');
     }
 
     /**

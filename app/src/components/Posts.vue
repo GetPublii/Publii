@@ -48,6 +48,13 @@
             </li>
 
             <li
+                v-if="counters.excluded"
+                :class="filterCssClasses('excluded')"
+                @click="setFilter('is:excluded')">
+                Excluded <span class="filter-count">({{ counters.excluded }})</span>
+            </li>
+
+            <li
                 v-if="counters.drafts"
                 :class="filterCssClasses('draft')"
                 @click="setFilter('is:draft')">
@@ -213,6 +220,16 @@
                                 Mark as unfeatured
                             </li>
                             <li 
+                                v-if="selectedPostsNeedsStatus('excluded_homepage')"
+                                @click="bulkExclude">
+                                Exclude from homepage
+                            </li>
+                            <li 
+                                v-if="selectedPostsHaveStatus('excluded_homepage')"
+                                @click="bulkInclude">
+                                Include in homepage
+                            </li>
+                            <li 
                                 v-if="selectedPostsNeedsStatus('hidden')"
                                 @click="bulkHide">
                                 Hide
@@ -262,6 +279,12 @@
                                 primaryColor="color-7"
                                 title="This post is hidden" />
                             <icon
+                                v-if="item.isExcludedOnHomepage"                               
+                                name="excluded-post"
+                                size="xs"
+                                primaryColor="color-3"
+                                title="This post is excluded from homepage" />
+                            <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
@@ -270,16 +293,18 @@
                         </a>
                     </h2>
 
-                    <template v-if="item.tags">
+                    <div 
+                        v-if="item.tags"
+                        class="post-tags">
                         <a
                             v-for="tag in item.tags"
                             href="#"
-                            class="tag"
+                            :class="{ 'tag': true, 'is-main-tag': tag.id === item.mainTag }"
                             :key="'tag-' + tag.id"
                             @click.stop.prevent="setFilter('tag:' + tag.name)">
                             #{{ tag.name }}
                         </a>
-                    </template>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -387,6 +412,7 @@ export default {
                     published: 0,
                     featured: 0,
                     hidden: 0,
+                    excluded: 0,
                     drafts: 0,
                     trashed: 0
                 };
@@ -397,6 +423,7 @@ export default {
                 published: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') === -1).length,
                 featured: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('featured') > -1).length,
                 hidden: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('hidden') > -1).length,
+                excluded: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('excluded_homepage') > -1).length,
                 drafts: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
             }
@@ -527,6 +554,12 @@ export default {
         },
         bulkUnfeatured () {
             this.changeStateForSelected('featured', true);
+        },
+        bulkExclude () {
+            this.changeStateForSelected('excluded_homepage');
+        },
+        bulkInclude () {
+            this.changeStateForSelected('excluded_homepage', true);
         },
         bulkHide () {
             this.changeStateForSelected('hidden');
@@ -707,6 +740,21 @@ export default {
 
 .header {
     overflow-y: visible!important;
+}
+
+.item {
+    .post-tags {
+        display: flex;
+
+        a {
+            order: 2;
+            margin: .25rem .5rem .25rem 0;
+
+            &.is-main-tag {
+                order: 1;
+            }
+        }
+    }
 }
 
 .filters {

@@ -103,7 +103,7 @@
    {{/checkIf}}
 {{/checkIf}}
 {{#checkIfAny @config.custom.frontCommentCount @config.custom.tagCommentCount @config.custom.authorCommentCount @config.post.displayCommentCount}}
-    <script id="dsq-count-scr" src="//{{@config.custom.commentDisqusShortname}}.disqus.com/count.js" async></script>
+    <script id="dsq-count-scr" src="https://{{@config.custom.commentDisqusShortname}}.disqus.com/count.js" async></script>
 {{/checkIfAny}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg2js.js"}}"></script>

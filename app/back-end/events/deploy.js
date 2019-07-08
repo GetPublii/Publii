@@ -8,6 +8,7 @@ class DeployEvents {
         let self = this;
         this.app = appInstance;
         this.deploymentProcess = false;
+        this.rendererProcess = false;
 
         ipcMain.on('app-deploy-render', function (event, siteData) {
             if(siteData.site && siteData.theme) {
@@ -17,6 +18,23 @@ class DeployEvents {
                     status: false
                 });
             }
+        });
+
+        ipcMain.on('app-deploy-render-abort', function(event, siteData) {
+            if(self.rendererProcess) {
+                try {
+                    self.rendererProcess.send({
+                        type: 'abort'
+                    });
+
+                    self.rendererProcess = false;
+                } catch(e) {
+                    console.log(e);
+                    self.rendererProcess = false;
+                }
+            }
+
+            event.sender.send('app-deploy-aborted', true);
         });
 
         ipcMain.on('app-deploy-upload', function(event, siteData) {
@@ -36,13 +54,10 @@ class DeployEvents {
                         type: 'abort'
                     });
 
-                    setTimeout(() => {
-                        if (this.deploymentProcess) {
-                            this.deploymentProcess.kill();
-                        }
-                    }, 2000);
+                    self.deploymentProcess = false;
                 } catch(e) {
-                    
+                    console.log(e);
+                    self.deploymentProcess = false;
                 }
             }
 
@@ -59,7 +74,7 @@ class DeployEvents {
     }
 
     renderSite(site, event) {
-        let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
+        this.rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
                 null,
                 fs.openSync(this.app.appDir + "/logs/rendering-deployment-process.log", "w"),
@@ -68,7 +83,7 @@ class DeployEvents {
             ]
         });
 
-        rendererProcess.send({
+        this.rendererProcess.send({
             type: 'dependencies',
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
@@ -80,7 +95,7 @@ class DeployEvents {
             previewLocation: this.app.appConfig.previewLocation
         });
 
-        rendererProcess.on('message', function(data) {
+        this.rendererProcess.on('message', function(data) {
             if(data.type === 'app-rendering-results') {
                 if(data.result === true) {
                     event.sender.send('app-deploy-rendered', {

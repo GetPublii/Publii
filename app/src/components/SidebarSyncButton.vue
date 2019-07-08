@@ -138,8 +138,12 @@ export default {
 
             this.$bus.$emit('rendering-popup-display');
         },
-        syncWebsite: function() {
-            if(this.redirectTo === 'sync') {
+        syncWebsite: function(e) {
+            if (e.screenX === 0 && e.screenY === 0) {
+                return;
+            }
+
+            if (this.redirectTo === 'sync') {
                 if (!this.$store.state.currentSite.config.theme) {
                     let siteName = this.$store.state.currentSite.config.name;
 
@@ -154,7 +158,7 @@ export default {
                 }
 
                 this.$bus.$emit('sync-popup-display');
-            } else if(this.redirectTo === 'site-settings') {
+            } else if (this.redirectTo === 'site-settings') {
                 let siteName = this.$store.state.currentSite.config.name;
 
                 this.$router.push({
