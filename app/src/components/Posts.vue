@@ -281,8 +281,8 @@
                             <icon
                                 v-if="item.isExcludedOnHomepage"                               
                                 name="excluded-post"
-                                customWidth="24"
-                                customHeight="13"
+                                size="xs"
+                                primaryColor="color-3"
                                 title="This post is excluded from homepage" />
                             <icon
                                 v-if="item.isDraft"

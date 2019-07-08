@@ -166,9 +166,8 @@
                                 title="Exclude from homepage"
                                 class="switcher-item-icon-helper"
                                 name="excluded-post"
-                                customWidth="24"
-                                customHeight="13"
-                                primaryColor="color-3" />
+                                size="xs"
+                                primaryColor="color-3"/>
                         </label>
                     </div>
                 </div>
