@@ -334,6 +334,8 @@ class Site {
         });
 
         db.close();
+
+        return regenerateProcess;
     }
 
     /**

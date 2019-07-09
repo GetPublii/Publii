@@ -16,6 +16,13 @@
 
             <div class="result-wrapper">
                 <p-button
+                    v-if="regeneratingInProgress"
+                    :onClick="abortRegenerate"
+                    type="danger">
+                    Cancel
+                </p-button>
+
+                <p-button
                     :onClick="regenerate"
                     :type="buttonStatus">
                     Regenerate thumbnails
@@ -80,10 +87,10 @@ export default {
         }
     },
     methods: {
-        removeSiteDir: function(filePath) {
+        removeSiteDir (filePath) {
             return filePath.replace(this.$store.state.currentSite.siteDir, '');
         },
-        regenerate: function() {
+        regenerate () {
             if(this.regeneratingInProgress) {
                 return;
             }
@@ -139,6 +146,21 @@ export default {
                     this.regeneratingInProgress = false;
                 });
             }, 350);
+        },
+        abortRegenerate () {
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
+            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
+            ipcRenderer.send('app-site-abort-regenerate-thumbnails', true);
+
+            this.resultCssClass = {
+                'result': true,
+                'error': false,
+                'success': false
+            };
+            this.resultLabel = 'Thumbnails regeneration cancelled.';
+            this.buttonStatus = '';
+            this.regeneratingInProgress = false;
         }
     },
     beforeDestroy: function() {
