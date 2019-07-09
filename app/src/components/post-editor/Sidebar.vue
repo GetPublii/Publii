@@ -295,8 +295,8 @@
                                         :items="tagsForDropdown">
                                     </dropdown>
 
-                                    <small class="note">
-                                        If the post has tags and the main tag is not set, the first tag in alphabetical order will be used as the main tag.
+                                    <small class="note">                                        
+                                        If the post has tags but no main tag has been set, the first tag alphabetically will be used by default.
                                     </small>
                                 </label>
                             </div>

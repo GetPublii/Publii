@@ -10,7 +10,7 @@
 
             <div class="render-popup-text">
                 <template v-if="qualityChanged">
-                    Images quality have been changed.
+                    Image quality has been changed.
                 </template>
 
                 <template v-if="!qualityChanged">
@@ -18,7 +18,7 @@
                 </template>
 
                 <br>
-                We warmly recommend you regenerate thumbnails.
+                We recommend that you regenerate thumbnails.
             </div>
 
             <progress-bar
