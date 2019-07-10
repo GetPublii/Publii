@@ -70,11 +70,13 @@
       "*.+(dylib|node|dll)",
       "default-files/default-themes/**/*"
     ],
+    "afterPack": "./build/scripts/afterPack.js",
     "files": [
       "**/*",
       "dist/**/*"
     ],
     "linux": {
+      "icon": "./build/icon.icns",
       "target": [
         "rpm",
         "AppImage",
