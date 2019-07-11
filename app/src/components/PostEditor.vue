@@ -10,46 +10,9 @@
             <div
                 v-if="!sourceCodeEditorVisible"
                 class="post-editor-actions">
-                <div class="post-editor-button">
-                    <span 
-                        class="post-editor-button-trigger"
-                        @click.stop="doCurrentAction()">
-                        {{ currentActionName }}
-                    </span>
-
-                    <span 
-                        class="post-editor-button-toggle"
-                        @click.stop="toggleButtonDropdown()">
-                    </span>
-
-                    <div 
-                        v-if="buttonDropdownVisible"
-                        class="post-editor-button-dropdown">
-                        <div
-                            class="post-editor-button-dropdown-item" 
-                            @click="setCurrentAction('save-and-close')">
-                            Save and close
-                        </div>
-                        <div 
-                            class="post-editor-button-dropdown-item" 
-                            @click="setCurrentAction('save')">
-                            Save
-                        </div>
-                        <div 
-                            class="post-editor-button-dropdown-item" 
-                            @click="setCurrentAction('save-as-draft')"
-                            v-if="!isDraft">
-                            Save as draft
-                        </div>
-                        <div 
-                            class="post-editor-button-dropdown-item" 
-                            @click="setCurrentAction('publish-post')"
-                            v-if="isDraft">
-                            <template v-if="!this.$store.state.app.config.closeEditorOnSave">Publish post</template>
-                            <template v-else>Publish and close</template>
-                        </div>
-                    </div>
-                </div>
+                
+                <btn-dropdown
+                    ref="dropdown-button" />
 
                 <p-button
                     type="outline"
@@ -161,6 +124,7 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             postData: {
+                editor: 'tinymce',
                 title: '',
                 text: '',
                 slug: '',
@@ -191,9 +155,7 @@ export default {
                     credits: ''
                 },
                 postViewOptions: {}
-            },
-            currentAction: '',
-            buttonDropdownVisible: false
+            }
         };
     },
     computed: {
@@ -221,16 +183,6 @@ export default {
                 this.$store.state.currentSite.config.theme,
                 '/'
             ].join('');
-        },
-        currentActionName () {
-            switch (this.currentAction) {
-                case 'save': return 'Save';
-                case 'save-and-close': return 'Save and close';
-                case 'save-as-draft': return 'Save as draft';
-                case 'publish-post': return 'Publish post';
-            }
-
-            return '';
         }
     },
     mounted () {
@@ -266,14 +218,8 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.$bus.$on('document-body-clicked', () => {
-            this.buttonDropdownVisible = false;
-        });
-
-        this.$bus.$on('update-inline-editor', () => {
-            this.buttonDropdownVisible = false;
-        });
-
+        this.$bus.$on('document-body-clicked', this.closeDropdownButton);
+        this.$bus.$on('update-inline-editor', this.closeDropdownButton);
         this.retrieveCurrentAction();
     },
     methods: {
@@ -406,6 +352,9 @@ export default {
                     this.postData.metaRobots = data.additionalData.metaRobots || "";
                     this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
+                    // Set editor
+                    this.postData.editor = data.additionalData.editor || 'tinymce';
+
                     // Update post template
                     this.postData.template = data.posts[0].template;
 
@@ -431,6 +380,7 @@ export default {
 
                 // Add custom editor script
                 if(
+                    this.postData.editor === 'tinymce' && 
                     this.$store.state.currentSite.themeSettings &&
                     this.$store.state.currentSite.themeSettings.extensions &&
                     this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
@@ -536,7 +486,8 @@ export default {
                     metaDesc: this.postData.metaDescription,
                     metaRobots: this.postData.metaRobots,
                     canonicalUrl: this.postData.canonicalUrl,
-                    mainTag: this.postData.mainTag
+                    mainTag: this.postData.mainTag,
+                    editor: this.postData.editor
                 },
                 'postViewSettings': postViewSettings,
                 'id': this.postID,
@@ -615,54 +566,28 @@ export default {
                 });
             }
         },
-        setCurrentAction (actionName) {
-            if (actionName !== 'publish-post' && actionName !== 'save-as-draft') {
-                localStorage.setItem('publii-post-editor-current-action', actionName);
-            }
-
-            this.currentAction = actionName;
-            this.buttonDropdownVisible = false;
-            this.doCurrentAction();
-        },
         retrieveCurrentAction () {
-            this.currentAction = localStorage.getItem('publii-post-editor-current-action');
+            let currentAction = localStorage.getItem('publii-post-editor-current-action');
 
-            if (!this.currentAction) {
+            if (!currentAction) {
                 if (this.$store.state.app.config.closeEditorOnSave) {
-                    this.currentAction = 'save-and-close';
+                    currentAction = 'save-and-close';
                 } else {
-                    this.currentAction = 'save';
-                }
-            }
-        },
-        doCurrentAction () {
-            this.buttonDropdownVisible = false;
-
-            if (this.currentAction === 'save-and-close' || this.currentAction === 'save') {
-                if (this.postData.status.indexOf('draft') > -1) {
-                    this.savePost('draft', false, this.currentAction === 'save-and-close');
-                } else {
-                    this.savePost('published', false, this.currentAction === 'save-and-close');
+                    currentAction = 'save';
                 }
             }
 
-            if (this.currentAction === 'save-as-draft') {
-                this.savePost('draft');
-                this.retrieveCurrentAction();
-            }
-
-            if (this.currentAction === 'publish-post') {
-                this.savePost('published', false, this.$store.state.app.config.closeEditorOnSave);
-                this.retrieveCurrentAction();
-            }
+            this.$refs['dropdown-button'].setValue(currentAction);
         },
-        toggleButtonDropdown () {
-            this.buttonDropdownVisible = !this.buttonDropdownVisible;
+        closeDropdownButton () {
+            this.$refs['dropdown-button'].hideDropdown();
         }
     },
     beforeDestroy () {
         this.unwatchDataLoss();
         $('#custom-post-editor-script').remove();
+        this.$bus.$off('document-body-clicked', this.closeDropdownButton);
+        this.$bus.$off('update-inline-editor', this.closeDropdownButton);
         this.$bus.$off('date-changed');
         this.$bus.$off('source-code-editor-show');
         this.$bus.$off('source-code-editor-close');
