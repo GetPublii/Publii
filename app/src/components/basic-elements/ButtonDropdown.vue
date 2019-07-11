@@ -1,41 +1,31 @@
 <template>
-    <div class="post-editor-button">
+    <div :class="{ 'button': true, 'is-green': isGreen, 'has-icon': hasIcon }">
         <span 
-            class="post-editor-button-trigger"
+            class="button-trigger"
             @click.stop="doCurrentAction()">
-            {{ getLabel }}
+            <icon
+                v-if="buttonIcon"
+                size="s"
+                properties="not-clickable"
+                :name="buttonIcon" />
+
+            {{ currentLabel }}
         </span>
 
         <span 
-            class="post-editor-button-toggle"
+            class="button-toggle"
             @click.stop="toggleDropdown()">
         </span>
 
         <div 
             v-if="dropdownVisible"
-            class="post-editor-button-dropdown">
+            class="button-dropdown">
             <div
-                class="post-editor-button-dropdown-item" 
-                @click="setCurrentAction('save-and-close')">
-                Save and close
-            </div>
-            <div 
-                class="post-editor-button-dropdown-item" 
-                @click="setCurrentAction('save')">
-                Save
-            </div>
-            <div 
-                class="post-editor-button-dropdown-item" 
-                @click="setCurrentAction('save-as-draft')"
-                v-if="!isDraft">
-                Save as draft
-            </div>
-            <div 
-                class="post-editor-button-dropdown-item" 
-                @click="setCurrentAction('publish-post')"
-                v-if="isDraft">
-                <template v-if="!this.$store.state.app.config.closeEditorOnSave">Publish post</template>
-                <template v-else>Publish and close</template>
+                v-for="(item, index) of filteredItems"
+                :key="'button-dropdown-' + index"
+                class="button-dropdown-item" 
+                @click="doAction(item.value)">
+                {{ item.label }}
             </div>
         </div>
     </div>
@@ -47,20 +37,36 @@ export default {
     props: {
         'items': {
             default: '',
+            type: Array
+        },
+        'defaultValue': {
+            default: '',
             type: String
         },
-        'localStorage': {
-            defalt: '',
+        'buttonColor': {
+            default: 'blue',
+            type: String
+        },
+        'buttonIcon': {
+            default: '',
             type: String
         }
     },
     computed: {
-        currentActionName () {
-            switch (this.currentAction) {
-                case 'save': return 'Save';
-                case 'save-and-close': return 'Save and close';
-                case 'save-as-draft': return 'Save as draft';
-                case 'publish-post': return 'Publish post';
+        filteredItems () {
+            return this.items.filter(item => item.isVisible());
+        },
+        currentLabel () {
+            let foundedItem = this.items.filter(item => item.value === this.value);
+
+            console.log(this.items, foundedItem, this.value);
+
+            if (foundedItem.length) {
+                if (foundedItem[0].activeLabel) {
+                    return foundedItem[0].activeLabel;
+                }
+
+                return foundedItem[0].label;
             }
 
             return '';
@@ -69,42 +75,30 @@ export default {
     data () {
         return {
             value: '',
+            hasIcon: false,
+            isGreen: false,
             dropdownVisible: false
         };
     },
+    mounted () {
+        this.setValue(this.defaultValue);
+
+        if (this.buttonColor === 'green') {
+            this.isGreen = true;
+        }
+
+        if (this.buttonIcon) {
+            this.hasIcon = true;
+        }
+    },
     methods: {
-        getLabel () {
-
-        },
-        setCurrentAction (actionName) {
-            if (actionName !== 'publish-post' && actionName !== 'save-as-draft') {
-                localStorage.setItem('publii-post-editor-current-action', actionName);
-            }
-
+        doAction (actionName) {
             this.value = actionName;
-            this.dropdownVisible = false;
-            this.doCurrentAction();
+            this.items.filter(item => item.value === this.value)[0].onClick();
+            this.hideDropdown();
         },
         doCurrentAction () {
-            this.dropdownVisible = false;
-
-            if (this.value === 'save-and-close' || this.value === 'save') {
-                if (this.postData.status.indexOf('draft') > -1) {
-                    this.savePost('draft', false, this.value === 'save-and-close');
-                } else {
-                    this.savePost('published', false, this.value === 'save-and-close');
-                }
-            }
-
-            if (this.value === 'save-as-draft') {
-                this.savePost('draft');
-                this.retrieveCurrentAction();
-            }
-
-            if (this.value === 'publish-post') {
-                this.savePost('published', false, this.$store.state.app.config.closeEditorOnSave);
-                this.retrieveCurrentAction();
-            }
+            this.items.filter(item => item.value === this.value)[0].onClick();
         },
         toggleDropdown () {
             this.dropdownVisible = !this.dropdownVisible;
@@ -125,4 +119,128 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/variables.scss';
 
+.button {
+    background: $color-1;
+    border: none;
+    border-radius: 3px;
+    box-shadow: none;
+    color: $color-10;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 500;
+    height: 4.2rem;
+    line-height: 4.1rem;      
+    padding: 0;
+    position: relative;
+    text-align: left;
+    transition: all .25s ease-out;
+    user-select: none;
+    white-space: nowrap;
+    width: auto;
+
+    &-trigger {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        border-right: 1px inset $color-1;
+        display: block;
+        height: 4.2rem;
+        left: 0;
+        padding-left: 2rem;
+        padding-right: 6rem;
+        position: relative;
+        top: 0;
+        transition: all .25s ease-out;          
+            
+        &:hover {
+            background: darken($color-1, 5%);  
+        }
+    }
+
+    &-toggle {
+        background: darken($color-1, 5%);
+        border-radius: 0 3px 3px 0;
+        cursor: pointer;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: all .25s ease-out;
+        width: 44px;
+        
+        &:hover {
+            background: darken($color-1, 9%);
+        }
+
+        &::after {
+            border-color: $color-10 transparent transparent;
+            border-style: solid;
+            border-width: 5px;              
+            content: "";
+            pointer-events: none;
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateX(-50%) translateY(-2.5px);
+        }
+    }
+
+    &-dropdown {
+        background: $color-10;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
+        left: 0;
+        position: absolute;
+        text-align: left;
+        top: 42px;
+        width: 100%;
+        z-index: 10;
+
+        &-item {
+            border-top: 1px solid lighten($color-8, 10%);
+            color: $color-5;
+            padding: .2rem 2rem;
+            text-align: left;
+
+            &:hover {
+                background: $color-9;
+            }
+        }
+    }
+
+    &.has-icon {
+        .button-trigger {
+            padding-left: 4.3rem;
+
+            & > svg {
+                display: inline-block;
+                fill: $color-10;
+                left: 1.4rem;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+
+    &.is-green {
+        background-color: $color-2;
+
+        .button-trigger {
+            border-right: 1px inset $color-2;
+
+            &:hover {
+                background: darken($color-2, 5%);  
+            }
+        }
+
+        .button-toggle {
+            background: darken($color-2, 5%);
+            
+            &:hover {
+                background: darken($color-2, 9%);
+            }
+        }
+    }
+}
 </style>

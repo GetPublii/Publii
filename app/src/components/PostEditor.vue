@@ -12,7 +12,9 @@
                 class="post-editor-actions">
                 
                 <btn-dropdown
-                    ref="dropdown-button" />
+                    ref="dropdown-button"
+                    :items="dropdownItems"
+                    :defaultValue="retrieveCurrentAction()" />
 
                 <p-button
                     type="outline"
@@ -159,6 +161,34 @@ export default {
         };
     },
     computed: {
+        dropdownItems () {
+            return [
+                {
+                    label: 'Save and close',
+                    value: 'save-and-close',
+                    isVisible: () => true,
+                    onClick: this.dropdownSaveAndClose
+                },
+                {
+                    label: 'Save',
+                    value: 'save',
+                    isVisible: () => true,
+                    onClick: this.dropdownSave
+                },
+                {
+                    label: 'Save as draft',
+                    value: 'save-as-draft',
+                    isVisible: () => !this.isDraft,
+                    onClick: this.dropdownSaveAsDraft
+                },
+                {
+                    label: this.$store.state.app.config.closeEditorOnSave ? 'Publish and close' : 'Publish post',
+                    value: 'publish-post',
+                    isVisible: () => this.isDraft,
+                    onClick: this.dropdownPublish
+                }
+            ]
+        },
         isEdit () {
             return !!this.postID;
         },
@@ -220,7 +250,6 @@ export default {
 
         this.$bus.$on('document-body-clicked', this.closeDropdownButton);
         this.$bus.$on('update-inline-editor', this.closeDropdownButton);
-        this.retrieveCurrentAction();
     },
     methods: {
         cancelPost () {
@@ -566,6 +595,24 @@ export default {
                 });
             }
         },
+        dropdownSave () {
+            let status = this.postData.status.indexOf('draft') > -1 ? 'draft' : 'published';
+            this.savePost(status, false, false);
+            localStorage.setItem('publii-post-editor-current-action', 'save');
+        },
+        dropdownSaveAndClose () {
+            let status = this.postData.status.indexOf('draft') > -1 ? 'draft' : 'published';
+            this.savePost(status, false, true);
+            localStorage.setItem('publii-post-editor-current-action', 'save-and-close');
+        },
+        dropdownSaveAsDraft () {
+            this.savePost('draft');
+            this.retrieveCurrentAction();
+        },
+        dropdownPublish () {
+            this.savePost('published', false, this.$store.state.app.config.closeEditorOnSave);
+            this.retrieveCurrentAction();
+        },
         retrieveCurrentAction () {
             let currentAction = localStorage.getItem('publii-post-editor-current-action');
 
@@ -577,10 +624,16 @@ export default {
                 }
             }
 
-            this.$refs['dropdown-button'].setValue(currentAction);
+            if (this.$refs['dropdown-button']) {
+                this.$refs['dropdown-button'].setValue(currentAction);
+            }
+
+            return currentAction;
         },
         closeDropdownButton () {
-            this.$refs['dropdown-button'].hideDropdown();
+            if (this.$refs['dropdown-button']) {
+                this.$refs['dropdown-button'].hideDropdown();
+            }
         }
     },
     beforeDestroy () {
@@ -716,92 +769,6 @@ export default {
         .mce-container,
         .mce-container-body {
             background: $color-10;
-        }
-    }
-
-    &-button {
-        background: $color-1;
-        border: none;
-        border-radius: 3px;
-        box-shadow: none;
-        color: $color-10;
-        cursor: pointer;
-        display: inline-block;
-        font-size: 15px;
-        font-weight: 500;
-        height: 4.2rem;
-        line-height: 4.1rem;      
-        padding: 0 1.6rem;
-        position: relative;
-        transition: all .25s ease-out;
-        user-select: none;
-        white-space: nowrap;
-        width: 196px;
-
-        &-trigger {
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
-            border-right: 1px inset $color-1;
-            height: 100%;
-            left: 0;
-            padding-left: 2rem;
-            position: absolute;
-            top: 0;
-            transition: all .25s ease-out;
-            width: 152px;            
-             
-            &:hover {
-                 background: darken($color-1, 5%);
-                 
-            }
-        }
-
-        &-toggle {
-            background: darken($color-1, 5%);
-            border-radius: 0 3px 3px 0;
-            cursor: pointer;
-            height: 100%;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: all .25s ease-out;
-            width: 44px;
-            
-            &:hover {
-                 background: darken($color-1, 9%);
-            }
-
-            &::after {
-                border-color: $color-10 transparent transparent;
-                border-style: solid;
-                border-width: 5px;              
-                content: "";
-                pointer-events: none;
-                left: 50%;
-                position: absolute;
-                top: 50%;
-                transform: translateX(-50%) translateY(-2.5px);
-            }
-        }
-
-        &-dropdown {
-            background: $color-10;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
-            left: 0;
-            position: absolute;
-            top: 42px;
-            width: 100%;
-
-            &-item {
-                border-top: 1px solid lighten($color-8, 10%);
-                color: $color-5;
-                padding: .2rem 2rem;
-
-                &:hover {
-                    background: $color-9;
-                }
-            }
         }
     }
 }
@@ -971,7 +938,6 @@ body[data-os="linux"] {
     }
     
     .post-editor-form {
-      
         #post-title {            
             font-size: 2.8rem;
             margin: 0 0 2.6rem;

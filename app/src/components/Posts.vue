@@ -9,13 +9,12 @@
                 placeholder="Filter or search posts..."
                 onChangeEventName="posts-filter-value-changed" />
 
-            <p-button
-                :onClick="addNewPost"
+            <btn-dropdown
                 slot="buttons"
-                type="primary icon"
-                icon="add-site-mono">
-                Add new post
-            </p-button>
+                buttonIcon="add-site-mono"
+                buttonColor="green"
+                :items="dropdownItems"
+                :defaultValue="retrieveCurrentEditor()" />
         </p-header>
 
         <ul
@@ -430,6 +429,24 @@ export default {
         },
         showModificationDateAsColumn () {
             return this.$store.state.app.config.showModificationDateAsColumn;
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Use TinyMCE editor',
+                    activeLabel: 'Add new post (T)',
+                    value: 'tinymce',
+                    isVisible: () => true,
+                    onClick: this.addNewPost
+                },
+                {
+                    label: 'Use Block editor',
+                    activeLabel: 'Add new post (B)',
+                    value: 'blockeditor',
+                    isVisible: () => true,
+                    onClick: this.addNewPost
+                }
+            ]
         }
     },
     mounted () {
@@ -683,6 +700,15 @@ export default {
             let postsWithGivenStatus = selectedPosts.filter(item => item.status.indexOf(status) > -1);
 
             return !!postsWithGivenStatus.length;
+        },
+        retrieveCurrentEditor () {
+            let currentEditor = localStorage.getItem('publii-current-editor');
+
+            if (!currentEditor) {
+                currentEditor = 'blockeditor';
+            }
+
+            return currentEditor;
         }
     },
     beforeDestroy () {
