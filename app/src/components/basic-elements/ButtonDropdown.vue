@@ -59,8 +59,6 @@ export default {
         currentLabel () {
             let foundedItem = this.items.filter(item => item.value === this.value);
 
-            console.log(this.items, foundedItem, this.value);
-
             if (foundedItem.length) {
                 if (foundedItem[0].activeLabel) {
                     return foundedItem[0].activeLabel;

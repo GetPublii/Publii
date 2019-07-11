@@ -9,7 +9,8 @@ export default {
             build: 0,
             status: ''
         },
-        editorOpened: false
+        editorOpened: false,
+        editorType: 'blockeditor'
     },
     // Persistent components
     components: {

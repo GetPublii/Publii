@@ -126,7 +126,7 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             postData: {
-                editor: 'tinymce',
+                editor: localStorage.getItem('publii-current-editor') || 'tinymce',
                 title: '',
                 text: '',
                 slug: '',

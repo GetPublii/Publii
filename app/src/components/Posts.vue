@@ -437,14 +437,14 @@ export default {
                     activeLabel: 'Add new post (T)',
                     value: 'tinymce',
                     isVisible: () => true,
-                    onClick: this.addNewPost
+                    onClick: this.addNewPost.bind(this, 'tinymce')
                 },
                 {
                     label: 'Use Block editor',
                     activeLabel: 'Add new post (B)',
                     value: 'blockeditor',
                     isVisible: () => true,
-                    onClick: this.addNewPost
+                    onClick: this.addNewPost.bind(this, 'blockeditor')
                 }
             ]
         }
@@ -479,8 +479,9 @@ export default {
         });
     },
     methods: {
-        addNewPost () {
+        addNewPost (editorType) {
             let siteName = this.$route.params.name;
+            localStorage.setItem('publii-current-editor', editorType);
             this.$store.commit('setEditorOpenState', true);
             this.$router.push('/site/' + siteName + '/posts/editor/');
         },
