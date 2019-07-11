@@ -404,6 +404,7 @@ class ContentHelper {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
 
         return text;
     }
