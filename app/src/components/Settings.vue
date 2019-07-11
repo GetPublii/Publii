@@ -1291,7 +1291,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                When enabled, related posts will be taken from all tags. Disable this option to only get related posts from the same tag as the main post.
+                                When enabled, related posts will be taken from all tags. When disabled, related posts will only be generated from the same tags as the current post.
                             </small>
                         </field>
                     </div>
