@@ -201,42 +201,74 @@
                             class="dropdown">
                             <li 
                                 v-if="selectedPostsNeedsStatus('published')"
-                                @click="bulkPublish">
+                                @click="bulkPublish"> 
+                                <icon                                
+                                   size="xs"
+                                   name="draft-post"
+                                   primaryColor="color-8" />
                                 Publish
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('draft')"
                                 @click="bulkUnpublish">
+                                <icon                                
+                                   size="xs"
+                                   name="draft-post"
+                                   primaryColor="color-7" />
                                 Mark as draft
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('featured')"
                                 @click="bulkFeatured">
+                                 <icon                                
+                                   size="xs"
+                                   name="featured-post"
+                                   primaryColor="color-helper-6" />
                                 Mark as featured
                             </li>
                             <li 
                                 v-if="selectedPostsHaveStatus('featured')"
                                 @click="bulkUnfeatured">
+                                 <icon                                
+                                   size="xs"
+                                   name="featured-post"
+                                   primaryColor="color-8" />
                                 Mark as unfeatured
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
                                 @click="bulkExclude">
+                                <icon                                
+                                   size="xs"
+                                   name="excluded-post"
+                                   primaryColor="color-3" />
                                 Exclude from homepage
                             </li>
                             <li 
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
                                 @click="bulkInclude">
+                                <icon                                
+                                   size="xs"
+                                   name="excluded-post"
+                                   primaryColor="color-8" />
                                 Include in homepage
                             </li>
                             <li 
                                 v-if="selectedPostsNeedsStatus('hidden')"
                                 @click="bulkHide">
+                                <icon                                
+                                   size="xs"
+                                   name="hidden-post"
+                                   primaryColor="color-7" />
                                 Hide
                             </li>
                             <li 
                                 v-if="selectedPostsHaveStatus('hidden')"
                                 @click="bulkUnhide">
+                                <icon                                
+                                   size="xs"
+                                   name="hidden-post"
+                                   primaryColor="color-8" />
                                 Unhide
                             </li>
                         </ul>
@@ -859,6 +891,11 @@ export default {
                 &:hover { 
                     background: $color-9;
                     color: $color-5;
+                }
+                
+                & > svg {
+                    margin-right: 4px;
+                    vertical-align: text-bottom;
                 }
             }
         }
