@@ -701,6 +701,11 @@ export default {
         }
     }
 
+    &-source-code-actions {
+        margin-left: auto;
+        margin-top: -2.6rem;
+    }
+
     &-field-select-tags {
         width: 480px;
     }
@@ -742,7 +747,7 @@ export default {
             border: 1px solid $color-7;
             clear: both;
             font-size: 1.6rem;
-            height: calc( 100vh - 33rem );
+            height: calc( 100vh - 28rem);
             margin: 1rem 0;
             min-height: 320px;
             padding: 1rem 2rem;
@@ -750,7 +755,7 @@ export default {
         }
 
         #post-editor_ifr {
-            height: calc( 100vh - 35rem )!important;
+            height: calc( 100vh - 30rem )!important;
         }
 
         .mce-tinymce {
@@ -819,11 +824,11 @@ body[data-os="win"] {
         height: calc(100vh - 9.2rem);
 
         &-content {
-            height: calc( 100vh - 34rem );
+            height: calc( 100vh - 29rem );
         }
 
         #post-editor_ifr {
-            height: calc( 100vh - 36rem )!important;
+            height: calc( 100vh - 31rem )!important;
         }
     }
 
@@ -855,11 +860,11 @@ body[data-os="linux"] {
         height: calc(100vh - 5.6rem);
 
         &-content {
-            height: calc( 100vh - 29.8rem );
+            height: calc( 100vh - 24.8rem );
         }
 
         #post-editor_ifr {
-            height: calc( 100vh - 31.8rem )!important;
+            height: calc( 100vh - 26.8rem )!important;
         }
     }
 }

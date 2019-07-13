@@ -26,7 +26,8 @@ class EditorBridge {
             setup: this.setupEditor.bind(this, customFormats),
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
-            style_formats: customFormats
+            style_formats: customFormats,
+            statusbar: false
         });
 
         // Remove style selector when there is no custom styles from the theme
@@ -271,37 +272,11 @@ class EditorBridge {
             });
 
             // Writers Panel
-            let statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
             let updateWritersPanel = function () {
                 window.app.$bus.$emit('writers-panel-refresh');
             };
             let throttledUpdate = Utils.throttledFunction(updateWritersPanel, 125);
-
-            if (statusbar) {
-                statusbar.insert({
-                    type: 'label',
-                    name: 'publii-text-stats',
-                    classes: 'publii-text-stats',
-                    disabled: editor.settings.readonly
-                }, 0);
-
-                let words = $('#counter-words').text();
-                let linkText = $('.post-editor-writers-panel').hasClass('is-hidden') ? 'View Stats' : 'Hide Stats';
-                $('.mce-publii-text-stats').html(`<svg class="sidebar-icon" width="19" height="19" viewbox="0 0 19 19"><path d="M3,7v10c0,0.5-0.5,1-1,1s-1-0.5-1-1V7c0-0.5,0.5-1,1-1S3,6.5,3,7z M7,1C6.5,1,6,1.5,6,2v15c0,0.5,0.5,1,1,1s1-0.5,1-1V2
-    C8,1.5,7.5,1,7,1z M12,10c-0.5,0-1,0.5-1,1v6c0,0.5,0.5,1,1,1s1-0.5,1-1v-6C13,10.5,12.5,10,12,10z M17,6c-0.5,0-1,0.5-1,1v10
-    c0,0.5,0.5,1,1,1s1-0.5,1-1V7C18,6.5,17.5,6,17,6z"/></svg> <a href="#" class="mce-publii-text-stats-link">${linkText}</a> &nbsp; • &nbsp; <span>Words: ${words}</span>`);
-                $('.mce-publii-text-stats-link').on('click', function(e) {
-                    e.preventDefault();
-
-                    if($(this).text() === 'View Stats') {
-                        window.app.$bus.$emit('writers-panel-open');
-                    } else {
-                        window.app.$bus.$emit('writers-panel-close');
-                    }
-                });
-
-                editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
-            }
+            editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();

@@ -723,6 +723,17 @@ export default {
             pointer-events: auto;
         }
 
+        &:before {
+            background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            content: "";
+            height: 12rem;
+            position: fixed;
+            top: 2.2rem;
+            right: 0;
+            width: 44.1rem;
+            z-index: 1;
+        }
+
         & > div {
             padding: 12.5rem 0 0 0;
         }
@@ -972,6 +983,10 @@ body[data-os="win"] {
     .post-editor-sidebar {
         height: calc(100vh - 3.8rem);
         top: 3.8rem;
+
+        &:before {
+            top: 3.8rem;
+        }
     }
 }
 
@@ -979,6 +994,10 @@ body[data-os="linux"] {
     .post-editor-sidebar {
         height: 100vh;
         top: 0;
+
+        &:before {
+            top: 0;
+        }
     }
 }
 

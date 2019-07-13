@@ -75,13 +75,13 @@ export default {
 
 .source-code-editor {
     background: $color-10;
-    height: calc(100vh - 7.8rem)!important;
+    height: calc(100vh - 10rem)!important;
     left: 0;
     overflow: hidden;
     position: absolute;
-    top: 7.8rem;
+    top: 10rem;
     width: 100vw;
-    z-index: 101;
+    z-index: 100001;
 
     &.is-hidden {
         display: none;
@@ -104,8 +104,8 @@ export default {
 
 body[data-os="win"] {
     .source-code-editor {
-        height: calc(100vh - 9.4rem)!important;
-        top: 9.4rem;
+        height: calc(100vh - 11.6rem)!important;
+        top: 11.6rem;
 
         .CodeMirror-wrap {
             height: 100%;
@@ -115,8 +115,8 @@ body[data-os="win"] {
 
 body[data-os="linux"] {
     .source-code-editor {
-        height: calc(100vh - 5.6rem)!important;
-        top: 5.6rem;
+        height: calc(100vh - 7.8rem)!important;
+        top: 7.8rem;
 
         .CodeMirror-wrap {
             height: 100%;
