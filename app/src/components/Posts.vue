@@ -434,14 +434,14 @@ export default {
             return [
                 {
                     label: 'Use TinyMCE editor',
-                    activeLabel: 'Add new post (T)',
+                    activeLabel: 'Add new post',
                     value: 'tinymce',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
                 },
                 {
                     label: 'Use Block editor',
-                    activeLabel: 'Add new post (B)',
+                    activeLabel: 'Add new post',
                     value: 'blockeditor',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'blockeditor')

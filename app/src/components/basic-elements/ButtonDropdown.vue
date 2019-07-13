@@ -80,6 +80,7 @@ export default {
     },
     mounted () {
         this.setValue(this.defaultValue);
+        this.$bus.$on('document-body-clicked', this.hideDropdown);
 
         if (this.buttonColor === 'green') {
             this.isGreen = true;
@@ -110,6 +111,9 @@ export default {
         getValue () {
             return this.value;
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('document-body-clicked', this.hideDropdown);
     }
 }
 </script>
