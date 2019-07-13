@@ -1001,20 +1001,6 @@ body[data-os="linux"] {
     }
 }
 
-@media (max-width: 1200px) {
-    .post-editor-sidebar {
-        .post-editor-settings {
-            &-header {
-                padding: 0 3rem;
-            }
-
-            &-content {
-                padding: 0 3rem 3rem 3rem;
-            }
-        }
-    }
-}
-
 /*
  * Select2 adjustments
  */

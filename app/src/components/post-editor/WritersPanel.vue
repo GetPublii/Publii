@@ -1,13 +1,5 @@
 <template>
     <div :class="{ 'post-editor-writers-panel': true, 'is-hidden': !isVisible }">
-        
-        <span
-            class="post-editor-writers-panel-close"
-            name="sidebar-close"
-            @click.prevent="close">
-            &times;
-        </span>
-
         <dl>
             <dt id="counter-words">{{ words }}</dt>
             <dd>Words</dd>
@@ -30,9 +22,14 @@ import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
     name: 'post-editor-writers-panel',
+    props: {
+        'isVisible': {
+            default: false,
+            type: Boolean
+        }
+    },
     data () {
         return {
-            isVisible: false,
             words: 0,
             uniqueWords: 0,
             characters: 0,
@@ -42,10 +39,7 @@ export default {
         };
     },
     mounted () {
-        this.isVisible = localStorage.getItem('publii-writers-panel') === 'opened';
         this.$bus.$on('writers-panel-refresh', () => this.refresh());
-        this.$bus.$on('writers-panel-open', () => this.open());
-        this.$bus.$on('writers-panel-close', () => this.close());
         this.refresh();
     },
     methods: {
@@ -76,23 +70,10 @@ export default {
             this.sentences = sentences.length;
             this.paragraphs = paragraphs ? paragraphs.length : 0;
             this.readingTime = readingTimePrefix + readingTime;
-            $('.mce-publii-text-stats').find('span').text('Words: ' + this.words);
-        },
-        open () {
-            this.isVisible = true;
-            $('.mce-publii-text-stats-link').text('Hide Stats');
-            localStorage.setItem('publii-writers-panel', 'opened');
-        },
-        close () {
-            this.isVisible = false;
-            $('.mce-publii-text-stats-link').text('View Stats');
-            localStorage.setItem('publii-writers-panel', 'closed');
         }
     },
     beforeDestroy () {
         this.$bus.$off('writers-panel-open');
-        this.$bus.$off('writers-panel-close');
-        this.$bus.$off('writers-panel-refresh');
     }
 };
 </script>
@@ -104,57 +85,25 @@ export default {
 .post-editor {
     &-writers-panel {
         background: $color-10;
-        border-left: 1px solid $color-8;
+        border-right: 1px solid $color-helper-8;
         bottom: 0;
-        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.075);
-        height: calc(100% - 7.8rem);
+        height: calc(100vh - 2.2rem);
+        left: 0;
         opacity: 1;
         position: absolute;
-        right: 281px;
         text-align: center;
-        transform: translateX(0);
-        transform-origin: 0 0;
+        top: 2.2rem;
         transition: all .25s ease-out;
         width: 220px;
         z-index: 100;
 
         &.is-hidden {
-            display: block;
             opacity: 0;
             pointer-events: none;
-            transform: translateX(-100px);
         }
 
-        &-close {
-                border-radius: 50%;
-                color: $color-7;
-                cursor: pointer;
-                font-size: 2.4rem;
-                font-weight: 300;
-                height: 3rem;
-                left: auto;
-                line-height: 1.1; 
-                padding: 0;
-                position: absolute;
-                right: 2rem;
-                text-align: center;       
-                transition: all .3s ease-out;         
-                top: 2rem;
-                width: 3rem;
-                                
-                &:active,
-                &:focus,
-                &:hover {
-                    color: $color-4;
-                }
-        
-                &:hover {
-                    background: $color-helper-8;
-                    }  
-                }
-
         dl {
-            margin: 6.4rem 15% 0 15%;
+            margin: 10rem 15% 0 15%;
             width: 70%;
 
             dt {
@@ -167,6 +116,10 @@ export default {
                 border-bottom: 1px solid rgba($color-8, .4);
                 margin: 0 0 1rem 0;
                 padding: 0 0 1.5rem 0;
+
+                &:last-child {
+                    border-bottom: none;
+                }
             }
         }
     }
@@ -176,16 +129,17 @@ export default {
  * Windows adjustments
  */
 body[data-os="win"] {
-    .post-editor-writers-panel-close {
-        top: 3.5rem;
+    .post-editor-writers-panel {
+        height: calc(100vh - 3.8rem);
+        top: 3.8rem;
     }
 }
 
 body[data-os="linux"] {
     .post-editor {
         &-writers-panel {
-            height: calc(100vh - 5.6rem);
-            top: 5.6rem;
+            height: 100vh;
+            top: 0;
         }
     }
 }
@@ -195,21 +149,11 @@ body[data-os="linux"] {
  */
 @media (max-height: 900px) {
     .post-editor-writers-panel {
-        right: 181px;
-
         dl {
-            margin: 4.8rem 15% 0 15%;
-
             dt {
-                font-size: 2.4rem;
+                font-size: 2rem;
             }
         }
-    }
-}
-
-@media (max-width: 1400px) {
-    .post-editor-writers-panel {
-        right: 181px;
     }
 }
 </style>

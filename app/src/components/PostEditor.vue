@@ -75,7 +75,18 @@
                 </div>
             </div>
 
-            <writers-panel ref="writers-panel" />
+            <writers-panel :isVisible="writersPanelOpen" />
+
+            <p-button
+                id="post-stats-button"
+                type="outline icon"
+                icon="stats"
+                title="Toggle post statistics panel"
+                @click.native="togglePostStats">
+                <template v-if="!writersPanelOpen">Show stats</template>
+                <template v-else>Hide stats</template>
+            </p-button>
+
             <sidebar :isVisible="sidebarVisible" />
             <source-code-editor ref="source-code-editor" />
             <author-popup />
@@ -125,7 +136,7 @@ export default {
             postID: this.$route.params.post_id || 0,
             newPost: true,
             sourceCodeEditorVisible: false,
-            writersPanelOpen: false,
+            writersPanelOpen: localStorage.getItem('publii-writers-panel') === 'opened',
             postSlugEdited: false,
             possibleDataLoss: false,
             unwatchDataLoss: null,
@@ -635,10 +646,22 @@ export default {
         },
         toggleSidebar () {
             this.sidebarVisible = !this.sidebarVisible;
+        },
+        togglePostStats () {
+            if (this.writersPanelOpen) {
+                this.writersPanelOpen = false;
+                localStorage.setItem('publii-writers-panel', 'closed');
+            } else {
+                this.writersPanelOpen = true;
+                localStorage.setItem('publii-writers-panel', 'opened');
+            }
         }
     },
     beforeDestroy () {
-        this.unwatchDataLoss();
+        if (this.unwatchDataLoss) {
+            this.unwatchDataLoss();
+        }
+
         $('#custom-post-editor-script').remove();
         this.$bus.$off('document-body-clicked', this.closeDropdownButton);
         this.$bus.$off('update-inline-editor', this.closeDropdownButton);
@@ -737,11 +760,6 @@ export default {
                 color: rgba($color-helper-7, .5); 
             }
         }
-        
-        #post-preview-button {
-            float: right;
-            margin-top: -4px;
-        }
 
         &-content {
             border: 1px solid $color-7;
@@ -772,6 +790,21 @@ export default {
         .mce-container-body {
             background: $color-10;
         }
+    }
+
+    #post-stats-button {
+        bottom: 3.2rem;
+        left: 3.2rem;
+        position: absolute;
+        text-align: center;
+        width: 155px;
+        z-index: 101;
+    }
+
+    #post-preview-button {
+        padding-left: 2.4rem;
+        text-align: center;
+        width: 155px;
     }
 }
 
@@ -930,16 +963,12 @@ body[data-os="linux"] {
     }
 }
     
-@media (max-width: 1600px) {
-    .post-editor .mce-flow-layout {
-        text-align: left !important;
-    }
-    
+@media (max-width: 1600px) {    
     .post-editor-form {
         #post-title {            
             font-size: 2.8rem;
             margin: 0 0 2.6rem;
-            text-align: left;
+            width: 100%;
         
             & + a {
                 top: 2.6rem;
