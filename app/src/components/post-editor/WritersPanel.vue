@@ -123,10 +123,6 @@ export default {
             opacity: 0;
             pointer-events: none;
             transform: translateX(-100px);
-
-            & + .post-editor-sidebar {
-                box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
-            }
         }
 
         &-close {

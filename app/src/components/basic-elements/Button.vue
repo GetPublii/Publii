@@ -9,9 +9,7 @@
             properties="not-clickable"
             :name="icon" />
 
-        <slot v-if="!isPreloader">
-            Button
-        </slot>
+        <slot v-if="!isPreloader"></slot>
 
         <span
             v-if="isPreloader"
@@ -65,6 +63,7 @@ export default {
                 'button-muted': types.indexOf('muted') > -1,
                 'button-cancel-popup': types.indexOf('cancel-popup') > -1,
                 'button-icon': types.indexOf('icon') > -1,
+                'button-only-icon': types.indexOf('only-icon') > -1,
                 'button-bottom': types.indexOf('bottom') > -1,
                 'button-medium': types.indexOf('medium') > -1,
                 'button-small': types.indexOf('small') > -1,
@@ -312,6 +311,11 @@ export default {
             & > svg {
                 fill: $color-7;
             }
+        }
+
+        &.button-only-icon {
+            padding: 0;
+            width: 48px;
         }
     }
 

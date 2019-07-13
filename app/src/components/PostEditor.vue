@@ -3,9 +3,16 @@
         <topbar-appbar />
 
         <div class="post-editor-topbar">
-            <h2 class="post-editor-title">
-                {{ editorTitle }}
-            </h2>
+            <p-button
+                v-if="!sourceCodeEditorVisible"
+                id="post-preview-button"
+                type="outline icon"
+                icon="off-live-preview"
+                :disabled="!themeConfigured"
+                :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
+                @click.native="generatePostPreview">
+                Preview
+            </p-button>
 
             <div
                 v-if="!sourceCodeEditorVisible"
@@ -14,6 +21,7 @@
                 <btn-dropdown
                     ref="dropdown-button"
                     :items="dropdownItems"
+                    :min-width="210"
                     :defaultValue="retrieveCurrentAction()" />
 
                 <p-button
@@ -22,6 +30,11 @@
                     <template v-if="!possibleDataLoss">Close</template>
                     <template v-if="possibleDataLoss">Cancel</template>
                 </p-button>
+
+                <p-button 
+                    icon="settings"
+                    type="outline icon only-icon"
+                    @click.native="toggleSidebar" />
             </div>
 
             <div
@@ -44,15 +57,6 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <p-button
-                        id="post-preview-button"
-                        type="outline"
-                        :disabled="!themeConfigured"
-                        :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
-                        @click.native="generatePostPreview">
-                        Preview
-                    </p-button>
-                    
                     <input
                         id="post-title"
                         ref="post-title"
@@ -72,7 +76,7 @@
             </div>
 
             <writers-panel ref="writers-panel" />
-            <sidebar />
+            <sidebar :isVisible="sidebarVisible" />
             <source-code-editor ref="source-code-editor" />
             <author-popup />
             <date-popup />
@@ -125,6 +129,7 @@ export default {
             postSlugEdited: false,
             possibleDataLoss: false,
             unwatchDataLoss: null,
+            sidebarVisible: false,
             postData: {
                 editor: localStorage.getItem('publii-current-editor') || 'tinymce',
                 title: '',
@@ -194,13 +199,6 @@ export default {
         },
         isDraft () {
             return this.postData.status.indexOf('draft') > -1;
-        },
-        editorTitle () {
-            if (this.isEdit) {
-                return 'Edit post';
-            }
-
-            return 'Create new post';
         },
         themeConfigured () {
             return !!this.$store.state.currentSite.config.theme;
@@ -634,6 +632,9 @@ export default {
             if (this.$refs['dropdown-button']) {
                 this.$refs['dropdown-button'].hideDropdown();
             }
+        },
+        toggleSidebar () {
+            this.sidebarVisible = !this.sidebarVisible;
         }
     },
     beforeDestroy () {
@@ -671,24 +672,16 @@ export default {
 
     &-topbar {
         align-items: center;
-        background: $color-10;
-        box-shadow: 0 0 1px rgba(0, 0, 0, .3);
+        background: transparent;
         font-size: 2.4rem;
         display: flex;
         height: 5.6rem;
         justify-content: space-between;
-        padding: 0 4rem;
+        padding: 0 3.2rem;
         position: absolute;
-        top: 2.2rem;
+        top: 4.5rem;
         width: 100%;
-        z-index: 102;
-    }
-
-    &-title {
-        font-size: 1.6rem;
-        margin: 0;
-        pointer-events: none;
-        text-transform: none;
+        z-index: 100001;
     }
 
     &-actions {
@@ -699,7 +692,11 @@ export default {
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: 90px;
+                width: 94px;
+            }
+
+            &:nth-child(3) {
+                margin-left: 1rem;
             }
         }
     }
@@ -712,7 +709,7 @@ export default {
         height: calc(100vh - 7.8rem);
         overflow: hidden;
         position: relative;
-        width: calc(100vw - 50rem);
+        width: 100%;
 
         & > div {
             padding: 4rem 4rem 3rem 4rem;
@@ -872,8 +869,6 @@ body[data-os="linux"] {
  */
 @media (max-height: 900px) {
     .post-editor-form {
-        width: calc(100vw - 40rem);
-
         & > div {
             padding: 3rem 3rem 3rem 4rem;
         }
@@ -915,8 +910,6 @@ body[data-os="linux"] {
     }
     
     .post-editor-form {
-        width: calc(100vw - 40rem);
-
         & > div {
             padding: 3rem 3rem 3rem 4rem;
         }

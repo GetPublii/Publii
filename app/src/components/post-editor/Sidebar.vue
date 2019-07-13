@@ -1,5 +1,5 @@
 <template>
-    <div class="post-editor-sidebar">
+    <div :class="{ 'post-editor-sidebar': true, 'is-visible': isVisible }">
         <div>
             <div class="post-editor-sidebar-header">
                 Post settings
@@ -11,22 +11,11 @@
                     @click="openItem('status')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
+                        primaryColor="link-color"
                         name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
-                    
-                    <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-                    
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -179,22 +168,11 @@
                     @click="openItem('image')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
+                        primaryColor="link-color"
                         name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
-
-                   <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -238,22 +216,11 @@
                         @click="openItem('tags')">
                         <icon
                             class="post-editor-settings-icon"
-                            size="m"
+                            size="s"
+                            primaryColor="link-color"
                             name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
-
-                        <span
-                            class="post-editor-settings-icon-open"
-                            name="sidebar-arrow">                        
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-close"
-                            name="sidebar-arrow"
-                            @click.native="closeItem">
-                            &times;
-                        </span>
                     </div>
 
                     <div
@@ -310,7 +277,8 @@
                         @click="openItem('seo')">
                         <icon
                             class="post-editor-settings-icon"
-                            size="m"
+                            size="s"
+                            primaryColor="link-color"
                             name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">
@@ -321,18 +289,6 @@
                                 class="post-editor-settings-label-warning">
                                 Post slug is too long
                             </span>
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-open"
-                            name="sidebar-arrow">                        
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-close"
-                            name="sidebar-arrow"
-                            @click.native="closeItem">
-                            &times;
                         </span>
                     </div>
 
@@ -402,22 +358,11 @@
                     @click="openItem('other')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
+                        primaryColor="link-color"
                         name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
-
-                    <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-  
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -519,6 +464,12 @@
 <script>
 export default {
     name: 'post-editor-sidebar',
+    props: {
+        'isVisible': {
+            default: false,
+            type: Boolean
+        }
+    },
     data () {
         return {
             openedItem: 'status',
@@ -755,27 +706,25 @@ export default {
 .post-editor {
     &-sidebar {
         background: $color-10;
-        height: calc(100vh - 7.8rem);
+        border-left: 1px solid $color-helper-8;
+        height: calc(100vh - 2.2rem);
         overflow: auto;
-        position: relative;
-        width: 50rem;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 2.2rem;
+        transition: opacity .25s ease-out;
+        width: 44.2rem;
+        z-index: 100000;
 
-        &:after {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-            linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-            bottom: 0;
-            content: "";
-            height: 40px;
-            left: auto;
-            pointer-events: none;
-            position: fixed;
-            right: 5px;
-            width: 49.5rem;
-            z-index: 1;
+        &.is-visible {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         & > div {
-            padding: 3.6rem 0 0 0;
+            padding: 12.5rem 0 0 0;
         }
 
         &-header {
@@ -785,7 +734,7 @@ export default {
         }
 
         .post-info {
-            border-bottom: 1px solid rgba($color-8, .4);
+            border-bottom: 1px solid $color-helper-8;
             display: grid;
             grid-template-columns: 50% 50%;
             margin-bottom: 3rem;
@@ -889,8 +838,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                background: $color-9;
-                padding: 0 3.6rem 3.6rem 3.6rem;
+                padding: 3.6rem;
 
                 .image-uploader {
                     margin-top: 0;
@@ -899,56 +847,40 @@ export default {
 
             &-header {
                 align-items: center;               
-                border-top: 1px solid rgba($color-8, .45);
-                border-bottom: 1px solid rgba($color-8, .45);
-                color: $link-color;
+                border-top: 1px solid $color-helper-8;
+                border-bottom: 1px solid $color-helper-8;
+                color: $color-4;
                 cursor: pointer;
                 display: flex;
                 height: 6.4rem;
+                margin-left: 3.6rem;
                 margin-top: -1px;
-                padding: 0 3.6rem;
+                padding: 0;
                 position: relative;
                 transition: all .25s ease-out;
                 user-select: none;
-
+                width: calc(100% - 7.2rem);
+    
                 &:hover {
-                    background: rgba($color-9, .5);
-                    color: $color-4;
+                    color: $link-color;
 
                     .post-editor-settings {
                         &-icon {
                             fill: $color-5;
-
-                            &-open {
-                                border-top-color: $color-5;
-                            }
                         }
                     }
                 }
 
                 &.is-open {
-                    background: $color-9;
-                    border-bottom-color: $color-9;
-
                     .post-editor-settings {
                         &-label {
-                            color: $color-4;
-                            font-weight: 500;
-                            left: -4.8rem;
+                            left: -3.6rem;
                         }
 
                         &-icon {
                             left: -1.6rem;
                             position: relative;
                             opacity: 0;
-
-                            &-open {
-                                opacity: 0;
-                            }
-
-                            &-close {
-                                opacity: 1;                                
-                            }
                         }
                     }
                 }
@@ -972,72 +904,11 @@ export default {
                 fill: $grey-icon-color; 
                 left: 0;
                 height: 2.4rem;
-                margin-right: 2.4rem;
+                margin-right: 1.6rem;
                 opacity: 1;
                 position: relative;
                 transition: all .25s ease-out;
                 width: 2.4rem;
-
-                &-open,
-                &-close {
-                    position: absolute;
-                    height: 2.4rem;
-                    right: 3.6rem;
-                    top: 2.3rem;
-                    width: 2.4rem;
-
-                    &:hover {
-                        fill: $color-4;
-                    }
-                }
-
-                &-open {  
-                  border-color: $color-7 transparent transparent;
-                    border-style: solid;
-                    border-width: 6px 5px;
-                    opacity: 1;                     
-                    cursor: pointer;                   
-                    height: 3px;
-                    left: auto;
-                    line-height: 1.1; 
-                    padding: 0;
-                    position: absolute;
-                    right: calc(4.5rem - 6px);
-                    width: 6px;
-                    text-align: center;       
-                    transition: all .3s ease-out;         
-                    top: calc(50% - 3px)                    
-                }
-
-                &-close {
-                    opacity: 0;
-                    border-radius: 50%;
-                    color: $color-7;
-                    cursor: pointer;
-                    font-size: 2.4rem;
-                    font-weight: 300;
-                    height: 3rem;
-                    left: auto;
-                    line-height: 1.1; 
-                    padding: 0;
-                    position: absolute;
-                    right: 3rem;
-                    text-align: center;       
-                    transition: all .3s ease-out;         
-                    top: 50%;
-                    transform: translate(0, -50%); 
-                    width: 3rem;
-                                
-                    &:active,
-                    &:focus,
-                    &:hover {
-                        color: $color-4;
-                    }
-        
-                    &:hover {
-                        background: $color-helper-8;
-                    }  
-                }
             }
 
             label {
@@ -1099,37 +970,20 @@ export default {
 
 body[data-os="win"] {
     .post-editor-sidebar {
-        height: calc(100vh - 9.4rem);
+        height: calc(100vh - 3.8rem);
+        top: 3.8rem;
     }
 }
 
 body[data-os="linux"] {
     .post-editor-sidebar {
-        height: calc(100vh - 5.6rem);
-    }
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .post-editor-sidebar {
-        width: 40rem;
-
-        &:after {
-            width: 39.5rem;
-        }
+        height: 100vh;
+        top: 0;
     }
 }
 
 @media (max-width: 1200px) {
     .post-editor-sidebar {
-        width: 40rem;
-
-        &:after {
-            width: 39.5rem;
-        }
-
         .post-editor-settings {
             &-header {
                 padding: 0 3rem;

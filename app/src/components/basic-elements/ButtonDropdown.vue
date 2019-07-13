@@ -2,6 +2,7 @@
     <div :class="{ 'button': true, 'is-green': isGreen, 'has-icon': hasIcon }">
         <span 
             class="button-trigger"
+            :style="'min-width:' + minWidth + 'px;'"
             @click.stop="doCurrentAction()">
             <icon
                 v-if="buttonIcon"
@@ -50,6 +51,10 @@ export default {
         'buttonIcon': {
             default: '',
             type: String
+        },
+        'minWidth': {
+            default: 150,
+            type: Number
         }
     },
     computed: {
@@ -151,6 +156,7 @@ export default {
         padding-left: 2rem;
         padding-right: 6rem;
         position: relative;
+        text-align: left;
         top: 0;
         transition: all .25s ease-out;          
             
