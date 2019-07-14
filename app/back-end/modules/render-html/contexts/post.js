@@ -265,10 +265,10 @@ class RendererContextPost extends RendererContext {
         }
 
         // Get related posts ordering
-        let ordering = ' p.id DESC ';
+        let ordering = ' subquery.id DESC ';
 
         if (this.siteConfig.advanced.relatedPostsOrder === 'id-asc') {
-            ordering = ' p.id ASC ';
+            ordering = ' subquery.id ASC ';
         } else if (this.siteConfig.advanced.relatedPostsOrder === 'random') {
             ordering = ' RANDOM() ';
         }
@@ -299,28 +299,34 @@ class RendererContextPost extends RendererContext {
 
         // Retrieve post
         let postsData = this.db.prepare(`
-            SELECT
-                p.id AS id,
-                1 AS priority
+            SELECT 
+                subquery.id AS id
             FROM
-                posts AS p
-            LEFT JOIN
-                posts_tags AS pt
-                ON
-                p.id = pt.post_id
-            WHERE
-                p.id != @postID AND
-                p.status LIKE "%published%" AND
-                p.status NOT LIKE "%trashed%" AND
-                p.status NOT LIKE "%hidden%"
-                ${conditions}
-            ${secondQuery}
-            GROUP BY
-                p.id
+                (
+                    SELECT
+                        p.id AS id,
+                        1 AS priority
+                    FROM
+                        posts AS p
+                    LEFT JOIN
+                        posts_tags AS pt
+                        ON
+                        p.id = pt.post_id
+                    WHERE
+                        p.id != @postID AND
+                        p.status LIKE "%published%" AND
+                        p.status NOT LIKE "%trashed%" AND
+                        p.status NOT LIKE "%hidden%"
+                        ${conditions}
+                    ${secondQuery}
+                    GROUP BY
+                        p.id
+                    ORDER BY
+                        priority ASC
+                    LIMIT @relatedPostsNumber
+                ) AS subquery
             ORDER BY
-                priority ASC,
                 ${ordering}
-            LIMIT @relatedPostsNumber
         `).all({
             postID: this.post.id,
             relatedPostsNumber: relatedPostsNumber * 2
