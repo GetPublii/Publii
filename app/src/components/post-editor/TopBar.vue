@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import PostHelper from './PostHelper';
+
 export default {
     name: 'post-editor-top-bar',
     computed: {
@@ -164,7 +166,7 @@ export default {
             // Get the text data
             let preparedText = this.$parent.postData.text;
             // Remove directory path from images src attribute
-            let mediaPath = this.$parent.getMediaPath();
+            let mediaPath = PostHelper.getMediaPath();
             preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
             // Send an event which will remove unused images from the post editor
             ipcRenderer.send('app-post-cancel', {

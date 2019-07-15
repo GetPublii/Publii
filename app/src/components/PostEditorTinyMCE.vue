@@ -63,11 +63,13 @@ import GalleryPopup from './post-editor/GalleryPopup';
 import Editor from './post-editor/Editor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
+import PostHelper from './post-editor/PostHelper';
+import Utils from './../helpers/utils';
 
 const mainProcess = remote.require('./main.js');
 
 export default {
-    name: 'post-editor',
+    name: 'post-editor-tinymce',
     components: {
         'author-popup': AuthorPopup,
         'date-popup': DatePopup,
@@ -92,6 +94,7 @@ export default {
             unwatchDataLoss: null,
             sidebarVisible: false,
             postData: {
+                editor: 'tinymce',
                 title: '',
                 text: '',
                 slug: '',
@@ -176,15 +179,6 @@ export default {
             let slugValue = mainProcess.slug(this.postData.title);
             this.postData.slug = slugValue;
         },
-        getMediaPath () {
-            let mediaPath = this.$store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
-            mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
-            mediaPath += '/input/media/posts/';
-            mediaPath += this.postID === 0 ? 'temp' : this.postID;
-            mediaPath += '/';
-
-            return mediaPath;
-        },
         loadPostData () {
             // Send request for a post to the back-end
             ipcRenderer.send('app-post-load', {
@@ -195,89 +189,8 @@ export default {
             // Load post data
             ipcRenderer.once('app-post-loaded', (event, data) => {
                 if(data !== false && this.postID !== 0) {
-                    // Set post elements
-                    this.postData.title = data.posts[0].title;
-                    let mediaPath = this.getMediaPath();
-                    let preparedText = data.posts[0].text;
-                    preparedText = preparedText.split('#DOMAIN_NAME#').join(mediaPath);
-
-                    this.postData.text = preparedText;
-                    $('#post-editor').val(preparedText);
-
-                    // Set tags
-                    this.postData.tags = [];
-
-                    if (data.tags.length) {
-                        for (let i = 0; i < data.tags.length; i++) {
-                            this.postData.tags.push(data.tags[i].name);
-                        }
-                    }
-
-                    this.postData.mainTag = data.additionalData.mainTag || '';
-
-                    // Set author
-                    this.postData.author = data.author[0].id;
-
-                    // Dates
-                    let format = 'MMM DD, YYYY  HH:mm';
-
-                    if(this.$store.state.app.config.timeFormat == 12) {
-                        format = 'MMM DD, YYYY  hh:mm a';
-                    }
-
-                    this.postData.creationDate.text = this.$moment(data.posts[0].created_at).format(format);
-                    this.postData.modificationDate.text = this.$moment(data.posts[0].modified_at).format(format);
-                    this.postData.creationDate.timestamp = data.posts[0].created_at;
-                    this.postData.modificationDate.timestamp = data.posts[0].modified_at;
-                    this.postData.status = data.posts[0].status.split(',').join(', ');
-                    this.postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
-                    this.postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
-                    this.postData.isExcludedOnHomepage = data.posts[0].status.indexOf('excluded_homepage') > -1;
-
-                    // Set image
-                    if (data.featuredImage) {
-                        this.postData.featuredImage.path = data.featuredImage.url;
-
-                        if(data.featuredImage.additional_data) {
-                            try {
-                                let imageData = JSON.parse(data.featuredImage.additional_data);
-                                this.postData.featuredImage.alt = imageData.alt;
-                                this.postData.featuredImage.caption = imageData.caption;
-                                this.postData.featuredImage.credits = imageData.credits;
-                            } catch(e) {
-                                console.warning('Unable to load featured image data: ');
-                                console.warning(data.featuredImage.additional_data);
-                            }
-                        }
-                    }
-
-                    // Set SEO
-                    this.postData.slug = data.posts[0].slug;
-                    this.postData.metaTitle = data.additionalData.metaTitle || "";
-                    this.postData.metaDescription = data.additionalData.metaDesc || "";
-                    this.postData.metaRobots = data.additionalData.metaRobots || "";
-                    this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
-
-                    // Update post template
-                    this.postData.template = data.posts[0].template;
-
-                    // Update post view settings
-                    let postViewFields = Object.keys(data.postViewSettings);
-
-                    for(let i = 0; i < postViewFields.length; i++) {
-                        let newValue = '';
-
-                        if(
-                            data.postViewSettings[postViewFields[i]] && data.postViewSettings[postViewFields[i]].value
-                        ) {
-                            newValue = data.postViewSettings[postViewFields[i]].value;
-                        } else {
-                            newValue = data.postViewSettings[postViewFields[i]];
-                        }
-
-                        this.postData.postViewOptions[postViewFields[i]] = newValue;
-                    }
-
+                    let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
+                    this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     this.$refs['tinymceEditor'].init();
                 }
 
@@ -319,82 +232,7 @@ export default {
             }
 
             tinymce.triggerSave();
-            let finalStatus = newPostStatus;
-            let mediaPath = this.getMediaPath();
-            let preparedText = $('#post-editor').val();
-            // Remove directory path from images src attribute
-            preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
-
-            if(this.postData.isHidden) {
-                finalStatus += ',hidden';
-            }
-
-            if(this.postData.isFeatured) {
-                finalStatus += ',featured';
-            }
-
-            if(this.postData.isExcludedOnHomepage) {
-                finalStatus += ',excluded_homepage';
-            }
-
-            let postViewSettings = {};
-
-            this.$store.state.currentSite.themeSettings.postConfig.forEach(field => {
-                let fieldType = 'select';
-
-                if (typeof field.type !== 'undefined') {
-                    fieldType = field.type;
-                }
-
-                postViewSettings[field.name] = {
-                    type: fieldType,
-                    value: this.postData.postViewOptions[field.name]
-                };
-            });
-
-            if (this.postData.slug === '') {
-                this.postData.slug = mainProcess.slug(this.postData.title);
-            }
-
-            let creationDate = this.postData.creationDate.timestamp;
-
-            if (!this.postData.creationDate.timestamp) {
-                creationDate = Date.now();
-            }
-
-            if (this.postData.status.indexOf('draft') > -1 && newPostStatus === 'published') {
-                creationDate = Date.now();
-            }
-
-            let postData = {
-                'site': this.$store.state.currentSite.config.name,
-                'title': this.postData.title,
-                'slug': this.postData.slug,
-                'text': preparedText,
-                'tags': this.postData.tags.join(','),
-                'status': finalStatus,
-                'creationDate': creationDate,
-                'modificationDate': Date.now(),
-                'template': this.postData.template,
-                'featuredImage': this.getMediaPath() + this.postData.featuredImage.path,
-                'featuredImageFilename': this.postData.featuredImage.path,
-                'featuredImageData': {
-                    alt: this.postData.featuredImage.alt,
-                    caption: this.postData.featuredImage.caption,
-                    credits: this.postData.featuredImage.credits
-                },
-                'additionalData': {
-                    metaTitle: this.postData.metaTitle,
-                    metaDesc: this.postData.metaDescription,
-                    metaRobots: this.postData.metaRobots,
-                    canonicalUrl: this.postData.canonicalUrl,
-                    mainTag: this.postData.mainTag,
-                    editor: 'tinymce'
-                },
-                'postViewSettings': postViewSettings,
-                'id': this.postID,
-                'author': parseInt(this.postData.author, 10)
-            };
+            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
@@ -429,7 +267,7 @@ export default {
                 this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
             }
 
-            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/' + this.postID);
+            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/tinymce/' + this.postID);
             let message = 'Changes have been saved';
 
             if (this.newPost) {

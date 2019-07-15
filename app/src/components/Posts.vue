@@ -483,7 +483,7 @@ export default {
             let siteName = this.$route.params.name;
             localStorage.setItem('publii-current-editor', editorType);
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/');
+            this.$router.push('/site/' + siteName + '/posts/editor/tinymce/');
         },
         editPost (id) {
             let siteName = this.$route.params.name;
@@ -493,7 +493,7 @@ export default {
             }
 
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/' + id);
+            this.$router.push('/site/' + siteName + '/posts/editor/tinymce/' + id);
 
             return false;
         },

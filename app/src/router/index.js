@@ -6,7 +6,8 @@ import AboutCredits from '../components/AboutCredits';
 import Site from '../components/Site';
 import AppSettings from '../components/AppSettings';
 import Posts from '../components/Posts';
-import PostEditor from '../components/PostEditor';
+import PostEditorTinyMCE from '../components/PostEditorTinyMCE';
+import PostEditorBlockEditor from '../components/PostEditorBlockEditor';
 import Tags from '../components/Tags';
 import Menus from '../components/Menus';
 import Authors from '../components/Authors';
@@ -129,8 +130,12 @@ export default new Router({
             component: AppThemes
         },
         {
-            path: '/site/:name/posts/editor/:post_id?',
-            component: PostEditor
+            path: '/site/:name/posts/editor/tinymce/:post_id?',
+            component: PostEditorTinyMCE
+        },
+        {
+            path: '/site/:name/posts/editor/blockeditor/:post_id?',
+            component: PostEditorBlockEditor
         }
     ]
 });
