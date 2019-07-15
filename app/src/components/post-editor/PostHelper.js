@@ -1,3 +1,6 @@
+import { remote } from 'electron';
+const mainProcess = remote.require('./main.js');
+
 class PostHelper {
     static preparePostData (newPostStatus, postID, $store, postData) {
         let finalStatus = newPostStatus;
@@ -207,4 +210,4 @@ class PostHelper {
     }
 }
 
-module.exports = PostHelper;
+export default PostHelper;

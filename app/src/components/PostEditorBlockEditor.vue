@@ -6,6 +6,8 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
+                    <textarea id="post-editor"></textarea>
+
                     <input
                         name="image"
                         id="post-editor-fake-image-uploader"
@@ -231,7 +233,6 @@ export default {
             this.unwatchDataLoss();
         }
 
-        $('#custom-post-editor-script').remove();
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
     }

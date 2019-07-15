@@ -261,7 +261,7 @@
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id)">                           
+                            @click.prevent.stop="editPost(item.id, item.editor)">                           
 
                           {{ item.title }}
 
@@ -452,7 +452,6 @@ export default {
     mounted () {
         this.orderBy = this.$store.state.ordering.posts.orderBy;
         this.order = this.$store.state.ordering.posts.order;
-
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
@@ -483,9 +482,9 @@ export default {
             let siteName = this.$route.params.name;
             localStorage.setItem('publii-current-editor', editorType);
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/tinymce/');
+            this.$router.push('/site/' + siteName + '/posts/editor/' + editorType + '/');
         },
-        editPost (id) {
+        editPost (id, editorType) {
             let siteName = this.$route.params.name;
 
             if(this.filterValue.trim() !== '') {
@@ -493,7 +492,7 @@ export default {
             }
 
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/tinymce/' + id);
+            this.$router.push('/site/' + siteName + '/posts/editor/' + editorType + '/' + id);
 
             return false;
         },
