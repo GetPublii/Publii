@@ -1,58 +1,7 @@
 <template>
     <div class="post-editor" ref="post-editor">
         <topbar-appbar />
-
-        <div class="post-editor-topbar">
-            <p-button
-                v-if="!sourceCodeEditorVisible"
-                id="post-preview-button"
-                type="outline icon"
-                icon="off-live-preview"
-                :disabled="!themeConfigured"
-                :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
-                @click.native="generatePostPreview">
-                Preview
-            </p-button>
-
-            <div
-                v-if="!sourceCodeEditorVisible"
-                class="post-editor-actions">
-                
-                <btn-dropdown
-                    ref="dropdown-button"
-                    :items="dropdownItems"
-                    :min-width="210"
-                    :defaultValue="retrieveCurrentAction()" />
-
-                <p-button
-                    type="outline"
-                    @click.native="cancelPost">
-                    <template v-if="!possibleDataLoss">Close</template>
-                    <template v-if="possibleDataLoss">Cancel</template>
-                </p-button>
-
-                <p-button 
-                    icon="settings"
-                    type="outline icon only-icon"
-                    @click.native="toggleSidebar" />
-            </div>
-
-            <div
-                v-if="sourceCodeEditorVisible"
-                class="post-editor-source-code-actions">
-                <p-button
-                    type="primary"
-                    @click.native="sourceCodeApply">
-                    Apply changes
-                </p-button>
-
-                <p-button
-                    type="outline"
-                    @click.native="sourceCodeCancel">
-                    Cancel
-                </p-button>
-            </div>
-        </div>
+        <post-editor-top-bar />
 
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
@@ -88,9 +37,9 @@
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
-            <source-code-editor ref="source-code-editor" />
             <author-popup />
             <date-popup />
+            <source-code-editor ref="source-code-editor" />
             <link-popup />
             <link-toolbar />
             <gallery-popup />
@@ -113,6 +62,7 @@ import LinkToolbar from './post-editor/LinkToolbar';
 import GalleryPopup from './post-editor/GalleryPopup';
 import Editor from './post-editor/Editor';
 import TopBarAppBar from './TopBarAppBar';
+import PostEditorTopBar from './post-editor/TopBar';
 
 const mainProcess = remote.require('./main.js');
 
@@ -129,13 +79,13 @@ export default {
         'sidebar': PostEditorSidebar,
         'source-code-editor': PostEditorSourceCode,
         'topbar-appbar': TopBarAppBar,
-        'writers-panel': PostEditorWritersPanel
+        'writers-panel': PostEditorWritersPanel,
+        'post-editor-top-bar': PostEditorTopBar
     },
     data () {
         return {
             postID: this.$route.params.post_id || 0,
             newPost: true,
-            sourceCodeEditorVisible: false,
             writersPanelOpen: localStorage.getItem('publii-writers-panel') === 'opened',
             postSlugEdited: false,
             possibleDataLoss: false,
@@ -177,42 +127,8 @@ export default {
         };
     },
     computed: {
-        dropdownItems () {
-            return [
-                {
-                    label: 'Save and close',
-                    value: 'save-and-close',
-                    isVisible: () => true,
-                    onClick: this.dropdownSaveAndClose
-                },
-                {
-                    label: 'Save',
-                    value: 'save',
-                    isVisible: () => true,
-                    onClick: this.dropdownSave
-                },
-                {
-                    label: 'Save as draft',
-                    value: 'save-as-draft',
-                    isVisible: () => !this.isDraft,
-                    onClick: this.dropdownSaveAsDraft
-                },
-                {
-                    label: this.$store.state.app.config.closeEditorOnSave ? 'Publish and close' : 'Publish post',
-                    value: 'publish-post',
-                    isVisible: () => this.isDraft,
-                    onClick: this.dropdownPublish
-                }
-            ]
-        },
         isEdit () {
             return !!this.postID;
-        },
-        isDraft () {
-            return this.postData.status.indexOf('draft') > -1;
-        },
-        themeConfigured () {
-            return !!this.$store.state.currentSite.config.theme;
         },
         extensionsPath () {
             return [
@@ -245,67 +161,11 @@ export default {
             this.postData.creationDate.text = this.$moment(this.postData.creationDate.timestamp).format(format);
         });
 
-        this.$bus.$on('source-code-editor-show', () => {
-            this.sourceCodeEditorVisible = true;
-        });
-
-        this.$bus.$on('source-code-editor-close', () => {
-            this.sourceCodeEditorVisible = false;
-        });
-
         this.$bus.$on('post-editor-possible-data-loss', () => {
             this.possibleDataLoss = true;
         });
-
-        this.$bus.$on('document-body-clicked', this.closeDropdownButton);
-        this.$bus.$on('update-inline-editor', this.closeDropdownButton);
     },
     methods: {
-        cancelPost () {
-            if(!this.possibleDataLoss) {
-                this.closeEditor();
-                return;
-            }
-
-            this.$bus.$emit('confirm-display', {
-                message: 'You will lose all unsaved changes - do you want to continue?',
-                okClick: this.cleanUpPost
-            });
-        },
-        cleanUpPost () {
-            // Get the text data
-            let preparedText = this.postData.text;
-            // Remove directory path from images src attribute
-            let mediaPath = this.getMediaPath();
-            preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
-            // Send an event which will remove unused images from the post editor
-            ipcRenderer.send('app-post-cancel', {
-                'site': this.$store.state.currentSite.config.name,
-                'id': this.postID,
-                'text': preparedText,
-                'featuredImageFilename': this.postData.featuredImage.path,
-                'featuredImageData': {
-                    alt: this.postData.featuredImage.alt,
-                    caption: this.postData.featuredImage.caption,
-                    credits: this.postData.featuredImage.credits
-                },
-            });
-
-            this.closeEditor();
-        },
-        closeEditor () {
-            let siteName = this.$route.params.name;
-            this.$router.push('/site/' + siteName + '/posts/');
-        },
-        getMediaPath () {
-            let mediaPath = this.$store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
-            mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
-            mediaPath += '/input/media/posts/';
-            mediaPath += this.postID === 0 ? 'temp' : this.postID;
-            mediaPath += '/';
-
-            return mediaPath;
-        },
         slugUpdated () {
             this.postSlugEdited = true;
         },
@@ -316,6 +176,15 @@ export default {
 
             let slugValue = mainProcess.slug(this.postData.title);
             this.postData.slug = slugValue;
+        },
+        getMediaPath () {
+            let mediaPath = this.$store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
+            mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
+            mediaPath += '/input/media/posts/';
+            mediaPath += this.postID === 0 ? 'temp' : this.postID;
+            mediaPath += '/';
+
+            return mediaPath;
         },
         loadPostData () {
             // Send request for a post to the back-end
@@ -587,63 +456,6 @@ export default {
             this.loadPostData();
             this.possibleDataLoss = false;
         },
-        sourceCodeApply () {
-            this.$refs['source-code-editor'].applyChanges();
-        },
-        sourceCodeCancel () {
-            this.$refs['source-code-editor'].cancelChanges();
-        },
-        generatePostPreview () {
-            let postID = this.postID;
-            let postData = this.savePost('published', true);
-
-            if (postData) {
-                this.$bus.$emit('rendering-popup-display', {
-                    postID,
-                    postData
-                });
-            }
-        },
-        dropdownSave () {
-            let status = this.postData.status.indexOf('draft') > -1 ? 'draft' : 'published';
-            this.savePost(status, false, false);
-            localStorage.setItem('publii-post-editor-current-action', 'save');
-        },
-        dropdownSaveAndClose () {
-            let status = this.postData.status.indexOf('draft') > -1 ? 'draft' : 'published';
-            this.savePost(status, false, true);
-            localStorage.setItem('publii-post-editor-current-action', 'save-and-close');
-        },
-        dropdownSaveAsDraft () {
-            this.savePost('draft');
-            this.retrieveCurrentAction();
-        },
-        dropdownPublish () {
-            this.savePost('published', false, this.$store.state.app.config.closeEditorOnSave);
-            this.retrieveCurrentAction();
-        },
-        retrieveCurrentAction () {
-            let currentAction = localStorage.getItem('publii-post-editor-current-action');
-
-            if (!currentAction) {
-                if (this.$store.state.app.config.closeEditorOnSave) {
-                    currentAction = 'save-and-close';
-                } else {
-                    currentAction = 'save';
-                }
-            }
-
-            if (this.$refs['dropdown-button']) {
-                this.$refs['dropdown-button'].setValue(currentAction);
-            }
-
-            return currentAction;
-        },
-        closeDropdownButton () {
-            if (this.$refs['dropdown-button']) {
-                this.$refs['dropdown-button'].hideDropdown();
-            }
-        },
         toggleSidebar () {
             this.sidebarVisible = !this.sidebarVisible;
         },
@@ -655,6 +467,10 @@ export default {
                 this.writersPanelOpen = true;
                 localStorage.setItem('publii-writers-panel', 'opened');
             }
+        },
+        closeEditor () {
+            let siteName = this.$route.params.name;
+            this.$router.push('/site/' + siteName + '/posts/');
         }
     },
     beforeDestroy () {
@@ -663,11 +479,7 @@ export default {
         }
 
         $('#custom-post-editor-script').remove();
-        this.$bus.$off('document-body-clicked', this.closeDropdownButton);
-        this.$bus.$off('update-inline-editor', this.closeDropdownButton);
         this.$bus.$off('date-changed');
-        this.$bus.$off('source-code-editor-show');
-        this.$bus.$off('source-code-editor-close');
         this.$bus.$off('post-editor-possible-data-loss');
     }
 };
@@ -691,42 +503,6 @@ export default {
         height: 2.2rem!important;
         position: absolute!important;
         width: 100%;
-    }
-
-    &-topbar {
-        align-items: center;
-        background: transparent;
-        font-size: 2.4rem;
-        display: flex;
-        height: 5.6rem;
-        justify-content: space-between;
-        padding: 0 3.2rem;
-        position: absolute;
-        top: 4.5rem;
-        width: 100%;
-        z-index: 100001;
-    }
-
-    &-actions {
-        display: flex;
-
-        .button {
-            text-align: center;
-
-            &:nth-child(2) {
-                margin-left: 1rem;
-                width: 94px;
-            }
-
-            &:nth-child(3) {
-                margin-left: 1rem;
-            }
-        }
-    }
-
-    &-source-code-actions {
-        margin-left: auto;
-        margin-top: -2.6rem;
     }
 
     &-field-select-tags {
@@ -800,12 +576,6 @@ export default {
         width: 155px;
         z-index: 101;
     }
-
-    #post-preview-button {
-        padding-left: 2.4rem;
-        text-align: center;
-        width: 155px;
-    }
 }
 
 /*
@@ -820,10 +590,6 @@ body[data-os="win"] {
         .topbar {
             height: 3.6rem;
         }
-
-        &-topbar {
-            top: 3.6rem;
-        }
     }
 }
 
@@ -835,10 +601,6 @@ body[data-os="linux"] {
 
         .topbar {
             height: 0;
-        }
-
-        &-topbar {
-            top: 0;
         }
     }
 }
@@ -942,11 +704,7 @@ body[data-os="linux"] {
     }
 }
 
-@media (max-width: 1400px) {
-    .post-editor-topbar {
-        padding: 0 3.6rem 0 4rem;
-    }
-    
+@media (max-width: 1400px) {    
     .post-editor-form {
         & > div {
             padding: 3rem 3rem 3rem 4rem;
