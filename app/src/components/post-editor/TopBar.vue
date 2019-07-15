@@ -188,13 +188,12 @@ export default {
             this.$refs['source-code-editor'].cancelChanges();
         },
         generatePostPreview () {
-            let postID = this.postID;
             let postData = this.$parent.savePost('published', true);
 
             if (postData) {
                 this.$bus.$emit('rendering-popup-display', {
-                    postID,
-                    postData
+                    postID: this.postID,
+                    postData: postData
                 });
             }
         }

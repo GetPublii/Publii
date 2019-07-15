@@ -92,7 +92,6 @@ export default {
             unwatchDataLoss: null,
             sidebarVisible: false,
             postData: {
-                editor: localStorage.getItem('publii-current-editor') || 'tinymce',
                 title: '',
                 text: '',
                 slug: '',
@@ -259,9 +258,6 @@ export default {
                     this.postData.metaRobots = data.additionalData.metaRobots || "";
                     this.postData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
-                    // Set editor
-                    this.postData.editor = data.additionalData.editor || 'tinymce';
-
                     // Update post template
                     this.postData.template = data.posts[0].template;
 
@@ -287,7 +283,6 @@ export default {
 
                 // Add custom editor script
                 if(
-                    this.postData.editor === 'tinymce' && 
                     this.$store.state.currentSite.themeSettings &&
                     this.$store.state.currentSite.themeSettings.extensions &&
                     this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
@@ -394,7 +389,7 @@ export default {
                     metaRobots: this.postData.metaRobots,
                     canonicalUrl: this.postData.canonicalUrl,
                     mainTag: this.postData.mainTag,
-                    editor: this.postData.editor
+                    editor: 'tinymce'
                 },
                 'postViewSettings': postViewSettings,
                 'id': this.postID,
@@ -488,37 +483,10 @@ export default {
 <style lang="scss">
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
+@import '../scss/editor/post-editors-common.scss';
 
 .post-editor {
-    background: $color-10;
-
-    &-wrapper {
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-        padding-top: 7.8rem;
-    }
-
-    .appbar {
-        height: 2.2rem!important;
-        position: absolute!important;
-        width: 100%;
-    }
-
-    &-field-select-tags {
-        width: 480px;
-    }
-
     &-form {
-        height: calc(100vh - 7.8rem);
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-
-        & > div {
-            padding: 4rem 4rem 3rem 4rem;
-        }
-
         #post-title {
             border: none;
             box-shadow: none;
@@ -535,17 +503,6 @@ export default {
             &::placeholder {
                 color: rgba($color-helper-7, .5); 
             }
-        }
-
-        &-content {
-            border: 1px solid $color-7;
-            clear: both;
-            font-size: 1.6rem;
-            height: calc( 100vh - 28rem);
-            margin: 1rem 0;
-            min-height: 320px;
-            padding: 1rem 2rem;
-            width: 100%;
         }
 
         #post-editor_ifr {
@@ -567,42 +524,6 @@ export default {
             background: $color-10;
         }
     }
-
-    #post-stats-button {
-        bottom: 3.2rem;
-        left: 3.2rem;
-        position: absolute;
-        text-align: center;
-        width: 155px;
-        z-index: 101;
-    }
-}
-
-/*
- * Windows & linux adjustments
- */
-body[data-os="win"] {
-    .post-editor {
-        .appbar {
-            height: 3.6rem!important;
-        }
-
-        .topbar {
-            height: 3.6rem;
-        }
-    }
-}
-
-body[data-os="linux"] {
-    .post-editor {
-        .appbar {
-            height: 0!important;
-        }
-
-        .topbar {
-            height: 0;
-        }
-    }
 }
 
 /*
@@ -610,18 +531,7 @@ body[data-os="linux"] {
  */
 
 body[data-os="win"] {
-    .post-editor-wrapper {
-        height: calc(100vh - 2px);
-        padding-top: 9.2rem;
-    }
-
     .post-editor-form {
-        height: calc(100vh - 9.2rem);
-
-        &-content {
-            height: calc( 100vh - 29rem );
-        }
-
         #post-editor_ifr {
             height: calc( 100vh - 31rem )!important;
         }
@@ -646,18 +556,7 @@ body[data-os="win"] {
 }
 
 body[data-os="linux"] {
-    .post-editor-wrapper {
-        height: calc(100vh - 2px);
-        padding-top: 5.6rem;
-    }
-
     .post-editor-form {
-        height: calc(100vh - 5.6rem);
-
-        &-content {
-            height: calc( 100vh - 24.8rem );
-        }
-
         #post-editor_ifr {
             height: calc( 100vh - 26.8rem )!important;
         }
@@ -669,10 +568,6 @@ body[data-os="linux"] {
  */
 @media (max-height: 900px) {
     .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-
         #post-title + a {
             top: 3.6rem;
         }
@@ -706,10 +601,6 @@ body[data-os="linux"] {
 
 @media (max-width: 1400px) {    
     .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-
         #post-title {            
             font-size: 2.8rem;
             margin: 0 0 2.6rem;

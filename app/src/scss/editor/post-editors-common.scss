@@ -1,0 +1,120 @@
+.post-editor {
+    background: $color-10;
+
+    &-wrapper {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        padding-top: 7.8rem;
+    }
+
+    .appbar {
+        height: 2.2rem!important;
+        position: absolute!important;
+        width: 100%;
+    }
+
+    &-field-select-tags {
+        width: 480px;
+    }
+
+    &-form {
+        height: calc(100vh - 7.8rem);
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        & > div {
+            padding: 4rem 4rem 3rem 4rem;
+        }
+    }
+
+    #post-stats-button {
+        bottom: 3.2rem;
+        left: 3.2rem;
+        position: absolute;
+        text-align: center;
+        width: 155px;
+        z-index: 101;
+    }
+}
+
+/*
+ * Windows & linux adjustments
+ */
+body[data-os="win"] {
+    .post-editor {
+        .appbar {
+            height: 3.6rem!important;
+        }
+
+        .topbar {
+            height: 3.6rem;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor {
+        .appbar {
+            height: 0!important;
+        }
+
+        .topbar {
+            height: 0;
+        }
+    }
+}
+
+/*
+ * Special styles for win & linux
+ */
+
+body[data-os="win"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 9.2rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 9.2rem);
+
+        &-content {
+            height: calc( 100vh - 29rem );
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 5.6rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 5.6rem);
+
+        &-content {
+            height: calc( 100vh - 24.8rem );
+        }
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+@media (max-height: 900px) {
+    .post-editor-form {
+        & > div {
+            padding: 3rem 3rem 3rem 4rem;
+        }
+    }
+}
+
+@media (max-width: 1400px) {    
+    .post-editor-form {
+        & > div {
+            padding: 3rem 3rem 3rem 4rem;
+        }
+    }
+}
