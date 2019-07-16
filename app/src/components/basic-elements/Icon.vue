@@ -97,7 +97,7 @@ export default {
             return style.join(';')
         },
         iconPath: function() {
-            return `src/assets/svg/${this.iconset}.svg#${this.name}`;
+            return `../src/assets/svg/${this.iconset}.svg#${this.name}`;
         }
     }
 }

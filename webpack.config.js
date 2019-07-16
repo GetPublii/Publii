@@ -7,12 +7,13 @@ module.exports = {
   entry: './app/src/main.js',
   target: 'electron',
   output: {
-    path: path.resolve(__dirname, './app/dist'),
-    publicPath: './dist/',
-    filename: 'build.js'
+    path: path.resolve(__dirname, './app/dist/'),
+    publicPath: './',
+    filename: 'build.js',
+    chunkFilename: '[name].bundle.js',
   },
   plugins: [
-    new DashboardPlugin() //,
+    // new DashboardPlugin() //,
     // new BundleAnalyzerPlugin()
   ],
   module: {

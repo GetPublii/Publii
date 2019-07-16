@@ -486,7 +486,7 @@ class App {
 
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);
-        this.mainWindow.loadURL('file://' + this.basedir + '/index.html');
+        this.mainWindow.loadURL('file://' + this.basedir + '/dist/index.html');
 
         this.mainWindow.webContents.on('did-finish-load', function() {
             let appVersionInfo = {

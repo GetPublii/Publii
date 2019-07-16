@@ -199,7 +199,7 @@ export default {
             let customEditorCSS = pathToEditorCSS;
 
             return [
-                'dist/css/editor-options.css?v=0710',
+                'css/editor-options.css?v=0710',
                 customEditorCSS
             ].join(',');
         }

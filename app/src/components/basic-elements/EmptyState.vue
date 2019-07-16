@@ -48,7 +48,7 @@ export default {
     },
     computed: {
         imagePath: function() {
-            return 'src/assets/svg/' + this.imageName;
+            return '../src/assets/svg/' + this.imageName;
         },
         hasButtonSlot: function() {
             return !!this.$slots['button'];

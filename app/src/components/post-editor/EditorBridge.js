@@ -307,7 +307,7 @@ class EditorBridge {
         let customEditorCSS = pathToEditorCSS;
 
         return [
-            'dist/css/editor.css?v=0710',
+            'css/editor.css?v=0710',
             customEditorCSS
         ].join(',');
     }

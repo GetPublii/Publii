@@ -1,30 +1,32 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Splashscreen from '../components/Splashscreen';
-import About from '../components/About';
-import AboutCredits from '../components/AboutCredits';
-import Site from '../components/Site';
-import AppSettings from '../components/AppSettings';
-import Posts from '../components/Posts';
-import PostEditorTinyMCE from '../components/PostEditorTinyMCE';
-import PostEditorBlockEditor from '../components/PostEditorBlockEditor';
-import Tags from '../components/Tags';
-import Menus from '../components/Menus';
-import Authors from '../components/Authors';
-import Tools from '../components/Tools';
-import LogViewer from '../components/LogViewer';
-import RegenerateThumbnails from '../components/RegenerateThumbnails';
-import WPImport from '../components/WPImport';
-import Backups from '../components/Backups';
-import CustomCss from '../components/CustomCss';
-import CustomHtml from '../components/CustomHtml';
-import FileManager from '../components/FileManager';
-import ServerSettings from '../components/ServerSettings';
-import Settings from '../components/Settings';
-import AppThemes from '../components/AppThemes';
-import ThemeSettings from '../components/ThemeSettings';
 
-Vue.use(Router)
+// Lazy-loaded views
+const About = () => import('../components/About.vue');
+const AboutCredits = () => import('../components/AboutCredits');
+const Site = () => import('../components/Site');
+const AppSettings = () => import('../components/AppSettings');
+const Posts = () => import('../components/Posts');
+const PostEditorTinyMCE = () => import('../components/PostEditorTinyMCE');
+const PostEditorBlockEditor = () => import('../components/PostEditorBlockEditor');
+const Tags = () => import('../components/Tags');
+const Menus = () => import('../components/Menus');
+const Authors = () => import('../components/Authors');
+const Tools = () => import('../components/Tools');
+const LogViewer = () => import('../components/LogViewer');
+const RegenerateThumbnails = () => import('../components/RegenerateThumbnails');
+const WPImport = () => import('../components/WPImport');
+const Backups = () => import('../components/Backups');
+const CustomCss = () => import('../components/CustomCss');
+const CustomHtml = () => import('../components/CustomHtml');
+const FileManager = () => import('../components/FileManager');
+const ServerSettings = () => import('../components/ServerSettings');
+const Settings = () => import('../components/Settings');
+const AppThemes = () => import('../components/AppThemes');
+const ThemeSettings = () => import('../components/ThemeSettings');
+
+Vue.use(Router);
 
 export default new Router({
     routes: [
