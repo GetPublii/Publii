@@ -54,6 +54,7 @@
 
 <script>
 import PostHelper from './PostHelper';
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'post-editor-top-bar',
