@@ -191,6 +191,7 @@ export default {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
+                    $('#post-editor').val(this.postData.text);
                     this.$refs['tinymceEditor'].init();
                 }
 

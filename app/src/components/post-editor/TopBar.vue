@@ -166,7 +166,7 @@ export default {
             // Get the text data
             let preparedText = this.$parent.postData.text;
             // Remove directory path from images src attribute
-            let mediaPath = PostHelper.getMediaPath();
+            let mediaPath = PostHelper.getMediaPath(this.$store, this.$parent.postID);
             preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
             // Send an event which will remove unused images from the post editor
             ipcRenderer.send('app-post-cancel', {
@@ -184,10 +184,10 @@ export default {
             this.$parent.closeEditor();
         },
         sourceCodeApply () {
-            this.$refs['source-code-editor'].applyChanges();
+            this.$parent.$refs['source-code-editor'].applyChanges();
         },
         sourceCodeCancel () {
-            this.$refs['source-code-editor'].cancelChanges();
+            this.$parent.$refs['source-code-editor'].cancelChanges();
         },
         generatePostPreview () {
             let postData = this.$parent.savePost('published', true);
