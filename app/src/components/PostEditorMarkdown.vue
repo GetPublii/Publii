@@ -1,0 +1,354 @@
+<template>
+    <div class="post-editor" ref="post-editor">
+        <topbar-appbar />
+        <post-editor-top-bar />
+
+        <div class="post-editor-wrapper">
+            <div class="post-editor-form">
+                <div>
+                    <input
+                        id="post-title"
+                        ref="post-title"
+                        class="post-editor-form-title"
+                        placeholder="Add post title"
+                        v-model="postData.title"
+                        @keyup="updateSlug" />   
+
+                    <vue-simplemde 
+                        v-model="postData.text"
+                        :configs="editorConfig" />
+
+                    <input
+                        name="image"
+                        id="post-editor-fake-image-uploader"
+                        class="is-hidden"
+                        type="file" />
+                </div>
+            </div>
+
+            <sidebar :isVisible="sidebarVisible" />
+            <author-popup />
+            <date-popup />
+        </div>
+    </div>
+</template>
+
+<script>
+import Vue from 'vue';
+import VueSimplemde from 'vue-simplemde'
+import { ipcRenderer, remote } from 'electron';
+import PostEditorSidebar from './post-editor/Sidebar';
+import AuthorPopup from './post-editor/AuthorPopup';
+import DatePopup from './post-editor/DatePopup';
+import TopBarAppBar from './TopBarAppBar';
+import PostEditorTopBar from './post-editor/TopBar';
+import PostHelper from './post-editor/PostHelper';
+import Utils from './../helpers/utils';
+
+const mainProcess = remote.require('./main.js');
+
+export default {
+    name: 'post-editor-markdown',
+    components: {
+        'author-popup': AuthorPopup,
+        'date-popup': DatePopup,
+        'sidebar': PostEditorSidebar,
+        'topbar-appbar': TopBarAppBar,
+        'post-editor-top-bar': PostEditorTopBar,
+        'vue-simplemde': VueSimplemde
+    },
+    data () {
+        return {
+            postID: this.$route.params.post_id || 0,
+            newPost: true,
+            postSlugEdited: false,
+            possibleDataLoss: false,
+            unwatchDataLoss: null,
+            sidebarVisible: false,
+            editorConfig: {
+                status: false,
+                toolbar: false,
+                placeholder: 'Write here...',
+                spellChecker: false
+            },
+            postData: {
+                editor: 'markdown',
+                title: '',
+                text: '',
+                slug: '',
+                author: 1,
+                tags: [],
+                mainTag: '',
+                template: '',
+                creationDate: {
+                    text: '',
+                    timestamp: 0
+                },
+                modificationDate: {
+                    text: '',
+                    timestamp: 0
+                },
+                isFeatured: false,
+                isHidden: false,
+                isExcludedOnHomepage: false,
+                status: '',
+                metaTitle: '',
+                metaDescription: '',
+                metaRobots: 'index, follow',
+                canonicalUrl: '',
+                featuredImage: {
+                    path: '',
+                    alt: '',
+                    caption: '',
+                    credits: ''
+                },
+                postViewOptions: {}
+            }
+        };
+    },
+    computed: {
+        isEdit () {
+            return !!this.postID;
+        }
+    },
+    mounted () {
+        if (this.isEdit) {
+            this.newPost = false;
+            this.loadPostData();
+        } else {
+            this.setDataLossWatcher();
+        }
+
+        this.$bus.$on('date-changed', (timestamp) => {
+            let format = 'MMM DD, YYYY  HH:mm';
+
+            if(this.$store.state.app.config.timeFormat == 12) {
+                format = 'MMM DD, YYYY  hh:mm a';
+            }
+
+            this.postData.creationDate.timestamp = timestamp;
+            this.postData.creationDate.text = this.$moment(this.postData.creationDate.timestamp).format(format);
+        });
+
+        this.$bus.$on('post-editor-possible-data-loss', () => {
+            this.possibleDataLoss = true;
+        });
+    },
+    methods: {
+        slugUpdated () {
+            this.postSlugEdited = true;
+        },
+        updateSlug () {
+            if(this.isEdit || this.postSlugEdited) {
+                return;
+            }
+
+            let slugValue = mainProcess.slug(this.postData.title);
+            this.postData.slug = slugValue;
+        },
+        loadPostData () {
+            // Send request for a post to the back-end
+            ipcRenderer.send('app-post-load', {
+                'site': this.$store.state.currentSite.config.name,
+                'id': this.postID
+            });
+
+            // Load post data
+            ipcRenderer.once('app-post-loaded', (event, data) => {
+                if(data !== false && this.postID !== 0) {
+                    let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
+                    this.postData = Utils.deepMerge(this.postData, loadedPostData);
+                }
+
+                setTimeout(() => {
+                    this.possibleDataLoss = false;
+                    this.setDataLossWatcher();
+                }, 100);
+            });
+        },
+        setDataLossWatcher () {
+            this.unwatchDataLoss = this.$watch('postData', (newValue, oldValue) => {
+                this.possibleDataLoss = true;
+                this.unwatchDataLoss();
+            }, { deep: true });
+        },
+        savePost (newPostStatus, preview = false, closeEditor = false) {
+            if (this.postData.title.trim() === '') {
+                this.$bus.$emit('alert-display', {
+                    message: 'You cannot save a post with empty title.'
+                });
+
+                return;
+            }
+
+            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+
+            if(!preview) {
+                this.savingPost(newPostStatus, postData, closeEditor);
+            } else {
+                return postData;
+            }
+        },
+        savingPost (newStatus, postData, closeEditor = false) {
+            // Send form data to the back-end
+            ipcRenderer.send('app-post-save', postData);
+
+            // Post save
+            ipcRenderer.once('app-post-saved', (event, data) => {
+                if (this.postID === 0) {
+                    this.postID = data.postID;
+                }
+
+                if (data.posts) {
+                    this.savedPost(newStatus, data, closeEditor);
+                } else {
+                    alert('An error occurred - please try again.');
+                }
+            });
+        },
+        savedPost (newStatus, updatedData, closeEditor = false) {
+            this.$store.commit('refreshAfterPostUpdate', updatedData);
+
+            if (closeEditor) {
+                this.closeEditor();
+                return;
+            } else {
+                // this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
+            }
+
+            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/markdown/' + this.postID);
+            let message = 'Changes have been saved';
+
+            if (this.newPost) {
+                this.newPost = false;
+
+                if (newStatus === 'draft') {
+                    message = 'New draft has been created';
+                } else {
+                    message = 'New post has been created';
+                }
+            }
+
+            this.$bus.$emit('message-display', {
+                message: message,
+                type: 'success',
+                lifeTime: 3
+            });
+
+            this.loadPostData();
+            this.possibleDataLoss = false;
+        },
+        toggleSidebar () {
+            this.sidebarVisible = !this.sidebarVisible;
+        },
+        closeEditor () {
+            let siteName = this.$route.params.name;
+            this.$router.push('/site/' + siteName + '/posts/');
+        }
+    },
+    beforeDestroy () {
+        if (this.unwatchDataLoss) {
+            this.unwatchDataLoss();
+        }
+
+        this.$bus.$off('date-changed');
+        this.$bus.$off('post-editor-possible-data-loss');
+    }
+};
+</script>
+
+<style lang="scss">
+@import '../scss/variables.scss';
+@import '../scss/mixins.scss';
+@import '../scss/editor/post-editors-common.scss';
+@import '../../node_modules/simplemde/dist/simplemde.min.css';
+
+.post-editor {
+    &-wrapper {
+        overflow: auto;
+        padding-top: 2.2rem;
+    }
+
+    &-form {
+        height: calc(100vh - 2.2rem);
+        overflow: scroll;
+
+        & > div {
+            padding: 9rem 4rem 3rem 4rem;
+        }
+
+        #post-title {
+            border: none;
+            box-shadow: none;
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0 10% 2.6rem;
+            padding: 0;
+            text-align: center;
+            width: 80%;
+            
+            &::placeholder {
+                color: rgba($color-helper-7, .5); 
+            }
+        }
+
+        .vue-simplemde {
+            margin: 0 auto;
+            max-width: 720px;
+
+            .CodeMirror {
+                border: none;
+                padding: 0;
+            }
+        }
+    }
+}
+
+body[data-os="win"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 3.6rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 3.6rem);
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 0;
+    }
+
+    .post-editor-form {
+        height: 100vh;
+    }
+}
+
+@media (max-width: 1400px) {    
+    .post-editor-form {
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+        
+            & + a {
+                top: 2.6rem;
+            }
+        }
+    }
+}
+    
+@media (max-width: 1600px) {    
+    .post-editor-form {
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+            width: 100%;
+        }
+    }
+}
+</style>

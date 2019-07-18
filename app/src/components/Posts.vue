@@ -433,6 +433,13 @@ export default {
         dropdownItems () {
             return [
                 {
+                    label: 'Use Block editor',
+                    activeLabel: 'Add new post',
+                    value: 'blockeditor',
+                    isVisible: () => true,
+                    onClick: this.addNewPost.bind(this, 'blockeditor')
+                },
+                {
                     label: 'Use TinyMCE editor',
                     activeLabel: 'Add new post',
                     value: 'tinymce',
@@ -440,11 +447,11 @@ export default {
                     onClick: this.addNewPost.bind(this, 'tinymce')
                 },
                 {
-                    label: 'Use Block editor',
+                    label: 'Use Markdown editor',
                     activeLabel: 'Add new post',
-                    value: 'blockeditor',
+                    value: 'markdown',
                     isVisible: () => true,
-                    onClick: this.addNewPost.bind(this, 'blockeditor')
+                    onClick: this.addNewPost.bind(this, 'markdown')
                 }
             ]
         }

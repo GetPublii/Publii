@@ -8,8 +8,9 @@ const AboutCredits = () => import('../components/AboutCredits');
 const Site = () => import('../components/Site');
 const AppSettings = () => import('../components/AppSettings');
 const Posts = () => import('../components/Posts');
-const PostEditorTinyMCE = () => import('../components/PostEditorTinyMCE');
 const PostEditorBlockEditor = () => import('../components/PostEditorBlockEditor');
+const PostEditorMarkdown = () => import('../components/PostEditorMarkdown');
+const PostEditorTinyMCE = () => import('../components/PostEditorTinyMCE');
 const Tags = () => import('../components/Tags');
 const Menus = () => import('../components/Menus');
 const Authors = () => import('../components/Authors');
@@ -132,12 +133,16 @@ export default new Router({
             component: AppThemes
         },
         {
-            path: '/site/:name/posts/editor/tinymce/:post_id?',
-            component: PostEditorTinyMCE
-        },
-        {
             path: '/site/:name/posts/editor/blockeditor/:post_id?',
             component: PostEditorBlockEditor
+        },
+        {
+            path: '/site/:name/posts/editor/markdown/:post_id?',
+            component: PostEditorMarkdown
+        },
+        {
+            path: '/site/:name/posts/editor/tinymce/:post_id?',
+            component: PostEditorTinyMCE
         }
     ]
 });

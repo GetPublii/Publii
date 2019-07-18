@@ -5,7 +5,16 @@ class PostHelper {
     static preparePostData (newPostStatus, postID, $store, postData) {
         let finalStatus = newPostStatus;
         let mediaPath = PostHelper.getMediaPath($store, postID);
-        let preparedText = $('#post-editor').val();
+        let preparedText = '';
+        
+        if (postData.editor === 'tinymce') {
+            preparedText = $('#post-editor').val();
+        }
+
+        if (postData.editor === 'markdown') {
+            preparedText = postData.text;
+        }
+        
         // Remove directory path from images src attribute
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
 
