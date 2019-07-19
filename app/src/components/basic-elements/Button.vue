@@ -75,7 +75,8 @@ export default {
                 'button-preloader': this.isPreloader,
                 'button-light': types.indexOf('light') > -1,
                 'button-active': types.indexOf('active') > -1,
-                'button-delete': types.indexOf('delete') > -1
+                'button-delete': types.indexOf('delete') > -1,
+                'button-clean': types.indexOf('clean') > -1,
             }
         }
     }
@@ -206,6 +207,25 @@ export default {
             }
         }
     }
+    
+     &-clean {
+        background: transparent;
+        box-shadow: none;
+        color: $link-color;        
+        font: {
+           size: 1.5rem;           
+           weight: 400;
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: transparent;
+            box-shadow: none;
+            color: $color-4;
+        }
+    }
 
     & > svg {
         display: inline-block;
@@ -308,6 +328,12 @@ export default {
         }
 
         &.button-outline {
+            & > svg {
+                fill: $color-7;
+            }
+        }
+        
+        &.button-clean {
             & > svg {
                 fill: $color-7;
             }

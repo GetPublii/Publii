@@ -94,7 +94,7 @@ export default {
         text-align: center;
         top: 2.2rem;
         transition: all .25s ease-out;
-        width: 220px;
+        width: 185px;
         z-index: 100;
 
         &.is-hidden {
@@ -108,14 +108,15 @@ export default {
 
             dt {
                 color: $color-5;
-                font-size: 3.2rem;
+                font-size: 3rem;
                 font-family: Georgia, serif;
             }
 
             dd {
                 border-bottom: 1px solid rgba($color-8, .4);
+                font-size: 1.5rem;
                 margin: 0 0 1rem 0;
-                padding: 0 0 1.5rem 0;
+                padding: 0 0 2rem 0;
 
                 &:last-child {
                     border-bottom: none;

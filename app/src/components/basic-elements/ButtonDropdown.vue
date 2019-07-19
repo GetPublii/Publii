@@ -148,8 +148,7 @@ export default {
 
     &-trigger {
         border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-        border-right: 1px inset $color-1;
+        border-bottom-left-radius: 3px;        
         display: block;
         height: 4.2rem;
         left: 0;

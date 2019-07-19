@@ -28,12 +28,12 @@
 
             <p-button
                 id="post-stats-button"
-                type="outline icon"
+                type="clean icon small"
                 icon="stats"
                 title="Toggle post statistics panel"
                 @click.native="togglePostStats">
-                <template v-if="!writersPanelOpen">Show stats</template>
-                <template v-else>Hide stats</template>
+                <template v-if="!writersPanelOpen">View Stats</template>
+                <template v-else>Hide Stats</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />

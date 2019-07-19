@@ -12,7 +12,7 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="link-color"
+                        primaryColor="color-1"
                         name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
@@ -112,52 +112,54 @@
                             </dl>                        
                         </div>
 
-                        <label id="post-featured-wrapper">
-                            <switcher
-                                v-model="$parent.postData.isFeatured" />
-                            <span>
-                                Mark as featured 
-                            </span>
+                        <div class="post-action">
+                            <label id="post-featured-wrapper">
+                                <switcher
+                                    v-model="$parent.postData.isFeatured" />
+                                <span>
+                                    Mark as featured 
+                                </span>
 
-                            <icon
-                                title="Mark as featured"
-                                class="switcher-item-icon-helper"
-                                name="featured-post"
-                                size="xs"
-                                primaryColor="color-helper-1" />
-                        </label>
+                                <icon
+                                    title="Mark as featured"
+                                    class="switcher-item-icon-helper"
+                                    name="featured-post"
+                                    size="xs"
+                                    primaryColor="color-helper-1" />
+                            </label>
 
-                        <label id="post-hidden-wrapper">
-                            <switcher 
-                                title="Post will not appear in any generated post lists such as tag or author pages"
-                                v-model="$parent.postData.isHidden" />
-                            <span title="Post will not appear in any generated post lists such as tag or author pages">
-                                Hide post
-                            </span>
+                            <label id="post-hidden-wrapper">
+                                <switcher 
+                                    title="Post will not appear in any generated post lists such as tag or author pages"
+                                    v-model="$parent.postData.isHidden" />
+                                <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                    Hide post
+                                </span>
 
-                            <icon
-                                title="Hide Post"
-                                class="switcher-item-icon-helper"
-                                name="hidden-post"
-                                size="xs"
-                                primaryColor="color-6" />
-                        </label>
+                                <icon
+                                    title="Hide Post"
+                                    class="switcher-item-icon-helper"
+                                    name="hidden-post"
+                                    size="xs"
+                                    primaryColor="color-6" />
+                            </label>
 
-                        <label id="post-excluded-homepage-wrapper">
-                            <switcher 
-                                title="Post will not appear on homepage listing"
-                                v-model="$parent.postData.isExcludedOnHomepage" />
-                            <span title="Post will not appear on homepage listing">
-                                Exclude from homepage
-                            </span>
+                            <label id="post-excluded-homepage-wrapper">
+                                <switcher 
+                                    title="Post will not appear on homepage listing"
+                                    v-model="$parent.postData.isExcludedOnHomepage" />
+                                <span title="Post will not appear on homepage listing">
+                                    Exclude from homepage
+                                </span>
 
-                            <icon
-                                title="Exclude from homepage"
-                                class="switcher-item-icon-helper"
-                                name="excluded-post"
-                                size="xs"
-                                primaryColor="color-3"/>
-                        </label>
+                                <icon
+                                    title="Exclude from homepage"
+                                    class="switcher-item-icon-helper"
+                                    name="excluded-post"
+                                    size="xs"
+                                    primaryColor="color-3"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,7 +171,7 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="link-color"
+                        primaryColor="color-1"
                         name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
@@ -217,7 +219,7 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="s"
-                            primaryColor="link-color"
+                            primaryColor="color-1"
                             name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
@@ -278,7 +280,7 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="s"
-                            primaryColor="link-color"
+                            primaryColor="color-1"
                             name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">
@@ -359,7 +361,7 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="link-color"
+                        primaryColor="color-1"
                         name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
@@ -713,12 +715,11 @@ export default {
         pointer-events: none;
         position: absolute;
         right: 0;
-        top: 2.2rem;
-        transition: opacity .25s ease-out;
+        top: 2.2rem;       
         width: 44.2rem;
         z-index: 100000;
 
-        &.is-visible {
+        &.is-visible {   
             opacity: 1;
             pointer-events: auto;
         }
@@ -744,12 +745,10 @@ export default {
             padding: calc(1rem + 0.6vw) 3.6rem;
         }
 
-        .post-info {
-            border-bottom: 1px solid $color-helper-8;
+        .post-info {            
             display: grid;
             grid-template-columns: 50% 50%;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1rem;
             
             &--nogrid {
                  display: block;
@@ -761,6 +760,7 @@ export default {
 
             dt {
                 color: $color-4;
+                font-size: 1.5rem;
                 margin: 0 0 .5rem 0;
             }
 
@@ -768,8 +768,8 @@ export default {
                 color: $color-7;
                 font-size: 1.4rem;
                 margin: 0;
-            }
-        }
+            }           
+        }            
 
         .post-editor-settings {
             .post-author-selector {
@@ -812,6 +812,12 @@ export default {
                     }
                 }
             }
+            
+            .post-action {            
+               label {
+                  line-height: 1.8;
+               }
+            }
         }
 
         .post-tags {
@@ -849,7 +855,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                padding: 3.6rem;
+                padding: 0 3.6rem 3.6rem;
 
                 .image-uploader {
                     margin-top: 0;
@@ -858,8 +864,7 @@ export default {
 
             &-header {
                 align-items: center;               
-                border-top: 1px solid $color-helper-8;
-                border-bottom: 1px solid $color-helper-8;
+                border-top: 1px solid $color-helper-8;                  
                 color: $color-4;
                 cursor: pointer;
                 display: flex;
@@ -897,8 +902,8 @@ export default {
                 }
             }
 
-            &-label {
-                font-weight: 400;
+            &-label {                
+                font-weight: 600;
                 left: 0;
                 position: relative;
                 transition: left .25s ease-out, color .0s ease-out;
@@ -924,7 +929,8 @@ export default {
 
             label {
                 display: block;
-                line-height: 2;
+                font-size: 1.5rem;
+                line-height: 2.6;
                 margin: 0 0 1rem 0;
 
                 input[type="text"],
@@ -945,7 +951,7 @@ export default {
                         width: 70%;
                     }
                 }
-            }
+            }            
 
             #post-featured-wrapper {
                 margin-top: 0;

@@ -254,7 +254,7 @@ export default {
     #post-preview-button {
         padding-left: 2.4rem;
         text-align: center;
-        width: 155px;
+        width: 122px;
     }
 }
 
