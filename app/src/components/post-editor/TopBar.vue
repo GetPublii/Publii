@@ -195,7 +195,7 @@ export default {
 
             if (postData) {
                 this.$bus.$emit('rendering-popup-display', {
-                    postID: this.postID,
+                    postID: this.$parent.postID,
                     postData: postData
                 });
             }
