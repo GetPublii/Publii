@@ -545,7 +545,7 @@ class GitlabPages {
     }
 
     readFile (filePath) {
-        return new Buffer(fs.readFileSync(filePath)).toString('base64');
+        return Buffer.from(fs.readFileSync(filePath)).toString('base64');
     }
 
     isBinaryFile (fullPath) {
