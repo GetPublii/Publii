@@ -5,6 +5,7 @@
 
 const slug = require('./../../../helpers/slug');
 const path = require('path');
+const MarkdownToHtml = require('./../text-renderers/markdown');
 const normalizePath = require('normalize-path');
 const URLHelper = require('./url');
 const UtilsHelper = require('./../../../helpers/utils');
@@ -23,7 +24,7 @@ class ContentHelper {
      * @param renderer
      * @returns {string}
      */
-    static prepareContent(postID, originalText, siteDomain, themeConfig, renderer) {
+    static prepareContent(postID, originalText, siteDomain, themeConfig, renderer, editor = 'tinymce') {
         let ampMode = renderer.ampMode;
         let domain = normalizePath(siteDomain);
         domain = URLHelper.fixProtocols(domain);
@@ -37,6 +38,8 @@ class ContentHelper {
 
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
+        console.log('EDITOR FOR:', postID, ' === ', editor);
+        preparedText = ContentHelper.parseText(preparedText, editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
         if(ampMode) {
@@ -85,6 +88,26 @@ class ContentHelper {
         }
 
         return preparedText;
+    }
+
+    /**
+     * Parse text using a editor-specific parser
+     * 
+     * @param {*} inputText 
+     * @param {*} editor 
+     */
+    static parseText (inputText, editor = 'tinymce') {
+        if (editor === 'tinymce') {
+            return inputText;
+        }
+
+        if (editor === 'markdown') {
+            return MarkdownToHtml.parse(inputText);
+        }
+
+        if (editor === 'blockeditor') {
+            return inputText;
+        }
     }
 
     /**

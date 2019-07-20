@@ -20,6 +20,7 @@ class RendererContextPostPreview extends RendererContext {
         this.postID = parseInt(this.renderer.postData.postID, 10);
         this.title = this.renderer.postData.title;
         this.postImage = this.renderer.postData.featuredImage;
+        this.editor = this.renderer.postData.editor;
 
         // Retrieve post tags
         if(this.renderer.postData.tags === '') {
@@ -457,6 +458,7 @@ class RendererContextPostPreview extends RendererContext {
 
         // Replace domain name constat with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
+        preparedText = ContentHelper.parseText(preparedText, this.editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
         preparedText = preparedText.replace(/<publii-amp>.*<\/publii-amp>/gmi, '');
