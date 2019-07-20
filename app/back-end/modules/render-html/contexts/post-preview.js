@@ -20,7 +20,7 @@ class RendererContextPostPreview extends RendererContext {
         this.postID = parseInt(this.renderer.postData.postID, 10);
         this.title = this.renderer.postData.title;
         this.postImage = this.renderer.postData.featuredImage;
-        this.editor = this.renderer.postData.editor;
+        this.editor = this.renderer.postData.additionalData.editor;
 
         // Retrieve post tags
         if(this.renderer.postData.tags === '') {
