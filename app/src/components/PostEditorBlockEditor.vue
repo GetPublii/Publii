@@ -6,9 +6,16 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <textarea id="post-editor"></textarea>
+                    <input
+                        id="post-title"
+                        ref="post-title"
+                        class="post-editor-form-title"
+                        placeholder="Add post title"
+                        v-model="postData.title"
+                        @keyup="updateSlug" />   
 
                     <publii-block-editor />
+                    <textarea id="post-editor"></textarea>
 
                     <input
                         name="image"
@@ -243,8 +250,91 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
+
+.post-editor {
+    &-wrapper {
+        overflow: auto;
+        padding-top: 2.2rem;
+    }
+
+    &-form {
+        height: calc(100vh - 2.2rem);
+        overflow: scroll;
+
+        & > div {
+            padding: 9rem 4rem 3rem 4rem;
+        }
+
+        #post-title {
+            border: none;
+            box-shadow: none;
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0 10% 2.6rem;
+            padding: 0;
+            text-align: center;
+            width: 80%;
+            
+            &::placeholder {
+                color: rgba($color-helper-7, .5); 
+            }
+        }
+    }
+
+    #post-editor {
+        display: none;
+    }
+}
+
+body[data-os="win"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 3.6rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 3.6rem);
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: calc(100vh - 2px);
+        padding-top: 0;
+    }
+
+    .post-editor-form {
+        height: 100vh;
+    }
+}
+
+@media (max-width: 1400px) {    
+    .post-editor-form {
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+        
+            & + a {
+                top: 2.6rem;
+            }
+        }
+    }
+}
+    
+@media (max-width: 1600px) {    
+    .post-editor-form {
+        #post-title {            
+            font-size: 2.8rem;
+            margin: 0 0 2.6rem;
+            width: 100%;
+        }
+    }
+}
 </style>
