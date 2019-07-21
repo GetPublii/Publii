@@ -57,6 +57,7 @@
     "node-expat": "^2.3.18",
     "node-version-compare": "^1.0.1",
     "normalize-path": "^2.0.1",
+    "publii-block-editor": "github:dziudek/publii-block-editor#master",
     "request": "^2.88.0",
     "sharp": "^0.22.1",
     "shuffle-array": "^1.0.1",

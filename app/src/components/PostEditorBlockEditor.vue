@@ -8,6 +8,8 @@
                 <div>
                     <textarea id="post-editor"></textarea>
 
+                    <publii-block-editor />
+
                     <input
                         name="image"
                         id="post-editor-fake-image-uploader"
@@ -25,6 +27,7 @@
 
 <script>
 import Vue from 'vue';
+import PubliiBlockEditor from 'publii-block-editor';
 import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
@@ -43,7 +46,8 @@ export default {
         'date-popup': DatePopup,
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
-        'post-editor-top-bar': PostEditorTopBar
+        'post-editor-top-bar': PostEditorTopBar,
+        'publii-block-editor': PubliiBlockEditor
     },
     data () {
         return {
