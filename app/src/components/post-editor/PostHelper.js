@@ -14,6 +14,10 @@ class PostHelper {
         if (postData.editor === 'markdown') {
             preparedText = postData.text;
         }
+
+        if (postData.editor === 'blockeditor') {
+            preparedText = $('#post-editor').val();
+        }
         
         // Remove directory path from images src attribute
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');

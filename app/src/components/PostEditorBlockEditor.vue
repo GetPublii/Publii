@@ -151,6 +151,11 @@ export default {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
+                    $('#post-editor').val(this.postData.text);
+
+                    setTimeout(() => {
+                        this.$bus.$emit('publii-block-editor-load');
+                    }, 0);
                 }
 
                 setTimeout(() => {
@@ -174,13 +179,17 @@ export default {
                 return;
             }
 
-            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            this.$bus.$emit('publii-block-editor-save');
 
-            if(!preview) {
-                this.savingPost(newPostStatus, postData, closeEditor);
-            } else {
-                return postData;
-            }
+            setTimeout(() => {
+                let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+
+                if(!preview) {
+                    this.savingPost(newPostStatus, postData, closeEditor);
+                } else {
+                    return postData;
+                }
+            }, 0);
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
