@@ -6,6 +6,7 @@
 const slug = require('./../../../helpers/slug');
 const path = require('path');
 const MarkdownToHtml = require('./../text-renderers/markdown');
+const BlocksToHtml = require('./../text-renderers/blockeditor');
 const normalizePath = require('normalize-path');
 const URLHelper = require('./url');
 const UtilsHelper = require('./../../../helpers/utils');
@@ -38,7 +39,6 @@ class ContentHelper {
 
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
-        console.log('EDITOR FOR:', postID, ' === ', editor);
         preparedText = ContentHelper.parseText(preparedText, editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
@@ -106,7 +106,7 @@ class ContentHelper {
         }
 
         if (editor === 'blockeditor') {
-            return inputText;
+            return BlocksToHtml.parse(inputText);
         }
     }
 
