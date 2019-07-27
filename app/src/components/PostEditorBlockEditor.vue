@@ -180,16 +180,13 @@ export default {
             }
 
             this.$bus.$emit('publii-block-editor-save');
+            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
 
-            setTimeout(() => {
-                let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
-
-                if(!preview) {
-                    this.savingPost(newPostStatus, postData, closeEditor);
-                } else {
-                    return postData;
-                }
-            }, 0);
+            if(!preview) {
+                this.savingPost(newPostStatus, postData, closeEditor);
+            } else {
+                return postData;
+            }
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
