@@ -12,7 +12,7 @@ function join () {
     let separator = inputs.shift();
     inputs.pop();
 
-    return new Handlebars.SafeString(inputs.join(separator));
+    return inputs.join(separator);
 }
 
 module.exports = join;
