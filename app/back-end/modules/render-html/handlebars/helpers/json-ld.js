@@ -127,7 +127,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
 
             jsonLDObject['description'] = context.data.root.post.excerpt;
 
-            if (context.data.config.post.displayAuthor) {
+            if (context.data.root.post.author && context.data.root.post.author.name) {
                 jsonLDObject['author'] = {
                     "@type": "Person",
                     "name": context.data.root.post.author.name
@@ -164,12 +164,14 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                     };
                 }
 
-                jsonLDObject['publisher']['logo'] = {
-                    "@type": "ImageObject",
-                    "url": logoUrl,
-                    "height": imageDimensions.height,
-                    "width": imageDimensions.width,
-                };
+                if (logoUrl.trim() !== '') {
+                    jsonLDObject['publisher']['logo'] = {
+                        "@type": "ImageObject",
+                        "url": logoUrl,
+                        "height": imageDimensions.height,
+                        "width": imageDimensions.width,
+                    };
+                }
             }
         }
 
