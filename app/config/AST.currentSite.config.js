@@ -74,7 +74,7 @@ const AstCurrentSiteConfig = {
             errorPage: '404.html',
             searchPage: 'search.html'
         },
-        ampIsEnabled: 1,
+        ampIsEnabled: 0,
         ampPrimaryColor: '#039be5',
         ampImage: '',
         ampShare: 1,

@@ -732,6 +732,14 @@
                     </div>
 
                     <div slot="tab-5">
+                        <field>
+                            <small
+                                slot="note"
+                                class="note">
+                                <strong>Remember:</strong> The AMP feature uses external JS and CSS files loaded from Google servers.
+                            </small>
+                        </field>
+
                         <field
                             id="amp-is-enabled"
                             label="Enable AMP">
