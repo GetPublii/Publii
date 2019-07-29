@@ -135,10 +135,17 @@ class Renderer {
      * Render the page content after removing the old output dir
      */
     async renderSite() {
-        if (this.singlePageMode) {
-            this.renderPostPreview();
-        } else {
-            await this.renderFullPreview();
+        try {
+            if (this.singlePageMode) {
+                this.renderPostPreview();
+            } else {
+                await this.renderFullPreview();
+            }
+        } catch (err) {
+            this.errorLog.push({
+                message: 'An error occurred during rendering process:',
+                desc: err.message
+            });
         }
 
         return true;
