@@ -305,6 +305,15 @@ class ContentHelper {
      * @private
      */
     static _addResponsiveAttributes(matches, url, themeConfig, domain) {
+        if (
+            url.indexOf('media/posts') === -1 && 
+            url.indexOf('media\posts') === -1 && 
+            url.indexOf('media/website') === -1 &&
+            url.indexOf('media\website') === -1
+        ) {
+            return matches + ' data-is-external-image="true" ';
+        }
+
         if(
             ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
             ContentHelper._imageIsLocal(url, domain) &&
