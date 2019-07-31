@@ -11,12 +11,7 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
-
-let sharp;
-
-if (process.platform !== 'linux') {
-  sharp = require('sharp');
-}
+const sharp = require('sharp');
 
 class Image extends Model {
     constructor(appInstance, imageData) {
@@ -443,12 +438,7 @@ class Image extends Model {
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
-        return (
-            process.platform === 'linux' || (
-                this.appInstance.appConfig.resizeEngine &&
-                this.appInstance.appConfig.resizeEngine === 'jimp'
-            )
-        );
+        return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
     }
 }
 
