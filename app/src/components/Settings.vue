@@ -732,14 +732,7 @@
                     </div>
 
                     <div slot="tab-5">
-                        <field>
-                            <small
-                                slot="note"
-                                class="note">
-                                <strong>Remember:</strong> The AMP feature uses external JS and CSS files loaded from Google servers.
-                            </small>
-                        </field>
-
+                        
                         <field
                             id="amp-is-enabled"
                             label="Enable AMP">
@@ -750,7 +743,8 @@
                             <small
                                 slot="note"
                                 class="note">
-                                AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast.
+                                AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>  when this option is enabled your website will load third-party scripts provided by Google's AMP CDN. 
+
                             </small>
                         </field>
 
