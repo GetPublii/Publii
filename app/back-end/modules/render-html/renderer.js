@@ -1440,9 +1440,20 @@ class Renderer {
      * Create feeds
      */
     generateFeeds() {
+        if (!this.siteConfig.advanced.feed.enableRss && !this.siteConfig.advanced.feed.enableJson) {
+            return;
+        }
+
         console.time('FEEDS');
-        this.generateFeed('xml');
-        this.generateFeed('json');
+
+        if (this.siteConfig.advanced.feed.enableRss) {
+            this.generateFeed('xml');
+        }
+
+        if (this.siteConfig.advanced.feed.enableJson) {
+            this.generateFeed('json');
+        }
+
         console.timeEnd('FEEDS');
     }
 

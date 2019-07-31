@@ -1138,6 +1138,27 @@
 
                     <div slot="tab-8">
                         <field
+                            id="feed-enable-rss"
+                            label="Enable RSS feed">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-enable-rss"
+                                    v-model="advanced.feed.enableRss" />
+                            </label>
+                        </field>
+
+                        <field
+                            id="feed-enable-json"
+                            label="Enable JSON feed">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-enable-json"
+                                    v-model="advanced.feed.enableJson" />
+                            </label>
+                        </field>
+                        
+                        <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-title"
                             label="Feed title:">
                             <dropdown
@@ -1149,7 +1170,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.title === 'customTitle'"
+                            v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
                             label="Custom feed title">
                             <label slot="field">
@@ -1161,6 +1182,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-full-text"
                             label="Show full text">
                             <label slot="field">
@@ -1174,10 +1196,10 @@
                                 class="note">
                                 Display full text of the post in the feed
                             </small>
-
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
                             label="Number of posts in feed">
                             <label slot="field">
@@ -1192,6 +1214,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-featured-image"
                             label="Show Featured image">
                             <label slot="field">
@@ -1205,7 +1228,6 @@
                                 class="note">
                                  Display a post's featured image in the feed
                             </small>
-
                         </field>
                     </div>
 

@@ -63,7 +63,9 @@ const AstCurrentSiteConfig = {
             titleValue: '',
             showFullText: 1,
             numberOfPosts: 10,
-            showFeaturedImage: 1
+            showFeaturedImage: 1,
+            enableRss: 1,
+            enableJson: 1
         },
         urls: {
             cleanUrls: false,
