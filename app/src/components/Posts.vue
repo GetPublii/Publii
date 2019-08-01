@@ -496,6 +496,11 @@ export default {
     methods: {
         addNewPost () {
             let siteName = this.$route.params.name;
+
+            if(this.filterValue.trim() !== '' && this.$store.state.app.config.alwaysSaveSearchState) {
+                localStorage.setItem('publii-posts-search-value', this.filterValue);
+            }
+
             this.$store.commit('setEditorOpenState', true);
             this.$router.push('/site/' + siteName + '/posts/editor/');
         },

@@ -1,4 +1,5 @@
 const AstAppConfig = {
+    alwaysSaveSearchState: false,
     backupsLocation: "",
     previewLocation: "",
     licenseAccepted: false,

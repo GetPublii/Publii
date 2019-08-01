@@ -57,6 +57,21 @@
             </field>
 
             <field
+                id="always-save-search-state"
+                label="Always save search state"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="always-save-search-state"
+                    v-model="alwaysSaveSearchState" />
+                <span
+                    slot="note"
+                    class="note">
+                    Enable this option if you want to save search state on posts listing while creating new post. By default Publii will save search state only when opening post to edit.
+                </span>
+            </field>
+
+            <field
                 id="show-modification-date-as-column"
                 label="Show modification date as column"
                 :labelSeparated="false">
@@ -160,6 +175,7 @@ export default {
     ],
     data () {
         return {
+            alwaysSaveSearchState: false,
             screensSelected: '',
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
@@ -209,6 +225,7 @@ export default {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;
+        this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
         this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
@@ -244,7 +261,8 @@ export default {
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
                 closeEditorOnSave: this.closeEditorOnSave,
-                showModificationDateAsColumn: this.showModificationDateAsColumn
+                showModificationDateAsColumn: this.showModificationDateAsColumn,
+                alwaysSaveSearchState: this.alwaysSaveSearchState
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
