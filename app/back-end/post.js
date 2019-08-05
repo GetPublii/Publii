@@ -307,6 +307,15 @@ class Post extends Model {
             // Change title (suffix with " Copy")
             let modifiedTitle = postToDuplicate.title + " Copy";
             let modifiedSlug = postToDuplicate.slug + '-copy';
+            let postStatus = postToDuplicate.status;
+
+            if (postStatus.indexOf('draft') === -1) {
+                postStatus = postStatus.replace('published', 'draft');
+
+                if (postStatus.indexOf('draft') === -1) {
+                    postStatus += ',draft';
+                }
+            }
 
             let newCopyPostSqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, @title, @authors, @slug, @text, @featured_image_id, @created_at, @modified_at, @status, @template)`);
             newCopyPostSqlQuery.run({
@@ -317,7 +326,7 @@ class Post extends Model {
                 featured_image_id: postToDuplicate.featured_image_id,
                 created_at: Date.now(),
                 modified_at: Date.now(),
-                status: postToDuplicate.status,
+                status: postStatus,
                 template: postToDuplicate.template
             });
         } else {
