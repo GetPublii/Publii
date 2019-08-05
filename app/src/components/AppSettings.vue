@@ -82,6 +82,16 @@
             </field>
 
             <field
+                id="show-post-slugs"
+                label="Show post slugs on the listing"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="show-post-slugs"
+                    v-model="showPostSlugs" />
+            </field>
+
+            <field
                 id="open-devtools-in-main"
                 label="Open DevTools automatically in the Main Window"
                 :labelSeparated="false">
@@ -183,6 +193,7 @@ export default {
             wideScrollbars: false,
             closeEditorOnSave: true,
             showModificationDateAsColumn: false,
+            showPostSlugs: false,
             locations: {
                 sites: '',
                 backups: '',
@@ -233,6 +244,7 @@ export default {
         this.screensSelected = this.$store.state.app.config.startScreen;
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
+        this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
     },
     methods: {
         goBack () {
@@ -262,6 +274,7 @@ export default {
                 wideScrollbars: this.wideScrollbars,
                 closeEditorOnSave: this.closeEditorOnSave,
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
+                showPostSlugs: this.showPostSlugs,
                 alwaysSaveSearchState: this.alwaysSaveSearchState
             };
 

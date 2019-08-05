@@ -11,7 +11,8 @@ const AstAppConfig = {
     timeFormat: 12,
     closeEditorOnSave: true,
     wideScrollbars: false,
-    showModificationDateAsColumn: false
+    showModificationDateAsColumn: false,
+    showPostSlugs: false
 };
 
 module.exports = AstAppConfig;

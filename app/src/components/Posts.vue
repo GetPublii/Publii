@@ -326,6 +326,12 @@
                     </h2>
 
                     <div 
+                        v-if="showPostSlugs"
+                        class="post-slug">
+                        URL: /{{ item.slug }}
+                    </div>
+
+                    <div 
                         v-if="item.tags"
                         class="post-tags">
                         <a
@@ -462,6 +468,9 @@ export default {
         },
         showModificationDateAsColumn () {
             return this.$store.state.app.config.showModificationDateAsColumn;
+        },
+        showPostSlugs () {
+            return this.$store.state.app.config.showPostSlugs;
         }
     },
     mounted () {
@@ -791,6 +800,12 @@ export default {
                 order: 1;
             }
         }
+    }
+
+    .post-slug {
+        color: $color-7;
+        font-size: 11px;
+        margin-top: 5px;
     }
 }
 
