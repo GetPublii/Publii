@@ -76,13 +76,13 @@ export default {
             if(closeTimestamp === null || data.notification.timestamp > parseInt(closeTimestamp, 10)) {
                 this.$store.commit('setNotification', {
                     timestamp: data.notification.timestamp,
-                    text: data.notification.text,
+                    text: data.notification.content,
                     visible: true
                 });
             } else {
                 this.$store.commit('setNotification', {
                     timestamp: data.notification.timestamp,
-                    text: data.notification.text,
+                    text: data.notification.content,
                     visible: false
                 });
             }
