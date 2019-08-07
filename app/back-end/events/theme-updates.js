@@ -1,6 +1,6 @@
 const ipcMain = require('electron').ipcMain;
 const path = require('path');
-const UpdatesHelper = require('../updates.helper.js');
+const UpdatesHelper = require('../helpers/updates.helper.js');
 
 /*
  * Events for the IPC communication regarding theme updates

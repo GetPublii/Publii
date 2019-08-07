@@ -20,14 +20,14 @@ class UpdatesHelper {
     }
 
     download () {
-        https.get(url, function (res) {
+        https.get(this.url, res => {
             let body = '';
 
-            res.on('data', function (chunk) {
-                body += chunk;
+            res.on('data', chunk => { 
+                body += chunk; 
             });
 
-            res.on('end', function () {
+            res.on('end', () => {
                 fs.writeFileSync(this.filePath, body, 'utf8');
                 this.handleResponse(body);
             });
@@ -43,8 +43,8 @@ class UpdatesHelper {
     }
 
     readExistingData () {
-        if(fs.existsSync(logFilePath)) {
-            let body = fs.readFileSync(logFilePath, 'utf8');
+        if (fs.existsSync(this.filePath)) {
+            let body = fs.readFileSync(this.filePath, 'utf8');
             this.handleResponse(body);
         } else {
             this.sendError();
