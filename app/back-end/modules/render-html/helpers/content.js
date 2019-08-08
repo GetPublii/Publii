@@ -395,7 +395,7 @@ class ContentHelper {
         });
 
         text = text.replace(/(<iframe)[\s\S]*?(<\/iframe>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-iframe layout="responsive" ')
+            return whole.replace(start, '<amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" ')
                         .replace(end, '</amp-iframe>');
         });
 
