@@ -9,19 +9,30 @@ let themeHelpers = {
         modifiedPostText = modifiedPostText.replace(/<img[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
             if (match.indexOf('data-is-external-image="true"') > -1) {
                 return match;
-            }
+            }  
             
-            if (lazyLoadEffect === 'lqip') {
-                match = match.replace('src="', 'data-src="');
-                match = match.replace('srcset="', 'data-srcset="');
-                if (match.indexOf('class="') > -1) {
-                    match = match.replace('class="', 'class="lazyload ');
-                } else {
-                    match = match.replace('<img', '<img class="lazyload"');
-                }
-                return match;
-            }
+             if (match.indexOf('width="') > -1 && match.indexOf('height="') > -1) {
+                let imgWidth = match.match(/width="(.*?)"/);
+                let imgHeight = match.match(/height="(.*?)"/);
 
+                if (imgWidth && imgWidth[1]) {
+                    imgWidth = parseInt(imgWidth[1], 10);
+                } else {
+                    imgWidth = NaN;
+                }
+
+                if (imgHeight && imgHeight[1]) {
+                    imgHeight = parseInt(imgHeight[1], 10);
+                } else {
+                    imgHeight = NaN;
+                }
+
+                if (!isNaN(imgWidth) && !isNaN(imgHeight)) {
+                    let aspectRatio = Number(imgWidth / imgHeight).toFixed(6);
+                    match = match.replace('width="', ' data-aspectratio="' + aspectRatio + '" width="');
+                }
+            }
+          
             // Create *-xs image path
             let image = url.split('.');
 
@@ -40,22 +51,18 @@ let themeHelpers = {
                 xsImage[xsImage.length - 2] = xsImage[xsImage.length - 2] + '/responsive';
                 xsImage = xsImage.join('/');
                 
-                if (lazyLoadEffect === 'blur') {
+                if (lazyLoadEffect !== 'fadein') {
                     // Replace src attribute with *-xs image path
-                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
-                    // change srcset to data-srcset
-                    match = match.replace('srcset="', 'data-srcset="');
-                }
-                
-                 if (lazyLoadEffect === 'fadein') {
+                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');                     
+                } else {
                     // Remove src attribute
-                    match = match.replace(/src=".*?"/gi, 'src="' + xsImage + '"');
-                    // change srcset to data-srcset
-                    match = match.replace('srcset="', 'data-srcset="');
+                    match = match.replace('src="', 'data-src="');                       
                 }                
                 
+                // change srcset to data-srcset
+                match = match.replace('srcset="', 'data-srcset="');
                 // replace sizes with data-sizes
-                match = match.replace(/sizes=".*?"/i, 'data-sizes="auto"');
+                match = match.replace(/sizes=".*?"/i, 'data-sizes="auto"');               
                 // add necessary CSS classes
                 if(match.indexOf('class="') > -1) {
                     match = match.replace('class="', 'class="lazyload ');
@@ -65,9 +72,9 @@ let themeHelpers = {
             }
             // return modified <img> tag
             return match;
-        });
-        
-            // Select all iframes from the content
+        });           
+                   
+        // Select all iframes from the content
         modifiedPostText = modifiedPostText.replace(/<iframe[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
             // Replace src attribute with data-src            
             match = match.replace('src="', 'data-src="');

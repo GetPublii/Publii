@@ -69,3 +69,15 @@
       <span>{{ translate 'partials.shareButtons.shareWithBuffer' }}</span>
    </a>
 {{/if}}
+
+{{#if @config.custom.shareWhatsApp}}
+   <a
+      href="https://wa.me/?text={{encodeUrlFragment title}} {{encodeUrlFragment url}}" 
+      class="js-share whatsapp"
+      rel="nofollow noopener noreferrer">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#whatsapp"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithWhatsApp' }}</span>
+   </a>
+{{/if}}
