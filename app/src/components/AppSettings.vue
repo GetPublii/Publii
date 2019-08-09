@@ -67,7 +67,7 @@
                 <span
                     slot="note"
                     class="note">
-                    Enable this option if you want to save search state on posts listing while creating new post. By default Publii will save search state only when opening post to edit.
+                    When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
                 </span>
             </field>
 
