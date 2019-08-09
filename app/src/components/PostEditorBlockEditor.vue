@@ -14,7 +14,7 @@
                         v-model="postData.title"
                         @keyup="updateSlug" />   
 
-                    <publii-block-editor />
+                    <publii-block-editor ref="editorInstance" />
                     <textarea id="post-editor"></textarea>
 
                     <input
@@ -111,6 +111,8 @@ export default {
         } else {
             this.setDataLossWatcher();
         }
+
+        this.$refs['editorInstance'].setPostID(this.postID);
 
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
@@ -212,7 +214,7 @@ export default {
                 this.closeEditor();
                 return;
             } else {
-                // this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
+                this.$refs['editorInstance'].setPostID(this.postID);
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
