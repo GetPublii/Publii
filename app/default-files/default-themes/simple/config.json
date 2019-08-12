@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.0.2.2",
+    "version": "2.0.3.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -686,8 +686,8 @@
             "name": "fontFamily",
             "label": "Font family",
             "group": "Fonts",
-            "note": "Select font family for headings and body section",
-            "value": "font-pair-1",
+            "note": "The 'OS Default Font' option will use the native system fonts of the browser your site visitors are using, providing a boost to speed and performance.<p><strong>Please note:</strong> when using Google Fonts, the IP address of your website visitors will be sent to Google to allow the correct fonts to be downloaded to their browser. The Google Fonts API limits the collection, storage and use of end-user data only to what is needed to deliver the fonts efficiently.</p>",
+            "value": "font-pair-0",
             "type": "select",
             "options": [
                 {
@@ -825,14 +825,14 @@
         {
             "name": "shareFacebook",
             "group": "Share Buttons",
-            "label": "Facebook share button",
+            "label": "Facebook",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareTwitter",
             "group": "Share Buttons",
-            "label": "Twitter share button",
+            "label": "Twitter",
             "value": false,
             "type": "checkbox"
         },
@@ -850,7 +850,7 @@
         {
             "name": "sharePinterest",
             "group": "Share Buttons",
-            "label": "Pinterest share button",
+            "label": "Pinterest",
             "value": false,
             "type": "checkbox"
         },
@@ -864,14 +864,21 @@
         {
             "name": "shareLinkedin",
             "group": "Share Buttons",
-            "label": "LinkedIn share button",
+            "label": "LinkedIn",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareBuffer",
             "group": "Share Buttons",
-            "label": "Buffer share button",
+            "label": "Buffer",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "shareWhatsApp",
+            "group": "Share Buttons",
+            "label": "WhatsApp",
             "value": false,
             "type": "checkbox"
         },
@@ -1286,7 +1293,7 @@
             "group": "Additional",
             "size": "small"
          },
-         {
+        {
             "name": "lazyLoad",
             "group": "Additional",
             "label": "Lazy Load",
@@ -1298,24 +1305,21 @@
             "name": "lazyLoadEffect",
             "label": "Lazy load effects",
             "group": "Additional",
-            "note": "More details you can find <a href='https://getpublii.com/docs/theme-settings.html' target='_blank'>here.</a>",
+            "note": "<strong>'Blur up'</strong> and <strong>'Fade in - LQIP'</strong> options use Low Quality Image Placeholder pattern; it means that initially load the low-quality images; once the page loaded they are replaced with the full quality images;<p><strong>'Fade in'</strong> does not use LQIP, but instead loads the images a lot faster; we recommended it for best-perceived performance; one minus of this technic is that 'src' attribute is missing, which causes HTML5 validation to fail.</p>",
             "value": "fadein",
             "type": "select",
             "options": [
                 {
                     "label": "Fade in",
                     "value": "fadein"
-
+                },
+                {
+                    "label": "Fade in - LQIP",
+                    "value": "fadeinlqip"
                 },
                 {
                     "label": "Blur up",
                     "value": "blur"
-
-                },
-                {
-                    "label": "No LQIP",
-                    "value": "lqip"
-
             }],
             "dependencies": [{
                 "field": "lazyLoad",

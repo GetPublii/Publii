@@ -10,12 +10,13 @@
                      <figure class="hero__image">
                         <img
                            class="hero__image-img lazyload"
-                           {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                           {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
                               src="{{urlXs}}"
                            {{else}}
                               data-src="{{url}}"
                            {{/checkIf}}
                            data-srcset="{{srcset.post}}"
+                           data-aspectratio="{{ math width '/' height }}"
                            data-sizes="auto"
                            alt="{{alt}}"
                            height="{{height}}"
@@ -51,7 +52,11 @@
                            <figure class="hero__image">
                               <img
                                  class="hero__image-img lazyload"
-                                 src="{{@config.custom.uploadHero}}"
+                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
+                                    src="{{@config.custom.uploadHero}}"
+                                 {{else}}
+                                    data-src="{{@config.custom.uploadHero}}"
+                                 {{/checkIf}}
                                  {{responsiveSrcSet @config.custom.uploadHero}}
                                  {{responsiveSizes}}
                                  data-sizes="auto"
@@ -81,7 +86,11 @@
                            <div class="hero__image">
                               <img
                                  class="hero__image-img lazyload"
-                                 src="{{@config.custom.uploadHero}}"
+                                 {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
+                                    src="{{@config.custom.uploadHero}}"
+                                 {{else}}
+                                    data-src="{{@config.custom.uploadHero}}"
+                                 {{/checkIf}}
                                  {{responsiveSrcSet @config.custom.uploadHero}}
                                  {{responsiveSizes}}
                                  data-sizes="auto"
@@ -123,10 +132,13 @@
                   {{#if @config.post.displayAuthor}}
                      <div class="post__meta post__meta--author">
                         {{#author}}
-                           {{#if avatar}}
-                              <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
+                           {{#if avatar}}                             
+                              {{#if @config.custom.lazyLoad}}
+                                 <img class="lazyload post__author-thumb" data-src="{{avatar}}" alt="{{name}}">
+                              {{else}}
+                                 <img src="{{avatar}}" alt="{{name}}" class="post__author-thumb">
+                              {{/if}}
                            {{/if}}
-
                            <a href="{{url}}" class="feed__author invert">{{name}}</a>
                         {{/author}}
                      </div>
@@ -180,8 +192,12 @@
                {{#if @config.post.displayAuthorBio}}
                   <div class="post__bio bio">
                      {{#author}}
-                        {{#if avatar}}
-                           <img src="{{avatar}}" alt="{{name}}" class="bio__avatar"/>
+                        {{#if avatar}}                         
+                           {{#if @config.custom.lazyLoad}}
+                              <img class="lazyload bio__avatar" data-src="{{avatar}}" alt="{{name}}">
+                           {{else}}
+                              <img src="{{avatar}}" alt="{{name}}" class="bio__avatar">
+                           {{/if}}
                         {{/if}}
                         <div class="bio__info">
                            <h3 class="bio__name">

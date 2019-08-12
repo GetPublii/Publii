@@ -57,6 +57,21 @@
             </field>
 
             <field
+                id="always-save-search-state"
+                label="Always save search state"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="always-save-search-state"
+                    v-model="alwaysSaveSearchState" />
+                <span
+                    slot="note"
+                    class="note">
+                    When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
+                </span>
+            </field>
+
+            <field
                 id="show-modification-date-as-column"
                 label="Show modification date as column"
                 :labelSeparated="false">
@@ -64,6 +79,16 @@
                     slot="field"
                     id="show-modification-date-as-column"
                     v-model="showModificationDateAsColumn" />
+            </field>
+
+            <field
+                id="show-post-slugs"
+                label="Show post slugs on the listing"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    id="show-post-slugs"
+                    v-model="showPostSlugs" />
             </field>
 
             <field
@@ -160,6 +185,7 @@ export default {
     ],
     data () {
         return {
+            alwaysSaveSearchState: false,
             screensSelected: '',
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
@@ -167,6 +193,7 @@ export default {
             wideScrollbars: false,
             closeEditorOnSave: true,
             showModificationDateAsColumn: false,
+            showPostSlugs: false,
             locations: {
                 sites: '',
                 backups: '',
@@ -190,15 +217,9 @@ export default {
             };
         },
         imageResizeEngines () {
-            if (process.platform === 'linux') {
-                return {
-                    'jimp': 'Jimp (slower but more stable)'
-                };
-            }
-
             return {
-                'sharp': 'Sharp (faster)',
-                'jimp': 'Jimp (slower but more stable)'
+                'sharp': 'Sharp',
+                'jimp': 'Jimp'
             };
         },
         checkSitesCatalog () {
@@ -215,6 +236,7 @@ export default {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;
+        this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
         this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
@@ -222,6 +244,7 @@ export default {
         this.screensSelected = this.$store.state.app.config.startScreen;
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
+        this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
     },
     methods: {
         goBack () {
@@ -250,7 +273,9 @@ export default {
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
                 closeEditorOnSave: this.closeEditorOnSave,
-                showModificationDateAsColumn: this.showModificationDateAsColumn
+                showModificationDateAsColumn: this.showModificationDateAsColumn,
+                showPostSlugs: this.showPostSlugs,
+                alwaysSaveSearchState: this.alwaysSaveSearchState
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

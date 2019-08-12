@@ -452,7 +452,7 @@
                     <small
                         slot="note"
                         class="note">
-                        More parallel operations can lead to upload errors on slow internet connections.
+                        More parallel operations can lead to upload errors on slow internet connections or error 403 due API rate limits.
                     </small>
                 </field>
 

@@ -49,7 +49,7 @@ var /*TYPE = {
       552: 'Requested file action aborted / Exceeded storage allocation (for current directory or dataset)',
       553: 'Requested action not taken / File name not allowed'
     },*/
-    bytesNOOP = new Buffer('NOOP\r\n');
+    bytesNOOP = Buffer.from('NOOP\r\n');
 
 var FTP = module.exports = function() {
   if (!(this instanceof FTP))

@@ -8,7 +8,7 @@
                <figure class="hero__image">
                   <img
                      class="hero__image-img lazyload"
-                     {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                     {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
                         src="{{@config.custom.uploadHero}}"
                      {{else}}
                         data-src="{{@config.custom.uploadHero}}"
@@ -38,7 +38,7 @@
                <div class="hero__image">
                   <img
                      class="hero__image-img lazyload"
-                     {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                     {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
                         src="{{@config.custom.uploadHero}}"
                      {{else}}
                         data-src="{{@config.custom.uploadHero}}"
@@ -85,7 +85,11 @@
                      {{#author}}
                         {{#if @config.custom.authorAvatar}}
                            {{#if avatar}}
-                              <img src="{{avatar}}" class="post__author-thumb" alt="{{name}}">
+                              {{#if @config.custom.lazyLoad}}
+                                 <img class="lazyload post__author-thumb" data-src="{{avatar}}" alt="{{name}}">
+                              {{else}}
+                                 <img src="{{avatar}}" alt="{{name}}" class="post__author-thumb">
+                              {{/if}}                      
                            {{/if}}
                         {{/if}}
                         {{#if @config.custom.authorAuthor}}
@@ -116,12 +120,13 @@
                         <div class="feed__image">
                            <img
                               class="lazyload"
-                              {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
+                              {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
                                  src="{{urlXs}}"
                               {{else}}
                                  data-src="{{url}}"
                               {{/checkIf}}
                               data-srcset="{{srcset.post}}"
+                              data-aspectratio="{{ math width '/' height }}"
                               data-sizes="auto"
                               height="{{height}}"
                               width="{{width}}"

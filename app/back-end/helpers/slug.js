@@ -31,8 +31,29 @@ slug.defaults.modes['rfc3986-non-unicode-with-dots-no-lower'] = {
 
 slug.defaults.mode = 'rfc3986-non-unicode';
 
+/**
+ * Define custom slug charmap
+ */
+slug.defaults.charmap['ä'] = 'ae';
+slug.defaults.charmap['Ä'] = 'AE';
+slug.defaults.charmap['ö'] = 'oe';
+slug.defaults.charmap['Ö'] = 'OE';
+slug.defaults.charmap['ü'] = 'ue';
+slug.defaults.charmap['Ü'] = 'UE';
+slug.defaults.charmap['ß'] = 'ss';
+slug.defaults.charmap['ẞ'] = 'SS';
+
 function createSlug(textToSlugify, filenameMode = false, saveLowerChars = false) {
-    textToSlugify = transliterate(textToSlugify);
+    textToSlugify = transliterate(textToSlugify, { replace: [
+        ['ä', 'ae'], 
+        ['Ä', 'AE'], 
+        ['ö', 'oe'], 
+        ['Ö', 'OE'], 
+        ['ü', 'ue'], 
+        ['Ü', 'UE'], 
+        ['ß', 'ss'], 
+        ['ẞ', 'SS']
+    ] });
 
     if(!filenameMode) {
         if(saveLowerChars) {

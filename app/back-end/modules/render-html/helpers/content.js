@@ -305,6 +305,15 @@ class ContentHelper {
      * @private
      */
     static _addResponsiveAttributes(matches, url, themeConfig, domain) {
+        if (
+            url.indexOf('media/posts') === -1 && 
+            url.indexOf('media\posts') === -1 && 
+            url.indexOf('media/website') === -1 &&
+            url.indexOf('media\website') === -1
+        ) {
+            return matches + ' data-is-external-image="true" ';
+        }
+
         if(
             ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
             ContentHelper._imageIsLocal(url, domain) &&
@@ -386,7 +395,7 @@ class ContentHelper {
         });
 
         text = text.replace(/(<iframe)[\s\S]*?(<\/iframe>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-iframe layout="responsive" ')
+            return whole.replace(start, '<amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" ')
                         .replace(end, '</amp-iframe>');
         });
 
@@ -404,6 +413,7 @@ class ContentHelper {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
 
         return text;
     }

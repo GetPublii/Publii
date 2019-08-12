@@ -88,11 +88,7 @@ class Netlify {
             this.deployment.outputLog.push('- - - - - - - - - - -');
             this.deployment.saveConnectionErrorLog(err);
             this.saveConnectionDebugLog();
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error'
-            });
+            this.onError(err);
 
             setTimeout(function () {
                 process.exit();
@@ -107,11 +103,21 @@ class Netlify {
         this.deployment.progressOfUploading = 0;
     }
 
-    onError () {
-        process.send({
-            type: 'web-contents',
-            message: 'app-connection-error'
-        });
+    onError (apiResponse = false) {
+        if (typeof apiResponse === 'boolean' || !apiResponse.body) {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error'
+            });
+        } else {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: JSON.parse(apiResponse.body).message
+                }
+            });
+        }
 
         setTimeout(function () {
             process.exit();

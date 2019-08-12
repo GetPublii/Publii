@@ -1,22 +1,18 @@
-let defaultResizeEngine = 'sharp';
-
-if (process.platform === 'linux') {
-  defaultResizeEngine = 'jimp';
-}
-
 const AstAppConfig = {
+    alwaysSaveSearchState: false,
     backupsLocation: "",
     previewLocation: "",
     licenseAccepted: false,
     openDevToolsInMain: false,
     openDevToolsInPreview: false,
-    resizeEngine: defaultResizeEngine,
+    resizeEngine: "sharp",
     sitesLocation: "",
     startScreen: "",
     timeFormat: 12,
     closeEditorOnSave: true,
     wideScrollbars: false,
-    showModificationDateAsColumn: false
+    showModificationDateAsColumn: false,
+    showPostSlugs: false
 };
 
 module.exports = AstAppConfig;

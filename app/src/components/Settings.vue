@@ -732,6 +732,7 @@
                     </div>
 
                     <div slot="tab-5">
+                        
                         <field
                             id="amp-is-enabled"
                             label="Enable AMP">
@@ -742,7 +743,8 @@
                             <small
                                 slot="note"
                                 class="note">
-                                AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast.
+                                AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>  when this option is enabled your website will load third-party scripts provided by Google's AMP CDN. 
+
                             </small>
                         </field>
 
@@ -1130,6 +1132,27 @@
 
                     <div slot="tab-8">
                         <field
+                            id="feed-enable-rss"
+                            label="Enable RSS feed">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-enable-rss"
+                                    v-model="advanced.feed.enableRss" />
+                            </label>
+                        </field>
+
+                        <field
+                            id="feed-enable-json"
+                            label="Enable JSON feed">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-enable-json"
+                                    v-model="advanced.feed.enableJson" />
+                            </label>
+                        </field>
+                        
+                        <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-title"
                             label="Feed title:">
                             <dropdown
@@ -1141,7 +1164,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.title === 'customTitle'"
+                            v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
                             label="Custom feed title">
                             <label slot="field">
@@ -1153,6 +1176,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-full-text"
                             label="Show full text">
                             <label slot="field">
@@ -1166,10 +1190,10 @@
                                 class="note">
                                 Display full text of the post in the feed
                             </small>
-
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
                             label="Number of posts in feed">
                             <label slot="field">
@@ -1184,6 +1208,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-featured-image"
                             label="Show Featured image">
                             <label slot="field">
@@ -1197,7 +1222,6 @@
                                 class="note">
                                  Display a post's featured image in the feed
                             </small>
-
                         </field>
                     </div>
 
@@ -1291,7 +1315,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                When enabled, related posts will be taken from all tags. Disable this option to only get related posts from the same tag as the main post.
+                                When enabled, related posts will be taken from all tags. When disabled, related posts will only be generated from the same tags as the current post.
                             </small>
                         </field>
                     </div>

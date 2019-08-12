@@ -61,6 +61,9 @@ textarea {
 .buffer {
   background: #333333; }
 
+.whatsapp {
+  background: #25D366; }
+
 ::-moz-selection {
   background: #D73A42;
   color: #FFFFFF; }
@@ -83,7 +86,8 @@ html {
       html {
         font-size: 1.2rem; } }
   html.no-scroll {
-    overflow: hidden; }
+    overflow: hidden;
+    position: fixed; }
 
 body {
   background: #FFFFFF;
@@ -1205,7 +1209,7 @@ textarea {
       height: inherit;
       -o-object-fit: cover;
       object-fit: cover;
-      width: 100%; }
+      width: inherit; }
     .hero__image > figcaption {
       background: #17181E;
       border-radius: 2px;
@@ -1229,6 +1233,8 @@ textarea {
   max-width: calc(42rem + 20%);
   padding: 0 6vw; }
   .feed__image > img {
+    display: inline-block;
+    height: auto;
     width: 100%; }
 
 .feed__meta {
@@ -1263,39 +1269,45 @@ textarea {
 .feed__readmore {
   margin-top: calc(1.13333rem + 0.25vw); }
 
-.post__image--left {
-  float: left;
-  margin-bottom: 1.7rem;
-  margin-right: 1.7rem;
-  max-width: 50%; }
-
-.post__image--right {
-  float: right;
-  margin-bottom: 1.7rem;
-  margin-left: 1.7rem;
-  max-width: 50%; }
-
-.post__image--center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center; }
-
-@media all and (min-width: 56.25em) {
+.post__image {
+  display: inline-block; }
+  .post__image > img {
+    display: inline-block; }
+  .post__image--left {
+    float: left;
+    margin-bottom: 1.7rem;
+    margin-right: 1.7rem;
+    max-width: 50%; }
+  .post__image--right {
+    float: right;
+    margin-bottom: 1.7rem;
+    margin-left: 1.7rem;
+    max-width: 50%; }
+  .post__image--center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; }
   .post__image--wide {
+    display: block; }
+    @media all and (min-width: 56.25em) {
+      .post__image--wide {
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        padding: 0 6vw;
+        text-align: center; }
+        .post__image--wide > img {
+          height: auto;
+          width: calc(42rem + 20%); } }
+  .post__image--full {
+    display: block;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
-    padding: 0 6vw;
     text-align: center; }
-    .post__image--wide > img {
-      margin: 0 auto;
-      width: calc(42rem + 20%); } }
-
-.post__image--full {
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%); }
-  .post__image--full > img {
-    width: 100%; }
+    .post__image--full > img {
+      display: block;
+      height: auto;
+      width: 100%; }
 
 .post__meta {
   color: gray-2;

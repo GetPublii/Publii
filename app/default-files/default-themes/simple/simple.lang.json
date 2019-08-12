@@ -22,7 +22,8 @@
             "shareWithPinterest": "Pinterest",
             "shareWithMix": "Mix",
             "shareWithLinkedIn": "LinkedIn",
-            "shareWithBuffer": "Buffer"
+            "shareWithBuffer": "Buffer",
+            "shareWithWhatsApp": "WhatsApp"
         },
         
         "footer": {

@@ -27,8 +27,9 @@
 
         <overlay
             v-if="themeIsOver"
-            :hasBorder="true">
-            Drop your theme here
+            :hasBorder="true"
+            :isBlue="true">
+            <div>Drop your theme here</div>
         </overlay>
     </div>
 </template>

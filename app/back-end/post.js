@@ -304,9 +304,35 @@ class Post extends Model {
 
         // Add duplicate post row
         if(postToDuplicate && postToDuplicate.id) {
-            // Change title (suffix with " Copy")
-            let modifiedTitle = postToDuplicate.title + " Copy";
-            let modifiedSlug = postToDuplicate.slug + '-copy';
+            // Change title (suffix with " (copy)")
+            let copySuffix = 1;
+            let modifiedTitle = postToDuplicate.title;
+            let postWithTheSameSlug = false;
+            let modifiedSlug = postToDuplicate.slug;
+            
+            if (modifiedTitle.substr(-7) !== ' (copy)') {
+                modifiedTitle += ' (copy)';
+            }
+
+            if (modifiedSlug.substr(-2).match(/-\d/)) {
+                modifiedSlug = modifiedSlug.substr(0, modifiedSlug.length - 2);
+            }
+
+            do {
+                copySuffix++;
+                postWithTheSameSlug = this.db.prepare(`SELECT id FROM posts WHERE slug = @slug LIMIT 1`).get({ slug: modifiedSlug + '-' + copySuffix });
+            } while (postWithTheSameSlug && postWithTheSameSlug.id);
+
+            modifiedSlug = modifiedSlug + '-' + copySuffix;
+            let postStatus = postToDuplicate.status;
+
+            if (postStatus.indexOf('draft') === -1) {
+                postStatus = postStatus.replace('published', 'draft');
+
+                if (postStatus.indexOf('draft') === -1) {
+                    postStatus += ',draft';
+                }
+            }
 
             let newCopyPostSqlQuery = this.db.prepare(`INSERT INTO posts VALUES(null, @title, @authors, @slug, @text, @featured_image_id, @created_at, @modified_at, @status, @template)`);
             newCopyPostSqlQuery.run({
@@ -317,7 +343,7 @@ class Post extends Model {
                 featured_image_id: postToDuplicate.featured_image_id,
                 created_at: Date.now(),
                 modified_at: Date.now(),
-                status: postToDuplicate.status,
+                status: postStatus,
                 template: postToDuplicate.template
             });
         } else {

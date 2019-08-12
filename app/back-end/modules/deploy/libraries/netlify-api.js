@@ -34,12 +34,19 @@ class NetlifyAPI {
             let filePath = filesToUpload[i];
             
             try {
-                await this.uploadFile(filePath, deployID);
+                let apiResponse = await this.uploadFile(filePath, deployID);
+
+                if (apiResponse.statusCode === 422) {
+                    return Promise.reject(apiResponse);
+                }
             } catch (e) {
                 try {
-                    await this.uploadFile(filePath, deployID);
+                    let apiResponse = await this.uploadFile(filePath, deployID);
+
+                    if (apiResponse.statusCode === 422) {
+                        return Promise.reject(apiResponse);
+                    }
                 } catch (e) {
-                    this.events.onError();
                     return Promise.reject(false);
                 }
             }
@@ -62,7 +69,8 @@ class NetlifyAPI {
             }
 
             let fileHash = await this.getFileHash(path.join(this.inputDir, filePath));
-            fileList['/' + filePath] = fileHash;
+            let fileKey = ('/' + filePath).replace(/\/\//gmi, '/');
+            fileList[fileKey] = fileHash;
         }
 
         // Save the files list
@@ -109,12 +117,14 @@ class NetlifyAPI {
     getFilesToUpload (filesList, hashesToUpload) {
         let filePaths = Object.keys(filesList.files);
         let filesToUpload = [];
+        let foundedHashes = [];
 
         for (let i = 0; i < filePaths.length; i++) {
             let filePath = filePaths[i];
             
             if (hashesToUpload.indexOf(filesList.files[filePath]) > -1) {
-                filesToUpload.push(filePath);
+                filesToUpload.push(filePath.replace(/\/\//gmi, '/'));
+                foundedHashes.push(filesList.files[filePath]);
             }
         }
 

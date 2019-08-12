@@ -11,13 +11,18 @@ export default {
         hasBorder: {
             default: false,
             type: Boolean
+        },
+        isBlue: {
+            default: false,
+            type: Boolean
         }
     },
     computed: {
         cssClasses: function() {
             return {
                 'overlay': true,
-                'has-border': this.hasBorder
+                'has-border': this.hasBorder,
+                'is-blue': this.isBlue
             };
         }
     }
@@ -54,6 +59,28 @@ export default {
     &.has-border {
         border: 3px dashed $color-9;
         border-radius: 10px;
+    }
+
+    &.is-blue {
+        border: 2px solid $color-1;
+        background: rgba($color-1, .17);
+        
+        & > div {
+            box-shadow: 0 0 3px rgba(black, .2);
+            background: $color-1;
+            border-radius: 3px;
+            color: $color-10;
+            font-size: 1.6rem;
+            font-weight: 500;
+            height: auto;
+            left: 50%;
+            line-height: 1.5;                
+            padding: 1.8rem 4rem 1.8rem 4rem;
+            position: absolute;
+            top: 50%; 
+            transform: translateX(-50%) translateY(-50%);
+            width: auto;              
+        }
     }
 }
 </style>
