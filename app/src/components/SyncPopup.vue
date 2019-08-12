@@ -330,25 +330,8 @@ export default {
             this.messageFromUploader = 'Connecting to the server...';
         });
 
-        ipcRenderer.on('app-connection-error', (event, data) => {
-            this.messageFromUploader = 'An error occurred during connecting to server...';
-            this.uploadError = true;
-            this.uploadingProgressColor = 'red';
-            this.uploadingProgress = 100;
-            this.uploadingProgressIsStopped = true;
-            this.syncInProgress = false;
-            this.$store.commit('setSidebarStatus', 'prepared');
-
-            if(data && data.additionalMessage) {
-                this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server: ' + data.additionalMessage
-                });
-            } else {
-                this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server. Please check your server settings or try again.'
-                });
-            }
-        });
+        ipcRenderer.off('app-connection-error', this.showError);
+        ipcRenderer.on('app-connection-error', this.showError);
 
         ipcRenderer.on('app-connection-success', () => {
             this.messageFromUploader = 'Connected to the server';
@@ -487,6 +470,25 @@ export default {
                 this.messageFromUploader = data.message;
             }
         },
+        showError: function(event, data) {
+            this.messageFromUploader = 'An error occurred during connecting to server...';
+            this.uploadError = true;
+            this.uploadingProgressColor = 'red';
+            this.uploadingProgress = 100;
+            this.uploadingProgressIsStopped = true;
+            this.syncInProgress = false;
+            this.$store.commit('setSidebarStatus', 'prepared');
+
+            if(data && data.additionalMessage) {
+                this.$bus.$emit('alert-display', {
+                    message: 'An error occurred during connecting to the server: ' + data.additionalMessage
+                });
+            } else {
+                this.$bus.$emit('alert-display', {
+                    message: 'An error occurred during connecting to the server. Please check your server settings or try again.'
+                });
+            }
+        }, 
         startUpload: function() {
             this.renderingInProgress = false;
             this.uploadInProgress = true;
@@ -573,7 +575,7 @@ export default {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
             });
-        },
+        }, 
         checkS3Config: function(deploymentConfig) {
             if(
                 deploymentConfig.s3 &&
@@ -657,8 +659,9 @@ export default {
     },
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
-        ipcRenderer.removeAllListeners('app-preview-render-error');
-        ipcRenderer.removeAllListeners('app-rendering-progress');
+        ipcRenderer.off('app-preview-render-error');
+        ipcRenderer.off('app-rendering-progress');
+        ipcRenderer.off('app-connection-error', this.showError);
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

@@ -135,10 +135,17 @@ class Renderer {
      * Render the page content after removing the old output dir
      */
     async renderSite() {
-        if (this.singlePageMode) {
-            this.renderPostPreview();
-        } else {
-            await this.renderFullPreview();
+        try {
+            if (this.singlePageMode) {
+                this.renderPostPreview();
+            } else {
+                await this.renderFullPreview();
+            }
+        } catch (err) {
+            this.errorLog.push({
+                message: 'An error occurred during rendering process:',
+                desc: err.message
+            });
         }
 
         return true;
@@ -1429,9 +1436,20 @@ class Renderer {
      * Create feeds
      */
     generateFeeds() {
+        if (!this.siteConfig.advanced.feed.enableRss && !this.siteConfig.advanced.feed.enableJson) {
+            return;
+        }
+
         console.time('FEEDS');
-        this.generateFeed('xml');
-        this.generateFeed('json');
+
+        if (this.siteConfig.advanced.feed.enableRss) {
+            this.generateFeed('xml');
+        }
+
+        if (this.siteConfig.advanced.feed.enableJson) {
+            this.generateFeed('json');
+        }
+
         console.timeEnd('FEEDS');
     }
 

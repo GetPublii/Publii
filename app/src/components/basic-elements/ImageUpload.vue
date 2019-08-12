@@ -83,7 +83,7 @@ export default {
     },
     watch: {
         value (newValue, oldValue) {
-            if (newValue !== '') {
+            if (newValue && typeof newValue === 'string') {
                 if (newValue.indexOf('https://') === 0 || newValue.indexOf('http://') === 0) {
                     this.filePath = newValue;
                 } else {
@@ -111,7 +111,7 @@ export default {
     },
     mounted () {
         setTimeout(() => {
-            if (this.value !== '') {
+            if (this.value && typeof this.value === 'string') {
                 if (this.value.indexOf('https://') === 0 || this.value.indexOf('http://') === 0) {
                     this.filePath = this.value;
                 } else {

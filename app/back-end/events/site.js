@@ -17,6 +17,7 @@ const URLHelper = require('../modules/render-html/helpers/url.js');
 class SiteEvents {
     constructor(appInstance) {
         let self = this;
+        this.regenerateProcess = false;
 
         /*
          * Reload site config and data
@@ -352,7 +353,17 @@ class SiteEvents {
          */
         ipcMain.on('app-site-regenerate-thumbnails', function(event, config) {
             let site = new Site(appInstance, config, true);
-            site.regenerateThumbnails(event.sender);
+            self.regenerateProcess = site.regenerateThumbnails(event.sender);
+        });
+
+        ipcMain.on('app-site-abort-regenerate-thumbnails', function(event, config) {
+            if (self.regenerateProcess) {
+                self.regenerateProcess.send({
+                    type: 'abort'
+                });
+                
+                self.regenerateProcess = false;
+            }
         });
 
         /*

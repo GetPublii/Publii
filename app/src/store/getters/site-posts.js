@@ -39,6 +39,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             id: post.id,
             editor: postEditor,
             title: post.title,
+            slug: post.slug,
             tags: postGetTags(state, post.id),
             status: post.status,
             created: post.created_at,

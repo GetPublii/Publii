@@ -11,12 +11,7 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
-
-let sharp;
-
-if (process.platform !== 'linux') {
-  sharp = require('sharp');
-}
+const sharp = require('sharp');
 
 class Image extends Model {
     constructor(appInstance, imageData) {
@@ -24,7 +19,7 @@ class Image extends Model {
         // Post ID
         this.id = parseInt(imageData.id, 10);
 
-        if(imageData.id === 'website') {
+        if (imageData.id === 'website') {
             this.id = 'website';
         }
 
@@ -35,7 +30,7 @@ class Image extends Model {
         // Image Type
         this.imageType = 'contentImages';
 
-        if(imageData.imageType) {
+        if (imageData.imageType) {
             this.imageType = imageData.imageType;
         }
     }
@@ -52,8 +47,9 @@ class Image extends Model {
             // Store it in the temp directory
             this.id = 'temp';
         }
+
         // For images added to existing posts
-        if(!this.path) {
+        if (!this.path) {
             return;
         }
 
@@ -69,14 +65,14 @@ class Image extends Model {
         let galleryDirPath = '';
         let responsiveDirPath = '';
 
-        if(this.id === 'website') {
+        if (this.id === 'website') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'website');
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'website', 'responsive');
         } else {
             dirPath = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString());
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString(), 'responsive');
 
-            if(this.imageType === 'galleryImages') {
+            if (this.imageType === 'galleryImages') {
                 galleryDirPath = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString(), 'gallery');
             }
         }
@@ -101,7 +97,7 @@ class Image extends Model {
         finalFileName = slug(finalFileName.name, false, true) + finalFileName.ext;
         newPath = path.join(dirPath, finalFileName);
 
-        if(this.imageType === 'galleryImages') {
+        if (this.imageType === 'galleryImages') {
             newPath = path.join(galleryDirPath, finalFileName);
         }
 
@@ -116,7 +112,7 @@ class Image extends Model {
                     let pathData = path.parse(newPath);
 
                     // Save responsive images
-                    if(generateResponsiveImages && self.allowedImageExtension(pathData.ext)) {
+                    if (generateResponsiveImages && self.allowedImageExtension(pathData.ext)) {
                         self.createResponsiveImages(newPath, self.imageType);
                     }
 
@@ -132,9 +128,10 @@ class Image extends Model {
             }
         }
 
+        // Get image dimensions 
         let dimensions = [false, false];
 
-        if(path.parse(this.path).ext === '.svg') {
+        if (path.parse(this.path).ext === '.svg') {
             dimensions = this.getSvgImageDimensions(this.path);
         } else {
             try {
@@ -166,12 +163,25 @@ class Image extends Model {
         let siteConfig = JSON.parse(fs.readFileSync(siteConfigPath));
         let imagesQuality = 60;
         let imageExtension = path.parse(originalPath).ext;
+        let imageDimensions = {
+            width: false, 
+            height: false
+        };
 
-        if(!this.allowedImageExtension(imageExtension)) {
+        if (!this.allowedImageExtension(imageExtension)) {
             return [];
         }
 
-        if(
+        try {
+            imageDimensions = sizeOf(this.path);
+        } catch(e) {
+            imageDimensions = {
+                width: false, 
+                height: false
+            };
+        }
+
+        if (
             siteConfig.advanced &&
             siteConfig.advanced.imagesQuality &&
             !isNaN(parseInt(siteConfig.advanced.imagesQuality, 10))
@@ -179,13 +189,13 @@ class Image extends Model {
             imagesQuality = siteConfig.advanced.imagesQuality;
             imagesQuality = parseInt(imagesQuality);
 
-            if(imagesQuality < 1 || imagesQuality > 100) {
+            if (imagesQuality < 1 || imagesQuality > 100) {
                 imagesQuality = 60;
             }
         }
 
         // If there is no selected theme
-        if(currentTheme === 'not selected' && imageType !== 'galleryImages') {
+        if (currentTheme === 'not selected' && imageType !== 'galleryImages') {
             return false;
         }
 
@@ -196,20 +206,20 @@ class Image extends Model {
         let dimensions = false;
         let dimensionsConfig = false;
 
-        if(imageType === 'featuredImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
+        if (imageType === 'featuredImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'featuredImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'featuredImages');
-        } else if(imageType === 'optionImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
+        } else if (imageType === 'optionImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'optionImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'optionImages');
-        } else if(imageType === 'contentImages' && Utils.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
+        } else if (imageType === 'contentImages' && Utils.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'contentImages');
-        } else if(imageType === 'galleryImages' && Utils.responsiveImagesConfigExists(themeConfig, 'galleryImages')) {
+        } else if (imageType === 'galleryImages' && Utils.responsiveImagesConfigExists(themeConfig, 'galleryImages')) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'galleryImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'galleryImages');
 
-            if(!dimensionsConfig) {
+            if (!dimensionsConfig) {
                 dimensions = ['thumbnail'];
 
                 dimensionsConfig = [];
@@ -221,20 +231,20 @@ class Image extends Model {
             }
         }
 
-        if(!dimensions) {
+        if (!dimensions) {
             return false;
         }
 
         let targetImagesDir = path.parse(originalPath).dir;
 
-        if(imageType !== 'galleryImages') {
+        if (imageType !== 'galleryImages') {
             targetImagesDir = path.join(targetImagesDir, 'responsive');
         }
 
         let promises = [];
 
         // create responsive images for each size
-        for(let name of dimensions) {
+        for (let name of dimensions) {
             let finalHeight = dimensionsConfig[name].height;
             let finalWidth = dimensionsConfig[name].width;
             let cropImage = dimensionsConfig[name].crop;
@@ -243,28 +253,36 @@ class Image extends Model {
             let destinationPath = path.join(targetImagesDir, filename + '-' + name + extension);
             let result;
 
-            if(!this.allowedImageExtension(extension)) {
+            if (!this.allowedImageExtension(extension)) {
                 continue;
             }
 
-            if(finalHeight === 'auto') {
+            if (imageDimensions.width !== false && finalWidth !== 'auto' && finalWidth > imageDimensions.width) {
+                finalWidth = imageDimensions.width;
+            }
+
+            if (imageDimensions.height !== false && finalHeight !== 'auto' && finalHeight > imageDimensions.height) {
+                finalHeight = imageDimensions.height;
+            }
+
+            if (finalHeight === 'auto') {
                 finalHeight = null;
 
-                if(this.shouldUseJimp()) {
+                if (this.shouldUseJimp()) {
                     finalHeight = Jimp.AUTO;
                 }
             }
             
-            if(finalWidth === 'auto') {
+            if (finalWidth === 'auto') {
                 finalWidth = null;
 
-                if(this.shouldUseJimp()) {
+                if (this.shouldUseJimp()) {
                     finalWidth = Jimp.AUTO;
                 }
             }
 
-            if(cropImage) {
-                if(this.shouldUseJimp()) {
+            if (cropImage) {
+                if (this.shouldUseJimp()) {
                     result = new Promise ((resolve, reject) => {
                         Jimp.read(originalPath, function (err, image) {
                             if (err) {
@@ -322,7 +340,7 @@ class Image extends Model {
                     }).catch(err => console.log(err));
                 }
             } else {
-                if(this.shouldUseJimp()) {
+                if (this.shouldUseJimp()) {
                     result = new Promise ((resolve, reject) => {
                         Jimp.read(originalPath, function (err, image) {
                             if (err) {
@@ -392,13 +410,13 @@ class Image extends Model {
         let svgHeight = svgFileContent.match(/\<svg.*height=['"]{1}(.*?)['"]{1}.*\>/mi);
         let svgViewBox = svgFileContent.match(/\<svg.*viewBox=['"]{1}(.*?)['"]{1}.*\>/mi);
 
-        if(svgWidth && svgHeight && svgWidth[1].indexOf('%') === 1 && svgHeight[1].indexOf('%') === 1) {
+        if (svgWidth && svgHeight && svgWidth[1].indexOf('%') === 1 && svgHeight[1].indexOf('%') === 1) {
             result.height = parseInt(svgHeight, 10);
             result.width = parseInt(svgWidth, 10);
-        } else if(svgViewBox && svgViewBox[1]) {
+        } else if (svgViewBox && svgViewBox[1]) {
             svgViewBox = svgViewBox[1].split(' ');
 
-            if(svgViewBox.length === 4) {
+            if (svgViewBox.length === 4) {
                 result.height = svgViewBox[3];
                 result.width = svgViewBox[2];
             }
@@ -420,12 +438,7 @@ class Image extends Model {
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
-        return (
-            process.platform === 'linux' || (
-                this.appInstance.appConfig.resizeEngine &&
-                this.appInstance.appConfig.resizeEngine === 'jimp'
-            )
-        );
+        return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
     }
 }
 

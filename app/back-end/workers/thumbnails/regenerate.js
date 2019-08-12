@@ -9,7 +9,7 @@ process.on('message', function(msg){
     let mediaPath = false;
     let catalog = false;
 
-    if(msg.type === 'dependencies') {
+    if (msg.type === 'dependencies') {
         context = msg.context;
         catalog = msg.catalog;
         mediaPath = msg.mediaPath;
@@ -17,11 +17,17 @@ process.on('message', function(msg){
         regenerateImages(mediaPath, catalog);
     }
 
-    if(msg.type === 'next-images') {
+    if (msg.type === 'next-images') {
         catalog = msg.catalog;
         mediaPath = msg.mediaPath;
 
         regenerateImages(mediaPath, catalog);
+    }
+
+    if (msg.type === 'abort') {
+        setTimeout(function() {
+            process.exit();
+        }, 1000);
     }
 });
 

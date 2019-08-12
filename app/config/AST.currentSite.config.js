@@ -63,7 +63,9 @@ const AstCurrentSiteConfig = {
             titleValue: '',
             showFullText: 1,
             numberOfPosts: 10,
-            showFeaturedImage: 1
+            showFeaturedImage: 1,
+            enableRss: 1,
+            enableJson: 1
         },
         urls: {
             cleanUrls: false,
@@ -74,7 +76,7 @@ const AstCurrentSiteConfig = {
             errorPage: '404.html',
             searchPage: 'search.html'
         },
-        ampIsEnabled: 1,
+        ampIsEnabled: 0,
         ampPrimaryColor: '#039be5',
         ampImage: '',
         ampShare: 1,
@@ -139,7 +141,7 @@ const AstCurrentSiteConfig = {
             repo: '',
             branch: '',
             token: '',
-            parallelOperations: 3
+            parallelOperations: 1
         },
         gitlab: {
             server: 'https://gitlab.com/',

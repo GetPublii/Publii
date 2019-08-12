@@ -26,7 +26,8 @@ class TagItem {
      * Prepares final tag data
      */
     prepareData() {
-        let addIndexHtml = this.renderer.previewMode;
+        let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex;
+        
         this.tagData = {
             id: this.tag.id,
             name: this.tag.name,

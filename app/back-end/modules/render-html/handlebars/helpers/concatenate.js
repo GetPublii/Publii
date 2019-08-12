@@ -11,7 +11,7 @@ function concatenate () {
     let inputs = Array.from(arguments);
     inputs.pop();
 
-    return new Handlebars.SafeString(inputs.join(''));
+    return inputs.join('');
 }
 
 module.exports = concatenate;
