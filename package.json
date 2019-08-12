@@ -75,11 +75,13 @@
       "node_modules/better-sqlite3/**/*",
       "node_modules/integer/**/*"
     ],
+    "afterPack": "./build/scripts/afterPack.js",
     "files": [
       "**/*",
       "dist/**/*"
     ],
     "linux": {
+      "icon": "./build/icon.icns",
       "target": [
         "rpm",
         "AppImage",
