@@ -6,13 +6,12 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <input
+                    <div
                         id="post-title"
                         ref="post-title"
                         class="post-editor-form-title"
-                        placeholder="Add post title"
-                        v-model="postData.title"
-                        @keyup="updateSlug" />   
+                        contenteditable="true"
+                        @keyup="updateTitle" />
 
                     <publii-block-editor ref="editorInstance" />
                     <textarea id="post-editor"></textarea>
@@ -133,6 +132,10 @@ export default {
         slugUpdated () {
             this.postSlugEdited = true;
         },
+        updateTitle () {
+            this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
+            this.updateSlug();
+        },
         updateSlug () {
             if(this.isEdit || this.postSlugEdited) {
                 return;
@@ -154,6 +157,7 @@ export default {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     $('#post-editor').val(this.postData.text);
+                    this.$refs['post-title'].innerText = this.postData.title;
 
                     setTimeout(() => {
                         this.$bus.$emit('publii-block-editor-load');
@@ -289,9 +293,13 @@ export default {
             padding: 0;
             text-align: center;
             width: 80%;
-            
-            &::placeholder {
+
+            &:empty {
                 color: rgba($color-helper-7, .5); 
+
+                &:before {
+                    content: "Add post title"
+                }
             }
         }
     }
