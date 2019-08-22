@@ -318,8 +318,12 @@ class App {
             let account = passwordData[1];
             let retrievedPassword = '';
 
-            if(passwordSafeStorage) {
-                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+            if (passwordSafeStorage) {
+                try {
+                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+                } catch (e) {
+                    console.log('(!) Cannot retrieve password via keytar');
+                }
             }
 
             if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
