@@ -452,7 +452,8 @@ class App {
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
-            nodeIntegration: true
+            nodeIntegration: true,
+            webviewTag: true
         };
 
         let displays = electron.screen.getAllDisplays();

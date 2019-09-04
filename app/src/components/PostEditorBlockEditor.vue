@@ -6,6 +6,9 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
+                    <webview :src="editorHtmlPath" nodeintegration></webview>
+                    
+                    <!--
                     <div
                         id="post-title"
                         ref="post-title"
@@ -15,12 +18,7 @@
 
                     <publii-block-editor ref="editorInstance" />
                     <textarea id="post-editor"></textarea>
-
-                    <input
-                        name="image"
-                        id="post-editor-fake-image-uploader"
-                        class="is-hidden"
-                        type="file" />
+                    -->
                 </div>
             </div>
 
@@ -101,6 +99,9 @@ export default {
     computed: {
         isEdit () {
             return !!this.postID;
+        },
+        editorHtmlPath () {
+            return 'file://' + window.__dirname + '/../node_modules/publii-block-editor/dist/index.html';
         }
     },
     mounted () {
@@ -279,27 +280,13 @@ export default {
 
         & > div {
             padding: 9rem 4rem 3rem 4rem;
-        }
 
-        #post-title {
-            border: none;
-            box-shadow: none;
-            display: block;
-            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 3.5rem;
-            font-weight: 600;
-            line-height: 1.2;
-            margin: 0 10% 2.6rem;
-            padding: 0;
-            text-align: center;
-            width: 80%;
-
-            &:empty {
-                color: rgba($color-helper-7, .5); 
-
-                &:before {
-                    content: "Add post title"
-                }
+            & > webview {
+                height: 100vh;
+                left: 0;
+                position: absolute;
+                top: 0;
+                width: 100%;
             }
         }
     }
@@ -328,29 +315,6 @@ body[data-os="linux"] {
 
     .post-editor-form {
         height: 100vh;
-    }
-}
-
-@media (max-width: 1400px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-        
-            & + a {
-                top: 2.6rem;
-            }
-        }
-    }
-}
-    
-@media (max-width: 1600px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-            width: 100%;
-        }
     }
 }
 </style>
