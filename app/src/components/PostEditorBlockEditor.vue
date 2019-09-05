@@ -105,19 +105,10 @@ export default {
         }
     },
     mounted () {
-        if (this.isEdit) {
-            this.newPost = false;
-            this.loadPostData();
-        } else {
-            this.setDataLossWatcher();
-        }
-
-        this.$refs['editorInstance'].setPostID(this.postID);
-
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
 
-            if(this.$store.state.app.config.timeFormat == 12) {
+            if (this.$store.state.app.config.timeFormat == 12) {
                 format = 'MMM DD, YYYY  hh:mm a';
             }
 
@@ -128,13 +119,41 @@ export default {
         this.$bus.$on('post-editor-possible-data-loss', () => {
             this.possibleDataLoss = true;
         });
+
+        this.webview = document.querySelector('webview');
+        this.initCommunicationWithEditor();
+
+        this.webview.addEventListener('dom-ready', () => {
+            this.webview.openDevTools();
+        
+            if (this.isEdit) {
+                this.newPost = false;
+                this.loadPostData();
+            } else {
+                this.setDataLossWatcher();
+            }
+
+            setTimeout(() => {
+                this.webview.send('set-post-id', this.postID);
+            }, 1000);
+        });
     },
     methods: {
+        initCommunicationWithEditor () {
+            this.webview.addEventListener('ipc-message', this.editorOnIpcMessage);
+        },
+        editorOnIpcMessage(event) {
+            const {args, channel} = event;
+
+            if (channel === 'editor-title-updated') {
+                this.updateTitle(args[0]);
+            }
+        },
         slugUpdated () {
             this.postSlugEdited = true;
         },
-        updateTitle () {
-            this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
+        updateTitle (newTitle) {
+            this.postData.title = newTitle;
             this.updateSlug();
         },
         updateSlug () {
@@ -157,12 +176,8 @@ export default {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
-                    $('#post-editor').val(this.postData.text);
-                    this.$refs['post-title'].innerText = this.postData.title;
-
-                    setTimeout(() => {
-                        this.$bus.$emit('publii-block-editor-load');
-                    }, 0);
+                    this.webview.send('set-post-text', this.postData.text);
+                    this.webview.send('set-post-title', this.postData.title);
                 }
 
                 setTimeout(() => {
@@ -219,7 +234,7 @@ export default {
                 this.closeEditor();
                 return;
             } else {
-                this.$refs['editorInstance'].setPostID(this.postID);
+                this.webview.send('set-post-id', this.postID);
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
@@ -257,6 +272,7 @@ export default {
             this.unwatchDataLoss();
         }
 
+        this.webview.removeEventListener('ipc-message', this.editorOnIpcMessage);
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
     }
