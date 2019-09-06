@@ -118,7 +118,7 @@ export default {
         this.initCommunicationWithEditor();
 
         this.webview.addEventListener('dom-ready', () => {
-            this.webview.openDevTools();
+            // this.webview.openDevTools();
         
             if (this.isEdit) {
                 this.newPost = false;
@@ -129,6 +129,7 @@ export default {
 
             setTimeout(() => {
                 this.webview.send('set-post-id', this.postID);
+                this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
             }, 1000);
         });
     },
@@ -302,11 +303,11 @@ export default {
             padding: 9rem 4rem 3rem 4rem;
 
             & > webview {
-                height: 100vh;
+                bottom: 0;
                 left: 0;
                 position: absolute;
+                right: 0;
                 top: 0;
-                width: 100%;
             }
         }
     }
