@@ -7,18 +7,7 @@
             <div class="post-editor-form">
                 <div>
                     <webview :src="editorHtmlPath" nodeintegration></webview>
-                    
-                    <!--
-                    <div
-                        id="post-title"
-                        ref="post-title"
-                        class="post-editor-form-title"
-                        contenteditable="true"
-                        @keyup="updateTitle" />
-
-                    <publii-block-editor ref="editorInstance" />
                     <textarea id="post-editor"></textarea>
-                    -->
                 </div>
             </div>
 
@@ -93,6 +82,11 @@ export default {
                     credits: ''
                 },
                 postViewOptions: {}
+            },
+            saveAction: {
+                status: '',
+                preview: false,
+                closeEditor: false
             }
         };
     },
@@ -148,6 +142,20 @@ export default {
             if (channel === 'editor-title-updated') {
                 this.updateTitle(args[0]);
             }
+
+            if (channel === 'editor-post-saved') {
+                document.querySelector('#post-editor').value = args[0];
+                let postData = PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
+
+                if (!this.saveAction.preview) {
+                    this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
+                } else {
+                    this.$bus.$emit('rendering-popup-display', {
+                        postID: this.postID,
+                        postData: postData
+                    });
+                }
+            }
         },
         slugUpdated () {
             this.postSlugEdited = true;
@@ -201,14 +209,10 @@ export default {
                 return;
             }
 
-            this.$bus.$emit('publii-block-editor-save');
-            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
-
-            if(!preview) {
-                this.savingPost(newPostStatus, postData, closeEditor);
-            } else {
-                return postData;
-            }
+            this.saveAction.status = newPostStatus;
+            this.saveAction.preview = preview;
+            this.saveAction.closeEditor = closeEditor;
+            this.webview.send('post-save');
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
