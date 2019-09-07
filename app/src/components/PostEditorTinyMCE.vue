@@ -325,6 +325,10 @@ export default {
 @import '../scss/editor/post-editors-common.scss';
 
 .post-editor {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+
     &-form {
         #post-title {
             border: none;

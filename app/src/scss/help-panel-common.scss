@@ -1,0 +1,16 @@
+.help-panel {
+    background: $color-10;
+    border: 1px solid $color-8;
+    height: 100vh;
+    opacity: 0;
+    padding: 20px;
+    position: absolute;
+    right: -350px;
+    transition: all .25s ease-out;
+    width: 300px;
+
+    &.is-visible {
+        opacity: 1;
+        right: 0;
+    }
+}

@@ -25,9 +25,20 @@
                 </div>
             </div>
 
+            <p-button
+                id="post-help-button"
+                type="clean icon small"
+                icon="stats"
+                title="Show help"
+                @click.native="toggleHelp">
+                <template v-if="!helpPanelOpen">Show help</template>
+                <template v-else>Hide help</template>
+            </p-button>
+
             <sidebar :isVisible="sidebarVisible" />
             <author-popup />
             <date-popup />
+            <help-panel-markdown :isOpen="helpPanelOpen" />
         </div>
     </div>
 </template>
@@ -39,6 +50,7 @@ import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
+import HelpPanelMarkdown from './post-editor/HelpPanelMarkdown';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
@@ -53,12 +65,14 @@ export default {
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
+        'help-panel-markdown': HelpPanelMarkdown,
         'vue-simplemde': VueSimplemde
     },
     data () {
         return {
             postID: this.$route.params.post_id || 0,
             newPost: true,
+            helpPanelOpen: false,
             postSlugEdited: false,
             possibleDataLoss: false,
             unwatchDataLoss: null,
@@ -247,6 +261,9 @@ export default {
         closeEditor () {
             let siteName = this.$route.params.name;
             this.$router.push('/site/' + siteName + '/posts/');
+        },
+        toggleHelp () {
+            this.helpPanelOpen = !this.helpPanelOpen;
         }
     },
     beforeDestroy () {
@@ -267,6 +284,10 @@ export default {
 @import '../../node_modules/simplemde/dist/simplemde.min.css';
 
 .post-editor {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+
     &-wrapper {
         overflow: auto;
         padding-top: 2.2rem;
@@ -312,6 +333,13 @@ export default {
             }
         }
     }
+}
+
+#post-help-button {
+    bottom: 20px;
+    position: absolute;
+    right: 20px;
+    z-index: 100;
 }
 
 body[data-os="win"] {
