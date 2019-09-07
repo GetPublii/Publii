@@ -1,5 +1,5 @@
 <template>
-    <div class="post-editor" ref="post-editor">
+    <div class="post-editor post-block-editor" ref="post-editor">
         <topbar-appbar />
         <post-editor-top-bar />
 
