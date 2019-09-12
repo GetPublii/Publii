@@ -1,16 +1,88 @@
 .help-panel {
     background: $color-10;
-    border: 1px solid $color-8;
-    height: 100vh;
+    border-left: 1px solid $color-helper-8;
+    height: calc(100vh - 2.2rem);
     opacity: 0;
-    padding: 20px;
+    overflow: auto;
     position: absolute;
-    right: -350px;
-    transition: all .25s ease-out;
-    width: 300px;
-
+    right: 0;
+    top: 2.2rem;    
+    width: 44.2rem;
+    
+     &::before {
+            background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            content: "";
+            height: 12rem;
+            position: fixed;
+            top: 2.2rem;
+            right: 0;
+            width: 44.1rem;
+            z-index: 1;
+        }
+    
+     &::after {
+            background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            content: "";
+            height: 10rem;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 44.1rem;
+            z-index: 1;
+        }
+    
     &.is-visible {
         opacity: 1;
-        right: 0;
     }
+
+    & > div {
+        font-size: 14px;
+        padding: 10rem 3.6rem 8rem;
+         
+    }
+    
+    &-header {
+            border-bottom: 1px solid $color-helper-8; 
+            font-size: 1.8rem;
+            margin: -3.6rem 0 2rem;
+            padding: calc(1rem + 0.6vw) 0 2.25rem
+    }
+    
+    p {
+        span {
+            background: rgba($color-0, 0.2);
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+    }
+    
+    &-table {
+        border-collapse: collapse;   
+        margin-top: .6rem;
+        
+        &.col-3 {
+            td {
+                width: auto !important;
+            } 
+        }
+        
+        th {
+            border-bottom: 1px solid $color-helper-8; 
+            padding: 12px 14px;
+            text-align: left;
+        }
+        
+        td {            
+            border-bottom: 1px solid $color-helper-8; 
+            border-right: 1px solid $color-helper-8; 
+            padding: 12px 14px;
+            vertical-align: top;
+            white-space: nowrap;
+            width: 50%;
+            
+            &:last-child {
+                border-right: none;
+            }
+        }
+    }     
 }
