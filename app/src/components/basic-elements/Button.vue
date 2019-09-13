@@ -250,7 +250,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-5;
+            background: darken($color-2, 6%);
         }
 
         & > svg {

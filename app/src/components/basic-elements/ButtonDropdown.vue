@@ -147,8 +147,8 @@ export default {
     width: auto;
 
     &-trigger {
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;        
+        border-radius: 3px;
+            
         display: block;
         height: 4.2rem;
         left: 0;
