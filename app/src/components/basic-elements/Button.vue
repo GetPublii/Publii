@@ -119,7 +119,7 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: lighten($color-1, 10%);
+        background: darken($color-1, 6%);
         color: $color-10;
     }
 
@@ -144,7 +144,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: lighten($color-2, 10%);
+            background: darken($color-2, 6%);
             color: $color-10;
         }
     }
@@ -172,7 +172,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: lighten($color-3, 10%);
+            background: darken($color-3, 8%);
             color: $color-10;
         }
     }

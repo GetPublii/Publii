@@ -23,7 +23,7 @@
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
-                title="Select a server type:">
+                title="Select server type:">
             </p-header>
 
             <div 
@@ -1239,7 +1239,7 @@ export default {
         & > div {
             align-items: center;
             background: $color-9;
-            border: 2px solid transparent;
+            border: 1px solid transparent;
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
