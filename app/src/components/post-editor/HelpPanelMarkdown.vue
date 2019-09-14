@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'help-panel': true, 'is-visible': isOpen }">
         <div>           
-            <p>You can easly manage headings, text styles or create other HTML elemetns by using the following keyboard shortcuts or typing markdown syntax.</p>
+            <p>You can easly manage headings, text styles or create other HTML elements by using the following keyboard shortcuts or typing markdown syntax:</p>
             <table class="help-panel-table col-3">
                 <tr>
                     <th>Element</th>

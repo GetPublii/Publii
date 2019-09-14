@@ -55,13 +55,12 @@ export default {
  */
 .single-site {
     align-items: center;
-    background: $color-10;   
-    border-top: 1px solid rgba($color-8, .45);
+    background: $color-10;      
     border-radius: 4px;
     cursor: pointer;   
     display: flex;    
     margin: 0;
-    padding: 0.7rem 2rem;    
+    padding: 0.55rem 2rem;    
    
     &-icon {
         align-items: center;       
