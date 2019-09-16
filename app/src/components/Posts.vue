@@ -385,21 +385,36 @@
             v-if="emptySearchResults"
             description="There are no posts matching your criteria."></empty-state>
 
-        <empty-state
+        <div
             v-if="!hasPosts"
-            imageName="posts.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="No posts available"
-            description="You don't have any post, yet. Let's fix that!">
+            class="empty-state-no-posts">
+
+            <img src="../../src/assets/svg/posts.svg" />
+
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
-                :onClick="addNewPost">
-                Add new post
+                :onClick="addNewPost.bind(this, 'blockeditor')">
+                Add new post (block)
             </p-button>
-        </empty-state>
+
+            <p-button
+                slot="button"
+                icon="add-site-mono"
+                type="icon"
+                :onClick="addNewPost.bind(this, 'markdown')">
+                Add new post (markdown)
+            </p-button>
+
+            <p-button
+                slot="button"
+                icon="add-site-mono"
+                type="icon"
+                :onClick="addNewPost.bind(this, 'tinymce')">
+                Add new post (Tiny)
+            </p-button>
+        </div>
     </section>
 </template>
 
