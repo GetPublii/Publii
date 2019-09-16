@@ -7,9 +7,9 @@
             :width="imageWidth"
             alt="">
 
-        <h2 v-if="title">
+        <h3 v-if="title">
             {{ title }}
-        </h2>
+        </h3>
 
         <p v-if="description">
             {{ description }}

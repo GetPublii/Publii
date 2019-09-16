@@ -391,7 +391,7 @@
             
            <div>               
                 <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="286" />
-                <h4>WYSIWYG editor</h4>
+                <h3>WYSIWYG editor</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
@@ -404,7 +404,7 @@
            
            <div>
                 <img src="../../src/assets/svg/block-editor.svg" height="286" width="286" />
-                <h4>Block editor</h4>
+                <h3>Block editor</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
@@ -417,7 +417,7 @@
             
            <div>                
                 <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="286" />
-                <h4>Markdown editor</h4>
+                <h3>Markdown editor</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
