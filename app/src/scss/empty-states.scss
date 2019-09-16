@@ -1,0 +1,59 @@
+.empty-state {
+    clear: both;
+    color: $color-7;
+    font-size: 1.6rem;
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    text-align: center;
+    top: 40%;
+    transform: translateY(-40%);
+    width: 100%;
+
+    &.post {
+        display: grid;
+        grid-template-columns: repeat(3, fit-content(400px));
+        grid-gap: 5vw;
+        justify-content: center;
+    }
+
+    h4 {
+        color: $color-5;
+        text-transform: none;
+    }
+
+    p {
+        margin: -0.5rem 0 3rem;
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+@media (max-height: 900px) {
+    .empty-state {
+        img {
+            height: auto;
+            max-width: 23rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+}
+
+@media (max-width: 1400px) {
+    .empty-state {
+        img {
+            height: auto;
+            max-width: 23rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+}
