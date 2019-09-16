@@ -392,7 +392,7 @@
            <div>               
                 <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="286" />
                 <h4>WYSIWYG editor</h4>
-                <p>I'm afraid that Monday is rather busy for me; I have lessons all afternoon to 6pm, then a 1-hour gap, then more lessons from 7pm.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
@@ -405,7 +405,7 @@
            <div>
                 <img src="../../src/assets/svg/block-editor.svg" height="286" width="286" />
                 <h4>Block editor</h4>
-                <p>I'm afraid that Monday is rather busy for me; I have lessons all afternoon to 6pm, then a 1-hour gap, then more lessons from 7pm.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
@@ -418,7 +418,7 @@
            <div>                
                 <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="286" />
                 <h4>Markdown editor</h4>
-                <p>Markdown editor is well designed for those who create content that undergoes rounds of edits from various stakeholders.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
