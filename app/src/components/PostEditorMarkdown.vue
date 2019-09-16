@@ -28,10 +28,10 @@
             <p-button
                 id="post-help-button"
                 type="clean icon small"
-                icon="stats"
-                title="Show help"
+                icon="help"
+                title="Help"
                 @click.native="toggleHelp">
-                <template v-if="!helpPanelOpen">Show help</template>
+                <template v-if="!helpPanelOpen">View help</template>
                 <template v-else>Hide help</template>
             </p-button>
 

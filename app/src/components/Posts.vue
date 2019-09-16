@@ -493,7 +493,7 @@ export default {
                     onClick: this.addNewPost.bind(this, 'blockeditor')
                 },
                 {
-                    label: 'Use TinyMCE editor',
+                    label: 'Use WYSIWYG editor',
                     activeLabel: 'Add new post',
                     value: 'tinymce',
                     isVisible: () => true,
