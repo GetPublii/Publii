@@ -144,7 +144,7 @@
                 icon="add-site-mono"
                 type="icon"
                 :onClick="showAddMenuForm">
-                Add menu
+                Add new menu
             </p-button>
         </empty-state>
 
