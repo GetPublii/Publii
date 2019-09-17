@@ -69,8 +69,8 @@ class BackupEvents {
         });
     }
 
-    removeBackups(siteName, backupsNames, event) {
-        let result = Backup.remove(siteName, backupsNames, this.app.appConfig.backupsLocation);
+    async removeBackups(siteName, backupsNames, event) {
+        let result = await Backup.remove(siteName, backupsNames, this.app.appConfig.backupsLocation);
 
         event.sender.send('app-backup-removed', {
             status: result.status,
