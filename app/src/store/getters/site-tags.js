@@ -8,7 +8,9 @@
  */
 
 export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
-    let tags = state.currentSite.tags.filter(tag => {
+    let tags = JSON.parse(JSON.stringify(state.currentSite.tags));
+    
+    tags = tags.filter(tag => {
         if(!filterValue) {
             return true;
         }

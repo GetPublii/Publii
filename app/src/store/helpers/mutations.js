@@ -142,17 +142,20 @@ export default {
         state.currentSite.themes = [...state.currentSite.themes, ...state.themes].slice();
     },
     setTags (state, tags) {
-        state.currentSite.tags = tags.slice();
+        Vue.set(state.currentSite, 'tags', tags.slice());
+    },
+    setPostsTags (state, postsTags) {
+        Vue.set(state.currentSite, 'postsTags', postsTags.slice());
     },
     removeTags (state, tagIDs) {
         state.currentSite.tags = state.currentSite.tags.filter(tag => tagIDs.indexOf(tag.id) === -1);
         state.currentSite.postsTags = state.currentSite.postsTags.filter(postTag => tagIDs.indexOf(postTag.tagID) === -1);
     },
     setAuthors (state, authors) {
-        state.currentSite.authors = authors.slice();
+        Vue.set(state.currentSite, 'authors', authors.slice());
     },
-    setPostAuthors (state, postAuthors) {
-        state.currentSite.postAuthors = postAuthors.slice();
+    setPostAuthors (state, postsAuthors) {
+        Vue.set(state.currentSite, 'postsAuthors', postsAuthors.slice());
     },
     removeAuthors (state, authorIDs) {
         state.currentSite.authors = state.currentSite.authors.filter(author => authorIDs.indexOf(author.id) === -1);
