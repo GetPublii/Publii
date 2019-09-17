@@ -38,11 +38,13 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
         return tagA[orderBy] - tagB[orderBy];
     });
 
+    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status.indexOf('trashed') > -1).map(post => post.id);
+
     tags = tags.map(tag => {
         let postsCounter = 0;
 
         postsCounter = state.currentSite.postsTags.filter(postTag => {
-            return postTag.tagID === tag.id;
+            return postTag.tagID === tag.id && deletedPostsIDs.indexOf(postTag.postID) === -1;
         }).length;
 
         tag.postsCounter = postsCounter;
