@@ -135,16 +135,16 @@
         <empty-state
             v-if="showEmptyState"
             imageName="menus.svg"
-            imageWidth="254"
-            imageHeight="284"
+            imageWidth="344"
+            imageHeight="286"
             title="No menus available"
-            description="You don't have any menu, yet. Let's fix that!">
+            description="You don't have any menu, yet. Let's create the first one!">
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
                 :onClick="showAddMenuForm">
-                Add new menu
+                Add menu
             </p-button>
         </empty-state>
 
