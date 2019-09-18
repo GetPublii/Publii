@@ -28,6 +28,7 @@
             <author-popup />
             <date-popup />
             <help-panel-block-editor :isOpen="helpPanelOpen" />
+            <search-popup />
         </div>
     </div>
 </template>
@@ -43,6 +44,7 @@ import HelpPanelBlockEditor from './post-editor/HelpPanelBlockEditor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
+import SearchPopup from './post-editor/SearchPopup';
 import Utils from './../helpers/utils';
 
 const mainProcess = remote.require('./main.js');
@@ -56,6 +58,7 @@ export default {
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
         'publii-block-editor': PubliiBlockEditor,
+        'search-popup': SearchPopup,
         'help-panel-block-editor': HelpPanelBlockEditor
     },
     data () {
@@ -139,7 +142,6 @@ export default {
 
         this.webview.addEventListener('dom-ready', () => {
             // this.webview.openDevTools();
-        
             if (this.isEdit) {
                 this.newPost = false;
                 this.loadPostData();

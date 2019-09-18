@@ -4,6 +4,7 @@ const electron = require('electron');
 const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
 const dialog = electron.dialog;
+const globalShortcut = electron.globalShortcut;
 const fs = require('fs');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
@@ -78,11 +79,15 @@ function handleSquirrelEvent() {
 let mainWindow;
 let appInstance;
 
-electronApp.on('window-all-closed', function() {
+electronApp.on('window-all-closed', function () {
     electronApp.quit();
 });
 
-electronApp.on('ready', function() {
+electronApp.on('will-quit', function () {
+    globalShortcut.unregister('CommandOrControl+F');
+});
+
+electronApp.on('ready', function () {
     let startupSettings = {
         'mainWindow': mainWindow,
         'app': electronApp,
@@ -94,6 +99,11 @@ electronApp.on('ready', function() {
     }
 
     appInstance = new App(startupSettings);
+
+    // Register search shortcut listener
+    globalShortcut.register('CommandOrControl+F', () => {
+        appInstance.getMainWindow().webContents.send('app-show-search-form'); 
+    });
 });
 
 // Export function to quit the app from the application menu on macOS

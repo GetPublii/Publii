@@ -31,7 +31,6 @@ window.addEventListener('contextmenu', () => {
     }
 });
 
-
 function spellCheckerReplaceSelectedText (replacementText) {
     let sel, range;
 
