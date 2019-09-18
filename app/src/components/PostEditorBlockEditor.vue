@@ -6,7 +6,10 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <webview :src="editorHtmlPath" nodeintegration></webview>
+                    <webview 
+                        :src="editorHtmlPath" 
+                        nodeintegration
+                        :preload="editorPreloadPath"></webview>
                     <textarea id="post-editor"></textarea>
                 </div>
             </div>
@@ -110,6 +113,9 @@ export default {
         },
         editorHtmlPath () {
             return 'file://' + window.__dirname + '/../node_modules/publii-block-editor/dist/index.html';
+        },
+        editorPreloadPath () {
+            return 'file://' + window.__dirname + '/editor-webview-preload.js';
         }
     },
     mounted () {
