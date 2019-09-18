@@ -387,33 +387,47 @@
 
         <div
             v-if="!hasPosts"
-            class="empty-state-no-posts">
+            class="empty-state post">
+            
+           <div>               
+                <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="286" />
+                <h3>WYSIWYG editor</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'tinymce')">
+                    Add new post
+                </p-button>    
+           </div>
+           
+           <div>
+                <img src="../../src/assets/svg/block-editor.svg" height="286" width="286" />
+                <h3>Block editor</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'blockeditor')">
+                    Add new post
+                </p-button>    
+           </div>
+            
+           <div>                
+                <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="286" />
+                <h3>Markdown editor</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'markdown')">
+                    Add new post
+                </p-button>    
+           </div>
 
-            <img src="../../src/assets/svg/posts.svg" />
-
-            <p-button
-                slot="button"
-                icon="add-site-mono"
-                type="icon"
-                :onClick="addNewPost.bind(this, 'blockeditor')">
-                Add new post (block)
-            </p-button>
-
-            <p-button
-                slot="button"
-                icon="add-site-mono"
-                type="icon"
-                :onClick="addNewPost.bind(this, 'markdown')">
-                Add new post (markdown)
-            </p-button>
-
-            <p-button
-                slot="button"
-                icon="add-site-mono"
-                type="icon"
-                :onClick="addNewPost.bind(this, 'tinymce')">
-                Add new post (Tiny)
-            </p-button>
         </div>
     </section>
 </template>
@@ -789,6 +803,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/empty-states.scss';
 
 .header {
     .col {

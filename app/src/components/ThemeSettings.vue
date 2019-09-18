@@ -292,20 +292,6 @@
                 </p-button>
             </p-footer>
         </div>
-
-        <empty-state
-            v-if="!siteHasTheme"
-            imageName="theme.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="You haven't selected any theme"
-            description="Please go to the Settings and select the theme first.">
-            <p-button
-                slot="button"
-                :onClick="goToSettings">
-                Go to settings
-            </p-button>
-        </empty-state>
     </section>
 </template>
 

@@ -24,22 +24,24 @@
         <empty-state
             v-if="noLocation"
             imageName="backup-path.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="Set your default backup location."
+            imageWidth="344"
+            imageHeight="286"
+            title="Set the default backup location."
             description="Your backup save file path hasn't been specified; let's fix that!">
             <p-button
                 slot="button"
+                icon="plus"
+                type="icon"
                 :onClick="goToSettings">
-                Set the backup location
+                Add backup location
             </p-button>
         </empty-state>
 
         <empty-state
             v-if="noBackups"
             imageName="backups.svg"
-            imageWidth="254"
-            imageHeight="284"
+            imageWidth="344"
+            imageHeight="286"
             title="No backups available"
             description="You don't have any backups, yet. Let's create the first one!">
             <p-button
@@ -48,7 +50,7 @@
                 type="icon"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">Create the first backup</template>
+                <template v-if="!operationInProgress">Create backup</template>
                 <template v-if="operationInProgress">Creating backup&hellip;</template>
             </p-button>
         </empty-state>
