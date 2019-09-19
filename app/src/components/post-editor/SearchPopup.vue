@@ -9,16 +9,16 @@
                 {{ currentResultIndex }} / 
             </template> 
             {{ resultsCount }}
-        </span>
-        <button @click.prevent="getNextResult()">
-            <icon
-                size="m"
-                name="arrow-down"  />
-        </button>
+        </span>        
         <button @click.prevent="getPrevResult()">
             <icon
                 size="m"
                 name="arrow-up"  />
+        </button>
+        <button @click.prevent="getNextResult()">
+            <icon
+                size="m"
+                name="arrow-down"  />
         </button>
         <button @click.prevent="finishSearch()">
             <icon
