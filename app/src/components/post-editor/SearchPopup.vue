@@ -10,9 +10,21 @@
             </template> 
             {{ resultsCount }}
         </span>
-        <button @click.prevent="getNextResult()">v</button>
-        <button @click.prevent="getPrevResult()">^</button>
-        <button @click.prevent="finishSearch()">x</button>
+        <button @click.prevent="getNextResult()">
+            <icon
+                size="m"
+                name="arrow-down"  />
+        </button>
+        <button @click.prevent="getPrevResult()">
+            <icon
+                size="m"
+                name="arrow-up"  />
+        </button>
+        <button @click.prevent="finishSearch()">
+            <icon
+                size="m"
+                name="close"  />
+        </button>
     </div>
 </template>
 
@@ -95,15 +107,17 @@ export default {
 
 .search-popup {
     background: $color-10;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .125);
+    border-radius: 6px;
+    box-shadow: 0 0 5px rgba($color-5, .125);
     left: 50%;
     opacity: 0;
+    padding: 15px 22px 15px 30px;
     pointer-events: none;
     position: fixed;
     top: 20px;
     transform: translateX(-50%);
     transition: all .25s ease-out;
-    width: 300px;
+    width: auto;
     z-index: 10000000;
 
     &.is-visible {
@@ -113,7 +127,38 @@ export default {
     }
 
     input {
-
+        border: none;
+        border-bottom: 1px solid $color-1;        
+        color: $color-7;
+        font-size: 18px;
+        font-weight: 500;
+        width: 300px;
+    }
+    
+    span {
+        color: $color-7;
+        display: inline-block;
+        font-size: 12px;  
+        margin-right: 20px;
+    }
+    
+    button {
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        vertical-align: middle;
+        text-align: center;
+        
+        & > svg {           
+            stroke: $color-7;
+        }
+        
+        &:hover {
+            
+            & > svg {           
+                stroke: $color-1;
+            }
+        }
     }
 }
 </style>

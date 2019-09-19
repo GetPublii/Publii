@@ -942,5 +942,22 @@
 		c-0.32-0.99-1.72-0.99-2.04,0L4.75,20.01L4.75,20.01z M54.44,20.01h-14.5l6.23-19.27c0.32-0.99,1.72-0.99,2.04,0L54.44,20.01
 		L54.44,20.01z"/>
     </symbol>
+    
+    <!-- Search icons  (rememebr to add stroke color via CSS e.g. stroke: #000;-->
+
+    <symbol id="close" viewBox="0 0 24 24"> 
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="8" y1="16" x2="16" y2="8"/>
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="16" y1="16" x2="8" y2="8"/>
+    </symbol>
+        
+    <symbol id="arrow-down" viewBox="0 0 24 24"> 
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="6" y1="9" x2="12" y2="15"/>
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="18" y1="9" x2="12" y2="15"/>
+    </symbol>
+        
+    <symbol id="arrow-up" viewBox="0 0 24 24"> 
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="6" y1="15" x2="12" y2="9"/>
+         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="18" y1="15" x2="12" y2="9"/>
+    </symbol>
         
 </svg>
