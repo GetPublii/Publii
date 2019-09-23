@@ -166,6 +166,10 @@ export default {
                 this.updateTitle(args[0]);
             }
 
+            if (channel === 'editor-content-updated') {
+                this.$bus.$emit('post-editor-possible-data-loss');
+            }
+
             if (channel === 'editor-post-saved') {
                 document.querySelector('#post-editor').value = args[0];
                 let postData = PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
