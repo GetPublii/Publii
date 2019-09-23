@@ -1,8 +1,8 @@
 .help-panel {
     background: $color-10;
     border-left: 1px solid $color-helper-8;
+    display: none;
     height: calc(100vh - 2.2rem);
-    opacity: 0;
     overflow: auto;
     position: absolute;
     right: 0;
@@ -32,7 +32,7 @@
         }
     
     &.is-visible {
-        opacity: 1;
+        display: block;
     }
 
     & > div {
