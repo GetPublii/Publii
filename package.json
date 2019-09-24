@@ -52,6 +52,7 @@
     "gulp-file-include": "^0.13.7",
     "gulp-sass": "^4.0.1",
     "mocha": "^3.2.0",
+    "node-loader": "^0.6.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
     "slug": "^0.9.1",

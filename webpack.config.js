@@ -74,6 +74,10 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.node$/,
+        use: 'node-loader'
       }
     ]
   },

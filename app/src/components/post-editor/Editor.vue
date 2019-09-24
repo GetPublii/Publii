@@ -6,6 +6,7 @@
 
 <script>
 import EditorBridge from './EditorBridge.js';
+import { webFrame } from 'electron';
 
 export default {
     name: 'editor',
@@ -25,6 +26,10 @@ export default {
     },
     beforeDestroy () {
         tinymce.remove();
+        window.removeEventListener('contextmenu', EditorBridge.spellCheckerContextMenu);
+        webFrame.setSpellCheckProvider('', {
+            spellCheck () {}
+        });
     }
 };
 </script>

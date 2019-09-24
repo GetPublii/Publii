@@ -1,6 +1,8 @@
 import EditorConfig from './../configs/postEditor.config.js';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, webFrame, remote } from 'electron';
 import Utils from './../../helpers/utils';
+import spellChecker from 'spellchecker';
+const { Menu, MenuItem } = remote;
 
 class EditorBridge {
     constructor(postID) {
@@ -281,6 +283,8 @@ class EditorBridge {
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();
             });
+
+            this.initSpellChecker();
         });
 
         editor.addButton('gallery', {
@@ -290,6 +294,75 @@ class EditorBridge {
                 editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
             }
         });
+    }
+
+    initSpellChecker () {
+        webFrame.setSpellCheckProvider('en-US', {
+            spellCheck (words, callback) {
+                setTimeout(() => {
+                    const misspelled = words.filter(x => spellChecker.isMisspelled(x));
+                    callback(misspelled);
+                }, 0);
+            }
+        });
+
+        let iframeWindow = document.getElementById('post-editor_ifr').contentWindow.window;
+
+        iframeWindow.addEventListener('contextmenu', () => {
+            let selectedText = iframeWindow.document.getSelection().toString();
+            let corrections = spellChecker.getCorrectionsForMisspelling(selectedText);
+            
+            if (corrections.length) {
+                let contextMenu = new Menu();
+        
+                for (let i = 0; i < corrections.length; i++) {
+                    contextMenu.append(new MenuItem({ 
+                        label: corrections[i], 
+                        click() { 
+                            EditorBridge.spellCheckerReplaceSelectedText(corrections[i], iframeWindow)
+                        } 
+                    }));
+                }
+        
+                contextMenu.popup();
+            }
+        });
+
+        window.addEventListener('contextmenu', EditorBridge.spellCheckerContextMenu);
+    }
+
+    static spellCheckerContextMenu () {
+        let selectedText = document.getSelection().toString();
+        let corrections = spellChecker.getCorrectionsForMisspelling(selectedText);
+        
+        if (corrections.length) {
+            let contextMenu = new Menu();
+    
+            for (let i = 0; i < corrections.length; i++) {
+                contextMenu.append(new MenuItem({ 
+                    label: corrections[i], 
+                    click() { 
+                        EditorBridge.spellCheckerReplaceSelectedText(corrections[i], window)
+                    } 
+                }));
+            }
+    
+            contextMenu.popup();
+        }
+    }
+
+    static spellCheckerReplaceSelectedText (replacementText, windowObject) {
+        let sel, range;
+    
+        if (windowObject.getSelection) {
+            sel = windowObject.getSelection();
+            
+            if (sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(windowObject.document.createTextNode(replacementText));
+            }
+        }
     }
 
     extensionsPath () {
