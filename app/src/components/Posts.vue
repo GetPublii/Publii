@@ -392,7 +392,7 @@
            <div>               
                 <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="286" />
                 <h3>WYSIWYG editor</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p>This editor provides a familiar word-processing experience, with additional tools for users that want to control every aspect of their page content.</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
@@ -405,20 +405,20 @@
            <div>
                 <img src="../../src/assets/svg/block-editor.svg" height="286" width="286" />
                 <h3>Block editor</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p>A modern and intuitive editor with shortkey and markdown support to make blogging easy, with no need to worry about HTML or other code elements.</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'blockeditor')">
-                    Add new post
+                    Add new post 
                 </p-button>    
            </div>
             
            <div>                
                 <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="286" />
                 <h3>Markdown editor</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi at elementum eleifend sit amet non lacus. Ut tincidunt ac ante finibu.</p>
+                <p>This editor supports Markdown syntax as shorthand for producing content quickly; great for extensive, no-frills projects such as documentation. </p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
