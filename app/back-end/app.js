@@ -12,6 +12,7 @@ const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
 const electron = require('electron');
+const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
 // Collection classes
 const Posts = require('./posts.js');
@@ -488,6 +489,7 @@ class App {
           windowParams.icon = path.join(__dirname, '..', 'src', 'assets', 'installation', '1024x1024.png');
         }
 
+        Menu.setApplicationMenu(null);
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);
         this.mainWindow.removeMenu();
