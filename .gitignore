@@ -6,7 +6,7 @@ npm-debug.log
 /node_modules/
 /app/node_modules/
 /coverage
-/dist/
+/dist
 /app/dist/
 /cache/
 /StaticBlog-darwin-x64/
