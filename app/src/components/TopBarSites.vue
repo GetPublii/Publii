@@ -63,7 +63,9 @@ export default {
 
             if (this.submenuIsOpen) {
                 setTimeout(() => {
+                    this.$refs['search'].$refs['search-input'].$refs['input'].value = '';
                     this.$refs['search'].$refs['search-input'].$refs['input'].focus();
+                    this.$bus.$emit('sites-list-filtered', '');
                 }, 100);
             }
         },

@@ -3,6 +3,7 @@
  */
 
 const fs = require('fs-extra');
+const os = require('os');
 const path = require('path');
 const sqlite = require('better-sqlite3');
 const Themes = require('./themes.js');
@@ -10,6 +11,7 @@ const Image = require('./image.js');
 const UtilsHelper = require('./helpers/utils');
 const childProcess = require('child_process');
 const slug = require('./helpers/slug');
+const trash = require('trash');
 
 class Site {
     constructor(appInstance, config, maintenanceMode = false) {
@@ -400,7 +402,19 @@ class Site {
         }
 
         setTimeout(() => {
-            fs.removeSync(sitePath);
+            if (
+                os.platform() !== 'darwin' || 
+                (
+                    os.platform() === 'darwin' &&
+                    parseInt(os.release().split('.')[0], 10) >= 16
+                )
+            ) {
+                (async () => {
+                    await trash(sitePath);
+                })();
+            } else {
+                fs.removeSync(sitePath);
+            }
         }, 500);
     }
 

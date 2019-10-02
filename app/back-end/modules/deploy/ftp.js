@@ -4,7 +4,6 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const md5 = require('md5');
 const ftpClient = require('./../custom-changes/ftp');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
@@ -48,7 +47,8 @@ class FTP {
                 host: this.deployment.siteConfig.deployment.server,
                 port: this.deployment.siteConfig.deployment.port,
                 user: this.deployment.siteConfig.deployment.username,
-                password: ftpPassword
+                password: ftpPassword,
+                rejectUnauthorized: this.deployment.siteConfig.deployment.rejectUnauthorized
             },
             connTimeout: 15000,
             pasvTimeout: 15000,
@@ -122,7 +122,10 @@ class FTP {
 
                 process.send({
                     type: 'web-contents',
-                    message: 'app-connection-error'
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: err.message
+                    }
                 });
 
                 setTimeout(function () {
@@ -470,7 +473,8 @@ class FTP {
                 host: deploymentConfig.server,
                 port: deploymentConfig.port,
                 user: deploymentConfig.username,
-                password: ftpPassword
+                password: ftpPassword,
+                rejectUnauthorized: deploymentConfig.rejectUnauthorized
             },
             connTimeout: 10000,
             pasvTimeout: 10000
@@ -533,7 +537,7 @@ class FTP {
             if(waitForTimeout) {
                 waitForTimeout = false;
                 client.destroy();
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                app.mainWindow.webContents.send('app-deploy-test-error', { message: err.message });
             }
         });
 

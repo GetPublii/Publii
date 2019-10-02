@@ -791,6 +791,7 @@ export default {
 .item {
     .post-tags {
         display: flex;
+        flex-wrap: wrap;
 
         a {
             order: 2;

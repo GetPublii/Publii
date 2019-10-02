@@ -46,7 +46,7 @@ export default {
                 if (sites.length > 0) {
                     this.$router.push('/site/' + sites[0] + '/posts/');
                 } else {
-                    this.$rotuer.push('/site/!/posts/');
+                    this.$router.push('/site/!/posts/');
                 }
             }
         }

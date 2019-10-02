@@ -12,6 +12,7 @@ const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
 const electron = require('electron');
+const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
 // Collection classes
 const Posts = require('./posts.js');
@@ -318,8 +319,12 @@ class App {
             let account = passwordData[1];
             let retrievedPassword = '';
 
-            if(passwordSafeStorage) {
-                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+            if (passwordSafeStorage) {
+                try {
+                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+                } catch (e) {
+                    console.log('(!) Cannot retrieve password via keytar');
+                }
             }
 
             if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
@@ -484,8 +489,10 @@ class App {
           windowParams.icon = path.join(__dirname, '..', 'src', 'assets', 'installation', '1024x1024.png');
         }
 
+        Menu.setApplicationMenu(null);
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);
+        this.mainWindow.removeMenu();
         this.mainWindow.loadURL('file://' + this.basedir + '/index.html');
 
         this.mainWindow.webContents.on('did-finish-load', function() {

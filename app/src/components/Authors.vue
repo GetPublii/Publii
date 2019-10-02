@@ -175,6 +175,16 @@ export default {
             return this.filterValue !== '' && !this.items.length;
         }
     },
+    beforeMount () {
+        ipcRenderer.send('app-authors-load', {
+            "site": this.$store.state.currentSite.config.name
+        });
+
+        ipcRenderer.once('app-authors-loaded', (event, data) => {
+            this.$store.commit('setAuthors', data.authors);
+            this.$store.commit('setPostsAuthors', data.postsAuthors);
+        });
+    },
     mounted: function() {
         this.orderBy = this.$store.state.ordering.authors.orderBy;
         this.order = this.$store.state.ordering.authors.order;

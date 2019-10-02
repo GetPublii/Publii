@@ -138,6 +138,10 @@ function hasActiveChild(items, context) {
 
         if(items[i].items.length) {
             result = hasActiveChild(items[i].items, context);
+
+            if (result) {
+                return true;
+            }
         }
     }
 
