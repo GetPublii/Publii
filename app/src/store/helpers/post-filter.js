@@ -3,13 +3,16 @@ export default (state, post, filterValue) => {
     post = JSON.parse(JSON.stringify(post));
     post.title = post.title.toLowerCase();
     post.slug = post.slug.toLowerCase();
+    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status.indexOf('trashed') > -1).map(post => post.id);
 
     // Check for author
     if(filterValue.indexOf('author:') === 0) {
         let authorToFind = filterValue.replace('author:', '');
 
         let results = state.currentSite.postsAuthors.filter(postAuthor => {
-            return postAuthor.postID === post.id && postAuthor.authorName.toLowerCase() === authorToFind;
+            return  postAuthor.postID === post.id && 
+                    deletedPostsIDs.indexOf(postAuthor.postID) === -1 && 
+                    postAuthor.authorName.toLowerCase() === authorToFind;
         });
 
         if(results.length) {
@@ -31,7 +34,9 @@ export default (state, post, filterValue) => {
         }
 
         let results = state.currentSite.postsTags.filter(postTags => {
-            return postTags.postID === post.id && postTags.tagID === tagID;
+            return  postTags.postID === post.id && 
+                    deletedPostsIDs.indexOf(postTags.postID) === -1 && 
+                    postTags.tagID === tagID;
         });
 
         if(results.length) {

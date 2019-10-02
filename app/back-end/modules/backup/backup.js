@@ -3,11 +3,13 @@
  */
 
 const fs = require('fs-extra');
+const os = require('os');
 const path = require('path');
 const Utils = require('./../../helpers/utils.js');
 const moment = require('moment');
 const archiver = require('archiver');
 const tar = require('tar');
+const trash = require('trash');
 
 class Backup {
     /**
@@ -148,7 +150,7 @@ class Backup {
      * @param backupsDir
      * @returns {{status: boolean, backups: *}}
      */
-    static remove(siteName, backupsNames, backupsDir) {
+    static async remove(siteName, backupsNames, backupsDir) {
         for(let backupName of backupsNames) {
             let backupFilePath = path.join(backupsDir, siteName, backupName);
 
@@ -160,19 +162,31 @@ class Backup {
             }
 
             try {
-                fs.unlinkSync(backupFilePath);
+                if (
+                    os.platform() !== 'darwin' || 
+                    (
+                        os.platform() === 'darwin' &&
+                        parseInt(os.release().split('.')[0], 10) >= 16
+                    )
+                ) {
+                    await (async () => {
+                        await trash(backupFilePath);
+                    })();
+                } else {
+                    fs.unlinkSync(backupFilePath);
+                }
             } catch (e) {
-                return {
+                return Promise.resolve({
                     status: false,
                     backups: Backup.loadList(siteName, backupsDir)
-                };
+                });
             }
         }
 
-        return {
+        return Promise.resolve({
             status: true,
             backups: Backup.loadList(siteName, backupsDir)
-        };
+        });
     }
 
     /**

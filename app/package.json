@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -67,6 +67,7 @@
     "striptags": "^3.1.1",
     "tar": "^2.2.1",
     "transliteration": "^1.6.2",
+    "trash": "^6.0.0",
     "unzipper": "^0.9.10",
     "vue": "^2.6.10",
     "vue-color": "^2.4.5",

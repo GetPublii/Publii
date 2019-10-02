@@ -9,6 +9,10 @@ const fs = require('fs');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 
+if (typeof process.env.NODE_ENV === 'undefined') {
+    process.env.NODE_ENV = 'production';
+}
+
 // this should be placed at top of main.js to handle setup events quickly
 if ((/^win/).test(process.platform) && handleSquirrelEvent()) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else

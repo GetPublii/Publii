@@ -8,6 +8,7 @@ module.exports = {
     PostEvents: require('./post.js'),
     SiteEvents: require('./site.js'),
     TagEvents: require('./tag.js'),
+    TagsEvents: require('./tags.js'),
     DeployEvents: require('./deploy.js'),
     SyncEvents: require('./sync.js'),
     MenuEvents: require('./menu.js'),
@@ -16,6 +17,7 @@ module.exports = {
     ThemeUpdatesEvents: require('./theme-updates.js'),
     BackupEvents: require('./backup.js'),
     AuthorEvents: require('./author.js'),
+    AuthorsEvents: require('./authors.js'),
     ImportEvents: require('./import.js'),
     FileManagerEvents: require('./file-manager.js')
 };

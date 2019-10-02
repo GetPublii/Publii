@@ -14,6 +14,7 @@ npm-debug.log
 /app/dist/*.svg
 !/app/dist/index.html
 !/app/dist/editor-webview-preload.js
+/dist
 /cache/
 /StaticBlog-darwin-x64/
 /StaticBlog-win32-x64/

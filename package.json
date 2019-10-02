@@ -19,11 +19,10 @@
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/back-end/**/*.spec.js --reporter dot",
     "update-editor": "cd app && npm i dziudek/publii-block-editor#master --save",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\"  --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=5.0.9 --overwrite --symlinks --app-version=0.36.0 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.36.0 --version-string.FileVersion=0.36.0 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
-    "packager:osx": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=darwin --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=5.0.9 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1 --ignore=app/node_modules/postcss* --overwrite --symlinks --icon app/src/assets/installation/icon.icns --osx-sign; electron-osx-flat Publii-darwin-x64/Publii.app",
-    "packager:linux": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=linux --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\" --ignore=app/node_modules/electron-* --electron-version=5.0.9 --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --overwrite --symlinks",
+    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\"  --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=5.0.11 --overwrite --symlinks --app-version=0.35.2 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.35.2 --version-string.FileVersion=0.35.2 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:osx": "electron-builder build --mac",
+    "packager:linux": "electron-builder build --linux",
     "postinstall": "opencollective postinstall",
-    "dist": "build",
     "osx-sign": "electron-osx-sign Publii-darwin-x64/Publii.app"
   },
   "repository": {
@@ -41,6 +40,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "electron-builder": "^21.2.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.11",
     "electron-rebuild": "^1.8.2",
@@ -64,12 +64,14 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^5.0.9",
+    "electron": "^5.0.11",
     "electron-packager": "^14.0.0",
-    "handlebars": "^4.0.5",
+    "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
+    "appId": "com.tidycustoms.publii",
+    "electronVersion": "5.0.11",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll)",
@@ -83,7 +85,13 @@
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
       "**/*",
-      "dist/**/*"
+      "dist/**/*",
+      "!app/node_modules/devtron/**/*",
+      "!app/node_modules/accessibility-developer-tools/**/*",
+      "!app/node_modules/babel*",
+      "!app/node_modules/postcss*",
+      "!app/node_modules/asn1/**/*",
+      "!app/node_modules/electron-*"
     ],
     "linux": {
       "icon": "./build/icon.icns",
@@ -95,6 +103,21 @@
       "category": "Development",
       "description": "Static Site CMS",
       "executableName": "Publii"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "app/src/assets/installation/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "target": "dmg",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "minimumSystemVersion": "10.10"
+    },
+    "dmg": {
+      "sign": false,
+      "icon": "build/icons/volume.icns",
+      "title": "Install Publii"
     }
   },
   "deb": {

@@ -296,6 +296,21 @@
                 </field>
 
                 <field
+                    v-if="['ftp+tls'].indexOf(deploymentMethodSelected) > -1"
+                    id="rejectunauthorized"
+                    label="Certificates"
+                    :labelSeparated="true">
+                    <switcher
+                        slot="field"
+                        id="rejectunauthorized"
+                        key="rejectunauthorized"
+                        v-model="deploymentSettings.rejectUnauthorized" />
+                    <template slot="second-label">
+                        Require the valid certificate for connection
+                    </template>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="sftpkey"
                     label="Your key">

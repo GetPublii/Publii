@@ -125,6 +125,7 @@ const AstCurrentSiteConfig = {
         username: '',
         password: '',
         askforpassword: false,
+        rejectUnauthorized: true,
         path: '',
         passphrase: '',
         sftpkey: '',

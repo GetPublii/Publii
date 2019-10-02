@@ -183,6 +183,16 @@ export default {
             return this.filterValue !== '' && !this.items.length;
         }
     },
+    beforeMount () {
+        ipcRenderer.send('app-tags-load', {
+            "site": this.$store.state.currentSite.config.name
+        });
+
+        ipcRenderer.once('app-tags-loaded', (event, data) => {
+            this.$store.commit('setTags', data.tags);
+            this.$store.commit('setPostsTags', data.postsTags);
+        });
+    },
     mounted: function() {
         this.orderBy = this.$store.state.ordering.tags.orderBy;
         this.order = this.$store.state.ordering.tags.order;

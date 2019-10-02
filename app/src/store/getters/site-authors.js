@@ -10,6 +10,8 @@
 import Utils from '../../helpers/utils.js';
 
 export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
+    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status.indexOf('trashed') > -1).map(post => post.id);
+    
     let authors = state.currentSite.authors.map(author => {
         let indexingOptionsEnabled = true;
         let authorTemplates = [];
@@ -44,7 +46,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
         }
 
         postsCounter = state.currentSite.postsAuthors.filter(postAuthor => {
-            return postAuthor.authorID === author.id;
+            return postAuthor.authorID === author.id && deletedPostsIDs.indexOf(postAuthor.postID) === -1;;
         }).length;
 
         return {
