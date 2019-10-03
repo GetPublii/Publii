@@ -54,7 +54,7 @@ visit our [Community Hub](https://getpublii.com/forum) or follow us on [Twitter]
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="graphs/contributors"><img src="https://opencollective.com/Publii/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/GetPublii/Publii/graphs/contributors"><img src="https://opencollective.com/Publii/contributors.svg?width=890&button=false" /></a>
 
 
 ## Backers
