@@ -359,9 +359,18 @@ class EditorBridge {
     
         if (windowObject.getSelection) {
             sel = windowObject.getSelection();
-            console.log(sel);
             
-            if (sel.rangeCount) {
+            if (!sel.rangeCount) {
+                return;
+            }
+            
+            if (sel.baseNode.firstElementChild.getAttribute('id') === 'post-title') {
+                let input = document.getElementById('post-title');
+                let end = input.selectionEnd;
+                input.value = replacementText + input.value.substring(end);
+                input.selectionStart = end;
+                input.selectionEnd = end;
+            } else {
                 range = sel.getRangeAt(0);
                 range.deleteContents();
                 range.insertNode(windowObject.document.createTextNode(replacementText));
