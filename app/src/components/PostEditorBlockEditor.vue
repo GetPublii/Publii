@@ -122,6 +122,8 @@ export default {
         }
     },
     mounted () {
+        ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
+
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
 

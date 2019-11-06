@@ -297,7 +297,10 @@ class EditorBridge {
     }
 
     initSpellChecker () {
-        webFrame.setSpellCheckProvider('en-US', {
+        let languageCode = window.app.$store.state.currentSite.config.language;
+        spellChecker.setDictionary(languageCode);
+
+        webFrame.setSpellCheckProvider(languageCode, {
             spellCheck (words, callback) {
                 setTimeout(() => {
                     const misspelled = words.filter(x => spellChecker.isMisspelled(x));
@@ -356,6 +359,7 @@ class EditorBridge {
     
         if (windowObject.getSelection) {
             sel = windowObject.getSelection();
+            console.log(sel);
             
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);

@@ -1,8 +1,11 @@
 const { webFrame, remote } = require('electron');
 const { Menu, MenuItem } = remote;
 const spellChecker = require('spellchecker');
+const languageCode = remote.getGlobal('spellCheckerLanguage');
 
-webFrame.setSpellCheckProvider('en-US', {
+spellChecker.setDictionary(languageCode);
+
+webFrame.setSpellCheckProvider(languageCode, {
   spellCheck (words, callback) {
     setTimeout(() => {
       const misspelled = words.filter(x => spellChecker.isMisspelled(x));
