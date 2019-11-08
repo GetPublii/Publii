@@ -122,7 +122,11 @@ export default {
         }
     },
     mounted () {
-        ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
+        if (this.$store.state.currentSite.config.spellchecking) {
+            ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
+        } else {
+            ipcRenderer.send('publii-set-spellchecker-language', '');
+        }
 
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';

@@ -284,7 +284,9 @@ class EditorBridge {
                 this.hideToolbarsOnCopy();
             });
 
-            this.initSpellChecker();
+            if (window.app.$store.state.currentSite.config.spellchecking) {
+                this.initSpellChecker();
+            }
         });
 
         editor.addButton('gallery', {

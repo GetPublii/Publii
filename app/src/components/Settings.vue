@@ -62,6 +62,14 @@
                 </field>
 
                 <field
+                    id="spellchecking"
+                    label="Enable spellchecker:">
+                    <switcher
+                        slot="field"
+                        v-model="spellchecking" />
+                </field>
+
+                <field
                     id="theme"
                     label="Current theme:">
                     <strong
@@ -1374,7 +1382,7 @@ export default {
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
     },
-    data: function() {
+    data () {
         return {
             buttonsLocked: false,
             logo: {
@@ -1383,6 +1391,7 @@ export default {
             },
             language: '',
             customLanguage: '',
+            spellchecking: false,
             name: '',
             theme: '',
             currentTheme: '',
@@ -1504,6 +1513,7 @@ export default {
             this.language = 'custom';
         }
 
+        this.spellchecking = this.$store.state.currentSite.config.spellchecking;
         this.name = this.$store.state.currentSite.config.displayName;
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
@@ -1547,6 +1557,9 @@ export default {
             } else {
                 newSettings.language = this.language;
             }
+
+            newSettings.spellchecking = this.spellchecking;
+
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {
                 if (group.name === '') {
