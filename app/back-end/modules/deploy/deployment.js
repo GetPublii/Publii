@@ -213,6 +213,7 @@ class Deployment {
                         });
                     }
                 } catch (e) {
+                    remoteFiles = false;
                     console.log('Malformed files-remote.json file: ' + e);
                 }
             }
