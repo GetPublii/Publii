@@ -18,6 +18,7 @@ const AstCurrentSiteConfig = {
         sitemapAddTags: 1,
         sitemapAddAuthors: 1,
         sitemapAddHomepage: 1,
+        sitemapAddExternalImages: 0,
         sitemapExcludedFiles: '',
         usePageTitleInsteadItemName: false,
         openGraphEnabled: 1,

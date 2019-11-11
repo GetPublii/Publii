@@ -638,6 +638,13 @@
                                 <switcher v-model="advanced.sitemapAddHomepage" />
                                 Homepage pagination
                             </label>
+
+                            <label
+                                v-if="advanced.sitemapEnabled"
+                                slot="field">
+                                <switcher v-model="advanced.sitemapAddExternalImages" />
+                                External images
+                            </label>
                         </field>
 
                         <field
