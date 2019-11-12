@@ -339,7 +339,7 @@ class Themes {
             }
         }
 
-        let configString = JSON.stringify(themeConfig);
+        let configString = JSON.stringify(themeConfig, null, 4);
 
         // Save config
         fs.writeFileSync(themeConfigPath, configString);

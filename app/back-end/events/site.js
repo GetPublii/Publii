@@ -226,7 +226,7 @@ class SiteEvents {
                 }
 
                 // Save config
-                fs.writeFileSync(configFile, JSON.stringify(config.settings));
+                fs.writeFileSync(configFile, JSON.stringify(config.settings, null, 4));
 
                 if(passwordData && passwordData.newPassword) {
                     config.settings.deployment.password = passwordData.newPassword;

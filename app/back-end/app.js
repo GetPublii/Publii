@@ -280,7 +280,7 @@ class App {
 
         if (siteConfig.name !== siteName) {
             siteConfig.name = siteName;
-            fs.writeFileSync(configFilePath, JSON.stringify(siteConfig));
+            fs.writeFileSync(configFilePath, JSON.stringify(siteConfig, null, 4));
         }
 
         siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
@@ -441,7 +441,7 @@ class App {
             this.appConfig = {};
 
             try {
-                fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig), {'flags': 'w'});
+                fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
             } catch (e) {
                 if (this.hasPermissionsErrors(e)) {
                     return false;
@@ -575,7 +575,7 @@ class App {
          */
         this.mainWindow.on('close', function() {
             let windowBounds = self.mainWindow.getBounds();
-            fs.writeFileSync(self.initPath, JSON.stringify(windowBounds), {'flags': 'w'});
+            fs.writeFileSync(self.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
         });
 
         /*

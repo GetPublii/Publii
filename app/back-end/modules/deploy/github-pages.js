@@ -602,7 +602,7 @@ class GithubPages {
         });
 
         let logPath = path.join(this.deployment.appDir, 'logs', 'github-tree.txt');
-        fs.writeFileSync(logPath, JSON.stringify(tree));
+        fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
 
         return this.apiRequest(
             {

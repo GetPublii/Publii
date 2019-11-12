@@ -176,7 +176,7 @@ class Deployment {
         // Save the files list
         fs.writeFileSync(
             path.join(this.inputDir, 'files.publii.json'),
-            JSON.stringify(fileList),
+            JSON.stringify(fileList, null, 4),
             {'flags': 'w'}
         );
     }
