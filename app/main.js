@@ -3,6 +3,7 @@
 const electron = require('electron');
 const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
+const globalShortcut = electron.globalShortcut;
 const dialog = electron.dialog;
 const fs = require('fs');
 const App = require('./back-end/app.js');
@@ -95,6 +96,12 @@ electronApp.on('ready', function() {
 
     if (process.env.NODE_ENV !== 'production') {
         loadDevtool(loadDevtool.VUEJS_DEVTOOLS);
+    }
+
+    if (process.platform === 'linux') {
+        globalShortcut.register('Control+X', () => {
+            electronApp.quit();
+        });
     }
 
     appInstance = new App(startupSettings);

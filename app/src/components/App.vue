@@ -130,7 +130,7 @@ export default {
                     type: "separator"
                 }, {
                     label: "Quit",
-                    accelerator: "Command+Q",
+                    accelerator: "CmdOrCtrl+Q",
                     click: () => { mainProcess.quitApp() }
                 }]
             }, {
