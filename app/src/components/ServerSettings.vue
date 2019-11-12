@@ -106,6 +106,14 @@
                         id="domain"
                         key="domain"
                         v-model="domain" />
+                    <small 
+                        v-if="deploymentMethodSelected === 'github-pages'"
+                        class="note"
+                        slot="note">
+                        This will be your Github repository path, which should use the following format: <strong>YOUR_USERNAME.github.io/YOUR_REPOSITORY_NAME</strong>.<br> 
+                        If you are using a custom domain name, set this field to just the custom domain name.
+                    </small>
+                    
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
                         class="note"
