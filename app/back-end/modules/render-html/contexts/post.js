@@ -233,17 +233,19 @@ class RendererContextPost extends RendererContext {
         }
 
         // Get words to compare (with length bigger than 3 chars)
-        let stringsToCompare = this.post.title.split(' ');
-        stringsToCompare = stringsToCompare.filter(word => word.length > 3);
+        if (['titles', 'titles-and-tags'].indexOf(this.siteConfig.advanced.relatedPostsCriteria) > -1) {
+            let stringsToCompare = this.post.title.split(' ');
+            stringsToCompare = stringsToCompare.filter(word => word.length > 3);
 
-        if(stringsToCompare.length) {
-            for (let toCompare of stringsToCompare) {
-                postTitleConditions.push(' LOWER(p.title) LIKE LOWER("%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%") ')
+            if(stringsToCompare.length) {
+                for (let toCompare of stringsToCompare) {
+                    postTitleConditions.push(' LOWER(p.title) LIKE LOWER("%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%") ')
+                }
+
+                postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
+                conditions.push(postTitleConditions);
+                conditionsLowerPriority.push(postTitleConditions);
             }
-
-            postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
-            conditions.push(postTitleConditions);
-            conditionsLowerPriority.push(postTitleConditions);
         }
 
         if(conditions.length > 1) {

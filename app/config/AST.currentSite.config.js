@@ -116,6 +116,7 @@ const AstCurrentSiteConfig = {
             behaviourLink: '#cookie-settings'
         },
         relatedPostsOrder: 'default',
+        relatedPostsCriteria: 'titles-and-tags',
         relatedPostsIncludeAllPosts: true
     },
     deployment: {
