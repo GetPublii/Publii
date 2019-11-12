@@ -10,6 +10,7 @@
         </span>
 
         <span
+            v-if="!$store.state.app.windowIsMaximized"
             @click="appMaximize"
             ref="maximize"
             class="appbar-button appbar-maximize">
@@ -19,9 +20,10 @@
         </span>
 
         <span
+            v-if="$store.state.app.windowIsMaximized"
             @click="appUnmaximize"
             ref="unmaximize"
-            class="appbar-button appbar-unmaximize is-hidden">
+            class="appbar-button appbar-unmaximize">
             <icon
                 size="xxs"
                 name="win-expand" />
@@ -54,16 +56,14 @@ export default {
                 remote.BrowserWindow.getFocusedWindow().maximize();
             }
 
-            this.$refs.maximize.classList.add('is-hidden');
-            this.$refs.unmaximize.classList.remove('is-hidden');
+            this.$store.commit('setWindowState', true);
         },
         appUnmaximize: function() {
             if(remote.BrowserWindow.getFocusedWindow()) {
                 remote.BrowserWindow.getFocusedWindow().unmaximize();
             }
 
-            this.$refs.unmaximize.classList.add('is-hidden');
-            this.$refs.maximize.classList.remove('is-hidden');
+            this.$store.commit('setWindowState', false);
         },
         appClose: function() {
             let allWindows = remote.BrowserWindow.getAllWindows();
@@ -113,10 +113,6 @@ body[data-os="win"] {
 
             &:hover {
                 background: $color-8;
-            }
-
-            &.is-hidden {
-                display: none;
             }
         }
 

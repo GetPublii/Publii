@@ -278,6 +278,9 @@ export default {
         Vue.set(state.currentSite.config, 'syncDate', date);
         Vue.set(state.currentSite.config, 'synced', 'synced');
         Vue.set(state.components.sidebar, 'status', state.currentSite.config.synced);
+    },
+    setWindowState (state, newState) {
+        state.app.windowIsMaximized = newState;
     }
 };
 
