@@ -550,6 +550,14 @@ class App {
             self.mainWindow.webContents.send('app-data-loaded', appVersionInfo);
         });
 
+        if (process.platform === 'linux') {
+            this.mainWindow.webContents.on('before-input-event', (event, input) => {
+                if (input.control && input.code === 'KeyQ') {
+                    this.app.quit();
+                }
+            });
+        }
+
         // Open Dev Tools
         if(this.appConfig.openDevToolsInMain) {
             this.mainWindow.webContents.openDevTools();

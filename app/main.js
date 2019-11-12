@@ -98,12 +98,6 @@ electronApp.on('ready', function() {
         loadDevtool(loadDevtool.VUEJS_DEVTOOLS);
     }
 
-    if (process.platform === 'linux') {
-        globalShortcut.register('Control+X', () => {
-            electronApp.quit();
-        });
-    }
-
     appInstance = new App(startupSettings);
 });
 
