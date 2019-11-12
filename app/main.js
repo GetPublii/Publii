@@ -3,9 +3,7 @@
 const electron = require('electron');
 const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
-const globalShortcut = electron.globalShortcut;
 const dialog = electron.dialog;
-const fs = require('fs');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 
