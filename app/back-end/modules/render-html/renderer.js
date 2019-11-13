@@ -1377,52 +1377,19 @@ class Renderer {
      */
     generateCSS() {
         console.time('CSS');
-        let overridePath = path.join(this.themeDir, 'visual-override.js');
-        let overridedOverridePath = UtilsHelper.fileIsOverrided(this.themeDir, overridePath);
 
-        if(overridedOverridePath) {
-            overridePath = overridedOverridePath;
-        }
-
-        let cssPath = path.join(this.themeDir, this.themeConfig.files.assetsPath, 'css', 'main.css');
-        let overridedCssPath = UtilsHelper.fileIsOverrided(this.themeDir, cssPath);
-
-        if(overridedCssPath) {
-            cssPath = overridedCssPath;
-        }
-
-        let mainCSSContent = fs.readFileSync(cssPath, 'utf8');
-        let styleCSS = mainCSSContent;
+        let themeVariablesCSS = this.getThemeVariablesCSS();
+        let mainCSS = this.getMainCSS();
+        let gdprPopupCSS = this.getGdprPopupCSS();
+        let overrideCSS = this.getOverrideCSS();
+        let customCSS = this.getCustomCSS();
+        // Concatenate all CSS codes into one codebase
+        let styleCSS = themeVariablesCSS + mainCSS + gdprPopupCSS + overrideCSS + customCSS;
         let newFileName = path.join(this.themeDir, this.themeConfig.files.assetsPath, 'css', 'style.css');
         let overridedNewFileName = UtilsHelper.fileIsOverrided(this.themeDir, newFileName);
 
-        if(overridedNewFileName) {
+        if (overridedNewFileName) {
             newFileName = overridedNewFileName;
-        }
-
-        // Add GDPR popup CSS code if used
-        if (this.siteConfig.advanced.gdpr.enabled) {
-            styleCSS += Gdpr.popupCssOutput();
-        }
-
-        let customCSSPath = path.join(this.sitesDir, this.siteName, 'input', 'config', 'custom-css.css');
-
-        // check if the theme contains visual-override.js file
-        if(UtilsHelper.fileExists(overridePath)) {
-            try {
-                let generateOverride = this.requireWithNoCache(overridePath);
-                let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                styleCSS += generateOverride(visualParams);
-            } catch(e) {
-                this.errorLog.push({
-                    message: 'An error (1003) occurred during preparing CSS overrides.',
-                    desc: e.message
-                });
-            }
-        }
-
-        if(UtilsHelper.fileExists(customCSSPath)) {
-            styleCSS += fs.readFileSync(customCSSPath, 'utf8');
         }
 
         // minify CSS if user enabled it
@@ -1434,6 +1401,100 @@ class Renderer {
 
         fs.writeFileSync(newFileName, styleCSS, {'flags': 'w'});
         console.timeEnd('CSS');
+    }
+
+    /**
+     * Returns compiled CSS based on theme-variables.js
+     */
+    getThemeVariablesCSS() {
+        let themeVariablesPath = path.join(this.themeDir, 'theme-variables.js');
+        let overridedThemeVariablesPath = UtilsHelper.fileIsOverrided(this.themeDir, themeVariablesPath);
+        
+        if (overridedThemeVariablesPath) {
+            themeVariablesPath = overridedThemeVariablesPath;
+        }
+
+        // check if the theme contains theme-variables.js file
+        if (UtilsHelper.fileExists(themeVariablesPath)) {
+            try {
+                let generateOverride = this.requireWithNoCache(themeVariablesPath);
+                let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                return generateOverride(visualParams) + styleCSS;
+            } catch(e) {
+                this.errorLog.push({
+                    message: 'An error (1003) occurred during preparing CSS theme variables.',
+                    desc: e.message
+                });
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns the main CSS of the theme
+     */
+    getMainCSS () {
+        let cssPath = path.join(this.themeDir, this.themeConfig.files.assetsPath, 'css', 'main.css');
+        let overridedCssPath = UtilsHelper.fileIsOverrided(this.themeDir, cssPath);
+
+        if (overridedCssPath) {
+            cssPath = overridedCssPath;
+        }
+
+        return fs.readFileSync(cssPath, 'utf8');
+    }
+
+    /**
+     * Creates CSS for GDPR popup
+     */
+    getGdprPopupCSS () {
+        if (this.siteConfig.advanced.gdpr.enabled) {
+            return Gdpr.popupCssOutput();
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns compiled CSS based on visual-override.js
+     */
+    getOverrideCSS () {
+        let overridePath = path.join(this.themeDir, 'visual-override.js');
+        let overridedOverridePath = UtilsHelper.fileIsOverrided(this.themeDir, overridePath);
+
+        if (overridedOverridePath) {
+            overridePath = overridedOverridePath;
+        }
+
+        // check if the theme contains visual-override.js file
+        if (UtilsHelper.fileExists(overridePath)) {
+            try {
+                let generateOverride = this.requireWithNoCache(overridePath);
+                let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                return generateOverride(visualParams);
+            } catch(e) {
+                this.errorLog.push({
+                    message: 'An error (1003) occurred during preparing CSS overrides.',
+                    desc: e.message
+                });
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns additional custom CSS code
+     */
+    getCustomCSS () {
+        let customCSSPath = path.join(this.sitesDir, this.siteName, 'input', 'config', 'custom-css.css');
+
+        if (UtilsHelper.fileExists(customCSSPath)) {
+            return fs.readFileSync(customCSSPath, 'utf8');
+        }
+
+        return '';
     }
 
     /*
