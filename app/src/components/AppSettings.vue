@@ -162,6 +162,38 @@
             </field>
         </fields-group>
 
+        <fields-group title="Default ordering on lists">
+            <field
+                id="posts-ordering"
+                label="Default posts ordering:">
+                <dropdown
+                    slot="field"
+                    id="posts-ordering"
+                    :items="orderingPostItems"
+                    v-model="postsOrdering"></dropdown>
+            </field>
+
+            <field
+                id="tags-ordering"
+                label="Default tags ordering:">
+                <dropdown
+                    slot="field"
+                    id="tags-ordering"
+                    :items="orderingTagItems"
+                    v-model="tagsOrdering"></dropdown>
+            </field>
+
+            <field
+                id="authors-ordering"
+                label="Default authors ordering:">
+                <dropdown
+                    slot="field"
+                    id="authors-ordering"
+                    :items="orderingAuthorItems"
+                    v-model="authorsOrdering"></dropdown>
+            </field>
+        </fields-group>
+
         <p-footer>
             <p-button
                 :onClick="save"
@@ -194,6 +226,9 @@ export default {
             closeEditorOnSave: true,
             showModificationDateAsColumn: false,
             showPostSlugs: false,
+            postsOrdering: 'id DESC',
+            tagsOrdering: 'id DESC',
+            authorsOrdering: 'id DESC',
             locations: {
                 sites: '',
                 backups: '',
@@ -222,6 +257,40 @@ export default {
                 'jimp': 'Jimp'
             };
         },
+        orderingPostItems () {
+            return {
+                'id DESC': 'By ID (descending)',
+                'id ASC': 'By ID (ascending)',
+                'title DESC': 'By title (descending)',
+                'title ASC': 'By title (ascending)',
+                'created DESC': 'By created date (descending)',
+                'created ASC': 'By created date (ascending)',
+                'modified DESC': 'By modified date (descending)',
+                'modified ASC': 'By modified date (ascending)',
+                'author DESC': 'By author (descending)',
+                'author ASC': 'By author (ascending)',
+            };
+        },
+        orderingTagItems () {
+            return {
+                'id DESC': 'By ID (descending)',
+                'id ASC': 'By ID (ascending)',
+                'name DESC': 'By name (descending)',
+                'name ASC': 'By name (ascending)',
+                'postsCounter DESC': 'By posts count (descending)',
+                'postsCounter ASC': 'By posts count (ascending)'
+            };
+        },
+        orderingAuthorItems () {
+            return {
+                'id DESC': 'By ID (descending)',
+                'id ASC': 'By ID (ascending)',
+                'name DESC': 'By name (descending)',
+                'name ASC': 'By name (ascending)',
+                'postsCounter DESC': 'By posts count (descending)',
+                'postsCounter ASC': 'By posts count (ascending)'
+            };
+        },
         checkSitesCatalog () {
             return fs.existsSync(this.locations.sites);
         },
@@ -245,6 +314,9 @@ export default {
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
         this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
+        this.postsOrdering = this.$store.state.app.config.postsOrdering;
+        this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
+        this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
     },
     methods: {
         goBack () {
@@ -275,7 +347,10 @@ export default {
                 closeEditorOnSave: this.closeEditorOnSave,
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
                 showPostSlugs: this.showPostSlugs,
-                alwaysSaveSearchState: this.alwaysSaveSearchState
+                alwaysSaveSearchState: this.alwaysSaveSearchState,
+                postsOrdering: this.postsOrdering,
+                tagsOrdering: this.tagsOrdering,
+                authorsOrdering: this.authorsOrdering
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
@@ -290,6 +365,8 @@ export default {
 
                 this.saved(newSettings, data);
             });
+
+            this.$bus.$emit('app-settings-saved', newSettings);
         },
         saved (newSettings, data) {
             this.$store.commit('setSiteDir', newSettings.sitesLocation);

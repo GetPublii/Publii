@@ -12,7 +12,10 @@ const AstAppConfig = {
     closeEditorOnSave: true,
     wideScrollbars: false,
     showModificationDateAsColumn: false,
-    showPostSlugs: false
+    showPostSlugs: false,
+    postsOrdering: 'id DESC',
+    tagsOrdering: 'id DESC',
+    authorsOrdering: 'id DESC'
 };
 
 module.exports = AstAppConfig;

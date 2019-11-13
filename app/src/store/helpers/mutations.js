@@ -12,6 +12,26 @@ export default {
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
         state.dirs = initialData.dirs;
+
+        // Set default ordering based on the app config
+        let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
+        let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
+        let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
+
+        Vue.set(state, 'ordering', {
+            posts: {
+                orderBy: postsOrdering[0],
+                order: postsOrdering[1]
+            },
+            tags: {
+                orderBy: tagsOrdering[0],
+                order: tagsOrdering[1]
+            },
+            authors: {
+                orderBy: authorsOrdering[0],
+                order: authorsOrdering[1]
+            }
+        });
     },
     setAppConfig (state, newAppConfig) {
         state.app.config = Utils.deepMerge(state.app.config, newAppConfig);
@@ -109,20 +129,24 @@ export default {
         state.components.sidebar.status = state.currentSite.config.synced;
         
         // Reset ordering after website switch
-        state.ordering = {
+        let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
+        let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
+        let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
+
+        Vue.set(state, 'ordering', {
             posts: {
-                orderBy: 'id',
-                order: 'DESC'
+                orderBy: postsOrdering[0],
+                order: postsOrdering[1]
             },
             tags: {
-                orderBy: 'id',
-                order: 'DESC'
+                orderBy: tagsOrdering[0],
+                order: tagsOrdering[1]
             },
             authors: {
-                orderBy: 'id',
-                order: 'DESC'
+                orderBy: authorsOrdering[0],
+                order: authorsOrdering[1]
             }
-        };
+        });
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);
