@@ -23,11 +23,11 @@ export default {
     keep_styles: false,
     image_class_list: [
         {title: 'None', value: 'post__image'},
-        {title: 'Full image', value: 'post__image--full'},
-        {title: 'Wide image', value: 'post__image--wide'},
-        {title: 'Left-aligned image', value: 'post__image--left'},
-        {title: 'Right-aligned image', value: 'post__image--right'},
-        {title: 'Centered image', value: 'post__image--center'}
+        {title: 'Full image', value: 'post__image post__image--full'},
+        {title: 'Wide image', value: 'post__image post__image--wide'},
+        {title: 'Left-aligned image', value: 'post__image post__image--left'},
+        {title: 'Right-aligned image', value: 'post__image post__image--right'},
+        {title: 'Centered image', value: 'post__image post__image--center'}
     ],
     element_format : 'html',
     fix_list_elements : true,
