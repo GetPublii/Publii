@@ -1,7 +1,10 @@
 <template>
-    <span
-        :class="cssClasses"
-        @click="toggle"></span>
+    <span :class="{ 'has-label': label }">
+        <span
+            :class="cssClasses"
+            @click="toggle"></span>
+        {{ label }}
+    </span>
 </template>
 
 <script>
@@ -10,6 +13,10 @@ export default {
     props: {
         value: {
             type: [Boolean, Number]
+        },
+        label: {
+            default: '',
+            type: String
         },
         checked: {
             default: false,
@@ -34,7 +41,8 @@ export default {
             return {
                 'switcher': true,
                 'is-checked': this.isChecked,
-                'lower-zindex': this.lowerZindex
+                'lower-zindex': this.lowerZindex,
+                'has-label': this.label
             };
         }
     },
@@ -63,6 +71,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../scss/variables.scss';
+
+.has-label {
+    font-size: 16px;
+    margin-right: 10px;
+}
 
 .switcher {
     background: rgba(142, 146, 157, 0.45);

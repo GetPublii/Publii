@@ -52,5 +52,12 @@ export default {
    ],
    toc_depth: 6,
    toc_header: "h3",
-   toc_class: "post__toc"
+   toc_class: "post__toc",
+   rel_list: [
+    {title: 'noreferrer', value: 'noreferrer'},
+    {title: 'nofollow', value: 'nofollow'},
+    {title: 'noopener', value: 'noopener'},
+    {title: 'sponsored', value: 'sponsored'},
+    {title: 'ugc', value: 'ugc'},
+   ]
 };

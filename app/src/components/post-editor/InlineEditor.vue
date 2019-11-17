@@ -85,16 +85,27 @@ export default {
             }
 
             if(response) {
-                let relAttr = '';
+                let relAttr = [];
 
-                if (response.rel) {
-                    relAttr = ' rel="nofollow"';
+                if (response.rel && response.rel.nofollow) {
+                    relAttr.push('nofollow');
+                }
 
-                    if (response.target.indexOf('_blank') > -1) {
-                        relAttr = ' rel="nofollow noopener noreferrer"';
-                    }
-                } else if (response.target.indexOf('_blank') > -1) {
-                    relAttr = ' rel="noopener noreferrer"';
+                if (response.rel && response.rel.sponsored) {
+                    relAttr.push('sponsored');
+                }
+
+                if (response.rel && response.rel.ugc) {
+                    relAttr.push('ugc');
+                }
+
+                if (response.target.indexOf('_blank') > -1) {
+                    relAttr.push('noopener');
+                    relAttr.push('noreferrer');
+                }
+
+                if (relAttr.length) {
+                    relAttr = ' rel="' + relAttr.join(' ') + '"';
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
