@@ -73,7 +73,7 @@ class Renderer {
             featuredImages: {}
         };
 
-        if(postID !== false) {
+        if (postID !== false) {
             this.postID = postID;
             this.postData = postData;
         }
@@ -194,7 +194,6 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
-        //try {
         this.sendProgress(11, 'Generating frontpage');
         this.generateFrontpage();
         this.sendProgress(20, 'Generating posts');
@@ -212,9 +211,6 @@ class Renderer {
         this.copyFiles();
         await this.generateSitemap();
         this.sendProgress(90, 'Finishing the render process');
-        //} catch (err) {
-        //    console.log('E!', err);
-        //}
     }
 
     /**
@@ -233,8 +229,9 @@ class Renderer {
         this.generatePartials();
         this.generatePost();
         this.generateCSS();
+
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.postID]);
 
         process.send({
             type: 'app-rendering-preview',
@@ -1582,9 +1579,10 @@ class Renderer {
      */
     copyFiles() {
         console.time("FILES");
+        let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         console.timeEnd("FILES");
     }
 
