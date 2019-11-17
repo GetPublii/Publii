@@ -382,6 +382,24 @@
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-server"
+                    label="API Server">
+                    <text-input
+                        slot="field"
+                        id="gh-server"
+                        key="gh-server"
+                        :class="{ 'is-invalid': errors.indexOf('github-server') > -1 }"
+                        @keyup.native="cleanError('github-server')"
+                        v-model="deploymentSettings.github.server" />
+                    <small
+                        slot="note"
+                        class="note">
+                        Change this value only if you are using your own GitHub instance (Enterprise edition).
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-user"
                     label="Username / Organization">
                     <text-input
@@ -1189,7 +1207,7 @@ export default {
             return this.validateFields(fields);
         },
         validateGithubPages () {
-            let fields = ['github_user', 'github_repo', 'github_branch', 'github_token'];
+            let fields = ['github_server', 'github_user', 'github_repo', 'github_branch', 'github_token'];
             return this.validateFields(fields);
         },
         validateGitlabPages () {

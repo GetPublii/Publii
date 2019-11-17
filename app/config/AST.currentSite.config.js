@@ -140,6 +140,7 @@ const AstCurrentSiteConfig = {
             acl: 'public-read'
         },
         github: {
+            server: 'api.github.com',
             user: '',
             repo: '',
             branch: '',
