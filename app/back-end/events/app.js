@@ -15,7 +15,7 @@ class AppEvents {
          * Save licence acceptance
          */
         ipcMain.on('app-license-accept', function(event, config) {
-            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify({licenseAccepted: true}));
+            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify({licenseAccepted: true}, null, 4));
             appInstance.appConfig = config;
 
             event.sender.send('app-license-accepted', true);
@@ -47,7 +47,7 @@ class AppEvents {
                         );
 
                         if(result) {
-                            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
+                            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
                             appInstance.appConfig = config;
                         }
         
@@ -69,7 +69,7 @@ class AppEvents {
                 message: 'success-save'
             });
 
-            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config));
+            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
             appInstance.appConfig = config;
         });
 

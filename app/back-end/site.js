@@ -96,7 +96,7 @@ class Site {
             'theme': 'simple'
         };
 
-        fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig));
+        fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig, null, 4));
         fs.writeFileSync(path.join(configDir, 'menu.config.json'), '[]');
         fs.writeFileSync(path.join(configDir, 'theme.config.json'), '{}');
     }

@@ -154,7 +154,7 @@ class RendererContextFeed extends RendererContext {
             ORDER BY
                 name DESC
         `).all({
-            postID: this.postID
+            postID: postID
         });
 
         return tags;

@@ -88,8 +88,8 @@
                         </template>
                         <template v-else>Title</template>
 
-                        <span class="order-descending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -102,8 +102,8 @@
                         </template>
                         <template v-else>Publication date</template>
 
-                        <span class="order-descending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -118,8 +118,8 @@
                         </template>
                         <template v-else>Modification date</template>
 
-                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -132,8 +132,8 @@
                         </template>
                         <template v-else>Author</template>
 
-                        <span class="order-descending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -146,8 +146,8 @@
                         </template>
                         <template v-else>ID</template>
 
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -497,9 +497,15 @@ export default {
 
         this.$bus.$on('site-switched', () => {
             setTimeout(() => {
-                this.orderBy = this.$store.state.ordering.posts.orderBy;
-                this.order = this.$store.state.ordering.posts.order;
+                this.saveOrdering(this.$store.state.ordering.posts.orderBy, this.$store.state.ordering.posts.order);
             }, 500);
+        });
+
+        this.$bus.$on('app-settings-saved', newSettings => {
+            if (this.orderBy + ' ' + this.order !== newSettings.postsOrdering) {
+                let order = newSettings.postsOrdering.split(' ');
+                this.saveOrdering(order[0], order[1]);
+            }
         });
     },
     methods: {
@@ -695,6 +701,12 @@ export default {
                     this.order = 'DESC';
                 }
             }
+
+            this.saveOrdering(this.orderBy, this.order);
+        },
+        saveOrdering (orderBy, order) {
+            this.orderBy = orderBy;
+            this.order = order;
 
             this.$store.commit('setOrdering', {
                 type: 'posts',

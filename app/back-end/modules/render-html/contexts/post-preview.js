@@ -377,7 +377,7 @@ class RendererContextPostPreview extends RendererContext {
             let featuredImageSrcSet = false;
             let featuredImageSizes = false;
 
-            if(!this.isGif(url)) {
+            if(!this.isGifOrSvg(url)) {
                 featuredImageSrcSet = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig);
                 featuredImageSizes = ContentHelper.getFeaturedImageSizes(this.themeConfig);
             } else {
@@ -426,7 +426,7 @@ class RendererContextPostPreview extends RendererContext {
                         let newFilename = filename + '-' + dimensionName + extension;
                         let capitalizedDimensionName = dimensionName.charAt(0).toUpperCase() + dimensionName.slice(1);
 
-                        if(!this.isGif(url)) {
+                        if(!this.isGifOrSvg(url)) {
                             featuredImageData['url' + capitalizedDimensionName] = url.replace(base, newFilename);
                         } else {
                             featuredImageData['url' + capitalizedDimensionName] = url;
@@ -500,11 +500,11 @@ class RendererContextPostPreview extends RendererContext {
     }
 
     /**
-     * Detects if image is a GIF
+     * Detects if image is a GIF or SVG
      */
-    isGif(url) {
-        if(url.slice(-4) === '.gif') {
-            return true;
+    isGifOrSvg(url) {
+        if(url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
+            return output;
         }
 
         return false;

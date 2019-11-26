@@ -31,7 +31,7 @@ class SyncEvents {
             configContent.syncDate = Date.now();
         }
 
-        fs.writeFileSync(configFile, JSON.stringify(configContent));
+        fs.writeFileSync(configFile, JSON.stringify(configContent, null, 4));
     }
 }
 

@@ -75,13 +75,13 @@ class FeaturedImageItem {
 
         let featuredImageSrcSets = '';
 
-        if(!this.isGif(url)) {
+        if(!this.isGifOrSvg(url)) {
             featuredImageSrcSets = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig);
         }
 
         let featuredImageSizes = false;
 
-        if(featuredImageSrcSets !== false && !this.isGif(url)) {
+        if(featuredImageSrcSets !== false && !this.isGifOrSvg(url)) {
             featuredImageSizes = ContentHelper.getFeaturedImageSizes(this.themeConfig);
         }
 
@@ -123,7 +123,7 @@ class FeaturedImageItem {
                     let newFilename = filename + '-' + dimensionName + extension;
                     let capitalizedDimensionName = dimensionName.charAt(0).toUpperCase() + dimensionName.slice(1);
 
-                    if(!this.isGif(url)) {
+                    if(!this.isGifOrSvg(url)) {
                         featuredImageData['url' + capitalizedDimensionName] = url.replace(base, 'responsive/' + newFilename);
                     } else {
                         featuredImageData['url' + capitalizedDimensionName] = url;
@@ -144,10 +144,10 @@ class FeaturedImageItem {
     }
 
     /**
-     * Detects if image is a GIF
+     * Detects if image is a GIF or SVG
      */
-    isGif(url) {
-        if(url.slice(-4) === '.gif') {
+    isGifOrSvg(url) {
+        if(url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
             return true;
         }
 

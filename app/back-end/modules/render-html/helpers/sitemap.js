@@ -500,6 +500,10 @@ class Sitemap {
 
             if (images) {
                 for (let i = 0; i < images.length; i++) {
+                    if (!this.siteConfig.advanced.sitemapAddExternalImages && images[i].url.indexOf(domain) === -1) {
+                        continue;
+                    }
+
                     this.outputXML += '<image:image>' + "\n";
                     this.outputXML += '<image:loc>' + images[i].url + '</image:loc>' + "\n";
                     this.outputXML += '<image:title><![CDATA[' + images[i].alt + ']]></image:title>' + "\n";

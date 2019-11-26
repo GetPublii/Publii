@@ -307,8 +307,8 @@ class GoogleCloud {
         let hardUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'hard-upload-errors-log.txt');
 
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
-        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors));
-        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors));
+        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors, null, 4));
+        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors, null, 4));
     }
 }
 

@@ -638,6 +638,13 @@
                                 <switcher v-model="advanced.sitemapAddHomepage" />
                                 Homepage pagination
                             </label>
+
+                            <label
+                                v-if="advanced.sitemapEnabled"
+                                slot="field">
+                                <switcher v-model="advanced.sitemapAddExternalImages" />
+                                External images
+                            </label>
                         </field>
 
                         <field
@@ -1293,6 +1300,17 @@
                         </field>
 
                         <field
+                            id="related-posts-criteria"
+                            label="Related posts selection mechanism:">
+                            <dropdown
+                                slot="field"
+                                id="related-posts-order-by"
+                                key="related-posts-order-by"
+                                v-model="advanced.relatedPostsCriteria"
+                                :items="relatedPostsCriteriaOptions"></dropdown>
+                        </field>
+
+                        <field
                             id="related-posts-order-by"
                             label="Related posts ordering:">
                             <dropdown
@@ -1434,6 +1452,13 @@ export default {
                 'default': 'By ID descending',
                 'id-asc': 'By ID ascending',
                 'random': 'Random'
+            };
+        },
+        relatedPostsCriteriaOptions () {
+            return {
+                'titles': 'Use only titles',
+                'tags': 'Use only tags',
+                'titles-and-tags': 'Use titles and tags'
             };
         },
         siteHasTheme () {

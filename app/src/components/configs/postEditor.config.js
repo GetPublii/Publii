@@ -23,11 +23,11 @@ export default {
     keep_styles: false,
     image_class_list: [
         {title: 'None', value: 'post__image'},
-        {title: 'Full image', value: 'post__image--full'},
-        {title: 'Wide image', value: 'post__image--wide'},
-        {title: 'Left-aligned image', value: 'post__image--left'},
-        {title: 'Right-aligned image', value: 'post__image--right'},
-        {title: 'Centered image', value: 'post__image--center'}
+        {title: 'Full image', value: 'post__image post__image--full'},
+        {title: 'Wide image', value: 'post__image post__image--wide'},
+        {title: 'Left-aligned image', value: 'post__image post__image--left'},
+        {title: 'Right-aligned image', value: 'post__image post__image--right'},
+        {title: 'Centered image', value: 'post__image post__image--center'}
     ],
     element_format : 'html',
     fix_list_elements : true,
@@ -52,5 +52,12 @@ export default {
    ],
    toc_depth: 6,
    toc_header: "h3",
-   toc_class: "post__toc"
+   toc_class: "post__toc",
+   rel_list: [
+    {title: 'noreferrer', value: 'noreferrer'},
+    {title: 'nofollow', value: 'nofollow'},
+    {title: 'noopener', value: 'noopener'},
+    {title: 'sponsored', value: 'sponsored'},
+    {title: 'ugc', value: 'ugc'},
+   ]
 };

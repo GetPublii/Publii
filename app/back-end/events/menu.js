@@ -22,7 +22,7 @@ class MenuEvents {
 
     saveNewMenuStructure(menuStructure, siteName) {
         let menuFile = path.join(this.app.sitesDir, siteName, 'input', 'config', 'menu.config.json');
-        fs.writeFileSync(menuFile, JSON.stringify(menuStructure), { encoding: 'utf8' });
+        fs.writeFileSync(menuFile, JSON.stringify(menuStructure, null, 4), { encoding: 'utf8' });
     }
 }
 

@@ -21,7 +21,7 @@ class GithubPages {
         this.client = new githubApi({
             version: "3.0.0",
             protocol: "https",
-            host: "api.github.com",
+            host: this.deployment.siteConfig.deployment.github.server,
             pathPrefix: "",
             timeout: 30000,
             headers: {
@@ -602,7 +602,7 @@ class GithubPages {
         });
 
         let logPath = path.join(this.deployment.appDir, 'logs', 'github-tree.txt');
-        fs.writeFileSync(logPath, JSON.stringify(tree));
+        fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
 
         return this.apiRequest(
             {

@@ -406,7 +406,7 @@ class Backup {
 
             if(configContent.name !== siteName) {
                 configContent.name = siteName;
-                fs.writeFileSync(configFilePath, JSON.stringify(configContent));
+                fs.writeFileSync(configFilePath, JSON.stringify(configContent, null, 4));
             }
         } catch(e) {
             console.log('modules/backup.js: Wrong site.config.json file');

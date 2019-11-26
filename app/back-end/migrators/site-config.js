@@ -46,7 +46,7 @@ class SiteConfigMigrator {
 
         // Remove from the config author data
         delete siteConfig.author;
-        fs.writeFileSync(configFilePath, JSON.stringify(siteConfig), {'flags': 'w'});
+        fs.writeFileSync(configFilePath, JSON.stringify(siteConfig, null, 4), {'flags': 'w'});
 
         // close DB connection
         db.close();

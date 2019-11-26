@@ -18,6 +18,7 @@ const AstCurrentSiteConfig = {
         sitemapAddTags: 1,
         sitemapAddAuthors: 1,
         sitemapAddHomepage: 1,
+        sitemapAddExternalImages: 0,
         sitemapExcludedFiles: '',
         usePageTitleInsteadItemName: false,
         openGraphEnabled: 1,
@@ -115,6 +116,7 @@ const AstCurrentSiteConfig = {
             behaviourLink: '#cookie-settings'
         },
         relatedPostsOrder: 'default',
+        relatedPostsCriteria: 'titles-and-tags',
         relatedPostsIncludeAllPosts: true
     },
     deployment: {
@@ -138,6 +140,7 @@ const AstCurrentSiteConfig = {
             acl: 'public-read'
         },
         github: {
+            server: 'api.github.com',
             user: '',
             repo: '',
             branch: '',

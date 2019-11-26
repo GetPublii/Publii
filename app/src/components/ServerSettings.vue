@@ -106,6 +106,14 @@
                         id="domain"
                         key="domain"
                         v-model="domain" />
+                    <small 
+                        v-if="deploymentMethodSelected === 'github-pages'"
+                        class="note"
+                        slot="note">
+                        This will be your Github repository path, which should use the following format: <strong>YOUR_USERNAME.github.io/YOUR_REPOSITORY_NAME</strong>.<br> 
+                        If you are using a custom domain name, set this field to just the custom domain name.
+                    </small>
+                    
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
                         class="note"
@@ -369,6 +377,24 @@
                         slot="note"
                         class="note">
                         Path should match your server path e.g. public_html/, public_html/blog/ or the root path e.g. /home/username/public_html/
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-server"
+                    label="API Server">
+                    <text-input
+                        slot="field"
+                        id="gh-server"
+                        key="gh-server"
+                        :class="{ 'is-invalid': errors.indexOf('github-server') > -1 }"
+                        @keyup.native="cleanError('github-server')"
+                        v-model="deploymentSettings.github.server" />
+                    <small
+                        slot="note"
+                        class="note">
+                        Change this value only if you are using your own GitHub instance (Enterprise edition).
                     </small>
                 </field>
 
@@ -1181,7 +1207,7 @@ export default {
             return this.validateFields(fields);
         },
         validateGithubPages () {
-            let fields = ['github_user', 'github_repo', 'github_branch', 'github_token'];
+            let fields = ['github_server', 'github_user', 'github_repo', 'github_branch', 'github_token'];
             return this.validateFields(fields);
         },
         validateGitlabPages () {

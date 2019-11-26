@@ -104,11 +104,16 @@ class Files {
      *
      * @param inputDir
      * @param outputDir
+     * @param postIDs
      */
-    static copyMediaFiles(inputDir, outputDir) {
+    static copyMediaFiles (inputDir, outputDir, postIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        let dirs = ['posts', 'website', 'files'];
+        let dirs = ['website', 'files'];
+
+        for (let i = 0; i < postIDs.length; i++) {
+            dirs.push('posts/' + postIDs[i]);
+        }
 
         for(let i = 0; i < dirs.length; i++) {
             if (!UtilsHelper.dirExists(path.join(basePathInput, dirs[i]))) {
