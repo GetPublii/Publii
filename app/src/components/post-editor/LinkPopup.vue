@@ -100,10 +100,19 @@
                         class="link-popup-field-title" />
                 </field>
 
-                <field label="Nofollow link:">
+                <field label="Rel attribute:">
                     <switcher
                         slot="field"
-                        v-model="rel" />
+                        label="nofollow"
+                        v-model="rel.nofollow" />
+                    <switcher
+                        slot="field"
+                        label="sponsored"
+                        v-model="rel.sponsored" />
+                    <switcher
+                        slot="field"
+                        label="ugc"
+                        v-model="rel.ugc" />
                 </field>
             </div>
 
@@ -141,7 +150,11 @@ export default {
             target: '',
             label: '',
             title: '',
-            rel: false
+            rel: {
+                nofollow: false,
+                sponsored: false,
+                ugc: false
+            }
         };
     },
     computed: {
@@ -218,7 +231,11 @@ export default {
             this.target = '';
             this.label = '';
             this.title = '';
-            this.rel = false;
+            this.rel = {
+                nofollow: false,
+                sponsored: false,
+                ugc: false
+            };
         },
         parseContent (content) {
             if(!content) {
@@ -269,8 +286,12 @@ export default {
                 }
             }
 
-            if (relContent && relContent[1].indexOf('nofollow') > -1) {
-                this.rel = true;
+            let relValues = ['nofollow', 'sponsored', 'ugc'];
+
+            for (let i = 0; i < relValues.length; i++) {
+                if (relContent && relContent[1].indexOf(relValues[i]) > -1) {
+                    this.rel[relValues[i]] = true;
+                }
             }
         },
         setLink () {

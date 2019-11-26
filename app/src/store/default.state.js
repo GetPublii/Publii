@@ -10,7 +10,8 @@ export default {
             status: ''
         },
         editorOpened: false,
-        editorType: 'blockeditor'
+        editorType: 'blockeditor',
+        windowIsMaximized: false
     },
     // Persistent components
     components: {

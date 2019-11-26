@@ -36,8 +36,8 @@
                         </template>
                         <template v-else>Name</template>
 
-                        <span class="order-descending" v-if="orderBy === 'name' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'name' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'name' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'name' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -53,8 +53,8 @@
                         </template>
                         <template v-else>Posts</template>
 
-                        <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -67,8 +67,8 @@
                         </template>
                         <template v-else>ID</template>
 
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
@@ -207,9 +207,15 @@ export default {
 
         this.$bus.$on('site-switched', () => {
             setTimeout(() => {
-                this.orderBy = this.$store.state.ordering.tags.orderBy;
-                this.order = this.$store.state.ordering.tags.order;
+                this.saveOrdering(this.$store.state.ordering.tags.orderBy, this.$store.state.ordering.tags.order);
             }, 500);
+        });
+
+        this.$bus.$on('app-settings-saved', newSettings => {
+            if (this.orderBy + ' ' + this.order !== newSettings.tagsOrdering) {
+                let order = newSettings.tagsOrdering.split(' ');
+                this.saveOrdering(order[0], order[1]);
+            }
         });
     },
     methods: {
@@ -276,6 +282,12 @@ export default {
                     this.order = 'DESC';
                 }
             }
+
+            this.saveOrdering(this.orderBy, this.order);
+        },
+        saveOrdering (orderBy, order) {
+            this.orderBy = orderBy;
+            this.order = order;
 
             this.$store.commit('setOrdering', {
                 type: 'tags',

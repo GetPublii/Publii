@@ -674,7 +674,7 @@ class EditorBridge {
 
         this.contentImageUploading = true;
 
-        ipcRenderer.once('app-image-uploaded', (event, data) => {
+        ipcRenderer.once('app-image-uploaded', (event, data) => {            
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<figure class="post__image"><img alt="" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></figure>');
             } else {

@@ -24,7 +24,7 @@
             <topbar-dropdown-item
                 label="Report an issue"
                 title="Report a bug in our supportdesk"
-                path="https://publii.ticksy.com/" />
+                path="https://getpublii.com/forum/" />
             <topbar-dropdown-item
                 label="Github repository"
                 title="View Publii on Github"

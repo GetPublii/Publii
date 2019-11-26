@@ -13,6 +13,7 @@ const normalizePath = require('normalize-path');
 // Electron classes
 const electron = require('electron');
 const Menu = electron.Menu;
+const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
 // Collection classes
 const Posts = require('./posts.js');
@@ -61,7 +62,13 @@ class App {
          * Run the app
          */
         this.checkDirs();
-        this.loadConfig();
+        let loadConfigResult = this.loadConfig();
+
+        if (!loadConfigResult) {
+            this.app.quit();
+            return;
+        }
+
         this.checkThemes();
         this.loadSites().then(() => {
             this.loadThemes();
@@ -273,7 +280,7 @@ class App {
 
         if (siteConfig.name !== siteName) {
             siteConfig.name = siteName;
-            fs.writeFileSync(configFilePath, JSON.stringify(siteConfig));
+            fs.writeFileSync(configFilePath, JSON.stringify(siteConfig, null, 4));
         }
 
         siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
@@ -426,9 +433,22 @@ class App {
             this.appConfig = JSON.parse(fs.readFileSync(this.appConfigPath, 'utf8'));
             this.appConfig = Utils.mergeObjects(JSON.parse(JSON.stringify(defaultAstAppConfig)), this.appConfig);
         } catch (e) {
+            if (this.hasPermissionsErrors(e)) {
+                return false;
+            }
+
             console.log('The app-config.json file will be created');
             this.appConfig = {};
-            fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig), {'flags': 'w'});
+
+            try {
+                fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
+            } catch (e) {
+                if (this.hasPermissionsErrors(e)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /*
@@ -446,6 +466,25 @@ class App {
             this.sitesDir = path.join(this.appDir, 'sites');
             this.app.sitesDir = path.join(this.appDir, 'sites');
         }
+
+        return true;
+    }
+
+    /**
+     * Check permissions errors
+     */
+    hasPermissionsErrors (error) {
+        if (error.code === 'EACCES') {
+            dialog.showErrorBox('Publii has no read/write access to the config folder', 'Please check the permissions of the Publii config folder and try to reopen the application.');
+            return true;
+        }
+
+        if (error.code === 'EPERM') {
+            dialog.showErrorBox('Publii has no read/write access to the config folder', 'If you are using macOS 10.15+ - please open "System Preferences", go to "Security & Privacy" and under "Privacy Tab" please check if Publii has proper permissions for the "Files and Documents". For other operating systems - please check the file permissions for the Publii configuration folder.');
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -512,6 +551,14 @@ class App {
             self.mainWindow.webContents.send('app-data-loaded', appVersionInfo);
         });
 
+        if (process.platform === 'linux') {
+            this.mainWindow.webContents.on('before-input-event', (event, input) => {
+                if (input.control && input.code === 'KeyQ') {
+                    this.app.quit();
+                }
+            });
+        }
+
         // Open Dev Tools
         if(this.appConfig.openDevToolsInMain) {
             this.mainWindow.webContents.openDevTools();
@@ -529,7 +576,7 @@ class App {
          */
         this.mainWindow.on('close', function() {
             let windowBounds = self.mainWindow.getBounds();
-            fs.writeFileSync(self.initPath, JSON.stringify(windowBounds), {'flags': 'w'});
+            fs.writeFileSync(self.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
         });
 
         /*

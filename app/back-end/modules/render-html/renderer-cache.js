@@ -226,7 +226,8 @@ class RendererCache {
             FROM
                 posts
             WHERE
-                status NOT LIKE "%trashed%"
+                status NOT LIKE "%trashed%" AND
+                status NOT LIKE "%draft%"
             ORDER BY
                 id ASC;
         `).all();

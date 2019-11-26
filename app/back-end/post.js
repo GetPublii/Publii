@@ -175,7 +175,7 @@ class Post extends Model {
                 title: this.title,
                 author: this.author,
                 slug: this.slug,
-                text: this.text,
+                text: this.cleanUpContent(this.text),
                 creationDate: this.creationDate,
                 modificationDate: this.modificationDate,
                 status: this.status,
@@ -199,7 +199,7 @@ class Post extends Model {
                 title: this.title,
                 author: this.author,
                 slug: this.slug,
-                text: this.text,
+                text: this.cleanUpContent(this.text),
                 status: this.status,
                 createdAt: this.creationDate,
                 modifiedAt: this.modificationDate,
@@ -766,6 +766,13 @@ class Post extends Model {
             id: this.id, 
             data: dataToSave
         });
+    }
+
+    /**
+     * Clean up post content from wrong code
+     */
+    cleanUpContent (content) {
+        return content.replace(/\<figure\sclass=\"post__image\spost__image\s/gmi, '<figure class="post__image ');
     }
 }
 
