@@ -55,7 +55,7 @@
     "vue-loader": "^13.6.0",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^3.6.0",
-    "webpack-bundle-analyzer": "^2.9.2",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
