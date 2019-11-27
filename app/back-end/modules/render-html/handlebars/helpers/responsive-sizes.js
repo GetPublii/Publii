@@ -9,22 +9,18 @@ const UtilsHelper = require('./../../../../helpers/utils.js');
  * @returns {string} - string with the sizes attribute
  */
 function responsiveSizesHelper(rendererInstance, Handlebars) {
-    Handlebars.registerHelper('responsiveSizes', returnSizesAttribute);
+    Handlebars.registerHelper('responsiveSizes', returnSizesAttribute.bind(rendererInstance));
 }
 
-function returnSizesAttribute (group, instance = false) {
+function returnSizesAttribute (group) {
     let output = '';
 
     // Check if the responsive config exists
-    if(!UtilsHelper.responsiveImagesConfigExists(rendererInstance.themeConfig)) {
+    if(!UtilsHelper.responsiveImagesConfigExists(this.themeConfig)) {
         return output;
     }
 
-    if (instance) {
-        rendererInstance = instance;
-    }
-
-    let responsiveConfig = rendererInstance.themeConfig.files.responsiveImages;
+    let responsiveConfig = this.themeConfig.files.responsiveImages;
     let useGroup = false;
 
     if(typeof group === "string") {
