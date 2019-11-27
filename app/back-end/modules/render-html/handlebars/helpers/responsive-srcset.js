@@ -12,16 +12,12 @@ const URLHelper = require('./../../helpers/url.js');
  * @returns {string} - string with the srcset attribute
  */
 function responsiveSrcSetHelper(rendererInstance, Handlebars) {
-    Handlebars.registerHelper('responsiveSrcSet', returnSrcSetAttribute);
+    Handlebars.registerHelper('responsiveSrcSet', returnSrcSetAttribute.bind(rendererInstance));
 }
 
-function returnSrcSetAttribute (url, group, instance = false) {
-    if(!url) {
+function returnSrcSetAttribute (url, group) {
+    if (!url) {
         return;
-    }
-
-    if (instance) {
-        rendererInstance = instance;
     }
 
     url = URLHelper.fixProtocols(normalizePath(url));
@@ -30,7 +26,7 @@ function returnSrcSetAttribute (url, group, instance = false) {
     let dimensionsData = false;
 
     // Check if the responsive config exists
-    if(!UtilsHelper.responsiveImagesConfigExists(rendererInstance.themeConfig)) {
+    if(!UtilsHelper.responsiveImagesConfigExists(this.themeConfig)) {
         return output;
     }
 
@@ -44,12 +40,12 @@ function returnSrcSetAttribute (url, group, instance = false) {
     }
 
     // Check for the config
-    if(UtilsHelper.responsiveImagesConfigExists(rendererInstance.themeConfig, 'optionImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(rendererInstance.themeConfig, 'optionImages', group);
-        dimensionsData = UtilsHelper.responsiveImagesData(rendererInstance.themeConfig, 'optionImages', group);
-    } else if(UtilsHelper.responsiveImagesConfigExists(rendererInstance.themeConfig, 'contentImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(rendererInstance.themeConfig, 'contentImages');
-        dimensionsData = UtilsHelper.responsiveImagesData(rendererInstance.themeConfig, 'contentImages');
+    if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'optionImages')) {
+        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'optionImages', group);
+        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'optionImages', group);
+    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'contentImages')) {
+        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'contentImages');
+        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'contentImages');
     }
 
     if(!dimensions) {
