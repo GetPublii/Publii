@@ -6,7 +6,7 @@ let themeHelpers = {
     lazyLoadForContentImages: function(postText, lazyLoadEffect = '') {
         let modifiedPostText = postText;
         // Select all images from the content
-        modifiedPostText = modifiedPostText.replace(/<img[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+        modifiedPostText = modifiedPostText.replace(/<img[\s\S]*?src="(.*?)"[\s\S]*?>/gmi, function(match, url) {
             if (match.indexOf('data-is-external-image="true"') > -1) {
                 return match;
             }  
@@ -75,7 +75,7 @@ let themeHelpers = {
         });           
                    
         // Select all iframes from the content
-        modifiedPostText = modifiedPostText.replace(/<iframe[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+        modifiedPostText = modifiedPostText.replace(/<iframe[\s\S]*?src="(.*?)"[\s\S]*?>/gmi, function(match, url) {
             // Replace src attribute with data-src            
             match = match.replace('src="', 'data-src="');
             // Add class attribute            
@@ -85,7 +85,7 @@ let themeHelpers = {
         });
        
         // Select all videos from the content
-        modifiedPostText = modifiedPostText.replace(/<video[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
+        modifiedPostText = modifiedPostText.replace(/<video[\s\S]*?src="(.*?)"[\s\S]*?>/gmi, function(match, url) {
             // Replace src attribute with data-src            
             match = match.replace('src="', 'data-src="');
             // Add class attribute            

@@ -64,12 +64,12 @@ class ContentHelper {
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
         // Find all images and add srcset and sizes attributes
-        preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
+        preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"/gmi, function(matches, url) {
             return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, domain);
         });
 
         // Wrap images with classes into <figure>
-        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img.*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
+        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[\s\S]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
             return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
         });
 
