@@ -91,7 +91,8 @@
       "!app/node_modules/babel*",
       "!app/node_modules/postcss*",
       "!app/node_modules/asn1/**/*",
-      "!app/node_modules/electron-*"
+      "!app/node_modules/electron-*",
+      "app/node_modules/publii-block-editor"
     ],
     "linux": {
       "icon": "./build/icon.icns",

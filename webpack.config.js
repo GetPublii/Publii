@@ -16,6 +16,10 @@ module.exports = {
     // new DashboardPlugin() //,
     // new BundleAnalyzerPlugin()
   ],
+  node: {
+    __dirname: false,
+    __filename: false
+  },
   module: {
     rules: [
       {

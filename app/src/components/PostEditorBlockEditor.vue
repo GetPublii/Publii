@@ -46,6 +46,8 @@ import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
 import SearchPopup from './post-editor/SearchPopup';
 import Utils from './../helpers/utils';
+import path from 'path';
+import url from 'url';
 
 const mainProcess = remote.require('./main.js');
 
@@ -115,10 +117,18 @@ export default {
             return !!this.postID;
         },
         editorHtmlPath () {
-            return 'file://' + window.__dirname + '/../node_modules/publii-block-editor/dist/index.html';
+            return url.format({
+                pathname: path.join(window.__dirname, '/../node_modules/publii-block-editor/dist/index.html'),
+                protocol: 'file',
+                slashes: true
+            });
         },
         editorPreloadPath () {
-            return 'file://' + window.__dirname + '/editor-webview-preload.js';
+            return url.format({
+                pathname: path.join(window.__dirname, '/editor-webview-preload.js'),
+                protocol: 'file',
+                slashes: true
+            });
         }
     },
     mounted () {
