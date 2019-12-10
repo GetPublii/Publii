@@ -115,6 +115,10 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "minimumSystemVersion": "10.10"
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
     "dmg": {
       "sign": false,
       "icon": "build/installation/volume.icns",
