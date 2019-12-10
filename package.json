@@ -103,7 +103,6 @@
     },
     "win": {
         "icon": "app/src/assets/installation/icon.ico",
-        "bundle-id": "TidyCustoms",
         "target": "nsis"
     },
     "mac": {
