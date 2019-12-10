@@ -102,12 +102,12 @@
       "executableName": "Publii"
     },
     "win": {
-        "icon": "app/src/assets/installation/icon.ico",
+        "icon": "build/installation/icon.ico",
         "target": "nsis"
     },
     "mac": {
       "category": "public.app-category.utilities",
-      "icon": "app/src/assets/installation/icon.icns",
+      "icon": "build/installation/icon.icns",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "target": "dmg",
@@ -117,7 +117,7 @@
     },
     "dmg": {
       "sign": false,
-      "icon": "build/icons/volume.icns",
+      "icon": "build/installation/volume.icns",
       "title": "Install Publii"
     }
   },
