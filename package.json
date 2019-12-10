@@ -116,8 +116,7 @@
       "minimumSystemVersion": "10.10"
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "oneClick": true
     },
     "dmg": {
       "sign": false,
