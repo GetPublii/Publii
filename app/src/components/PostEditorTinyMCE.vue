@@ -238,7 +238,10 @@ export default {
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
             } else {
-                return postData;
+                this.$bus.$emit('rendering-popup-display', {
+                    postID: this.postID,
+                    postData: postData
+                });
             }
         },
         savingPost (newStatus, postData, closeEditor = false) {
