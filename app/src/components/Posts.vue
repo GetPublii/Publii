@@ -390,7 +390,7 @@
             class="empty-state post">
             
            <div>               
-                <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="286" />
+                <img src="../../src/assets/svg/wysiwyg-editor.svg" height="286" width="331" />
                 <h3>WYSIWYG editor</h3>
                 <p>This editor provides a familiar word-processing experience, with additional tools for users that want to control every aspect of their page content.</p>
                 <p-button
@@ -403,7 +403,7 @@
            </div>
            
            <div>
-                <img src="../../src/assets/svg/block-editor.svg" height="286" width="286" />
+                <img src="../../src/assets/svg/block-editor.svg" height="286" width="331" />
                 <h3>Block editor</h3>
                 <p>A modern and intuitive editor with shortkey and markdown support to make blogging easy, with no need to worry about HTML or other code elements.</p>
                 <p-button
@@ -416,7 +416,7 @@
            </div>
             
            <div>                
-                <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="286" />
+                <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="331" />
                 <h3>Markdown editor</h3>
                 <p>This editor supports Markdown syntax as shorthand for producing content quickly; great for extensive, no-frills projects such as documentation. </p>
                 <p-button
