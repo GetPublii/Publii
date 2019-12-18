@@ -156,16 +156,17 @@ export default {
         this.webview = document.querySelector('webview');
         this.initCommunicationWithEditor();
 
-        this.webview.addEventListener('dom-ready', () => {
-            // this.webview.openDevTools();
-            if (this.isEdit) {
-                this.newPost = false;
-                this.loadPostData();
-            } else {
-                this.setDataLossWatcher();
-            }
+        this.webview.getWebContents().on('dom-ready', () => {
+            this.webview.openDevTools();
 
             setTimeout(() => {
+                if (this.isEdit) {
+                    this.newPost = false;
+                    this.loadPostData();
+                } else {
+                    this.setDataLossWatcher();
+                }
+
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
                 this.webview.send('set-current-site-data', {
