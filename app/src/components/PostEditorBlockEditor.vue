@@ -168,6 +168,11 @@ export default {
             setTimeout(() => {
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
+                this.webview.send('set-current-site-data', {
+                    tags: this.$store.state.currentSite.tags,
+                    posts: this.$store.state.currentSite.posts,
+                    authors: this.$store.state.currentSite.authors
+                });
             }, 1000);
         });
     },
