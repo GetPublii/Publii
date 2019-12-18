@@ -535,13 +535,6 @@ class App {
         this.mainWindow.loadURL('file://' + this.basedir + '/dist/index.html');
         this.mainWindow.removeMenu();
 
-        // Register search shortcut listener
-        this.mainWindow.webContents.on('before-input-event', (e, input) => {
-            if (input.key === 'f' && (input.meta || input.control)) {
-                this.mainWindow.webContents.send('app-show-search-form');     
-            }
-        });
-
         this.mainWindow.webContents.on('did-finish-load', function() {
             let appVersionInfo = {
                 version: self.versionData,
