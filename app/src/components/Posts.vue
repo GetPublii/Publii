@@ -415,7 +415,7 @@
                 </p-button>    
            </div>
             
-           <div>                
+           <!--<div>                
                 <img src="../../src/assets/svg/markdown-editor.svg" height="286" width="331" />
                 <h3>Markdown editor</h3>
                 <p>This editor supports Markdown syntax as shorthand for producing content quickly; great for extensive, no-frills projects such as documentation. </p>
@@ -426,8 +426,7 @@
                     :onClick="addNewPost.bind(this, 'markdown')">
                     Add new post
                 </p-button>    
-           </div>
-
+           </div>-->
         </div>
     </section>
 </template>
@@ -512,14 +511,14 @@ export default {
                     value: 'tinymce',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
-                },
+                }/*,
                 {
                     label: 'Use Markdown editor',
                     activeLabel: 'Add new post',
                     value: 'markdown',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'markdown')
-                }
+                }*/
             ]
         },
         showPostSlugs () {
