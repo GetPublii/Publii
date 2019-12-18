@@ -16,7 +16,6 @@ class BlocksToHtml {
                 let blockParser = blocksMapping[block.type];
                 let blockContent = blockParser(block);
                 outputText.push(blockContent);
-                console.log(blockContent);
             } catch (err) {
                 console.error(err);
             }
