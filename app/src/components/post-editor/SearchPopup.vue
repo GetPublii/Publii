@@ -63,10 +63,8 @@ export default {
             });
         });
 
-        ipcRenderer.on('app-show-search-form', () => {
-            this.isVisible = true;
-            this.$refs['search-phrase-input'].focus();
-        });
+        ipcRenderer.on('app-show-search-form', this.showSearch);
+        this.$bus.$on('app-show-search-form', this.showSearch);
     },
     methods: {
         getNextResult () {
@@ -85,6 +83,10 @@ export default {
                 forward: false
             });
         },
+        showSearch () {
+            this.isVisible = true;
+            this.$refs['search-phrase-input'].focus();
+        },
         finishSearch () {
             this.webviewContents.stopFindInPage('clearSelection');
             this.isVisible = false;
@@ -97,6 +99,7 @@ export default {
     },
     beforeDestroy () {
         ipcRenderer.removeAllListeners('app-show-search-form');
+        this.$bus.$off('app-show-search-form', this.showSearch);
     }
 };
 </script>

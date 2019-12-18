@@ -4,7 +4,6 @@ const electron = require('electron');
 const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
 const dialog = electron.dialog;
-const globalShortcut = electron.globalShortcut;
 const ipcMain = electron.ipcMain;
 const fs = require('fs');
 const App = require('./back-end/app.js');
@@ -22,10 +21,6 @@ electronApp.on('window-all-closed', function () {
     electronApp.quit();
 });
 
-electronApp.on('will-quit', function () {
-    globalShortcut.unregister('CommandOrControl+F');
-});
-
 electronApp.on('ready', function () {
     let startupSettings = {
         'mainWindow': mainWindow,
@@ -38,11 +33,6 @@ electronApp.on('ready', function () {
     }
 
     appInstance = new App(startupSettings);
-
-    // Register search shortcut listener
-    globalShortcut.register('CommandOrControl+F', () => {
-        appInstance.getMainWindow().webContents.send('app-show-search-form'); 
-    });
 
     ipcMain.on('publii-set-spellchecker-language', (event, language) => {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
