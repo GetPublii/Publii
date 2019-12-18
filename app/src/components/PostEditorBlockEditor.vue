@@ -175,6 +175,12 @@ export default {
                 });
             }, 1000);
         });
+
+        this.webview.getWebContents().on('before-input-event', (event, input) => {
+            if (input.key === 'f' && (input.meta || input.control)) {
+                this.$bus.$emit('app-show-search-form');  
+            }
+        });
     },
     methods: {
         initCommunicationWithEditor () {
