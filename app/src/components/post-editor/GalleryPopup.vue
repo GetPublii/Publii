@@ -282,7 +282,7 @@ export default {
                 let description = ``;
 
                 if(img.caption !== '') {
-                    description = `<figcaption class="gallery-description">${img.caption}</figcaption>`;
+                    description = `<figcaption class="gallery__item-description">${img.caption}</figcaption>`;
                 }
 
                 let link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${img.alt}" /></a>`;
