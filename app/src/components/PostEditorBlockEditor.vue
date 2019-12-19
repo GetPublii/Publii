@@ -178,6 +178,13 @@ export default {
             this.webview.getWebContents().on('before-input-event', (event, input) => {
                 if (input.key === 'f' && (input.meta || input.control)) {
                     this.$bus.$emit('app-show-search-form');  
+                } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
+                    this.webview.send('block-editor-undo');
+                } else if (
+                    (input.key === 'z' && (input.meta || input.control) && input.shift) || 
+                    (input.key === 'y' && (input.meta || input.control) && !input.shift)
+                ) {
+                    this.webview.send('block-editor-redo');
                 }
             });
         });
