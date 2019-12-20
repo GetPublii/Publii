@@ -97,7 +97,8 @@
                         Add menu item
                     </p-button>
                     <p-button
-                        type="small"
+                        type="clean small"
+                        class="menu-edit-btn"
                         @click.native="editMenuName(item.name, index)">
                         Edit menu name
                     </p-button>
@@ -394,9 +395,10 @@ export default {
     }
 
     .item-content {
-        border-top: 1px solid $color-8;
+        border-top: 1px solid var(--input-border-color);
         overflow: hidden;
         padding: 3rem 0 3rem 3rem;
+        user-select: none;
         width: 100%;
     }
 
@@ -411,31 +413,22 @@ export default {
     .menu-item-list {
         list-style-type: none;
         margin: .25 * $spacing 0;
-        padding: 0;
+        padding: 0;       
+    }
+    
+    &-edit-btn {
+         color: var(--link-secondary-color) !important;
+        
+         &:active,
+         &:focus,
+         &:hover {
+            color: var(--link-secondary-hover-color) !important;
+         }
     }
 
     &-empty-list {
         display: block;
         text-align: center;
-    }
-}
-
-.menu-item-editor-wrapper {
-    right: 0;
-
-    &.v-enter-active,
-    &.v-leave-active {
-        transition: all .25s ease;
-    }
-
-    &.v-enter,
-    &.v-leave-to {
-        right: -55rem;
-    }
-
-    &.v-enter-to,
-    &.v-leave {
-        right: 0;
     }
 }
 </style>

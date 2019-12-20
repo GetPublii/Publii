@@ -37,9 +37,9 @@ export default {
  */
 .overlay {
     align-items: center;
-    background: rgba(255, 255, 255, .85);
+    background: var(--overlay);
     bottom: 0;
-    color: $color-7;
+    color: var(--gray-4);
     display: flex;   
     font-weight: bold;
     justify-content: center;
@@ -57,19 +57,19 @@ export default {
     }
 
     &.has-border {
-        border: 3px dashed $color-9;
+        border: 3px dashed var(--gray-1);
         border-radius: 10px;
     }
 
     &.is-blue {
-        border: 2px solid $color-1;
-        background: rgba($color-1, .17);
+        border: 2px solid var(--primary-color);
+        background: rgba(var(--primary-color-rgb), .17);
         
         & > div {
             box-shadow: 0 0 3px rgba(black, .2);
-            background: $color-1;
+            background: var(--primary-color);
             border-radius: 3px;
-            color: $color-10;
+            color: var(--white);
             font-size: 1.6rem;
             font-weight: 500;
             height: auto;

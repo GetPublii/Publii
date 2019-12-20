@@ -94,14 +94,14 @@ export default {
 }
 
 .version {
-    color: $color-7;
+    color: var(--gray-4);
     font-size: 1.5rem;
     font-weight: 400;
 }
 
 .license {
     -webkit-app-region: no-drag;
-    color: $color-7;
+    color: var(--gray-4);
     font-weight: 400;
     margin-top: 5rem;
 }

@@ -1,5 +1,5 @@
 .overlay {
-    background-color: rgba($color-helper-7, .35);
+    background: var(--overlay);
     bottom: 0;
     display: block;
     height: auto;
@@ -12,10 +12,38 @@
     z-index: 100002;
 }
 
+.popup {
+    background-color: var(--popup-bg);
+    border: none;
+    border-radius: .6rem;
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 400;
+    left: 50%;  
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    user-select: none;
+}
+
+.message {
+    color: var(--text-primary-color);
+    font-weight: 400;
+    margin: 0;
+    padding: 4rem;
+    position: relative;
+    text-align: left;
+
+    &.text-centered {
+        text-align: center;
+    }
+}
 
 h1,
 h2 {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-size: 1.8rem;
     font-weight: 500;
     margin: 0 0 7rem 0;

@@ -91,21 +91,18 @@
                                         </template>
 
                                         <template v-if="$parent.postData.creationDate.text">
-                                            Change custom post date 
+                                            Change post date 
 
                                             <small>
                                                 ({{ $parent.postData.creationDate.text }})
                                             </small>
-
-                                            <a 
-                                                href="#" 
+                                                
+                                            <span
                                                 class="post-date-reset"
                                                 @click.stop.prevent="resetCreationDate()">
-                                                
-                                                <icon
-                                                    size="m"
-                                                    name="sidebar-close"/>
-                                            </a>
+                                                &times;
+                                            </span>
+                                            
                                         </template>
                                     </a>
                                 </dd>
@@ -707,8 +704,8 @@ export default {
 
 .post-editor {
     &-sidebar {
-        background: $color-10;
-        border-left: 1px solid $color-helper-8;
+        background: var(--option-sidebar-bg);
+        border-left: 1px solid var(--input-border-color);
         height: calc(100vh - 2.2rem);
         overflow: auto;
         opacity: 0;
@@ -725,7 +722,7 @@ export default {
         }
 
         &:before {
-            background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
             height: 12rem;
             position: fixed;
@@ -747,7 +744,8 @@ export default {
 
         .post-info {            
             display: grid;
-            grid-template-columns: 50% 50%;
+            grid-template-columns: repeat(2, 49%);
+            grid-gap: 0 2%;
             margin-bottom: 1rem;
             
             &--nogrid {
@@ -759,21 +757,27 @@ export default {
             }
 
             dt {
-                color: $color-4;
+                color: var(--label-color);
                 font-size: 1.5rem;
                 margin: 0 0 .5rem 0;
             }
 
             dd {
-                color: $color-7;
+                color: var(--gray-4);
                 font-size: 1.4rem;
                 margin: 0;
+                
+                a {
+                    display: block;
+                    position: relative;
+                    white-space: nowrap;
+                }
             }           
         }            
 
         .post-editor-settings {
             .post-author-selector {
-                border-bottom: 1px solid $color-9;
+                border-bottom: 1px solid var(--gray-1);
                 margin-bottom: 2rem;
                 padding-bottom: 0;
             }
@@ -786,35 +790,47 @@ export default {
                 }
 
                 small {
-                    color: $color-6;
+                    color: var(--gray-4);
                     padding: 0 .5rem;
                     position: relative;
                     top: -1px;
                 }
 
                 &-reset {
-                    color: $color-3;
+                    border-radius: 50%;
+                    color: var(--icon-secondary-color);           
                     font-size: 2.4rem;
+                    font-weight: 300;
+                    height: 3rem; 
                     line-height: 1;
-                    position: relative;
-                    top: 1px;
-                    vertical-align: middle;
+                    position: absolute;
+                    right: 0;
+                    text-align: center;       
+                    transition: var(--transition);         
+                    top: 50%;
+                    transform: translate(0, -50%);         
+                    width: 3rem;
                     
                     .icon {
                         cursor: pointer;
-                        fill: $color-3;
-                        transition: all .3s ease-out;
-                    }
+                        fill: currentColor;                        
+                    }                    
                     
-                    
-                    &:hover .icon {
-                        fill: $color-4;
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        color: var(--headings-color);
                     }
+        
+                    &:hover {
+                        background: var(--input-border-color);
+                    }  
                 }
             }
             
             .post-action {            
                label {
+                  font-weight: 400;
                   line-height: 1.8;
                }
             }
@@ -825,7 +841,7 @@ export default {
             margin-bottom: 0;
 
             &-error {
-                color: $color-3;
+                color: var(--warning);
                 display: block;
                 font-size: 1.4rem;
                 padding: .5rem 0;
@@ -864,8 +880,8 @@ export default {
 
             &-header {
                 align-items: center;               
-                border-top: 1px solid $color-helper-8;                  
-                color: $color-4;
+                border-top: 1px solid var(--input-border-color);     
+                color: var(--link-tertiary-color);
                 cursor: pointer;
                 display: flex;
                 height: 6.4rem;
@@ -873,12 +889,12 @@ export default {
                 margin-top: -1px;
                 padding: 0;
                 position: relative;
-                transition: all .25s ease-out;
+                transition: var(--transition);
                 user-select: none;
                 width: calc(100% - 7.2rem);
     
                 &:hover {
-                    color: $link-color;
+                    color: var(--link-tertiary-hover-color);
 
                     .post-editor-settings {
                         &-icon {
@@ -910,34 +926,36 @@ export default {
                 width: calc(100% - 5.8rem);
 
                 &-warning {
-                    color: $color-3;
+                    color: var(--warning);
                     font-size: 1.2rem;
                     margin-left: 1rem;
                 }
             }
 
             &-icon {
-                fill: $grey-icon-color; 
+                fill: var(--icon-secondary-color); 
                 left: 0;
                 height: 2.4rem;
                 margin-right: 1.6rem;
                 opacity: 1;
                 position: relative;
-                transition: all .25s ease-out;
+                transition: var(--transition);
                 width: 2.4rem;
             }
 
             label {
+                color: var(--label-color);
                 display: block;
                 font-size: 1.5rem;
+                font-weight: 500;
                 line-height: 2.6;
-                margin: 0 0 1rem 0;
+                margin: 0 0 1.2rem 0;
 
                 input[type="text"],
                 input[type="number"],
                 select,
                 textarea {
-                    background-color: $color-10;
+                    background-color: var(--input-bg);
                     width: 100%;
                 }
 
@@ -960,15 +978,15 @@ export default {
 
         .note {
             clear: both;
+            color: var(--text-light-color);
             display: block;
             font-size: 1.4rem;
             font-style: italic;
-            line-height: 1.4;
-            opacity: .6;
+            line-height: 1.4;            
             padding-top: .5rem;
 
             &.is-warning {
-                color: $color-3;
+                color: var(--warning);
                 opacity: 1;
             }
         }
@@ -1018,12 +1036,12 @@ body > .select2-container {
     font-size: 1.4rem;
 
     .select2-results__option--highlighted[aria-selected] {
-        background: $color-1;
+        background: var(--primary-color);
     }
 
     .select2-dropdown {
-        background-color: $color-10;
-        border: 1px solid $color-8;
+        background-color: var(--white);
+        border: 1px solid var(--input-border-color);
         border-radius: 3px;
     }
 }

@@ -41,7 +41,7 @@ export default {
         .input-wrapper {            
 
             input {
-                background: $color-9;
+                background: var(--gray-1);
                 border-radius: 30px;
                 box-shadow: none!important;
                 font-size: 1.5rem;
@@ -49,7 +49,7 @@ export default {
             }
 
             svg {
-                fill: $color-7!important;
+                fill: var(--icon-secondary-color)!important;
                 height: 1.6rem;
                 left: 3.5rem!important;
                 width: 1.6rem;
@@ -58,7 +58,7 @@ export default {
 
         & > span {
         border-radius: 50%;
-        color: $color-7;
+        color: var(--icon-secondary-color);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
@@ -76,11 +76,11 @@ export default {
         &:active,
         &:focus,
         &:hover {
-            color: $color-4;
+            color: var(--icon-tertiary-color);
         }
         
         &:hover {
-            background: $color-helper-8;
+            background: var(--input-border-color);
         }
         }
     }

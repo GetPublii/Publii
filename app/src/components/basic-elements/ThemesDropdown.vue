@@ -64,11 +64,11 @@ export default {
 
 select {
     -webkit-appearance: none;
-    background-color: $color-10;
+    background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px $color-8;
-    color: $color-5;
+    box-shadow: inset 0 0 0 1px var(--input-border-color);
+    color: var(--text-primary-color);
     font: 400 1.6rem/1.5 $secondary-font;
     max-width: 100%;
     min-width: 100px;
@@ -79,11 +79,12 @@ select {
     width: 100%;
 
     &:focus {
-        box-shadow: inset 0 0 2px 1px $color-1;
+        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
     }
 
     &:not([multiple]) {
-        background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+        background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+        background-color: var(--input-bg);
         background-size: 10px;
         padding-right: 3rem;
     }

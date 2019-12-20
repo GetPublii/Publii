@@ -47,7 +47,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .char-counter {
-    color: $color-7;
+    color: var(--text-light-color);
     display: block;
     font-size: 1.2rem;
     line-height: 1.6;
@@ -56,7 +56,7 @@ export default {
     width: 100%;
 
     &.is-too-long {
-        color: $color-3;
+        color: var(--warning);
     }
 }
 </style>

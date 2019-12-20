@@ -1,36 +1,199 @@
-/*
- * color palette
- */
-$color-0: #2a99f4;
+// default
+
+:root {
+  --primary-color: #42a5f5;
+  --primary-color-rgb: 66, 165, 245;
+  --secondary-color: #2a99f4;   
+  --gray-7: #f6f7f8;
+  --gray-6: #2a2e30;
+  --gray-5: #3d464e;  
+  --gray-4: #707277;
+  --gray-3: #8e929d;
+  --gray-2: #dddddd;
+  --gray-1: #f6f7f8;
+  --white: #fff;
+  --warning: #EA1A16;
+  --success: #40B771;
+  --highlighted: #FFF8E1;
+    
+  --overlay: rgba(0,0,0, .35);
+    
+  --transition: all .2s ease-out;
+    
+  --icon-primary-color: #4e5360;
+  --icon-secondary-color: #8e929d;
+  --icon-tertiary-color: #3d464e;
+    
+  --bg-primary: #fff; 
+  --bg-secondary: #fff;    
+ 
+  --border-light-color: #dfe0e3; 
+    
+  --input-bg: #fff;
+  --input-bg-hover: #f6f7f8;
+  --input-bg-light: #f6f7f8;
+  --input-border-color: #dfe0e3;
+  --input-border-focus: #42a5f5;
+  --label-color: #2a2e30;
+    
+  --button-bg: #42a5f5;
+  --button-hover-bg: #1d93f3;    
+  --button-green-bg: #40B771;
+  --button-green-hover-bg: #38a063;    
+  --button-red-bg: #EA1A16;
+  --button-red-hover-bg: #cd1613; 
+  --button-gray-bg: #8e929d;
+  --button-gray-hover-bg: #707277;
+    
+  --text-primary-color: #3d464e; 
+  --text-light-color: #8e929d; 
+  --headings-color: #2a2e30;
+    
+  --link-primary-color: #328ed8; 
+  --link-primary-hover-color: #2a2e30; 
+  --link-secondary-color:  #328ed8; 
+  --link-secondary-hover-color: #2a2e30; 
+  --link-tertiary-color:  #2a2e30; 
+  --link-tertiary-hover-color: #328ed8; 
+    
+  --sidebar-bg: #42a5f5; 
+  --sidebar-link-color: #fff;  
+  --sidebar-link-hover-bg: rgba(98, 185, 255, 0.35); 
+  --sidebar-link-hover-color: #fff; 
+  --sidebar-link-opacity: .7; 
+  --sidebar-link-icon: #ffffff;
+  --sidebar-link-icon-hover: #ffffff;
+  --sidebar-link-active-color: #fff;  
+  --sidebar-link-active-bg: rgba(255,255,255, .18); 
+  --sidebar-sync-btn-bg: rgba(255,255,255, .18); 
+  --sidebar-sync-btn-color: #fff;
+  --sidebar-preview-btn-border-color: rgba(255,255,255, .38);
+  --sidebar-preview-btn-border-hover-color: #fff;
+  --sidebar-preview-btn-color: #fff;
+  --sidebar-preview-btn-hover-color: #fff;
+    
+  --option-sidebar-bg: #fff;
+    
+  --tab-color: #2a2e30;
+  --tab-hover-color: rgba($color-helper-8, 0.4);
+  --tab-active-bg: #42a5f5; 
+  --tab-active-color: #FFF; 
+    
+  --scrollbar: #ddd;
+  --scrollbar-hover: #707277;
+    
+  --progress-bar: rgba(255, 255, 255, 0.3);
+    
+  --popup-bg: #fff; 
+  --popup-btn-cancel-color: #707277;
+  --popup-btn-cancel-hover-color: #707277;
+  --popup-btn-cancel-bg: #fff;
+  --popup-btn-cancel-hover-bg: #f6f7f8;
+}
+
+//dark
+//
+//:root { 
+//  --primary-color: #1089ff;
+//  --primary-color-rgb: 16, 137, 255;
+//  --secondary-color: #2a99f4;   
+//  --gray-7: #1e2128;
+//  --gray-6: #21242c;
+//  --gray-5: #8e929d;   
+//  --gray-4: #6f7480;   
+//  --gray-3: #8e929d;
+//  --gray-2: #dddddd;
+//  --gray-1: #2b2c35;  
+//  --white: #fff;
+//  --warning: #FF1011;
+//  --success: #56a900;
+//  --highlighted: #343540;
+//    
+//  --overlay: rgba(30,33,40, .80);
+//    
+//  --transition: all .2s ease-out;
+//    
+//  --icon-primary-color: #8e929d;
+//  --icon-secondary-color: #7F838D;
+//  --icon-tertiary-color: rgba(255,255,255, .87);
+//    
+//  --bg-primary: #202128; 
+//  --bg-secondary: #191a1f;     
+// 
+//  --border-light-color: #282930; 
+//    
+//  --input-bg: #2b2c35;
+//  --input-bg-hover: #343540;
+//  --input-bg-light: #2b2c35;
+//  --input-border-color: #3e3f4c;
+//  --input-border-focus: #1089ff;
+//  --label-color: #8e929d;
+//    
+//  --button-bg: #1089ff;
+//  --button-hover-bg: #0067cb;    
+//  --button-green-bg: #56a900;
+//  --button-green-hover-bg: #458800;
+//  --button-red-bg: #ed0001;
+//  --button-red-hover-bg: #a90001;
+//  --button-gray-bg: #6f7480;
+//  --button-gray-hover-bg: #1089ff;
+//    
+//  --text-primary-color: rgba(255,255,255, .87); 
+//  --text-light-color: #7F838D; 
+//  --headings-color: rgba(255,255,255, .87);
+//    
+//  --link-primary-color: rgba(255,255,255, .87);
+//  --link-primary-hover-color: #2e98ff; 
+//  --link-secondary-color: #8e929d;
+//  --link-secondary-hover-color: #2e98ff; 
+//  --link-tertiary-color: rgba(255,255,255, .87);
+//  --link-tertiary-hover-color: #2e98ff; 
+//    
+//  --sidebar-bg: #191a1f; 
+//  --sidebar-link-color: #8e929d;  
+//  --sidebar-link-hover-bg: #202128; 
+//  --sidebar-link-hover-color: rgba(255,255,255, .87);
+//  --sidebar-link-opacity: 1; 
+//  --sidebar-link-icon: #8e929d;
+//  --sidebar-link-icon-hover: #ffffff;
+//  --sidebar-link-active-color: rgba(255,255,255, .87);
+//  --sidebar-link-active-bg: #23262e;  
+//  --sidebar-sync-btn-bg: #1089ff; 
+//  --sidebar-sync-btn-color: rgba(255,255,255, .87);
+//  --sidebar-preview-btn-border-color: #3e3f4c;
+//  --sidebar-preview-btn-border-hover-color: #8e929d;
+//  --sidebar-preview-btn-color: rgba(255,255,255, .87);
+//  --sidebar-preview-btn-hover-color: #fff;
+//    
+//  --option-sidebar-bg: #23262e;
+//    
+//  --tab-color: rgba(255,255,255, .87);
+//  --tab-hover-color: #23262e;
+//  --tab-active-bg: #1089ff; 
+//  --tab-active-color: #FFFFFF; 
+//    
+//  --scrollbar: #3b414f;
+//  --scrollbar-hover: #6f7480;
+//    
+//  --progress-bar: rgba(25, 26, 31, 0.3);
+//    
+//  --popup-bg: #2b2c35;
+//  --popup-btn-cancel-color: #6f7480;
+//  --popup-btn-cancel-hover-color: rgba(255,255,255, .87);
+//  --popup-btn-cancel-bg: #2b2c35;
+//  --popup-btn-cancel-hover-bg: #343540;
+// 
+//}
+
 $color-1: #42a5f5;
-$color-2: #40b771;
-$color-3: #ef5350;
 $color-4: #2a2e30;
 $color-5: #3d464e;
-$color-6: #707277;
-$color-7: #8e929d;
 $color-8: #dddddd;
-$color-9: #f6f7f8;
 $color-10: #fff;
 
-
-$color-helper-1: #FFD54F;
-$color-helper-2: #5765A2;
-$color-helper-3: #A57C3A;
-$color-helper-4: #D48CDA;
-$color-helper-5: #FFF8E1;
 $color-helper-6: #ffc400;
 $color-helper-7: #1e2128;
 $color-helper-8: #e5e6e8;
-$color-helper-9: #d5d5d5;
-$color-helper-10: rgba($color-helper-8, 0.5);
-
-$link-color: #328ed8;  
-$link-hover-color: #2a2e30;
-
-$grey-icon-color: $color-7; 
-$danger-color: #ef5350;
-$post-editor-sidebar-color: #f6f7f8; 
 
 /*
  * Logo color sets

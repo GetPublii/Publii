@@ -82,11 +82,12 @@ html {
 }
 
 body#tinymce {
+    background: var(--bg-primary); 
     -webkit-font-smoothing: antialiased;
     font-size: inherit;
     line-height: 1.6;
     padding: 1.8rem 1rem 0 1rem;
-    max-width: 40rem;
+    max-width: 40rem; 
 
     & > :nth-child(1) {
         margin-top: 0;
@@ -94,19 +95,19 @@ body#tinymce {
 }
 
 a {
-    color: $link-color;
+    color: var(--link-primary-color);
     text-decoration: none;
     -webkit-transition: all 0.12s linear 0s;
     transition: all 0.12s linear 0s;
 }
 
 a:hover {
-    color: $link-color;
+    color: var(--link-primary-color);
     text-decoration: underline;
 }
 
 a:active {
-    color: $link-color;
+    color: var(--link-primary-color);
 }
 
 a:focus {
@@ -130,7 +131,7 @@ figure {
 
 figcaption {
     clear: both;
-    color: $color-6;
+    color: var(--gray-4);
     font-style: italic;
     font-size: 0.7rem;
     margin: 0.8rem 0 0;
@@ -260,7 +261,7 @@ strong {
 }
 
 blockquote {
-    border-left: 0.3rem solid $color-1;
+    border-left: 0.3rem solid var(--primary-color);
     font-style: italic;
     padding: 0.8rem 0 0.8rem 1.86667rem;
 }
@@ -300,7 +301,7 @@ pre {
 
 code,
 pre {
-    background-color: $color-9;
+    background-color: var(--gray-1);
     font-family: "Monaco", "Courier New", monospace;
     font-size: 0.8rem;
 }
@@ -317,13 +318,13 @@ table {
 }
 
 table th {
-    border-bottom: 2px solid $color-helper-8;
+    border-bottom: 2px solid var(--border-light-color);
     font-weight: 700;
     padding: 0.8rem 1.33333rem;
 }
 
 table tr:nth-child(2n) {
-    background: $color-9;
+    background: var(--gray-1);
 }
 
 table td {
@@ -332,13 +333,13 @@ table td {
 
 hr#read-more {
     border: none;
-    border-top: 3px solid $color-helper-8;
+    border-top: 3px solid var(--border-light-color);
     margin: 1.6rem 0;
     position: relative;
 
     &:after {
         background: #fff;
-        color: $color-7;
+        color: var(--gray-4);
         content: "Read more";
         font-size: 1rem;
         left: 50%;

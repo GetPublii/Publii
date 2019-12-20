@@ -1,6 +1,6 @@
 .help-panel {
-    background: $color-10;
-    border-left: 1px solid $color-helper-8;
+    background: var(--option-sidebar-bg);
+    border-left: 1px solid var(--input-border-color);
     display: none;
     height: calc(100vh - 2.2rem);
     overflow: auto;
@@ -10,7 +10,7 @@
     width: 44.2rem;
     
      &::before {
-            background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
             height: 12rem;
             position: fixed;
@@ -21,7 +21,7 @@
         }
     
      &::after {
-            background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 75%,rgba(255,255,255,0) 100%);
+            background: linear-gradient(to top, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
             height: 10rem;
             position: fixed;
@@ -42,16 +42,19 @@
     }
     
     &-header {
-            border-bottom: 1px solid $color-helper-8; 
+            border-bottom: 1px solid var(--input-border-color); 
             font-size: 1.8rem;
             margin: -3.6rem 0 2rem;
             padding: calc(1rem + 0.6vw) 0 2.25rem
     }
     
-    p {
+    &-desc {
+        color: var(--text-light-color);
+        
         span {
-            background: rgba($color-0, 0.2);
+            background: var(--input-border-color);
             border-radius: 4px;
+            color: var(--text-primary-color);
             padding: 2px 4px;
         }
     }
@@ -67,14 +70,14 @@
         }
         
         th {
-            border-bottom: 1px solid $color-helper-8; 
+            border-bottom: 1px solid var(--input-border-color); 
             padding: 12px 14px;
             text-align: left;
         }
         
         td {            
-            border-bottom: 1px solid $color-helper-8; 
-            border-right: 1px solid $color-helper-8; 
+            border-bottom: 1px solid var(--input-border-color); 
+            border-right: 1px solid var(--input-border-color); 
             padding: 12px 14px;
             vertical-align: top;
             white-space: nowrap;

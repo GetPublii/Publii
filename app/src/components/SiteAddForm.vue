@@ -234,7 +234,7 @@ export default {
  * Site create form
  */
 .site-create {
-    background: $color-10;
+   background: var(--popup-bg);
     border-radius: 5px;
     box-shadow: 0 0 60px rgba($color-4, 0.05);
     font-size: 1.6rem;
@@ -252,7 +252,7 @@ export default {
     }
 
     .title {
-        color: $color-4;
+        color: var(--text-primary-color);
         font-size: 1.8rem;
         font-weight: 600;
         margin: 0 0 4rem 0!important;
@@ -272,7 +272,7 @@ export default {
         }
 
         &-error {
-            color: $color-3;
+            color: var(--warning);
         }
 
         &:last-child {
@@ -293,11 +293,15 @@ export default {
             border-radius: 0 0 0 3px;
 
             & + .button {
-                box-shadow: inset 0 0 0 1px $color-8!important;
+                box-shadow: none!important;
+                border-top: 1px solid var(--input-border-color);
                 border-radius: 0 0 3px 0;
+                color: var(--popup-btn-cancel-color);
                 margin-left: 0;
+                
                 &:hover {
-                    background: $color-9;
+                   background: var(--popup-btn-cancel-hover-bg);
+                   color: var(--popup-btn-cancel-hover-color);
                 }
             }
         }
@@ -312,10 +316,10 @@ export default {
             
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-7, 0.2);
-                border-right: 2px solid rgba($color-7, 0.2);
-                border-bottom: 2px solid rgba($color-7, 0.2);
-                border-left: 2px solid $color-7;
+                border-top: 2px solid var(--border-light-color);
+                border-right: 2px solid var(--border-light-color);
+                border-bottom: 2px solid var(--border-light-color);
+                border-left: 2px solid var(--gray-4);
                 border-radius: 50%;
                 display: block;   
                 height: 3.5rem;

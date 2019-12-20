@@ -194,7 +194,7 @@ export default {
         right: 5rem;
 
         &-icon {
-            fill: $color-10;
+            fill: var(--white);
             float: left;
             margin-top: .2rem;
             transform-origin: 59% 51%;
@@ -202,20 +202,21 @@ export default {
         }
 
         & > sub {
-            color: rgba(255, 255, 255, .75);
+            color: var(--sidebar-link-color);
             display: block;
             font-size: 1.3rem;
             letter-spacing: .5px;
             margin: 0 -2.5rem;
+            opacity: var(--sidebar-link-opacity);
             padding: 1.5rem 0 1rem 0;
             text-align: center;
             width: calc(100% + 5rem);
         }
 
         &-link {
-            background: rgba($color-10, .18);
+            background: var(--sidebar-sync-btn-bg);
             border-radius: 3px;
-            color: $color-10;
+            color: var(--sidebar-sync-btn-color);
             display: block;
             font-size: 1.6rem;
             font-weight: 500;
@@ -232,13 +233,13 @@ export default {
                 width: 3rem;
 
                 path {
-                    fill: $color-10;
-                    transition: all .25s ease-out;
+                    fill: var(--white);
+                    transition: var(--transition);
                 }
 
                 polygon {
-                    fill: $color-1;
-                    transition: all .25s ease-out;
+                    fill: var(--primary-color);
+                    transition: var(--transition);
                 }
             }
 
@@ -246,7 +247,7 @@ export default {
             &:focus .sidebar-sync-icon,
             &:hover .sidebar-sync-icon {
                 path {
-                    fill: $color-10;
+                    fill: var(--white);
                 }
 
                 polygon {
@@ -273,7 +274,7 @@ export default {
                 width: 2.4rem;
 
                 path {
-                    fill: $color-10;                   
+                    fill: var(--white);                   
                 }
             }
 
@@ -281,7 +282,7 @@ export default {
             &:focus,
             &:hover {
                 background: $color-helper-6;
-                color: $color-10;
+                color: var(--white);
 
                 .sidebar-sync-icon {
                     fill: $color-helper-6;
@@ -317,10 +318,10 @@ export default {
             
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-10, 0.2);
-                border-right: 2px solid rgba($color-10, 0.2);
-                border-bottom: 2px solid rgba($color-10, 0.2);
-                border-left: 2px solid $color-10;
+                border-top: 2px solid rgba(255,255,255, .2);
+                border-right: 2px solid rgba(255,255,255, .2);
+                border-bottom: 2px solid rgba(255,255,255, .2);
+                border-left: 2px solid var(--white);
                 border-radius: 50%;
                 display: inline-block;   
                 height: 2.1rem;
@@ -336,9 +337,9 @@ export default {
     }
 
     &-preview-link {
-        border: 2px solid rgba(255, 255, 255, 0.38);
+        border: 2px solid var(--sidebar-preview-btn-border-color);
         border-radius: 3px;
-        color: $color-10!important;
+        color: var(--sidebar-preview-btn-color) !important;
         display: block;
         margin-bottom: 1rem;
         padding: 1.2rem 2.4rem;
@@ -350,8 +351,8 @@ export default {
         }
 
         &:hover {
-            border-color: $color-10;
-            color: $color-10!important;
+            border-color: var(--sidebar-preview-btn-border-hover-color) !important;
+            color: var(--sidebar-preview-btn-hover-color) !important;
         }
 
         &.is-disabled {

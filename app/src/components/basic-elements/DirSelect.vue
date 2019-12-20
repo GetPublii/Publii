@@ -106,8 +106,8 @@ export default {
     }
 
     .clear {
-       border-radius: 50%;
-        color: $color-7;
+        border-radius: 50%;
+        color: var(--icon-secondary-color);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
@@ -116,21 +116,20 @@ export default {
         position: absolute;
         right: 1.5rem;
         text-align: center;
-        transition: all .3s ease-out;         
-                    top: 50%;
-                    transform: translateY(-50%); 
-                    width: 3rem;
+        transition: var(--transition);           
+        top: 50%;
+        transform: translateY(-50%); 
+        width: 3rem;
 
         &:active,
-                    &:focus,
-                    &:hover {
-                        color: $color-4;
-                    }
+        &:focus,
+        &:hover {
+            color: var(--icon-tertiary-color);
+        }
         
-                     &:hover {
-                        background: $color-helper-8;
-                    } 
-                      
+        &:hover {
+            background: var(--input-border-color);
+        }      
     }
 
     svg {
@@ -141,12 +140,12 @@ export default {
     }
 
     & ~ small.note {
-        color: $danger-color;
+        color: var(--warning);
         padding: 1rem 0;
         width: 100%;
 
         svg {
-            fill: $danger-color;
+            fill: var(--warning);
             height: 1.8rem!important;
             margin-left: 1.3rem;
             position: relative;

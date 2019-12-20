@@ -2,11 +2,30 @@
     <div class="topbar">
         <topbar-appbar />
 
-        <div class="topbar-inner">
-            <img src="../assets/images/logo.png" class="topbar-logo" alt="Logo">
+        <div class="topbar-inner">           
+             <icon                   
+                 customWidth="63"
+                 customHeight="26" 
+                 class="topbar-logo"
+                 name="logo" />
+            
             <topbar-notification />
             <topbar-sites v-if="displayIcon" />
             <topbar-preview-link v-if="displayIcon" />
+            <div class="topbar-darkmode-switcher">
+               <span class="topbar-darkmode-dark">
+                   <icon                   
+                     customWidth="20"
+                     customHeight="20"
+                     name="sun" />
+               </span>
+               <span class="topbar-darkmode-default">
+                   <icon                   
+                     customWidth="20"
+                     customHeight="20"
+                     name="moon" />
+               </span>
+            </div>
             <topbar-dropdown />
         </div>
     </div>
@@ -48,7 +67,7 @@ export default {
 @import '../scss/variables.scss';
 
 .topbar {
-    background: $color-9;
+    background: var(--gray-1);
     font-size: 1.6rem;
     height: 7.8rem;
     position: absolute;
@@ -58,10 +77,11 @@ export default {
     width: 100%;
 
     & > .topbar-inner {
-        background: $color-10;
+        align-items: center;
+        background: var(--bg-secondary);
         box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         display: flex;
-        align-items: center;
+        height: 5.6rem;        
         padding: 0 calc(3rem - 3px) 0 5rem;
         position: absolute;
         top: 2.2rem;
@@ -70,11 +90,37 @@ export default {
     }
 
     &-logo {
-        display: block;
-        height: 5.6rem;
+        fill: var(--icon-tertiary-color);
+        display: block;    
         margin-right: auto;
-        width: auto;
     }
+    
+    &-darkmode-switcher {
+        margin: -1px 0 0 2.3rem;
+        order: 3;
+        
+        & > span {
+            cursor: pointer;
+            display: inline-block;           
+            
+            svg {
+               fill: var(--icon-secondary-color);
+               transition: var(--transition);
+               vertical-align: text-top;
+            }   
+            
+            &:hover {
+                
+                svg {
+                    fill: var(--icon-tertiary-color); 
+                }
+            }
+        }
+    }
+}
+    
+body[data-os="osx"] {
+    
 }
 
 body[data-os="win"] {

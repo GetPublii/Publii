@@ -364,7 +364,7 @@ export default {
 
         .mce-container,
         .mce-container-body {
-            background: $color-10;
+           background: var(--bg-primary);
         }
     }
 }

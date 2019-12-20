@@ -7,7 +7,6 @@
             @click="setActiveMenuItem(item.icon)">
             <router-link :to="item.url">
                 <icon
-                    primaryColor="color-10"
                     size="s"
                     :name="item.icon" />
                 {{ item.label }}
@@ -95,37 +94,44 @@ export default {
 
     a {
         border-radius: 3px;
-        color: $color-10;
+        color: var(--sidebar-link-color);
         display: block;
         font-size: 1.6rem;
         font-weight: 400;
         line-height: 3.2rem;
         margin: 0 0;
-        opacity: .7;
+        opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: 0.85rem 0.8rem;        
+        padding: 0.85rem 0.8rem;   
+        transition: var(--transition);
 
         &:active,
         &:focus,
         &:hover {
-            background: rgba(98, 185, 255, 0.35);
-            color: $color-10;
+            background: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-link-hover-color);
             opacity: 1;
+            
+            svg {
+               fill: var(--sidebar-link-icon-hover);       
+            }
         }
     }
 
     svg {
+        fill: var(--sidebar-link-icon);
         left: 1rem;
         margin-right: 2.6rem;
         position: relative;
+        transition: var(--transition);
         top: .4rem;
     }
 
     &-item {
         &.is-active {
             a {
-                background: rgba($color-10, .18);
-                color: $color-10;
+                background: var(--sidebar-link-active-bg);
+                color: var(--sidebar-link-active-color);
                 opacity: 1;
             }
         }

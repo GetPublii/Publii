@@ -16,7 +16,7 @@ html {
 }
 
 body {
-    color: $color-5;
+    color: var(--text-primary-color);
     font: 400 1rem/1.5 $secondary-font;
     -webkit-font-smoothing: antialiased;
     line-height: $baseline;
@@ -28,14 +28,14 @@ body {
 }
 
 a {
-    color: $link-color;
+    color: var(--link-primary-color);
     text-decoration: none;
-    transition: all .25s ease-out;
+    transition: var(--transition);
 
     &:active,
     &:focus,
     &:hover {
-        color: $link-hover-color;
+        color: var(--link-primary-hover-color);
     }
 
     svg {
@@ -53,26 +53,16 @@ h2 {
 }
 
 h1 {
-    color: $color-helper-7;
+    color: var(--headings-color);
     font-size: 2.2rem;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 h2 {
     font-weight: 500;
-    color: $color-4;
+    color: var(--headings-color);
     text-transform: uppercase;
     margin: 0 0 2rem;
-}
-
-p {
-    a {
-        color: $color-1;
-        text-decoration: none;
-        &:hover {
-            color: $color-4
-        }
-    }
 }
 
 b {
@@ -99,7 +89,7 @@ form p {
  */
 
 .screen {
-    background: $color-10;
+   background: var(--bg-primary);
 
     &.screen-splashscreen {
         -webkit-app-region: drag; // necessary for making window draggable
@@ -123,7 +113,7 @@ form p {
 
 .is-validation-message,
 .is-required {
-    color: $color-3;
+    color: var(--warning);
 }
 
 .is-rotating {
@@ -152,12 +142,12 @@ form p {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: $color-8;
+    background-color: var(--scrollbar);
     border: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $color-6;
+    background: var(--scrollbar-hover);
 }
 
 ::-webkit-scrollbar-thumb:horizontal {

@@ -273,7 +273,7 @@ export default {
 @import '../scss/variables.scss';
 
 .editor-note {
-    color: $color-6;
+   color: var(--gray-4);
 
     span {
         display: inline-block;

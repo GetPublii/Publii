@@ -103,7 +103,7 @@ export default {
 
         &:after {
             left: 14px;
-            background: #42a5f5;
+            background: var(--input-border-focus);
         }
     }
 }

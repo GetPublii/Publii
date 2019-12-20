@@ -84,8 +84,8 @@ export default {
 
 .post-editor {
     &-writers-panel {
-        background: $color-10;
-        border-right: 1px solid $color-helper-8;
+       background: var(--option-sidebar-bg);
+        border-right: 1px solid var(--input-border-color);
         bottom: 0;
         height: calc(100vh - 2.2rem);
         left: 0;
@@ -93,7 +93,7 @@ export default {
         position: absolute;
         text-align: center;
         top: 2.2rem;
-        transition: all .25s ease-out;
+        transition: var(--transition);
         width: 185px;
         z-index: 100;
 
@@ -107,13 +107,13 @@ export default {
             width: 70%;
 
             dt {
-                color: $color-5;
+                color: var(--text-primary-color);
                 font-size: 3rem;
                 font-family: Georgia, serif;
             }
 
             dd {
-                border-bottom: 1px solid rgba($color-8, .4);
+                border-bottom: 1px solid var(--input-border-color);
                 font-size: 1.5rem;
                 margin: 0 0 1rem 0;
                 padding: 0 0 2rem 0;

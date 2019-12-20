@@ -1,0 +1,97 @@
+.options-sidebar {
+    padding: 3.6rem;
+
+    &-wrapper {
+        background: var(--option-sidebar-bg);
+        border-left: 1px solid var(--input-border-color);
+        height: 100%;
+        overflow: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+        user-select: none;
+        width: 48rem;
+        z-index: 10;   
+        
+
+        &.v-enter-active,
+        &.v-leave-active {
+            transition: all .25s ease;
+        }
+
+        &.v-enter,
+        &.v-leave-to {
+            right: -55rem;
+        }
+
+        &.v-enter-to,
+        &.v-leave {
+            right: 0;
+        }
+    }
+
+    h2 {        
+        border-bottom: 1px solid var(--input-border-color);
+        font-size: 1.8rem;
+        font-weight: 400;
+        margin-top: -3.2rem;
+        padding: calc(1rem + 0.6vw) 0;
+        text-transform: none;
+    }
+
+    label {
+        color: var(--label-color);
+        cursor: default;
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 500;
+        line-height: 2.6;
+        margin-bottom: 1.2rem; 
+        user-select: none;
+        
+        small {
+           font-size: 90%;
+        }
+
+        input { 
+            width: 100%;
+        }
+
+        &.is-invalid {
+            input {
+                box-shadow: inset 0 0 0 1px var(--warning);
+            }
+        }
+    }
+
+    &-close {                   
+        border-radius: 50%;
+        color: var(--icon-secondary-color);
+        cursor: pointer;
+        font-size: 2.4rem;
+        font-weight: 300;
+        height: 3rem;                   
+        line-height: 1.1; 
+        padding: 0;
+        position: absolute;
+        right: 3.5rem;
+        text-align: center;       
+        transition: var(--transition);         
+        top: 2.3rem;        
+        width: 3rem;
+                                
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--icon-tertiary-color);
+        }
+        
+        &:hover {
+            background: var(--input-border-color);
+        }  
+    }
+
+    &-buttons {
+        padding: 2rem 0 0 0;
+    }
+}

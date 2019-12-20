@@ -1901,6 +1901,7 @@ export default {
 .site-settings {
     margin: 0 auto;
     max-width: 960px;
+    user-select: none;
 
     .multiple-checkboxes {
         label {

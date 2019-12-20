@@ -74,6 +74,7 @@ input[type="radio"] {
 }
 
 input[type="radio"] + label {
+    color: var(--label-color);
     display: inline-block;
     cursor: pointer;
     top: 0;
@@ -81,7 +82,7 @@ input[type="radio"] + label {
 }
 
 label.radio:before {
-    border: 1px solid $color-7;
+    border: 1px solid var(--input-border-color);
     border-radius: 2px;
     content: "";
     display: inline-block;
@@ -98,9 +99,9 @@ label.radio:before {
 }
 
 input[type="radio"]:checked + label.radio:before {
-    background: $color-1;
-    border: 1px solid $color-1;
-    box-shadow: inset 0 0 0 4px white;
+    background: var(--input-border-focus);
+    border: 1px solid var(--input-border-focus);
+    box-shadow: inset 0 0 0 4px var(--input-bg);
     content: "";
 }
 </style>

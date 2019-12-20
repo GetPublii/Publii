@@ -27,8 +27,7 @@
                 :data-status="isActiveIcon(index + 1)"
                 @click="changeIcon(index + 1)"
                 class="logo-creator-icon-block" >
-                <icon
-                    primaryColor="color-5"
+                <icon                   
                     size="m"
                     properties="not-clickable"
                     :name="icon" />
@@ -132,7 +131,7 @@ export default {
 
     &-preview {
         border-radius: 50%;
-        border: 1px solid $color-helper-8;
+        border: 1px solid var(--input-border-color);
         float: left;
         height: 9rem;
         line-height: 100%;
@@ -188,12 +187,11 @@ export default {
             float: left;
             height: 3rem;
             list-style-type: none;
-            padding: 0;
-            transition: all .2s ease-out;
-            will-change: transform;
-            width: 3.5rem;
+            padding: 0 1px 0 0;
+            transition: all .2s ease-out;           
 
-            & > svg {
+            & > svg {   
+                fill: var(--icon-tertiary-color);
                 margin: .5rem;
             }
 
@@ -202,7 +200,7 @@ export default {
             }
 
             &[data-status="inactive"] {
-                opacity: .35;
+                opacity: .36;
                 transform: scale(.75);
             }
         }

@@ -202,7 +202,7 @@ export default {
 @import '../scss/variables.scss';
 
 .editor-note {
-    color: $color-6;
+    color: var(--gray-4);
     display: block;
     margin-top: 2rem;
 
@@ -226,27 +226,28 @@ export default {
     margin: -2rem 0 0 0;
     padding: 0;
     position: relative;
+    user-select: none;
     z-index: 1;
 
     .label {
-        color: $color-7;
+        color: var(--gray-4);
         float: left;
         margin-right: 1rem;
     }
 
     .filter-value {
-        color: $color-7;
+        color: var(--gray-4);
         cursor: pointer;
         display: inline-block;
         margin-right: 1rem;
 
         &.filter-active {
-            color: $link-color;
+            color: var(--link-primary-color);
             cursor: default;
         }
 
         &:hover {
-            color: $link-color;
+            color: var(--link-primary-color);
         }
 
         &:last-child {

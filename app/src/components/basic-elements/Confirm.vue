@@ -122,38 +122,17 @@ export default {
     z-index: 100005;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
+.popup {   
     max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    min-width: 60rem;    
+    padding: 4rem;   
 }
 
 .message {
-    color: $color-5;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    text-align: left;
+    padding: 0;   
 
     & + * {
         margin-top: 2rem;
-    }
-
-    &.text-centered {
-        text-align: center;
     }
 }
 

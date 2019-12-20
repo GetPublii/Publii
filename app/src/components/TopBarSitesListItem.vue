@@ -55,8 +55,7 @@ export default {
  */
 .single-site {
     align-items: center;
-    background: $color-10;      
-    border-radius: 4px;
+    background: var(--bg-secondary);     
     cursor: pointer;   
     display: flex;    
     margin: 0;
@@ -70,7 +69,7 @@ export default {
         justify-content: center;
         margin-right: 0.8rem;
         position: relative;
-        transition: all .25s ease-out;
+        transition: var(--transition);
         will-change: transform;
         width: 3.3rem;  
 
@@ -80,7 +79,7 @@ export default {
     }
 
     &:hover {  
-         background: rgba($color-9, .5);
+        background: var(--gray-1);
         will-change: transform;       
        
         .single-site-icon {
@@ -98,7 +97,7 @@ export default {
         padding: 0;
         text-align: left;
         text-overflow: ellipsis; 
-        transition: all .25s ease-out;
+        transition: var(--transition);
         white-space: nowrap;  
         max-width: 82%;        
     }

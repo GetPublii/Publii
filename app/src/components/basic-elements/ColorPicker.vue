@@ -128,7 +128,7 @@ export default {
 
         &.is-visible {
             display: block;
-        }
+        }       
     }
 }
 </style>

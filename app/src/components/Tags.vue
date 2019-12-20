@@ -318,7 +318,7 @@ export default {
         margin-left: 3px;
         position: relative;
         &:after {
-             border-top: solid 5px rgba($color-7, .7);
+             border-top: solid 5px var(--icon-secondary-color);
              border-left: solid 5px transparent;
              border-right: solid 5px transparent;
              content: "";
@@ -340,27 +340,8 @@ export default {
     .order-descending {
         &:after {
             border-top-color: transparent; 
-            border-bottom: solid 5px rgba($color-7, .7);                      
+            border-bottom: solid 5px var(--icon-secondary-color);                      
         }
-    }
-}
-
-.tag-form-wrapper {
-    right: 0;
-
-    &.v-enter-active,
-    &.v-leave-active {
-        transition: all .25s ease;
-    }
-
-    &.v-enter,
-    &.v-leave-to {
-        right: -55rem;
-    }
-
-    &.v-enter-to,
-    &.v-leave {
-        right: 0;
     }
 }
 </style>

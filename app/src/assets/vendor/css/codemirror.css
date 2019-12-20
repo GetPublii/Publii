@@ -4,7 +4,7 @@
   /* Set height, width, borders, and global font properties here */
   font-family: Lucida Console, Monaco, Monospace;
   height: 300px;
-  color: black;
+  color: var(--text-primary-color);
 }
 
 /* PADDING */
@@ -17,14 +17,14 @@
 }
 
 .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
-  background-color: white; /* The little square between H and V scrollbars */
+  background-color: var(--bg-primary); /* The little square between H and V scrollbars */
 }
 
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid #ddd;
-  background-color: #f7f7f7;
+  border-right: 1px solid var(--input-border-color);
+  background-color: var(--input-bg-light);
   white-space: nowrap;
 }
 .CodeMirror-linenumbers {}
@@ -33,7 +33,7 @@
   padding: 0 3px 0 5px;
   min-width: 20px;
   text-align: right;
-  color: #999;
+  color: var(--text-light-color);
   white-space: nowrap;
 }
 
@@ -43,7 +43,7 @@
 /* CURSOR */
 
 .CodeMirror-cursor {
-  border-left: 1px solid black;
+  border-left: 1px solid var(--text-primary-color);
   border-right: none;
   width: 0;
 }
@@ -54,7 +54,7 @@
 .cm-fat-cursor .CodeMirror-cursor {
   width: auto;
   border: 0 !important;
-  background: #7e7;
+  background: var(--success);
 }
 .cm-fat-cursor div.CodeMirror-cursors {
   z-index: 1;
@@ -65,7 +65,7 @@
   border: 0;
   -webkit-animation: blink 1.06s steps(1) infinite;
   animation: blink 1.06s steps(1) infinite;
-  background-color: #7e7;
+  background-color: var(--success);
 }
 @-webkit-keyframes blink {
   0% {}
@@ -89,7 +89,7 @@
   overflow: hidden;
 }
 .CodeMirror-ruler {
-  border-left: 1px solid #ccc;
+  border-left: 1px solid var(--input-border-color);
   top: 0; bottom: 0;
   position: absolute;
 }
@@ -148,7 +148,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror {
   position: relative;
   overflow: hidden;
-  background: white;
+  background: var(--bg-primary);
 }
 
 .CodeMirror-scroll {

@@ -106,7 +106,7 @@ export default {
 @import '../../scss/mixins.scss';
 
 .search-popup {
-    background: $color-10;
+   background: var(--bg-primary);
     border-radius: 6px;
     box-shadow: 0 0 5px rgba($color-5, .125);
     left: 50%;
@@ -116,7 +116,7 @@ export default {
     position: fixed;
     top: 20px;
     transform: translateX(-50%);
-    transition: all .25s ease-out;
+    transition: var(--transition);
     width: auto;
     z-index: 10000000;
 
@@ -128,15 +128,15 @@ export default {
 
     input {
         border: none;
-        border-bottom: 1px solid $color-1;        
-        color: $color-7;
+        border-bottom: 1px solid var(--primary-color);        
+        color: var(--gray-4);
         font-size: 18px;
         font-weight: 500;
         width: 300px;
     }
     
     span {
-        color: $color-7;
+        color: var(--gray-4);
         display: inline-block;
         font-size: 12px;  
         margin-right: 20px;
@@ -150,13 +150,13 @@ export default {
         text-align: center;
         
         & > svg {           
-            stroke: $color-7;
+            stroke: var(--gray-4);
         }
         
         &:hover {
             
             & > svg {           
-                stroke: $color-1;
+                stroke: var(--primary-color);
             }
         }
     }

@@ -328,21 +328,10 @@ h1 {
     text-align: center;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
+.popup {   
     max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    min-width: 60rem;   
+    padding: 4rem;   
 
     .field {
         .switcher {
@@ -353,12 +342,9 @@ h1 {
 }
 
 .message {
-    color: $color-7;
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    position: relative;
+    color: var(--gray-4);
+    font-size: 1.8rem;   
+    padding: 0;    
 }
 
 .buttons {

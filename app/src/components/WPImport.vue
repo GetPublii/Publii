@@ -336,7 +336,7 @@ export default {
     }
 
     #import-progress {
-        color: $color-6;
+        color: var(--gray-4);
         display: inline-block;
         font-style: italic;
         margin: 2rem;
@@ -347,7 +347,7 @@ export default {
         padding: 2rem 0 0 0;
 
         &.is-error {
-            color: $color-3;
+            color: var(--warning);
             text-align: center;
         }
     }
@@ -356,7 +356,7 @@ export default {
         margin: 0 0 2rem 0;
 
         &-section {
-            border-bottom: 2px solid $color-9;
+            border-bottom: 2px solid var(--gray-1);
             font-weight: 500;
             margin: 0;
             padding: 3rem 0;

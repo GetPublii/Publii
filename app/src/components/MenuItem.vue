@@ -31,8 +31,7 @@
                 @click.prevent="removeMenuItem">
                 <icon
                     name="trash"
-                    size="xs"
-                    primary-color="color-3" />
+                    size="xs" />
             </a>
 
             <a
@@ -302,7 +301,7 @@ li {
     }
 
     &.is-ghost {
-        border: 1px dashed $color-8;
+        border: 1px dashed var(--input-border-color);
 
         & > .menu-item-wrapper {
             opacity: 0;
@@ -311,18 +310,18 @@ li {
 
     &.is-invalid {
         & > .menu-item-wrapper > .menu-item-label {
-            color: $color-3;
+            color: var(--warning);
             text-decoration: line-through;
         }
     }
 
     &.is-draft {
         .menu-item-label {
-            color: $color-7;
+            color: var(--gray-4);
             font-style: italic;
 
             svg {
-                fill: $color-7;
+                fill: var(--gray-4);
                 position: relative;
                 top: 2px;
             }
@@ -330,39 +329,87 @@ li {
     }
 
     & > div {
-        background: $color-9;
-        border-left: 2px solid $color-8;
+        background: var(--gray-1);
+        border-left: 2px solid var(--input-border-color);
+        border-radius: 3px;
         cursor: move !important;
         padding: 4 * $spacing 10 * $spacing;
-
-        .menu-item-remove {
-            float: right
+        position: relative;
+        
+        .menu-item-label {
+            color: var(--text-primary-color);
+            margin-right: 2rem;           
         }
 
-        .menu-item-edit {
-            margin-left: 2rem;
-        }
+        .menu-item-remove { 
+            background: var(--bg-primary);
+            position: relative;
+            border-radius: 50%;            
+            cursor: pointer;
+            display: inline-block;            
+            height: 3rem;           
+            padding: 0;
+            position: absolute;
+            right: 1.5rem;
+            text-align: center;
+            transition: all .3s ease-out;
+            top: 50%;
+            transform: translate(0, -50%);
+            width: 3rem;
 
-        .menu-item-submenu {
-            margin-left: 1rem;
-        }
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--headings-color);
+            }
 
+            &:hover {                  
+                & > svg {
+                   fill: var(--warning);
+                   transform: scale(1);
+               }
+            }
+
+            svg {
+                fill: var(--icon-secondary-color);               
+                height: 1.6rem;
+                pointer-events: none;
+                transform: scale(.9);
+                transition: var(--transition);
+                vertical-align: middle;
+                width: 1.6rem;
+            }
+        }
+        
         .menu-item-edit,
         .menu-item-submenu {
+            color: var(--link-secondary-color);
             font-size: 1.4rem;
             padding: 1rem .5rem;
+            
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--link-secondary-hover-color);
+            }
         }
-
-        .menu-item-remove {
-            padding-left: 0 0 0 .5rem;
-        }
-
-        svg {
-            fill: $color-3;
-            height: 1.6rem;
-            pointer-events: none;
-            width: 1.6rem;
-        }
+        
+        .menu-item-edit {            
+            padding-right: 1rem;
+            position: relative;
+            
+            &::after {
+                background: var(--input-border-color);
+                content: "";
+                display: block;
+                height: 14px;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translate(0, -50%);
+                width: 1px;
+            }
+        }        
 
         select {
             height: 2.4rem;

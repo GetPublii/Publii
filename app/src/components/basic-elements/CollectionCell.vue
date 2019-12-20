@@ -80,14 +80,14 @@ export default {
         }
 
         .tag {
-            color: $color-7;
+            color: var(--text-light-color);
             font-size: 1.2rem;
             font-weight: 400;
 
             &:active,
             &:focus,
             &:hover {
-                color: $link-color;
+                color: var(--link-primary-color);
             }
         }
 
@@ -107,7 +107,7 @@ export default {
         }
 
         .is-main-author {
-            color: $color-7;
+            color: var(--text-light-color);
         }
     }
 
@@ -122,7 +122,7 @@ export default {
         }
 
         .modify-date {
-            color: $color-7;
+            color: var(--text-light-color);
             font-size: 1.2rem;
             margin: .2rem 0 0 0;
         }
@@ -135,12 +135,12 @@ export default {
         .tags,
         .authors {
             a {
-                color: $color-7;
+                color: var(--text-light-color);
 
                 &:active,
                 &:focus,
                 &:hover {
-                    color: $link-color;
+                    color: var(--link-primary-color);
                 }
             }
         }

@@ -99,11 +99,11 @@ export default {
 
         .icon {
             cursor: pointer;
-            fill: $color-3;
-            transition: all .3s ease-out;
+            fill: var(--warning);          
+            transition: all .3s ease-out;           
             
             &:hover {
-                fill: $color-4;
+                fill: var(--icon-tertiary-color);
             }
         }
     }

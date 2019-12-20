@@ -1231,6 +1231,7 @@ export default {
 .server-settings {
     margin: 0 auto;
     max-width: 960px;
+    user-select: none;
 
     #http-protocol {
         float: left;
@@ -1243,7 +1244,7 @@ export default {
     }
 
     .is-invalid + .note {
-        color: $color-3;
+        color: var(--warning);
     }
     
     &-intro {       
@@ -1253,26 +1254,27 @@ export default {
         
         & > div {
             align-items: center;
-            background: $color-9;
+            background: var(--gray-1);
             border: 1px solid transparent;
+            border-radius: 3px;
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
-            transition: all .25s ease-out;
+            transition: var(--transition);
             
             &:hover {
-                background: $color-10;
-                border-color: $color-0;
+                background: var(--bg-primary);
+                border-color: var(--primary-color);
                 box-shadow: 0 0 26px rgba(black, .07);
                 cursor: pointer;
                 
                 & > svg {
-                    fill: $color-1;
+                    fill: var(--primary-color);
                 }
             }
             
             & > svg {
-                fill: $color-5;
+                fill: var(--gray-5);
                 transition: inherit;
             }
         }

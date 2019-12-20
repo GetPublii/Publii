@@ -88,7 +88,7 @@ export default {
 
 .topbar {
     &-app-settings {
-        color: $color-7;
+        color: var(--icon-secondary-color);
         cursor: pointer;
         display: block;
         height: 4rem;
@@ -99,7 +99,7 @@ export default {
 
 
         &:hover {
-            color: $color-4;
+            color: var(--icon-tertiary-color);
         }
 
         &-icon {
@@ -113,7 +113,7 @@ export default {
             right: -1px;
             top: 50%;
             width: 3px;
-            transition: all .25s ease-out;
+            transition: var(--transition);
 
             &:after,
             &:before {
@@ -146,7 +146,7 @@ export default {
     }
 
     &-app-submenu {
-        background: $color-10;
+       background: var(--bg-secondary);
         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                      0 8px 16px rgba(29, 39, 52, 0.07);
         font-size: 1.5rem;
@@ -157,7 +157,7 @@ export default {
         top: 4rem;
         
         &-separator {
-            border-bottom: 1px solid $color-helper-8;
+            border-bottom: 1px solid var(--border-light-color);
             margin-bottom: 2rem;
             padding-bottom: 1rem;
         }

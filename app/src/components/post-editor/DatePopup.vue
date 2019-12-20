@@ -290,36 +290,16 @@ export default {
     z-index: 100005;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
+.popup {   
     max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    min-width: 60rem;   
+    padding: 4rem;   
 }
 
 .message {
-    color: $color-7;
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin: 0;
-    padding: 0 0 4rem 0;
-    position: relative;
-    text-align: center;
-
-    &.text-centered {
-        text-align: center;
-    }
+    color: var(--gray-4);
+    font-size: 1.8rem;   
+    padding: 0 0 4rem 0;   
 }
 
 .buttons {
@@ -339,10 +319,12 @@ export default {
 
     select {
         -webkit-appearance: none;
-        background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat 100% 50%;
+        background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat 100% 50%;
+        background-color: var(--input-bg);
         background-size: 10px;
         border: none;
         box-shadow: none;
+        color: var(--text-primary-color);
         font-size: 2.6rem;
         height: 4.8rem;
         min-width: 70px;

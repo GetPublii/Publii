@@ -233,10 +233,10 @@ export default {
  * Main container for the app
  */
 .app {
-    background: $color-10;
+   background: var(--bg-primary);
 
     &-view {
-        background: $color-10;
+       background: var(--bg-primary);
         font-size: 1.6rem;
         height: 100%;
         left: 0;
@@ -276,7 +276,7 @@ body[data-os="win"] {
 
     .app {
         &-view {
-            border: 1px solid $grey-icon-color;
+            border: 1px solid var(--icon-secondary-color);
             overflow: hidden;
         }
 
@@ -296,7 +296,7 @@ body[data-os="linux"] {
 
     .app {
         &-view {
-            border: 1px solid $grey-icon-color;
+            border: 1px solid var(--icon-secondary-color);
             overflow: hidden;
         }
 

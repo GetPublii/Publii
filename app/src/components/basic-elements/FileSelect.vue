@@ -111,7 +111,7 @@ export default {
     }
 
     .clear {
-        color: $color-3;
+        color: var(--icon-secondary-color);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
@@ -125,7 +125,7 @@ export default {
         width: 2rem;
 
         &:hover {
-            color: $color-4;
+            color: var(--icon-tertiary-color);
         }
     }
 
@@ -137,12 +137,12 @@ export default {
     }
 
     & ~ small.note {
-        color: $danger-color;
+        color: var(--warning);
         padding: 1rem 0;
         width: 100%;
 
         svg {
-            fill: $danger-color;
+            fill: var(--warning);
             height: 1.8rem!important;
             margin-left: 1.3rem;
             position: relative;
