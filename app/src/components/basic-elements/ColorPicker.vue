@@ -128,7 +128,11 @@ export default {
 
         &.is-visible {
             display: block;
-        }       
+        }  
+
+        /deep/ .vc-chrome-body {
+            background-color: var(--bg-primary);
+        }     
     }
 }
 </style>
