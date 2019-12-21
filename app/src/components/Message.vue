@@ -131,10 +131,10 @@ export default {
 
          &-content {
              align-items: center;
-             background: $color-10;
+             background: var(--popup-bg);
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
              border-radius: 6px;
-             color: $color-5;
+             color: var(--text-primary-color);
              font-size: 1.5rem;            
              display: flex;
              justify-content: center;  
@@ -146,7 +146,7 @@ export default {
              max-width: 48rem;            
 
              a {
-                 color: $color-10;
+                 color: var(--white);
                  cursor: pointer;
                  text-decoration: underline;
 

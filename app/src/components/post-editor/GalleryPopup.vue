@@ -328,7 +328,7 @@ h1 {
 }
 
 .gallery-popup {
-    background-color: $color-10;
+    background-color: var(--white);
     border: none;
     border-radius: .6rem;
     display: inline-block;
@@ -352,7 +352,7 @@ h1 {
     }
 
     &-config {
-        border-top: 1px solid $color-9;
+        border-top: 1px solid var(--gray-1);
         display: flex;
         padding: 1.5rem 2rem;
 
@@ -372,11 +372,11 @@ h1 {
 
         select {
             -webkit-appearance: none;
-            background-color: $color-10;
+            background-color: var(--white);
             border: none;
             border-radius: 3px;
             box-shadow: inset 0 0 0 1px $color-8;
-            color: $color-5;
+            color: var(--text-primary-color);
             font: 400 1.6rem/1.5 $secondary-font;
             margin-left: auto;
             max-width: 100%;
@@ -388,7 +388,8 @@ h1 {
             width: 200px;
 
             &:not([multiple]) {
-                background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+                background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+                background-color: var(--input-bg);
                 background-size: 10px;
                 padding-right: 3rem;
             }
@@ -425,7 +426,7 @@ h1 {
         }
 
         &-item {
-            border-top: 1px solid $color-9;
+            border-top: 1px solid var(--gray-1);
             display: flex;
             padding: 2rem 0;
 
@@ -492,7 +493,7 @@ h1 {
                     width: 2rem;
 
                     &[href="#remove"] {
-                        color: $color-3;
+                        color: var(--warning);
                         top: 50%;
                         transform: translateY(-60%);
                     }

@@ -22,7 +22,7 @@ export default {
 @import '../scss/variables.scss';
 
 .sidebar {
-    background: $color-1;
+    background: var(--sidebar-bg);
     height: 100%;
     padding: 4.4rem 5rem;
     position: absolute;

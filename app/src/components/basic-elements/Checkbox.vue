@@ -42,8 +42,8 @@ export default {
 
 input[type="checkbox"] {
     -webkit-appearance: none;
-    background: $color-10;
-    border: 1px solid $color-8;
+    background: var(--bg-primary);
+    border: 1px solid var(--input-border-color);
     border-radius:2px;
     height: 1.9rem;
     line-height: 1.6rem;
@@ -56,16 +56,16 @@ input[type="checkbox"] {
     z-index: 1;
 
     &:hover {
-        border: 1px solid $color-1;
+        border: 1px solid var(--primary-color);
         cursor: pointer;
     }
 
     &.is-checked {
-        background: $color-1;
-        border-color: $color-1;
+        background: var(--primary-color);
+        border-color: var(--primary-color);
 
         &:before {
-            color: $color-10;
+            color: var(--white);
             font-weight: bold;
             content: '\2713';
             -webkit-margin-start: 0;

@@ -82,7 +82,7 @@ export default {
 .appbar {
     -webkit-app-region: drag; // necessary for making window draggable
     -webkit-user-select: none; // remove conflict with the text selection
-    background: $color-helper-8;
+    background: var(--border-light-color);
     height: 2.2rem;
     padding: 0;
     position: relative;
@@ -125,10 +125,10 @@ body[data-os="win"] {
 
         &-close {
             &:hover {
-                background: $color-3;
+                background: var(--warning);
 
                 & > svg {
-                    fill: $color-10;
+                    fill: var(--white);
                 }
             }
         }

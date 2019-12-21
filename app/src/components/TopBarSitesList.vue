@@ -79,7 +79,7 @@ export default {
 }
 
 .empty-state {
-    color: $color-7;
+    color: var(--text-light-color);
     line-height: 350px;
 }
 </style>

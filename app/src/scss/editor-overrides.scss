@@ -36,7 +36,7 @@
 
     &-normal {
         &.mce-active {
-            background-color: $color-9 !important;
+            background-color: var(--gray-1) !important;
 
             .mce-text {
                 color: $color-5 !important;
@@ -48,7 +48,7 @@
     &:hover,
     &:focus,
     &.mce-selected {
-        background-color: $color-9 !important;
+        background-color: var(--gray-1) !important;
         color: $color-5 !important;
 
         .mce-text {
@@ -74,8 +74,8 @@
     }
 
     &.mce-active {
-        background: $color-1 !important;
-        color: $color-10;
+        background: var(--white) !important;
+        color: var(--white);
     }
 }
 
@@ -95,7 +95,7 @@ div.mce-tinymce-inline {
     }
 
     .mce-btn-group:not(:first-child) {
-        border-color: $color-5;
+        border-color: var(--text-primary-color);
     }
 
     .mce-btn {
@@ -107,7 +107,7 @@ div.mce-tinymce-inline {
             border-color: transparent;
 
             .mce-ico {
-                color: $color-10;
+                color: var(--white);
             }
         }
 
@@ -122,7 +122,7 @@ div.mce-tinymce-inline {
         border: none;
 
         .tinymce-overlay {
-            border: 2px solid $color-1;
+            border: 2px solid var(--primary-color);
             background: rgba($color-1, .17);           
             display: none;           
             height: 100%;            
@@ -136,9 +136,9 @@ div.mce-tinymce-inline {
             
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
-                background: $color-1;
+                background: var(--primary-color);
                 border-radius: 3px;
-                color: $color-10;
+                color: var(--white);
                 font-size: 1.6rem;
                 font-weight: 500;
                 height: auto;
@@ -153,7 +153,7 @@ div.mce-tinymce-inline {
             
             .upload-icon {
                 display: inline-block; 
-                fill: $color-10;
+                fill: var(--white);
                 height: 2.4rem;
                 margin-right: 2rem;
                 width: 2.4rem;
@@ -170,7 +170,7 @@ div.mce-tinymce-inline {
                 border-top: 2px solid rgba($color-10, 0.2);
                 border-right: 2px solid rgba($color-10, 0.2);
                 border-bottom: 2px solid rgba($color-10, 0.2);
-                border-left: 2px solid $color-10;
+                border-left: 2px solid var(--white);
                 border-radius: 50%;
                 display: inline-block;   
                 height: 2.1rem;
@@ -201,11 +201,11 @@ div.mce-tinymce-inline {
 
         .mce-btn,
         .mce-panel {
-            //background: $color-9;
+            //background: var(--gray-1);
         }
 
         .mce-btn {
-            background: $post-editor-sidebar-color;
+            background: var(--option-sidebar-bg);
             border-radius: 2px;
             border-width: 1px;
             padding: 2px;
@@ -213,7 +213,7 @@ div.mce-tinymce-inline {
             &:active,
             &:focus,
             &:hover {
-                background: $color-9;
+                background: var(--gray-1);
                 border-color: $color-8;
 
                 & > button {
@@ -222,7 +222,7 @@ div.mce-tinymce-inline {
             }
 
             &.mce-active {
-                background: $color-10;
+               background: var(--bg-primary);
             }
         }
 
@@ -276,7 +276,8 @@ div.mce-tinymce-inline {
 
         select {
             -webkit-appearance: none;
-            background: $color-4 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+            background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+            background-color: $color-4; 
             background-size: 9px;
             border: none;
             border-left: 1px solid $color-5;
@@ -296,7 +297,7 @@ div.mce-tinymce-inline {
             
             &:hover {
                 background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>');
-                color: $color-10;
+                color: var(--white);
             }
 
             &:focus {
@@ -312,7 +313,7 @@ div.mce-tinymce-inline {
             color: rgba($color-10, .8);
             
             &:hover {
-                color: $color-10;
+                color: var(--white);
             }
         }
     }
@@ -326,7 +327,7 @@ div.mce-tinymce-inline {
         }
 
         &:after {
-            background: $color-10;
+           background: var(--bg-primary);
             line-height: 10px;
             position: absolute;
             left: 12px;
@@ -351,7 +352,7 @@ body[data-os="win"] {
     user-select: none;
 
     svg {
-        fill: $color-7;
+        fill: var(--gray-4);
         height: 1.6rem;
         left: 0;
         margin-right: .5rem;
@@ -362,13 +363,13 @@ body[data-os="win"] {
 
     a {
         border-bottom: 1px solid currentColor;
-        color: $link-color;
+        color: var(--link-primary-color);
         cursor: pointer;
-        transition: all .25s ease-out;
+        transition: var(--transition);
 
         &:active,
         &:focus {
-            color: $color-1;
+            color: var(--primary-color);
         }
 
         &:hover {
@@ -410,12 +411,12 @@ body[data-os="win"] {
             &:active,
             &:focus,
             &:hover {
-                background: $color-10 !important;
+                background: var(--white) !important;
                 color: $color-5 !important;
             }
 
             i {
-                color: $color-3;
+                color: var(--warning);
                 font-size: 1.4rem !important;
             }
         }
@@ -451,10 +452,10 @@ body[data-os="win"] {
             width: 100% !important;
 
             .mce-btn {
-                background: $color-1 !important;
+                background: var(--white) !important;
                 border-radius: 0 0 0 .6rem !important;
                 box-shadow: none !important;
-                color: $color-10 !important;
+                color: var(--white) !important;
                 font-size: 1.6rem;
                 height: 5.6rem;
                 left: 0 !important;
@@ -471,32 +472,32 @@ body[data-os="win"] {
                 }
 
                 &.mce-disabled > button {
-                    color: $color-10 !important;
+                    color: var(--white) !important;
                 }
 
                 &:active,
                 &:focus,
                 &:hover {
                     background: lighten($color-1, 10%) !important;
-                    color: $color-10 !important;
+                    color: var(--white) !important;
                 }
 
                 & + .mce-btn {
-                    background: $color-10 !important;
+                    background: var(--white) !important;
                     border-top: 1px solid $color-8 !important;
                     border-radius: 0 0 .6rem 0 !important;
-                    color: $color-6 !important;
+                    color: var(--gray-4) !important;
                     left: 50% !important;
 
                     &.mce-disabled > button {
-                        color: $color-6 !important;
+                        color: var(--gray-4) !important;
                     }
 
                     &:active > button,
                     &:focus > button,
                     &:hover > button {
-                        background: $color-9 !important;
-                        color: $color-6 !important;
+                        background: var(--gray-1) !important;
+                        color: var(--gray-4) !important;
                     }
                 }
             }
@@ -507,11 +508,11 @@ body[data-os="win"] {
         .mce-foot {
             .mce-container-body {
                 .mce-btn {
-                    background: $color-1 !important;
+                    background: var(--white) !important;
                     border-top: none !important;
                     border-radius: 0 0 0 .6rem !important;
                     box-shadow: none !important;
-                    color: $color-10 !important;
+                    color: var(--white) !important;
                     font-size: 1.6rem;
                     height: 5.6rem;
                     left: 0 !important;
@@ -520,18 +521,18 @@ body[data-os="win"] {
                     width: 20% !important;
 
                     & > button {
-                        color: $color-10 !important;
+                        color: var(--white) !important;
                     }
 
                     &.mce-disabled > button {
-                        color: $color-10 !important;
+                        color: var(--white) !important;
                     }
 
                     &:active,
                     &:focus,
                     &:hover {
                         background: lighten($color-1, 10%) !important;
-                        color: $color-10 !important;
+                        color: var(--white) !important;
                     }
 
                     + .mce-btn {
@@ -560,12 +561,12 @@ body[data-os="win"] {
     }
 
     .mce-textbox {
-        background-color: $color-10;
+        background-color: var(--white);
         border: none;
         border-radius: 3px;
         box-shadow: inset 0 0 0 1px $color-8;
         box-sizing: border-box;
-        color: $color-5;
+        color: var(--text-primary-color);
         font: 400 1.6rem/1.5 $secondary-font;
         height: 4.8rem;
         outline: none;
@@ -597,7 +598,7 @@ body[data-os="win"] {
         width: 360px !important;
 
         button {
-            background: $color-10 !important;
+            background: var(--white) !important;
             border-radius: 3px;
             height: 48px !important;
             line-height: 46px !important;

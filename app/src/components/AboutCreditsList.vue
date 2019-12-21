@@ -133,12 +133,20 @@ export default {
     }
 
     &-item {
-        border-bottom: 1px solid $color-8;
+        border-bottom: 1px solid var(--border-light-color);
         padding: 1.4rem 0;
 
         & > a {
+            color: var(--link-secondary-color);
             float: right;
+            font-size: 1.4rem;
             margin-left: 5rem;
+            
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--link-secondary-hover-color);
+            }
         }
 
         &:last-of-type {

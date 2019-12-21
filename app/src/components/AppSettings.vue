@@ -397,5 +397,6 @@ export default {
     margin: 0 auto;
     max-width: 960px;
     padding: 4.4rem 0;
+    user-select: none;
 }
 </style>

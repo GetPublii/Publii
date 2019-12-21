@@ -122,7 +122,7 @@ export default {
     &-notification {
         -webkit-app-region: no-drag; // Make the links clickable again   
         align-items: center;
-        border-right: 1px solid $color-helper-8;
+        border-right: 1px solid var(--border-light-color);
         display: inline-flex;
         font-size: 1.4rem;
         font-weight: 400;
@@ -132,10 +132,10 @@ export default {
         position: relative;
 
         &-close {
-            -webkit-app-region: no-drag; // Make the button clickable again   
-            background: $color-9;
+            -webkit-app-region: no-drag; // Make the button clickable again  
+            background: var(--input-bg-light);
             border-radius: 50%;
-            color: $color-7;
+            color: var(--icon-secondary-color);
             cursor: pointer;
             font-size: 2.1rem;
             font-weight: 300;
@@ -150,11 +150,11 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                color: $color-4;
+                 color: var(--icon-tertiary-color);
             }
         
             &:hover {
-                background: $color-helper-8;
+               background: var(--input-border-color);
             }  
         }
     }

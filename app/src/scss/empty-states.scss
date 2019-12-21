@@ -1,6 +1,6 @@
 .empty-state {
     clear: both;
-    color: $color-7;
+    color: var(--text-light-color);
     font-size: 1.6rem;
     left: 0;
     padding: 0 2vw;
@@ -18,7 +18,7 @@
     }
 
     h3 {
-        color: $color-5;
+        color: var(--text-primary-color);
         text-transform: none;
     }
 

@@ -135,11 +135,11 @@ export default {
     &:hover {
 
         .site-logo-link {
-            color: $color-4;
+            color: var(--text-primary-color);
             
         }
         .site-logo-icon-open {
-            border-top-color: $color-4;
+            border-top-color: var(--icon-tertiary-color);
             
         }
     }
@@ -172,7 +172,7 @@ export default {
     }
 
     &-link {
-        color: $color-5;
+        color: var(--text-primary-color);
         display: block;
         font-size: 1.5rem;
         font-weight: 500;
@@ -195,7 +195,7 @@ export default {
     }
 
     &-icon-open {
-        border-color: $color-7 transparent transparent;
+        border-color: var(--icon-secondary-color) transparent transparent;
         border-style: solid;
         border-width: 5px;
         opacity: 1;                     

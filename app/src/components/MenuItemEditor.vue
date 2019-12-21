@@ -1,13 +1,13 @@
 <template>
-    <div class="menu-item-editor-wrapper">
-        <div class="menu-item-editor">
+    <div class="options-sidebar-wrapper">
+        <div class="options-sidebar">
             <h2>
                 <template v-if="menuItemID !== ''">Edit menu item</template>
                 <template v-if="menuItemID === ''">Add new menu item</template>
             </h2>
 
             <span
-                class="menu-item-editor-close"
+                class="options-sidebar-close"
                 name="sidebar-close"
                 @click.prevent="hide()">
                 &times;
@@ -142,7 +142,7 @@
                     type="text" />
             </label>
 
-            <div class="menu-item-editor-buttons">
+            <div class="options-sidebar-buttons">
                 <p-button
                     v-if="menuItemID !== ''"
                     type="primary"
@@ -427,81 +427,5 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
-
-.menu-item-editor {
-    padding: 3.6rem;
-
-    &-wrapper {
-        background: $post-editor-sidebar-color;
-        box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
-        height: 100%;
-        overflow: auto;
-        position: absolute;
-        top: 0;
-        width: 50rem;
-        z-index: 10;
-    }
-
-    h2 {
-        background: $color-10;
-        border-bottom: 1px solid rgba($color-8, .25);
-        font-size: 1.8rem;
-        font-weight: 400;
-        margin: -3.6rem -3.6rem 2rem -3.6rem;
-        padding: calc(1rem + 0.6vw) 3.6rem;
-        text-transform: none;
-    }
-
-    label {
-        display: block;
-        line-height: 2;
-        margin-bottom: 1.5rem;
-
-        span {
-            display: block;
-            font-weight: 400;
-        }
-
-        input {
-            width: 100%;
-        }
-
-        &.is-invalid {
-            input {
-                box-shadow: inset 0 0 0 1px $color-3;
-            }
-        }
-    }
-
-    &-close {                   
-        border-radius: 50%;
-        color: $color-7;
-        cursor: pointer;
-        font-size: 2.4rem;
-        font-weight: 300;
-        height: 3rem;                   
-        line-height: 1.1; 
-        padding: 0;
-        position: absolute;
-        right: 3.5rem;
-        text-align: center;       
-        transition: all .3s ease-out;         
-        top: 2.1rem;        
-        width: 3rem;
-                                
-        &:active,
-        &:focus,
-        &:hover {
-            color: $color-4;
-        }
-        
-        &:hover {
-            background: $color-helper-8;
-        }  
-    }
-
-    &-buttons {
-        padding: 2rem 0 0 0;
-    }
-}
+@import '../scss/options-sidebar.scss';
 </style>

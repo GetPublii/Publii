@@ -135,6 +135,7 @@ body {
 
 body#tinymce {
     -webkit-font-smoothing: antialiased;
+    background: var(--bg-primary); 
     font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: inherit;
     font-weight: 400;

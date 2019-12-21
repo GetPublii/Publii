@@ -832,7 +832,7 @@ export default {
     margin-left: 3px;
     position: relative;
     &:after {
-        border-top: solid 5px rgba($color-7, .7);
+        border-top: solid 5px var(--icon-secondary-color);
         border-left: solid 5px transparent;
         border-right: solid 5px transparent;
         content: "";
@@ -854,7 +854,7 @@ export default {
 .order-descending {
     &:after {
         border-top-color: transparent; 
-        border-bottom: solid 5px rgba($color-7, .7);                 
+        border-bottom: solid 5px var(--icon-secondary-color);                 
     }
 }
 
@@ -878,7 +878,7 @@ export default {
     }
 
     .post-slug {
-        color: $color-7;
+        color: var(--gray-4);
         font-size: 11px;
         margin-top: 5px;
     }
@@ -890,27 +890,29 @@ export default {
     margin: -2rem 0 0 0;
     padding: 0;
     position: relative;
+    user-select: none;
     z-index: 1;
 
     .label {
-        color: $color-7;
+        color: var(--text-light-color);
         float: left;
         margin-right: 1rem;
     }
 
     .filter-value {
-        color: $color-7;
+        color: var(--text-light-color);
         cursor: pointer;
         display: inline-block;
         margin-right: 1rem;
+        transition: var(--transition);
 
         &.filter-active {
-            color: $link-color;
+            color: var(--link-primary-color);
             cursor: default;
         }
 
         &:hover {
-            color: $link-color;
+            color: var(--link-primary-color);
         }
 
         &:last-child {
@@ -920,7 +922,7 @@ export default {
 }
 
 .tools {
-    background: $color-10;
+   background: var(--bg-primary);
     display: flex;
     
     .button {
@@ -930,7 +932,7 @@ export default {
         
          &::before {
              content: "";
-             background: $color-9;  border-radius: 3px;
+             background: var(--gray-1);  border-radius: 3px;
              display: block;
              left: -2px;
              opacity: 0;
@@ -962,7 +964,7 @@ export default {
         position: relative;
 
         .dropdown {
-            background: $color-10;
+           background: var(--bg-secondary);
             border-radius: 3px;
             box-shadow: 0 2px 8px rgba(29, 39, 52, 0.15);
             left: 0;
@@ -975,7 +977,7 @@ export default {
             z-index: 1;
 
             li {
-                color: $color-7;
+                color: var(--text-light-color);
                 cursor: pointer;
                 display: block;
                 font-size: 1.4rem;
@@ -984,8 +986,8 @@ export default {
                 white-space: nowrap;
 
                 &:hover { 
-                    background: $color-9;
-                    color: $color-5;
+                    background: var(--gray-1);
+                    color: var(--text-primary-color);
                 }
                 
                 & > svg {

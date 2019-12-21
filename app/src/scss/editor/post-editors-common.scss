@@ -1,11 +1,12 @@
 .post-editor {
-    background: $color-10;
+   background: var(--bg-primary);
 
     &-wrapper {
         display: flex;
         height: 100vh;
         overflow: hidden;
         padding-top: 7.8rem;
+        user-select: none;
     }
 
     .appbar {

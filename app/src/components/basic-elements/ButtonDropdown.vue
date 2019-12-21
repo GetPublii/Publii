@@ -127,11 +127,11 @@ export default {
 @import '../../scss/variables.scss';
 
 .button {
-    background: $color-1;
+    background: var(--primary-color);
     border: none;
     border-radius: 3px;
     box-shadow: none;
-    color: $color-10;
+    color: var(--white);
     cursor: pointer;
     display: inline-block;
     font-size: 15px;
@@ -141,7 +141,7 @@ export default {
     padding: 0;
     position: relative;
     text-align: left;
-    transition: all .25s ease-out;
+    transition: var(--transition);
     user-select: none;
     white-space: nowrap;
     width: auto;
@@ -157,7 +157,7 @@ export default {
         position: relative;
         text-align: left;
         top: 0;
-        transition: all .25s ease-out;          
+        transition: var(--transition);          
             
         &:hover {
             background: darken($color-1, 5%);  
@@ -172,15 +172,24 @@ export default {
         position: absolute;
         right: 0;
         top: 0;
-        transition: all .25s ease-out;
+        transition: var(--transition);
         width: 44px;
         
         &:hover {
             background: darken($color-1, 9%);
         }
+        
+        &::before {                    
+            content: "";
+            pointer-events: none;
+            height: 100%;
+            position: absolute;
+            transition: var(--transition);
+            width: 100%;                       
+        }
 
         &::after {
-            border-color: $color-10 transparent transparent;
+            border-color: var(--white) transparent transparent;
             border-style: solid;
             border-width: 5px;              
             content: "";
@@ -193,10 +202,11 @@ export default {
     }
 
     &-dropdown {
-        background: $color-10;
+        background: var(--bg-secondary);
         border-radius: 0 0 5px 5px;
         box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
         left: 0;
+        overflow: hidden;
         position: absolute;
         text-align: left;
         top: 42px;
@@ -204,13 +214,13 @@ export default {
         z-index: 10;
 
         &-item {
-            border-top: 1px solid lighten($color-8, 10%);
-            color: $color-5;
+            border-top: 1px solid var(--border-light-color);
+            color: var(--text-primary-color);
             padding: .2rem 2rem;
             text-align: left;
 
             &:hover {
-                background: $color-9;
+                background: var(--gray-1);
             }
         }
     }
@@ -221,7 +231,7 @@ export default {
 
             & > svg {
                 display: inline-block;
-                fill: $color-10;
+                fill: var(--white);
                 left: 1.4rem;
                 position: absolute;
                 top: 50%;
@@ -231,21 +241,26 @@ export default {
     }
 
     &.is-green {
-        background-color: $color-2;
+        background-color: var(--button-green-bg);
 
-        .button-trigger {
-            border-right: 1px inset $color-2;
+        .button-trigger {            
 
             &:hover {
-                background: darken($color-2, 5%);  
+                background: var(--button-green-hover-bg);  
             }
         }
 
         .button-toggle {
-            background: darken($color-2, 5%);
+            background: var(--button-green-hover-bg);  
+            border-left: 1px solid var(--button-green-bg);
             
             &:hover {
-                background: darken($color-2, 9%);
+                background: var(--button-green-hover-bg);
+                
+                &::before {
+                    background: rgba(black, .1);
+                }
+                
             }
         }
     }

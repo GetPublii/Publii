@@ -402,16 +402,21 @@ export default {
         margin-top: -1.5rem;
 
         .directory-link {
-            color: $color-7;
+            color: var(--text-light-color);
             cursor: pointer;
             font-size: 1.4rem;
+            transition: var(--transition);
+            
+            &:hover {
+                color: var(--link-primary-color);
+            }
 
             & + .directory-link {
                 margin-left: 2rem;
             }
 
             &.is-active {
-                color: $color-1;
+                color: var(--primary-color);
             }
         }
     }

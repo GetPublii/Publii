@@ -45,6 +45,7 @@ export default {
 .heading {
     display: flex;
     margin-bottom: 12 * $spacing;
+    user-select: none;
     width: 100%;
 
     @include clearfix;

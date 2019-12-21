@@ -15,8 +15,7 @@
                 <icon
                     name="blank-image"
                     customWidth="64"
-                    customHeight="64"
-                    primaryColor="color-8" />
+                    customHeight="64" />
 
                 {{ labelText }}
                 <input
@@ -251,13 +250,13 @@ export default {
 
 .upload {
     &-image {
-        background: $color-9;
+        background: var(--input-bg-light);
         background-clip: padding-box;
         background-position: center;
         background-repeat: no-repeat;
-        border: 2px dashed $color-8;
+        border: 2px dashed var(--input-border-color);
         border-radius: 3px;
-        color: $color-6;
+        color: var(--gray-4);
         display: block;
         margin: 0 0 -40px 0;
         text-align: center;
@@ -280,7 +279,7 @@ export default {
             padding: 0 0 40px 0;
 
             &:not(.is-empty):not(.is-hovered) {
-                background-color: $color-10;
+                background-color: var(--bg-secondary);
                 background-clip: content-box;
                 background-image:   linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa),
                                     linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa);
@@ -290,7 +289,7 @@ export default {
         }
 
         &.is-empty {
-            box-shadow: inset 0 0 0 5px $color-10;
+            box-shadow: inset 0 0 0 5px var(--bg-primary);
         }
 
         &.is-empty {
@@ -308,24 +307,27 @@ export default {
 
             &::-webkit-file-upload-button {
                 -webkit-appearance: none;
-                background: $color-7;
-                border: 1px solid $color-7;
+                background: var(--button-gray-bg);
+                border: 1px solid var(--button-gray-bg);
                 border-radius: 3px;
-                color: $color-10;
-                font-weight: bold;
+                color: var(--white);
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 1.5rem;
                 padding: .5rem;
                 text-align: center;
                 width: 16rem;
+                outline: none;
 
                 &:hover {
-                    background: $color-6;
-                    border-color: $color-6;
+                    background: var(--button-gray-hover-bg);
+                    border-color: var(--button-gray-hover-bg);
                 }
             }
         }
 
         &.is-hovered {
-            border-color: $color-1;
+            border-color: var(--primary-color);
         }
 
         &:not(.is-empty):not(.is-hovered) {
@@ -343,7 +345,7 @@ export default {
     }
 
     &-remove {
-        color: $color-3;
+        color: var(--warning);
         display: block;
         font-size: 13px;
         margin: 10px 0;
@@ -358,20 +360,19 @@ export default {
     }
 
     &-overlay {
-        color: $color-7;
+        color: var(--gray-4);
         display: none;
 
         svg {
-            display: block;
-            fill: $color-8;
-            height: 6.4rem;
+            display: block; 
+            fill: var(--icon-secondary-color);
             margin: 1rem auto 1.5rem;
-            width: 6.4rem;
+           
         }
     }
 
     &-uploading-overlay {
-        background: $color-9;
+        background: var(--gray-1);
         height: 100%;
         left: 0;
         position: absolute;
@@ -379,7 +380,7 @@ export default {
         width: 100%;
 
         & > div {
-            color: $color-7!important;
+            color: var(--gray-3)!important;
             left: 50%;
             position: absolute;
             top: 50%;
@@ -395,10 +396,10 @@ export default {
             
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-1, 0.2);
-                border-right: 2px solid rgba($color-1, 0.2);
-                border-bottom: 2px solid rgba($color-1, 0.2);
-                border-left: 2px solid $color-1;
+                border-top: 2px solid rgba(var(--primary-color-rgb), .2);
+                border-right: 2px solid rgba(var(--primary-color-rgb), .2);
+                border-bottom: 2px solid rgba(var(--primary-color-rgb), .2);
+                border-left: 2px solid var(--primary-color-rgb);
                 border-radius: 50%;
                 display: block;   
                 height: 2.5rem;

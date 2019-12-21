@@ -54,7 +54,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .progress {
-    background: $color-8;
+    background: var(--input-border-color);
     border: none;
     border-radius: 3px;
     height: 6px;
@@ -64,7 +64,7 @@ export default {
     width: 100%;
 
     &-bar {
-        background: $color-1;
+        background: var(--input-border-focus);
         border-radius: 3px;
         height: 6px;
         margin: 0;
@@ -75,7 +75,7 @@ export default {
 
         &:after {
             animation: progressbar 2s linear infinite;
-            background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent);
+            background-image: linear-gradient(-45deg, var(--progress-bar) 25%, transparent 25%, transparent 50%, var(--progress-bar) 50%, var(--progress-bar) 75%, transparent 75%, transparent);
             background-size: 16px 16px;
             border-radius: 3px;
             bottom: 0;
@@ -95,7 +95,7 @@ export default {
         }
 
         &.is-success {
-            background: $color-2;
+            background: var(--success);
 
             &:after {
                 display: none;
@@ -103,7 +103,7 @@ export default {
         }
 
         &.is-error {
-            background: $color-3;
+            background: var(--warning);
 
             &:after {
                 display: none;

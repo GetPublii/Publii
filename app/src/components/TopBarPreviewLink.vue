@@ -72,28 +72,30 @@ export default {
 
 .preview-link {
     align-items: center;
-    background: $color-9;
-    border-radius: 4px;
-    color: $color-7;
+    background: var(--gray-1);
+    border-radius: 3px;
+    color: var(--gray-4);
     cursor: not-allowed;
     display: flex;
     font-size: 1.4rem;
     justify-content: center;
     padding: 0.8rem 1.2rem;
     order: 2;
-    transition: all .25s ease-out;
+    transition: var(--transition);
+    white-space: nowrap;
     
     & > svg {
         margin-right: 0.6rem; 
     }
 
     &.is-online {
-        color: $color-5;
-        cursor: pointer;
-    }
-
-    &:hover {
-        background: $color-helper-10;
-    }
+        color: var(--text-primary-color);
+        cursor: pointer; 
+        
+        &:hover {
+           background: var(--primary-color);
+           color: var(--white);
+       }
+    }    
 }
 </style>

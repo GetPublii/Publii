@@ -61,6 +61,7 @@ export default {
 @import '../scss/mixins.scss';
 
 .about {
+    color: var(--text-light-color);
     margin: 0 auto;
     max-width: 960px;
     padding: 4.4rem 0;
@@ -83,7 +84,8 @@ export default {
     }
 
     &-version {
+        color: var(--text-primary-color);
         margin: -2rem 0 5rem;
-    }
+    }   
 }
 </style>

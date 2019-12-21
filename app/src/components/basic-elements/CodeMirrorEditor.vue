@@ -79,12 +79,12 @@ export default {
 @import '../../../node_modules/codemirror-advanceddialog/dist/dialog.css';
 
 .CodeMirror {
-    border: 1px solid $color-8;
+    border: 1px solid var(--input-border-color);
 }
 
 // Search + Search and Replace popup in Code Mirror
 .CodeMirror-advanced-dialog {
-    background: $color-10;
+   background: var(--bg-primary);
     border: none;
     bottom: 0;
     box-shadow: 0 0 1px $color-8;
@@ -107,7 +107,7 @@ export default {
         }
 
         & > input {
-            background: $color-9;
+            background: var(--gray-1);
             border: 0;
             border-radius: 30px;
             box-shadow: none!important;            
@@ -139,11 +139,11 @@ export default {
         width: 350px;
 
         button {
-            background: $color-1;
+            background: var(--primary-color);
             border: none;
             border-radius: 3px;
             box-shadow: none;
-            color: $color-10;
+            color: var(--white);
             cursor: pointer;
             display: inline-block;
             font: {
@@ -156,7 +156,7 @@ export default {
             margin: 2px 2px 30px;
             padding: 0 1.4rem;
             position: relative;
-            transition: all .25s ease-out;
+            transition: var(--transition);
             user-select: none;
             white-space: nowrap;
 
@@ -168,7 +168,7 @@ export default {
             &:focus,
             &:hover {
                 background: lighten($color-1, 10%);
-                color: $color-10;
+                color: var(--white);
             }
         }
     }

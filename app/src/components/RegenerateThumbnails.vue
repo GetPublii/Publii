@@ -175,13 +175,16 @@ export default {
 @import '../scss/variables.scss';
 
 .regenerate-thumbnails {
+    user-select: none;
+    
     .list {
         list-style-type: none;
         margin: 0;
         padding: 2rem 0;
+        user-select: text;
 
         .item {
-            border-top: 1px solid $color-9;
+            border-top: 1px solid var(--gray-1);
             padding: .5rem 0;
 
             &:first-child {
@@ -199,11 +202,11 @@ export default {
         }
 
         &.error {
-            color: $color-3;
+            color: var(--warning);
         }
 
         &.success {
-            color: $color-2;
+            color: var(--success);
         }
     }
 }

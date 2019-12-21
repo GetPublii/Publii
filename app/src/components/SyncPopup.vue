@@ -671,29 +671,20 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    overflow: hidden;
-    padding: 4rem 4rem 6rem 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+.popup {    
+    padding: 4rem 4rem 6rem 4rem;  
     width: 70rem;
 
     .description {
+        color: var(--label-color);
         padding: 0 1rem;
         text-align: left;
     }
 
     .description.alert {
-        background: $color-helper-5;
+        background: var(--highlighted);
+        border-radius: .2em;
+        color: var(--text-primary-color);
         font-size: 1.5rem;
         margin-bottom: 3rem;
         padding: 1rem 2rem;
@@ -710,7 +701,7 @@ export default {
 }
 
 .message {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-weight: 400;
     margin: 0;
     padding: 4rem;

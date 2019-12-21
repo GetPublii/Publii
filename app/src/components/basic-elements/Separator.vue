@@ -75,7 +75,7 @@ export default {
     }
 
     &.line > .separator-wrapper:before {
-        border-top: 1px dashed $color-8;
+        border-top: 1px dashed var(--input-border-color);
         content: "";
         left: 0;
         position: absolute;
@@ -88,8 +88,8 @@ export default {
         position: relative;
 
         & > label {
-            background: $color-10;
-            color: $color-helper-7;
+            background: var(--bg-primary);
+            color: var(--headings-color);
             font-size: 1.6rem;
             font-weight: 600;
             padding-right: .5rem;

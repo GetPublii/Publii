@@ -208,11 +208,11 @@ export default {
     }
 
     input {
-        background-color: $color-10;
+        background-color: var(--input-bg);
         border: none;
         border-radius: 3px;
-        box-shadow: inset 0 0 0 1px $color-8;
-        color: $color-5;
+        box-shadow: inset 0 0 0 1px var(--input-border-color);
+        color: var(--text-primary-color);
         display: inline-block;
         font: 400 1.6rem/1.5 $secondary-font;
         outline: none;
@@ -220,7 +220,7 @@ export default {
         width: 100%;
 
         &:focus {
-            box-shadow: inset 0 0 2px 1px $color-1;
+            box-shadow: inset 0 0 2px 1px var(--input-border-focus);
         }
 
         &[disabled],
@@ -229,7 +229,7 @@ export default {
             cursor: not-allowed;
 
             &:focus {
-                box-shadow: inset 0 0 0 1px $color-8;
+                box-shadow: inset 0 0 0 1px var(--input-border-color);
             }
         }
     }
@@ -243,7 +243,7 @@ export default {
     &.is-invalid,
     &.has-error {
         input {
-            box-shadow: inset 0 0 0 1px $color-3;
+            box-shadow: inset 0 0 0 1px var(--warning);
         }
     }
 
@@ -271,7 +271,7 @@ export default {
 
     .password-show,
     .password-hide {
-        color: $color-1;
+        color: var(--primary-color);
         cursor: pointer;
         font-size: 1.4rem;
         position: absolute;

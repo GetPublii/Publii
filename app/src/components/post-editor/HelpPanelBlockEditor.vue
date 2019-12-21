@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'help-panel': true, 'is-visible': isOpen }">
         <div>           
-            <p>You can insert a block either by clicking the  <span>+</span>  or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:</p>
+            <p class="help-panel-desc">You can insert a block either by clicking the  <span>+</span>  or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:</p>
             <table class="help-panel-table">
                 <tr>
                     <th>Shortcuts</th>

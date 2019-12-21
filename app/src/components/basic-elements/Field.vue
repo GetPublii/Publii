@@ -82,7 +82,7 @@ export default {
 @import '../../scss/variables.scss';
 
 label {
-    color: $color-4;
+    color: var(--label-color);
     cursor: pointer;
     font-weight: 400;
 }
@@ -103,6 +103,7 @@ label {
 
     & > label {
         &:first-child {
+            cursor: default;
             display: table-cell;
             line-height: 1.4;
             padding: 1.5rem 1rem 0 0;
@@ -110,7 +111,7 @@ label {
             width: 23rem;
 
             sup {
-                color: $color-3;
+                color: var(--warning);
                 font-size: 1.8rem;
                 font-weight: 400;
                 position: relative;
@@ -183,12 +184,13 @@ label {
 
     .note {
         clear: both;
+        color: var(--text-light-color);
         display: block;
         font-size: 1.4rem;
         font-style: italic;
-        line-height: 1.4;
-        opacity: .75;
+        line-height: 1.4;        
         padding: .5rem 0 1rem 0;
+        user-select: text;
 
         svg {
             display: inline-block;
@@ -198,7 +200,17 @@ label {
         }
 
         &.is-invalid {
-            color: $color-3;
+            color: var(--warning);
+        }
+        
+        a {
+            color: var(--link-secondary-color);
+            
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--link-secondary-hover-color);
+            }
         }
     }
 
@@ -226,7 +238,7 @@ label {
         width: 100%;
 
         &.line > .separator-wrapper:before {
-            border: 1px solid $color-9;
+            border: 1px solid var(--gray-1);
             content: "";
             left: 0;
             position: absolute;
@@ -239,8 +251,8 @@ label {
             position: relative;
 
             & > label {
-                background: $color-10;
-                color: $color-1;
+               background: var(--bg-primary);
+                color: var(--primary-color);
                 font-size: 1.4rem;
                 font-weight: 500;
                 padding-right: .5rem;

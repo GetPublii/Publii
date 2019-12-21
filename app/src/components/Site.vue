@@ -130,7 +130,7 @@ export default {
     padding: 2rem;
 
     &.is-empty {
-        background: $color-9;
+        background: var(--gray-7);
         height: 100%;
         position: absolute;
         width: 100%;
@@ -149,7 +149,7 @@ export default {
     }
 
     .content {
-        background: $color-10;
+       background: var(--bg-primary);
         bottom: 0;
         overflow: scroll;
         padding: 4.4rem 5rem;

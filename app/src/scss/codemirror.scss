@@ -14,7 +14,8 @@
 
 .tools-custom-html {
     .CodeMirror {
-        border: 1px solid $color-8;
+        background: var(--bg-primary);
+        border: 1px solid var(--input-border-color);
         height: calc(100vh - 43rem)!important;
     }
 }

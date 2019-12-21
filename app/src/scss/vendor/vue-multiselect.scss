@@ -3,11 +3,14 @@
 
 .multiselect {
     &__tags {
-        border-color: $color-8;
-        border-radius: 3px;        
+        background: var(--input-bg);
+        border-color: var(--input-border-color);
+        border-radius: 3px;
+        color: var(--text-primary-color);
     }
 
     &__single {
+        background: var(--input-bg);
         font-size: 1.6rem;
         line-height: 1.4;
         margin-bottom: 0;
@@ -19,21 +22,36 @@
     }
 
     &__option {
+        font-size: 15px;
+        font-weight: 400;
+        padding: 12px 2rem;
+
         &--highlight {
-            background: $color-1;
+            background: var(--primary-color);
         }
 
         &.multiselect__option--selected {
-            background: $color-9;
-            color: $color-4;
+            background: var(--input-bg-hover);
+            color: var(--label-color);
         }
     }
 
     &__input {
-        border: none!important;
-        box-shadow: none!important;
-        margin: 0!important;
-        padding: 0!important;
+        background: var(--input-bg);
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        
+        &::placeholder {
+            color: var(--text-primary-color);
+        }
+    }
+
+    &__content-wrapper {
+        border-color: var(--input-border-color);
+        background: var(--input-bg);
+        color: var(--text-primary-color);
     }
 }
 
@@ -41,7 +59,7 @@
     label {
         &.is-invalid {
             .multiselect__tags {
-                border-color: $color-3;
+                border-color: var(--warning);
             }
         }
     }

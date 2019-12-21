@@ -113,11 +113,11 @@ export default {
 
 select {
     -webkit-appearance: none;
-    background-color: $color-10;
+    background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px $color-8;
-    color: $color-5;
+    box-shadow: inset 0 0 0 1px var(--input-border-color);
+    color: var(--text-primary-color);
     font: 400 1.6rem/1.5 $secondary-font;
     max-width: 100%;
     min-width: 100px;
@@ -128,7 +128,8 @@ select {
     width: 100%;
 
     &.no-border {
-        box-shadow: none;
+        background-color: transparent!important;
+        box-shadow: none; 
         padding: 0 12px 0 0;
 
         &:focus {
@@ -137,7 +138,7 @@ select {
     }
 
     &:focus {
-        box-shadow: inset 0 0 2px 1px $color-1;
+        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
     }
 
     &[disabled],
@@ -146,7 +147,7 @@ select {
         cursor: not-allowed;
 
         &:focus {
-            box-shadow: inset 0 0 0 1px $color-8;
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
         }
     }
 
@@ -155,30 +156,31 @@ select {
         width: 100%;
 
         &:hover {
-            border-color: $color-8;
+            border-color: var(--input-border-color);
         }
 
         &:focus {
-            border-color: $color-8;
+            border-color: var(--input-border-color);
         }
 
         &[disabled] {
-            background-color: $color-9;
+            background-color: var(--gray-1);
             cursor: not-allowed;
             &:hover {
-                border-color: $color-8;
+                border-color: var(--input-border-color);
             }
         }
     }
 
     &:not([multiple]) {
-        background: $color-10 url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+        background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
+        background-color: var(--input-bg);
         background-size: 10px;
         padding-right: 3rem;
     }
 
     &.invalid {
-        border: 1px solid $color-3;
+        border: 1px solid var(--warning);
 
         &:focus {
             border: none;

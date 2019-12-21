@@ -91,7 +91,7 @@ export default {
 
 .site-switch {
     -webkit-app-region: no-drag; // Make the buttons clickable again   
-    color: $color-5;
+    color: var(--text-primary-color);
     cursor: pointer;
     display: block;
     font-weight: 500;  
@@ -99,7 +99,7 @@ export default {
     order: 1;
 
     & > span {
-        transition: all .25s ease-out;
+        transition: var(--transition);
     }
 
     & > svg {
@@ -113,7 +113,7 @@ export default {
     &:focus,
     &:hover {
         & > span {
-            color: $color-1;
+            color: var(--primary-color);
 
         }
 
@@ -124,7 +124,7 @@ export default {
 }
 
 .sites-switcher {
-    background: $color-10;
+    background: var(--bg-secondary);
     box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                 0 8px 16px rgba(29, 39, 52, 0.07);
     left: 0;

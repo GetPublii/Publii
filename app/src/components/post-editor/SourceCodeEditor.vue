@@ -74,7 +74,7 @@ export default {
 @import '../../scss/mixins.scss';
 
 .source-code-editor {
-    background: $color-10;
+   background: var(--bg-primary);
     height: calc(100vh - 10rem)!important;
     left: 0;
     overflow: hidden;

@@ -41,7 +41,7 @@ export default {
     width: calc(100% - 10rem);
 
     &:after {
-        background: linear-gradient(transparent, #fff);
+        background: linear-gradient(transparent, var(--bg-primary));
         bottom: 0;
         content: "";
         height: 100px;

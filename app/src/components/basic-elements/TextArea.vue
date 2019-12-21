@@ -217,11 +217,11 @@ export default {
 @import '../../scss/variables.scss';
 
 textarea {
-    background-color: $color-10;
+    background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px $color-8;
-    color: $color-5;
+    box-shadow: inset 0 0 0 1px var(--input-border-color);
+    color: var(--text-primary-color);
     display: block;
     font: 400 1.6rem/1.5 $secondary-font;
     max-width: 100%;
@@ -232,7 +232,7 @@ textarea {
     width: 100%;
 
     &:focus {
-        box-shadow: inset 0 0 2px 1px $color-1;
+        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
     }
 
     &[disabled],
@@ -241,7 +241,7 @@ textarea {
         cursor: not-allowed;
 
         &:focus {
-            box-shadow: inset 0 0 0 1px $color-8;
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
         }
     }
 }

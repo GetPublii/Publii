@@ -20,7 +20,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $color-6;
+    background: var(--gray-4);
 }
 
 ::-webkit-scrollbar-thumb:horizontal {

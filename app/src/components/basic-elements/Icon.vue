@@ -157,7 +157,7 @@ export default {
     }
 
     &.file {
-        fill: $color-9;
+        fill: var(--gray-1);
         margin-right: 1rem;
         position: relative!important;
         top: 5px!important;
