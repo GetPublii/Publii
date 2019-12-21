@@ -17,8 +17,7 @@ export default {
     align-items: center;
     border-bottom: 1px solid var(--border-light-color);
     display: flex;
-    flex-wrap: wrap;
-    transition: all 1s ease-in;
+    flex-wrap: wrap;   
 
     &:last-child {
         .col {
