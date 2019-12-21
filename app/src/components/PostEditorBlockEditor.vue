@@ -166,6 +166,7 @@ export default {
             }
 
             setTimeout(() => {
+                this.webview.send('set-app-theme', this.$store.state.app.theme);
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
                 this.webview.send('set-current-site-data', {
@@ -173,7 +174,7 @@ export default {
                     posts: this.$store.state.currentSite.posts,
                     authors: this.$store.state.currentSite.authors
                 });
-            }, 1000);
+            }, 0);
 
             this.webview.getWebContents().on('before-input-event', (event, input) => {
                 if (input.key === 'f' && (input.meta || input.control)) {
