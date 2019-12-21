@@ -48,7 +48,8 @@ export default {
     },
     computed: {
         imagePath: function() {
-            return '../src/assets/svg/' + this.imageName;
+            let theme = this.$store.state.app.theme;
+            return '../src/assets/svg/' + theme + '/' + this.imageName;
         },
         hasButtonSlot: function() {
             return !!this.$slots['button'];

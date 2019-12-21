@@ -11,7 +11,8 @@ export default {
         },
         editorOpened: false,
         editorType: 'blockeditor',
-        windowIsMaximized: false
+        windowIsMaximized: false,
+        theme: localStorage.getItem('publii-theme') === 'dark' ? 'dark' : 'default' 
     },
     // Persistent components
     components: {

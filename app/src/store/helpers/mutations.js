@@ -36,6 +36,9 @@ export default {
     setAppConfig (state, newAppConfig) {
         state.app.config = Utils.deepMerge(state.app.config, newAppConfig);
     },
+    setAppTheme (state, newTheme) {
+        state.app.theme = newTheme;
+    },
     setSiteDir (state, newSitesLocation) {
         state.currentSite.siteDir = state.currentSite.siteDir.replace(
             state.app.config.sitesLocation,

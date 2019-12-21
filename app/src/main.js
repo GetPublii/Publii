@@ -101,6 +101,9 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
         }),
         components: {
             'App': App
+        },
+        mounted () {
+            document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
         }
     });
 });

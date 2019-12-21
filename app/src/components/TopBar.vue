@@ -3,28 +3,36 @@
         <topbar-appbar />
 
         <div class="topbar-inner">           
-             <icon                   
-                 customWidth="63"
-                 customHeight="26" 
-                 class="topbar-logo"
-                 name="logo" />
+            <icon                   
+                customWidth="63"
+                customHeight="26" 
+                class="topbar-logo"
+                name="logo" />
             
             <topbar-notification />
             <topbar-sites v-if="displayIcon" />
             <topbar-preview-link v-if="displayIcon" />
-            <div class="topbar-darkmode-switcher">
-               <span class="topbar-darkmode-dark">
-                   <icon                   
-                     customWidth="20"
-                     customHeight="20"
-                     name="sun" />
-               </span>
-               <span class="topbar-darkmode-default">
-                   <icon                   
-                     customWidth="20"
-                     customHeight="20"
-                     name="moon" />
-               </span>
+            <div 
+                @click="toggleTheme()"
+                class="topbar-darkmode-switcher">
+                <span        
+                    v-if="$store.state.app.theme === 'dark'"
+                    class="topbar-darkmode-dark"
+                    title="Switch to light mode">
+                    <icon                   
+                        customWidth="20"
+                        customHeight="20"
+                        name="sun" />
+                </span>
+                <span 
+                    v-if="$store.state.app.theme === 'default'"
+                    class="topbar-darkmode-default"
+                    title="Switch to dark mode">
+                    <icon                   
+                        customWidth="20"
+                        customHeight="20"
+                        name="moon" />
+                </span>
             </div>
             <topbar-dropdown />
         </div>
@@ -58,6 +66,19 @@ export default {
             }
 
             return true;
+        }
+    },
+    methods: {
+        toggleTheme () {
+            let currentTheme = this.$store.state.app.theme;
+
+            if (currentTheme === 'dark') {
+                this.$store.commit('setAppTheme', 'default');
+            } else {
+                this.$store.commit('setAppTheme', 'dark');
+            }
+
+            document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
         }
     }
 }
