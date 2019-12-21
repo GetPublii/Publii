@@ -158,9 +158,9 @@ export default {
 
     &.file {
         fill: var(--gray-1);
-        margin-right: 1rem;
+        margin: -2px 1rem -2px 0;
         position: relative!important;
-        top: 5px!important;
+        top: 4px!important;
     }
 
     &.file--txt {

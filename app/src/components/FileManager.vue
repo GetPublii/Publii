@@ -119,8 +119,8 @@
                             :name="item.icon"
                             :customCssClasses="'file ' + item.icon"
                             iconset="file-extensions-map"
-                            customWidth="16"
-                            customHeight="20" />
+                            customWidth="22"
+                            customHeight="24" />
 
                         {{ item.name }}
                     </a>
