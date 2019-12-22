@@ -107,7 +107,7 @@ export default {
 
     .clear {
         border-radius: 50%;
-        color: var(--icon-secondary-color);
+        color: var(--warning);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;

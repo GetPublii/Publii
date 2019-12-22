@@ -8,6 +8,7 @@
     text-align: center;
     top: 40%;
     transform: translateY(-40%);
+    user-select: none;
     width: 100%;
 
     &.post {
@@ -15,6 +16,11 @@
         grid-template-columns: repeat(3, fit-content(400px));
         grid-gap: 2vw;
         justify-content: center;
+        
+        div:nth-child(3) {           
+            opacity: .35; 
+            pointer-events: none;           
+        }
     }
 
     h3 {

@@ -117,7 +117,7 @@ export default {
     }
     
     &-darkmode-switcher {
-        margin: -1px 0 0 2.3rem;
+        margin: -1px 0 0 2.1rem;
         order: 3;
         
         & > span {

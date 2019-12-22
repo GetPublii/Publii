@@ -12,7 +12,6 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="color-1"
                         name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
@@ -168,7 +167,6 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="color-1"
                         name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
@@ -216,7 +214,6 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="s"
-                            primaryColor="color-1"
                             name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
@@ -277,7 +274,6 @@
                         <icon
                             class="post-editor-settings-icon"
                             size="s"
-                            primaryColor="color-1"
                             name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">
@@ -358,7 +354,6 @@
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
-                        primaryColor="color-1"
                         name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
@@ -894,13 +889,7 @@ export default {
                 width: calc(100% - 7.2rem);
     
                 &:hover {
-                    color: var(--link-tertiary-hover-color);
-
-                    .post-editor-settings {
-                        &-icon {
-                            fill: $color-5;
-                        }
-                    }
+                    color: var(--link-tertiary-hover-color);                    
                 }
 
                 &.is-open {
@@ -933,7 +922,7 @@ export default {
             }
 
             &-icon {
-                fill: var(--icon-secondary-color); 
+                fill: var(--primary-color); 
                 left: 0;
                 height: 2.4rem;
                 margin-right: 1.6rem;

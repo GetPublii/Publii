@@ -127,7 +127,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .button {
-    background: var(--primary-color);
+    background: var(--button-bg);
     border: none;
     border-radius: 3px;
     box-shadow: none;
@@ -160,12 +160,13 @@ export default {
         transition: var(--transition);          
             
         &:hover {
-            background: darken($color-1, 5%);  
+            background: var(--button-hover-bg);  
         }
     }
 
     &-toggle {
-        background: darken($color-1, 5%);
+        background: var(--button-hover-bg);  
+        border-left: 1px solid var(--button-bg);
         border-radius: 0 3px 3px 0;
         cursor: pointer;
         height: 100%;
@@ -173,13 +174,9 @@ export default {
         right: 0;
         top: 0;
         transition: var(--transition);
-        width: 44px;
+        width: 44px;        
         
-        &:hover {
-            background: darken($color-1, 9%);
-        }
-        
-        &::before {                    
+        &::before {                
             content: "";
             pointer-events: none;
             height: 100%;
@@ -198,6 +195,14 @@ export default {
             position: absolute;
             top: 50%;
             transform: translateX(-50%) translateY(-2.5px);
+        }
+        
+        &:hover {
+            background: var(--button-hover-bg); 
+            
+            &::before {
+               background: rgba(black, .1);
+            } 
         }
     }
 
@@ -259,8 +264,7 @@ export default {
                 
                 &::before {
                     background: rgba(black, .1);
-                }
-                
+                }                
             }
         }
     }

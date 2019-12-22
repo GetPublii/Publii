@@ -109,9 +109,9 @@ export default {
 @import '../../scss/mixins.scss';
 
 .search-popup {
-   background: var(--bg-primary);
+    background: var(--popup-bg);
     border-radius: 6px;
-    box-shadow: 0 0 5px rgba($color-5, .125);
+    box-shadow: 0 0 5px rgba(black, .125);
     left: 50%;
     opacity: 0;
     padding: 15px 22px 15px 30px;
@@ -130,38 +130,51 @@ export default {
     }
 
     input {
+        background: none;
         border: none;
-        border-bottom: 1px solid var(--primary-color);        
-        color: var(--gray-4);
+        border-bottom: 1px solid var(--input-border-focus);        
+        color: var(--text-primary-color);
         font-size: 18px;
         font-weight: 500;
         width: 300px;
     }
     
     span {
-        color: var(--gray-4);
+        color: var(--text-primary-color);
         display: inline-block;
         font-size: 12px;  
-        margin-right: 20px;
+        margin-right: 10px;
+        min-width: 3.5rem;
     }
     
     button {
+        background: none;
         border: none;
-        cursor: pointer;
+        border-radius: 50%;        
+        cursor: pointer;        
+        height: 2.8rem;         
         padding: 0;
-        vertical-align: middle;
-        text-align: center;
+        position: relative;       
+        text-align: center;       
+        transition: var(--transition);             
+        width: 2.8rem;
         
         & > svg {           
-            stroke: var(--gray-4);
+            stroke: var(--icon-secondary-color);
+            vertical-align: middle;
+        }       
+        
+        &:active,
+        &:focus,
+        &:hover {
+            & > svg {           
+                stroke: var(--icon-tertiary-color);
+            }
         }
         
         &:hover {
-            
-            & > svg {           
-                stroke: var(--primary-color);
-            }
-        }
+            background: var(--input-border-color);            
+        }  
     }
 }
 </style>
