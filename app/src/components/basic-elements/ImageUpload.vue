@@ -360,7 +360,7 @@ export default {
     }
 
     &-overlay {
-        color: var(--gray-4);
+        color: var(--gray-3);
         display: none;
 
         svg {
