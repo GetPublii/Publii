@@ -256,7 +256,7 @@ export default {
         background-repeat: no-repeat;
         border: 2px dashed var(--input-border-color);
         border-radius: 3px;
-        color: var(--gray-4);
+        color: var(--gray-3);
         display: block;
         margin: 0 0 -40px 0;
         text-align: center;
