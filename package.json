@@ -61,7 +61,7 @@
   "dependencies": {
     "electron": "^5.0.12",
     "electron-packager": "^14.0.0",
-    "handlebars": "^4.2.0",
+    "handlebars": "^4.3.0",
     "opencollective": "^1.0.3"
   },
   "build": {
