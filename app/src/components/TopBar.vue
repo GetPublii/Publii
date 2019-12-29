@@ -74,8 +74,10 @@ export default {
 
             if (currentTheme === 'dark') {
                 this.$store.commit('setAppTheme', 'default');
+                localStorage.setItem('publii-theme', 'default');
             } else {
                 this.$store.commit('setAppTheme', 'dark');
+                localStorage.setItem('publii-theme', 'dark');
             }
 
             document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
