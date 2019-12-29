@@ -80,6 +80,7 @@ export default {
     },
     methods: {
         initWysiwyg () {
+            let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
             let secondToolbarStructure = "formatselect removeformat code undo redo";
 
@@ -115,7 +116,13 @@ export default {
                 height: 320,
                 entity_encoding: "raw",
                 allow_script_urls: true,
-                style_formats: customFormats
+                style_formats: customFormats,
+                setup: function (editor) {
+                    editor.on('init', function () {
+                        let iframe = document.querySelector('#' + self.editorID + '_ifr');
+                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$store.state.app.theme);
+                    });
+                }
             });
         },
         generateID () {

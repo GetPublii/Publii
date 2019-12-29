@@ -29,7 +29,7 @@ class EditorBridge {
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
-            statusbar: false
+            statusbar: true
         });
 
         // Remove style selector when there is no custom styles from the theme
@@ -52,14 +52,14 @@ class EditorBridge {
         this.addEditorButtons();
 
         editor.on('init', () => {
-            $('.mce-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
-            $('.mce-tinymce').addClass('is-loaded');
+            $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
+            $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
             // Scroll the editor to bottom in order to avoid issues
             // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
-
+            
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
@@ -76,6 +76,10 @@ class EditorBridge {
                 }
             }, false);
 
+            // Support for dark mode
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$store.state.app.theme);
+
+            // Add inline editors
             this.addInlineEditor(customFormats);
             this.addLinkEditor(iframe);
 
@@ -137,9 +141,6 @@ class EditorBridge {
                 }
             });
 
-            /*
-             * @ToDo: implement popup with image position
-             */
             iframe.contentWindow.window.document.body.addEventListener("click", (e) => {
                 let clickedElement = e.path[0];
                 let showPopup = false;
@@ -167,11 +168,6 @@ class EditorBridge {
                 } else if(e.path[1] && e.path[1].tagName === 'FIGURE') {
                     clickedElement = e.path[1];
                     showPopup = true;
-                }
-
-                if(showPopup) {
-                    //var positionY = clickedElement.getBoundingRect().top;
-                    //var positionX = clickedElement.getBoundingRect().left
                 }
 
                 if(clickedElement.tagName === 'A') {
@@ -289,10 +285,10 @@ class EditorBridge {
             }
         });
 
-        editor.addButton('gallery', {
-            icon: 'images',
+        editor.ui.registry.addButton('gallery', {
+            icon: 'gallery',
             tooltip: "Insert Gallery",
-            onclick: function () {
+            onAction: function () {
                 editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
             }
         });
@@ -366,7 +362,7 @@ class EditorBridge {
                 return;
             }
             
-            if (sel.baseNode.firstElementChild.getAttribute('id') === 'post-title') {
+            if (sel.baseNode.firstElementChild && sel.baseNode.firstElementChild.getAttribute('id') === 'post-title') {
                 let input = document.getElementById('post-title');
                 let end = input.selectionEnd;
                 input.value = replacementText + input.value.substring(end);
@@ -500,11 +496,11 @@ class EditorBridge {
     }
 
     addEditorButtons() {
-        this.tinymceEditor.addButton("sourcecode", {
-            icon:"code",
+        this.tinymceEditor.ui.registry.addButton("sourcecode", {
+            icon: 'sourcecode',
             tooltip: "Source code",
             text: "HTML",
-            onclick: () => {
+            onAction: () => {
                 let content = this.tinymceEditor.getContent({
                     source_view: true
                 });
@@ -513,10 +509,9 @@ class EditorBridge {
             }
         });
 
-        this.tinymceEditor.addButton('readmore', {
+        this.tinymceEditor.ui.registry.addButton('readmore', {
             text: 'Read more',
-            icon: false,
-            onclick: () => {
+            onAction: () => {
                 this.tinymceEditor.insertContent('<hr id="read-more">' + "\n");
             }
         });
@@ -582,7 +577,7 @@ class EditorBridge {
     }
 
     initEditorDragNDropImages(editor) {
-        let editorArea = $('.mce-tinymce');
+        let editorArea = $('.tox-tinymce');
         let postEditor = $('.post-editor');
         let hoverState = false;
         let tinymceOverlay = $('.tinymce-overlay');
@@ -655,15 +650,15 @@ class EditorBridge {
         }
 
         if(!files[0] || !files[0].path) {
-            $('.mce-tinymce').removeClass('is-hovered');
-            $('.mce-tinymce').removeClass('is-loading-image');
+            $('.tox-tinymce').removeClass('is-hovered');
+            $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').text('Drag your image here');
 
             this.contentImageUploading = false;
             return;
         }
 
-        $('.mce-tinymce').addClass('is-loading-image');
+        $('.tox-tinymce').addClass('is-loading-image');
         $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
         ipcRenderer.send('app-image-upload', {
@@ -681,8 +676,8 @@ class EditorBridge {
                 tinymce.activeEditor.insertContent('<figure class="post__image"><img alt="" src="' + data.url + '"/></figure>');
             }
 
-            $('.mce-tinymce').removeClass('is-hovered');
-            $('.mce-tinymce').removeClass('is-loading-image');
+            $('.tox-tinymce').removeClass('is-hovered');
+            $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
 
             this.contentImageUploading = false;

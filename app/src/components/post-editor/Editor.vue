@@ -37,5 +37,4 @@ export default {
 <style lang="scss">
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
-@import '../../scss/editor-overrides.scss';
 </style>

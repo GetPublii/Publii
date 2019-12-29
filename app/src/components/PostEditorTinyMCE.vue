@@ -1,5 +1,5 @@
 <template>
-    <div class="post-editor" ref="post-editor">
+    <div class="post-editor post-editor-wysiwyg" ref="post-editor">
         <topbar-appbar />
         <post-editor-top-bar />
 
@@ -188,7 +188,7 @@ export default {
 
             // Load post data
             ipcRenderer.once('app-post-loaded', (event, data) => {
-                if(data !== false && this.postID !== 0) {
+                if (data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     $('#post-editor').val(this.postData.text);
@@ -326,6 +326,7 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
+@import '../scss/editor/editor-overrides.scss';
 
 .post-editor {
     overflow-x: hidden;
@@ -353,21 +354,6 @@ export default {
 
         #post-editor_ifr {
             height: calc( 100vh - 30rem )!important;
-        }
-
-        .mce-tinymce {
-            opacity: 0;
-            transition: opacity .25s ease-out;
-            transition-delay: .5s;
-
-            &.is-loaded {
-                opacity: 1;
-            }
-        }
-
-        .mce-container,
-        .mce-container-body {
-           background: var(--bg-primary);
         }
     }
 }
@@ -416,31 +402,6 @@ body[data-os="linux"] {
     .post-editor-form {
         #post-title + a {
             top: 3.6rem;
-        }
-    }
-
-    .mce-window {
-        max-height: 590px!important;
-        padding: 2rem !important;
-
-        .mce-foot {
-            margin: 2.4rem -2rem 0 -2rem !important;
-        }
-
-        .mce-window-body {
-            max-height: 500px;
-
-            & > .mce-form.mce-abs-layout-item {
-                max-height: 500px;
-
-                & > .mce-container-body.mce-abs-layout {
-                    max-height: 500px;
-                }
-            }
-        }
-
-        .mce-reset .mce-window-head {
-            margin: 0 0 2rem 0!important;
         }
     }
 }

@@ -71,16 +71,23 @@ export default {
     methods: {
         toggleTheme () {
             let currentTheme = this.$store.state.app.theme;
+            let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
+            let theme;
 
             if (currentTheme === 'dark') {
-                this.$store.commit('setAppTheme', 'default');
-                localStorage.setItem('publii-theme', 'default');
+                theme = 'default';
             } else {
-                this.$store.commit('setAppTheme', 'dark');
-                localStorage.setItem('publii-theme', 'dark');
+                theme = 'dark';
             }
 
-            document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
+            this.$store.commit('setAppTheme', theme);
+            localStorage.setItem('publii-theme', theme);
+
+            for (let i = 0; i < iframes.length; i++) {
+                iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
+            }
+
+            document.querySelector('html').setAttribute('data-theme', theme);
         }
     }
 }

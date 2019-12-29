@@ -1,8 +1,9 @@
 export default {
     selector: '#post-editor',
     file_picker_types: 'image',
-    plugins: "advlist autolink autosave link image lists hr pagebreak searchreplace media table paste autoresize autosave textpattern toc",
-    toolbar1: "bold italic underline strikethrough link unlink blockquote alignleft aligncenter alignright bullist numlist image gallery media table toc",
+    contextmenu: false,
+    plugins: "advlist autolink autosave link image lists hr pagebreak searchreplace media table paste autoresize emoticons textpattern toc",
+    toolbar1: "bold italic underline strikethrough link unlink emoticons blockquote alignleft aligncenter alignright bullist numlist image gallery media table toc",
     toolbar2: "styleselect formatselect searchreplace hr readmore undo redo restoredraft removeformat sourcecode",
     toolbar3: "",
     block_formats: 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Address=address;Pre=pre;Code=code;Blockquote=blockquote',
@@ -59,5 +60,7 @@ export default {
     {title: 'noopener', value: 'noopener'},
     {title: 'sponsored', value: 'sponsored'},
     {title: 'ugc', value: 'ugc'},
-   ]
+   ],
+   link_context_toolbar: false,
+   link_quicklink: false
 };
