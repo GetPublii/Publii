@@ -56,9 +56,9 @@
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
     "slug": "^0.9.1",
-    "vue": "^2.5.16",
+    "vue": "^2.6.11",
     "vue-loader": "^13.6.0",
-    "vue-template-compiler": "^2.5.16",
+    "vue-template-compiler": "^2.6.11",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.2",
     "webpack-dashboard": "^1.0.2"
