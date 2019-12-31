@@ -64,16 +64,16 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^5.0.12",
+    "electron": "^6.1.5",
     "electron-packager": "^14.0.0",
     "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "5.0.12",
+    "electronVersion": "6.1.5",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll)",
@@ -108,8 +108,8 @@
       "executableName": "Publii"
     },
     "win": {
-        "icon": "build/installation/icon.ico",
-        "target": "nsis"
+      "icon": "build/installation/icon.ico",
+      "target": "nsis"
     },
     "mac": {
       "category": "public.app-category.utilities",
