@@ -525,10 +525,6 @@ class App {
             windowParams.frame = false;
         }
 
-        if (process.platform === 'linux') {
-          windowParams.icon = path.join(__dirname, '..', 'src', 'assets', 'installation', '1024x1024.png');
-        }
-
         Menu.setApplicationMenu(null);
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);

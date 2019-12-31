@@ -19,7 +19,7 @@
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/back-end/**/*.spec.js --reporter dot",
     "update-editor": "cd app && npm i dziudek/publii-block-editor#master --save",
-    "packager:win": "cross-env NODE_ENV=production electron-packager ./app Publii --platform=win32 --arch=x64 --asar.unpack=\"*.+(dylib|node|dll)\" --asar.unpackDir=\"default-files/default-themes/**/*\"  --ignore=app/node_modules/electron-* --ignore=app/node_modules/devtron --ignore=app/node_modules/accessibility-developer-tools --ignore=app/node_modules/babel* --ignore=app/node_modules/asn1  --ignore=app/node_modules/postcss* --electron-version=5.0.11 --overwrite --symlinks --app-version=0.35.2 --icon=app/src/assets/installation/icon.ico --app-bundle-id=TidyCustoms --helper-bundle-id=TidyCustoms --version-string.CompanyName=\"TidyCustoms\" --version-string.ProductName=Publii --version-string.FileDescription=Publii --version-string.LegalCopyright=\"Copyright (C) 2018 TidyCustoms. All rights reserved.\" --version-string.ProductVersion=0.35.2 --version-string.FileVersion=0.35.2 --version-string.InternalName=Publii --version-string.OriginalFilename=Publii",
+    "packager:win": "electron-builder build --win --x64",
     "packager:osx": "electron-builder build --mac",
     "packager:linux": "electron-builder build --linux",
     "postinstall": "opencollective postinstall",
@@ -64,14 +64,16 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^5.0.11",
+    "electron": "^5.0.12",
     "electron-packager": "^14.0.0",
     "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "5.0.11",
+    "electronVersion": "5.0.12",
+    "productName": "Publii",
+    "copyright": "Copyright (C) 2018 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll)",
@@ -105,9 +107,13 @@
       "description": "Static Site CMS",
       "executableName": "Publii"
     },
+    "win": {
+        "icon": "build/installation/icon.ico",
+        "target": "nsis"
+    },
     "mac": {
       "category": "public.app-category.utilities",
-      "icon": "app/src/assets/installation/icon.icns",
+      "icon": "build/installation/icon.icns",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "target": "dmg",
@@ -115,9 +121,12 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "minimumSystemVersion": "10.10"
     },
+    "nsis": {
+      "oneClick": true
+    },
     "dmg": {
       "sign": false,
-      "icon": "build/icons/volume.icns",
+      "icon": "build/installation/volume.icns",
       "title": "Install Publii"
     }
   },

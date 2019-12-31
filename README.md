@@ -9,7 +9,7 @@
 [Publii](https://getpublii.com/) is a desktop-based CMS for Windows, Mac and Linux that makes creating static websites fast
 and hassle-free, even for beginners.
 
-**Current version: 0.35.2 (build 12011)**
+**Current version: 0.35.3 (build 12100)**
 
 ## Why Publii?
 Unlike static-site generators that are often unwieldy and difficult to use, Publii provides an
@@ -54,7 +54,7 @@ visit our [Community Hub](https://getpublii.com/forum) or follow us on [Twitter]
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="graphs/contributors"><img src="https://opencollective.com/Publii/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/GetPublii/Publii/graphs/contributors"><img src="https://opencollective.com/Publii/contributors.svg?width=890&button=false" /></a>
 
 
 ## Backers

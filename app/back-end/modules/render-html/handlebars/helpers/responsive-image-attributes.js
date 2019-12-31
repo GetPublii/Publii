@@ -11,8 +11,8 @@ const responsiveSizes = require('./responsive-sizes.js');
  */
 function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveImageAttributes', function (url, group) {
-        let srcSet = responsiveSrcSet.returnSrcSetAttribute(url, group, rendererInstance);
-        let sizes = responsiveSizes.returnSizesAttribute(group, rendererInstance);
+        let srcSet = responsiveSrcSet.returnSrcSetAttribute.bind(rendererInstance)(url);
+        let sizes = responsiveSizes.returnSizesAttribute.bind(rendererInstance)(group);
 
         if (srcSet) {
             return new Handlebars.SafeString(srcSet + ' ' + sizes);

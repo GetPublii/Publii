@@ -506,7 +506,7 @@ class RendererContextPostPreview extends RendererContext {
      */
     isGifOrSvg(url) {
         if(url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
-            return output;
+            return true;
         }
 
         return false;
