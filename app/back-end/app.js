@@ -493,12 +493,17 @@ class App {
     initWindow() {
         let self = this;
         let windowParams = this.windowBounds;
+
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
             nodeIntegration: true,
             webviewTag: true
         };
+
+        if (this.appConfig.appTheme === 'dark') {
+            windowParams.backgroundColor = '#202128';
+        }
 
         let displays = electron.screen.getAllDisplays();
         let externalDisplay = displays.find((display) => {

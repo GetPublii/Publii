@@ -74,6 +74,21 @@ class AppEvents {
         });
 
         /*
+         * Save app color theme config
+         */
+        ipcMain.on('app-save-color-theme', function (event, theme) {
+            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+
+            try {
+                appConfig = JSON.parse(appConfig);
+                appConfig.appTheme = theme;
+                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+            } catch (e) {
+                console.log('(!) App was unable to save the color theme');
+            }
+        });
+
+        /*
          * Delete theme
          */
         ipcMain.on('app-theme-delete', function(event, config) {

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import TopBarAppBar from './TopBarAppBar';
 import TopBarSites from './TopBarSites';
 import TopBarNotification from './TopBarNotification';
@@ -82,6 +83,7 @@ export default {
 
             this.$store.commit('setAppTheme', theme);
             localStorage.setItem('publii-theme', theme);
+            ipcRenderer.send('app-save-color-theme', theme);
 
             for (let i = 0; i < iframes.length; i++) {
                 iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
