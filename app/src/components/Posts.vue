@@ -18,7 +18,7 @@
         </p-header>
 
         <ul
-            v-if="hasPosts"
+            v-if="dataLoaded && hasPosts"
             class="filters">
             <li
                 :class="filterCssClasses('all')"
@@ -68,7 +68,7 @@
             </li>
         </ul>
 
-        <collection v-if="!emptySearchResults && hasPosts">
+        <collection v-if="dataLoaded && !emptySearchResults && hasPosts">
             <collection-header slot="header">
                 <collection-cell width="40px">
                     <checkbox
@@ -386,7 +386,7 @@
             description="There are no posts matching your criteria."></empty-state>
 
         <div
-            v-if="!hasPosts"
+            v-if="dataLoaded && !hasPosts"
             class="empty-state post">
             
            <div>               
@@ -443,6 +443,7 @@ export default {
     data () {
         return {
             bulkDropdownVisible: false,
+            dataLoaded: false,
             filterValue: '',
             selectedItems: [],
             orderBy: 'id',
@@ -558,6 +559,10 @@ export default {
                 this.saveOrdering(order[0], order[1]);
             }
         });
+
+        if (this.$store.state.currentSite.posts) {
+            this.dataLoaded = true;
+        }
     },
     methods: {
         addNewPost (editorType) {
@@ -738,6 +743,8 @@ export default {
             });
         },
         whenSiteLoaded () {
+            this.dataLoaded = true;
+
             setTimeout(() => {
                 this.setFilter('');
             }, 0);
