@@ -2,10 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: './app/src/main.js',
-  target: 'electron',
+  target: 'electron-renderer',
   output: {
     path: path.resolve(__dirname, './app/dist/'),
     publicPath: './',
@@ -14,7 +15,8 @@ module.exports = {
   },
   plugins: [
     // new DashboardPlugin() //,
-    // new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin(),
+    new VueLoaderPlugin()
   ],
   node: {
     __dirname: false,
