@@ -180,6 +180,7 @@ export default {
             content: "";
             pointer-events: none;
             height: 100%;
+            left: 0;
             position: absolute;
             transition: var(--transition);
             width: 100%;                       

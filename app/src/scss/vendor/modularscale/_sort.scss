@@ -1,0 +1,34 @@
+// Basic list sorting
+// Would like to replace with http://sassmeister.com/gist/30e4863bd03ce0e1617c
+// Unfortunately libsass has a bug with passing arguments into the min() funciton.
+
+@function ms-sort($l) {
+
+  // loop until the list is confirmed to be sorted
+  $sorted: false;
+  @while $sorted == false {
+
+    // Start with the assumption that the lists are sorted.
+    $sorted: true;
+
+    // Loop through the list, checking each value with the one next to it.
+    // Swap the values if they need to be swapped.
+    // Not super fast but simple and modular scale doesn't lean hard on sorting.
+    @for $i from 2 through length($l) {
+      $n1: nth($l,$i - 1);
+      $n2: nth($l,$i);
+
+      // If the first value is greater than the 2nd, swap them.
+      @if $n1 > $n2 {
+        $l: set-nth($l, $i, $n1);
+        $l: set-nth($l, $i - 1, $n2);
+
+        // The list isn't sorted and needs to be looped through again.
+        $sorted: false;
+      }
+    }
+  }
+
+  // Return the sorted list.
+  @return $l;
+}

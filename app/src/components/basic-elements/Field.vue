@@ -251,7 +251,7 @@ label {
             position: relative;
 
             & > label {
-               background: var(--bg-primary);
+                background: var(--bg-primary);
                 color: var(--primary-color);
                 font-size: 1.4rem;
                 font-weight: 500;

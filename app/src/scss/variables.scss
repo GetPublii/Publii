@@ -88,6 +88,14 @@ html[data-theme="default"] {
   --popup-btn-cancel-hover-color: #707277;
   --popup-btn-cancel-bg: #fff;
   --popup-btn-cancel-hover-bg: #f6f7f8;
+    
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+ --font-serif: Georgia, Times New Roman, Times, Serif;
+ --font-monospace: Menlo, Monaco, Consolas, Courier New, monospace;
+    
+ --font-weight-normal: 400;
+ --font-weight-semibold: 500;
+ --font-weight-bold: 700;
 }
 
 //dark
@@ -180,6 +188,14 @@ html[data-theme="dark"] {
  --popup-btn-cancel-hover-color: rgba(255,255,255, .87);
  --popup-btn-cancel-bg: #2b2c35;
  --popup-btn-cancel-hover-bg: #343540;
+    
+ --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+ --font-serif: Georgia, Times New Roman, Times, Serif;
+ --font-monospace: Menlo, Monaco, Consolas, Courier New, monospace;
+    
+ --font-weight-normal: 400;
+ --font-weight-semibold: 500;
+ --font-weight-bold: 700;
 
 }
 
@@ -226,5 +242,52 @@ $secondary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxyge
  * Dimensions
  */
 
-$baseline: 1.5;
-$spacing: 0.25rem; // ($baseline / 6)
+$spacing: 0.25rem; // ($baseline / 6.4)
+
+// Modular scale
+
+$modularscale: (
+  base: 1em,
+  ratio: 1.125 //$major-second 
+); 
+
+// Min and Max screen width
+$minScreen: 49rem;
+$maxScreen: 100rem; 
+
+
+// Baseline
+$line-height: 1.6;
+$baseline: 1.6em / 7; 
+
+
+// Font size map
+$font: ( 
+	min: 1em,
+	max: 1.15em 
+);
+
+$h1: ( 
+	min: (ms(5)), 
+	max: (ms(6))
+); 
+$h2: ( 
+	min: (ms(3)),
+	max: (ms(4))
+);
+$h3: ( 
+	min: (ms(2)),
+	max: (ms(3))
+);
+$h4: ( 
+	min: (ms(1)),
+	max: (ms(2))
+);
+$h5: ( 
+	min: (ms(0)),
+	max: (ms(1))
+);
+$h6: ( 
+	min: (ms(0)),
+	max: (ms(0)) 
+);

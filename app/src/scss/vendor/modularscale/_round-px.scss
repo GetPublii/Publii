@@ -1,0 +1,7 @@
+@function ms-round-px($r) {
+    @if unit($r) == 'px' {
+        @return round($r);
+    }
+    @warn "ms-round-px is no longer used by modular scale and will be removed in the 3.1.0 release.";
+    @return $r;
+}

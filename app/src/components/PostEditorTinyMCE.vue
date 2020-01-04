@@ -335,10 +335,12 @@ export default {
 
     &-form {
         #post-title {
+            background: none;
             border: none;
             box-shadow: none;
+            color: var(--text-primary-color);
             display: block;
-            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-family: var(--font-base);
             font-size: 3.5rem;
             font-weight: 600;
             line-height: 1.2;
@@ -348,7 +350,7 @@ export default {
             width: 80%;
             
             &::placeholder {
-                color: rgba($color-helper-7, .5); 
+                color: var(--gray-3); 
             }
         }
 
@@ -391,44 +393,6 @@ body[data-os="linux"] {
     .post-editor-form {
         #post-editor_ifr {
             height: calc( 100vh - 26.8rem )!important;
-        }
-    }
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .post-editor-form {
-        #post-title + a {
-            top: 3.6rem;
-        }
-    }
-}
-
-@media (max-width: 1400px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-        
-            & + a {
-                top: 2.6rem;
-            }
-        }
-    }
-}
-    
-@media (max-width: 1600px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-            width: 100%;
-        
-            & + a {
-                top: 2.6rem;
-            }
         }
     }
 }

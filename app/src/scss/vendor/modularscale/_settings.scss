@@ -1,0 +1,37 @@
+// Parse settings starting with defaults.
+// Settings should cascade down like you would expect in CSS.
+// More specific overrides previous settings.
+
+@function ms-settings($b: false, $r: false, $t: false, $m: $modularscale) {
+  $base: $ms-base;
+  $ratio: $ms-ratio;
+  $thread: map-get($m, $t);
+
+  // Override with user settings
+  @if map-get($m, base) {
+    $base: map-get($m, base);
+  }
+  @if map-get($m, ratio) {
+    $ratio: map-get($m, ratio);
+  }
+
+  // Override with thread settings
+  @if $thread {
+    @if map-get($thread, base) {
+      $base: map-get($thread, base);
+    }
+    @if map-get($thread, ratio) {
+      $ratio: map-get($thread, ratio);
+    }
+  }
+
+  // Override with inline settings
+  @if $b {
+    $base: $b;
+  }
+  @if $r {
+    $ratio: $r;
+  }
+
+  @return $base $ratio;
+}
