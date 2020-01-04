@@ -234,7 +234,7 @@ export default {
  * Site create form
  */
 .site-create {
-   background: var(--popup-bg);
+    background: var(--popup-bg);
     border-radius: 5px;
     box-shadow: 0 0 60px rgba($color-4, 0.05);
     font-size: 1.6rem;
@@ -245,6 +245,7 @@ export default {
     text-align: center;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+    user-select: none;
     width: 770px;
 
     &-form {

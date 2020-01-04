@@ -50,9 +50,9 @@
 
         .tinymce-overlay {
             border: 2px solid var(--primary-color);
-            background: rgba($color-1, .17);           
-            display: none;           
-            height: 100%;            
+            background: rgba($color-1, .17);
+            display: none;
+            height: 100%;
             left: 0;
             opacity: 1;
             position: absolute;
@@ -60,7 +60,7 @@
             top: 0;
             width: 100%;
             z-index: 10000;
-            
+
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
                 background: var(--primary-color);
@@ -70,16 +70,16 @@
                 font-weight: 500;
                 height: auto;
                 left: 50%;
-                line-height: 1.5;                
+                line-height: 1.5;
                 padding: 1.8rem 6rem 1.8rem 4rem;
                 position: absolute;
-                top: 50%; 
+                top: 50%;
                 transform: translateX(-50%) translateY(-50%);
-                width: auto;              
+                width: auto;
             }
-            
+
             .upload-icon {
-                display: inline-block; 
+                display: inline-block;
                 fill: var(--white);
                 height: 2.4rem;
                 margin-right: 2rem;
@@ -87,37 +87,37 @@
             }
 
             .loader {
-                display: inline-block;               
+                display: inline-block;
                 height: 2.4rem;
                 margin-right: 2rem;
                 width: 2.4rem;
-            
-            & > span {
-                animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-10, 0.2);
-                border-right: 2px solid rgba($color-10, 0.2);
-                border-bottom: 2px solid rgba($color-10, 0.2);
-                border-left: 2px solid var(--white);
-                border-radius: 50%;
-                display: inline-block;   
-                height: 2.1rem;
-                width: 2.1rem;                 
-                
-                &::after {
+
+                & > span {
+                    animation: spin .9s infinite linear;
+                    border-top: 2px solid rgba($color-10, 0.2);
+                    border-right: 2px solid rgba($color-10, 0.2);
+                    border-bottom: 2px solid rgba($color-10, 0.2);
+                    border-left: 2px solid var(--white);
                     border-radius: 50%;
-                    content: "";
-                    display: block;                                      
-                }
-            
-                @at-root {
-                    @keyframes spin {
-                       100% { 
-                          transform: rotate(360deg);
-                       }                  
+                    display: inline-block;
+                    height: 2.1rem;
+                    width: 2.1rem;
+
+                    &::after {
+                        border-radius: 50%;
+                        content: "";
+                        display: block;
                     }
-                 }
-              }                
-           }
+
+                    @at-root {
+                        @keyframes spin {
+                            100% {
+                                transform: rotate(360deg);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         &.is-hovered {
@@ -130,32 +130,64 @@
         .tox-panel {
             // background: var(--gray-1);
         }
-
+        
         .tox-tbtn {
-            background: var(--option-sidebar-bg);
+            svg {
+                fill: var(--icon-primary-color);
+                transition: var(--transition);
+            }
+            
+            &:hover {
+                svg {
+                    fill: var(--icon-tertiary-color);
+                }
+            }
+        }
+
+        .tox-tbtn:not(span),
+        .tox-split-button,
+        .tox-tbtn--select {
+            background: var(--input-bg-light);
             border-radius: 2px;
-            border-width: 1px;
+            color: var(--text-primary-color);
+            height: 38px;
+            margin: 1px;
             padding: 2px;
+            min-width: 38px;
 
             &:active,
             &:focus,
             &:hover {
-                background: var(--gray-1);
-                border-color: $color-8;
+                background: var(--input-border-color);
+                box-shadow: 0 0 0 1px var(--border-light-color) inset;
 
                 & > button {
                     background: transparent;
                 }
             }
 
-            &.tox-active {
-               background: var(--bg-primary);
+            &.tox-tbtn--enabled {
+                background: var(--input-border-color);
+                box-shadow: 0 0 0 1px var(--border-light-color) inset;
+                
+                svg {
+                    fill: var(--icon-tertiary-color);
+                }
             }
+        }
+
+        .tox-tbtn--select {
+            padding: 2px 8px !important;
+        }
+
+        .tox-split-button__chevron {
+            min-width: 16px;
         }
 
         .tox-panel,
         .tox-statusbar,
         .tox-toolbar-grp {
+            background: none;
             border: none;
         }
 
@@ -166,6 +198,18 @@
         .tox-toolbar-grp {
             padding-bottom: 2.4rem;
             position: relative;
+        }
+        
+        .tox-editor-header {
+            margin-bottom: 2.4rem;
+        }
+        
+        .tox-toolbar-overlord {
+            background: none;
+        }
+        
+        .tox-edit-area__iframe {
+            background: none;
         }
     }
 
@@ -193,7 +237,7 @@
         z-index: 10;
 
         em {
-            cursor: pointer; 
+            cursor: pointer;
             height: 24px;
             padding: 4px;
             width: 30px;
@@ -202,7 +246,7 @@
         select {
             -webkit-appearance: none;
             background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
-            background-color: $color-4; 
+            background-color: $color-4;
             background-size: 9px;
             border: none;
             border-left: 1px solid $color-5;
@@ -219,7 +263,7 @@
             padding: 6px 18px;
             position: relative;
             top: 2px;
-            
+
             &:hover {
                 background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>');
                 color: var(--white);
@@ -236,7 +280,7 @@
 
         .tox-ico {
             color: rgba($color-10, .8);
-            
+
             &:hover {
                 color: var(--white);
             }
@@ -252,7 +296,7 @@
         }
 
         &:after {
-           background: var(--bg-primary);
+            background: var(--bg-primary);
             line-height: 10px;
             position: absolute;
             left: 12px;
@@ -263,44 +307,20 @@
     .tox-window * {
         font-size: 1.6rem !important;
     }
-    
-    .tox-menu-item {
-        &-normal {
-            &.tox-active {
-                background-color: var(--gray-1) !important;
-    
-                .tox-text {
-                    color: $color-5 !important;
-                    font-weight: 600 !important;
-                }
-            }
-        }
-    
-        &:hover,
-        &:focus,
-        &.tox-selected {
-            background-color: var(--gray-1) !important;
-            color: $color-5 !important;
-    
-            .tox-text {
-                color: $color-5 !important;
-            }
-        }
-    }
-    
+
     .tox-edit-area {
         margin-bottom: -6rem;
     }
-    
+
     .tox-container,
     .tox-container-body {
-       background: var(--bg-primary);
+        background: var(--bg-primary);
     }
-    
+
     .tox-tabs {
         border: none !important;
     }
-    
+
     .tox-tab {
         border: none !important;
         border-radius: 3px;
@@ -308,54 +328,295 @@
         margin: 0 !important;
         padding: 0.8rem 1.2rem !important;
         text-shadow: none !important;
-    
+
         &:hover {
             background: rgba($color-helper-8, 0.4) !important;
         }
-    
+
         &.tox-active {
             background: var(--white) !important;
             color: var(--white);
         }
     }
-    
+
     .tox-arrow.tox-arrow-up {
+
         &:before,
         &:after {
             border-bottom-color: $color-4 !important;
         }
     }
-    
+
     div.tox-tinymce-inline {
         &.tox-panel {
             background: $color-4;
             border-color: $color-4;
             border-radius: 3px;
         }
-    
+
         .tox-tbtn-group:not(:first-child) {
             border-color: var(--text-primary-color);
         }
-    
+
         .tox-tbtn {
             background-color: $color-4;
-    
+
             &:hover,
             &:focus,
             &:active {
                 border-color: transparent;
-    
+
                 .tox-ico {
                     color: var(--white);
                 }
             }
-    
+
             .tox-ico {
                 color: rgba($color-10, .7);
             }
         }
     }
 }
+
+/*
+ * Modal dialog
+ */
+body {
+    .tox {
+        &-tinymce-aux {
+            z-index: 999999;
+        }
+
+        .tox-dialog {
+            background-color: var(--popup-bg);
+            border: none;
+            border-radius: .6rem;
+            display: inline-block;
+            font-size: 1.6rem;
+            font-weight: 400;
+            min-width: 62rem;
+            overflow: hidden;
+            text-align: center;
+            user-select: none;
+
+            &-wrap__backdrop {
+                background-color: var(--overlay);
+            }
+
+            &__header {
+                background: transparent;
+                padding: 4rem 4rem 0 4rem;
+            }
+
+            &__title {
+                color: var(--text-primary-color);
+                font-size: 1.8rem;
+                font-weight: 500;
+                margin: 0 auto;
+                text-align: center;
+                text-transform: none;
+            }
+
+            &__footer {
+                background: transparent;
+                border: none;
+                display: block;
+                padding: 0;               
+
+                &-end {
+                    flex-direction: row-reverse;
+
+                    .tox-button {
+                        background: var(--button-bg);
+                        border: none;
+                        border-radius: initial;
+                        box-shadow: none;
+                        color: var(--white);
+                        cursor: pointer;
+                        display: inline-block;
+                        flex: 0 1 100%;
+
+                        font: {
+                            size: 1.5rem;
+                            family: $secondary-font;
+                            weight: 500;
+                        }
+
+                        height: 5.6rem;
+                        line-height: 5.5rem;
+                        margin: 0 !important;
+                        padding: 0 2rem;
+                        position: relative;
+                        transition: var(--transition);
+                        user-select: none;
+                        white-space: nowrap;
+
+                        &:focus {
+                            outline: none;
+                        }
+
+                        &:active,
+                        &:focus,
+                        &:hover,
+                        &.button-active {
+                            background: var(--button-hover-bg);
+                            color: var(--white);
+                        }
+
+                        &--secondary {
+                            background: var(--popup-btn-cancel-bg);
+                            border: none;
+                            border-top: 1px solid var(--input-border-color) !important;
+                            color: var(--popup-btn-cancel-color);
+
+                            &:active,
+                            &:focus,
+                            &:hover {
+                                background: var(--popup-btn-cancel-hover-bg);
+                                color: var(--popup-btn-cancel-hover-color);
+                            }
+                        }
+                    }
+                }
+            }
+            &__body {
+                color: var(--text-primary-color);
+                
+                &-content {
+                    padding: 3rem 4rem 5rem 4rem;
+                }
+                
+                &-nav {
+                    padding: 4rem 2rem 4rem 4rem;
+
+                    &-item {
+                        color: var(--tab-color);
+                        font-size: 15px;
+                        padding: 0.3rem 0.1rem;   
+
+                        &:focus {
+                            background: none;
+                        }
+
+                        &--active {
+                            border-color: var(--tab-active-bg);
+                            color: var(--link-primary-color);
+                        }
+                    }
+                }
+            }
+        }
+
+        .tox-label,
+        .tox-toolbar-label {
+            color: var(--label-color);
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 2.6;
+        }
+
+        .tox-selectfield select,
+        .tox-textarea,
+        .tox-textfield,
+        .tox-toolbar-textfield {
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 3px;
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
+            color: var(--text-primary-color);
+            font: 400 1.6rem/1.5 $secondary-font;
+            outline: none;
+            padding: 1.2rem 1.8rem;
+
+            &:focus {
+                box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+            }
+        }
+        
+        .tox-button--naked {
+            border-radius: 50%;
+            color: var(--icon-secondary-color);
+            transition: var(--transition);
+            
+            &:hover:not(:disabled) {
+                background-color: var(--input-border-color);
+                border-color: var(--input-border-color);
+                color: var(--icon-tertiary-color) !important;
+            }
+        }
+        
+        .tox-tbtn {
+            transition: var(--transition);
+            
+            &:hover {
+                background-color: var(--input-border-color);
+            }
+            
+            svg {
+                 fill: var(--icon-primary-color); 
+            }
+        }
+        
+        .tox-menu {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light-color);
+        }
+        
+        .tox-collection {
+            
+            &__item {
+                color: var(--text-light-color);
+                
+                &-caret svg {
+                    fill: var(--icon-primary-color); 
+                }
+            }
+            
+            &--list {
+                .tox-collection__item--active {
+                    background-color: var(--gray-1);
+                    color: var(--text-primary-color);
+
+                    &:not(.tox-collection__item--state-disabled) {
+                        color: var(--icon-tertiary-color);
+                    }
+                }
+                
+                .tox-collection__item--enabled {
+                    color: var(--text-primary-color);
+                }
+
+                .tox-collection__group {
+                    border-color: var(--border-light-color);
+                }
+            }
+        }
+        
+       .tox-checkbox__icons {
+           .tox-checkbox-icon__indeterminate svg {
+              fill: var(--primary-color); 
+           }
+           
+           .tox-checkbox-icon__unchecked svg {
+               fill: var(--input-border-color); 
+           }
+           
+           .tox-checkbox-icon__checked svg {
+               fill: var(--primary-color); 
+           }
+        }
+        
+        input.tox-checkbox__input:focus+.tox-checkbox__icons {
+            box-shadow: none;
+        }
+        
+        .tox-selectfield__icon-js svg {
+            fill: var(--icon-secondary-color);
+        }
+    }
+}
+
+
 
 /*
  * Special rules for Windows
@@ -378,7 +639,7 @@ body[data-os="win"] {
         left: 0;
         margin-right: .5rem;
         position: relative;
-        top: -1px; 
+        top: -1px;
         width: 1.6rem;
     }
 
@@ -525,62 +786,6 @@ body[data-os="win"] {
         }
     }
 
-    &[aria-label="Find and replace"] {
-        .tox-foot {
-            .tox-container-body {
-                .tox-tbtn {
-                    background: var(--white) !important;
-                    border-top: none !important;
-                    border-radius: 0 0 0 .6rem !important;
-                    box-shadow: none !important;
-                    color: var(--white) !important;
-                    font-size: 1.6rem;
-                    height: 5.6rem;
-                    left: 0 !important;
-                    line-height: 5.6rem;
-                    top: 0 !important;
-                    width: 20% !important;
-
-                    & > button {
-                        color: var(--white) !important;
-                    }
-
-                    &.tox-disabled > button {
-                        color: var(--white) !important;
-                    }
-
-                    &:active,
-                    &:focus,
-                    &:hover {
-                        background: lighten($color-1, 10%) !important;
-                        color: var(--white) !important;
-                    }
-
-                    + .tox-tbtn {
-                        border-top: none !important;
-                        left: 20% !important;
-                        border-radius: 0 !important;
-
-                        + .tox-tbtn {
-                            left: 40% !important;
-                            border-radius: 0 0 0 0 !important;
-
-                            ~ .tox-tbtn {
-                                left: 60% !important;
-                                border-radius: 0 0 0 0 !important;
-
-                                ~ .tox-tbtn {
-                                    left: 80% !important;
-                                    border-radius: 0 0 .6rem 0 !important;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     .tox-textbox {
         background-color: var(--white);
         border: none;
@@ -635,7 +840,7 @@ body[data-os="win"] {
 
 @media (max-height: 900px) {
     .tox-window {
-        max-height: 590px!important;
+        max-height: 590px !important;
         padding: 2rem !important;
 
         .tox-foot {
@@ -655,7 +860,7 @@ body[data-os="win"] {
         }
 
         .tox-reset .tox-window-head {
-            margin: 0 0 2rem 0!important;
+            margin: 0 0 2rem 0 !important;
         }
     }
 }

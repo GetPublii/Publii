@@ -25,8 +25,7 @@
                             :data-full-image="image.fullImagePath"
                             :data-size="image.dimensions" />
 
-                        <div>
-                            <span>{{ image.fullImagePath.split('/').pop() }}</span>
+                        <div>                            
                             <input
                                 type="text"
                                 class="gallery-popup-images-list-item-alt"
@@ -65,11 +64,9 @@
                     v-if="isUploading"
                     class="loading-state">
                     <icon
-                        name="gallery"
-                        primaryColor="color-8"
-                        size="xl"
-                        customHeight="100"
-                        customWidth="100" />
+                        name="gallery"                       
+                        customHeight="50"
+                        customWidth="66" />
 
                     <progress-bar
                         color="blue"
@@ -327,21 +324,10 @@ h1 {
     text-align: center;
 }
 
-.gallery-popup {
-    background-color: var(--white);
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 0 0 4rem 0;
-    position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+.gallery-popup {    
+    max-width: 70rem;
+    min-width: 70rem;   
+    padding: 0 0 4rem 0;  
 
     h1 {
         margin: 4rem 0 2rem 0;
@@ -351,10 +337,22 @@ h1 {
         margin: 0;
     }
 
-    &-config {
-        border-top: 1px solid var(--gray-1);
+    &-config {       
         display: flex;
-        padding: 1.5rem 2rem;
+        padding: 1.5rem 3rem;
+        position: relative;
+        
+        &:after {
+            background: linear-gradient(transparent, var(--popup-bg)); 
+            bottom: 100%;
+            content: "";
+            height: 40px;
+            left: 0;
+            pointer-events: none;
+            position: absolute;
+            right: 0;           
+            z-index: 1;
+        }
 
         & > * {
             width: auto;
@@ -372,12 +370,12 @@ h1 {
 
         select {
             -webkit-appearance: none;
-            background-color: var(--white);
+            background-color: var(--input-bg);
             border: none;
             border-radius: 3px;
-            box-shadow: inset 0 0 0 1px $color-8;
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
-            font: 400 1.6rem/1.5 $secondary-font;
+            font: 400 1.6rem/1.5 var(--font-base);
             margin-left: auto;
             max-width: 100%;
             min-width: 100px;
@@ -400,25 +398,26 @@ h1 {
         padding: 2rem 4rem;
 
         svg {
-            margin: 5rem 0 0 0;
+            fill: var(--icon-secondary-color);
+            margin: 3rem 0 0 0;
         }
     }
 
     &-images-list {
         list-style-type: none;
-        height: 400px;
+        min-height: 400px;
         margin: 0;
-        max-height: 400px;
+        max-height: 600px;
         overflow: scroll;
-        padding: 0 3rem;
+        padding: 0 3rem 20px;
 
         &:empty {
-            height: 400px;
+            min-height: 400px;
             position: relative;
 
             &:after {
                 content: "Your gallery is empty";
-                font-style: italic;
+                color: var(--label-color);
                 position: absolute;
                 top: 50%;
                 transform: translateX(-50%) translateY(-50%);
@@ -426,12 +425,12 @@ h1 {
         }
 
         &-item {
-            border-top: 1px solid var(--gray-1);
-            display: flex;
-            padding: 2rem 0;
+            align-items: center;           
+            display: grid;
+            grid-template-columns: auto 1fr 15px;
+            padding: 1rem 0;
 
-            &:first-child {
-                border-top: none;
+            &:first-child {                
 
                 .gallery-popup-images-list-operations {
                     & > a[href="#up"] {
@@ -450,47 +449,48 @@ h1 {
 
             img {
                 cursor: move;
-                height: 90px;
+                max-height: 90px;
                 width: 90px;
             }
 
             & > div {
                 display: flex;
                 flex-wrap: wrap;
-                padding: 0 2rem;
-                width: 430px;
+                padding: 0 2rem;               
 
                 & > * {
                     width: 100%;
                 }
 
                 & > span {
-                    font-size: 1.4rem;
-                    font-weight: bold;
+                    font-size: 1.3rem;
+                    font-weight: var(--font-weight-semibold);
                     line-height: 1;
                     padding: 0 0 .5rem 0;
                     text-align: left;
                 }
 
-                & > input {
-                    font-size: 1.3rem;
-                    margin: .5rem 0 0 0;
-                    padding: .5rem 1rem;
+                & > input {                    
+                    margin: 5px 0;                    
                 }
             }
 
             & > .gallery-popup-images-list-operations {
+                align-self: normal;
+                margin: 5px 0;
                 padding: 0;
-                position: relative;
-                width: 15px;
+                position: relative;                
 
                 & > a {
-                    font-size: 3.2rem;
-                    height: 2rem;
+                    border-radius: 50%;
+                    font-size: 2.4rem;
+                    height: 3rem; 
                     left: 0;
-                    line-height: 2rem;
+                    line-height: 1.1; 
+                    text-align: center;       
+                    transition: var(--transition);   
                     position: absolute;
-                    width: 2rem;
+                    width: 3rem;
 
                     &[href="#remove"] {
                         color: var(--warning);
@@ -500,23 +500,27 @@ h1 {
 
                     &[href="#up"],
                     &[href="#down"] {
-                        color: $color-8;
+                         color: var(--icon-secondary-color);
+                        
+                         &:active,
+                         &:focus,
+                         &:hover {
+                             color: var(--icon-tertiary-color);
+                         }
                     }
 
-                    &[href="#up"] {
-                        left: 3px;
+                    &[href="#up"] {                      
                         top: 0;
                         transform: rotate(90deg);
                     }
 
                     &[href="#down"] {
-                        bottom: 0;
-                        left: -3px;
+                        bottom: 0;                       
                         transform: rotate(-90deg);
-                    }
-
+                    }                    
+        
                     &:hover {
-                        opacity: .5;
+                        background: var(--input-border-color);
                     }
                 }
             }

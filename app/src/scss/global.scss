@@ -19,7 +19,7 @@ body {
     color: var(--text-primary-color);
     font: 400 1rem/1.5 $secondary-font;
     -webkit-font-smoothing: antialiased;
-    line-height: $baseline;
+    line-height: $line-height;
 }
 
 html,
