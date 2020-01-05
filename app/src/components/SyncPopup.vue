@@ -351,8 +351,14 @@ export default {
             this.close();
         },
         openWebsite: function() {
-            let url = this.$store.state.currentSite.config.domain;
-            shell.openExternal(url);
+            let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
+
+            if (urlToOpen) {
+                shell.openExternal(urlToOpen);
+            } else {
+                alert('Sorry! The website link seems to be invalid.');
+            }
+
             this.close();
         },
         showFolder: function() {

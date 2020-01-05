@@ -25,6 +25,7 @@
 
 <script>
 import { shell } from 'electron';
+import Utils from './../../helpers/utils.js';
 
 export default {
     name: 'link-toolbar',
@@ -99,8 +100,14 @@ export default {
             let selectedText = tinymce.activeEditor.selection.getContent();
             let link = selectedText.match(/href="(.*?)"/);
 
-            if(link && link[1] && link[1].indexOf('#INTERNAL_LINK#') === -1) {
-                shell.openExternal(link[1]);
+            if (link && link[1] && link[1].indexOf('#INTERNAL_LINK#') === -1) {
+                let urlToOpen = Utils.getValidUrl(link[1]);
+
+                if (urlToOpen) {
+                    shell.openExternal(urlToOpen);
+                } else {
+                    alert('Sorry! This link seems to be invalid.');
+                }
             }
         },
 

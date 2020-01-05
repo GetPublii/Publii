@@ -9,7 +9,7 @@
         <a
             v-if="isExternal"
             :href="path"
-            @click="openExternalLink">
+            target="_blank">
             {{ label }}
         </a>
     </li>

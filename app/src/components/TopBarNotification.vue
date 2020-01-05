@@ -96,14 +96,6 @@ export default {
                     return;
                 }
 
-                this.$refs.content.addEventListener('click', e => {
-                    if(e.target.tagName === 'A') {
-                        e.preventDefault();
-                        shell.openExternal(e.target.getAttribute('href'));
-                        this.closeNotification();
-                    }
-                });
-
                 this.contentEventsAdded = true;
             }, 500);
         },

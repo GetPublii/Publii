@@ -1227,7 +1227,13 @@ export default {
                 return false;
             }
 
-            shell.openExternal(this.$store.state.currentSite.config.domain);
+            let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
+
+            if (urlToOpen) {
+                shell.openExternal(urlToOpen);
+            } else {
+                alert('Sorry! The website link seems to be invalid.');
+            }
         },
         cleanError (field) {
             let pos = this.errors.indexOf(field);
