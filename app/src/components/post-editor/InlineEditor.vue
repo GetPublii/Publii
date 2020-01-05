@@ -121,8 +121,13 @@ export default {
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
-                tinymce.activeEditor.selection.setContent('');
-                tinymce.activeEditor.selection.setContent(linkHTML);
+
+                if (tinymce.activeEditor.selection.getContent() === '') {
+                    tinymce.activeEditor.insertContent(linkHTML);
+                } else {
+                    tinymce.activeEditor.selection.setContent('');
+                    tinymce.activeEditor.selection.setContent(linkHTML);
+                }
 
                 setTimeout(() => {
                     this.updateLinkButtons();

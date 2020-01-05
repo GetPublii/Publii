@@ -190,6 +190,8 @@ export default {
             this.parseContent(config.selection);
             this.isVisible = true;
         });
+
+        this.$bus.$on('link-popup-updated', this.addLinkHTML);
     },
     methods: {
         customTypeLabels (value) {
@@ -329,10 +331,51 @@ export default {
             this.cleanPopup();
             this.isVisible = false;
             this.$bus.$emit('link-popup-updated', false);
+        },
+        addLinkHTML (response) {
+            if ($('#link-toolbar').css('display') !== 'none' || $('#inline-toolbar').css('display') !== 'none') {
+                return;
+            }
+
+            if (response) {
+                let relAttr = [];
+
+                if (response.rel && response.rel.nofollow) {
+                    relAttr.push('nofollow');
+                }
+
+                if (response.rel && response.rel.sponsored) {
+                    relAttr.push('sponsored');
+                }
+
+                if (response.rel && response.rel.ugc) {
+                    relAttr.push('ugc');
+                }
+
+                if (response.target.indexOf('_blank') > -1) {
+                    relAttr.push('noopener');
+                    relAttr.push('noreferrer');
+                }
+
+                if (relAttr.length) {
+                    relAttr = ' rel="' + relAttr.join(' ') + '"';
+                }
+
+                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
+            
+
+                if (tinymce.activeEditor.selection.getContent() === '') {
+                    tinymce.activeEditor.insertContent(linkHTML);
+                } else {
+                    tinymce.activeEditor.selection.setContent('');
+                    tinymce.activeEditor.selection.setContent(linkHTML);
+                }
+            }
         }
     },
     beforeDestroy () {
         this.$bus.$off('init-link-popup');
+        this.$bus.$off('link-popup-updated', this.addLinkHTML);
     }
 }
 </script>
