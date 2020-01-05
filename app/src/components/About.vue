@@ -36,13 +36,11 @@
 <script>
 import { shell } from 'electron';
 import { mapGetters } from 'vuex';
-import ExternalLinks from './mixins/ExternalLinks';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
 export default {
     name: 'about',
     mixins: [
-        ExternalLinks,
         GoToLastOpenedWebsite
     ],
     computed: {

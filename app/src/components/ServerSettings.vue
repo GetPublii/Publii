@@ -850,7 +850,6 @@
 <script>
 import Vue from 'vue';
 import { shell, ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
@@ -858,9 +857,6 @@ import s3ACLs from './configs/s3ACLs.js';
 
 export default {
     name: 'server-settings',
-    mixins: [
-        ExternalLinks
-    ],
     data () {
         return {
             domain: '',

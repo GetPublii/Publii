@@ -299,7 +299,6 @@
 import fs from 'fs';
 import Vue from 'vue';
 import { ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 import PostsDropDown from './basic-elements/PostsDropDown';
 import TagsDropDown from './basic-elements/TagsDropDown';
 import AuthorsDropDown from './basic-elements/AuthorsDropDown';
@@ -312,9 +311,6 @@ export default {
         'posts-dropdown': PostsDropDown,
         'tags-dropdown': TagsDropDown
     },
-    mixins: [
-        ExternalLinks
-    ],
     data: function() {
         return {
             buttonsLocked: false,

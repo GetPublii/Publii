@@ -12,6 +12,7 @@ const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
 const electron = require('electron');
+const shell = electron.shell;
 const Menu = electron.Menu;
 const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
@@ -541,6 +542,12 @@ class App {
             if (input.key === 'f' && (input.meta || input.control)) {
                 this.mainWindow.webContents.send('app-show-search-form');     
             }
+        });
+
+        // Prevent from creating new windows in the Electron context
+        this.mainWindow.webContents.on('new-window', function(event, url) {
+            event.preventDefault();
+            shell.openExternal(url);
         });
 
         this.mainWindow.webContents.on('did-finish-load', function() {

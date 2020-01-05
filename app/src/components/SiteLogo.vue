@@ -27,13 +27,8 @@
 </template>
 
 <script>
-import ExternalLinks from './mixins/ExternalLinks.js';
-
 export default {
     name: 'site-logo',
-    mixins: [
-        ExternalLinks
-    ],
     data: function() {
         return {
             siteIsLoaded: false

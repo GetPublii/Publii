@@ -30,13 +30,9 @@
 
 <script>
 import { remote, ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 
 export default {
     name: 'about-credits-list',
-    mixins: [
-        ExternalLinks
-    ],
     props: [
         'licenses'
     ],

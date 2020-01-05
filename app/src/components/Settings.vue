@@ -1385,7 +1385,6 @@
 <script>
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import GdprGroups from './basic-elements/GdprGroups';
@@ -1393,9 +1392,6 @@ import ThemesDropdown from './basic-elements/ThemesDropdown';
 
 export default {
     name: 'site-settings',
-    mixins: [
-        ExternalLinks
-    ],
     components: {
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
