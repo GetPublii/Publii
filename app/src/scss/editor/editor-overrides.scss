@@ -39,8 +39,7 @@
             opacity: 1;
         }
 
-        .tox-toolbar {
-            background: transparent;
+        .tox-toolbar {           
             justify-content: center;
         }
 
@@ -207,6 +206,8 @@
         
         .tox-toolbar-overlord {
             background: none;
+            border: none;
+            padding: 0;
         }
         
         .tox-edit-area__iframe {
@@ -444,6 +445,23 @@
  */
 body {
     .tox {
+        
+        &-tinymce {
+            border-color: var(--input-border-color);
+        }
+        
+        .tox-toolbar, 
+        .tox-toolbar__overflow, 
+        .tox-toolbar-overlord,
+        .tox-toolbar__primary {
+             background: transparent;
+        }
+        
+        .tox-toolbar-overlord {
+            border-bottom: 1px solid var(--input-border-color);
+            padding: 5px;
+        }
+        
         &-tinymce-aux {
             z-index: 999999;
         }
@@ -451,8 +469,7 @@ body {
         .tox-dialog {
             background-color: var(--popup-bg);
             border: none;
-            border-radius: .6rem;
-            display: inline-block;
+            border-radius: .6rem;            
             font-size: 1.6rem;
             font-weight: 400;
             min-width: 62rem;
@@ -612,6 +629,8 @@ body {
         }
         
         .tox-tbtn {
+            color: var(--text-primary-color);
+            margin: 2px 2px 3px 0;
             transition: var(--transition);
             
             svg {
@@ -620,8 +639,11 @@ body {
             
             &:active,
             &:focus,
-            &:hover {
+            &:hover,
+            &--enabled,
+            &--enabled:hover {
                 background-color: var(--input-border-color);
+                color: var(--text-primary-color);
                 
                 svg {
                    fill: var(--icon-tertiary-color);
@@ -629,6 +651,7 @@ body {
             }
             
             &:focus:not(.tox-tbtn--disabled) {
+                color: var(--text-primary-color);
                 
                 svg {
                    fill: var(--icon-tertiary-color);
@@ -649,6 +672,10 @@ body {
                 
                 &-caret svg {
                     fill: var(--icon-primary-color); 
+                }
+                
+                &-accessory {
+                    color: var(--text-light-color);
                 }
             }
             
