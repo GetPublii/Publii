@@ -87,6 +87,7 @@ export default {
        background: var(--option-sidebar-bg);
         border-right: 1px solid var(--input-border-color);
         bottom: 0;
+        color: var(--label-color);
         height: calc(100vh - 2.2rem);
         left: 0;
         opacity: 1;

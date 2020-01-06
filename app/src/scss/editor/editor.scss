@@ -736,12 +736,26 @@ publii-non-amp:before {
 /*
  * Outline selected elements
  */
-.mce-content-body img[data-mce-selected], 
+.mce-match-marker-selected {
+    background: var(--primary-color);
+}
+
+.mce-content-body img[data-mce-selected],
 .mce-content-body table[data-mce-selected],
+.mce-content-body hr[data-mce-selected],
+.mce-content-body [contentEditable=false] [contentEditable=true]:focus,
+.mce-content-body [contentEditable=false] [contentEditable=true]:hover,
 .mce-content-body [contentEditable=false][data-mce-selected],
-.mce-content-body hr[data-mce-selected] {
+.mce-content-body .mce-edit-focus{
     outline: 3px solid rgba(var(--primary-color-rgb), .55) !important;
 }
+
+.mce-content-body [data-mce-selected=inline-boundary],
+.mce-content-body td[data-mce-selected],.mce-content-body th[data-mce-selected] {
+    background-color: rgba(var(--primary-color-rgb), .55) !important;
+}
+
+
 
 /*
  * Styling for obfuscated e-mails

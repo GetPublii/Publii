@@ -62,7 +62,7 @@ export default {
     }
 
     &.is-blue {
-        border: 2px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
         background: rgba(var(--primary-color-rgb), .17);
         
         & > div {
@@ -75,7 +75,7 @@ export default {
             height: auto;
             left: 50%;
             line-height: 1.5;                
-            padding: 1.8rem 4rem 1.8rem 4rem;
+            padding: 1.4rem 3rem 1.4rem 3rem;
             position: absolute;
             top: 50%; 
             transform: translateX(-50%) translateY(-50%);
