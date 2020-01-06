@@ -4,16 +4,18 @@ html[data-theme="default"] {
   --primary-color-rgb: 66, 165, 245;
   --secondary-color: #2a99f4;   
   --gray-7: #f6f7f8;
-  --gray-6: #2a2e30;
+  --gray-6: #EDEEF1;
   --gray-5: #3d464e;  
   --gray-4: #707277;
   --gray-3: #8e929d;
   --gray-2: #dddddd;
   --gray-1: #f6f7f8;
   --white: #fff;
+  --white-rgb: 255,255,255;
   --warning: #EA1A16;
   --success: #40B771;
   --highlighted: #FFF8E1;
+  --shadow: rgba(61, 70, 78, .25);
     
   --overlay: rgba(0,0,0, .35);
     
@@ -104,16 +106,18 @@ html[data-theme="dark"] {
  --primary-color-rgb: 16, 137, 255;
  --secondary-color: #2a99f4;   
  --gray-7: #1e2128;
- --gray-6: #21242c;
+ --gray-6: #3e3f4c;
  --gray-5: #8e929d;   
  --gray-4: #6f7480;   
  --gray-3: #8e929d;
  --gray-2: #dddddd;
  --gray-1: #2b2c35;  
  --white: #fff;
+ --white-rgb: 255,255,255;
  --warning: #FF1011;
  --success: #56a900;
  --highlighted: #343540;
+ --shadow: rgba(30, 33, 40, .25);
    
  --overlay: rgba(30,33,40, .80);
    
@@ -171,7 +175,7 @@ html[data-theme="dark"] {
  --sidebar-preview-btn-color: rgba(255,255,255, .87);
  --sidebar-preview-btn-hover-color: #fff;
    
- --option-sidebar-bg: #23262e;
+ --option-sidebar-bg: #22232a;
    
  --tab-color: rgba(255,255,255, .87);
  --tab-hover-color: #23262e;

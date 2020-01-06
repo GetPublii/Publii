@@ -103,6 +103,7 @@ export default {
      top: 4.2rem;
      transform: translate(-50%, 0);
      max-width: 48rem;
+     user-select: none;
      width: 100%;
      z-index: 100003;
 
