@@ -133,9 +133,11 @@ export default {
 
                 if(url && url[1] && url[1].indexOf('#INTERNAL_LINK#') === -1) {
                     previewButton.css('opacity', 1);
+                    previewButton.css('cursor', 'pointer');
                     previewButton.attr('title', 'Preview this link in browser');
                 } else {
                     previewButton.css('opacity', .25);
+                    previewButton.css('cursor', 'not-allowed');
                     previewButton.attr('title', 'You can preview only external links in the post editor');
                 }
             } else {

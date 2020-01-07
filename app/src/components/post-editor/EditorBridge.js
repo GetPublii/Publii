@@ -596,14 +596,14 @@ class EditorBridge {
         let tinymceOverlay = $('.tinymce-overlay');
 
         postEditor.on('dragover', () => {
-            if(!this.postEditorInnerDragging) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
         });
 
         tinymceOverlay.on('dragover', e => {
-            if(!this.postEditorInnerDragging) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }

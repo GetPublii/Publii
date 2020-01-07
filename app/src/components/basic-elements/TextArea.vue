@@ -4,6 +4,7 @@
             :id="editorID"
             :data-id="editorID"
             :rows="rows"
+            class="publii-textarea"
             v-model="content"></textarea>
         <char-counter
             v-if="charCounter"
@@ -98,7 +99,6 @@ export default {
                 preview_styles: false,
                 resize: false,
                 menubar: false,
-                statusbar: false,
                 forced_root_block: "",
                 force_br_newlines: false,
                 force_p_newlines: true,
@@ -220,10 +220,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+@import '../../scss/editor/post-editors-common.scss';
+@import '../../scss/editor/editor-overrides.scss';
 
-textarea {
+.publii-textarea {
     background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
