@@ -17,7 +17,7 @@
             stroke: #3e3f4c;
             stroke-width: 3;
             stroke-miterlimit: 10;
-            fill: #282930
+            fill: #202128
         }
 
         .st4,

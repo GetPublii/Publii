@@ -74,14 +74,24 @@ export default {
 @import '../../scss/mixins.scss';
 
 .source-code-editor {
-   background: var(--bg-primary);
+    background: var(--bg-primary);
     height: calc(100vh - 10rem)!important;
-    left: 0;
+    left: 0;   
     overflow: hidden;
     position: absolute;
     top: 10rem;
     width: 100vw;
-    z-index: 100001;
+    z-index: 99999;
+    
+    &::before {
+        background: var(--bg-primary);
+        content: "";        
+        height: 10rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;         
+    }
 
     &.is-hidden {
         display: none;
@@ -106,6 +116,10 @@ body[data-os="win"] {
     .source-code-editor {
         height: calc(100vh - 11.6rem)!important;
         top: 11.6rem;
+        
+        &::before {
+            height: 11.6rem;            
+        }
 
         .CodeMirror-wrap {
             height: 100%;
@@ -117,6 +131,10 @@ body[data-os="linux"] {
     .source-code-editor {
         height: calc(100vh - 7.8rem)!important;
         top: 7.8rem;
+        
+        &::before {
+            height: 7.8rem;            
+        }
 
         .CodeMirror-wrap {
             height: 100%;

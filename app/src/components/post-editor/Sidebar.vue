@@ -709,7 +709,7 @@ export default {
         right: 0;
         top: 2.2rem;       
         width: 44.2rem;
-        z-index: 100000;
+        z-index: 99999;
 
         &.is-visible {   
             opacity: 1;

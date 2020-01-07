@@ -192,7 +192,10 @@
         }
 
         .tox-statusbar {
+            align-self: flex-end;
+            bottom: 4rem;
             position: relative;
+            width: auto;
         }
 
         .tox-toolbar-grp {
@@ -349,95 +352,7 @@
         }
     }
 
-    // Hacky way to achieve "images" icon ;)
-    .tox-i-images {
 
-        &:before,
-        &:after {
-            content: "\e014";
-        }
-
-        &:after {
-            background: var(--bg-primary);
-            line-height: 10px;
-            position: absolute;
-            left: 12px;
-            top: 13px;
-        }
-    }
-
-    .tox-window * {
-        font-size: 1.6rem !important;
-    }
-
-    .tox-edit-area {
-        margin-bottom: -6rem;
-    }
-
-    .tox-container,
-    .tox-container-body {
-        background: var(--bg-primary);
-    }
-
-    .tox-tabs {
-        border: none !important;
-    }
-
-    .tox-tab {
-        border: none !important;
-        border-radius: 3px;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 0.8rem 1.2rem !important;
-        text-shadow: none !important;
-
-        &:hover {
-            background: rgba($color-helper-8, 0.4) !important;
-        }
-
-        &.tox-active {
-            background: var(--white) !important;
-            color: var(--white);
-        }
-    }
-
-    .tox-arrow.tox-arrow-up {
-
-        &:before,
-        &:after {
-            border-bottom-color: $color-4 !important;
-        }
-    }
-
-    div.tox-tinymce-inline {
-        &.tox-panel {
-            background: $color-4;
-            border-color: $color-4;
-            border-radius: 3px;
-        }
-
-        .tox-tbtn-group:not(:first-child) {
-            border-color: var(--text-primary-color);
-        }
-
-        .tox-tbtn {
-            background-color: $color-4;
-
-            &:hover,
-            &:focus,
-            &:active {
-                border-color: transparent;
-
-                .tox-ico {
-                    color: var(--white);
-                }
-            }
-
-            .tox-ico {
-                color: rgba(var(--white-rgb), .7);
-            }
-        }
-    }
 }
 
 /*
@@ -574,7 +489,7 @@ body {
                         padding: 0.3rem 0.1rem;   
                         
                         &:hover {
-                            color: var(--tab-active-color);
+                            color: var(--tab-active-bg);
                         }
 
                         &:focus {
@@ -583,7 +498,7 @@ body {
 
                         &--active {
                             border-color: var(--tab-active-bg);
-                            color: var(--tab-active-color);  
+                            color: var(--tab-active-bg);  
                         }
                     }
                 }
@@ -666,6 +581,24 @@ body {
         }
         
         .tox-collection {
+            
+            &--toolbar {
+                .tox-collection__item {
+                     color: var(--icon-primary-color); 
+                    
+                    &--enabled {
+                        background-color: var(--gray-1);
+                        color: var(--primary-color);
+                    }
+                    
+                    &--active {
+                        background-color: var(--gray-1);
+                        &:not(.tox-collection__item--state-disabled) {
+                            color: var(--icon-tertiary-color);
+                        }
+                    }
+                }
+            }
             
             &__item {
                 color: var(--text-light-color);
@@ -755,6 +688,20 @@ body {
                 border-color: var(--input-border-color);
             }
         }
+    
+        .tox-statusbar {
+            background: transparent;
+            border-color: var(--border-light-color);
+            color: var(--text-light-color);
+            padding: 13px 16px;
+            text-transform: none;
+            
+            a, 
+            &__path-item,
+            &__wordcount {
+               color: var(--text-light-color) !important;
+            }
+        }    
     }
 }
 
@@ -836,7 +783,7 @@ body[data-os="win"] {
             &:focus,
             &:hover {
                 background: var(--white) !important;
-                color: $color-5 !important;
+                color: var(--gray-5) !important;
             }
 
             i {

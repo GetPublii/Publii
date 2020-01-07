@@ -87,7 +87,7 @@ export default {
     padding: 0;
     position: relative;
     text-align: right;
-    z-index: 103;
+    z-index: 999999;
 
     &-button {
         display: none;
@@ -112,7 +112,7 @@ body[data-os="win"] {
             }
 
             &:hover {
-                background: $color-8;
+                background: var(--input-border-color);
             }
         }
 

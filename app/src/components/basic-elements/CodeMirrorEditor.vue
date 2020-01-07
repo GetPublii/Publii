@@ -84,10 +84,10 @@ export default {
 
 // Search + Search and Replace popup in Code Mirror
 .CodeMirror-advanced-dialog {
-   background: var(--bg-primary);
+    background: var(--bg-primary);
     border: none;
     bottom: 0;
-    box-shadow: 0 0 1px $color-8;
+    box-shadow: 0 0 1px var(--input-border-color);
     display: block;
     left: 0;
     padding: 2rem 5rem 1rem;
@@ -107,8 +107,8 @@ export default {
         }
 
         & > input {
-            background: var(--gray-1);
-            border: 0;
+            background: var(--input-bg);
+            border: 1px solid var(-input-border-color);
             border-radius: 30px;
             box-shadow: none!important;            
             float: left;
@@ -139,7 +139,7 @@ export default {
         width: 350px;
 
         button {
-            background: var(--primary-color);
+            background: var(--button-bg);
             border: none;
             border-radius: 3px;
             box-shadow: none;
@@ -167,7 +167,7 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                background: lighten($color-1, 10%);
+                background: var(--button-hover-bg);
                 color: var(--white);
             }
         }
