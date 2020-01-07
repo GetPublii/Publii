@@ -532,7 +532,7 @@ select[multiple] {
             }
         }
     }
-}
+} 
 
 // Image alignment without parent container
 img {
@@ -550,7 +550,7 @@ img {
         margin-right: baseline(-22);
         max-width: calc(100% + #{baseline(44)});
         width: calc(100% + #{baseline(44)})
-    }
+    } 
 
 }
 
@@ -559,23 +559,19 @@ img {
     padding: baseline(4) baseline(6);
 
     &--highlight {
-        background-color: #fff3cd;
-        color: #856404;
+        background-color: var(--highlighted);        
     }
 
     &--info {
-        background-color: #dcefff;
-        color: #266394;
+        background-color: rgba(var(--primary-color-rgb), .1);       
     }
 
     &--success {
-        background: #d4edda;
-        color: #155724;
+        background: rgba(var(--success-rgb), .1);       
     }
 
     &--warning {
-        background: #fff3f3;
-        color: #a94442;
+        background: rgba(var(--warning-rgb), .1);        
     }
 }
 
