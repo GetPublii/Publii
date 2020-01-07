@@ -111,6 +111,10 @@ class Files {
         let basePathOutput = path.join(outputDir, 'media');
         let dirs = ['website', 'files'];
 
+        if (postIDs[0] === 0) {
+            postIDs[0] = 'temp';
+        }
+
         for (let i = 0; i < postIDs.length; i++) {
             dirs.push('posts/' + postIDs[i]);
         }
