@@ -535,7 +535,7 @@ class EditorBridge {
         let win = iframe.contentWindow.window;
         let doc = win.document;
         let body = doc.body;
-        
+
         window.app.$bus.$emit('init-inline-editor', customFormats);
 
         $(doc.querySelector('html')).on('mouseup', (e) => {
