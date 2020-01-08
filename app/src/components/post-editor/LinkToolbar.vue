@@ -118,6 +118,10 @@ export default {
         },
 
         update(selection, link) {
+            if ($('#inline-toolbar').css('display') !== 'none') {
+                return;
+            }
+
             if(link) {
                 let range = selection.getRangeAt(0);
                 let rect = range.getBoundingClientRect();

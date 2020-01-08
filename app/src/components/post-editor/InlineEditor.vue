@@ -183,6 +183,10 @@ export default {
         },
 
         update (sel, text) {
+            if ($('#link-toolbar').css('display') !== 'none') {
+                return;
+            }
+
             if(text.trim() !== '') {
                 let range = sel.getRangeAt(0);
                 let rect = range.getBoundingClientRect();
