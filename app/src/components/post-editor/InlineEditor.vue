@@ -62,7 +62,7 @@
             <option value="">Select style</option>
             <option
                 v-for="(format, index) in customFormats"
-                :value="format.name"
+                :value="'custom-' + format.title.toLowerCase()"
                 :key="'format-' + index">
                 {{ format.title }}
             </option>
@@ -153,7 +153,7 @@ export default {
                 tinymce.activeEditor.execCommand('mceToggleFormat', false, $(e.target).val());
             } else {
                 for(let i = 0; i < this.customFormats.length; i++) {
-                    tinymce.activeEditor.formatter.remove(this.customFormats[i].name);
+                    tinymce.activeEditor.formatter.remove('custom-' + this.customFormats[i].title.toLowerCase());
                 }
 
                 $(this.$refs['inline-toolbar-format']).val('');
@@ -210,7 +210,7 @@ export default {
                 let formatSet = false;
 
                 for(let i = 0; i < this.customFormats.length; i++) {
-                    let name = this.customFormats[i].name;
+                    let name = 'custom-' + this.customFormats[i].title.toLowerCase();
                     let status = tinymce.activeEditor.formatter.canApply(name);
                     $(this.$refs['inline-toolbar-format']).find('option[value="' + name + '"]').prop('disabled', !status);
 
