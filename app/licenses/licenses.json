@@ -3324,6 +3324,13 @@
     "path": "/node_modules/psl",
     "licenseFile": "/node_modules/psl/LICENSE"
   },
+  "publii-block-editor@0.1.0": {
+    "licenses": "GPL-3.0",
+    "publisher": "TidyCustoms",
+    "email": "bob@tidycustoms.net",
+    "path": "/node_modules/publii-block-editor",
+    "licenseFile": "/node_modules/publii-block-editor/license.txt"
+  },
   "pump@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/pump",
