@@ -26,10 +26,6 @@ export default {
     },
     beforeDestroy () {
         tinymce.remove();
-        window.removeEventListener('contextmenu', EditorBridge.spellCheckerContextMenu);
-        webFrame.setSpellCheckProvider('', {
-            spellCheck () {}
-        });
     }
 };
 </script>

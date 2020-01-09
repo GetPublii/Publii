@@ -499,7 +499,8 @@ class App {
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
             nodeIntegration: true,
-            webviewTag: true
+            webviewTag: true,
+            preload: path.join(__dirname, 'app-preload.js')
         };
 
         if (this.appConfig.appTheme === 'dark') {

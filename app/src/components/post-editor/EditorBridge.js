@@ -1,8 +1,6 @@
 import EditorConfig from './../configs/postEditor.config.js';
-import { ipcRenderer, webFrame, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Utils from './../../helpers/utils';
-import spellChecker from 'spellchecker';
-const { Menu, MenuItem } = remote;
 
 class EditorBridge {
     constructor(postID) {
@@ -281,10 +279,6 @@ class EditorBridge {
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();
             });
-
-            if (window.app.$store.state.currentSite.config.spellchecking) {
-                this.initSpellChecker();
-            }
         });
 
         editor.ui.registry.addButton('gallery', {
@@ -294,88 +288,6 @@ class EditorBridge {
                 editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
             }
         });
-    }
-
-    initSpellChecker () {
-        let languageCode = window.app.$store.state.currentSite.config.language;
-        spellChecker.setDictionary(languageCode);
-
-        webFrame.setSpellCheckProvider(languageCode, {
-            spellCheck (words, callback) {
-                setTimeout(() => {
-                    const misspelled = words.filter(x => spellChecker.isMisspelled(x));
-                    callback(misspelled);
-                }, 0);
-            }
-        });
-
-        let iframeWindow = document.getElementById('post-editor_ifr').contentWindow.window;
-
-        iframeWindow.addEventListener('contextmenu', () => {
-            let selectedText = iframeWindow.document.getSelection().toString();
-            let corrections = spellChecker.getCorrectionsForMisspelling(selectedText);
-            
-            if (corrections.length) {
-                let contextMenu = new Menu();
-        
-                for (let i = 0; i < corrections.length; i++) {
-                    contextMenu.append(new MenuItem({ 
-                        label: corrections[i], 
-                        click() { 
-                            EditorBridge.spellCheckerReplaceSelectedText(corrections[i], iframeWindow)
-                        } 
-                    }));
-                }
-        
-                contextMenu.popup();
-            }
-        });
-
-        window.addEventListener('contextmenu', EditorBridge.spellCheckerContextMenu);
-    }
-
-    static spellCheckerContextMenu () {
-        let selectedText = document.getSelection().toString();
-        let corrections = spellChecker.getCorrectionsForMisspelling(selectedText);
-        
-        if (corrections.length) {
-            let contextMenu = new Menu();
-    
-            for (let i = 0; i < corrections.length; i++) {
-                contextMenu.append(new MenuItem({ 
-                    label: corrections[i], 
-                    click() { 
-                        EditorBridge.spellCheckerReplaceSelectedText(corrections[i], window)
-                    } 
-                }));
-            }
-    
-            contextMenu.popup();
-        }
-    }
-
-    static spellCheckerReplaceSelectedText (replacementText, windowObject) {
-        let sel, range;
-    
-        if (windowObject.getSelection) {
-            sel = windowObject.getSelection();
-            
-            if (!sel.rangeCount) {
-                return;
-            }
-            
-            if (sel.baseNode.firstElementChild && sel.baseNode.firstElementChild.getAttribute('id') === 'post-title') {
-                let input = document.getElementById('post-title');
-                let end = input.selectionEnd;
-                input.value = replacementText + input.value.substring(end);
-                input.selectionStart = end;
-                input.selectionEnd = end;
-            } else {
-                range = sel.getRangeAt(0);
-                range.deleteContents();
-                range.insertNode(windowObject.document.createTextNode(replacementText));
-            }
-        }
     }
 
     extensionsPath () {
