@@ -81,7 +81,7 @@
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
-      "*.+(dylib|node|dll)",
+      "*.+(dylib|node|dll|aff|dic)",
       "default-files/default-themes/**/*",
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
