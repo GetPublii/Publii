@@ -2,7 +2,6 @@ const { SpellCheckHandler, ContextMenuListener, ContextMenuBuilder } = require('
 const { remote } = require('electron');
 
 setTimeout(() => {
-    console.log('XXXXXXXXXXXXX');
     // const languageCode = remote.getGlobal('spellCheckerLanguage');
 
     // if (languageCode !== '') {
