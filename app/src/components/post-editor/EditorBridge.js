@@ -259,8 +259,10 @@ class EditorBridge {
                         ipcRenderer.once('app-image-uploaded', (event, data) => {
                             this.callbackForTinyMCE(data.baseImage.url, {
                                 alt: '',
-                                height: data.baseImage.size[1],
-                                width: data.baseImage.size[0]
+                                dimensions: {
+                                    height: data.baseImage.size[1],
+                                    width: data.baseImage.size[0]
+                                }
                             });
                         });
 
