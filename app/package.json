@@ -63,7 +63,6 @@
     "sharp": "^0.22.1",
     "shuffle-array": "^1.0.1",
     "slug": "^0.9.1",
-    "spellchecker": "^3.7.0",
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^2.5.0",
     "striptags": "^3.1.1",
