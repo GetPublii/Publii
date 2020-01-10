@@ -108,11 +108,12 @@ body[data-os="win"] {
 
             & > svg {
                 display: block;
+                fill: var(--icon-tertiary-color);
                 margin: 0 auto;
             }
 
             &:hover {
-                background: var(--input-border-color);
+                background: var(--input-border-color);                
             }
         }
 
