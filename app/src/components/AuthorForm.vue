@@ -26,7 +26,7 @@
                 <input
                     v-model="authorData.username"
                     @keyup="cleanError('slug')"
-                    :spellcheck="false"
+                    spellcheck="false"
                     type="text">
             </label>
 
@@ -42,7 +42,7 @@
                 <input
                     v-model="authorData.email"
                     @keyup="emailChanged"
-                    :spellcheck="false"
+                    spellcheck="false"
                     type="text">
             </label>
 

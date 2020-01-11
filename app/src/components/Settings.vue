@@ -717,7 +717,7 @@
                             <input
                                 slot="field"
                                 type="text"
-                                :spellcheck="false"
+                                spellcheck="false"
                                 v-model="advanced.openGraphAppId" />
                         </field>
                     </div>

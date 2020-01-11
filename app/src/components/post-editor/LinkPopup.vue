@@ -68,7 +68,7 @@
                     <input
                         slot="field"
                         type="text"
-                        :spellcheck="false"
+                        spellcheck="false"
                         v-model="external"
                         class="link-popup-field-external" />
                 </field>

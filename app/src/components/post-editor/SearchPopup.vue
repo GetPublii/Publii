@@ -3,7 +3,7 @@
         <input 
             @keyup="doKeyboardNavigation"
             ref="search-phrase-input"
-            :spellcheck="false"
+            spellcheck="false"
             v-model="searchPhrase" />
         <span>
             <template v-if="resultsCount > 0">

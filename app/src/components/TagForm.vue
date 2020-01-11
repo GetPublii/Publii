@@ -26,7 +26,7 @@
                 <input
                     v-model="tagData.slug"
                     @keyup="cleanError('slug')"
-                    :spellcheck="false"
+                    spellcheck="false"
                     type="text">
             </label>
 
