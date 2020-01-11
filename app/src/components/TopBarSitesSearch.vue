@@ -6,6 +6,7 @@
             icon="magnifier-small"
             properties="is-small has-padding"
             ref="search-input"
+            :spellcheck="false"
             placeholder="Search..." />
         <span
             v-if="value !== ''"

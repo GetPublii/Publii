@@ -26,6 +26,7 @@
                 <input
                     v-model="tagData.slug"
                     @keyup="cleanError('slug')"
+                    spellcheck="false"
                     type="text">
             </label>
 
@@ -72,6 +73,7 @@
                     v-if="!currentThemeHasTagTemplates"
                     slot="field"
                     id="template"
+                    :spellcheck="false"
                     placeholder="Not available in your theme"
                     :disabled="true"
                     :readonly="true" />

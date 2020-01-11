@@ -15,6 +15,7 @@
                 v-model="group.name" />
 
             <text-input
+                :spellcheck="false"
                 v-model="group.id" />
 
             <icon
