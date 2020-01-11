@@ -33,7 +33,7 @@
     "codemirror": "^5.33.0",
     "codemirror-revisedsearch": "^1.0.12",
     "count-files": "^2.6.2",
-    "electron-spellchecker": "^2.2.1",
+    "electron-spellchecker": "github:dziudek/electron-spellchecker#master",
     "fast-memoize": "^2.2.7",
     "file-exists": "^1.0.0",
     "fs-extra": "^8.0.1",
