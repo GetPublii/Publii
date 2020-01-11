@@ -85,7 +85,6 @@
       "default-files/default-themes/**/*",
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
-      "node_modules/node-expat/**/*",
       "node_modules/better-sqlite3/**/*",
       "node_modules/integer/**/*",
       "node_modules/spellchecker/vendor/**/*"
