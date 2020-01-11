@@ -9,6 +9,7 @@
             :placeholder="placeholder"
             :disabled="disabled"
             :value="value"
+            :spellcheck="false"
             properties="keyboard-blocked" />
 
         <span
