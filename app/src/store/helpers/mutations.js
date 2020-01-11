@@ -150,6 +150,10 @@ export default {
                 order: authorsOrdering[1]
             }
         });
+
+        if (window.spellCheckHandler) {
+            window.spellCheckHandler.switchLanguage(state.currentSite.config.language);
+        }
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);

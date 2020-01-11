@@ -132,7 +132,7 @@ export default {
         }
     },
     mounted () {
-        if (this.$store.state.currentSite.config.spellchecking) {
+        if (this.$store.state.app.config.spellchecking) {
             ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
         } else {
             ipcRenderer.send('publii-set-spellchecker-language', '');
