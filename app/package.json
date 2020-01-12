@@ -56,6 +56,7 @@
     "moment": "^2.24.0",
     "node-version-compare": "^1.0.1",
     "normalize-path": "^2.0.1",
+    "electron-load-devtool": "^1.0.0",
     "publii-block-editor": "github:dziudek/publii-block-editor#master",
     "request": "^2.88.0",
     "sharp": "^0.22.1",
@@ -80,7 +81,6 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron-load-devtool": "^1.0.0",
     "electron-rebuild": "^1.8.8"
   }
 }
