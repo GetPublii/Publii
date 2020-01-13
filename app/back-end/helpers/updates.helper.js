@@ -31,7 +31,7 @@ class UpdatesHelper {
                 fs.writeFileSync(this.filePath, body, 'utf8');
                 this.handleResponse(body);
             });
-        }).on('error', function () {
+        }).on('error', () => {
             this.sendError();
         });
     }

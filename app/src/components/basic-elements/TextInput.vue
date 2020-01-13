@@ -16,6 +16,7 @@
             :min="min"
             :max="max"
             :step="step"
+            :spellcheck="spellcheck"
             ref="input"
             :pattern="pattern"
             @keyup="keyboardEvent"
@@ -116,6 +117,10 @@ export default {
         'preferredCount': {
             default: 0,
             type: Number
+        },
+        'spellcheck': {
+            default: true,
+            type: Boolean
         }
     },
     computed: {

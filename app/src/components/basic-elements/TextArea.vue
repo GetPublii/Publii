@@ -5,6 +5,7 @@
             :data-id="editorID"
             :rows="rows"
             class="publii-textarea"
+            :spellcheck="spellcheck"
             v-model="content"></textarea>
         <char-counter
             v-if="charCounter"
@@ -40,6 +41,10 @@ export default {
         preferredCount: {
             default: 0,
             type: Number
+        },
+        spellcheck: {
+            default: true,
+            type: Boolean
         }
     },
     data: function() {

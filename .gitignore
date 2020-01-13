@@ -12,6 +12,7 @@ npm-debug.log
 /app/dist/*.js.map
 /app/dist/*.png
 /app/dist/*.svg
+/app/dist/*.node
 !/app/dist/index.html
 !/app/dist/editor-webview-preload.js
 /dist

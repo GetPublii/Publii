@@ -47,6 +47,20 @@
             </field>
 
             <field
+                id="spellchecking"
+                label="Enable spellchecker:"
+                :labelSeparated="false">
+                <switcher
+                    slot="field"
+                    v-model="spellchecking" />
+                <span
+                    slot="note"
+                    class="note">
+                    After changing this setting - please restart the application.
+                </span>
+            </field>
+
+            <field
                 id="close-editor-on-save"
                 label="Close post editor on save"
                 :labelSeparated="false">
@@ -229,6 +243,7 @@ export default {
             postsOrdering: 'id DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
+            spellchecking: true,
             locations: {
                 sites: '',
                 backups: '',
@@ -317,6 +332,7 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+        this.spellchecking = this.$store.state.app.config.spellchecking;
     },
     methods: {
         goBack () {
@@ -350,7 +366,8 @@ export default {
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
-                authorsOrdering: this.authorsOrdering
+                authorsOrdering: this.authorsOrdering,
+                spellchecking: this.spellchecking
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

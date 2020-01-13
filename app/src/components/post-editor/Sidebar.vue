@@ -298,6 +298,7 @@
                                     <input
                                         type="text"
                                         v-model="$parent.postData.slug"
+                                        spellcheck="false"
                                         @keyup="$parent.slugUpdated">
                                     <small 
                                         v-if="$parent.postData.slug.length > 250"
@@ -339,6 +340,7 @@
                                     <input
                                         type="text"
                                         v-model="$parent.postData.canonicalUrl"
+                                        spellcheck="false"
                                         placeholder="Leave blank to use a default Page URL" />
                                 </label>
                             </div>

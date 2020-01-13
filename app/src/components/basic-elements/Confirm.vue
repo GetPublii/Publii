@@ -12,6 +12,7 @@
                 v-if="hasInput"
                 :type="inputIsPassword ? 'password' : 'text'"
                 :value="defaultText"
+                :spellcheck="false"
                 ref="input" />
 
             <div class="buttons">

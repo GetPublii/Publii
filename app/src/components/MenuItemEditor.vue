@@ -45,6 +45,7 @@
                 <input
                     v-model="internalLink"
                     @keyup.native="cleanError('internalLink')"
+                    spellcheck="false"
                     type="text" />
             </label>
 
@@ -56,6 +57,7 @@
                 <input
                     v-model="externalLink"
                     @keyup.native="cleanError('externalLink')"
+                    spellcheck="false"
                     type="text" />
             </label>
 
@@ -121,6 +123,7 @@
                 <span>CSS class</span>
                 <input
                     v-model="cssClass"
+                    spellcheck="false"
                     type="text" />
             </label>
 
@@ -139,6 +142,7 @@
                 <span>Link rel attribute:</span>
                 <input
                     v-model="rel"
+                    spellcheck="false"
                     type="text" />
             </label>
 

@@ -34,6 +34,7 @@
                         ref="name"
                         id="name"
                         key="name"
+                        :spellcheck="false"
                         v-model="name" />
                 </field>
 
@@ -58,15 +59,8 @@
                         id="customLanguage"
                         ref="customLanguage"
                         key="customLanguage"
+                        :spellcheck="false"
                         v-model="customLanguage" />
-                </field>
-
-                <field
-                    id="spellchecking"
-                    label="Enable spellchecker:">
-                    <switcher
-                        slot="field"
-                        v-model="spellchecking" />
                 </field>
 
                 <field
@@ -523,6 +517,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('tags-prefix') > -1 }"
                                 @click.native="clearErrors('tags-prefix')"
                                 v-model="advanced.urls.tagsPrefix"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -540,6 +535,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('authors-prefix') > -1 }"
                                 @click.native="clearErrors('authors-prefix')"
                                 v-model="advanced.urls.authorsPrefix"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -556,6 +552,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('pagination-phrase') > -1 }"
                                 @click.native="clearErrors('pagination-phrase')"
                                 v-model="advanced.urls.pageName"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -573,6 +570,7 @@
                                 @click.native="clearErrors('error-page')"
                                 :readonly="!themeHasSupportForErrorPage"
                                 v-model="advanced.urls.errorPage"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForErrorPage"
@@ -591,6 +589,7 @@
                                 @click.native="clearErrors('search-page')"
                                 :readonly="!themeHasSupportForSearchPage"
                                 v-model="advanced.urls.searchPage"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForSearchPage"
@@ -660,6 +659,7 @@
                             label="Excluded files">
                             <text-area
                                 slot="field"
+                                :spellcheck="false"
                                 v-model="advanced.sitemapExcludedFiles" />
                             <small
                                 slot="note"
@@ -709,6 +709,7 @@
                             <input
                                 slot="field"
                                 type="text"
+                                spellcheck="false"
                                 v-model="advanced.openGraphAppId" />
                         </field>
                     </div>
@@ -730,6 +731,7 @@
                             <text-input
                                 id="twitter-username"
                                 v-model="advanced.twitterUsername"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -804,6 +806,7 @@
                             <text-input
                                 id="amp-ga-id"
                                 v-model="advanced.ampGaId"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -849,6 +852,7 @@
                             <text-input
                                 id="amp-share-facebook-id"
                                 v-model="advanced.ampShareFacebookId"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 class="note"
@@ -1012,6 +1016,7 @@
                             <text-input
                                 id="gdpr-page-url"
                                 v-model="advanced.gdpr.articleExternalUrl"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -1054,6 +1059,7 @@
                             <text-input
                                 id="gdpr-behaviour-link"
                                 v-model="advanced.gdpr.behaviourLink"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 class="note"
@@ -1534,7 +1540,6 @@ export default {
             this.language = 'custom';
         }
 
-        this.spellchecking = this.$store.state.currentSite.config.spellchecking;
         this.name = this.$store.state.currentSite.config.displayName;
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
@@ -1578,8 +1583,6 @@ export default {
             } else {
                 newSettings.language = this.language;
             }
-
-            newSettings.spellchecking = this.spellchecking;
 
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {

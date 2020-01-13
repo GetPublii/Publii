@@ -26,6 +26,7 @@
                 <input
                     v-model="authorData.username"
                     @keyup="cleanError('slug')"
+                    spellcheck="false"
                     type="text">
             </label>
 
@@ -41,6 +42,7 @@
                 <input
                     v-model="authorData.email"
                     @keyup="emailChanged"
+                    spellcheck="false"
                     type="text">
             </label>
 
@@ -103,6 +105,7 @@
                     slot="field"
                     id="template"
                     placeholder="Not available in your theme"
+                    :spellcheck="false"
                     :disabled="true"
                     :readonly="true" />
             </label>

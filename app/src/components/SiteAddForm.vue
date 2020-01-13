@@ -21,6 +21,7 @@
                     <text-input
                         ref="site-name"
                         id="site-name"
+                        :spellcheck="false"
                         changeEventName="add-website-name-changed"
                         :customCssClasses="siteNameCssClasses" />
                 </div>
@@ -38,6 +39,7 @@
                     <text-input
                         ref="author-name"
                         id="author-name"
+                        :spellcheck="false"
                         changeEventName="add-website-author-changed"
                         :customCssClasses="authorNameCssClasses" />
                 </div>

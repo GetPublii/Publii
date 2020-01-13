@@ -8,7 +8,6 @@ const AstCurrentSiteConfig = {
     },
     domain: '',
     language: 'en',
-    spellchecking: true,
     advanced: {
         cssCompression: 1,
         htmlCompression: 1,

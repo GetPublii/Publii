@@ -105,6 +105,7 @@
                         slot="field"
                         id="domain"
                         key="domain"
+                        :spellcheck="false"
                         v-model="domain" />
                     <small 
                         v-if="deploymentMethodSelected === 'github-pages'"
@@ -238,6 +239,7 @@
                         slot="field"
                         id="server"
                         key="server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('server') > -1 }"
                         @keyup.native="cleanError('server')"
                         v-model="deploymentSettings.server" />
@@ -257,6 +259,7 @@
                         slot="field"
                         id="username"
                         key="username"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('username') > -1 }"
                         @keyup.native="cleanError('username')"
                         v-model="deploymentSettings.username" />
@@ -277,6 +280,7 @@
                         id="password"
                         type="password"
                         key="password"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('password') > -1 }"
                         @keyup.native="cleanError('password')"
                         v-model="deploymentSettings.password" />
@@ -345,6 +349,7 @@
                         slot="field"
                         id="passphrase"
                         type="password"
+                        :spellcheck="false"
                         key="passphrase"
                         v-model="deploymentSettings.passphrase" />
 
@@ -363,6 +368,7 @@
                         slot="field"
                         id="path"
                         key="path"
+                        :spellcheck="false"
                         v-model="deploymentSettings.path" />
 
                     <small
@@ -388,6 +394,7 @@
                         slot="field"
                         id="gh-server"
                         key="gh-server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-server') > -1 }"
                         @keyup.native="cleanError('github-server')"
                         v-model="deploymentSettings.github.server" />
@@ -406,6 +413,7 @@
                         slot="field"
                         id="gh-user"
                         key="gh-user"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-user') > -1 }"
                         @keyup.native="cleanError('github-user')"
                         v-model="deploymentSettings.github.user" />
@@ -425,6 +433,7 @@
                         slot="field"
                         id="gh-repo"
                         key="gh-repo"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-repo') > -1 }"
                         @keyup.native="cleanError('github-repo')"
                         v-model="deploymentSettings.github.repo" />
@@ -444,6 +453,7 @@
                         slot="field"
                         id="gh-branch"
                         key="gh-branch"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-branch') > -1 }"
                         @keyup.native="cleanError('github-branch')"
                         v-model="deploymentSettings.github.branch" />
@@ -469,6 +479,7 @@
                         id="gh-token"
                         type="password"
                         key="gh-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-token') > -1 }"
                         @keyup.native="cleanError('github-token')"
                         v-model="deploymentSettings.github.token" />
@@ -505,6 +516,7 @@
                         slot="field"
                         id="gl-server"
                         key="gl-server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-server') > -1 }"
                         @keyup.native="cleanError('gitlab-server')"
                         v-model="deploymentSettings.gitlab.server" />
@@ -523,6 +535,7 @@
                         slot="field"
                         id="gl-repo"
                         key="gl-repo"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-repo') > -1 }"
                         @keyup.native="cleanError('gitlab-repo')"
                         v-model="deploymentSettings.gitlab.repo" />
@@ -542,6 +555,7 @@
                         slot="field"
                         id="gl-branch"
                         key="gl-branch"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-branch') > -1 }"
                         @keyup.native="cleanError('gitlab-branch')"
                         v-model="deploymentSettings.gitlab.branch" />
@@ -567,6 +581,7 @@
                         id="gl-token"
                         type="password"
                         key="gl-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-token') > -1 }"
                         @keyup.native="cleanError('gitlab-token')"
                         v-model="deploymentSettings.gitlab.token" />
@@ -586,6 +601,7 @@
                         slot="field"
                         id="netlify-id"
                         key="netlify-id"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('netlify-id') > -1 }"
                         @keyup.native="cleanError('netlify-id')"
                         v-model="deploymentSettings.netlify.id" />
@@ -606,6 +622,7 @@
                         id="netlify-token"
                         type="password"
                         key="netlify-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('netlify-token') > -1 }"
                         @keyup.native="cleanError('netlify-token')"
                         v-model="deploymentSettings.netlify.token" />
@@ -626,6 +643,7 @@
                         id="s3-id"
                         type="password"
                         key="s3-id"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-id') > -1 }"
                         @keyup.native="cleanError('s3-id')"
                         v-model="deploymentSettings.s3.id" />
@@ -646,6 +664,7 @@
                         id="s3-key"
                         type="password"
                         key="s3-key"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-key') > -1 }"
                         @keyup.native="cleanError('s3-key')"
                         v-model="deploymentSettings.s3.key" />
@@ -665,6 +684,7 @@
                         slot="field"
                         id="s3-bucket"
                         key="s3-bucket"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-bucket') > -1 }"
                         @keyup.native="cleanError('s3-bucket')"
                         v-model="deploymentSettings.s3.bucket" />
@@ -704,6 +724,7 @@
                         slot="field"
                         id="s3-prefix"
                         key="s3-prefix"
+                        :spellcheck="false"
                         v-model="deploymentSettings.s3.prefix" />
                     <small
                         slot="note"
@@ -751,6 +772,7 @@
                         slot="field"
                         id="google-bucket"
                         key="google-bucket"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('google-bucket') > -1 }"
                         @keyup.native="cleanError('google-bucket')"
                         v-model="deploymentSettings.google.bucket" />
@@ -770,6 +792,7 @@
                         slot="field"
                         id="google-prefix"
                         key="google-prefix"
+                        :spellcheck="false"
                         v-model="deploymentSettings.google.prefix" />
                     <small
                         slot="note"

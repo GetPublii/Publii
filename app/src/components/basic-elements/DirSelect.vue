@@ -8,6 +8,7 @@
             :id="id"
             :placeholder="placeholder"
             :value="value"
+            :spellcheck="false"
             properties="keyboard-blocked" />
 
         <span
