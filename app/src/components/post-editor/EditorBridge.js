@@ -279,6 +279,10 @@ class EditorBridge {
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();
             });
+
+            if (spellCheckHandler) {
+                spellCheckHandler.reinitialize();
+            }
         });
 
         editor.ui.registry.addButton('gallery', {
