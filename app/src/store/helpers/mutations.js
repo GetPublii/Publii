@@ -151,9 +151,11 @@ export default {
             }
         });
 
+        /*
         if (window.spellCheckHandler) {
             window.spellCheckHandler.switchLanguage(state.currentSite.config.language);
         }
+        */
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);

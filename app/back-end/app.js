@@ -500,6 +500,7 @@ class App {
         windowParams.webPreferences = {
             nodeIntegration: true,
             webviewTag: true,
+            spellcheck: true,
             preload: path.join(__dirname, 'app-preload.js')
         };
 

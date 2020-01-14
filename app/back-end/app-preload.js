@@ -1,3 +1,4 @@
+/*
 const { SpellCheckHandler, ContextMenuListener, ContextMenuBuilder } = require('electron-spellchecker');
 const fs = require('fs');
 const path = require('path');
@@ -28,4 +29,5 @@ setTimeout(() => {
         });
     }
 }, 1000);
+*/
 

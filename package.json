@@ -69,14 +69,14 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^6.1.7",
+    "electron": "^8.0.0-beta.5",
     "electron-packager": "^14.0.0",
     "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "6.1.7",
+    "electronVersion": "8.0.0-beta.5",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
@@ -86,8 +86,7 @@
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",
-      "node_modules/integer/**/*",
-      "node_modules/spellchecker/vendor/**/*"
+      "node_modules/integer/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [

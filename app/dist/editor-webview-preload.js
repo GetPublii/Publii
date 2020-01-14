@@ -1,3 +1,4 @@
+/*
 const { SpellCheckHandler, ContextMenuListener, ContextMenuBuilder } = require('electron-spellchecker');
 const { remote } = require('electron');
 const languageCode = remote.getGlobal('spellCheckerLanguage');
@@ -14,3 +15,4 @@ setTimeout(() => {
         });
     } 
 }, 1000);
+*/

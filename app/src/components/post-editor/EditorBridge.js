@@ -280,9 +280,11 @@ class EditorBridge {
                 this.hideToolbarsOnCopy();
             });
 
+            /*
             if (spellCheckHandler) {
                 spellCheckHandler.reinitialize();
             }
+            */
         });
 
         editor.ui.registry.addButton('gallery', {
