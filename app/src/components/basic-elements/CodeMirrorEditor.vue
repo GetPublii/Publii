@@ -1,6 +1,7 @@
 <template>
     <textarea
         :id="id"
+        spellcheck="false"
         ref="textarea"></textarea>
 </template>
 

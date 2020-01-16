@@ -64,6 +64,15 @@
                 </field>
 
                 <field
+                    id="spellchecking"
+                    label="Enable spellchecker">
+                    <switcher
+                        slot="field"
+                        id="spellchecking"
+                        v-model="spellchecking" />
+                </field>
+
+                <field
                     id="theme"
                     label="Current theme:">
                     <strong
@@ -117,6 +126,7 @@
                                 id="meta-title"
                                 v-model="advanced.metaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                         </field>
@@ -130,6 +140,7 @@
                                 v-model="advanced.metaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -174,6 +185,7 @@
                                 slot="field"
                                 v-model="advanced.postMetaTitle"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="70" />
                             <small
                                 slot="note"
@@ -191,6 +203,7 @@
                                 v-model="advanced.postMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -221,6 +234,7 @@
                                 id="tag-meta-title"
                                 v-model="advanced.tagMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -239,6 +253,7 @@
                                 v-model="advanced.tagMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -311,6 +326,7 @@
                                 id="author-meta-title"
                                 v-model="advanced.authorMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -329,6 +345,7 @@
                                 v-model="advanced.authorMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -401,6 +418,7 @@
                                 id="author-meta-title"
                                 v-model="advanced.errorMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -419,6 +437,7 @@
                                 v-model="advanced.errorMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -448,6 +467,7 @@
                                 id="search-meta-title"
                                 v-model="advanced.searchMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -466,6 +486,7 @@
                                 v-model="advanced.searchMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -923,6 +944,7 @@
                             <text-input
                                 id="amp-footer-text"
                                 v-model="advanced.ampFooterText"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
                     </div>
@@ -957,6 +979,7 @@
                             <text-input
                                 id="gdpr-popup-title-primary"
                                 v-model="advanced.gdpr.popupTitlePrimary"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -968,6 +991,7 @@
                                 id="gdpr-popup-desc"
                                 v-model="advanced.gdpr.popupDesc"
                                 :rows="6"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -978,6 +1002,7 @@
                             <text-input
                                 id="gdpr-readmore-link-label"
                                 v-model="advanced.gdpr.readMoreLinkLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1027,6 +1052,7 @@
                             <text-input
                                 id="gdpr-save-button-label"
                                 v-model="advanced.gdpr.saveButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1049,6 +1075,7 @@
                             <text-input
                                 id="gdpr-popup-label"
                                 v-model="advanced.gdpr.badgeLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1192,6 +1219,7 @@
                                 <text-input
                                     id="feed-title-value"
                                     type="text"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="advanced.feed.titleValue" />
                             </label>
                         </field>
@@ -1534,6 +1562,7 @@ export default {
         this.logo.color = this.$store.state.currentSite.config.logo.color;
         this.logo.icon = this.$store.state.currentSite.config.logo.icon;
         this.language = this.$store.state.currentSite.config.language;
+        this.spellchecking = this.$store.state.currentSite.config.spellchecking;
 
         if (!this.availableLanguages[this.language]) {
             this.customLanguage = this.language;
@@ -1573,6 +1602,7 @@ export default {
             let newSettings = {};
             newSettings.name = this.name;
             newSettings.displayName = this.name;
+            newSettings.spellchecking = this.spellchecking;
             newSettings.logo = {
                 icon: this.$refs['logo-creator'].getActiveIcon(),
                 color: this.$refs['logo-creator'].getActiveColor()
@@ -1714,10 +1744,10 @@ export default {
                 });
             });
         },
-        saved(newSettings, oldName, showPreview = false) {
+        saved (newSettings, oldName, showPreview = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
 
-            if(newSettings.theme) {
+            if (newSettings.theme) {
                 newSettings.theme =    newSettings.theme.replace(/^site-/, '')
                                                         .replace(/^app-/, '')
                                                         .replace(/^install-use-/, '')
@@ -1738,13 +1768,13 @@ export default {
                 this.setCurrentTheme();
 
                 // Remove old entry if user changed the site name
-                if(oldName !== this.$store.state.currentSite.config.name) {
+                if (oldName !== this.$store.state.currentSite.config.name) {
                     this.$store.commit('removeWebsite', oldName);
                 }
 
                 this.buttonsLocked = false;
 
-                if(showPreview) {
+                if (showPreview) {
                     if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                         this.$bus.$emit('confirm-display', {
                             message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
@@ -1761,7 +1791,7 @@ export default {
             }, 1000);
         },
         validate () {
-            if(this.advanced.urls.tagsPrefix.trim() === '' && !!this.advanced.urls.cleanUrls) {
+            if (this.advanced.urls.tagsPrefix.trim() === '' && !!this.advanced.urls.cleanUrls) {
                 this.$bus.$emit('message-display', {
                     message: 'Tags prefix cannot be empty if pretty URLs are enabled.',
                     type: 'warning',
@@ -1774,7 +1804,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.authorsPrefix.trim() === '') {
+            if (this.advanced.urls.authorsPrefix.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Authors prefix cannot be empty.',
                     type: 'warning',
@@ -1787,7 +1817,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.authorsPrefix.trim() === this.advanced.urls.tagsPrefix.trim()) {
+            if (this.advanced.urls.authorsPrefix.trim() === this.advanced.urls.tagsPrefix.trim()) {
                 this.$bus.$emit('message-display', {
                     message: 'Authors prefix cannot be the same as tags prefix.',
                     type: 'warning',
@@ -1801,7 +1831,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.pageName.trim() === '') {
+            if (this.advanced.urls.pageName.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Pagination phrase cannot be empty.',
                     type: 'warning',
@@ -1814,7 +1844,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.errorPage.trim() === '') {
+            if (this.advanced.urls.errorPage.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Error page filename cannot be empty.',
                     type: 'warning',
@@ -1827,7 +1857,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.searchPage.trim() === '') {
+            if (this.advanced.urls.searchPage.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Search page filename cannot be empty.',
                     type: 'warning',
@@ -1840,7 +1870,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.errorPage.trim() === this.advanced.urls.searchPage.trim()) {
+            if (this.advanced.urls.errorPage.trim() === this.advanced.urls.searchPage.trim()) {
                 this.$bus.$emit('message-display', {
                     message: 'Error page filename cannot be the same as search page filename.',
                     type: 'warning',
@@ -1863,7 +1893,7 @@ export default {
         setCurrentTheme () {
             this.currentTheme = this.$store.state.currentSite.config.theme;
 
-            if(this.currentTheme !== '') {
+            if (this.currentTheme !== '') {
                 let oldName = this.currentTheme;
                 this.currentTheme = this.$store.state.currentSite.themes.filter(theme => theme.directory === this.currentTheme);
 

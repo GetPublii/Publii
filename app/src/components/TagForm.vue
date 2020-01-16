@@ -17,6 +17,7 @@
                 <span>Name:</span>
                 <input
                     v-model="tagData.name"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     @keyup="cleanError('name')"
                     type="text">
             </label>
@@ -34,6 +35,7 @@
                 <span>Description:</span>
                 <text-area
                     v-model="tagData.description"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     :rows="4"></text-area>
             </label>
 
@@ -42,6 +44,7 @@
                 <text-input
                     v-model="tagData.additionalData.metaTitle"
                     type="text"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
                     :readonly="!metaOptionsActive"
@@ -57,6 +60,7 @@
                     :disabled="!metaOptionsActive"
                     :readonly="!metaOptionsActive"
                     :charCounter="metaOptionsActive"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     :preferredCount="160"></text-area>
             </label>
 

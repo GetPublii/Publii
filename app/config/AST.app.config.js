@@ -15,8 +15,7 @@ const AstAppConfig = {
     showPostSlugs: false,
     postsOrdering: 'id DESC',
     tagsOrdering: 'id DESC',
-    authorsOrdering: 'id DESC',
-    spellchecking: true
+    authorsOrdering: 'id DESC'
 };
 
 module.exports = AstAppConfig;

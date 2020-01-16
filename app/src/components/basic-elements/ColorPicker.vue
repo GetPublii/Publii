@@ -8,6 +8,7 @@
             v-model="content"
             :readonly="true"
             @click="togglePicker"
+            spellcheck="false"
             type="colorpicker" />
 
         <chrome-picker

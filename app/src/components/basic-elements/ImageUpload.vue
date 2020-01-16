@@ -22,6 +22,7 @@
                     ref="input"
                     type="file"
                     class="upload-image-input"
+                    spellcheck="false"
                     @change="valueChanged">
 
                 <div

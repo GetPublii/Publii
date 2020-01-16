@@ -1,6 +1,7 @@
 <template>
     <textarea id="post-editor"
               class="post-editor-form-content post-editor-field-content is-hidden"
+              :spellcheck="$store.state.currentSite.config.spellchecking"
               data-name="main-content"></textarea>
 </template>
 

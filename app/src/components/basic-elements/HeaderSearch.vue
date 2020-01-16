@@ -9,6 +9,7 @@
             type="search"
             v-model="value"
             :placeholder="placeholder"
+            :spellcheck="$store.state.currentSite.config.spellchecking"
             ref="input-field"
             @keyup="updateValue" />
 

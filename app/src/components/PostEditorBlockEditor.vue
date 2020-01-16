@@ -9,7 +9,7 @@
                     <webview 
                         :src="editorHtmlPath" 
                         nodeintegration
-                        webpreferences="spellcheck"
+                        :webpreferences="$store.state.currentSite.config.spellchecking ? 'spellcheck' : ''"
                         :preload="editorPreloadPath"></webview>
                     <textarea id="post-editor"></textarea>
                 </div>

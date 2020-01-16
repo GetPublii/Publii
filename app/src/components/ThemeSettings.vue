@@ -111,7 +111,7 @@
                                     slot="field"
                                     :rows="field.rows"
                                     v-model="custom[field.name]"
-                                    :spellcheck="field.spellcheck"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :cols="field.cols"></text-area>
 
                                 <text-area
@@ -186,7 +186,7 @@
                                     :size="field.size"
                                     :step="field.step"
                                     :pattern="field.pattern"
-                                    :spellcheck="field.spellcheck"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="custom[field.name]"
                                     :placeholder="field.placeholder"></text-input>
 
@@ -241,7 +241,7 @@
                                     v-if="field.type === 'text' || field.type === 'number'"
                                     :type="field.type"
                                     slot="field"
-                                    :spellcheck="field.spellcheck"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     placeholder="Leave it blank to use default value"
                                     v-model="postView[field.name]" />
 
@@ -249,7 +249,7 @@
                                     v-if="field.type === 'textarea'"
                                     slot="field"
                                     placeholder="Leave it blank to use default value"
-                                    :spellcheck="field.spellcheck"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="postView[field.name]" />
 
                                 <color-picker

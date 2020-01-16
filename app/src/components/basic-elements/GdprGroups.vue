@@ -12,6 +12,7 @@
             class="gdpr-group"
             :key="'gdpr-group-' + index">
             <text-input
+                :spellcheck="$store.state.currentSite.config.spellchecking"
                 v-model="group.name" />
 
             <text-input

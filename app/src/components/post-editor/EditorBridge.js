@@ -27,7 +27,8 @@ class EditorBridge {
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
-            statusbar: true
+            statusbar: true,
+            browser_spellcheck: window.app.$store.state.currentSite.config.spellchecking
         });
 
         // Remove style selector when there is no custom styles from the theme
@@ -41,6 +42,7 @@ class EditorBridge {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
+        console.log('EC:', window.app.$store.state.currentSite.config.spellchecking, JSON.stringify(editorConfig));
         tinymce.init(editorConfig);
     }
 
@@ -279,12 +281,6 @@ class EditorBridge {
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();
             });
-
-            /*
-            if (spellCheckHandler) {
-                spellCheckHandler.reinitialize();
-            }
-            */
         });
 
         editor.ui.registry.addButton('gallery', {

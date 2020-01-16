@@ -19,6 +19,7 @@
                 <span>Label</span>
                 <input
                     v-model="label"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     @keyup.native="cleanError('label')"
                     type="text">
             </label>
@@ -116,6 +117,7 @@
                 <span>Link Title attribute</span>
                 <input
                     v-model="title"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     type="text" />
             </label>
 

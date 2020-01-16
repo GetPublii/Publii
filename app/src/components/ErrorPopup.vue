@@ -12,7 +12,7 @@
                 class="error-log"
                 v-html="errors"></div>
 
-            <textarea ref="error-log">{{ text }}</textarea>
+            <textarea spellcheck="false" ref="error-log">{{ text }}</textarea>
 
             <div class="buttons">
                 <p-button

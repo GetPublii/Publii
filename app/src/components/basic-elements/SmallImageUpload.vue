@@ -9,6 +9,7 @@
             v-if="isEmpty"
             type="file"
             ref="input"
+            spellcheck="false"
             class="upload-input"
             @change="valueChanged">
 

@@ -30,11 +30,13 @@
                                 type="text"
                                 class="gallery-popup-images-list-item-alt"
                                 v-model="image.alt"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 placeholder="Image alternative text" />
                             <input
                                 type="text"
                                 class="gallery-popup-images-list-item-caption"
                                 v-model="image.caption"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 placeholder="Image caption" />
                         </div>
 

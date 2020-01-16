@@ -89,6 +89,7 @@
                     <input
                         slot="field"
                         type="text"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         v-model="label"
                         class="link-popup-field-label" />
                 </field>
@@ -97,6 +98,7 @@
                     <input
                         slot="field"
                         type="text"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         v-model="title"
                         class="link-popup-field-title" />
                 </field>

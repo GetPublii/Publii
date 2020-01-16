@@ -11,6 +11,7 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         placeholder="Add post title"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         v-model="postData.title"
                         @keyup="updateSlug" />                    
 

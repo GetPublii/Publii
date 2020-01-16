@@ -189,18 +189,21 @@
                             <label>Alternative text
                                 <text-input
                                     ref="featured-image-alt"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.alt" />
                             </label>
 
                             <label>Caption
                                 <text-input
                                     ref="featured-image-caption"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.caption" />
                             </label>
 
                             <label>Credits
                                 <text-input
                                     ref="featured-image-credits"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.credits" />
                             </label>
                         </div>
@@ -312,6 +315,7 @@
                                     <text-input
                                         type="text"
                                         v-model="$parent.postData.metaTitle"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         placeholder="Leave blank to use a default Page title"
                                         :charCounter="true"
                                         :preferredCount="70" />
@@ -323,6 +327,7 @@
                                     <text-area
                                         v-model="$parent.postData.metaDescription"
                                         :charCounter="true"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :preferredCount="160"></text-area>
                                 </label>
 
@@ -427,6 +432,7 @@
                                         v-if="field.type === 'text' || field.type === 'number'"
                                         :type="field.type"
                                         class="post-view-settings"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :placeholder="fieldPlaceholder(field)"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
@@ -434,6 +440,7 @@
                                         v-if="field.type === 'textarea'"
                                         class="post-view-settings"
                                         :placeholder="fieldPlaceholder(field)"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
                                     <color-picker

@@ -18,6 +18,7 @@
                 <input
                     v-model="authorData.name"
                     @keyup="cleanError('name')"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     type="text">
             </label>
 
@@ -73,6 +74,7 @@
                 <text-input
                     v-model="authorData.metaTitle"
                     type="text"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     :placeholder="metaFieldAttrs"
                     :disabled="!metaOptionsActive"
                     :readonly="!metaOptionsActive"
@@ -88,6 +90,7 @@
                     :disabled="!metaOptionsActive"
                     :readonly="!metaOptionsActive"
                     :charCounter="metaOptionsActive"
+                    :spellcheck="$store.state.currentSite.config.spellchecking"
                     :preferredCount="160"></text-area>
             </label>
 
