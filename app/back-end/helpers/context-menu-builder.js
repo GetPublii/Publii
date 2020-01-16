@@ -1,7 +1,7 @@
 const { remote, shell } = require('electron');
 const { Menu, MenuItem } = remote;
 
-class ContextMenuBuilder {
+module.exports = class ContextMenuBuilder {
     constructor () {
         this.menu = null;
         this.translations = {
@@ -132,19 +132,3 @@ class ContextMenuBuilder {
         return menu;
     }
 }
-
-class ContextMenuListener {
-    constructor (handler) {
-        let webView = remote.getCurrentWebContents();
-        
-        webView.on('context-menu', (event, params) => {
-        event.preventDefault();
-        handler(params);
-        });
-    }
-}
-
-let contextMenuBuilder = new ContextMenuBuilder();
-let contextMenuListener = new ContextMenuListener((info) => {
-    contextMenuBuilder.showPopupMenu(info);
-});
