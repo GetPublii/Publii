@@ -122,6 +122,8 @@ export default {
                 entity_encoding: "raw",
                 allow_script_urls: true,
                 style_formats: customFormats,
+                contextmenu: false,
+                browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
                 setup: function (editor) {
                     editor.on('init', function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
