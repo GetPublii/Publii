@@ -1,5 +1,5 @@
 <template>
-    <div class="post-editor" ref="post-editor">
+    <div class="post-editor post-editor-markdown" ref="post-editor">
         <topbar-appbar />
         <post-editor-top-bar />
 
@@ -284,7 +284,7 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
-@import '../../node_modules/simplemde/dist/simplemde.min.css';
+@import '../scss/editor/editor-markdown.scss';
 
 .post-editor {
     overflow-x: hidden;
