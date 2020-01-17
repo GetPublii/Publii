@@ -83,6 +83,11 @@
                     <td>###### </td>
                     <td>Ctrl/⌘ + H (x6)</td>
                 </tr>
+                <tr>
+                    <td>Readmore</td>
+                    <td>---READMORE---</td>
+                    <td></td>
+                </tr>
             </table>
         </div>
     </div>

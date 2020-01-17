@@ -102,12 +102,22 @@ class ContentHelper {
         }
 
         if (editor === 'markdown') {
+            inputText = ContentHelper.prepareMarkdown(inputText);
             return MarkdownToHtml.parse(inputText);
         }
 
         if (editor === 'blockeditor') {
             return BlocksToHtml.parse(inputText);
         }
+    }
+
+    /**
+     * Prepares markdown code to display
+     * @param input 
+     */
+    static prepareMarkdown (input) {
+        input = input.replace(/\-\-\-READMORE\-\-\-/gmi, '<hr id="read-more" />');
+        return input;
     }
 
     /**
