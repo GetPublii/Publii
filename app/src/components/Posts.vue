@@ -512,14 +512,14 @@ export default {
                     value: 'tinymce',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
-                }/*,
+                },
                 {
                     label: 'Use Markdown editor',
                     activeLabel: 'Add new post',
                     value: 'markdown',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'markdown')
-                }*/
+                }
             ]
         },
         showPostSlugs () {
@@ -954,7 +954,8 @@ export default {
         }
         
         & + .button {
-            margin: 0; position: relative;
+            margin: 0; 
+            position: relative;
         }
         
         &:hover { 

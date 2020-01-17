@@ -16,11 +16,6 @@
         grid-template-columns: repeat(3, fit-content(400px));
         grid-gap: 2vw;
         justify-content: center;
-        
-        div:nth-child(3) {           
-            opacity: .35; 
-            pointer-events: none;           
-        }
     }
 
     h3 {
