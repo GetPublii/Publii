@@ -1,5 +1,8 @@
 <template>
-    <div class="post-editor post-editor-markdown" ref="post-editor">
+    <div 
+        class="post-editor post-editor-markdown" 
+        ref="post-editor" 
+        :data-post-id="postID">
         <topbar-appbar />
         <post-editor-top-bar />
 
@@ -60,6 +63,8 @@ import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
 import Utils from './../helpers/utils';
+import InlineAttachment from './post-editor/CodeMirror/inline-attachment.js';
+import InlineAttachmentC4 from './post-editor/CodeMirror/codemirror-4.inline-attachment.js';
 const mainProcess = remote.require('./main.js');
 
 export default {
@@ -160,6 +165,7 @@ export default {
         this.simplemde.codemirror.on('change', this.detectDataLoss);
         window.prompt = this.linkPopupHandler;
         this.$refs.linkPopup.setSimpleMdeInstance(this.simplemde);
+        inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
     },
     methods: {
         slugUpdated () {
