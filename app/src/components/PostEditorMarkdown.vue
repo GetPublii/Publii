@@ -14,6 +14,7 @@
                         @keyup="updateTitle" />   
 
                     <vue-simplemde 
+                        ref="markdownEditor"
                         v-model="postData.text"
                         :configs="editorConfig" />
 
@@ -77,11 +78,13 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             sidebarVisible: false,
+            editorIsInitialized: false,
             editorConfig: {
                 status: false,
                 toolbar: false,
                 placeholder: 'Write here...',
-                spellChecker: false
+                spellChecker: false,
+                promptURLs: true
             },
             postData: {
                 editor: 'markdown',
@@ -121,6 +124,9 @@ export default {
     computed: {
         isEdit () {
             return !!this.postID;
+        },
+        simplemde () {
+            return this.$refs.markdownEditor.simplemde;
         }
     },
     mounted () {
@@ -145,6 +151,8 @@ export default {
         this.$bus.$on('post-editor-possible-data-loss', () => {
             this.possibleDataLoss = true;
         });
+
+        this.simplemde.codemirror.on('change', this.detectDataLoss);
     },
     methods: {
         slugUpdated () {
@@ -267,6 +275,15 @@ export default {
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;
+        },
+        detectDataLoss () {
+            if (!this.editorIsInitialized) {
+                this.editorIsInitialized = true;
+                return;
+            }
+            
+            this.$bus.$emit('post-editor-possible-data-loss');
+            this.simplemde.codemirror.off('change', this.detectDataLoss);
         }
     },
     beforeDestroy () {
