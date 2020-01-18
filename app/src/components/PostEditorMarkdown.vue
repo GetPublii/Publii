@@ -330,58 +330,61 @@ export default {
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
 @import '../scss/editor/editor-markdown.scss';
-
-.post-editor {
+    
+    
+.post-editor-markdown { 
     overflow-x: hidden;
     position: relative;
     width: 100%;
-
-    &-wrapper {
-        overflow: auto;
-        padding-top: 2.2rem;
-    }
-
-    &-form {
-        height: calc(100vh - 2.2rem);
-        overflow: scroll;
-
-        & > div {
-            padding: 9rem 4rem 3rem 4rem;
+    
+   .post-editor {
+        &-wrapper {
+            overflow: auto;
+            padding-top: 2.2rem;
         }
 
-        #post-title {
-            border: none;
-            box-shadow: none;
-            display: block;
-            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 3.5rem;
-            font-weight: 600;
-            line-height: 1.2;
-            margin: 0 10% 2.6rem;
-            padding: 0;
-            text-align: center;
-            width: 80%;
+        &-form {
+            height: calc(100vh - 2.2rem);
+            overflow: scroll;
 
-            &:empty {
-                color: var(--gray-3); 
+            & > div {
+                padding: 9rem 4rem 3rem 4rem;
+            }
 
-                &:before {
-                    content: "Add post title"
+            #post-title {
+                border: none;
+                box-shadow: none;
+                display: block;
+                font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+                font-size: 3.5rem;
+                font-weight: 600;
+                line-height: 1.2;
+                margin: 0 10% 2.6rem;
+                padding: 0;
+                text-align: center;
+                width: 80%;
+
+                &:empty {
+                    color: var(--gray-3); 
+
+                    &:before {
+                        content: "Add post title"
+                    }
                 }
             }
-        }
 
-        .vue-simplemde {
-            margin: 0 auto;
-            max-width: 720px;
-            position: relative;
-            z-index: 0;
+            .vue-simplemde {
+                margin: 0 auto;
+                max-width: 720px;
+                position: relative;
+                z-index: 0;
 
-            .CodeMirror {
-                border: none;
-                padding: 0;
+                .CodeMirror {
+                    border: none;
+                    padding: 0;
+                }
             }
-        }
+       }
     }
 }
 
