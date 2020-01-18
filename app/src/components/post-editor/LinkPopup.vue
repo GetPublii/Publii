@@ -300,8 +300,8 @@ export default {
             }
         },
         parseMarkdownContent (content) {
-            let linkContent = content.match(/\((.*?)\)/);
-            let urlContent = content.match(/\[(.*?)\]/);
+            let linkContent = content.match(/\[(.*?)\]/);
+            let urlContent = content.match(/\((.*?)\)/);
             this.type = 'post';
 
             if (linkContent && linkContent[1]) {
@@ -379,7 +379,7 @@ export default {
         },
         addLinkMarkdown (response) {
             if (response) {
-                this.simplemdeInstance.codemirror.replaceSelections([`[${response.url}](${response.text})`]);  
+                this.simplemdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);  
             }
         },
         addLinkHTML (response) {

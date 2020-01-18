@@ -416,8 +416,6 @@ class EditorBridge {
             icon: 'link',
             tooltip: 'Insert/edit link',
             onAction: () => {
-                console.log('SEL:', tinymce.activeEditor.selection.getContent());
-
                 window.app.$bus.$emit('init-link-popup', {
                     postID: this.postID,
                     selection: tinymce.activeEditor.selection.getContent()
