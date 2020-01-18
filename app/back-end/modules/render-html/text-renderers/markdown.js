@@ -22,7 +22,7 @@ class MarkdownToHtml {
                 dimensions = ` width="${size[1]}" height="${size[2]}"`;
             }
         
-            return `<img src="${href}" alt="${text}"${dimensions}>`;
+            return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions} /></figure>`;
         };
         
         marked.setOptions({
