@@ -363,7 +363,7 @@ export default {
             width: 80%;
 
             &:empty {
-                color: rgba($color-helper-7, .5); 
+                color: var(--gray-3); 
 
                 &:before {
                     content: "Add post title"
@@ -374,6 +374,8 @@ export default {
         .vue-simplemde {
             margin: 0 auto;
             max-width: 720px;
+            position: relative;
+            z-index: 0;
 
             .CodeMirror {
                 border: none;
@@ -412,26 +414,4 @@ body[data-os="linux"] {
     }
 }
 
-@media (max-width: 1400px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-        
-            & + a {
-                top: 2.6rem;
-            }
-        }
-    }
-}
-    
-@media (max-width: 1600px) {    
-    .post-editor-form {
-        #post-title {            
-            font-size: 2.8rem;
-            margin: 0 0 2.6rem;
-            width: 100%;
-        }
-    }
-}
 </style>
