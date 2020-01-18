@@ -39,6 +39,9 @@
             <sidebar :isVisible="sidebarVisible" />
             <author-popup />
             <date-popup />
+            <link-popup 
+                ref="linkPopup"
+                :markdown="true" />
             <help-panel-markdown :isOpen="helpPanelOpen" />
         </div>
     </div>
@@ -52,6 +55,7 @@ import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
 import HelpPanelMarkdown from './post-editor/HelpPanelMarkdown';
+import LinkPopup from './post-editor/LinkPopup';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
@@ -63,6 +67,7 @@ export default {
     components: {
         'author-popup': AuthorPopup,
         'date-popup': DatePopup,
+        'link-popup': LinkPopup,
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
@@ -153,6 +158,8 @@ export default {
         });
 
         this.simplemde.codemirror.on('change', this.detectDataLoss);
+        window.prompt = this.linkPopupHandler;
+        this.$refs.linkPopup.setSimpleMdeInstance(this.simplemde);
     },
     methods: {
         slugUpdated () {
@@ -284,6 +291,20 @@ export default {
             
             this.$bus.$emit('post-editor-possible-data-loss');
             this.simplemde.codemirror.off('change', this.detectDataLoss);
+        },
+        linkPopupHandler (e) {
+            let selectedText = this.simplemde.codemirror.getSelections();
+
+            if (selectedText && selectedText.length) {
+                selectedText = selectedText[0];
+            } else {
+                selectedText = '';
+            }
+
+            this.$bus.$emit('init-link-popup', {
+                postID: this.postID,
+                selection: selectedText
+            });
         }
     },
     beforeDestroy () {
@@ -293,6 +314,7 @@ export default {
 
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
+        window.prompt = () => false;
     }
 };
 </script>

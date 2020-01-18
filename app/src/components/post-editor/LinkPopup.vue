@@ -73,7 +73,9 @@
                         class="link-popup-field-external" />
                 </field>
 
-                <field label="Link target:">
+                <field 
+                    v-if="!markdown"
+                    label="Link target:">
                     <v-select
                         slot="field"
                         ref="targetSelect"
@@ -94,7 +96,9 @@
                         class="link-popup-field-label" />
                 </field>
 
-                <field label="Link title attribute:">
+                <field 
+                    v-if="!markdown"
+                    label="Link title attribute:">
                     <input
                         slot="field"
                         type="text"
@@ -103,7 +107,9 @@
                         class="link-popup-field-title" />
                 </field>
 
-                <field label="Rel attribute:">
+                <field 
+                    v-if="!markdown"
+                    label="Rel attribute:">
                     <switcher
                         slot="field"
                         label="nofollow"
@@ -141,10 +147,16 @@ import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
     name: 'link-popup',
+    props: {
+        'markdown': {
+            default: false
+        }
+    },
     data () {
         return {
             postID: 0,
             isVisible: false,
+            simplemdeInstance: null,
             type: 'post',
             post: null,
             tag: null,
@@ -194,7 +206,7 @@ export default {
             this.isVisible = true;
         });
 
-        this.$bus.$on('link-popup-updated', this.addLinkHTML);
+        this.$bus.$on('link-popup-updated', this.addLink);
     },
     methods: {
         customTypeLabels (value) {
@@ -335,6 +347,18 @@ export default {
             this.isVisible = false;
             this.$bus.$emit('link-popup-updated', false);
         },
+        addLink (response) {
+            if (this.markdown) {
+                this.addLinkMarkdown(response);
+            } else {
+                this.addLinkHTML(response);
+            }
+        },
+        addLinkMarkdown (response) {
+            if (response) {
+                this.simplemdeInstance.codemirror.replaceSelections([`[${response.url}](${response.text})`]);  
+            }
+        },
         addLinkHTML (response) {
             if ($('#link-toolbar').css('display') !== 'none' || $('#inline-toolbar').css('display') !== 'none') {
                 return;
@@ -374,11 +398,14 @@ export default {
                     tinymce.activeEditor.selection.setContent(linkHTML);
                 }
             }
+        },
+        setSimpleMdeInstance (instance) {
+            this.simplemdeInstance = instance;
         }
     },
     beforeDestroy () {
         this.$bus.$off('init-link-popup');
-        this.$bus.$off('link-popup-updated', this.addLinkHTML);
+        this.$bus.$off('link-popup-updated', this.addLink);
     }
 }
 </script>
