@@ -255,10 +255,17 @@ export default {
             };
         },
         parseContent (content) {
-            if(!content) {
+            if (!content) {
                 return;
             }
 
+            if (this.markdown) {
+                this.parseMarkdownContent(content);
+            } else {
+                this.parseHTMLContent(content);
+            }
+        },
+        parseHTMLContent (content) {
             let rawText = strip_tags(content);
             let linkContent = content.match(/>(.*?)<\/a>/);
             let titleContent = content.match(/title="(.*?)"/);
@@ -282,32 +289,48 @@ export default {
                 this.target = targetContent[1];
             }
 
-            if(urlContent && urlContent[1]) {
-                if(urlContent[1].indexOf('/post/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
-                    this.type = 'post';
-                    this.post = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/tag/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
-                    this.type = 'tag';
-                    this.tag = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/author/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
-                    this.type = 'author';
-                    this.author = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/frontpage/') !== -1) {
-                    this.type = 'frontpage';
-                } else {
-                    this.type = 'external';
-                    this.external = urlContent[1];
-                }
-            }
+            this.parseUrlContent(urlContent);
 
             let relValues = ['nofollow', 'sponsored', 'ugc'];
 
             for (let i = 0; i < relValues.length; i++) {
                 if (relContent && relContent[1].indexOf(relValues[i]) > -1) {
                     this.rel[relValues[i]] = true;
+                }
+            }
+        },
+        parseMarkdownContent (content) {
+            let linkContent = content.match(/\((.*?)\)/);
+            let urlContent = content.match(/\[(.*?)\]/);
+            this.type = 'post';
+
+            if (linkContent && linkContent[1]) {
+                this.label = linkContent[1];
+            } else {
+                this.label = content;
+            }
+
+            this.parseUrlContent(urlContent);
+        },
+        parseUrlContent (urlContent) {
+            if (urlContent && urlContent[1]) {
+                if (urlContent[1].indexOf('/post/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
+                    this.type = 'post';
+                    this.post = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/tag/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
+                    this.type = 'tag';
+                    this.tag = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/author/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
+                    this.type = 'author';
+                    this.author = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
+                    this.type = 'frontpage';
+                } else {
+                    this.type = 'external';
+                    this.external = urlContent[1];
                 }
             }
         },
