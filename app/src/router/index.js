@@ -27,6 +27,21 @@ const Settings = () => import('../components/Settings');
 const AppThemes = () => import('../components/AppThemes');
 const ThemeSettings = () => import('../components/ThemeSettings');
 
+// Avoid NavigationDuplicated errors
+const originalPush = Router.prototype.push;
+
+Router.prototype.push = function push (location, onResolve, onReject) {
+    if (onResolve || onReject) {
+        return originalPush.call(this, location, onResolve, onReject);
+    }
+
+    return originalPush.call(this, location).catch(error => {
+        if (error.name !== 'NavigationDuplicated') {
+            throw error;
+        }
+    });
+}
+
 Vue.use(Router);
 
 export default new Router({
