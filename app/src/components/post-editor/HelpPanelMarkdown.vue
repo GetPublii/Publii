@@ -21,7 +21,7 @@
                 <tr>
                     <td><s>Strikethrough</s></td>
                     <td>~~text~~</td>
-                    <td>Ctrl + Alt + U</td>
+                    <td>Ctrl/⌘ + Alt + U</td>
                 </tr>
                 <tr>
                     <td><a href="">Link</a></td>
@@ -31,7 +31,7 @@
                 <tr>
                     <td>List</td>
                     <td>* item</td>
-                    <td>Ctrl + L</td>
+                    <td>Ctrl/⌘ + L</td>
                 </tr>
                 <tr>
                     <td>Ordered List</td>
