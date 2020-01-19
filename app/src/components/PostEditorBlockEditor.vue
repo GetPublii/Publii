@@ -36,7 +36,6 @@
 
 <script>
 import Vue from 'vue';
-import PubliiBlockEditor from 'publii-block-editor';
 import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
@@ -60,7 +59,6 @@ export default {
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
-        'publii-block-editor': PubliiBlockEditor,
         'search-popup': SearchPopup,
         'help-panel-block-editor': HelpPanelBlockEditor
     },
