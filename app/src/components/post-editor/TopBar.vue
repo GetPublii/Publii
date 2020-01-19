@@ -217,7 +217,7 @@ export default {
         justify-content: space-between;
         padding: 0 3.2rem;
         position: absolute;
-        top: 4.5rem;
+        top: 3.6rem;
         width: 100%;
         z-index: 100001;
     }
@@ -240,8 +240,7 @@ export default {
     }
 
     &-source-code-actions {
-        margin-left: auto;
-        margin-top: -2.6rem;
+        margin-left: auto;        
     }
 
     #post-preview-button {
@@ -254,25 +253,12 @@ export default {
 /*
  * Windows & linux adjustments
  */
-body[data-os="win"] {
-    .post-editor {
-        &-topbar {
-            top: 3.6rem;
-        }
-    }
-}
 
 body[data-os="linux"] {
     .post-editor {
         &-topbar {
             top: 0;
         }
-    }
-}
-
-@media (max-width: 1400px) {
-    .post-editor-topbar {
-        padding: 0 3.6rem 0 4rem;
     }
 }
 </style>

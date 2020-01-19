@@ -267,22 +267,12 @@ export default {
     }
 }
 
-body[data-os="win"] {
-    #app {
-        & > .topbar + section {
-            height: calc(100vh - 8.7rem);
-            top: 8.7rem;
-        }
-    }
+body[data-os="win"] {    
 
     .app {
         &-view {
             border: 1px solid var(--icon-secondary-color);
             overflow: hidden;
-        }
-
-        &-site-sidebar {
-            top: 8.7rem;
         }
     }
 }

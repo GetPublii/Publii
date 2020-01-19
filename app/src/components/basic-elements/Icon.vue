@@ -108,8 +108,8 @@ export default {
 
 .icon {
     &.size-xxxs {
-        height: 8px;
-        width: 8px;
+        height: 10px;
+        width: 10px;
     }
 
     &.size-xxs {

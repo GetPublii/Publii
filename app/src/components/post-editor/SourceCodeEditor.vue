@@ -113,13 +113,7 @@ export default {
  */
 
 body[data-os="win"] {
-    .source-code-editor {
-        height: calc(100vh - 11.6rem)!important;
-        top: 11.6rem;
-        
-        &::before {
-            height: 11.6rem;            
-        }
+    .source-code-editor {      
 
         .CodeMirror-wrap {
             height: 100%;

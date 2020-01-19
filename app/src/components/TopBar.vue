@@ -150,20 +150,6 @@ export default {
         }
     }
 }
-    
-body[data-os="osx"] {
-    
-}
-
-body[data-os="win"] {
-    .topbar {
-        height: 9.2rem;
-
-        & > .topbar-inner {
-            top: 3.6rem;
-        }
-    }
-}
 
 body[data-os="linux"] {
     .topbar {

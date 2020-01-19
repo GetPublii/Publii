@@ -1001,17 +1001,6 @@ export default {
  * Special styles for win
  */
 
-body[data-os="win"] {
-    .post-editor-sidebar {
-        height: calc(100vh - 3.8rem);
-        top: 3.8rem;
-
-        &:before {
-            top: 3.8rem;
-        }
-    }
-}
-
 body[data-os="linux"] {
     .post-editor-sidebar {
         height: 100vh;

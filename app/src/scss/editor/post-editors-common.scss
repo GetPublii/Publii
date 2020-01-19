@@ -31,8 +31,10 @@
     }
 
     #post-stats-button {
-        bottom: 3.2rem;
-        left: 3.2rem;
+        bottom: 2rem;
+        height: auto;
+        line-height: 1;
+        left: 1.8rem;
         position: absolute;
         text-align: center;        
         z-index: 101;
@@ -44,12 +46,8 @@
  */
 body[data-os="win"] {
     .post-editor {
-        .appbar {
-            height: 3.6rem!important;
-        }
-
         .topbar {
-            height: 3.6rem;
+            height: 2.2rem;
         }
     }
 }
@@ -73,14 +71,13 @@ body[data-os="linux"] {
 body[data-os="win"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 9.2rem;
+        
     }
 
-    .post-editor-form {
-        height: calc(100vh - 9.2rem);
+    .post-editor-form {       
 
         &-content {
-            height: calc( 100vh - 29rem );
+            height: calc( 100vh - 27.6rem );
         }
     }
 }

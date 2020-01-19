@@ -130,13 +130,6 @@ export default {
 /*
  * Windows adjustments
  */
-body[data-os="win"] {
-    .post-editor-writers-panel {
-        height: calc(100vh - 3.8rem);
-        top: 3.8rem;
-    }
-}
-
 body[data-os="linux"] {
     .post-editor {
         &-writers-panel {
@@ -153,7 +146,11 @@ body[data-os="linux"] {
     .post-editor-writers-panel {
         dl {
             dt {
-                font-size: 2rem;
+                font-size: 2.6rem;
+            }
+            
+            dd {
+                line-height: 1.1;
             }
         }
     }

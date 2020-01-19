@@ -398,11 +398,11 @@ export default {
 body[data-os="win"] {
     .post-editor-wrapper {
         height: calc(100vh - 2px);
-        padding-top: 3.6rem;
+        padding-top: 2.2rem;
     }
 
     .post-editor-form {
-        height: calc(100vh - 3.6rem);
+        height: calc(100vh - 2.2rem);
     }
 }
 

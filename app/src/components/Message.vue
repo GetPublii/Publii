@@ -174,12 +174,6 @@ export default {
      }
 }
 
-body[data-os="win"] {
-    .messages {
-        top: 5.6rem;
-    }
-}
-
 body[data-os="linux"] {
     .messages {
         top: 4.4rem;
