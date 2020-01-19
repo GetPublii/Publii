@@ -223,6 +223,7 @@ export default {
 @import '../scss/vendor/normalize.css';
 @import '../scss/vendor/vue-multiselect.scss';
 @import '../scss/variables.scss';
+@import '../scss/css-variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/global.scss';
 @import '../scss/forms.scss';
