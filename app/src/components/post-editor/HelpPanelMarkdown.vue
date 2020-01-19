@@ -2,7 +2,6 @@
     <div :class="{ 'help-panel': true, 'is-visible': isOpen }">
         <div>           
             <p class="help-panel-desc">
-                If you need to add images - just drag'n'drop them over the editor area <br><br>
                 You can easly manage headings, text styles or create other HTML elements by using the following keyboard shortcuts or typing markdown syntax:
             </p>
             <table class="help-panel-table col-3">
@@ -90,6 +89,10 @@
                     <td>Readmore</td>
                     <td>---READMORE---</td>
                     <td></td>
+                </tr>
+                 <tr>
+                    <td>Image</td>
+                    <td colspan="2">Drag and drop an image onto the editor</td>                    
                 </tr>
             </table>
         </div>
