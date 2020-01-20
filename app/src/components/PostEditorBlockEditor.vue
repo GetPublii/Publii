@@ -393,7 +393,7 @@ export default {
 
 body[data-os="win"] {
     .post-editor-wrapper {
-        height: calc(100vh - 2px);
+        height: 100vh;
         padding-top: 2.2rem;
     }
 
@@ -404,7 +404,7 @@ body[data-os="win"] {
 
 body[data-os="linux"] {
     .post-editor-wrapper {
-        height: calc(100vh - 2px);
+        height: 100vh;
         padding-top: 0;
     }
 
