@@ -14,7 +14,7 @@
             @click.prevent.stop="syncWebsite"
         >
             <span v-html="icon" class="sidebar-sync-link-icon"></span>
-            {{ status }}
+            <span>{{ status }}</span>
         </a>
 
         <sub
@@ -194,11 +194,7 @@ export default {
         right: 5rem;
 
         &-icon {
-            fill: var(--white);
-            float: left;
-            margin-top: .2rem;
-            transform-origin: 59% 51%;
-            width: 2rem;
+            fill: var(--white);           
         }
 
         & > sub {
@@ -214,22 +210,21 @@ export default {
         }
 
         &-link {
+            align-items: center;
             background: var(--sidebar-sync-btn-bg);
             border-radius: 3px;
             color: var(--sidebar-sync-btn-color);
-            display: block;
+            display: flex;
             font-size: 1.6rem;
             font-weight: 500;
-            padding: 1.4rem 2.4rem 1.4rem 6.5rem;
+            justify-content: center;
+            padding: 1.4rem 2.4rem;
             position: relative;  
             
             // sync cloud icon
             .sidebar-sync-icon {
-                height: 2.2rem;
-                left: 2.05rem;
-                position: absolute;   
-                top: 50%;
-                transform: translate(0, -50%);
+                height: 2.2rem;  
+                display: inherit;
                 width: 3rem;
 
                 path {
@@ -265,12 +260,7 @@ export default {
             
             // interjection mark icon
             .sidebar-interjection-icon {
-                height: 2.3rem;
-                left: 2.05rem;
-                margin-top: 0;
-                position: absolute;   
-                top: 50%;
-                transform: translate(0, -50%);
+                height: 2.3rem;                
                 width: 2.4rem;
 
                 path {
@@ -290,12 +280,10 @@ export default {
             }
             
             &-icon {               
-                display: inline-block;
-                height: 100%;               
-                left: 0; 
-                position: absolute;
-                top: 0; 
-                width: 100%;
+                display: block;
+                height: 100%;  
+                margin-right: 1.2rem;
+                width: auto;
             }
         }
 
@@ -308,12 +296,8 @@ export default {
         &-noftp {}
         
         &-preparing { 
-            display: inline-block;            
-            left: 2.5rem;    
-            height: 2.1rem;
-            position: absolute;   
-            top: 50%;
-            transform: translate(0, -50%);
+            display: block;              
+            height: 2.1rem;           
             width: 2.1rem;
             
             & > span {
