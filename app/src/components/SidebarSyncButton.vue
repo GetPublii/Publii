@@ -260,6 +260,7 @@ export default {
             
             // interjection mark icon
             .sidebar-interjection-icon {
+                display: block;
                 height: 2.3rem;                
                 width: 2.4rem;
 
