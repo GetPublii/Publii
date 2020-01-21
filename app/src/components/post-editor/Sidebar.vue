@@ -728,7 +728,7 @@ export default {
         &:before {
             background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
-            height: 12rem;
+            height: 10rem;
             position: fixed;
             top: 2.2rem;
             right: 0;
@@ -737,13 +737,13 @@ export default {
         }
 
         & > div {
-            padding: 12.5rem 0 0 0;
+            padding: 9rem 0 0 0;
         }
 
         &-header {
             font-size: 1.8rem;
-            margin-top: -3.6rem;
-            padding: calc(1rem + 0.6vw) 3.6rem;
+            margin-top: 0;
+            padding: 0 3.6rem 1.5rem;
         }
 
         .post-info {            
