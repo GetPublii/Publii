@@ -34,8 +34,8 @@
         border-bottom: 1px solid var(--input-border-color);
         font-size: 1.8rem;
         font-weight: 400;
-        margin-top: -3.2rem;
-        padding: calc(1rem + 0.6vw) 0;
+        margin-top: -1.2rem;
+        padding: 0 0 1.5rem;
         text-transform: none;
     }
 
@@ -77,7 +77,7 @@
         right: 3.5rem;
         text-align: center;       
         transition: var(--transition);         
-        top: 2.3rem;        
+        top: 2rem;        
         width: 3rem;
                                 
         &:active,

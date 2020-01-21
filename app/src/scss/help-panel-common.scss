@@ -12,7 +12,7 @@
      &::before {
             background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
-            height: 12rem;
+            height: 10rem;
             position: fixed;
             top: 2.2rem;
             right: 0;
@@ -37,7 +37,7 @@
 
     & > div {
         font-size: 14px;
-        padding: 10rem 3.6rem 8rem;
+        padding:  8rem 3.6rem;
          
     }
     
