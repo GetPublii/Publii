@@ -50,7 +50,7 @@ exports.selectDirectory = function(fieldName = false) {
 
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openDirectory']
-    }, function(selectedPath) {
+    }).then(selectedPath => {
         mainWindowHandler.webContents.send('app-directory-selected', {
             path: selectedPath,
             fieldName: fieldName
@@ -64,7 +64,7 @@ exports.selectFile = function(fieldName = false) {
 
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openFile', 'showHiddenFiles']
-    }, function(selectedPath) {
+    }).then(selectedPath => {
         mainWindowHandler.webContents.send('app-file-selected', {
             path: selectedPath,
             fieldName: fieldName
@@ -79,7 +79,7 @@ exports.selectFiles = function (fieldName = false, filters = []) {
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openFile', 'multiSelections'],
         filters: filters
-    }, function(selectedPaths) {
+    }).then(selectedPaths => {
         mainWindowHandler.webContents.send('app-files-selected', {
             paths: selectedPaths,
             fieldName: fieldName

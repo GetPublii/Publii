@@ -178,12 +178,12 @@ export default {
 
             ipcRenderer.removeAllListeners('app-files-selected');
             ipcRenderer.once('app-files-selected', (event, data) => {
-                if(data.paths !== undefined) {
+                if (data.paths !== undefined && data.paths.filePaths.length) {
                     this.isUploading = true;
-                    this.imagesToUpload = data.paths.length;
+                    this.imagesToUpload = data.paths.filePaths.length;
                     this.uploadProgress = 0;
                     this.uploadMessage = '';
-                    this.loadImages(data.paths);
+                    this.loadImages(data.paths.filePaths);
                 }
             });
         },

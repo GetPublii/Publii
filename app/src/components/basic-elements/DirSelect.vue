@@ -69,18 +69,12 @@ export default {
             mainProcess.selectDirectory('dir-select');
 
             ipcRenderer.once('app-directory-selected', (event, data) => {
-                if(data.path === undefined) {
+                if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
 
-                if(typeof data.path === "object") {
-                    this.$refs.input.content = data.path[0];
-                    this.fieldValue = data.path[0];
-                } else {
-                    this.$refs.input.content = data.path;
-                    this.fieldValue = data.path;
-                }
-
+                this.$refs.input.content = data.path.filePaths[0];
+                this.fieldValue = data.path.filePaths[0];
                 this.onChange(this.fieldValue);
                 this.$emit('input', this.fieldValue);
             });

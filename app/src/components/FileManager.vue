@@ -205,8 +205,8 @@ export default {
         });
 
         ipcRenderer.on('app-files-selected', (event, data) => {
-            if(data.paths !== undefined) {
-                this.uploadFile(data.paths);
+            if (data.paths !== undefined && data.paths.filePaths.length) {
+                this.uploadFile(data.paths.filePaths);
             }
         });
 

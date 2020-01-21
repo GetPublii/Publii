@@ -73,20 +73,13 @@ export default {
             mainProcess.selectFile('file-select');
 
             ipcRenderer.once('app-file-selected', (event, data) => {
-                if(data.path === undefined) {
+                if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
 
-                if(typeof data.path === "object") {
-                    this.$refs.input.content = data.path[0];
-                    this.fieldValue = data.path[0];
-                    this.$emit('input', this.fieldValue);
-                } else {
-                    this.$refs.input.content = data.path;
-                    this.fieldValue = data.path;
-                    this.$emit('input', this.fieldValue);
-                }
-
+                this.$refs.input.content = data.path.filePaths[0];
+                this.fieldValue = data.path.filePaths[0];
+                this.$emit('input', this.fieldValue);
                 this.onChange(this.fieldValue);
             });
         },

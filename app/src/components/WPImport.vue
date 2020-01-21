@@ -200,7 +200,7 @@ export default {
     },
     methods: {
         selectedFileChanged: function(filePath) {
-            if(filePath === '') {
+            if (filePath === '') {
                 this.resetState();
                 return;
             }
