@@ -51,7 +51,7 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import InlineEditor from './post-editor/InlineEditor';
 import PostEditorSourceCode from './post-editor/SourceCodeEditor';
@@ -66,11 +66,14 @@ import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
 import Utils from './../helpers/utils';
-
-const mainProcess = remote.require('./main.js');
+import PostEditorsCommon from './mixins/PostEditorsCommon';
 
 export default {
     name: 'post-editor-tinymce',
+    editorType: 'tinymce',
+    mixins: [
+        PostEditorsCommon
+    ],
     components: {
         'author-popup': AuthorPopup,
         'date-popup': DatePopup,
@@ -95,7 +98,7 @@ export default {
             unwatchDataLoss: null,
             sidebarVisible: false,
             postData: {
-                editor: 'tinymce',
+                editor: this.$options.editorType,
                 title: '',
                 text: '',
                 slug: '',
@@ -169,17 +172,6 @@ export default {
         });
     },
     methods: {
-        slugUpdated () {
-            this.postSlugEdited = true;
-        },
-        updateSlug () {
-            if(this.isEdit || this.postSlugEdited) {
-                return;
-            }
-
-            let slugValue = mainProcess.slug(this.postData.title);
-            this.postData.slug = slugValue;
-        },
         loadPostData () {
             // Send request for a post to the back-end
             ipcRenderer.send('app-post-load', {
@@ -294,9 +286,6 @@ export default {
             this.loadPostData();
             this.possibleDataLoss = false;
         },
-        toggleSidebar () {
-            this.sidebarVisible = !this.sidebarVisible;
-        },
         togglePostStats () {
             if (this.writersPanelOpen) {
                 this.writersPanelOpen = false;
@@ -305,10 +294,6 @@ export default {
                 this.writersPanelOpen = true;
                 localStorage.setItem('publii-writers-panel', 'opened');
             }
-        },
-        closeEditor () {
-            let siteName = this.$route.params.name;
-            this.$router.push('/site/' + siteName + '/posts/');
         }
     },
     beforeDestroy () {

@@ -53,7 +53,7 @@
 <script>
 import Vue from 'vue';
 import VueSimplemde from 'vue-simplemde'
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -65,10 +65,14 @@ import PostHelper from './post-editor/PostHelper';
 import Utils from './../helpers/utils';
 import InlineAttachment from './post-editor/CodeMirror/inline-attachment.js';
 import InlineAttachmentC4 from './post-editor/CodeMirror/codemirror-4.inline-attachment.js';
-const mainProcess = remote.require('./main.js');
+import PostEditorsCommon from './mixins/PostEditorsCommon';
 
 export default {
     name: 'post-editor-markdown',
+    editorType: 'markdown',
+    mixins: [
+        PostEditorsCommon
+    ],
     components: {
         'author-popup': AuthorPopup,
         'date-popup': DatePopup,
@@ -89,6 +93,7 @@ export default {
             unwatchDataLoss: null,
             sidebarVisible: false,
             editorIsInitialized: false,
+            sidebarVisible: false,
             editorConfig: {
                 status: false,
                 toolbar: false,
@@ -97,7 +102,7 @@ export default {
                 promptURLs: true
             },
             postData: {
-                editor: 'markdown',
+                editor: this.$options.editorType,
                 title: '',
                 text: '',
                 slug: '',
@@ -168,20 +173,9 @@ export default {
         inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
     },
     methods: {
-        slugUpdated () {
-            this.postSlugEdited = true;
-        },
         updateTitle () {
             this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
             this.updateSlug();
-        },
-        updateSlug () {
-            if(this.isEdit || this.postSlugEdited) {
-                return;
-            }
-
-            let slugValue = mainProcess.slug(this.postData.title);
-            this.postData.slug = slugValue;
         },
         loadPostData () {
             // Send request for a post to the back-end
@@ -278,13 +272,6 @@ export default {
 
             this.loadPostData();
             this.possibleDataLoss = false;
-        },
-        toggleSidebar () {
-            this.sidebarVisible = !this.sidebarVisible;
-        },
-        closeEditor () {
-            let siteName = this.$route.params.name;
-            this.$router.push('/site/' + siteName + '/posts/');
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;

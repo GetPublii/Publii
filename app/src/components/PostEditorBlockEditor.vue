@@ -36,7 +36,7 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -48,11 +48,14 @@ import SearchPopup from './post-editor/SearchPopup';
 import Utils from './../helpers/utils';
 import path from 'path';
 import url from 'url';
-
-const mainProcess = remote.require('./main.js');
+import PostEditorsCommon from './mixins/PostEditorsCommon';
 
 export default {
     name: 'post-editor-block-editor',
+    editorType: 'blockeditor',
+    mixins: [
+        PostEditorsCommon
+    ],
     components: {
         'author-popup': AuthorPopup,
         'date-popup': DatePopup,
@@ -72,7 +75,7 @@ export default {
             unwatchDataLoss: null,
             sidebarVisible: false,
             postData: {
-                editor: 'blockeditor',
+                editor: this.$options.editorType,
                 title: '',
                 text: '',
                 slug: '',
@@ -218,20 +221,9 @@ export default {
                 }
             }
         },
-        slugUpdated () {
-            this.postSlugEdited = true;
-        },
         updateTitle (newTitle) {
             this.postData.title = newTitle;
             this.updateSlug();
-        },
-        updateSlug () {
-            if(this.isEdit || this.postSlugEdited) {
-                return;
-            }
-
-            let slugValue = mainProcess.slug(this.postData.title);
-            this.postData.slug = slugValue;
         },
         loadPostData () {
             // Send request for a post to the back-end
@@ -323,13 +315,6 @@ export default {
 
             this.loadPostData();
             this.possibleDataLoss = false;
-        },
-        toggleSidebar () {
-            this.sidebarVisible = !this.sidebarVisible;
-        },
-        closeEditor () {
-            let siteName = this.$route.params.name;
-            this.$router.push('/site/' + siteName + '/posts/');
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;

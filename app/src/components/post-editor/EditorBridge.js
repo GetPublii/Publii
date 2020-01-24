@@ -42,7 +42,6 @@ class EditorBridge {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
-        console.log('EC:', window.app.$store.state.currentSite.config.spellchecking, JSON.stringify(editorConfig));
         tinymce.init(editorConfig);
     }
 
