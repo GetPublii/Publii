@@ -73,6 +73,20 @@
                         class="link-popup-field-external" />
                 </field>
 
+                <field
+                    v-if="type === 'file'"
+                    label="File:">
+                    <v-select
+                        slot="field"
+                        ref="fileSelect"
+                        :options="filesList"
+                        v-model="file"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('fileSelect')"
+                        placeholder="Select file"></v-select>
+                </field>
+
                 <field 
                     v-if="!markdown"
                     label="Link target:">
@@ -123,6 +137,15 @@
                         label="ugc"
                         v-model="rel.ugc" />
                 </field>
+
+                <field 
+                    v-if="!markdown && type === 'file'"
+                    label="Download attribute:">
+                    <switcher
+                        slot="field"
+                        label=""
+                        v-model="downloadAttr" />
+                </field>
             </div>
 
             <div class="buttons">
@@ -143,6 +166,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
@@ -161,20 +185,23 @@ export default {
             post: null,
             tag: null,
             author: null,
+            file: null,
             external: '',
             target: '',
             label: '',
             title: '',
+            downloadAttr: false,
             rel: {
                 nofollow: false,
                 sponsored: false,
                 ugc: false
-            }
+            },
+            filesList: []
         };
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'external' ];
+            return [ 'post', 'tag', 'author', 'frontpage', 'external', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -206,6 +233,7 @@ export default {
             this.isVisible = true;
         });
 
+        this.loadFiles();
         this.$bus.$on('link-popup-updated', this.addLink);
     },
     methods: {
@@ -216,6 +244,7 @@ export default {
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'external': return 'External link';
+                case 'file': return 'File from file manager';
             }
         },
         customTagLabels (value) {
@@ -244,8 +273,10 @@ export default {
             this.post = null;
             this.tag = null;
             this.author = null;
+            this.file = null;
             this.external = '';
             this.target = '';
+            this.downloadAttr = false;
             this.label = '';
             this.title = '';
             this.rel = {
@@ -272,21 +303,26 @@ export default {
             let targetContent = content.match(/target="(.*?)"/);
             let urlContent = content.match(/href="(.*?)"/);
             let relContent = content.match(/rel="(.*?)"/);
+            let downloadContent = content.match(/<a.*?(download="true").*?>/);
 
             this.type = 'post';
 
-            if(linkContent && linkContent[1]) {
+            if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
             } else {
                 this.label = rawText;
             }
 
-            if(titleContent && titleContent[1]) {
+            if (titleContent && titleContent[1]) {
                 this.title = titleContent[1];
             }
 
-            if(targetContent && targetContent[1]) {
+            if (targetContent && targetContent[1]) {
                 this.target = targetContent[1];
+            }
+
+            if (downloadContent && downloadContent[1]) {
+                this.downloadAttr = true;
             }
 
             this.parseUrlContent(urlContent);
@@ -328,6 +364,9 @@ export default {
                     this.author = parseInt(id, 10);
                 } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
                     this.type = 'frontpage';
+                } else if (urlContent[1].indexOf('/file/') !== -1) {
+                    this.type = 'file';
+                    this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
                 } else {
                     this.type = 'external';
                     this.external = urlContent[1];
@@ -340,7 +379,8 @@ export default {
                 title: '',
                 target: '',
                 text: this.label,
-                rel: this.rel
+                rel: this.rel,
+                downloadAttr: this.downloadAttr
             };
 
             if (this.type !== 'external') {
@@ -389,6 +429,7 @@ export default {
 
             if (response) {
                 let relAttr = [];
+                let downloadAttr = '';
 
                 if (response.rel && response.rel.nofollow) {
                     relAttr.push('nofollow');
@@ -411,9 +452,14 @@ export default {
                     relAttr = ' rel="' + relAttr.join(' ') + '"';
                 }
 
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
-            
+                console.log(response.url);
 
+                if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
+                    downloadAttr = ' download="true" '
+                }
+
+                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
+            
                 if (tinymce.activeEditor.selection.getContent() === '') {
                     tinymce.activeEditor.insertContent(linkHTML);
                 } else {
@@ -424,6 +470,25 @@ export default {
         },
         setSimpleMdeInstance (instance) {
             this.simplemdeInstance = instance;
+        },
+        loadFiles () {
+            ipcRenderer.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                this.filesList = data.map(file => file.name);
+
+                ipcRenderer.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'media/files'
+                }); 
+
+                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+                });
+            });
         }
     },
     beforeDestroy () {
@@ -450,6 +515,10 @@ h1 {
     min-width: 60rem;   
     padding: 4rem;   
 
+    &.popup-link-add {
+        overflow: visible;
+    }
+
     .field {
         .switcher {
             float: left;
@@ -470,5 +539,13 @@ h1 {
     position: relative;
     text-align: center;
     top: 1px;
+
+    & > .button {
+        border-radius: 0 0 0 .6rem;
+
+        & + .button {
+            border-radius: 0 0 .6rem 0;
+        }
+    }
 }
 </style>

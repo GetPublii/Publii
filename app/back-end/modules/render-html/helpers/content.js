@@ -447,6 +447,7 @@ class ContentHelper {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'file');
 
         return text;
     }
@@ -463,18 +464,38 @@ class ContentHelper {
     static prepareInternalLinks(text, renderer, type) {
         // Extract URLs
         let regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/[0-9]{1,}', 'gmi');
+
+        if (type === 'file') {
+            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?\"', 'gmi');
+        }
+
         let urls = [...new Set(text.match(regexp))];
 
+        // We need to remove trailing '"' char from the files matches
+        if (type === 'file') {
+            urls = urls.map(file => file.replace(/"$/, ''));
+        }
+
         // When there is no internal links of given type - return unmodified text
-        if(urls.length === 0) {
+        if (urls.length === 0) {
             return text;
         }
 
         // Get proper URLs for frontpage
-        if(type === 'frontpage') {
+        if (type === 'frontpage') {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
             text = text.split(url).join(link);
+
+            return text;
+        }
+
+        // Get proper URLs for the files
+        if (type === 'file') {
+            for (let url of urls) {
+                let link = url.replace('#INTERNAL_LINK#/file/', renderer.siteConfig.domain + '/');
+                text = text.split(url).join(link);
+            }
 
             return text;
         }

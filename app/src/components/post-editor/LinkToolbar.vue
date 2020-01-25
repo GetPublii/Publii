@@ -50,6 +50,7 @@ export default {
 
             if(response) {
                 let relAttr = [];
+                let downloadAttr = '';
 
                 if (response.rel && response.rel.nofollow) {
                     relAttr.push('nofollow');
@@ -72,7 +73,11 @@ export default {
                     relAttr = ' rel="' + relAttr.join(' ') + '"';
                 }
 
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}>${response.text}</a>`;
+                if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
+                    downloadAttr = ' download="true" '
+                }
+
+                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
                 tinymce.activeEditor.selection.setContent(linkHTML);
             } else {
                 let sel = this.win.getSelection();

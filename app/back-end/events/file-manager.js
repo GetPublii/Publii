@@ -13,7 +13,7 @@ class FileManagerEvents {
      *
      * @param appInstance
      */
-    constructor(appInstance) {
+    constructor (appInstance) {
         let self = this;
         this.app = appInstance;
 

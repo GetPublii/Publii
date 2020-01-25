@@ -1,22 +1,21 @@
 <template>
     <section class="content tools">
-         <div class="tools-container">
-        <p-header title="Tools" />
+        <div class="tools-container">
+            <p-header title="Tools" />
 
-        <div class="tools-list">
-            <div
-                v-for="(item, key) in items">
-                <router-link :to="getUrl(item.link)">
-                    <icon
-                        :name="item.icon"
-                        customWidth="50"
-                        customHeight="46" />
-                    {{ item.name }}
-                </router-link>
+            <div class="tools-list">
+                <div
+                    v-for="(item, key) in items">
+                    <router-link :to="getUrl(item.link)">
+                        <icon
+                            :name="item.icon"
+                            customWidth="50"
+                            customHeight="46" />
+                        {{ item.name }}
+                    </router-link>
+                </div>
             </div>
         </div>
-
-              </div>
     </section>
 </template>
 
