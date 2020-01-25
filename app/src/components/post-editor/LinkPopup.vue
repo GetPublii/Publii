@@ -452,8 +452,6 @@ export default {
                     relAttr = ' rel="' + relAttr.join(' ') + '"';
                 }
 
-                console.log(response.url);
-
                 if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
                     downloadAttr = ' download="true" '
                 }
