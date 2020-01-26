@@ -74,6 +74,7 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             sidebarVisible: false,
+            filesList: null,
             postData: {
                 editor: this.$options.editorType,
                 title: '',
@@ -171,10 +172,30 @@ export default {
                 this.webview.send('set-app-theme', this.$store.state.app.theme);
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
-                this.webview.send('set-current-site-data', {
-                    tags: this.$store.state.currentSite.tags,
-                    posts: this.$store.state.currentSite.posts,
-                    authors: this.$store.state.currentSite.authors
+                
+                ipcRenderer.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'root-files'
+                });
+
+                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                    this.filesList = data.map(file => file.name);
+
+                    ipcRenderer.send('app-file-manager-list', {
+                        siteName: this.$store.state.currentSite.config.name,
+                        dirPath: 'media/files'
+                    }); 
+
+                    ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                        this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+
+                        this.webview.send('set-current-site-data', {
+                            tags: this.$store.state.currentSite.tags,
+                            posts: this.$store.state.currentSite.posts,
+                            authors: this.$store.state.currentSite.authors,
+                            files: this.filesList
+                        });
+                    });
                 });
             }, 0);
 
