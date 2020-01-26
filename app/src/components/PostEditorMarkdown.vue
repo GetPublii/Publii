@@ -364,11 +364,16 @@ export default {
                 margin: 0 auto;
                 max-width: 720px;
                 position: relative;
-                z-index: 0;
+                z-index: 1000;
 
                 .CodeMirror {
                     border: none;
+                    height: auto!important;
                     padding: 0;
+                }
+
+                .CodeMirror-advanced-dialog + .CodeMirror {
+                    padding-bottom: 80px;
                 }
             }
        }
