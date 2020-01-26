@@ -303,7 +303,7 @@ export default {
             let targetContent = content.match(/target="(.*?)"/);
             let urlContent = content.match(/href="(.*?)"/);
             let relContent = content.match(/rel="(.*?)"/);
-            let downloadContent = content.match(/<a.*?(download="true").*?>/);
+            let downloadContent = content.match(/<a.*?(download="download").*?>/);
 
             this.type = 'post';
 
@@ -453,7 +453,7 @@ export default {
                 }
 
                 if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
-                    downloadAttr = ' download="true" '
+                    downloadAttr = ' download="download" '
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;

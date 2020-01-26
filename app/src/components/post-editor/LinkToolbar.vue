@@ -74,7 +74,7 @@ export default {
                 }
 
                 if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
-                    downloadAttr = ' download="true" '
+                    downloadAttr = ' download="download" '
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;

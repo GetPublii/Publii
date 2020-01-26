@@ -56,6 +56,9 @@ class ContentHelper {
         if (preparedText.indexOf('class="post__toc') === -1) {
            preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, ''); 
         }
+
+        // Reduce download="download" to download
+        preparedText = preparedText.replace(/download="download"/gmi, 'download');
     
         // Remove contenteditable attributes
         preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
