@@ -75,7 +75,7 @@ export default {
     }
 
     &.line > .separator-wrapper:before {
-        border-top: 1px dashed var(--input-border-color);
+        border-top: 2px solid var(--input-border-color);
         content: "";
         left: 0;
         position: absolute;
@@ -90,9 +90,9 @@ export default {
         & > label {
             background: var(--bg-primary);
             color: var(--headings-color);
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 600;
-            padding-right: .5rem;
+            padding-right: .75rem;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);

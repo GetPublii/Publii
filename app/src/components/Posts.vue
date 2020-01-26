@@ -172,7 +172,7 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="trash"
-                        type="small light icon"
+                        type="small light icon delete"
                         :onClick="bulkTrash">
                         Move to trash
                     </p-button>

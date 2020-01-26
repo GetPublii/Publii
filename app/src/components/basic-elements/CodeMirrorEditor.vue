@@ -88,11 +88,11 @@ export default {
     background: var(--bg-primary);
     border: none;
     bottom: 0;
-    box-shadow: 0 0 1px var(--input-border-color);
+    box-shadow: 0 0 0 1px var(--input-border-color);
     display: block;
     left: 0;
     padding: 2rem 5rem 1rem;
-    position: absolute;
+    position: fixed;
     width: 100%;
     z-index: 102;
 
@@ -109,7 +109,7 @@ export default {
 
         & > input {
             background: var(--input-bg);
-            border: 1px solid var(-input-border-color);
+            border: 1px solid var(--input-border-color);
             border-radius: 30px;
             box-shadow: none!important;            
             float: left;

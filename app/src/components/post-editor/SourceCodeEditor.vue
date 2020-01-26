@@ -99,6 +99,7 @@ export default {
 
     .CodeMirror-wrap {
         display: block;
+        min-height: calc(100vh - 10rem); 
         padding: 0;
         width: 100%;
     }
@@ -112,15 +113,6 @@ export default {
  * Special styles for win & linux
  */
 
-body[data-os="win"] {
-    .source-code-editor {      
-
-        .CodeMirror-wrap {
-            height: 100%;
-        }
-    }
-}
-
 body[data-os="linux"] {
     .source-code-editor {
         height: calc(100vh - 7.8rem)!important;
@@ -131,7 +123,7 @@ body[data-os="linux"] {
         }
 
         .CodeMirror-wrap {
-            height: 100%;
+            min-height: calc(100vh - 7.8rem);
         }
     }
 }

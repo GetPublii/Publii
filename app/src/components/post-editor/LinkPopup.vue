@@ -244,7 +244,7 @@ export default {
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'external': return 'External link';
-                case 'file': return 'File from file manager';
+                case 'file': return 'File from File Manager';
             }
         },
         customTagLabels (value) {

@@ -457,6 +457,10 @@ body {
                             background: var(--button-hover-bg);
                             color: var(--white);
                         }
+                        
+                        &[disabled] {                           
+                            cursor: not-allowed;
+                        }
 
                         &--secondary {
                             background: var(--popup-btn-cancel-bg);
@@ -543,7 +547,13 @@ body {
                 border-color: var(--input-border-color);
                 color: var(--icon-tertiary-color) !important;
             }
-        }
+            
+            &[disabled] {
+                background-color: transparent;
+                border-color: transparent;
+                color: var(--icon-secondary-color);
+            }
+        }        
         
         .tox-tbtn {
             color: var(--text-primary-color);
