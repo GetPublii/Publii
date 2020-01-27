@@ -14,6 +14,7 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
+                        @keydown="detectEnterInTitle"
                         @keyup="updateTitle" />   
 
                     <vue-simplemde 
@@ -173,6 +174,12 @@ export default {
         inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
     },
     methods: {
+        detectEnterInTitle (event) {
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                this.simplemde.codemirror.focus();
+            }
+        },
         updateTitle () {
             this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
             this.updateSlug();
@@ -356,6 +363,10 @@ export default {
 
                     &:before {
                         content: "Add post title"
+                    }
+
+                    &:focus:before {
+                        content: "";
                     }
                 }
             }
