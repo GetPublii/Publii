@@ -45,6 +45,10 @@ class EditorBridge {
         tinymce.init(editorConfig);
     }
 
+    focus () {
+        this.tinymceEditor.focus();
+    }
+
     setupEditor(customFormats, editor) {
         let self = this;
         this.tinymceEditor = editor;

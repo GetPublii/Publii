@@ -23,6 +23,9 @@ export default {
             } else {
                 this.editorInstance.reloadEditor();
             }
+        },
+        focus () {
+            this.editorInstance.focus();
         }
     },
     beforeDestroy () {

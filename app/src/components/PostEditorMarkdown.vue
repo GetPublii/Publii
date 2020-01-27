@@ -14,6 +14,7 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         @keydown="detectEnterInTitle"
                         @keyup="updateTitle" />   
 

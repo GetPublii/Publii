@@ -6,14 +6,14 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <input
+                    <div
                         id="post-title"
                         ref="post-title"
                         class="post-editor-form-title"
-                        placeholder="Add post title"
+                        contenteditable="true"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                        v-model="postData.title"
-                        @keyup="updateSlug" />                    
+                        @keydown="detectEnterInTitle"
+                        @keyup="updateTitle" />                
 
                     <editor ref="tinymceEditor" />
 
@@ -151,7 +151,6 @@ export default {
             this.newPost = false;
             this.loadPostData();
         } else {
-            this.$refs['post-title'].focus();
             this.$refs['tinymceEditor'].init();
             this.setDataLossWatcher();
         }
@@ -172,6 +171,16 @@ export default {
         });
     },
     methods: {
+        updateTitle () {
+            this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
+            this.updateSlug();
+        },
+        detectEnterInTitle (event) {
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                this.$refs['tinymceEditor'].focus();
+            }
+        },
         loadPostData () {
             // Send request for a post to the back-end
             ipcRenderer.send('app-post-load', {
@@ -321,12 +330,10 @@ export default {
 
     &-form {
         #post-title {
-            background: none;
             border: none;
             box-shadow: none;
-            color: var(--text-primary-color);
             display: block;
-            font-family: var(--font-base);
+            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             font-size: 3.5rem;
             font-weight: 600;
             line-height: 1.2;
@@ -334,9 +341,17 @@ export default {
             padding: 0;
             text-align: center;
             width: 80%;
-            
-            &::placeholder {
+
+            &:empty {
                 color: var(--gray-3); 
+
+                &:before {
+                    content: "Add post title"
+                }
+
+                &:focus:before {
+                    content: "";
+                }
             }
         }
 
