@@ -3,15 +3,6 @@
         <topbar-appbar />
 
         <div class="topbar-inner">           
-            <icon                   
-                customWidth="63"
-                customHeight="26" 
-                class="topbar-logo"
-                name="logo" />
-            
-            <topbar-notification />
-            <topbar-sites v-if="displayIcon" />
-            <topbar-preview-link v-if="displayIcon" />
             <div 
                 @click="toggleTheme()"
                 class="topbar-darkmode-switcher">
@@ -42,32 +33,15 @@
 <script>
 import { ipcRenderer } from 'electron';
 import TopBarAppBar from './TopBarAppBar';
-import TopBarSites from './TopBarSites';
 import TopBarNotification from './TopBarNotification';
 import TopBarDropDown from './TopBarDropDown';
-import TopBarPreviewLink from './TopBarPreviewLink';
 
 export default {
     name: 'topbar',
     components: {
         'topbar-appbar': TopBarAppBar,
-        'topbar-sites': TopBarSites,
         'topbar-notification': TopBarNotification,
-        'topbar-dropdown': TopBarDropDown,
-        'topbar-preview-link': TopBarPreviewLink
-    },
-    computed: {
-        displayIcon: function() {
-            let excludedPaths = [
-                '/site/!/posts'
-            ];
-
-            if (excludedPaths.indexOf(this.$route.path) > -1) {
-                return false;
-            }
-
-            return true;
-        }
+        'topbar-dropdown': TopBarDropDown
     },
     methods: {
         toggleTheme () {
@@ -101,7 +75,7 @@ export default {
 .topbar {
     background: var(--gray-1);
     font-size: 1.6rem;
-    height: 7.8rem;
+    height: 2.2rem;
     position: absolute;
     top: 0;
     -webkit-app-region: no-drag;
@@ -110,21 +84,14 @@ export default {
 
     & > .topbar-inner {
         align-items: center;
-        background: var(--bg-secondary);
-        box-shadow: 0 0 1px rgba(0, 0, 0, .3);
         display: flex;
         height: 5.6rem;        
-        padding: 0 calc(3rem - 3px) 0 5rem;
+        padding: 0;
         position: absolute;
+        right: 0;
         top: 2.2rem;
-        width: 100%;
+        width: 100px;
         z-index: 102;
-    }
-
-    &-logo {
-        fill: var(--icon-tertiary-color);
-        display: block;    
-        margin-right: auto;
     }
     
     &-darkmode-switcher {
@@ -153,7 +120,7 @@ export default {
 
 body[data-os="linux"] {
     .topbar {
-        height: 5.6rem;
+        height: 0;
 
         & > .topbar-inner {
             top: 0;

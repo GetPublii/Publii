@@ -75,18 +75,18 @@ export default {
 
 .source-code-editor {
     background: var(--bg-primary);
-    height: calc(100vh - 10rem)!important;
+    height: calc(100vh - 8rem)!important;
     left: 0;   
     overflow: hidden;
     position: absolute;
-    top: 10rem;
+    top: 8rem;
     width: 100vw;
     z-index: 99999;
     
     &::before {
         background: var(--bg-primary);
         content: "";        
-        height: 10rem;
+        height: 8rem;
         position: fixed;
         top: 0;
         left: 0;
@@ -99,7 +99,7 @@ export default {
 
     .CodeMirror-wrap {
         display: block;
-        min-height: calc(100vh - 10rem); 
+        min-height: calc(100vh - 8rem); 
         padding: 0;
         width: 100%;
     }
@@ -115,15 +115,15 @@ export default {
 
 body[data-os="linux"] {
     .source-code-editor {
-        height: calc(100vh - 7.8rem)!important;
-        top: 7.8rem;
+        height: calc(100vh - 6rem)!important;
+        top: 6rem;
         
         &::before {
-            height: 7.8rem;            
+            height: 6rem;            
         }
 
         .CodeMirror-wrap {
-            min-height: calc(100vh - 7.8rem);
+            min-height: calc(100vh - 6rem);
         }
     }
 }

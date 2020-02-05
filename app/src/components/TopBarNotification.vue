@@ -114,14 +114,16 @@ export default {
     &-notification {
         -webkit-app-region: no-drag; // Make the links clickable again   
         align-items: center;
-        border-right: 1px solid var(--border-light-color);
         display: inline-flex;
         font-size: 1.4rem;
         font-weight: 400;
-        margin: 0 2rem 0 0;
-        order: 1;
+        left: 350px;
+        margin: 0;
         padding: .9rem 2rem;
-        position: relative;
+        position: fixed;
+        top: 2.2rem;
+        width: calc(100vw - 450px);
+        z-index: 102;
 
         &-close {
             -webkit-app-region: no-drag; // Make the button clickable again  
@@ -148,6 +150,14 @@ export default {
             &:hover {
                background: var(--input-border-color);
             }  
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .topbar {
+        &-notification {
+            top: 0;
         }
     }
 }

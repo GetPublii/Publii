@@ -161,14 +161,14 @@
 
 .source-code-editor {
     .CodeMirror {
-        min-height: calc(100vh - 10rem); 
+        min-height: calc(100vh - 8rem); 
     }
 }
 
 body[data-os="linux"] {
     .source-code-editor {        
         .CodeMirror {
-            min-height: calc(100vh - 7.8rem);
+            min-height: calc(100vh - 6rem);
         }
     }
 }

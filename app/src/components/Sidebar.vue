@@ -1,5 +1,6 @@
 <template>
     <aside class="sidebar">
+        <topbar-sites />
         <sidebar-menu />
         <sidebar-sync-button />
     </aside>
@@ -8,12 +9,14 @@
 <script>
 import SidebarMenu from './SidebarMenu';
 import SidebarSyncButton from './SidebarSyncButton';
+import TopBarSites from './TopBarSites';
 
 export default {
     name: 'sidebar',
     components: {
         'sidebar-menu': SidebarMenu,
-        'sidebar-sync-button': SidebarSyncButton
+        'sidebar-sync-button': SidebarSyncButton,
+        'topbar-sites': TopBarSites
     }
 }
 </script>
