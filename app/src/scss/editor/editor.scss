@@ -96,15 +96,15 @@ hr {
 blockquote,
 figure,
 .gallery {
-    margin-top: baseline(9);
-    margin-bottom: baseline(9);
+    margin-top: baseline(8);
+    margin-bottom: baseline(8);
 }
 
 pre,
 table,
 script {
-    margin-top: baseline(6);
-    margin-bottom: baseline(8);
+    margin-top: baseline(5);
+    margin-bottom: baseline(7);
 }
 
 h1,
@@ -118,7 +118,7 @@ h6 {
     font-weight: var(--font-weight-bold);
     letter-spacing: -0.03rem;
     line-height: 1.3;
-    margin-top: baseline(9);
+    margin-top: baseline(7);
 }
 
 h1 {
@@ -152,7 +152,7 @@ h4,
 h5,
 h6 {
     & + p {
-        margin-top: baseline(4);
+        margin-top: baseline(3);
     }
 }
 
@@ -184,7 +184,7 @@ blockquote {
 
 ul,
 ol {
-    margin-left: 2rem;
+    margin-left: 2rem;  
 
     & > li {
         list-style: inherit;
