@@ -732,6 +732,11 @@
                                 type="text"
                                 spellcheck="false"
                                 v-model="advanced.openGraphAppId" />
+                            <small
+                                slot="note"
+                                class="note">
+                                Read how to obtain <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
+                            </small>
                         </field>
                     </div>
 
@@ -878,7 +883,7 @@
                             <small
                                 class="note"
                                 slot="note">
-                                Facebook App ID
+                                Please provide <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
                             </small>
                         </field>
 
