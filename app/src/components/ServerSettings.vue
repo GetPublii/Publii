@@ -7,6 +7,14 @@
                 v-if="deploymentMethodSelected !== ''" 
                 title="Server Settings">
                 <p-button
+                    @click.native="deploymentMethodSelected = ''"
+                    slot="buttons"
+                    title="Click to change currently used deployment method"
+                    type="outline">
+                    Change deployment method
+                </p-button>
+
+                <p-button
                     @click.native="visitWebsite"
                     slot="buttons"
                     :type="siteIsOnline ? 'outline' : 'outline disabled-with-events'"
@@ -23,7 +31,7 @@
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
-                title="Select server type:">
+                title="Select deployment method:">
             </p-header>
 
             <div 
@@ -133,36 +141,6 @@
                         slot="note">
                         Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
-                </field>
-
-                <field
-                    id="relative-urls"
-                    label=" ">
-                    <switcher
-                        slot="field"
-                        id="relative-urls"
-                        key="relative-urls"
-                        v-model="deploymentSettings.relativeUrls"
-                        @click.native="toggleDomainName" />
-                    <template slot="second-label">
-                        Use relative URLs
-                    </template>
-                    <small
-                        class="note"
-                        slot="note">
-                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
-                    </small>
-                </field>
-
-                <field
-                    id="deploymentMethod"
-                    label="Protocol">
-                    <dropdown
-                        slot="field"
-                        id="deploymentMethod"
-                        key="protocol"
-                        :items="deploymentMethods"
-                        v-model="deploymentMethodSelected"></dropdown>
 
                     <small
                         class="note"
@@ -205,6 +183,25 @@
                         slot="note"
                         v-if="deploymentMethodSelected === 'google-cloud'">
                         Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                    </small>
+                </field>
+
+                <field
+                    id="relative-urls"
+                    label=" ">
+                    <switcher
+                        slot="field"
+                        id="relative-urls"
+                        key="relative-urls"
+                        v-model="deploymentSettings.relativeUrls"
+                        @click.native="toggleDomainName" />
+                    <template slot="second-label">
+                        Use relative URLs
+                    </template>
+                    <small
+                        class="note"
+                        slot="note">
+                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
