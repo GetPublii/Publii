@@ -36,6 +36,12 @@
                 {{ errorMessage }}
             </div>
 
+            <small 
+                v-if="!stats"
+                class="note">
+                Posts will be imported as compatible with the WYSIWYG editor.
+            </small>
+
             <wp-import-stats
                 v-if="stats"
                 :stats="stats" />
