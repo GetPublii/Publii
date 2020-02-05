@@ -98,7 +98,7 @@ export default {
                 selector: 'textarea[data-id="' + this.editorID + '"]',
                 content_css: this.getTinyMCECSSFiles(),
                 plugins: "autolink link lists paste code",
-                toolbar1: "bold italic link unlink blockquote alignleft aligncenter alignright alignjustify bullist numlist",
+                toolbar1: "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist",
                 toolbar2: secondToolbarStructure,
                 toolbar3: "",
                 preview_styles: false,
