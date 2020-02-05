@@ -44,6 +44,11 @@
                     id="images-resize-engine"
                     :items="imageResizeEngines"
                     v-model="imageResizeEnginesSelected"></dropdown>
+                <small
+                    slot="note"
+                    class="note">
+                    Sharp resize engine is much faster than Jimp, but is also less stable. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine.
+                </small>
             </field>
 
             <field
