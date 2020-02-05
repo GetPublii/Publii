@@ -106,7 +106,7 @@
                         v-for="(groupName, index) of customSettingsTabs"
                         :slot="'tab-' + index"
                         :key="'tab-' + index">
-                        <div v-if="groupName !== 'Post options'">
+                        <div v-if="groupName !== 'Post options' && groupName !== 'Translations'">
                             <field
                                 v-for="(field, subindex) of getFieldsByGroupName(groupName)"
                                 v-if="checkDependencies(field.dependencies)"
@@ -289,6 +289,16 @@
                                 </small>
                             </field>
                         </div>
+
+                        <div v-if="groupName === 'Translations'">
+                            <field>
+                                <small
+                                    slot="note"
+                                    class="note">
+                                    If you need to translate theme phrases to languages other than english - please check our documentation regarding <a href="https://getpublii.com/dev/translations-api/" target="_blank" rel="noopener">Translations API</a><br><br>
+                                </small>
+                            </field>
+                        </div>
                     </div>
                 </tabs>
             </fields-group>
@@ -369,6 +379,7 @@ export default {
             });
 
             tabs.push('Post options');
+            tabs.push('Translations');
 
             return tabs;
         },
