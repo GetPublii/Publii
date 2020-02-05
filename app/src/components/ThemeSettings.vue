@@ -31,7 +31,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.postsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -41,7 +48,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.tagsPostsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all tag posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -51,7 +65,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.authorsPostsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all authors posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -61,6 +82,8 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="0"
+                        step="1"
                         v-model="basic.excerptLength" />
                 </field>
 
