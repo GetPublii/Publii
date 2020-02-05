@@ -49,7 +49,7 @@ export default {
                 url: '/site/' + siteName + '/settings/themes/'
             }, {
                 icon: 'settings',
-                label: 'Settings',
+                label: 'Site settings',
                 url: '/site/' + siteName + '/settings/'
             }, {
                 icon: 'server',
