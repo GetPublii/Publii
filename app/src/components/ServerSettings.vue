@@ -29,6 +29,32 @@
                 </p-button>
             </p-header>
 
+            <div class="deployment-notice" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                <template v-if="deploymentMethodSelected === 'ftp'">
+                    The FTP protocol uses an unencrypted transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'netlify'">
+                    Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'github-pages'">
+                    Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'gitlab-pages'">
+                    Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
+                </template>
+
+               <template v-if="deploymentMethodSelected === 's3'">
+                    Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'google-cloud'">
+                    Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                </template>
+            </div>
+
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
                 title="Select deployment method:">
@@ -140,49 +166,6 @@
                         class="note"
                         slot="note">
                         Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'ftp'">
-                        The FTP protocol uses an unencrypted transmission.<br>
-                        We strongly recommend to use FTPS or SFTP protocols if possible.
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'netlify'">
-                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'github-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'gitlab-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 's3'">
-                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'google-cloud'">
-                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
                     </small>
                 </field>
 
