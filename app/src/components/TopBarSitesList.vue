@@ -63,7 +63,6 @@ export default {
 @import '../scss/variables.scss';
 
 .sites {
-   
     &-list {
         clear: both;
         list-style-type: none;
@@ -80,6 +79,6 @@ export default {
 
 .empty-state {
     color: var(--text-light-color);
-    line-height: 350px;
+    line-height: 47px;
 }
 </style>
