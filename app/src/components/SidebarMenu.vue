@@ -44,10 +44,6 @@ export default {
                 label: 'Authors',
                 url: '/site/' + siteName + '/authors/'
             }, {
-                icon: 'server',
-                label: 'Server',
-                url: '/site/' + siteName + '/settings/server/'
-            }, {
                 icon: 'themes',
                 label: 'Theme',
                 url: '/site/' + siteName + '/settings/themes/'
@@ -55,6 +51,10 @@ export default {
                 icon: 'settings',
                 label: 'Settings',
                 url: '/site/' + siteName + '/settings/'
+            }, {
+                icon: 'server',
+                label: 'Server',
+                url: '/site/' + siteName + '/settings/server/'
             }, {
                 icon: 'tools',
                 label: 'Tools',
