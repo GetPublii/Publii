@@ -98,7 +98,7 @@ export default {
      background: transparent;
      bottom: 0;
      pointer-events: none;
-     position: absolute;
+     position: fixed;
      left: 50%;
      top: 4.2rem;
      transform: translate(-50%, 0);
