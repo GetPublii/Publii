@@ -40,6 +40,10 @@ export default {
         state.app.theme = newTheme;
     },
     setSiteDir (state, newSitesLocation) {
+        if (!state.currentSite.siteDir) {
+            return;
+        }
+
         state.currentSite.siteDir = state.currentSite.siteDir.replace(
             state.app.config.sitesLocation,
             newSitesLocation
