@@ -164,7 +164,7 @@ const AstCurrentSiteConfig = {
             prefix: ''
         },
         manual: {
-            output: '',
+            output: 'catalog',
             outputDirectory: ''
         }
     }

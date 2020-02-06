@@ -46,7 +46,7 @@
                     Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
                 </template>
 
-               <template v-if="deploymentMethodSelected === 's3'">
+                <template v-if="deploymentMethodSelected === 's3'">
                     Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
                 </template>
 
@@ -789,7 +789,7 @@
                         slot="field"
                         id="manual-output"
                         key="manual-output"
-                        :items="{ '': 'Select output type', 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
+                        :items="{ 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
                         :class="{ 'is-invalid': errors.indexOf('manual-output') > -1 }"
                         @click.native="cleanError('manual-output')"
                         v-model="deploymentSettings.manual.output"></dropdown>
@@ -935,6 +935,10 @@ export default {
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
         Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment))));
+
+        if (this.deploymentSettings.manual.output === '') {
+            this.deploymentSettings.manual.output = 'catalog';
+        }
 
         setTimeout(() => {
             this.setPortValue();
