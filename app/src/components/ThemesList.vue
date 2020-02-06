@@ -70,28 +70,7 @@ export default {
                 sourcePath: e.dataTransfer.files[0].path
             });
 
-            ipcRenderer.once('app-theme-uploaded', this.uploadedTheme);
-        },
-        uploadedTheme (event, data) {
-            this.$store.commit('replaceAppThemes', data.themes);
-            this.$store.commit('updateSiteThemes');
-
-            let messageConfig = {
-                message: '',
-                type: 'success',
-                lifeTime: 3
-            };
-
-            if(data.status === 'added') {
-                messageConfig.message = 'Theme has been successfully added.';
-            } else if(data.status === 'updated') {
-                messageConfig.message = 'Theme has been successfully updated.';
-            } else if(data.status === 'wrong-format') {
-                messageConfig.message = 'The uploaded files are incorrect. Please upload theme directory or theme ZIP file.';
-                messageConfig.type = 'warning';
-            }
-
-            this.$bus.$emit('message-display', messageConfig);
+            ipcRenderer.once('app-theme-uploaded', this.$parent.uploadedTheme);
         }
     }
 }
