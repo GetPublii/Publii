@@ -1,6 +1,6 @@
 <template>
     <section class="settings site-settings-app">
-        <p-header title="Global Settings">
+        <p-header title="App Settings">
             <p-button
                 :onClick="goBack"
                 type="outline"
@@ -139,7 +139,7 @@
                 label="Backup location">
                 <dir-select
                     id="backups-location"
-                    placeholder="Set it if you want to use backup tool"
+                    placeholder="Leave blank to use default backups directory"
                     v-model="locations.backups"
                     slot="field" />
                 <small

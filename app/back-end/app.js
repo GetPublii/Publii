@@ -103,6 +103,10 @@ class App {
         if (!fs.existsSync(path.join(this.appDir, 'logs'))) {
             fs.mkdirSync(path.join(this.appDir, 'logs'));
         }
+
+        if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
+            fs.mkdirSync(path.join(this.appDir, 'backups'));
+        }
     }
 
     /**

@@ -8,6 +8,11 @@ class BackupEvents {
     constructor(appInstance) {
         let self = this;
         this.app = appInstance;
+        this.backupsLocation = this.app.appConfig.backupsLocation;
+
+        if (this.backupsLocation === '') {
+            this.backupsLocation = path.join(this.app.appDir, 'backups');
+        }
 
         ipcMain.on('app-backups-list-load', function (event, siteData) {
             if(siteData.site) {
@@ -61,7 +66,7 @@ class BackupEvents {
     }
 
     loadBackupsList(siteName, event) {
-        let backups = Backup.loadList(siteName, this.app.appConfig.backupsLocation || '');
+        let backups = Backup.loadList(siteName, this.backupsLocation);
 
         event.sender.send('app-backups-list-loaded', {
             status: true,
@@ -70,7 +75,7 @@ class BackupEvents {
     }
 
     async removeBackups(siteName, backupsNames, event) {
-        let result = await Backup.remove(siteName, backupsNames, this.app.appConfig.backupsLocation);
+        let result = await Backup.remove(siteName, backupsNames, this.backupsLocation);
 
         event.sender.send('app-backup-removed', {
             status: result.status,
@@ -79,7 +84,7 @@ class BackupEvents {
     }
 
     renameBackup(siteName, oldBackupName, newBackupName, event) {
-        let result = Backup.rename(siteName, oldBackupName, newBackupName, this.app.appConfig.backupsLocation);
+        let result = Backup.rename(siteName, oldBackupName, newBackupName, this.backupsLocation);
 
         event.sender.send('app-backup-renamed', {
             status: result.status,
@@ -88,7 +93,7 @@ class BackupEvents {
     }
 
     createBackup(siteName, filename, event) {
-        let backupsDir = this.app.appConfig.backupsLocation;
+        let backupsDir = this.backupsLocation;
         let sourceDir = path.join(this.app.sitesDir, siteName);
         let backupProcess = childProcess.fork(__dirname + '/../workers/backup/create');
 
@@ -115,7 +120,7 @@ class BackupEvents {
     }
 
     restoreBackup(siteName, backupName, event) {
-        let backupsDir = this.app.appConfig.backupsLocation;
+        let backupsDir = this.backupsLocation;
         let destinationDir = this.app.sitesDir;
         let tempDir = path.join(this.app.appDir, 'temp');
         let backupProcess = childProcess.fork(__dirname + '/../workers/backup/restore');

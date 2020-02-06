@@ -1,7 +1,7 @@
 <template>
     <section class="content backups">
         <p-header
-            v-if="!(noLocation || noBackups)"
+            v-if="!noBackups"
             title="Backups">
 
             <p-button
@@ -22,22 +22,6 @@
         </p-header>
 
         <empty-state
-            v-if="noLocation"
-            imageName="backup-path.svg"
-            imageWidth="344"
-            imageHeight="286"
-            title="Set the default backup location."
-            description="Your backup save file path hasn't been specified; let's fix that!">
-            <p-button
-                slot="button"
-                icon="plus"
-                type="icon"
-                :onClick="goToSettings">
-                Add backup location
-            </p-button>
-        </empty-state>
-
-        <empty-state
             v-if="noBackups"
             imageName="backups.svg"
             imageWidth="344"
@@ -55,7 +39,7 @@
             </p-button>
         </empty-state>
 
-        <collection v-if="!(noLocation || noBackups)">
+        <collection v-if="!noBackups">
             <collection-header slot="header">
                 <collection-cell width="40px">
                     <checkbox
@@ -155,7 +139,6 @@ export default {
             items: [],
             operationInProgress: false,
             selectedItems: [],
-            noLocation: this.$store.state.app.config.backupsLocation === '',
             fileToRename: '',
             fileToRestore: ''
         };
