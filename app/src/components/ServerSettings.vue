@@ -5,13 +5,13 @@
         <div class="server-settings">
             <p-header 
                 v-if="deploymentMethodSelected !== ''" 
-                title="Server Settings">
+                :title="getDeploymentMethodName(deploymentMethodSelected) + ' settings'">
                 <p-button
                     @click.native="deploymentMethodSelected = ''"
                     slot="buttons"
                     title="Click to change currently used deployment method"
                     type="outline">
-                    Change deployment method
+                    Change server type
                 </p-button>
 
                 <p-button
@@ -57,7 +57,7 @@
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
-                title="Select deployment method:">
+                title="Select server type:">
             </p-header>
 
             <div 
@@ -121,9 +121,7 @@
                 </div>
             </div>
 
-            <fields-group 
-                v-if="deploymentMethodSelected !== ''"
-                title="Destination Server">
+            <fields-group v-if="deploymentMethodSelected !== ''">
                 <field
                     id="domain"
                     label="Domain">
@@ -1255,6 +1253,22 @@ export default {
             } else {
                 this.domain = '';
             }
+        },
+        getDeploymentMethodName (method) {
+            switch (method) {
+                case 'github-pages': return 'Github Pages';
+                case 'gitlab-pages': return 'GitLab Pages';
+                case 'netlify': return 'Netlify';
+                case 's3': return 'Amazon S3';
+                case 'google-cloud': return 'Google Cloud';
+                case 'ftp': return 'FTP';
+                case 'sftp':
+                case 'sftp+key': return 'SFTP';
+                case 'ftp+tls': return 'FTP with SSL/TLS';
+                case 'manual': return 'Manual upload';
+            }
+
+            return '';
         }
     }
 }
