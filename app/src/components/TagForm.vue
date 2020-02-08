@@ -175,6 +175,8 @@ export default {
         save() {
             if (this.tagData.slug.trim() === '' && this.tagData.name.trim() !== '') {
                 this.tagData.slug = mainProcess.slug(this.tagData.name);
+            } else {
+                this.tagData.slug = mainProcess.slug(this.tagData.slug);
             }
 
             if (!this.validate()) {
@@ -187,6 +189,8 @@ export default {
             this.saveData(tagData);
         },
         validate () {
+            console.log(JSON.stringify(this.tagData));
+
             if (this.tagData.name.trim() === '') {
                 this.errors.push('name');
             }
@@ -195,7 +199,7 @@ export default {
                 this.errors.push('slug');
             }
 
-            if(this.errors.length) {
+            if (this.errors.length) {
                 this.$bus.$emit('message-display', {
                     message: 'Please fill all required fields',
                     type: 'warning',
