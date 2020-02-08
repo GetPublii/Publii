@@ -39,7 +39,7 @@ class Site {
      * Create a new site
      */
     create(authorName) {
-        if(!this.siteExists()) {
+        if (!this.siteExists()) {
             this.createDirectories();
             this.copyDefaultTheme();
             this.createConfigFiles();

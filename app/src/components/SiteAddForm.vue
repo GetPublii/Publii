@@ -152,7 +152,7 @@ export default {
             this.checkWebsiteName();
             this.checkAuthorName();
 
-            if(this.siteNameError || this.authorNameError) {
+            if (this.siteNameError || this.authorNameError) {
                 return true;
             }
 
@@ -161,7 +161,7 @@ export default {
         addWebsite (e) {
             let self = this;
 
-            if(this.formIsInvalid()) {
+            if (this.formIsInvalid()) {
                 return;
             }
 
@@ -170,22 +170,42 @@ export default {
             setTimeout(() => {
                 ipcRenderer.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
 
-                ipcRenderer.once('app-site-created', function(event, data) {
-                    self.overlayIsVisible = false;
-
-                    if(data !== false) {
-                        data.authors = self.setAuthor(data.authorName);
-                        self.$store.commit('addNewSite', data);
-                        window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
-                        self.$router.push(`/site/${data.siteConfig.name}`)
-                    } else {
-                        self.$bus.$emit('alert-display', {
-                            message: 'Site using this name exists!',
-                            textCentered: true
-                        });
-
-                        self.siteNameError = true;
+                ipcRenderer.once('app-site-creation-error', (event, data) => {
+                    this.overlayIsVisible = false;
+                    if (data.name) {
+                        this.siteNameError = true;
                     }
+
+                    if (data.author) {
+                        this.authorNameError = true;
+                    }
+
+                    ipcRenderer.removeAllListeners('app-site-created');
+                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
+                });
+
+                ipcRenderer.once('app-site-creation-duplicate', (event, data) => {
+                    this.overlayIsVisible = false;
+                    this.siteNameError = true;
+
+                    this.$bus.$emit('alert-display', {
+                        message: 'Site using this name exists!',
+                        textCentered: true
+                    });
+
+                    ipcRenderer.removeAllListeners('app-site-created');
+                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                });
+
+                ipcRenderer.once('app-site-created', (event, data) => {
+                    this.overlayIsVisible = false;
+                    data.authors = self.setAuthor(data.authorName);
+                    this.$store.commit('addNewSite', data);
+                    window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
+                    this.$router.push(`/site/${data.siteConfig.name}`);
+                    
+                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
                 });
             }, 250);
         },

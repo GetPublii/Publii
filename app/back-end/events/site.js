@@ -322,8 +322,24 @@ class SiteEvents {
          */
         ipcMain.on('app-site-create', function (event, config, authorName) {
             config.name = slug(config.name);
+
+            if (config.name.trim() === '') {
+                event.sender.send('app-site-creation-error', {
+                    name: config.name.trim() === '',
+                    author: slug(authorName).trim() === ''
+                });
+
+                return;
+            }
+
             let site = new Site(appInstance, config);
             let result = site.create(authorName);
+
+            if (result === false) {
+                event.sender.send('app-site-creation-duplicate');
+                return;
+            }
+
             config.theme = 'simple';
             appInstance.sites[config.name] = config;
 
@@ -337,13 +353,11 @@ class SiteEvents {
 
             appInstance.db = new sqlite(dbPath);
 
-            if(result !== false) {
-                result = {
-                    siteConfig: appInstance.sites[config.name],
-                    siteDir: siteDir,
-                    authorName: authorName
-                }
-            }
+            result = {
+                siteConfig: appInstance.sites[config.name],
+                siteDir: siteDir,
+                authorName: authorName
+            };
 
             event.sender.send('app-site-created', result);
         });
