@@ -36,33 +36,40 @@ class Author extends Model {
      *
      * @returns {object} - object with created/edited author data
      */
-    save() {
-        if(this.name === '') {
+    save () {
+        if (this.name === '') {
             return {
                 status: false,
                 message: 'author-empty-name'
             };
         }
 
-        if(this.username === '' || slug(this.username) === '') {
+        if (this.username === '' || slug(this.username) === '') {
             this.username = slug(this.name);
         }
 
-        if(!this.isAuthorNameUnique()) {
+        if (slug(this.username).trim() === '') {
+            return {
+                status: false,
+                message: 'author-empty-username'
+            };
+        }
+
+        if (!this.isAuthorNameUnique()) {
             return {
                 status: false,
                 message: 'author-duplicate-name'
             };
         }
 
-        if(!this.isAuthorUsernameUnique()) {
+        if (!this.isAuthorUsernameUnique()) {
             return {
                 status: false,
                 message: 'author-duplicate-username'
             };
         }
 
-        if(this.id !== 0) {
+        if (this.id !== 0) {
             return this.updateAuthor();
         }
 

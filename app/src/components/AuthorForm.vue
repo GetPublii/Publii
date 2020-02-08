@@ -204,6 +204,8 @@ export default {
         save () {
             if (this.authorData.username === '') {
                 this.authorData.username = mainProcess.slug(this.authorData.name);
+            } else {
+                this.authorData.username = mainProcess.slug(this.authorData.username);
             }
 
             let authorData = {
@@ -268,22 +270,26 @@ export default {
                 messageConfig.type = 'warning';
             }
 
-            if(message === 'author-duplicate-name') {
+            if (message === 'author-duplicate-name') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('name');
                 messageConfig.message = 'Provided author name is in use. Please try other author name.';
-            } else if(message === 'author-duplicate-username') {
+            } else if (message === 'author-duplicate-username') {
                 this.displayAdvancedOptions = true;
                 this.errors.push('slug');
                 messageConfig.message = 'Provided author name in a similar form (case insensitive) is in use. Please try other author name.';
-            } else if(message === 'author-empty-name') {
+            } else if (message === 'author-empty-name') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('name');
                 messageConfig.message = 'Author name cannot be empty. Please try other name.';
-            } else if(message === 'author-empty-email') {
+            } else if (message === 'author-empty-email') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('email');
                 messageConfig.message = 'In order to use Gravatar service provide the author e-mail at first.';
+            } else if (message === 'author-empty-username') {
+                this.displayAdvancedOptions = false;
+                this.errors.push('slug');
+                messageConfig.message = 'Author slug cannot be empty';
             }
 
             this.$bus.$emit('message-display', messageConfig);
