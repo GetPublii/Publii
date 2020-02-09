@@ -132,6 +132,7 @@ export default {
     position: absolute;
     top: 4.8rem;
     width: 30rem;
+    z-index: 10;
     
     .button {
         font-size: 1.5rem;

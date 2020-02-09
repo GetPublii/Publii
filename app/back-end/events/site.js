@@ -394,8 +394,15 @@ class SiteEvents {
         ipcMain.on('app-site-delete', function (event, config) {
             Site.delete(appInstance, config.site);
             delete appInstance.sites[config.site];
-
             event.sender.send('app-site-deleted', true);
+        });
+
+        /*
+         * Clone website
+         */
+        ipcMain.on('app-site-clone', function (event, config) {
+            let clonedWebsiteData = Site.clone(appInstance, config.catalogName, config.siteName);
+            event.sender.send('app-site-cloned', clonedWebsiteData);
         });
 
         /*

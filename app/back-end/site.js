@@ -419,6 +419,73 @@ class Site {
     }
 
     /*
+     * Clone website
+     */
+    static clone(appInstance, catalogName, siteName) {
+        let sitePath = path.join(appInstance.sitesDir, catalogName);
+        let newCatalogName = Site.findFreeName(catalogName, appInstance.sitesDir);
+        let newSiteName = Site.getClonedSiteName(siteName);
+        let newSitePath = path.join(appInstance.sitesDir, newCatalogName);
+        fs.copySync(sitePath, newSitePath);
+        Site.updateNameInSiteConfig(newSitePath, newCatalogName, newSiteName);
+        
+        return {
+            siteName: newSiteName,
+            siteCatalog: newCatalogName
+        };
+    }
+
+    /**
+     * 
+     * Find first free name
+     * 
+     * e.g. XYZ -> XYZ copy
+     * e.g. XYZ copy -> XYZ copy copy
+     * 
+     * @param {string} name 
+     */
+    static findFreeName (name, basePath) {
+        let baseName = name + '-copy';
+        let dirPath = path.join(basePath, baseName);
+        let currentName = baseName;
+
+        while (UtilsHelper.dirExists(dirPath)) {
+            currentName = baseName + '-copy';
+            dirPath = path.join(basePath, currentName);
+            iterator++;
+        }
+
+        return currentName;
+    }
+
+    /**
+     * Returns new cloned site name with proper " copy X" suffix
+     * 
+     * @param {string} catalogName 
+     * @param {string} siteName 
+     */
+    static getClonedSiteName (siteName) {
+        siteName = siteName + ' copy';
+        return siteName;
+    }
+
+    /**
+     * Update site.config.json to use a new name of the website
+     * 
+     * @param {string} sitePath 
+     * @param {string} newNameSlug 
+     */
+    static updateNameInSiteConfig (sitePath, newSiteSlug, newSiteName) {
+        let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
+        let siteConfig = fs.readFileSync(configFilePath);
+        siteConfig = JSON.parse(siteConfig);
+        siteConfig.name = newSiteSlug;
+        siteConfig.displayName = newSiteName;
+        siteConfig = JSON.stringify(siteConfig, null, 4);
+        fs.writeFileSync(configFilePath, siteConfig);
+    }
+
+    /*
      * Load Custom CSS code
      */
     static loadCustomCSS(appInstance, name) {

@@ -91,6 +91,12 @@ export default {
     removeWebsite (state, name) {
         Vue.delete(state.sites, name);
     },
+    cloneWebsite (state, data) {
+        let copiedData = JSON.parse(JSON.stringify(state.sites[data.clonedWebsiteCatalog]));
+        copiedData.name = data.newSiteCatalog;
+        copiedData.displayName = data.newSiteName;
+        Vue.set(state.sites, data.newSiteCatalog, copiedData);
+    },
     addNewSite (state, siteData) {
         state.currentSite = {
             config: JSON.parse(JSON.stringify(siteData.siteConfig)),

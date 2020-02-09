@@ -1400,6 +1400,17 @@
                 </p-button>
             </fields-group>
 
+            <fields-group title="Clone website">
+                <p>Do you need a copy of this website - clone it.</p>
+
+                <p-button
+                    @click.native="cloneWebsite"
+                    type="icon"
+                    icon="duplicate">
+                    Clone website
+                </p-button>
+            </fields-group>
+
             <p-footer>
                 <p-button
                     @click.native="saveAndPreview"
@@ -1919,6 +1930,28 @@ export default {
                 okClick: this.removeWebsite,
                 hasInput: true,
                 okLabel: 'Remove website'
+            });
+        },
+        cloneWebsite () {
+            ipcRenderer.send('app-site-clone', {
+                catalogName: this.websiteName,
+                siteName: this.name
+            });
+
+            ipcRenderer.once('app-site-cloned', (event, clonedWebsiteData) => {
+                this.$store.commit('cloneWebsite', {
+                    clonedWebsiteCatalog: this.websiteName, 
+                    newSiteName: clonedWebsiteData.siteName, 
+                    newSiteCatalog: clonedWebsiteData.siteCatalog
+                });
+                
+                this.$router.push({ path: `/site/${clonedWebsiteData.siteCatalog}` });
+                window.localStorage.setItem('publii-last-opened-website', clonedWebsiteData.siteCatalog);
+                this.$bus.$emit('message-display', {
+                    message: 'Website has been cloned. Switched to: ' + clonedWebsiteData.siteCatalog,
+                    type: 'success',
+                    lifeTime: 3
+                });
             });
         },
         removeWebsite (name) {
