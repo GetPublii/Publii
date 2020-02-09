@@ -8,6 +8,7 @@ const ipcMain = electron.ipcMain;
 const fs = require('fs');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
+const passwordSafeStorage = require('keytar');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
@@ -91,3 +92,29 @@ exports.selectFiles = function (fieldName = false, filters = []) {
 exports.slug = function (input) {
     return createSlug(input);
 };
+
+// Load password from Keytar
+exports.loadPassword = async function (type, passwordKey) {
+    if (passwordKey.indexOf(type) === 0) {
+        let passwordData = passwordKey.split(' ');
+        let service = passwordData[0];
+        let account = passwordData[1];
+        let retrievedPassword = '';
+
+        if (passwordSafeStorage) {
+            try {
+                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+            } catch (e) {
+                console.log('(!) Cannot retrieve password via keytar');
+            }
+        }
+
+        if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
+            retrievedPassword = '';
+        }
+
+        return retrievedPassword;
+    }
+
+    return '';
+}

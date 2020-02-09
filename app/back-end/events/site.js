@@ -157,8 +157,8 @@ class SiteEvents {
                 let netlifyTokenData = false;
 
                 // Save the password in the keychain
-                if(passwordSafeStorage) {
-                    if(config.settings.deployment.password !== '') {
+                if (passwordSafeStorage) {
+                    if (config.settings.deployment.password !== '') {
                         passwordData = await self.loadPassword(
                             config.settings,
                             'publii',

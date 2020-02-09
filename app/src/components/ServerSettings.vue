@@ -850,11 +850,12 @@
 
 <script>
 import Vue from 'vue';
-import { shell, ipcRenderer } from 'electron';
+import { shell, ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
 import s3ACLs from './configs/s3ACLs.js';
+const mainProcess = remote.require('./main');
 
 export default {
     name: 'server-settings',
@@ -928,11 +929,13 @@ export default {
             }, 0);
         }
     },
-    mounted () {
+    async mounted () {
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
-        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment))));
+        let storedDeploymentSettings = JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment));
+        storedDeploymentSettings = await this.loadPasswords(storedDeploymentSettings);
+        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, storedDeploymentSettings));
 
         if (this.deploymentSettings.manual.output === '') {
             this.deploymentSettings.manual.output = 'catalog';
@@ -1269,6 +1272,33 @@ export default {
             }
 
             return '';
+        },
+        async loadPasswords(deploymentSettings) {
+            deploymentSettings.password = await mainProcess.loadPassword('publii', deploymentSettings.password);
+
+            if (deploymentSettings.passphrase) {
+                deploymentSettings.passphrase = await mainProcess.loadPassword('publii-passphrase', deploymentSettings.passphrase);
+            }
+
+            if (deploymentSettings.s3) {
+                deploymentSettings.s3.id = await mainProcess.loadPassword('publii-s3-id', deploymentSettings.s3.id);
+                deploymentSettings.s3.key = await mainProcess.loadPassword('publii-s3-key', deploymentSettings.s3.key);
+            }
+
+            if (deploymentSettings.netlify) {
+                deploymentSettings.netlify.id = await mainProcess.loadPassword('publii-netlify-id', deploymentSettings.netlify.id);
+                deploymentSettings.netlify.token = await mainProcess.loadPassword('publii-netlify-token', deploymentSettings.netlify.token);
+            }
+
+            if (deploymentSettings.github) {
+                deploymentSettings.github.token = await mainProcess.loadPassword('publii-gh-token', deploymentSettings.github.token);
+            }
+
+            if (deploymentSettings.gitlab) {
+                deploymentSettings.gitlab.token = await mainProcess.loadPassword('publii-gl-token', deploymentSettings.gitlab.token);
+            }
+
+            return deploymentSettings;
         }
     }
 }

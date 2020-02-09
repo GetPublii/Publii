@@ -5,7 +5,6 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
-const passwordSafeStorage = require('keytar');
 const fileExists = require('file-exists');
 const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
@@ -71,11 +70,10 @@ class App {
         }
 
         this.checkThemes();
-        this.loadSites().then(() => {
-            this.loadThemes();
-            this.initWindow();
-            this.initWindowEvents();
-        });
+        this.loadSites();
+        this.loadThemes();
+        this.initWindow();
+        this.initWindowEvents();
     }
 
     /**
@@ -178,9 +176,9 @@ class App {
      *
      * @returns {object}
      */
-    async reloadSite(siteName) {
+    reloadSite(siteName) {
         let siteData = this.switchSite(siteName);
-        let siteConfig = await this.loadSite(siteName);
+        let siteConfig = this.loadSite(siteName);
 
         return {
             data: siteData,
@@ -259,19 +257,19 @@ class App {
      * @param storeInConfig
      * @returns {object}
      */
-    async loadSite(siteName) {
+    loadSite(siteName) {
         let dirPath = path.join(this.sitesDir, siteName);
         let fileStat = fs.statSync(dirPath);
 
         // check directories only
-        if(!fileStat.isDirectory()) {
+        if (!fileStat.isDirectory()) {
             return;
         }
 
         // check if the config file exists
         let configFilePath = path.join(dirPath, 'input', 'config', 'site.config.json');
 
-        if(!fileExists(configFilePath)) {
+        if (!fileExists(configFilePath)) {
             return;
         }
 
@@ -293,16 +291,15 @@ class App {
         // Migrate old author data if necessary
         siteConfig = SiteConfigMigrator.moveOldAuthorData(this, siteConfig);
 
-        // Load passwords
-        siteConfig = await this.loadPasswords(siteConfig);
+        // set site data
         this.sites[siteConfig.name] = JSON.parse(JSON.stringify(siteConfig));
 
-        if(this.sites[siteConfig.name].logo.icon.indexOf('#') > -1) {
+        if (this.sites[siteConfig.name].logo.icon.indexOf('#') > -1) {
             this.sites[siteConfig.name].logo.icon = this.sites[siteConfig.name].logo.icon.split('#')[1];
         }
 
         // Fill displayName fields for old websites without it
-        if(!this.sites[siteConfig.name].displayName) {
+        if (!this.sites[siteConfig.name].displayName) {
             this.sites[siteConfig.name].displayName = siteConfig.name;
         }
 
@@ -312,74 +309,13 @@ class App {
     /**
      * Load websites
      */
-    async loadSites() {
+    loadSites() {
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
 
-        for(let siteName of files) {
-            await this.loadSite(siteName);
+        for (let siteName of files) {
+            this.loadSite(siteName);
         }
-    }
-
-    /**
-     * Load password from Keytar
-     */
-    async loadPassword(type, passwordKey) {
-         if(passwordKey.indexOf(type) === 0) {
-            let passwordData = passwordKey.split(' ');
-            let service = passwordData[0];
-            let account = passwordData[1];
-            let retrievedPassword = '';
-
-            if (passwordSafeStorage) {
-                try {
-                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
-                } catch (e) {
-                    console.log('(!) Cannot retrieve password via keytar');
-                }
-            }
-
-            if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
-                retrievedPassword = '';
-            }
-
-            return retrievedPassword;
-        }
-
-        return '';
-    }
-
-    /**
-     * Load passwords if its are stored in the keychain
-     */
-    async loadPasswords(siteConfig) {
-        if(siteConfig.deployment) {
-            siteConfig.deployment.password = await this.loadPassword('publii', siteConfig.deployment.password);
-
-            if(siteConfig.deployment.passphrase) {
-                siteConfig.deployment.passphrase = await this.loadPassword('publii-passphrase', siteConfig.deployment.passphrase);
-            }
-
-            if(siteConfig.deployment.s3) {
-                siteConfig.deployment.s3.id = await this.loadPassword('publii-s3-id', siteConfig.deployment.s3.id);
-                siteConfig.deployment.s3.key = await this.loadPassword('publii-s3-key', siteConfig.deployment.s3.key);
-            }
-
-            if(siteConfig.deployment.netlify) {
-                siteConfig.deployment.netlify.id = await this.loadPassword('publii-netlify-id', siteConfig.deployment.netlify.id);
-                siteConfig.deployment.netlify.token = await this.loadPassword('publii-netlify-token', siteConfig.deployment.netlify.token);
-            }
-
-            if(siteConfig.deployment.github) {
-                siteConfig.deployment.github.token = await this.loadPassword('publii-gh-token', siteConfig.deployment.github.token);
-            }
-
-            if(siteConfig.deployment.gitlab) {
-                siteConfig.deployment.gitlab.token = await this.loadPassword('publii-gl-token', siteConfig.deployment.gitlab.token);
-            }
-        }
-
-        return siteConfig;
     }
 
     /**
