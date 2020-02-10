@@ -302,9 +302,9 @@ class GoogleCloud {
     }
 
     saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-        let softUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'soft-upload-errors-log.txt');
-        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'hard-upload-errors-log.txt');
+        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
+        let softUploadErrorsPath = path.join(this.deployment.appDir, 'soft-upload-errors-log.txt');
+        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'hard-upload-errors-log.txt');
 
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
         fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors, null, 4));

@@ -52,8 +52,8 @@ class PreviewEvents {
         let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
                 null,
-                fs.openSync(this.app.appDir + "/logs/rendering-process.log", "w"),
-                fs.openSync(this.app.appDir + "/logs/rendering-errors.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/rendering-process.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/rendering-errors.log", "w"),
                 'ipc'
             ]
         });

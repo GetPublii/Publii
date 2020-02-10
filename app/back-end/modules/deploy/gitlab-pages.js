@@ -589,7 +589,7 @@ class GitlabPages {
     }
 
     saveConnectionDebugLog () {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
+        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }

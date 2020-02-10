@@ -601,7 +601,7 @@ class GithubPages {
             }
         });
 
-        let logPath = path.join(this.deployment.appDir, 'logs', 'github-tree.txt');
+        let logPath = path.join(this.deployment.appDir, 'github-tree.txt');
         fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
 
         return this.apiRequest(
@@ -702,7 +702,7 @@ class GithubPages {
     }
 
     saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
+        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
         fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }

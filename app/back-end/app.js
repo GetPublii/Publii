@@ -87,7 +87,6 @@ class App {
             fs.mkdirSync(path.join(this.appDir, 'sites'));
             fs.mkdirSync(path.join(this.appDir, 'config'));
             fs.mkdirSync(path.join(this.appDir, 'themes'));
-            fs.mkdirSync(path.join(this.appDir, 'logs'));
             fs.copySync(
                 path.join(__dirname, '..', 'default-files', 'default-themes').replace('app.asar', 'app.asar.unpacked'),
                 path.join(this.appDir, 'themes'),
@@ -96,10 +95,6 @@ class App {
                     dereference: true
                 }
             );
-        }
-
-        if (!fs.existsSync(path.join(this.appDir, 'logs'))) {
-            fs.mkdirSync(path.join(this.appDir, 'logs'));
         }
 
         if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
@@ -137,7 +132,7 @@ class App {
                         }
                     );
                 } catch (err) {
-                    fs.appendFile(this.appDir + '/logs/themes-copy-errors.txt', JSON.stringify(err));
+                    fs.appendFile(this.app.getPath('logs') + '/themes-copy-errors.txt', JSON.stringify(err));
                 }
             } else {
                 // For existing themes - compare versions
@@ -329,7 +324,7 @@ class App {
         this.dirPaths = {
             sites: normalizePath(path.join(this.appDir, 'sites')),
             temp: normalizePath(path.join(this.appDir, 'temp')),
-            logs: normalizePath(path.join(this.appDir, 'logs'))
+            logs: normalizePath(this.app.getPath('logs'))
         };
     }
 

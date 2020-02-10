@@ -502,8 +502,7 @@ class Deployment {
      */
     saveConnectionLog() {
         let output = this.outputLog.join("\r\n");
-        let logPath = path.join(this.appDir, 'logs', 'connection-log.txt');
-
+        let logPath = path.join(this.appDir, 'connection-log.txt');
         fs.writeFileSync(logPath, output);
     }
 
@@ -514,12 +513,11 @@ class Deployment {
      * @param suffix
      */
     saveConnectionFilesLog(files, suffix = '') {
-        if(suffix !== '') {
+        if (suffix !== '') {
             suffix = '-' + suffix;
         }
 
-        let logPath = path.join(this.appDir, 'logs', 'connection-files-log' + suffix + '.txt');
-
+        let logPath = path.join(this.appDir, 'connection-files-log' + suffix + '.txt');
         fs.writeFileSync(logPath, files);
     }
 
@@ -529,8 +527,7 @@ class Deployment {
      * @param message
      */
     saveConnectionErrorLog(message) {
-        let logPath = path.join(this.appDir, 'logs', 'connection-error-log.txt');
-
+        let logPath = path.join(this.appDir, 'connection-error-log.txt');
         fs.writeFileSync(logPath, message);
     }
 }

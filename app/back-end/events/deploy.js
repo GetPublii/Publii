@@ -77,15 +77,15 @@ class DeployEvents {
         this.rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
                 null,
-                fs.openSync(this.app.appDir + "/logs/rendering-deployment-process.log", "w"),
-                fs.openSync(this.app.appDir + "/logs/rendering-deployment-errors.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/rendering-deployment-process.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/rendering-deployment-errors.log", "w"),
                 'ipc'
             ]
         });
 
         this.rendererProcess.send({
             type: 'dependencies',
-            appDir: this.app.appDir,
+            appDir: this.app.app.getPath('logs'),
             sitesDir: this.app.sitesDir,
             siteConfig: this.app.sites[site],
             postID: false,
@@ -132,8 +132,8 @@ class DeployEvents {
         this.deploymentProcess = childProcess.fork(__dirname + '/../workers/deploy/deployment', {
             stdio: [
                 null,
-                fs.openSync(this.app.appDir + "/logs/deployment-process.log", "w"),
-                fs.openSync(this.app.appDir + "/logs/deployment-errors.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/deployment-process.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/deployment-errors.log", "w"),
                 'ipc'
             ]
         });
@@ -144,7 +144,7 @@ class DeployEvents {
 
         this.deploymentProcess.send({
             type: 'dependencies',
-            appDir: this.app.appDir,
+            appDir: this.app.app.getPath('logs'),
             sitesDir: this.app.sitesDir,
             siteConfig: deploymentConfig
         });
@@ -165,7 +165,7 @@ class DeployEvents {
     }
 
     testConnection(deploymentConfig, siteName) {
-        let deployment = new Deployment(this.app.appDir, this.app.sitesDir, deploymentConfig);
+        let deployment = new Deployment(this.app.app.getPath('logs'), this.app.sitesDir, deploymentConfig);
         deployment.testConnection(this.app, deploymentConfig, siteName);
     }
 }

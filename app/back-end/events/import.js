@@ -40,8 +40,8 @@ class ImportEvents {
         let importProcess = childProcess.fork(__dirname + '/../workers/import/check', {
             stdio: [
                 null,
-                fs.openSync(this.app.appDir + "/logs/import-check-process.log", "w"),
-                fs.openSync(this.app.appDir + "/logs/import-check-errors.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/import-check-process.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/import-check-errors.log", "w"),
                 'ipc'
             ]
         });
@@ -67,8 +67,8 @@ class ImportEvents {
         let importProcess = childProcess.fork(__dirname + '/../workers/import/import', {
             stdio: [
                 null,
-                fs.openSync(this.app.appDir + "/logs/import-process.log", "w"),
-                fs.openSync(this.app.appDir + "/logs/import-errors.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/import-process.log", "w"),
+                fs.openSync(this.app.app.getPath('logs') + "/import-errors.log", "w"),
                 'ipc'
             ]
         });

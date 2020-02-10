@@ -198,7 +198,7 @@ class AppEvents {
          * Load log files list
          */
         ipcMain.on('app-log-files-load', function(event) {
-            let logPath = path.join(appInstance.appDir, 'logs');
+            let logPath = appInstance.app.getPath('logs');
             let files = fs.readdirSync(logPath).filter(function(file) {
                 return file.substr(-4) === '.txt' || file.substr(-4) === '.log';
             });
@@ -212,11 +212,11 @@ class AppEvents {
          * Load specific log file
          */
         ipcMain.on('app-log-file-load', function(event, filename) {
-            let filePath = path.join(appInstance.appDir, 'logs', filename);
+            let filePath = path.join(appInstance.app.getPath('logs'), filename);
             let fileContent = fs.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {
-                fileContent: fileContent
+                fileContent: appInstance.app.getPath('logs') + '-' + fileContent
             });
         });
     }

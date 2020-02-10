@@ -12,7 +12,7 @@ class ThemeUpdatesEvents {
         ipcMain.on('app-theme-updates-retrieve', function(event, downloadNotifications) {
             let updatesHelper = new UpdatesHelper({
                 event: event,
-                filePath: path.join(appInstance.appDir, 'logs', 'theme-updates.json'),
+                filePath: path.join(appInstance.app.getPath('logs'), 'theme-updates.json'),
                 namespace: 'theme-updates',
                 url: 'https://getpublii.com/theme-updates.json',
                 contentField: 'updates',
