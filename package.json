@@ -44,10 +44,11 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
-    "electron-builder": "^21.2.0",
+    "electron-builder": "^22.3.2",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.11",
-    "electron-rebuild": "^1.8.2",
+    "electron-rebuild": "^1.10.0",
+    "electron-updater": "^4.2.0",
     "electron-windows-installer": "^1.4.4",
     "file-loader": "^1.1.4",
     "glob": "^7.1.4",
@@ -120,7 +121,7 @@
       "icon": "build/installation/icon.icns",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "target": "dmg",
+      "target": ["dmg", "zip"],
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "minimumSystemVersion": "10.10"
@@ -132,6 +133,11 @@
       "sign": false,
       "icon": "build/installation/volume.icns",
       "title": "Install Publii"
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "https://dev-zen.com/publii-publish-test/",
+      "channel": "stable"
     }
   },
   "deb": {
