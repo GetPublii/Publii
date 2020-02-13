@@ -1039,6 +1039,8 @@ export default {
             });
         },
         saved (newSettings) {
+            newSettings.deployment = this.setHiddenPasswords(JSON.parse(JSON.stringify(newSettings.deployment)));
+
             this.$store.commit('setSiteConfig', {
                 name: this.$store.state.currentSite.config.name,
                 config: newSettings
@@ -1273,7 +1275,7 @@ export default {
 
             return '';
         },
-        async loadPasswords(deploymentSettings) {
+        async loadPasswords (deploymentSettings) {
             deploymentSettings.password = await mainProcess.loadPassword('publii', deploymentSettings.password);
 
             if (deploymentSettings.passphrase) {
@@ -1296,6 +1298,33 @@ export default {
 
             if (deploymentSettings.gitlab) {
                 deploymentSettings.gitlab.token = await mainProcess.loadPassword('publii-gl-token', deploymentSettings.gitlab.token);
+            }
+
+            return deploymentSettings;
+        },
+        setHiddenPasswords (deploymentSettings) {
+            deploymentSettings.password = 'publii ' + this.$store.state.currentSite.config.name;
+
+            if (deploymentSettings.passphrase) {
+                deploymentSettings.passphrase = 'publii-passphrase ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.s3) {
+                deploymentSettings.s3.id = 'publii-s3-id ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.s3.key = 'publii-s3-key ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.netlify) {
+                deploymentSettings.netlify.id = 'publii-netlify-id ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.netlify.token = 'publii-netlify-token ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.github) {
+                deploymentSettings.github.token = 'publii-gh-token ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.gitlab) {
+                deploymentSettings.gitlab.token = 'publii-gl-token ' + this.$store.state.currentSite.config.name;
             }
 
             return deploymentSettings;
