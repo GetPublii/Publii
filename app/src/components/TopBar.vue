@@ -2,69 +2,21 @@
     <div class="topbar">
         <topbar-appbar />
 
-        <div class="topbar-inner">           
-            <div 
-                @click="toggleTheme()"
-                class="topbar-darkmode-switcher">
-                <span        
-                    v-if="$store.state.app.theme === 'dark'"
-                    class="topbar-darkmode-dark"
-                    title="Switch to light mode">
-                    <icon                   
-                        customWidth="20"
-                        customHeight="20"
-                        name="sun" />
-                </span>
-                <span 
-                    v-if="$store.state.app.theme === 'default'"
-                    class="topbar-darkmode-default"
-                    title="Switch to dark mode">
-                    <icon                   
-                        customWidth="20"
-                        customHeight="20"
-                        name="moon" />
-                </span>
-            </div>
+        <div class="topbar-inner">
             <topbar-dropdown />
         </div>
     </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import TopBarAppBar from './TopBarAppBar';
-import TopBarNotification from './TopBarNotification';
 import TopBarDropDown from './TopBarDropDown';
 
 export default {
     name: 'topbar',
     components: {
         'topbar-appbar': TopBarAppBar,
-        'topbar-notification': TopBarNotification,
         'topbar-dropdown': TopBarDropDown
-    },
-    methods: {
-        toggleTheme () {
-            let currentTheme = this.$store.state.app.theme;
-            let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
-            let theme;
-
-            if (currentTheme === 'dark') {
-                theme = 'default';
-            } else {
-                theme = 'dark';
-            }
-
-            this.$store.commit('setAppTheme', theme);
-            localStorage.setItem('publii-theme', theme);
-            ipcRenderer.send('app-save-color-theme', theme);
-
-            for (let i = 0; i < iframes.length; i++) {
-                iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
-            }
-
-            document.querySelector('html').setAttribute('data-theme', theme);
-        }
     }
 }
 </script>
@@ -92,29 +44,6 @@ export default {
         top: 2.2rem;
         width: 100px;
         z-index: 102;
-    }
-    
-    &-darkmode-switcher {
-        margin: -1px 0 0 2.1rem;
-        order: 3;
-        
-        & > span {
-            cursor: pointer;
-            display: inline-block;           
-            
-            svg {
-               fill: var(--icon-secondary-color);
-               transition: var(--transition);
-               vertical-align: text-top;
-            }   
-            
-            &:hover {
-                
-                svg {
-                    fill: var(--icon-tertiary-color); 
-                }
-            }
-        }
     }
 }
 

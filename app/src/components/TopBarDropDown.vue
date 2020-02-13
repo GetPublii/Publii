@@ -9,14 +9,17 @@
             ref="submenu"
             :class="cssClasses">
             <topbar-dropdown-item
-                label="Application settings"
+                label="App settings"
                 title="Application configuration"
                 path="/app-settings" />
             <topbar-dropdown-item
-                class="topbar-app-submenu-separator" 
                 label="Themes"
                 title="Go to the themes manager"
                 path="/app-themes" />
+            <topbar-dropdown-item
+                class="topbar-app-submenu-separator" 
+                :onClick="toggleTheme"
+                :label="$store.state.app.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" />
             <topbar-dropdown-item
                 label="Help"
                 title="Check Publii documentation"
@@ -42,6 +45,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -75,6 +79,27 @@ export default {
             this.$bus.$off('document-body-clicked', this.hideSubmenu);
             this.$bus.$emit('document-body-clicked');
             this.$bus.$on('document-body-clicked', this.hideSubmenu);
+        },
+        toggleTheme () {
+            let currentTheme = this.$store.state.app.theme;
+            let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
+            let theme;
+
+            if (currentTheme === 'dark') {
+                theme = 'default';
+            } else {
+                theme = 'dark';
+            }
+
+            this.$store.commit('setAppTheme', theme);
+            localStorage.setItem('publii-theme', theme);
+            ipcRenderer.send('app-save-color-theme', theme);
+
+            for (let i = 0; i < iframes.length; i++) {
+                iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
+            }
+
+            document.querySelector('html').setAttribute('data-theme', theme);
         }
     },
     beforeDestroy () {
@@ -146,7 +171,7 @@ export default {
     }
 
     &-app-submenu {
-       background: var(--bg-secondary);
+        background: var(--bg-secondary);
         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
                      0 8px 16px rgba(29, 39, 52, 0.07);
         font-size: 1.5rem;
