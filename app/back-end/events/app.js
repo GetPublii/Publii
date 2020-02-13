@@ -51,12 +51,12 @@ class AppEvents {
                             appInstance.appConfig = config;
                         }
         
-                        appInstance.loadSites().then(() => {
-                            event.sender.send('app-config-saved', {
-                                status: true,
-                                message: 'success-save',
-                                sites: appInstance.sites
-                            });
+                        appInstance.loadSites();
+                        
+                        event.sender.send('app-config-saved', {
+                            status: true,
+                            message: 'success-save',
+                            sites: appInstance.sites
                         });
                     }, 500);
                 }

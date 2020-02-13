@@ -23,9 +23,8 @@ class SiteEvents {
          * Reload site config and data
          */
         ipcMain.on('app-site-reload', function(event, config) {
-            appInstance.reloadSite(config.siteName).then(result => {
-                event.sender.send('app-site-reloaded', result);
-            });
+            let result = appInstance.reloadSite(config.siteName);
+            event.sender.send('app-site-reloaded', result);
         });
 
         /*
