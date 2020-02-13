@@ -97,13 +97,14 @@
                 </div>
 
                 <progress-bar
+                    v-if="renderingInProgress"
                     :color="renderingProgressColor"
                     :progress="renderingProgress"
                     :stopped="renderingProgressIsStopped"
                     :message="messageFromRenderer" />
 
                 <progress-bar
-                    v-if="!isManual"
+                    v-if="!isManual && (uploadInProgress || syncInProgress)"
                     :color="uploadingProgressColor"
                     :progress="uploadingProgress"
                     :stopped="uploadingProgressIsStopped"
