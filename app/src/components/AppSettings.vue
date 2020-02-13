@@ -379,13 +379,13 @@ export default {
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {
-                    message: 'Global settings has been successfully saved.',
+                    message: 'App settings has been successfully saved.',
                     type: 'success',
                     lifeTime: 3
                 });
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'An error occurred during saving the Global Settings. Please try again.',
+                    message: 'An error occurred during saving the App Settings. Please try again.',
                     type: 'warning',
                     lifeTime: 3
                 });

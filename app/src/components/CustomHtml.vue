@@ -250,8 +250,8 @@ export default {
             if(showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                        okLabel: 'Go to application settings',
+                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                        okLabel: 'Go to app settings',
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
