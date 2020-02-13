@@ -15,6 +15,7 @@
         <rendering-popup />
         <regenerate-thumbnails-popup />
         <error-popup />
+        <sites-popup />
         <sync-popup />
         <subscription-popup />
     </div>
@@ -29,6 +30,7 @@ import TopBarNotification from './TopBarNotification';
 import Message from './Message';
 import RenderingPopup from './RenderingPopup';
 import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
+import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SubscriptionPopup from './SubscriptionPopup';
@@ -48,6 +50,7 @@ export default {
         'rendering-popup': RenderingPopup,
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
+        'sites-popup': SitesPopup,
         'sync-popup': SyncPopup,
         'subscription-popup': SubscriptionPopup
     },

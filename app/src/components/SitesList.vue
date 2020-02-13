@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import TopBarSitesListItem from './TopBarSitesListItem';
+import SitesListItem from './SitesListItem';
 
 export default {
     name: 'sites-list',
@@ -51,7 +51,7 @@ export default {
         });
     },
     components: {
-        'sites-list-item': TopBarSitesListItem
+        'sites-list-item': SitesListItem
     },
     beforeDestroy () {
         this.$bus.$off('sites-list-filtered');

@@ -21,7 +21,7 @@
 import { mapState } from 'vuex'
 
 export default {
-    name: 'topbar-sites-list-item',
+    name: 'sites-list-item',
     props: [
         'site'
     ],
@@ -40,6 +40,7 @@ export default {
         showWebsite: function(siteToDisplay) {
             window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             this.$bus.$emit('site-switched');
+            this.$bus.$emit('sites-popup-hide');
             this.$router.push({ path: `/site/${siteToDisplay}` });
         }
     }
