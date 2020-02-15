@@ -93,14 +93,15 @@
                 </div>
 
                 <progress-bar
-                    v-if="renderingInProgress"
+                    :cssClasses="{ 'rendering-progress-bar': true }"
                     :color="renderingProgressColor"
                     :progress="renderingProgress"
                     :stopped="renderingProgressIsStopped"
                     :message="messageFromRenderer" />
 
                 <progress-bar
-                    v-if="!isManual && (uploadInProgress || syncInProgress)"
+                    v-if="!isManual && (uploadInProgress || syncInProgress || isInSync || uploadError)"
+                    :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
                     :color="uploadingProgressColor"
                     :progress="uploadingProgress"
                     :stopped="uploadingProgressIsStopped"

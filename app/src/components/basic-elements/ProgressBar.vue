@@ -1,8 +1,8 @@
 <template>
-    <div class="progress-wrapper">
+    <div :class="cssWrapperClasses">
         <div class="progress">
             <div
-                :class="cssClasses"
+                :class="cssBarClasses"
                 :style="'width: ' + progress + '%'">
             </div>
         </div>
@@ -34,10 +34,18 @@ export default {
         message: {
             default: '',
             type: String
+        },
+        cssClasses: {
+            default: () => ({}),
+            type: Object
         }
     },
     computed: {
-        cssClasses: function() {
+        cssWrapperClasses () {
+            let defaultCss = { 'progress-wrapper': true };
+            return Object.assign(defaultCss, this.cssClasses);
+        },
+        cssBarClasses () {
             return {
                 'progress-bar': true,
                 'is-stopped': this.stopped,
