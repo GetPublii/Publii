@@ -62,7 +62,32 @@ export default {
                 'web-planet',
                 'web-watch',
                 'web-idea',
-                'web-pulse'
+                'web-pulse',
+                'web-bell',
+                'web-briefcase',
+                'web-clipboard',
+                'web-command',
+                'web-cpu',
+                'web-droplet',
+                'web-dollar-sign',
+                'web-edit-2',
+                'web-eye',
+                'web-feather',
+                'web-file-text',
+                'web-flag',
+                'web-home',
+                'web-image',
+                'web-moon',
+                'web-percent',
+                'web-power',
+                'web-shield',
+                'web-smartphone',
+                'web-speaker',
+                'web-sun',
+                'web-tv',
+                'web-umbrella',
+                'web-radio',
+                'web-layers'
             ]
         };
     },
@@ -154,8 +179,7 @@ export default {
     &-icon {
         float: right;
         margin: 0;
-        padding: 0;  
-        max-width: 560px;
+        padding: 0;
 
         &-block {
             color: var(--icon-secondary-color);

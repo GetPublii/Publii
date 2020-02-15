@@ -49,7 +49,7 @@ export default {
         pointer-events: none;
         position: absolute;
         right: 5px;
-        z-index: 1;
+        z-index: 9999;
     }
 
     &.is-add-form-opened {
