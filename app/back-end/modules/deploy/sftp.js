@@ -4,7 +4,6 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const md5 = require('md5');
 const sftpClient = require('ssh2-sftp-client');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
@@ -18,7 +17,6 @@ class SFTP {
     }
 
     async initConnection() {
-        let self = this;
         let waitForTimeout = true;
         let ftpPassword = this.deployment.siteConfig.deployment.password;
         let passphrase = this.deployment.siteConfig.deployment.passphrase;
@@ -78,9 +76,9 @@ class SFTP {
                 message: 'app-connection-success'
             });
 
-            self.deployment.setInput();
-            self.deployment.setOutput();
-            self.deployment.prepareLocalFilesList();
+            this.deployment.setInput();
+            this.deployment.setOutput();
+            this.deployment.prepareLocalFilesList();
 
             process.send({
                 type: 'web-contents',
@@ -91,15 +89,25 @@ class SFTP {
                 }
             });
 
-            self.downloadFilesList();
+            this.downloadFilesList();
         }).catch(err => {
-            self.deployment.outputLog.push('ERR (1): ' + err);
-            self.downloadFilesList();
+            this.deployment.outputLog.push('ERR (1): ' + err);
+            this.deployment.saveConnectionLog();
+            this.connection.end();
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error'
+            });
+
+            setTimeout(function () {
+                process.exit();
+            }, 1000);
         });
 
-        setTimeout(function() {
+        setTimeout(() => {
             if(waitForTimeout === true) {
-                self.connection.end();
+                this.connection.end();
 
                 process.send({
                     type: 'web-contents',
@@ -114,14 +122,10 @@ class SFTP {
     }
 
     downloadFilesList() {
-        let self = this;
-
         this.connection.get(
-            normalizePath(path.join(self.deployment.outputDir, 'files.publii.json'))
-        ).then(function(stream) {
-            let fileStream;
-
-            self.deployment.outputLog.push('<- files.publii.json');
+            normalizePath(path.join(this.deployment.outputDir, 'files.publii.json'))
+        ).then((stream) => {
+            this.deployment.outputLog.push('<- files.publii.json');
 
             process.send({
                 type: 'web-contents',
@@ -132,17 +136,22 @@ class SFTP {
                 }
             });
 
-            let remoteFilesList = path.join(self.deployment.configDir, 'files-remote.json');
+            let remoteFilesList = path.join(this.deployment.configDir, 'files-remote.json');
             fs.writeFileSync(remoteFilesList, stream);
 
             if(fs.readFileSync(remoteFilesList).length) {
-                self.deployment.compareFilesList(true);
+                this.deployment.compareFilesList(true);
             } else {
-                self.deployment.compareFilesList(false);
+                this.deployment.compareFilesList(false);
             }
         }).catch(err => {
-            self.deployment.outputLog.push('ERR (2): ' + err + ' [<- files.publii.json]');
-            self.deployment.compareFilesList(false);
+            this.deployment.outputLog.push('ERR (2): ' + err + ' [<- files.publii.json]');
+            
+            try {
+                this.deployment.compareFilesList(false);
+            } catch (err) {
+                this.deployment.outputLog.push('ERR (3): ' + err + ' [<- files.publii.json]');
+            }
         });
     }
 

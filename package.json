@@ -61,6 +61,7 @@
     "node-sass": "^4.5.3",
     "sass-loader": "^8.0.0",
     "slug": "^0.9.1",
+    "ssh2-sftp-client": "^5.0.2",
     "vue": "^2.6.11",
     "vue-loader": "^15.8.3",
     "vue-template-compiler": "^2.6.11",
@@ -121,7 +122,10 @@
       "icon": "build/installation/icon.icns",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "minimumSystemVersion": "10.10"

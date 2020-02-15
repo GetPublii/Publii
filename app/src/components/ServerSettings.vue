@@ -250,6 +250,19 @@
                 </field>
 
                 <field
+                    v-if="['sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
+                    id="sftp-auth-method"
+                    label="Authentication method">
+                    <radio-buttons
+                        slot="field"
+                        id="sftp-auth-method"
+                        name="sftp-auth-method"
+                        key="sftp-auth-method"
+                        :items="sftpAuthMethodItems"
+                        v-model="deploymentMethodSelected" />
+                </field>
+
+                <field
                     v-if="['ftp', 'ftp+tls', 'sftp'].indexOf(deploymentMethodSelected) > -1 && !deploymentSettings.askforpassword"
                     id="password"
                     label="Password">
@@ -303,7 +316,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="sftpkey"
-                    label="Your key">
+                    label="Your private key">
                     <file-select
                         id="sftpkey"
                         :class="{ 'is-invalid': errors.indexOf('key') > -1 }"
@@ -920,6 +933,12 @@ export default {
             } else {
                 return 'After the initial sync, your website will be available online';
             }
+        },
+        sftpAuthMethodItems () {
+            return [
+                { value: "sftp", label: "Password" }, 
+                { value: "sftp+key", label: "Key file" }
+            ];
         }
     },
     watch: {
@@ -955,8 +974,6 @@ export default {
                 case 'sftp':
                 case 'sftp+key':
                     this.deploymentSettings.port = '22'; break;
-                case 'ftp+implicit+tls':
-                    this.deploymentSettings.port = '990'; break;
                 case 's3':
                 case 'github-pages':
                 case 'gitlab-pages':
