@@ -75,18 +75,18 @@ export default {
 
 .source-code-editor {
     background: var(--bg-primary);
-    height: calc(100vh - 8rem)!important;
+    height: calc(100vh - 10rem)!important;
     left: 0;   
     overflow: hidden;
     position: absolute;
-    top: 8rem;
+    top: 10rem;
     width: 100vw;
     z-index: 99999;
     
     &::before {
         background: var(--bg-primary);
         content: "";        
-        height: 8rem;
+        height: 10rem;
         position: fixed;
         top: 0;
         left: 0;
@@ -99,7 +99,7 @@ export default {
 
     .CodeMirror-wrap {
         display: block;
-        min-height: calc(100vh - 8rem); 
+        min-height: calc(100vh - 10rem); 
         padding: 0;
         width: 100%;
     }
