@@ -61,7 +61,7 @@
     "normalize-path": "^2.0.1",
     "publii-block-editor": "github:dziudek/publii-block-editor#master",
     "request": "^2.88.0",
-    "sharp": "^0.23.4",
+    "sharp": "^0.24.1",
     "shuffle-array": "^1.0.1",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
