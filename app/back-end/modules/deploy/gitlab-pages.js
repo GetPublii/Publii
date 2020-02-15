@@ -7,17 +7,11 @@ const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const Gitlab = require('gitlab/dist/es5').default
-const list = require('ls-all');
-const crypto = require('crypto');
-const countFiles = require('count-files');
-const moment = require('moment');
-const normalizePath = require('normalize-path');
 
 class GitlabPages {
     constructor (deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
         this.repository = '';
         this.user = '';
         this.branch = '';
@@ -586,11 +580,6 @@ class GitlabPages {
         }
 
         return true;
-    }
-
-    saveConnectionDebugLog () {
-        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }
 

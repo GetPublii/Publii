@@ -45,7 +45,6 @@ class Deployment {
         this.filesToRemove = [];
         this.filesToUpload = [];
         this.operationsCounter = 0;
-        this.outputLog = [];
     }
 
     /**
@@ -293,7 +292,7 @@ class Deployment {
         }
 
         this.currentOperationNumber = 0;
-        this.outputLog.push('Founded ' + this.operationsCounter + ' operations to do');
+        console.log('Founded ' + this.operationsCounter + ' operations to do');
         this.progressPerFile = 90.0 / this.operationsCounter;
         this.sortFiles();
 
@@ -498,15 +497,6 @@ class Deployment {
     };
 
     /**
-     * Functions used to store the current connection logs
-     */
-    saveConnectionLog() {
-        let output = this.outputLog.join("\r\n");
-        let logPath = path.join(this.appDir, 'connection-log.txt');
-        fs.writeFileSync(logPath, output);
-    }
-
-    /**
      * Save connection files log
      *
      * @param files
@@ -519,16 +509,6 @@ class Deployment {
 
         let logPath = path.join(this.appDir, 'connection-files-log' + suffix + '.txt');
         fs.writeFileSync(logPath, files);
-    }
-
-    /**
-     * Save connection error log
-     *
-     * @param message
-     */
-    saveConnectionErrorLog(message) {
-        let logPath = path.join(this.appDir, 'connection-error-log.txt');
-        fs.writeFileSync(logPath, message);
     }
 }
 

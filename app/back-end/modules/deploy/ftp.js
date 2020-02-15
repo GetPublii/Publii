@@ -13,11 +13,9 @@ class FTP {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
         this.econnresetCounter = 0;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
-        this.logTimer = false;
     }
 
     async initConnection() {
@@ -69,10 +67,6 @@ class FTP {
             message: 'app-connection-in-progress'
         });
 
-        this.logTimer = setInterval(() => {
-            self.saveConnectionDebugLog();
-        }, 5000);
-
         this.connection.connect(connectionParams);
 
         this.connection.on('ready', function() {
@@ -100,9 +94,9 @@ class FTP {
         });
 
         this.connection.on('error', function(err) {
-            self.deployment.outputLog.push('- - - FTP ERROR - - -');
-            self.deployment.outputLog.push(err);
-            self.deployment.outputLog.push('- - - - - - - - - - -');
+            console.log('- - - FTP ERROR - - -');
+            console.log(err);
+            console.log('- - - - - - - - - - -');
 
             if(typeof err === "string" && err.indexOf('ECONNRESET') > -1) {
                 self.econnresetCounter++;
@@ -111,10 +105,6 @@ class FTP {
                     return;
                 }
             }
-
-            clearInterval(self.logTimer);
-            self.deployment.saveConnectionErrorLog(err);
-            self.saveConnectionDebugLog();
 
             if(waitForTimeout) {
                 waitForTimeout = false;
@@ -135,11 +125,9 @@ class FTP {
         });
 
         this.connection.on('close', function(err) {
-            self.deployment.outputLog.push('- - - FTP CONNECTION CLOSED - - -');
-            self.deployment.outputLog.push(err);
-            self.deployment.outputLog.push('- - - - - - - - - - - - - - - - -');
-            clearInterval(self.logTimer);
-            self.saveConnectionDebugLog();
+            console.log('- - - FTP CONNECTION CLOSED - - -');
+            console.log(err);
+            console.log('- - - - - - - - - - - - - - - - -');
 
             setTimeout(function () {
                 process.exit();
@@ -149,9 +137,7 @@ class FTP {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 self.connection.destroy();
-                self.deployment.saveConnectionErrorLog('Request timeout...');
-                clearInterval(self.logTimer);
-                self.saveConnectionDebugLog();
+                console.log('Request timeout...');
 
                 process.send({
                     type: 'web-contents',
@@ -173,7 +159,7 @@ class FTP {
             function(err, stream) {
                 let fileStream;
 
-                self.deployment.outputLog.push('<- files.publii.json');
+                console.log('<- files.publii.json');
 
                 process.send({
                     type: 'web-contents',
@@ -216,15 +202,15 @@ class FTP {
             normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
             function(err) {
-                self.deployment.outputLog.push('-> files.publii.json');
+                console.log('-> files.publii.json');
 
                 if (err) {
-                    self.deployment.outputLog.push(err);
+                    console.log(err);
                 }
 
                 self.connection.logout(function(err) {
                     if (err) {
-                        self.deployment.outputLog.push(err);
+                        console.log(err);
                     }
 
                     self.connection.end();
@@ -249,8 +235,6 @@ class FTP {
                     }
                 });
 
-                self.deployment.saveConnectionLog();
-
                 setTimeout(function () {
                     process.exit();
                 }, 1000);
@@ -266,11 +250,11 @@ class FTP {
             output,
             function (err) {
                 if (err) {
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - -ERROR UPLOAD FILE - - -');
-                    self.deployment.outputLog.push(output);
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                    console.log(err);
+                    console.log('- - -ERROR UPLOAD FILE - - -');
+                    console.log(output);
+                    console.log(err);
+                    console.log('- - - - - - - - - - - - - - ');
 
                     setTimeout(() => {
                         if(!self.softUploadErrors[input]) {
@@ -285,7 +269,7 @@ class FTP {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            self.deployment.outputLog.push('UPL HARD ERR ' + input + ' -> ' + output);
+                            console.log('UPL HARD ERR ' + input + ' -> ' + output);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -302,7 +286,7 @@ class FTP {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    self.deployment.outputLog.push('UPL ' + input + ' -> ' + output);
+                    console.log('UPL ' + input + ' -> ' + output);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -328,11 +312,11 @@ class FTP {
             true,
             function (err) {
                 if (err) {
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - -ERROR UPLOAD DIR - - -');
-                    self.deployment.outputLog.push(output);
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                    console.log(err);
+                    console.log('- - -ERROR UPLOAD DIR - - -');
+                    console.log(output);
+                    console.log(err);
+                    console.log('- - - - - - - - - - - - - - ');
 
                     setTimeout(() => {
                         if(!self.softUploadErrors[input]) {
@@ -347,7 +331,7 @@ class FTP {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            self.deployment.outputLog.push('UPL HARD ERR ' + input + ' -> ' + output);
+                            console.log('UPL HARD ERR ' + input + ' -> ' + output);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -364,7 +348,7 @@ class FTP {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    self.deployment.outputLog.push('UPL ' + input + ' -> ' + output);
+                    console.log('UPL ' + input + ' -> ' + output);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -389,14 +373,14 @@ class FTP {
             input,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                self.deployment.outputLog.push('DEL ' + input);
+                console.log('DEL ' + input);
 
                 if (err) {
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - -ERROR REMOVE FILE - - -');
-                    self.deployment.outputLog.push(input);
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                    console.log(err);
+                    console.log('- - -ERROR REMOVE FILE - - -');
+                    console.log(input);
+                    console.log(err);
+                    console.log('- - - - - - - - - - - - - - ');
                 }
 
                 self.deployment.progressOfDeleting += self.deployment.progressPerFile;
@@ -423,14 +407,14 @@ class FTP {
             true,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                self.deployment.outputLog.push('DEL ' + input);
+                console.log('DEL ' + input);
 
                 if (err) {
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - -ERROR REMOVE DIR - - -');
-                    self.deployment.outputLog.push(input);
-                    self.deployment.outputLog.push(err);
-                    self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                    console.log(err);
+                    console.log('- - -ERROR REMOVE DIR - - -');
+                    console.log(input);
+                    console.log(err);
+                    console.log('- - - - - - - - - - - - - - ');
                 }
                 self.deployment.progressOfDeleting += self.deployment.progressPerFile;
 
@@ -554,17 +538,7 @@ class FTP {
             message = '[connection] > PASS ******************************';
         }
 
-        this.debugOutput.push(message);
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
-        let softUploadErrorsPath = path.join(this.deployment.appDir, 'soft-upload-errors-log.txt');
-        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'hard-upload-errors-log.txt');
-
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
-        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors, null, 4));
-        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors, null, 4));
+        console.log(message);
     }
 }
 

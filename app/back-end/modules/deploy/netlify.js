@@ -77,17 +77,13 @@ class Netlify {
                 }
             });
 
-            this.deployment.saveConnectionLog();
-
             setTimeout(function () {
                 process.exit();
             }, 1000);
         }).catch(err => {
-            this.deployment.outputLog.push('- - Netlify ERROR - -');
-            this.deployment.outputLog.push(err);
-            this.deployment.outputLog.push('- - - - - - - - - - -');
-            this.deployment.saveConnectionErrorLog(err);
-            this.saveConnectionDebugLog();
+            console.log('- - Netlify ERROR - -');
+            console.log(err);
+            console.log('- - - - - - - - - - -');
             this.onError(err);
 
             setTimeout(function () {
@@ -181,11 +177,6 @@ class Netlify {
                 });
             }
         }, 10000);
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }
 

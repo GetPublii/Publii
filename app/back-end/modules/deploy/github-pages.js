@@ -17,7 +17,6 @@ class GithubPages {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
         this.client = new githubApi({
             version: "3.0.0",
             protocol: "https",
@@ -117,11 +116,9 @@ class GithubPages {
 
                 await self.deploy();
             } catch (err) {
-                self.deployment.outputLog.push('- - - GH ERROR  - - -');
-                self.deployment.outputLog.push(JSON.stringify(err));
-                self.deployment.outputLog.push('- - - - - - - - - - -');
-                self.deployment.saveConnectionErrorLog(JSON.stringify(err));
-                self.saveConnectionDebugLog();
+                console.log('- - - GH ERROR  - - -');
+                console.log(JSON.stringify(err));
+                console.log('- - - - - - - - - - -');
 
                 process.send({
                     type: 'web-contents',
@@ -230,8 +227,6 @@ class GithubPages {
             let result = await this.createReference(sha);
             
             if(result === false) {
-                self.deployment.saveConnectionLog();
-
                 setTimeout(function () {
                     process.exit();
                 }, 1000);
@@ -257,17 +252,13 @@ class GithubPages {
                 }
             });
 
-            self.deployment.saveConnectionLog();
-
             setTimeout(function () {
                 process.exit();
             }, 1000);
         } catch (err) {
-            self.deployment.outputLog.push('- - - GH ERROR  - - -');
-            self.deployment.outputLog.push(JSON.stringify(err));
-            self.deployment.outputLog.push('- - - - - - - - - - -');
-            self.deployment.saveConnectionErrorLog(JSON.stringify(err));
-            self.saveConnectionDebugLog();
+            console.log('- - - GH ERROR  - - -');
+            console.log(JSON.stringify(err));
+            console.log('- - - - - - - - - - -');
 
             process.send({
                 type: 'web-contents',
@@ -699,11 +690,6 @@ class GithubPages {
         }
 
         return true;
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }
 

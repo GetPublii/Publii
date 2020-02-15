@@ -35,7 +35,6 @@
     "codemirror-revisedsearch": "^1.0.12",
     "count-files": "^2.6.2",
     "electron-load-devtool": "^1.0.0",
-    "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "fast-memoize": "^2.2.7",
     "file-exists": "^1.0.0",

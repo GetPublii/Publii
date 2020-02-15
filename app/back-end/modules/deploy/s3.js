@@ -13,7 +13,6 @@ class S3 {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
         this.econnresetCounter = 0;
         this.waitForTimeout = false;
         this.softUploadErrors = {};
@@ -97,8 +96,6 @@ class S3 {
 
         setTimeout(function() {
             if(self.waitForTimeout === true) {
-                self.saveConnectionDebugLog();
-
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error'
@@ -125,7 +122,7 @@ class S3 {
         };
 
         this.connection.getObject(params, function(err, data) {
-            self.deployment.outputLog.push('<- files.publii.json');
+            console.log('<- files.publii.json');
 
             if (err && err.code !== 'NoSuchKey') {
                 self.onError(err);
@@ -184,7 +181,7 @@ class S3 {
             };
 
             this.connection.putObject(params, function(err) {
-                self.deployment.outputLog.push('-> files.publii.json');
+                console.log('-> files.publii.json');
 
                 if (err) {
                     self.onError(err, true);
@@ -207,8 +204,6 @@ class S3 {
                         issues: self.hardUploadErrors.length > 0
                     }
                 });
-
-                self.deployment.saveConnectionLog();
 
                 setTimeout(function () {
                     process.exit();
@@ -288,7 +283,7 @@ class S3 {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            self.deployment.outputLog.push('UPL HARD ERR ' + input + ' -> ' + fileName);
+                            console.log('UPL HARD ERR ' + input + ' -> ' + fileName);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -305,7 +300,7 @@ class S3 {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    self.deployment.outputLog.push('UPL ' + input + ' -> ' + fileName);
+                    console.log('UPL ' + input + ' -> ' + fileName);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -360,7 +355,7 @@ class S3 {
             params,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                self.deployment.outputLog.push('DEL ' + input);
+                console.log('DEL ' + input);
 
                 if (err) {
                     self.onError(err, true);
@@ -383,11 +378,9 @@ class S3 {
     }
 
     onError(err, silentMode = false) {
-        this.deployment.outputLog.push('- - -  S3 ERROR - - -');
-        this.deployment.outputLog.push(err.message);
-        this.deployment.outputLog.push('- - - - - - - - - - -');
-        this.deployment.saveConnectionErrorLog(err);
-        this.saveConnectionDebugLog();
+        console.log('- - -  S3 ERROR - - -');
+        console.log(err.message);
+        console.log('- - - - - - - - - - -');
 
         if(this.waitForTimeout && !silentMode) {
             this.waitForTimeout = false;
@@ -463,16 +456,6 @@ class S3 {
                 });
             }
         }, 10000);
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'connection-debug-log.txt');
-        let softUploadErrorsPath = path.join(this.deployment.appDir, 'soft-upload-errors-log.txt');
-        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'hard-upload-errors-log.txt');
-
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
-        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors, null, 4));
-        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors, null, 4));
     }
 }
 
