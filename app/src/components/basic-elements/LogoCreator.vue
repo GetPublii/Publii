@@ -2,24 +2,11 @@
     <div class="logo-creator">
         <div
             class="logo-creator-preview"
-            :data-color="activeColor"
             :data-icon="activeIcon">
             <icon
-                :data-color="activeColor"
                 size="xl"
                 :name="icons[activeIcon - 1]" />
         </div>
-
-        <ul class="logo-creator-color">
-            <li
-                v-for="(color, index) in colors"
-                class="logo-creator-color-block"
-                :data-color="index + 1"
-                :data-status="isActiveColor(index + 1)"
-                @click="changeColor(index + 1)"
-                >
-            </li>
-        </ul>
 
         <ul class="logo-creator-icon">
             <li
@@ -124,31 +111,22 @@ export default {
 @import '../../scss/mixins.scss';
 
 .logo-creator {
+    display: flex;
     margin-bottom: 32px;
     max-width: 100%;
     overflow: hidden;
     text-align: center;
 
-    &-preview {
-        border-radius: 50%;
-        border: 1px solid var(--input-border-color);
-        float: left;
-        height: 9rem;
+    &-preview {          
         line-height: 100%;
+        min-width: 23rem;
         overflow: hidden;
-        text-align: center;
-        width: 9rem;
-
-        & > svg {
-            margin: 2rem;
-        }
-
-        @include logoSVGColors();
+        padding: 1rem;
+        text-align: left;       
     }
 
-    &-color {
-        float: right;
-        margin: 0 0 1rem 2rem;
+    &-color {        
+        margin: 0 0 1rem;
         padding: 0;       
 
         &-block {  
@@ -163,8 +141,6 @@ export default {
             transition: all .2s ease-out;
             width: 3.2rem;
 
-            @include logoColors();
-
             &[data-status="active"] {
                 transform: scale(1);
             }
@@ -177,30 +153,34 @@ export default {
 
     &-icon {
         float: right;
-        margin: 0 0 0 1rem;
+        margin: 0;
         padding: 0;  
         max-width: 560px;
 
         &-block {
+            color: var(--icon-secondary-color);
             cursor: pointer;
             display: block;
             float: left;
             height: 3rem;
             list-style-type: none;
             padding: 0 1px 0 0;
-            transition: all .2s ease-out;           
+            transition: all .2s ease-out;  
+            
+            &:hover {
+                color: var(--icon-tertiary-color);
+            }
 
-            & > svg {   
-                fill: var(--icon-tertiary-color);
+            & > svg {                 
                 margin: .5rem;
             }
 
             &[data-status="active"] {
+                color: var(--icon-tertiary-color);
                 transform: scale(1);
             }
 
-            &[data-status="inactive"] {
-                opacity: .36;
+            &[data-status="inactive"] {               
                 transform: scale(.75);
             }
         }

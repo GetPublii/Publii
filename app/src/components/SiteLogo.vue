@@ -5,8 +5,7 @@
         <span
             v-if="logoColor"
             class="site-logo-bg">
-            <icon 
-                :data-color="logoColor"
+            <icon                 
                 :name="logoIcon"               
                 size="s" />
         </span>
@@ -121,21 +120,20 @@ export default {
 @import '../scss/mixins.scss';
 
 .site-logo {
-    align-items: center;   
-    display: flex;    
-    width: 30rem;
+    align-items: center;       
+    color: var(--sidebar-preview-btn-color);
+    display: flex;
+    padding: 2.5rem 4rem;
+    width: 100%;
+    transition: var(--transition);
 
     &:active,
     &:focus,
     &:hover {
-
-        .site-logo-link {
-            color: var(--text-primary-color);
-            
-        }
+        
         .site-logo-icon-open {
-            border-top-color: var(--icon-tertiary-color);
-            
+            border-top-color: var(--sidebar-link-icon-hover);    
+            opacity: 1; 
         }
     }
 
@@ -151,29 +149,24 @@ export default {
     &-bg {
         align-items: center;
         border-radius: 3px;
+        color: var(--sidebar-icon);
         display: flex;
-        height: 3rem;
+        height: 20px;
         justify-content: center;
-        width: 3rem;
-        
-         svg {
-            @include logoSVGColors();
-        }        
+        width: 20px;            
     }
 
     &-name {
-        margin: 0 0 0 .8rem;
-        width: calc(100% - 7.6rem);
+        margin: 0 0 0 1.5rem;
+        width: calc(100% - 5rem);
     }
 
-    &-link {
-        color: var(--text-primary-color);
+    &-link {       
         display: block;
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 500;
         margin: 0;
-        overflow: hidden;
-        padding: 1rem 0;
+        overflow: hidden;       
         position: relative;
         text-overflow: ellipsis;
         transition: all .3s ease-out;
@@ -190,7 +183,7 @@ export default {
     }
 
     &-icon-open {
-        border-color: var(--icon-secondary-color) transparent transparent;
+        border-color: var(--sidebar-link-icon) transparent transparent;
         border-style: solid;
         border-width: 5px;
         opacity: 1;                     
@@ -198,12 +191,13 @@ export default {
         height: 5px;
         left: auto;
         line-height: 1.1; 
+        opacity: var(--sidebar-link-opacity);
         padding: 0;
         position: absolute;
-        right: calc(1rem + 5px);
+        right: 4rem;
         width: 5px;
         text-align: center;       
-        transition: all .3s ease-out;         
+        transition: var(--transition);        
         top: calc(50% - 2px);
     }
 }

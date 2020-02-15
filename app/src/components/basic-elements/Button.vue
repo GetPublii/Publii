@@ -403,7 +403,7 @@ export default {
             color: var(--text-primary-color);
 
             & > svg {
-                fill: var(--gray-5);
+                fill: var(--icon-tertiary-color);
             }
         }  
 

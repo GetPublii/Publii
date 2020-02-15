@@ -56,7 +56,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .col {
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
     padding: 1.6rem 0;
     text-align: left;
 
@@ -74,7 +74,7 @@ export default {
     &.titles {
         .title {
             font-size: 1.6rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
         }
@@ -82,7 +82,7 @@ export default {
         .tag {
             color: var(--text-light-color);
             font-size: 1.2rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-normal);
 
             &:active,
             &:focus,
@@ -101,7 +101,7 @@ export default {
     &.names {
         .name {
             font-size: 1.6rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-normal);
             margin: 0;
             text-transform: none;
         }

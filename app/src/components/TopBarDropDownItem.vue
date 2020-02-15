@@ -52,7 +52,8 @@ li {
     & > a {
         display: block;
         font-weight: 400;
-        padding: .5rem 4rem;
+        padding: .5rem 3rem;
+        white-space: nowrap;
     }
 }
 </style>

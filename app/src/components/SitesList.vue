@@ -67,11 +67,12 @@ export default {
         clear: both;
         list-style-type: none;
         margin: 0.5rem 0 0;
-        padding: 0;
+        padding: 0 2rem;
         text-align: center;
         
         &-wrapper {           
-            max-height: 350px;
+            margin-top: 1rem;
+            max-height: calc(100vh - 24rem);
             overflow-y: auto;
         }
     }

@@ -19,7 +19,7 @@
             <topbar-dropdown-item
                 class="topbar-app-submenu-separator" 
                 :onClick="toggleTheme"
-                :label="$store.state.app.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" />
+                :label="$store.state.app.theme === 'dark' ? 'Switch to Light mode' : 'Switch to Dark mode'" />
             <topbar-dropdown-item
                 label="Help"
                 title="Check Publii documentation"
@@ -116,11 +116,10 @@ export default {
         color: var(--icon-secondary-color);
         cursor: pointer;
         display: block;
-        height: 4rem;
-        margin-left: 1rem;
+        height: 5rem;       
         order: 3;
         padding: 0 1rem;
-        width: 3px; 
+        width: 35px; 
 
 
         &:hover {
@@ -173,13 +172,13 @@ export default {
     &-app-submenu {
         background: var(--bg-secondary);
         box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
-                     0 8px 16px rgba(29, 39, 52, 0.07);
+                     0 2px 16px rgba(29, 39, 52, 0.07);
         font-size: 1.5rem;
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
-        right: 3.5rem;
-        top: 4rem;
+        right: 3rem;
+        top: 2.5rem;        
         
         &-separator {
             border-bottom: 1px solid var(--border-light-color);

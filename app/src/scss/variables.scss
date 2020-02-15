@@ -36,9 +36,10 @@ $primary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen"
 $secondary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
 /*
- * Dimensions
+ * Others
  */
 
+$wrapper: 960px;
 $spacing: 0.25rem; // ($baseline / 6.4)
 
 // Modular scale

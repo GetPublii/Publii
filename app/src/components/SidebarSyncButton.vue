@@ -188,10 +188,10 @@ export default {
 
 .sidebar {
     &-sync {
-        bottom: 5rem;
-        left: 5rem;
+        bottom: 3rem;
+        left: 4rem;
         position: absolute;
-        right: 5rem;
+        right: 4rem;
 
         &-icon {
             fill: var(--white);           
@@ -206,7 +206,7 @@ export default {
             opacity: var(--sidebar-link-opacity);
             padding: 1.5rem 0 1rem 0;
             text-align: center;
-            width: calc(100% + 5rem);
+            width: calc(100% + 4rem);
         }
 
         &-link {
@@ -361,19 +361,6 @@ export default {
 @keyframes spin {
     100% {
         transform: rotate(360deg);
-    }
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 736px), (min-height: 737px) and (max-height: 900px), (max-width: 1400px) {
-    .sidebar {
-        &-sync {
-            bottom: 3rem;
-            left: 4rem;
-            right: 4rem;
-        }
     }
 }
 </style>

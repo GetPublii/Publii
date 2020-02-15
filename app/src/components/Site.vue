@@ -145,16 +145,16 @@ export default {
     .sidebar {
         bottom: 0;
         left: 0;
-        width: 35rem;
+        width: 32rem;
     }
 
     .content {
        background: var(--bg-primary);
         bottom: 0;
         overflow: scroll;
-        padding: 4.4rem 5rem;
+        padding: 4rem 5rem;
         right: 0;
-        width: calc(100% - 35rem);
+        width: calc(100% - 32rem); // 32rem = sideabr width
 
         &.is-wide {
             width: 100%;
@@ -173,27 +173,17 @@ export default {
         position: absolute;
     }
 }
-
-/*
- * Responsive improvements
- */
+    
 @media (max-height: 900px) {
-    .site {
-        .content {
-            padding: 4rem;
-        }
+    .site .content {          
+           padding: 4rem;
+    }
+ }
+ 
+@media (max-width: 1400px) {
+    .site .content {          
+           padding: 4rem;
     }
 }
 
-@media (max-width: 1400px) {
-    .site {
-        .sidebar {        
-            width: 32rem;
-    }
-        .content {
-            padding: 4rem;
-            width: calc(100% - 32rem);
-        }
-    }
-}
 </style>

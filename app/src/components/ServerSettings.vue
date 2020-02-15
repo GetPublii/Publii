@@ -1338,7 +1338,7 @@ export default {
 
 .server-settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
     user-select: none;
 
     #http-protocol {

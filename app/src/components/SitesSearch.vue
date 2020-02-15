@@ -4,7 +4,7 @@
             changeEventName="sites-list-filtered"
             v-model="value"
             icon="magnifier-small"
-            properties="is-small has-padding"
+            properties="is-small"
             ref="search-input"
             :spellcheck="false"
             placeholder="Search..." />
@@ -35,25 +35,25 @@ export default {
 <style lang="scss">
 @import '../scss/variables.scss';
 
-.site-switch {
+.sites-popup {
     .search {   
         position: relative;
 
-        .input-wrapper {            
+        .input-wrapper {              
+            padding: 1rem;
 
             input {
                 background: var(--gray-1);
                 border-radius: 30px;
-                box-shadow: none!important;
-                font-size: 1.5rem;
-                padding: 1.1rem 4.4rem!important;
+                box-shadow: none!important;               
+                padding: 1.2rem 4.4rem 1.2rem 6rem!important;
             }
 
             svg {
-                fill: var(--icon-secondary-color)!important;
-                height: 1.6rem;
-                left: 3.5rem!important;
-                width: 1.6rem;
+                fill: var(--icon-primary-color)!important;
+                height: 1.7rem;
+                left: 3.4rem!important;
+                width: 1.7rem;
             }
         }
 

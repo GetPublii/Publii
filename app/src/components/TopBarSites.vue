@@ -31,11 +31,11 @@ export default {
 @import '../scss/variables.scss';
 
 .site-switch {
-    -webkit-app-region: no-drag; // Make the buttons clickable again   
-    color: var(--text-primary-color);
+    -webkit-app-region: no-drag; // Make the buttons clickable again         
     cursor: pointer;
     display: block;
     font-weight: 500;  
+    margin: 1rem -4rem;    
     position: relative;
     order: 1;
 

@@ -1,6 +1,6 @@
 <template>
     <div :class="{ 'sites-popup': true, 'is-hidden': !isVisible }">
-        <p-header title="Sites list">
+        <p-header>
             <p-button
                 type="outline"
                 slot="buttons"
@@ -16,10 +16,10 @@
                 Add new website
             </p-button>
         </p-header>
-
-        <sites-search ref="search" />
-
-        <sites-list />
+        <div class="sites-popup-container">            
+           <sites-search ref="search" />
+           <sites-list />            
+        </div>
     </div>
 </template>
 
@@ -72,18 +72,24 @@ export default {
 
 .sites-popup {
     background: var(--bg-primary);
-    height: calc(100vh - 2.2rem);
+    height: 100vh;
     left: 0;
     opacity: 1;
+    padding: 4.4rem 3.2rem;
     pointer-events: auto;
     position: fixed;
-    top: 2.2rem;
+    top: 0;
     width: 100vw;
     z-index: 1000;
 
     &.is-hidden {
         pointer-events: none;
         opacity: 0;
+    }
+    
+    &-container {
+        margin: auto;
+        max-width: $wrapper;
     }
 }
 </style>

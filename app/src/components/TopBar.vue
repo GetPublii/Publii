@@ -36,14 +36,29 @@ export default {
 
     & > .topbar-inner {
         align-items: center;
-        display: flex;
-        height: 5.6rem;        
+        display: flex;             
         padding: 0;
         position: absolute;
         right: 0;
         top: 2.2rem;
-        width: 100px;
+        width: 40px;
         z-index: 102;
+    }
+}
+    
+/*
+ * Responsive improvements
+ */
+
+@media (max-height: 900px) {
+    .topbar > .topbar-inner {
+        width: 35px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .topbar > .topbar-inner {
+        width: 35px;
     }
 }
 
@@ -57,19 +72,4 @@ body[data-os="linux"] {
     }
 }
 
-/*
- * Responsive improvements
- */
-
-@media (max-height: 900px) {
-    .topbar > .topbar-inner {
-        padding: 0 calc(2rem - 3px) 0 4rem;
-    }
-}
-
-@media (max-width: 1400px) {
-    .topbar > .topbar-inner {
-        padding: 0 calc(2rem - 3px) 0 4rem;
-    }
-}
 </style>

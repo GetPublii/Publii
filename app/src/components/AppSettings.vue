@@ -400,7 +400,7 @@ export default {
 
 .settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
     padding: 4.4rem 0;
     user-select: none;
 }

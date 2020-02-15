@@ -93,6 +93,10 @@ export default {
         top: 1.4rem;
         transition: var(--transition);
         z-index: 1;
+        
+        &:hover {
+            fill: var(--icon-tertiary-color);
+        }
     }
 
     & > input { 
@@ -146,6 +150,11 @@ export default {
     &.is-opened {
         & > svg {
             left: 3rem;
+            cursor: default;
+            
+            &:hover {
+                fill: var(--icon-primary-color);
+            }
         }
 
         & > input {
