@@ -9,14 +9,14 @@
 <script>
 import SidebarMenu from './SidebarMenu';
 import SidebarSyncButton from './SidebarSyncButton';
-import TopBarSites from './TopBarSites';
+import SidebarSites from './SidebarSites';
 
 export default {
     name: 'sidebar',
     components: {
         'sidebar-menu': SidebarMenu,
         'sidebar-sync-button': SidebarSyncButton,
-        'topbar-sites': TopBarSites
+        'topbar-sites': SidebarSites
     }
 }
 </script>
