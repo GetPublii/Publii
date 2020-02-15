@@ -1,6 +1,8 @@
 <template>
-    <div :class="{ 'sites-popup': true, 'is-hidden': !isVisible }">
-        <p-header>
+    <div 
+        :class="{ 'sites-popup': true, 'is-hidden': !isVisible }"
+        @click="hide">
+        <p-header @click.stop>
             <p-button
                 type="outline"
                 slot="buttons"
@@ -16,7 +18,7 @@
                 Add new website
             </p-button>
         </p-header>
-        <div class="sites-popup-container">            
+        <div class="sites-popup-container" @click.stop>            
            <sites-search ref="search" />
            <sites-list />            
         </div>
