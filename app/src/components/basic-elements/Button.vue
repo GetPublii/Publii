@@ -69,6 +69,7 @@ export default {
                 'button-small': types.indexOf('small') > -1,
                 'button-full-width': types.indexOf('full-width') > -1,
                 'button-half-width': types.indexOf('half-width') > -1,
+                'button-quarter-width': types.indexOf('quarter-width') > -1,
                 'button-no-border-radius': types.indexOf('no-border-radius') > -1,
                 'button-disabled': types.indexOf('disabled') > -1 || this.disabled,
                 'button-disabled-with-events': types.indexOf('disabled-with-events') > -1,
@@ -294,6 +295,10 @@ export default {
         height: 3.8rem;
         line-height: 3.9rem;
         padding: 0 1.4rem;
+    }
+    
+    &-quarter-width {       
+        width: 25%;
     }
 
     &-half-width {

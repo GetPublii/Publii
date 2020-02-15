@@ -10,6 +10,19 @@
     text-align: center;
     top: 0;
     z-index: 100002;
+    
+    &.as-page {
+       background: var(--bg-primary);
+       height: 100vh;   
+       padding: 4.4rem 3.2rem;
+       pointer-events: auto;   
+       width: 100vw;    
+        
+       h1 {
+          font-size: 2.2rem;
+          margin-bottom: 1.5rem;
+       }
+    }
 }
 
 .popup {

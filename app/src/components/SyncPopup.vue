@@ -1,5 +1,5 @@
 <template>
-    <div class="overlay" v-if="isVisible">
+    <div class="overlay as-page" v-if="isVisible">
         <div class="popup sync">
             <div
                 v-if="isInSync && noIssues"
@@ -32,21 +32,21 @@
                 <div class="buttons">
                     <p-button
                         v-if="!isManual"
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium quarter-width"
                         :onClick="openWebsite">
                         Visit your website
                     </p-button>
 
                     <p-button
                         v-if="isManual"
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium quarter-width"
                         :onClick="showFolder">
                         Get website files
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium half-width no-border-radius">
+                        type="outline medium quarter-width">
                         OK
                     </p-button>
                 </div>
@@ -68,14 +68,14 @@
 
                 <div class="buttons">
                     <p-button
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium  quarter-width"
                         :onClick="openWebsite">
                         Visit your website
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium half-width no-border-radius">
+                        type="outline medium quarter-width ">
                         OK
                     </p-button>
                 </div>
@@ -85,14 +85,10 @@
                 v-if="properConfig && !isInSync"
                 class="sync-todo">
                 <div class="heading">
-                    <h1>Website synchronization</h1>
+                    <h1>Website synchronization</h1>                    
 
                     <p class="description">
-                        After clicking the "Sync your website" button, your website will be rendered and uploaded to the server specified in the "Server Settings" page.
-                    </p>
-
-                    <p class="description alert">
-                        <strong>Remember!</strong> Any duplicate files or filenames already in the destination location that match the Publii-generated files will be overwritten.
+                        Any duplicate files or filenames already in the destination location <br>that match the Publii-generated files will be overwritten.
                     </p>
                 </div>
 
@@ -113,14 +109,14 @@
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
-                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'"
+                        :type="syncInProgress ? 'disabled medium quarter-width': 'medium quarter-width'"
                         :disabled="syncInProgress">
                         Sync your website
                     </p-button>
 
                     <p-button
                         :onClick="cancelSync"
-                        type="cancel-popup medium no-border-radius half-width">
+                        type="outline medium quarter-width">
                         Cancel
                     </p-button>
                 </div>
@@ -138,14 +134,14 @@
 
                 <div class="buttons">
                     <p-button
-                        type="medium no-border-radius half-width"
+                        type="medium  quarter-width"
                         :onClick="goToServerSettings">
                         Go to Settings
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium no-border-radius half-width">
+                        type="outline medium  quarter-width">
                         Cancel
                     </p-button>
                 </div>
@@ -163,13 +159,13 @@
 
                 <div class="buttons">
                     <p-button
-                        type="medium no-border-radius half-width"
+                        type="medium  quarter-width"
                         :onClick="goToServerSettings">
                         Go to Settings
                     </p-button>
 
                     <p-button
-                        type="cancel-popup medium no-border-radius half-width"
+                        type="outline medium  quarter-width"
                         :onClick="close">
                         Cancel
                     </p-button>
@@ -678,14 +674,18 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {    
-    padding: 4rem 4rem 6rem 4rem;  
-    width: 70rem;
+.popup {        
+    max-width: $wrapper;
+    overflow: visible;
+    width: 100%;
 
     .description {
-        color: var(--label-color);
+        color: var(--text-light-color);
+        font-size: 1.4rem;
+        line-height: 1.4;
+        margin: auto;
         padding: 0 1rem;
-        text-align: left;
+        text-align: center;       
     }
 
     .description.alert {
@@ -722,7 +722,8 @@ export default {
 
 .buttons {
     display: flex;
-    margin: 4rem -4rem -6rem -4rem;
+    justify-content: center;
+    margin-top: 4rem;
     position: relative;
     text-align: center;
     top: 1px;
