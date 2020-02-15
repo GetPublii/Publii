@@ -876,8 +876,8 @@ export default {
         return {
             domain: '',
             httpProtocols: {
-                'http': 'http://',
                 'https': 'https://',
+                'http': 'http://',
                 'file': 'file://',
                 'dat': 'dat://',
                 'ipfs': 'ipfs://',
@@ -911,10 +911,10 @@ export default {
         currentHttpProtocol () {
             if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {
                 return 'file';
-            } else if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
-                return 'https';
-            } else {
+            } else if (this.$store.state.currentSite.config.domain.indexOf('http:') === 0) {
                 return 'http';
+            } else {
+                return 'https';
             }
         },
         siteIsOnline () {
