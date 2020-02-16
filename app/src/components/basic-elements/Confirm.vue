@@ -18,7 +18,8 @@
             <div class="buttons">
                 <p-button
                     type="medium no-border-radius half-width"
-                    :onClick="onOk">
+                    :onClick="onOk"
+                    ref="okButton">
                     {{ okLabel }}
                 </p-button>
 
@@ -59,6 +60,8 @@ export default {
     },
     mounted () {
         this.$bus.$on('confirm-display', (config) => {
+            document.body.classList.add('has-popup-visible');
+
             setTimeout(() => {
                 this.isVisible = true;
                 this.message = config.message;
@@ -67,8 +70,8 @@ export default {
                 this.inputIsPassword = config.inputIsPassword || false;
                 this.okLabel = config.okLabel || "OK";
                 this.cancelLabel = config.cancelLabel || "Cancel";
-                this.defaultText = config.defaultText || "";
-
+                this.defaultText = config.defaultText || "";                
+                
                 if(config.okClick) {
                     this.okClick = config.okClick;
                 } else {
@@ -80,14 +83,22 @@ export default {
                 } else {
                     this.cancelClick = () => false;
                 }
+
+                setTimeout(() => {
+                    if (config.hasInput) {
+                        console.log(this.$refs);
+                        this.$refs.input.$el.querySelector('input').focus();
+                    }
+                }, 100);
             }, 0);
         });
-
+        
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         onOk () {
             this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
 
             if(this.hasInput) {
                 this.okClick(this.$refs.input.content);
@@ -97,6 +108,7 @@ export default {
         },
         onCancel () {
             this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
             this.cancelClick();
         },
         onDocumentKeyDown (e) {
@@ -106,6 +118,11 @@ export default {
         },
         onEnterKey () {
             this.onOk();
+
+            setTimeout(() => {
+                this.isVisible = false;
+                document.body.classList.remove('has-popup-visible');
+            }, 100);
         }
     },
     beforeDestroy () {

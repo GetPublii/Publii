@@ -2,7 +2,7 @@
     <div 
         :class="{ 'sites-popup': true, 'is-hidden': !isVisible }"
         @click="hide">
-        <p-header @click.stop>
+        <p-header @click.native.stop>
             <p-button
                 type="outline"
                 slot="buttons"
@@ -58,8 +58,11 @@ export default {
             this.isVisible = false;
         },
         addNewWebsite (e) {
-            this.isVisible = false;
             this.$router.push('/site/!');
+
+            setTimeout(() => {
+                this.isVisible = false;
+            }, 500);
         }
     },
     beforeDestroy () {
@@ -81,6 +84,7 @@ export default {
     pointer-events: auto;
     position: fixed;
     top: 0;
+    transition: all .25s ease-out;
     width: 100vw;
     z-index: 1000;
 

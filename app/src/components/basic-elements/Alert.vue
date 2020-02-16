@@ -48,6 +48,8 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('alert-display', (config) => {
+            document.body.classList.add('has-popup-visible');
+            
             setTimeout(() => {
                 this.isVisible = true;
                 this.message = config.message;
@@ -67,6 +69,7 @@ export default {
     methods: {
         onOk: function() {
             this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
             this.okClick();
         },
         onDocumentKeyDown (e) {

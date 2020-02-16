@@ -1387,30 +1387,6 @@
                 </tabs>
             </fields-group>
 
-            <fields-group
-                title="Delete website"
-                type="danger">
-                <p>Are you sure you want to permanently REMOVE this website? Once confirmed this action cannot be undone - Double-check to make sure you're deleting the right website!</p>
-
-                <p-button
-                    @click.native="askForRemove"
-                    type="danger icon"
-                    icon="trash">
-                    Delete website
-                </p-button>
-            </fields-group>
-
-            <fields-group title="Clone website">
-                <p>Do you need a copy of this website - clone it.</p>
-
-                <p-button
-                    @click.native="cloneWebsite"
-                    type="icon"
-                    icon="duplicate">
-                    Clone website
-                </p-button>
-            </fields-group>
-
             <p-footer>
                 <p-button
                     @click.native="saveAndPreview"
@@ -1923,72 +1899,6 @@ export default {
             if (this.$store.state.currentSite.themeSettings) {
                 this.currentThemeVersion = this.$store.state.currentSite.themeSettings.version;
             }
-        },
-        askForRemove () {
-            this.$bus.$emit('confirm-display', {
-                message: `Do you really want to remove this website? This action cannot be undone. To confirm deletion, please enter the website name to be deleted (${this.websiteName}) below:`,
-                okClick: this.removeWebsite,
-                hasInput: true,
-                okLabel: 'Remove website'
-            });
-        },
-        cloneWebsite () {
-            ipcRenderer.send('app-site-clone', {
-                catalogName: this.websiteName,
-                siteName: this.name
-            });
-
-            ipcRenderer.once('app-site-cloned', (event, clonedWebsiteData) => {
-                this.$store.commit('cloneWebsite', {
-                    clonedWebsiteCatalog: this.websiteName, 
-                    newSiteName: clonedWebsiteData.siteName, 
-                    newSiteCatalog: clonedWebsiteData.siteCatalog
-                });
-                
-                this.$router.push({ path: `/site/${clonedWebsiteData.siteCatalog}` });
-                window.localStorage.setItem('publii-last-opened-website', clonedWebsiteData.siteCatalog);
-                this.$bus.$emit('message-display', {
-                    message: 'Website has been cloned. Switched to: ' + clonedWebsiteData.siteCatalog,
-                    type: 'success',
-                    lifeTime: 3
-                });
-            });
-        },
-        removeWebsite (name) {
-            if (name !== this.websiteName) {
-                this.$bus.$emit('alert-display', {
-                    message: 'Provided name is not the same as the current site name: ' + this.websiteName
-                });
-
-                return;
-            }
-
-            ipcRenderer.send('app-site-delete', {
-                site: this.websiteName
-            });
-
-            ipcRenderer.once('app-site-deleted', () => {
-                this.$store.commit('removeWebsite', this.websiteName);
-                let sites = Object.keys(this.$store.state.sites);
-
-                if(sites.length > 0) {
-                    this.$router.push({ path: `/site/${sites[0]}` });
-                    window.localStorage.setItem('publii-last-opened-website', sites[0]);
-                    this.$bus.$emit('message-display', {
-                        message: 'Website has been removed. Switched to: ' + sites[0],
-                        type: 'success',
-                        lifeTime: 3
-                    });
-                    return;
-                }
-
-                this.$router.push({ path: `/site/!` });
-                this.$bus.$emit('message-display', {
-                    message: 'Website has been removed.',
-                    type: 'success',
-                    lifeTime: 3
-                });
-            });
         },
         customPostLabels (value) {
             return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];

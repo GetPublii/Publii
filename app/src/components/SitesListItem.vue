@@ -20,7 +20,8 @@
                 href="#"
                 class="single-site-actions-btn"
                 title="Duplicate website"
-                tabindex="-1">
+                tabindex="-1"
+                @click.stop.prevent="askForClone">
                 <icon
                     name="duplicate"                
                     size="xs" />
@@ -30,7 +31,8 @@
                 href="#"
                 class="single-site-actions-btn delete"
                 title="Delete website"
-                tabindex="-1">
+                tabindex="-1"
+                @click.stop.prevent="askForRemove">
                 <icon
                     name="trash"                
                     size="xs" />
@@ -40,7 +42,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { ipcRenderer } from 'electron';
+import { mapState } from 'vuex';
 
 export default {
     name: 'sites-list-item',
@@ -66,9 +69,92 @@ export default {
             this.$router.push({ path: `/site/${siteToDisplay}` });
         },
         showWebsiteOnEnter (event, siteToDisplay) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !document.body.classList.contains('has-popup-visible')) {
                 this.showWebsite(siteToDisplay);
             }
+        },
+        askForRemove () {
+            this.$bus.$emit('confirm-display', {
+                message: `Do you really want to remove this website? This action cannot be undone.`,
+                okClick: this.removeWebsite.bind(this, this.site),
+                okLabel: 'Remove website'
+            });
+        },
+        askForClone () {
+            this.$bus.$emit('confirm-display', {
+                message: `Please provide a name for a copy of the website:`,
+                okClick: this.cloneWebsite,
+                hasInput: true,
+                okLabel: 'Clone website'
+            });
+        },
+        cloneWebsite (newName) {
+            if (!this.checkIfNewNameIsFree(newName)) {
+                this.$bus.$emit('alert-display', {
+                    message: 'The selected name is used by other website. Please try again.'
+                });
+                return;
+            }
+
+            ipcRenderer.send('app-site-clone', {
+                catalogName: this.site,
+                siteName: newName
+            });
+
+            ipcRenderer.once('app-site-cloned', (event, clonedWebsiteData) => {
+                this.$store.commit('cloneWebsite', {
+                    clonedWebsiteCatalog: this.site, 
+                    newSiteName: clonedWebsiteData.siteName, 
+                    newSiteCatalog: clonedWebsiteData.siteCatalog
+                });
+                
+                this.$router.push({ path: `/site/${clonedWebsiteData.siteCatalog}` });
+                window.localStorage.setItem('publii-last-opened-website', clonedWebsiteData.siteCatalog);
+                this.$bus.$emit('message-display', {
+                    message: 'Website has been cloned. Switched to: ' + clonedWebsiteData.siteCatalog,
+                    type: 'success',
+                    lifeTime: 3
+                });
+            });
+        },
+        removeWebsite (name) {
+            ipcRenderer.send('app-site-delete', {
+                site: name
+            });
+
+            ipcRenderer.once('app-site-deleted', () => {
+                this.$store.commit('removeWebsite', name);
+                let sites = Object.keys(this.$store.state.sites);
+
+                if(sites.length > 0) {
+                    this.$router.push({ path: `/site/${sites[0]}` });
+                    window.localStorage.setItem('publii-last-opened-website', sites[0]);
+                    this.$bus.$emit('message-display', {
+                        message: 'Website has been removed. Switched to: ' + sites[0],
+                        type: 'success',
+                        lifeTime: 3
+                    });
+                    return;
+                }
+
+                this.$router.push({ path: `/site/!` });
+                this.$bus.$emit('message-display', {
+                    message: 'Website has been removed.',
+                    type: 'success',
+                    lifeTime: 3
+                });
+            });
+        },
+        checkIfNewNameIsFree (newName) {
+            let keys = Object.keys(this.$store.state.sites);
+
+            for (let i = 0; i < keys.length; i++) {
+                if (newName === this.$store.state.sites[keys[i]].displayName) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

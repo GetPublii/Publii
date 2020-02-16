@@ -422,15 +422,15 @@ class Site {
      * Clone website
      */
     static clone(appInstance, catalogName, siteName) {
+        let newCatalogName = slug(siteName).toLowerCase();
         let sitePath = path.join(appInstance.sitesDir, catalogName);
-        let newCatalogName = Site.findFreeName(catalogName, appInstance.sitesDir);
-        let newSiteName = Site.getClonedSiteName(siteName);
-        let newSitePath = path.join(appInstance.sitesDir, newCatalogName);
+        let newCatalogFreeName = Site.findFreeName(newCatalogName, appInstance.sitesDir);
+        let newSitePath = path.join(appInstance.sitesDir, newCatalogFreeName);
         fs.copySync(sitePath, newSitePath);
-        Site.updateNameInSiteConfig(newSitePath, newCatalogName, newSiteName);
+        Site.updateNameInSiteConfig(newSitePath, newCatalogFreeName, siteName);
         
         return {
-            siteName: newSiteName,
+            siteName: siteName,
             siteCatalog: newCatalogName
         };
     }
@@ -445,28 +445,16 @@ class Site {
      * @param {string} name 
      */
     static findFreeName (name, basePath) {
-        let baseName = name + '-copy';
+        let baseName = name;
         let dirPath = path.join(basePath, baseName);
         let currentName = baseName;
 
         while (UtilsHelper.dirExists(dirPath)) {
             currentName = baseName + '-copy';
             dirPath = path.join(basePath, currentName);
-            iterator++;
         }
 
         return currentName;
-    }
-
-    /**
-     * Returns new cloned site name with proper " copy X" suffix
-     * 
-     * @param {string} catalogName 
-     * @param {string} siteName 
-     */
-    static getClonedSiteName (siteName) {
-        siteName = siteName + ' copy';
-        return siteName;
     }
 
     /**
