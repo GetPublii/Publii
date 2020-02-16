@@ -258,7 +258,7 @@ export default {
 .site-create {
     background: var(--popup-bg);
     border-radius: 5px;
-    box-shadow: 0 0 60px rgba($color-4, 0.05);
+    box-shadow: 0 0 60px rgba($color-4, 0.07);
     font-size: 1.6rem;
     margin: 0;
     left: 50%;

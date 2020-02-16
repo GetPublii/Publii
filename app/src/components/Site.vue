@@ -130,7 +130,6 @@ export default {
     padding: 2rem;
 
     &.is-empty {
-        background: var(--gray-7);
         height: 100%;
         position: absolute;
         width: 100%;
