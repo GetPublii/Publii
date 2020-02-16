@@ -4,7 +4,8 @@
             <sites-list-item
                 v-for="(siteName, key) in sites"
                 :site="siteName"
-                :key="key">
+                :key="key"
+                tabindex="1">
             </sites-list-item>
 
             <li

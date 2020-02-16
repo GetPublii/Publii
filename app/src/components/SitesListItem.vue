@@ -1,7 +1,8 @@
 <template>
     <li
         class="single-site"
-        @click="showWebsite(site)">    
+        @click="showWebsite(site)"
+        @keydown="showWebsiteOnEnter($event, site)">    
         
         <span class="single-site-icon">
             <icon
@@ -15,11 +16,11 @@
         </strong> 
         
         <div class="single-site-actions">
-            
             <a
                 href="#"
                 class="single-site-actions-btn"
-                title="Duplicate website">
+                title="Duplicate website"
+                tabindex="-1">
                 <icon
                     name="duplicate"                
                     size="xs" />
@@ -28,14 +29,13 @@
             <a  
                 href="#"
                 class="single-site-actions-btn delete"
-                title="Delete website">
+                title="Delete website"
+                tabindex="-1">
                 <icon
                     name="trash"                
                     size="xs" />
             </a>
-            
         </div>
-        
     </li>
 </template>
 
@@ -59,11 +59,16 @@ export default {
         }
     },
     methods: {
-        showWebsite: function(siteToDisplay) {
+        showWebsite (siteToDisplay) {
             window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             this.$bus.$emit('site-switched');
             this.$bus.$emit('sites-popup-hide');
             this.$router.push({ path: `/site/${siteToDisplay}` });
+        },
+        showWebsiteOnEnter (event, siteToDisplay) {
+            if (event.key === 'Enter') {
+                this.showWebsite(siteToDisplay);
+            }
         }
     }
 }
@@ -84,6 +89,10 @@ export default {
     margin: 0;
     padding: 1.2rem 0;
     position: relative;
+
+    &:focus {
+        background: var(--input-bg-light);
+    }
     
     &-actions {
         display: flex;

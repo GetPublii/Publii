@@ -7,7 +7,8 @@
             properties="is-small"
             ref="search-input"
             :spellcheck="false"
-            placeholder="Search..." />
+            placeholder="Search..."
+            tabindex="0" />
         <span
             v-if="value !== ''"
             @click.stop="clear">
