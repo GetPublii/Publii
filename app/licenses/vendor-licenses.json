@@ -41,5 +41,8 @@
     },
     "node-slug": {
         "url": "https://github.com/dodo/node-slug"
+    },
+    "feathericons": {
+        "url": "https://feathericons.com"
     }
 }

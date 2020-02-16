@@ -7,7 +7,7 @@
                 {{ licenseData.name }}
                 <a
                     class="credits-toggle"
-                    @click="itemClicked($event, licenseData.id, licenseData.url)"
+                    @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
                     :href="licenseData.href"
                     :target="licenseData.target">
                     License
