@@ -66,7 +66,7 @@ export default {
     border: none;
     border-radius: 3px;
     height: 6px;
-    margin: 4rem auto 5rem auto;
+    margin: 7rem auto;
     padding: 0;
     position: relative;
     width: 100%;
@@ -80,50 +80,27 @@ export default {
         position: relative;
         transition: width .2s ease-out;
         width: 0;
-
-        &:after {
-            animation: progressbar 2s linear infinite;
-            background-image: linear-gradient(-45deg, var(--progress-bar) 25%, transparent 25%, transparent 50%, var(--progress-bar) 50%, var(--progress-bar) 75%, transparent 75%, transparent);
-            background-size: 16px 16px;
-            border-radius: 3px;
-            bottom: 0;
-            content: "";
-            left: 0;
-            overflow: hidden;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 1;
-        }
-
-        &.is-stopped {
-            &:after {
-                display: none;
+       
+        @at-root {
+            .sync-progress-bar {               
+                .progress-bar {
+                     background: rgba(var(--yellow), 1);
+                }
             }
         }
+
+        &.is-stopped {}
 
         &.is-success {
             background: var(--success);
-
-            &:after {
-                display: none;
-            }
         }
 
         &.is-error {
             background: var(--warning);
-
-            &:after {
-                display: none;
-            }
         }
 
         &.is-warning {
             background: $color-helper-6;
-
-            &:after {
-                display: none;
-            }
         }
     }
 
@@ -138,16 +115,6 @@ export default {
         text-align: center;
         top: .75rem;
         width: 100%;
-    }
-}
-
-@-webkit-keyframes progressbar {
-    0% {
-        background-position: 0 0;
-    }
-
-    100% {
-        background-position: 48px 48px;
     }
 }
 </style>

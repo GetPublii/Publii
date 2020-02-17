@@ -3,30 +3,26 @@
         <div class="popup sync">
             <div
                 v-if="isInSync && noIssues"
-                class="sync-success">
-                <icon
-                    size="xl"
-                    name="success"
-                    primaryColor="color-2" />
+                class="sync-success">                
 
-                <h2>Your website is now in sync</h2>
+                <h1>Your website is now in sync</h1>
 
                 <p
                     v-if="isGithubPages"
-                    class="description alert">
-                    <strong>Remember!</strong> Changes on Github Pages can be visible in a few minutes from the deployment.
+                    class="description">
+                    <strong>Note:</strong> Changes on Github Pages can be visible in a few minutes from the deployment.<br>So be patient and wait for a while.
                 </p>
 
                 <p
                     v-if="isGitlabPages"
-                    class="description alert">
-                    <strong>Remember!</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment.
+                    class="description">
+                    <strong>Note:</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment. <br>So be patient and wait for a while.
                 </p>
 
                 <p
                     v-if="isManual"
-                    class="description alert">
-                    Your website files has been prepared. Use the "Get website files" button below to get your files in order to manually deploy them.
+                    class="description">
+                    Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
                 </p>
 
                 <div class="buttons">
@@ -55,12 +51,8 @@
             <div
                 v-if="isInSync && !noIssues"
                 class="sync-success">
-                <icon
-                    size="xl"
-                    name="warning"
-                    primaryColor="color-helper-6" />
-
-                <h2>Some files were not synced properly.</h2>
+               
+                <h1>Some files were not synced properly.</h1>
 
                 <p class="description">
                     Please check hard-upload-errors-log.txt files using the Tools -&gt; Log Viewer tool.
@@ -125,13 +117,12 @@
 
             <div
                 v-if="noDomainConfig"
-                class="sync-issues-to-resolve">
-                <icon
-                    name="settings"
-                    size="xl"
-                    primaryColor="color-8" />
+                class="sync-issues-to-resolve">                
 
-                <h2>Make sure the domain name is set.</h2>
+                <h1>Make sure the domain name is set.</h1>
+                <p class="description">
+                    We are currently unable to sync your website because you probably did not provide a domain name. <br>Go to server settings and make sure you have the domain name.
+                </p>
 
                 <div class="buttons">
                     <p-button
@@ -150,13 +141,12 @@
 
             <div
                 v-if="!noDomainConfig && noServerConfig"
-                class="sync-issues-to-resolve">
-                <icon
-                    name="server"
-                    size="xl"
-                    primaryColor="color-8" />
+                class="sync-issues-to-resolve">                
 
-                <h2>Make sure the destination server is properly configured.</h2>
+                <h1>Make sure the destination server is properly configured.</h1>
+                <p class="description">
+                    We are currently unable to sync your website because the destination server is not configured correctly. <br>Go to server settings and make sure that the entered data is correct.
+                </p>
 
                 <div class="buttons">
                     <p-button
@@ -686,17 +676,21 @@ export default {
         line-height: 1.4;
         margin: auto;
         padding: 0 1rem;
-        text-align: center;       
-    }
+        text-align: center;      
 
-    .description.alert {
-        background: var(--highlighted);
-        border-radius: .2em;
-        color: var(--text-primary-color);
-        font-size: 1.5rem;
-        margin-bottom: 3rem;
-        padding: 1rem 2rem;
-        text-align: left;
+        &.alert {
+            background: var(--highlighted);
+            border-radius: .2em;
+            color: var(--text-primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 1rem 2rem;
+            text-align: left;
+        }
+        
+        strong {
+            color: var(--text-primary-color); 
+        }
     }
 }
 

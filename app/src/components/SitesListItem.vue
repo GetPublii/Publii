@@ -82,7 +82,7 @@ export default {
         },
         askForClone () {
             this.$bus.$emit('confirm-display', {
-                message: `Please provide a name for a copy of the website:`,
+                message: `Please specify the new name for the duplicate website:`,
                 okClick: this.cloneWebsite,
                 hasInput: true,
                 okLabel: 'Clone website'

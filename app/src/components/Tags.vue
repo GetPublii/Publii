@@ -311,7 +311,7 @@ export default {
     overflow-x: hidden!important;
 
     &.no-scroll {
-        overflow: hidden;
+        overflow: hidden!important;
     }
 
     .header {
