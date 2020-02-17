@@ -120,8 +120,8 @@
                 class="sync-issues-to-resolve">                
 
                 <h1>Make sure the domain name is set.</h1>
-                <p class="description">
-                    We are currently unable to sync your website because you probably did not provide a domain name. <br>Go to server settings and make sure you have the domain name.
+                <p class="description">                   
+                    Your website cannot currently be synced as the settings appear to lack a domain name. <br>Check your server settings to ensure a domain name has been entered.
                 </p>
 
                 <div class="buttons">
@@ -145,7 +145,7 @@
 
                 <h1>Make sure the destination server is properly configured.</h1>
                 <p class="description">
-                    We are currently unable to sync your website because the destination server is not configured correctly. <br>Go to server settings and make sure that the entered data is correct.
+                    Your website cannot currently be synced as the destination server has not been configured correctly. <br>Check your server settings to ensure that the correct information has been entered.
                 </p>
 
                 <div class="buttons">
