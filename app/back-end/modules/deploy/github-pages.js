@@ -16,11 +16,19 @@ const normalizePath = require('normalize-path');
 class GithubPages {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
+        let server = '';
+
+        if (this.deployment.siteConfig) {
+            server = this.deployment.siteConfig.deployment.github.server;
+        } else {
+            server = this.deployment.github.server;
+        }
+
         this.connection = false;
         this.client = new githubApi({
             version: "3.0.0",
             protocol: "https",
-            host: this.deployment.siteConfig.deployment.github.server,
+            host: server,
             pathPrefix: "",
             timeout: 30000,
             headers: {

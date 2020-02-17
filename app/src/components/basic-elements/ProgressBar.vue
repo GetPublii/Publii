@@ -66,7 +66,7 @@ export default {
     border: none;
     border-radius: 3px;
     height: 6px;
-    margin: 7rem auto;
+    margin: 0 auto;
     padding: 0;
     position: relative;
     width: 100%;
@@ -105,6 +105,7 @@ export default {
     }
 
     &-wrapper {
+        padding: 7rem 0;
         position: relative;
     }
 

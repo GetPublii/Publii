@@ -25,6 +25,13 @@
                     Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
                 </p>
 
+                <progress-bar
+                    :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
+                    color="green"
+                    :progress="100"
+                    :stopped="false"
+                    message="" />
+
                 <div class="buttons">
                     <p-button
                         v-if="!isManual"
@@ -84,20 +91,22 @@
                     </p>
                 </div>
 
-                <progress-bar
-                    :cssClasses="{ 'rendering-progress-bar': true }"
-                    :color="renderingProgressColor"
-                    :progress="renderingProgress"
-                    :stopped="renderingProgressIsStopped"
-                    :message="messageFromRenderer" />
+                <div class="progress-bars-wrapper">
+                    <progress-bar
+                        :cssClasses="{ 'rendering-progress-bar': true }"
+                        :color="renderingProgressColor"
+                        :progress="renderingProgress"
+                        :stopped="renderingProgressIsStopped"
+                        :message="messageFromRenderer" />
 
-                <progress-bar
-                    v-if="!isManual && (uploadInProgress || syncInProgress || isInSync || uploadError)"
-                    :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
-                    :color="uploadingProgressColor"
-                    :progress="uploadingProgress"
-                    :stopped="uploadingProgressIsStopped"
-                    :message="messageFromUploader" />
+                    <progress-bar
+                        v-if="!isManual && (uploadInProgress || syncInProgress || isInSync || uploadError)"
+                        :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
+                        :color="uploadingProgressColor"
+                        :progress="uploadingProgress"
+                        :stopped="uploadingProgressIsStopped"
+                        :message="messageFromUploader" />
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -718,9 +727,21 @@ export default {
 .buttons {
     display: flex;
     justify-content: center;
-    margin-top: 4rem;
+    margin-top: 0;
     position: relative;
     text-align: center;
     top: 1px;
+}
+
+.progress-bars-wrapper {
+    position: relative;
+
+    .progress-wrapper + .progress-wrapper {
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+    }
 }
 </style>

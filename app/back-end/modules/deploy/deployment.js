@@ -59,13 +59,13 @@ class Deployment {
 
         switch(deploymentConfig.protocol) {
             case 'sftp':
-            case 'sftp+key':        connection = new SFTP();        break;
-            case 's3':              connection = new S3();          break;
-            case 'netlify':         connection = new Netlify();     break;
-            case 'google-cloud':    connection = new GoogleCloud(); break;
-            case 'github-pages':    connection = new GithubPages(); break;
-            case 'gitlab-pages':    connection = new GitlabPages(); break;
-            default:                connection = new FTP();         break;
+            case 'sftp+key':        connection = new SFTP();                        break;
+            case 's3':              connection = new S3();                          break;
+            case 'netlify':         connection = new Netlify();                     break;
+            case 'google-cloud':    connection = new GoogleCloud();                 break;
+            case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
+            case 'gitlab-pages':    connection = new GitlabPages();                 break;
+            default:                connection = new FTP();                         break;
         }
 
         if(connection) {
