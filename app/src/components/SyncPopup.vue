@@ -25,12 +25,14 @@
                     Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
                 </p>
 
-                <progress-bar
-                    :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
-                    color="green"
-                    :progress="100"
-                    :stopped="false"
-                    message="" />
+                <div class="progress-bars-wrapper">
+                    <progress-bar
+                        :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
+                        color="green"
+                        :progress="100"
+                        :stopped="false"
+                        message="" />
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -100,7 +102,7 @@
                         :message="messageFromRenderer" />
 
                     <progress-bar
-                        v-if="!isManual && (uploadInProgress || syncInProgress || isInSync || uploadError)"
+                        v-if="!isManual && !renderingInProgress && (uploadInProgress || syncInProgress || isInSync || uploadError)"
                         :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
                         :color="uploadingProgressColor"
                         :progress="uploadingProgress"
