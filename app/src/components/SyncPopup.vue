@@ -727,13 +727,14 @@ export default {
 .buttons {
     display: flex;
     justify-content: center;
-    margin-top: 0;
+    margin-top: 4rem;
     position: relative;
     text-align: center;
     top: 1px;
 }
 
 .progress-bars-wrapper {
+    margin-bottom: -4rem;
     position: relative;
 
     .progress-wrapper + .progress-wrapper {
