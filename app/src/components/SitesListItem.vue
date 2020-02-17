@@ -89,6 +89,13 @@ export default {
             });
         },
         cloneWebsite (newName) {
+            if (newName.replace(/\s/gmi, '').trim() === '') {
+                this.$bus.$emit('alert-display', {
+                    message: 'The website name cannot be empty. Please try again.'
+                });
+                return;
+            }
+            
             if (!this.checkIfNewNameIsFree(newName)) {
                 this.$bus.$emit('alert-display', {
                     message: 'The selected name is used by other website. Please try again.'
@@ -115,6 +122,8 @@ export default {
                     type: 'success',
                     lifeTime: 3
                 });
+
+                 this.$bus.$emit('sites-popup-hide');
             });
         },
         removeWebsite (name) {
