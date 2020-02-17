@@ -77,7 +77,8 @@ export default {
             this.$bus.$emit('confirm-display', {
                 message: `Do you really want to remove this website? This action cannot be undone.`,
                 okClick: this.removeWebsite.bind(this, this.site),
-                okLabel: 'Remove website'
+                okLabel: 'Remove website',
+                isDanger: true
             });
         },
         askForClone () {
@@ -123,7 +124,7 @@ export default {
                     lifeTime: 3
                 });
 
-                 this.$bus.$emit('sites-popup-hide');
+                this.$bus.$emit('sites-popup-hide');
             });
         },
         removeWebsite (name) {

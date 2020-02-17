@@ -17,7 +17,7 @@
 
             <div class="buttons">
                 <p-button
-                    type="medium no-border-radius half-width"
+                    :type="isDanger ? 'medium no-border-radius half-width danger' : 'medium no-border-radius half-width'"
                     :onClick="onOk"
                     ref="okButton">
                     {{ okLabel }}
@@ -46,6 +46,7 @@ export default {
             okClick: () => false,
             cancelClick: () => false,
             okLabel: 'OK',
+            isDanger: false,
             cancelLabel: 'Cancel',
             defaultText: ''
         };
@@ -70,7 +71,8 @@ export default {
                 this.inputIsPassword = config.inputIsPassword || false;
                 this.okLabel = config.okLabel || "OK";
                 this.cancelLabel = config.cancelLabel || "Cancel";
-                this.defaultText = config.defaultText || "";                
+                this.defaultText = config.defaultText || "";   
+                this.isDanger = config.isDanger || false;             
                 
                 if(config.okClick) {
                     this.okClick = config.okClick;
