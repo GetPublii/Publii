@@ -27,33 +27,7 @@
                     slot="buttons">
                     Save Settings
                 </p-button>
-            </p-header>
-
-            <div class="deployment-notice" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
-                <template v-if="deploymentMethodSelected === 'ftp'">
-                    The FTP protocol uses an unencrypted transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
-                </template>
-
-                <template v-if="deploymentMethodSelected === 'netlify'">
-                    Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
-                </template>
-
-                <template v-if="deploymentMethodSelected === 'github-pages'">
-                    Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
-                </template>
-
-                <template v-if="deploymentMethodSelected === 'gitlab-pages'">
-                    Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
-                </template>
-
-                <template v-if="deploymentMethodSelected === 's3'">
-                    Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
-                </template>
-
-                <template v-if="deploymentMethodSelected === 'google-cloud'">
-                    Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
-                </template>
-            </div>
+            </p-header>          
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
@@ -122,6 +96,34 @@
             </div>
 
             <fields-group v-if="deploymentMethodSelected !== ''">
+                
+                  <div class="msg msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                <template v-if="deploymentMethodSelected === 'ftp'">
+                     FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'netlify'">
+                    Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'github-pages'">
+                    Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'gitlab-pages'">
+                    Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
+                </template>
+
+                <template v-if="deploymentMethodSelected === 's3'">
+                    Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
+                </template>
+
+                <template v-if="deploymentMethodSelected === 'google-cloud'">
+                    Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                </template>
+            </div>
+
+
                 <field
                     id="domain"
                     label="Domain">
@@ -163,7 +165,7 @@
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
-                        Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                        Note: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -182,7 +184,7 @@
                     <small
                         class="note"
                         slot="note">
-                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                        Note: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -1352,6 +1354,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .server-settings {
     margin: 0 auto;
@@ -1407,6 +1410,10 @@ export default {
 
     #relative-urls {
         margin-top: 0;
+    }
+    
+    .msg {
+        margin-bottom: 3rem;
     }
 }
 </style>

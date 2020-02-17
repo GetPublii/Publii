@@ -1,12 +1,18 @@
 <template>
     <div
-        class="topbar-notification"
+        class="topbar-notifications"
         v-if="notification.visible"
         :data-timestamp="notification.timestamp" >
-        <span
+        <div class="topbar-notification">
+            <div class="topbar-notification-content">
+                <icon
+                    size="l"
+                    primaryColor="color-helper-1"
+                    name="info" />
+        <p
             ref="content"
             v-html="notification.text">
-        </span>
+        </p>
 
         <span
             class="topbar-notification-close"
@@ -14,6 +20,7 @@
             @click="closeNotification">
             &times;
         </span>
+        </div></div>
     </div>
 </template>
 
@@ -110,22 +117,84 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 
-.topbar {
-    &-notification {
-        -webkit-app-region: no-drag; // Make the links clickable again   
-        align-items: center;
-        display: inline-flex;
-        font-size: 1.4rem;
-        font-weight: 400;
-        left: 350px;
-        margin: 0;
-        padding: .9rem 2rem;
-        position: fixed;
-        top: 2.2rem;
-        width: calc(100vw - 450px);
-        z-index: 102;
+.topbar-notifications {
+     background: transparent;
+     bottom: 0;
+     pointer-events: none;
+     position: fixed;
+     left: 50%;
+     top: 4.2rem;
+     transform: translate(-50%, 0);     
+     user-select: none;
+     width: 100%;
+     z-index: 100003;
 
-        &-close {
+     .topbar-notification {
+         animation: messages-animation .24s cubic-bezier(.17,.67,.6,1.34) forwards;
+         display: flex;
+         justify-content: center;
+         margin: 0;
+         opacity: 1;
+         padding: 0;
+         position: relative;
+         white-space: nowrap;
+         width: 100%;
+
+         @at-root {
+                  @keyframes messages-animation {
+                     from {
+                          opacity: 0;
+                          transform: scale(0.6);
+                     }
+                     to {
+                          opacity: 1;
+                          transform: scale(1);
+                     }
+                 }
+            }
+
+         &-content {
+             align-items: center;
+             background: var(--popup-bg);
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+             border-radius: 6px;
+             color: var(--text-primary-color);
+             font-size: 1.5rem;            
+             display: flex;
+             justify-content: center;  
+             line-height: 1.4;
+             margin: 0;
+             padding: 2rem;
+             pointer-events: all;
+             position: absolute;                     
+
+             a {
+                 color: var(--white);
+                 cursor: pointer;
+                 text-decoration: underline;
+
+                 &:active,
+                 &:focus,
+                 &:hover {
+                     opacity: .75;
+                 }
+             }
+
+             p {
+                 margin: 0 0 0 2rem;
+             }
+             
+             .icon {
+                 flex-shrink: 0;
+             }
+         }
+
+         &-icon {
+             display: block;            
+             margin: 0;
+         }
+         
+         &-close {
             -webkit-app-region: no-drag; // Make the button clickable again  
             background: var(--input-bg-light);
             border-radius: 50%;
@@ -135,8 +204,8 @@ export default {
             font-weight: 300;
             height: 2.4rem;
             left: auto;
-            line-height: 1.1; 
-            margin: 0 1.9rem;
+            line-height: 1; 
+            margin-left: 2rem;
             text-align: center;       
             transition: all .3s ease-out;            
             width: 2.4rem;
@@ -151,7 +220,7 @@ export default {
                background: var(--input-border-color);
             }  
         }
-    }
+     }
 }
 
 body[data-os="linux"] {

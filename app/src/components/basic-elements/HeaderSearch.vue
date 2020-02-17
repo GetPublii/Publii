@@ -124,7 +124,7 @@ export default {
         font-size: 2.4rem;
         font-weight: 300;
         height: 3rem;
-        line-height: 1.1;       
+        line-height: 1;       
         opacity: 0;
         padding: 0;
         position: absolute;

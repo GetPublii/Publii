@@ -3,9 +3,8 @@
         id="app"
         :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }">
         <message />
-        <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
         <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
-
+        <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
         <section>
             <router-view />
         </section>

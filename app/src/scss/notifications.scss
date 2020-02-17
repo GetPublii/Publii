@@ -1,0 +1,15 @@
+.msg {    
+    border-radius: 4px;
+    font-size: 1.4rem;
+    padding: 1.5rem 2rem;
+    
+    a {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &-info {
+        background-color: var(--highlighted);       
+    }   
+}
