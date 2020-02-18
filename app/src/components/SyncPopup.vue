@@ -29,7 +29,7 @@
                     <progress-bar
                         :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
                         color="green"
-                        :progress="100"
+                        :progress="100" 
                         :stopped="false"
                         message="" />
                 </div>
@@ -371,7 +371,7 @@ export default {
         startSync: function() {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
+                    message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
                     okLabel: 'Go to settings',
                     okClick: () => {
                         let siteName = this.$route.params.name;
@@ -676,7 +676,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {        
+.popup {       
+    background: none;
     max-width: $wrapper;
     overflow: visible;
     width: 100%;
