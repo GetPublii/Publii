@@ -45,6 +45,7 @@
                     :items="imageResizeEngines"
                     v-model="imageResizeEnginesSelected"></dropdown>
                 <small
+                    v-if="process.platform !== 'linux'"
                     slot="note"
                     class="note">
                     Sharp resize engine is much faster than Jimp, but is also less stable. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine.
@@ -221,6 +222,12 @@ export default {
         GoToLastOpenedWebsite
     ],
     data () {
+        let imageResizeEngine = 'sharp';
+
+        if (process.platform === 'linux') {
+            imageResizeEngine = 'jimp';
+        }
+
         return {
             alwaysSaveSearchState: false,
             screensSelected: '',
@@ -257,6 +264,12 @@ export default {
             };
         },
         imageResizeEngines () {
+            if (process.platform === 'linux') {
+                return {
+                    'jimp': 'Jimp'
+                };
+            }
+
             return {
                 'sharp': 'Sharp',
                 'jimp': 'Jimp'
@@ -322,6 +335,10 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+
+        if (process.platform === 'linux') {
+            this.imageResizeEnginesSelected = 'jimp';
+        }
     },
     methods: {
         goBack () {
