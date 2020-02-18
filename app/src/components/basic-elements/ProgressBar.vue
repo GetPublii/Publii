@@ -110,11 +110,12 @@ export default {
     }
 
     &-message {
+        color: var(--text-light-color);
         font-size: 1.3rem;
         padding: 0;
         position: absolute;
         text-align: center;
-        top: .75rem;
+        bottom: 2rem;
         width: 100%;
     }
 }

@@ -10,13 +10,13 @@
                 <p
                     v-if="isGithubPages"
                     class="description">
-                    <strong>Note:</strong> Changes on Github Pages can be visible in a few minutes from the deployment.<br>So be patient and wait for a while.
+                    <strong>Note:</strong> Changes on Github Pages can be visible in a few minutes from the deployment, <br>so be patient and wait for a while.
                 </p>
 
                 <p
                     v-if="isGitlabPages"
                     class="description">
-                    <strong>Note:</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment. <br>So be patient and wait for a while.
+                    <strong>Note:</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment,  <br>so be patient and wait for a while.
                 </p>
 
                 <p
@@ -188,7 +188,7 @@ export default {
             isVisible: false,
             renderingInProgress: false,
             uploadInProgress: false,
-            messageFromRenderer: '',
+            messageFromRenderer: 'true',
             renderingProgress: 0,
             renderingProgressColor: 'blue',
             renderingProgressIsStopped: false,
