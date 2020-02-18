@@ -11,9 +11,10 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
+let sharp;
 
 if (process.platform !== 'linux') {
-    const sharp = require('sharp');
+    sharp = require('sharp');
 }
 
 class Image extends Model {

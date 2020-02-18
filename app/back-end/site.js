@@ -278,8 +278,8 @@ class Site {
         let regenerateProcess = childProcess.fork(__dirname + '/workers/thumbnails/regenerate', {
             stdio: [
                 null,
-                fs.openSync(this.application.getPath('logs') + "/regenerate-process.log", "w"),
-                fs.openSync(this.application.getPath('logs') + "/regenerate-errors.log", "w"),
+                fs.openSync(this.application.app.getPath('logs') + "/regenerate-process.log", "w"),
+                fs.openSync(this.application.app.getPath('logs') + "/regenerate-errors.log", "w"),
                 'ipc'
             ]
         });
