@@ -25,6 +25,12 @@
                     Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
                 </p>
 
+                <p 
+                    v-if="!(isGithubPages || isGitlabPages || isManual)"
+                    class="description">
+                    All files have been successfully uploaded to your server. <br>Visit your website by clicking the button below.
+                </p>
+
                 <div class="progress-bars-wrapper">
                     <progress-bar
                         :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
