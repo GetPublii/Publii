@@ -105,7 +105,7 @@ export default {
     }
 
     &-wrapper {
-        padding: 7rem 0;
+        padding: 0 0 7rem;
         position: relative;
     }
 

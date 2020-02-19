@@ -743,6 +743,7 @@ export default {
 }
 
 .progress-bars-wrapper {
+    margin-top: 7rem;
     margin-bottom: -4rem;
     position: relative;
 
