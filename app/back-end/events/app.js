@@ -216,7 +216,7 @@ class AppEvents {
             let fileContent = fs.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {
-                fileContent: appInstance.app.getPath('logs') + '-' + fileContent
+                fileContent: fileContent
             });
         });
     }
