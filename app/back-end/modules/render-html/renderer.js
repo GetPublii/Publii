@@ -90,7 +90,7 @@ class Renderer {
         this.emptyOutputDir();
         let themeValidationResults = this.themeIsValid();
 
-        if(themeValidationResults === true) {
+        if (themeValidationResults === true) {
             await this.renderSite();
 
             if(this.errorLog.length === 0) {
@@ -208,7 +208,7 @@ class Renderer {
         this.generateFeeds();
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
-        this.copyFiles();
+        await this.copyFiles();
         await this.generateSitemap();
         this.sendProgress(90, 'Finishing the render process');
     }
@@ -257,8 +257,16 @@ class Renderer {
      * Make sure the output dir exists and is empty before generating the output files
      */
     emptyOutputDir() {
-        if(UtilsHelper.dirExists(this.outputDir)) {
-            fs.emptyDirSync(this.outputDir);
+        if (UtilsHelper.dirExists(this.outputDir)) {
+            let files = fs.readdirSync(this.outputDir);
+            
+            for (let file of files) {
+                if (file === '.' || file === '..' || file === 'media') {
+                    continue;
+                }
+
+                fs.rmdirSync(path.join(this.outputDir, file), { recursive: true });
+            }
         } else {
             fs.mkdirSync(this.outputDir);
         }
@@ -1577,12 +1585,12 @@ class Renderer {
     /**
      * Copy input files to the output directory
      */
-    copyFiles() {
+    async copyFiles() {
         console.time("FILES");
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         console.timeEnd("FILES");
     }
 

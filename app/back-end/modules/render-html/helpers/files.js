@@ -3,6 +3,7 @@ const list = require('ls-all');
 const path = require('path');
 const UtilsHelper = require('./../../../helpers/utils');
 const normalizePath = require('normalize-path');
+const DiffCopy = require('./diffCopy.js');
 
 class Files {
     /**
@@ -106,7 +107,7 @@ class Files {
      * @param outputDir
      * @param postIDs
      */
-    static copyMediaFiles (inputDir, outputDir, postIDs) {
+    static async copyMediaFiles (inputDir, outputDir, postIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
         let dirs = ['website', 'files'];
@@ -119,16 +120,25 @@ class Files {
             dirs.push('posts/' + postIDs[i]);
         }
 
-        for(let i = 0; i < dirs.length; i++) {
+        for (let i = 0; i < dirs.length; i++) {
             if (!UtilsHelper.dirExists(path.join(basePathInput, dirs[i]))) {
                 continue;
             }
 
-            fs.copySync(
-                path.join(basePathInput, dirs[i]),
-                path.join(basePathOutput, dirs[i])
-            );
+            if (!UtilsHelper.dirExists(path.join(basePathOutput, dirs[i]))) {
+                fs.copySync(
+                    path.join(basePathInput, dirs[i]),
+                    path.join(basePathOutput, dirs[i])
+                );
+            } else {
+                await DiffCopy.copy(
+                    path.join(basePathInput, dirs[i]), 
+                    path.join(basePathOutput, dirs[i])
+                );
+            }
         }
+
+        DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));
     }
 }
 
