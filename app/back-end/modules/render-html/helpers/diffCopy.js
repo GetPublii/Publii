@@ -5,8 +5,11 @@ const path = require('path');
 class DiffCopy {
     static async copy (input, output) {
         let inputFiles = await DiffCopy.listAllFiles(input);
-        let outputFiles = await DiffCopy.listAllFiles(output);
         inputFiles = inputFiles.map(item => item.path);
+        DiffCopy.compareExistingFiles(inputFiles, input, output);
+        // We remove output files during DiffCopy.compareExistingFiles, 
+        // so we need to create index of the output files after this operation to get the current list of output files
+        let outputFiles = await DiffCopy.listAllFiles(output);
         outputFiles = outputFiles.map(item => item.path);
         DiffCopy.inputFilesCopy(inputFiles, outputFiles, input, output);
         DiffCopy.outputFilesDelete(inputFiles, outputFiles, input, output);
@@ -14,6 +17,27 @@ class DiffCopy {
 
     static async listAllFiles (dir) {
         return list([dir], { recurse: true, flatten: true });
+    }
+
+    static compareExistingFiles (inputFiles, inputDir, outputDir) {
+        for (let i = 0; i < inputFiles.length; i++) {
+            let fileToCheck = inputFiles[i].replace(inputDir, outputDir);
+
+            if (!fs.existsSync(fileToCheck)) {
+                continue;
+            }
+
+            let fileStats = fs.statSync(fileToCheck);
+
+            if (fileStats.isDirectory()) {
+                continue;
+            }
+
+            if (DiffCopy.getFileSize(inputFiles[i]) !== DiffCopy.getFileSize(fileToCheck)) {
+                fs.removeSync(fileToCheck);
+                console.log('[DIFF REMOVE DUE SIZE]', fileToCheck);
+            }
+        }
     }
 
     static inputFilesCopy (inputFiles, outputFiles, inputDir, outputDir) {
@@ -102,6 +126,13 @@ class DiffCopy {
                 console.log('[DIFF REMOVE CATALOG]', path.join(baseOutputPath, allPostFolders[i]));
             }
         }
+    }
+
+    static getFileSize(filename) {
+        let stats = fs.statSync(filename);
+        let fileSize = stats['size'];
+        
+        return fileSize;
     }
 }
 
