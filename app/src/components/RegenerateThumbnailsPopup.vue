@@ -8,7 +8,7 @@
                 size="xl"
                 primaryColor="color-8" />
 
-            <div class="render-popup-text">
+            <h1>
                 <template v-if="qualityChanged">
                     Image quality has been changed.
                 </template>
@@ -16,10 +16,11 @@
                 <template v-if="!qualityChanged">
                     Your theme has been changed.
                 </template>
+            </h1>
 
-                <br>
-                We recommend that you regenerate thumbnails.
-            </div>
+            <p class="popup-info">
+                Pressing the Regenerate thumbnails button will start generating new image sizes defined by your new theme.
+            </p>
 
             <progress-bar
                 :color="progressColor"
@@ -166,14 +167,30 @@ export default {
     z-index: 100006;
 }
 
-.popup {   
+.popup {  
     padding: 4rem 4rem 6rem 4rem;   
     width: 60rem;
+
+    &-info {
+        margin: -1.5rem 0 4rem;
+    }
 }
 
+.message {
+    color: var(--text-primary-color);
+    font-weight: 400;
+    margin: 0;
+    padding: 4rem;
+    position: relative;
+    text-align: left;
+
+    &.text-centered {
+        text-align: center;
+    }
+}
 .buttons {
     display: flex;
-    margin: 4rem -4rem -6rem -4rem;
+    margin: 0 -4rem -6rem -4rem;
     position: relative;
     text-align: center;
     top: 1px;
