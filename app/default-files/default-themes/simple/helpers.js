@@ -7,7 +7,7 @@ let themeHelpers = {
         let modifiedPostText = postText;
         // Select all images from the content
         modifiedPostText = modifiedPostText.replace(/<img[a-zA-Z0-9\s\"\'\=\-]*?src="(.*?)".*?>/gmi, function(match, url) {
-            if (match.indexOf('data-is-external-image="true"') > -1) {
+            if (match.indexOf('data-is-external-image="true"') > -1 || match.indexOf('srcset="') === -1) {
                 return match;
             }  
             

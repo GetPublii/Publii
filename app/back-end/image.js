@@ -172,6 +172,10 @@ class Image extends Model {
             height: false
         };
 
+        if (!siteConfig.advanced.responsiveImages) {
+            return [];
+        }
+
         if (!this.allowedImageExtension(imageExtension)) {
             return [];
         }

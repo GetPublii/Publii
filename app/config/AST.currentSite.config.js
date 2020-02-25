@@ -14,6 +14,7 @@ const AstCurrentSiteConfig = {
         htmlCompression: 1,
         htmlCompressionRemoveComments: 1,
         imagesQuality: 60,
+        responsiveImages: 1,
         versionSuffix: 1,
         sitemapEnabled: 1,
         sitemapAddTags: 1,

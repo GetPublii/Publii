@@ -1150,6 +1150,16 @@
                         </field>
 
                         <field
+                            id="responsive-images"
+                            label="Enable responsive images">
+                            <label slot="field">
+                                <switcher
+                                    id="responsive-images"
+                                    v-model="advanced.responsiveImages" />
+                            </label>
+                        </field>
+
+                        <field
                             id="version-suffix"
                             label="Version parameter">
                             <label slot="field">
