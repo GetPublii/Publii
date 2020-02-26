@@ -1637,6 +1637,7 @@ class Renderer {
         globalContext.context = [context];
         globalContext.config = URLHelper.prepareSettingsImages(this.siteConfig.domain, {
             basic: JSON.parse(JSON.stringify(this.themeConfig.config)),
+            site: JSON.parse(JSON.stringify(this.siteConfig.advanced)),
             custom: JSON.parse(JSON.stringify(this.themeConfig.customConfig))
         });
         globalContext.website.language = this.siteConfig.language;
