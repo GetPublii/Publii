@@ -1157,6 +1157,12 @@
                                     id="responsive-images"
                                     v-model="advanced.responsiveImages" />
                             </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                Enable this option if you want to deliver different sized images at different screen resolutions depending on breakpoints defined through config.json file in a theme's folder.
+                            </small>
                         </field>
 
                         <field
