@@ -1150,6 +1150,22 @@
                         </field>
 
                         <field
+                            id="media-lazyload"
+                            label="Enable media lazy load">
+                            <label slot="field">
+                                <switcher
+                                    id="media-lazyload"
+                                    v-model="advanced.mediaLazyLoad" />
+                            </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                Enable this option if you want to enable loading="lazy" attributes for images, videos and iframes.
+                            </small>
+                        </field>
+                        
+                        <field
                             id="responsive-images"
                             label="Enable responsive images">
                             <label slot="field">

@@ -73,6 +73,14 @@ class ContentHelper {
             });
         }
 
+        // Add loading="lazy" attributes to img, video, audio, iframe tags
+        if (renderer.siteConfig.advanced.mediaLazyLoad) {
+            preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
+            preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
+            preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
+            preparedText = preparedText.replace(/<iframe\s/gmi, '<iframe loading="lazy" ');
+        }
+
         // Wrap images with classes into <figure>
         preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
             return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
