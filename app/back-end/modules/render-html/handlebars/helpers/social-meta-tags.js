@@ -1,3 +1,5 @@
+const stripTags = require('striptags');
+
 /**
  * Helper for creating Open Graph and Twitter Cars metatags
  *
@@ -91,7 +93,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             }
 
             output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
-            output += '<meta property="og:description" content="' + description.replace(/"/g, "'") + '" />';
+            output += '<meta property="og:description" content="' + stripTags(description).replace(/"/g, "'") + '" />';
             output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '" />';
             output += '<meta property="og:type" content="' + openGraphType + '" />';
 
@@ -109,7 +111,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             output += '<meta name="twitter:card" content="' + twitterCardsType + '" />';
             output += '<meta name="twitter:site" content="' + twitterUsername + '" />';
             output += '<meta name="twitter:title" content="' + title.replace(/"/g, "'") + '" />';
-            output += '<meta name="twitter:description" content="' + description.replace(/"/g, "'") + '" />';
+            output += '<meta name="twitter:description" content="' + stripTags(description).replace(/"/g, "'") + '" />';
 
             if(image) {
                 output += '<meta name="twitter:image" content="' + image + '" />';
