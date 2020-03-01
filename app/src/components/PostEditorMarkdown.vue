@@ -99,7 +99,7 @@ export default {
             editorConfig: {
                 status: false,
                 toolbar: false,
-                placeholder: 'Write here...',
+                placeholder: 'Start writing...',
                 spellChecker: false,
                 promptURLs: true
             },
