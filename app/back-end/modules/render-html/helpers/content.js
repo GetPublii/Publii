@@ -172,6 +172,10 @@ class ContentHelper {
             text += '&hellip;';
         }
 
+        if (text.trim() === '&hellip;') {
+            return '';
+        }
+
         return text;
     }
 
