@@ -265,13 +265,13 @@
                                     :type="field.type"
                                     slot="field"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    placeholder="Leave it blank to use default value"
+                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
                                     v-model="postView[field.name]" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
-                                    placeholder="Leave it blank to use default value"
+                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="postView[field.name]" />
 
