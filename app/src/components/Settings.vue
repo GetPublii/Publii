@@ -1161,7 +1161,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                Enable this option if you want to enable loading="lazy" attributes for images, videos and iframes.
+                                Enable this option if you want to use native lady loading that lazy loads images, videos and iframes.
                             </small>
                         </field>
                         

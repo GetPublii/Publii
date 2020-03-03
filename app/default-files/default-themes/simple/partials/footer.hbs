@@ -80,11 +80,20 @@
 </script>
 <script defer src="{{js "scripts.min.js"}}"></script>
 
-{{#if @config.custom.lazyLoad}}
-<script>
-      var lazyFeaturedImage=function lazyFeaturedImage(){var b=document.querySelectorAll(".hero__image-img");for(var a=0;a<b.length;a++){var c=b[a];c.addEventListener("lazyloaded",function(f){var d=f.target.parentNode;d.classList.add("hero__image--overlay")})}};lazyFeaturedImage();
-   </script>
-{{/if}}
+<script>        
+    var images = document.querySelectorAll('img[loading]');
+   
+    for (var i = 0; i < images.length; i++) {
+        if (images[i].complete) {
+            images[i].classList.add('is-loaded');
+        } else {
+            images[i].addEventListener('load', function () {
+                this.classList.add('is-loaded');
+            }, false);
+        }
+    }
+</script>
+
 {{#is "post"}}
    {{#post}}
       {{#if hasGallery}}

@@ -44,10 +44,6 @@
            {{/checkIf}}
         {{/checkIf}}
         {{jsonLD}}
-        {{#if @config.custom.lazyLoad}}            
-            <script src="{{js "ls.parent-fit.min.js"}}"></script>
-            <script async src="{{js "lazysizes.min.js"}}"></script>          
-        {{/if}}
 		{{#is "post"}}
            {{#post}}
               {{#if hasGallery}}
