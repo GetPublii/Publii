@@ -4,57 +4,22 @@
    <article class="post search-page">
       <div class="hero">
          {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-            {{#if @config.custom.uploadHeroCaption}}
-               {{#if @config.custom.lazyLoad}}
-                  <figure class="hero__image">
-                     <img
-                        class="hero__image-img lazyload"
-                         {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                           src="{{@config.custom.uploadHero}}"
-                        {{else}}
-                           data-src="{{@config.custom.uploadHero}}"
-                        {{/checkIf}}
-                        {{responsiveImageAttributes @config.custom.uploadHero}}
-                        data-sizes="auto"
-                        alt="{{@config.custom.uploadHeroAlt}}">
-                     <figcaption>
-                        {{@config.custom.uploadHeroCaption}}
-                     </figcaption>
-                  </figure>
-               {{else}}
-                  <figure class="hero__image hero__image--overlay">
-                     <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{responsiveImageAttributes @config.custom.uploadHero}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
-                     <figcaption>
-                        {{@config.custom.uploadHeroCaption}}
-                     </figcaption>
-                  </figure>
-               {{/if}}
-            {{else}}
-               {{#if @config.custom.lazyLoad}}
-                  <div class="hero__image">
-                     <img
-                        class="hero__image-img lazyload"
-                        {{#checkIf @config.custom.lazyLoadEffect '!==' "lqip" }}
-                           src="{{@config.custom.uploadHero}}"
-                        {{else}}
-                           data-src="{{@config.custom.uploadHero}}"
-                        {{/checkIf}}
-                        {{responsiveImageAttributes @config.custom.uploadHero}}
-                        data-sizes="auto"
-                        alt="{{@config.custom.uploadHeroAlt}}">
-                  </div>
-               {{else}}
-                  <div class="hero__image hero__image--overlay">
-                     <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{responsiveImageAttributes @config.custom.uploadHero}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
-                  </div>
-               {{/if}}
-            {{/if}}
+            <figure class="hero__image hero__image--overlay">
+                <img
+                   src="{{@config.custom.uploadHero}}"
+                   {{#if @config.site.responsiveImages}}
+                      {{responsiveImageAttributes @config.custom.uploadHero}}
+                   {{/if}}
+                   {{ lazyload "eager" }}
+                   {{imageDimensions @config.custom.uploadHero}}
+                   alt="{{@config.custom.uploadHeroAlt}}">
+
+                {{#if @config.custom.uploadHeroCaption}}
+                   <figcaption>
+                      {{@config.custom.uploadHeroCaption}}
+                   </figcaption>
+                {{/if}}
+            </figure>
          {{/checkIfAll}}
          <header class="hero__content">
             <div class="wrapper">

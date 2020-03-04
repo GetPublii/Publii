@@ -3,57 +3,22 @@
 <main>
    <div class="hero">
       {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-         {{#if @config.custom.uploadHeroCaption}}
-            {{#if @config.custom.lazyLoad}}
-               <figure class="hero__image">
-                  <img
-                     class="hero__image-img lazyload"
-                     {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
-                        src="{{@config.custom.uploadHero}}"
-                     {{else}}
-                        data-src="{{@config.custom.uploadHero}}"
-                     {{/checkIf}}
-                     {{responsiveImageAttributes @config.custom.uploadHero}}
-                     data-sizes="auto"
-                     alt="{{@config.custom.uploadHeroAlt}}">
-                  <figcaption>
-                     {{@config.custom.uploadHeroCaption}}
-                  </figcaption>
-               </figure>
-            {{else}}
-               <figure class="hero__image hero__image--overlay">
-                  <img
-                     src="{{@config.custom.uploadHero}}"
-                     {{responsiveImageAttributes @config.custom.uploadHero}}
-                     alt="{{@config.custom.uploadHeroAlt}}">
-                  <figcaption>
-                     {{@config.custom.uploadHeroCaption}}
-                  </figcaption>
-               </figure>
+         <figure class="hero__image hero__image--overlay">
+            <img
+               src="{{@config.custom.uploadHero}}"
+               {{#if @config.site.responsiveImages}}
+                  {{responsiveImageAttributes @config.custom.uploadHero}}
+               {{/if}}
+               {{ lazyload "eager" }}
+               {{imageDimensions @config.custom.uploadHero}}
+               alt="{{@config.custom.uploadHeroAlt}}">
+
+            {{#if @config.custom.uploadHeroCaption}}
+               <figcaption>
+                  {{@config.custom.uploadHeroCaption}}
+               </figcaption>
             {{/if}}
-         {{else}}
-            {{#if @config.custom.lazyLoad}}
-               <div class="hero__image">
-                  <img
-                     class="hero__image-img  lazyload"
-                     {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
-                        src="{{@config.custom.uploadHero}}"
-                     {{else}}
-                        data-src="{{@config.custom.uploadHero}}"
-                     {{/checkIf}}
-                     {{responsiveImageAttributes @config.custom.uploadHero}}
-                     data-sizes="auto"
-                     alt="{{@config.custom.uploadHeroAlt}}">
-               </div>
-            {{else}}
-               <div class="hero__image hero__image--overlay">
-                  <img
-                     src="{{@config.custom.uploadHero}}"
-                     {{responsiveImageAttributes @config.custom.uploadHero}}
-                     alt="{{@config.custom.uploadHeroAlt}}">
-               </div>
-            {{/if}}
-         {{/if}}
+         </figure>
       {{/checkIfAll}}
       <header class="hero__content">
          <div class="wrapper">
@@ -80,11 +45,11 @@
                      {{#author}}
                         {{#if @config.custom.tagAvatar}}
                            {{#if avatar}}
-                              {{#if @config.custom.lazyLoad}}
-                                 <img class="lazyload post__author-thumb" data-src="{{avatar}}" alt="{{name}}">
-                              {{else}}
-                                 <img src="{{avatar}}" alt="{{name}}" class="post__author-thumb">
-                              {{/if}}
+                              <img
+                                 src="{{avatar}}"
+                                 {{ lazyload "lazy" }}
+                                 class="post__author-thumb"
+                                 alt="{{name}}">
                            {{/if}}
                         {{/if}}
                         {{#if @config.custom.tagAuthor}}
@@ -111,31 +76,16 @@
             {{#if @config.custom.tagFeaturedImage}}
                {{#featuredImage}}
                   {{#if url}}
-                     {{#if @config.custom.lazyLoad}}
-                        <div class="feed__image">
-                           <img
-                              class="lazyload"
-                              {{#checkIf @config.custom.lazyLoadEffect '!==' "fadein" }}
-                                 src="{{urlXs}}"
-                              {{else}}
-                                 data-src="{{url}}"
-                              {{/checkIf}}
-                              data-srcset="{{srcset.post}}"
-                              data-aspectratio="{{ math width '/' height }}"
-                              data-sizes="auto"
+                     <div class="feed__image">
+                       <img
+                              src="{{url}}"
+                              {{#if @config.site.responsiveImages}}
+                                 {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                              {{/if}}
+                              {{ lazyload "lazy" }}
                               height="{{height}}"
                               width="{{width}}"
                               alt="{{alt}}">
-                        </div>
-                     {{else}}
-                        <div class="feed__image">
-                           <img
-                              src="{{url}}"
-                              sizes="{{sizes.post}}"
-                              srcset="{{srcset.post}}"
-                              alt="{{alt}}">
-                        </div>
-                     {{/if}}
                   {{/if}}
                {{/featuredImage}}
             {{/if}}
