@@ -1377,6 +1377,11 @@
                                 v-model="advanced.hiddenPostsListingOrder"
                                 :items="orderOptions"></dropdown>
                         </field>
+                        
+                        <separator                            
+                            type="small"
+                            :is-line="true"
+                            label="" />
 
                         <field
                             id="related-posts-criteria"
