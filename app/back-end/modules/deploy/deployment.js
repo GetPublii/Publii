@@ -398,6 +398,8 @@ class Deployment {
                 this.client.removeDirectory(normalizePath(path.join(this.outputDir, fileToRemove.path)));
             }
         } else {
+            self.progressOfUploading = self.progressOfDeleting;
+
             process.send({
                 type: 'web-contents',
                 message: 'app-uploading-progress',

@@ -447,7 +447,7 @@ export default {
             });
         },
         renderingProgressUpdate: function(event, data) {
-            if(this.renderingProgress > data.progress) {
+            if (this.renderingProgress > data.progress) {
                 return;
             }
 

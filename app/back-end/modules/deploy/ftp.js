@@ -389,8 +389,8 @@ class FTP {
                     type: 'web-contents',
                     message: 'app-uploading-progress',
                     value: {
-                        progress: 40 + Math.floor(self.deployment.progressOfDeleting),
-                        operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
+                        progress: 8 + Math.floor(self.deployment.progressOfDeleting),
+                        operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
                     }
                 });
 
