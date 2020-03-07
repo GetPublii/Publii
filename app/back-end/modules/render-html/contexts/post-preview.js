@@ -460,6 +460,14 @@ class RendererContextPostPreview extends RendererContext {
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
         preparedText = ContentHelper.parseText(preparedText, this.editor);
 
+        // Remove TOC plugin ID attributes when TOC does not exist
+        if (preparedText.indexOf('class="post__toc') === -1) {
+            preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, ''); 
+        }
+
+        // Reduce download="download" to download
+        preparedText = preparedText.replace(/download="download"/gmi, 'download');
+
         // Remove content for AMP or non-AMP depending from ampMode value
         preparedText = preparedText.replace(/<publii-amp>.*<\/publii-amp>/gmi, '');
         preparedText = preparedText.replace(/<publii-non-amp>/gmi, '');
@@ -497,6 +505,28 @@ class RendererContextPostPreview extends RendererContext {
                 return matches;
             }
         });
+
+        // Add loading="lazy" attributes to img, video, audio, iframe tags
+        if (self.siteConfig.advanced.mediaLazyLoad) {
+            preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
+            preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
+            preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
+            preparedText = preparedText.replace(/<iframe\s/gmi, '<iframe loading="lazy" ');
+        }
+
+        // Wrap images with classes into <figure>
+        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
+            return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
+        });
+
+        // Wrap iframes into <div class="post__iframe">
+        preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
+            return '<div class="post__iframe">' + matches + '</div>';
+        });
+
+        // Remove CDATA sections inside scripts added by TinyMCE
+        preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
+        preparedText = preparedText.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
 
         return preparedText;
     }
