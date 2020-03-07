@@ -97,6 +97,7 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             sidebarVisible: false,
+            iframeFocusCheckTimeout: false,
             postData: {
                 editor: this.$options.editorType,
                 title: '',
@@ -169,6 +170,10 @@ export default {
         this.$bus.$on('post-editor-possible-data-loss', () => {
             this.possibleDataLoss = true;
         });
+
+        this.iframeFocusCheckTimeout = setTimeout(() => {
+            this.checkIframeFocus();
+        }, 1000);
     },
     methods: {
         updateTitle () {
@@ -304,6 +309,16 @@ export default {
                 this.writersPanelOpen = true;
                 localStorage.setItem('publii-writers-panel', 'opened');
             }
+        },
+        checkIframeFocus () {
+            if (!document.getElementById('post-editor_ifr').contentDocument.hasFocus()) {
+                document.getElementById('inline-toolbar').style.display = 'none';
+                document.getElementById('link-toolbar').style.display = 'none';
+            }
+
+            this.iframeFocusCheckTimeout = setTimeout(() => {
+                this.checkIframeFocus();
+            }, 1000);
         }
     },
     beforeDestroy () {
@@ -314,6 +329,7 @@ export default {
         $('#custom-post-editor-script').remove();
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
+        clearTimeout(this.iframeFocusCheckTimeout);
     }
 };
 </script>
