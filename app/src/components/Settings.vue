@@ -1474,8 +1474,7 @@ export default {
             currentTheme: '',
             currentThemeVersion: '',
             advanced: {},
-            errors: [],
-            previousQuality: false
+            errors: []
         };
     },
     computed: {
@@ -1622,7 +1621,6 @@ export default {
 
             let siteName = this.$store.state.currentSite.config.name;
             let newTheme = this.$store.state.currentSite.config.theme;
-            this.previousQuality = this.$store.state.currentSite.config.advanced.imagesQuality;
 
             if(this.theme !== '') {
                 newTheme = this.theme;
@@ -1687,7 +1685,7 @@ export default {
                 }
 
                 if(data.status === true) {
-                    if(data.themeChanged && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
+                    if(data.thumbnailsRegenerateRequired && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
                         this.saved(newSettings, siteName, showPreview);
                         
                         ipcRenderer.send('app-site-regenerate-thumbnails-required', {
@@ -1699,22 +1697,6 @@ export default {
                                 this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: false });
                             }
                         });
-                    } else {
-                        this.saved(newSettings, siteName, showPreview);
-
-                        if(this.previousQuality !== this.$store.state.currentSite.config.advanced.imagesQuality) {
-                            ipcRenderer.send('app-site-regenerate-thumbnails-required', {
-                                name: this.$store.state.currentSite.config.name
-                            });
-
-                            ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
-                                if (data.message) {
-                                    this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: true });
-                                }
-                            });
-
-                            this.previousQuality = this.$store.state.currentSite.config.advanced.imagesQuality;
-                        }
                     }
 
                     if(data.newThemeConfig) {

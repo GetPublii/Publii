@@ -9,13 +9,7 @@
                 primaryColor="color-8" />
 
             <h1>
-                <template v-if="qualityChanged">
-                    Image quality has been changed.
-                </template>
-
-                <template v-if="!qualityChanged">
-                    Your theme has been changed.
-                </template>
+                Your theme or thumbnail settings has been changed.
             </h1>
 
             <p class="popup-info">
@@ -65,7 +59,6 @@ export default {
     data () {
         return {
             isVisible: false,
-            qualityChanged: false,
             message: '',
             progress: 0,
             progressColor: 'blue',
@@ -77,7 +70,6 @@ export default {
     mounted () {
         this.$bus.$on('regenerate-thumbnails-display', (config) => {
             this.isVisible = true;
-            this.qualityChanged = config.qualityChanged;
             this.message = '';
             this.progress = 0;
             this.progressColor = 'blue';
@@ -91,7 +83,6 @@ export default {
     methods: {
         skip () {
             this.isVisible = false;
-            this.qualityChanged = false;
             this.message = '';
             this.progress = 0;
             this.progressColor = 'blue';
