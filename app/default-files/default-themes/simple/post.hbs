@@ -7,8 +7,7 @@
              
             {{#featuredImage}}
                {{#if url}}
-                  <figure class="hero__image hero__image--overlay">
-                      
+                  <figure class="hero__image hero__image--overlay">                      
                      <img
                         src="{{url}}"
                         {{#if @config.site.responsiveImages}}                           
@@ -24,8 +23,7 @@
                            {{caption}}
                            {{credits}}
                         </figcaption>                      
-                     {{/checkIfAny}}
-                      
+                     {{/checkIfAny}}                      
                   </figure>
                {{else}}
                   {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
@@ -129,7 +127,7 @@
                           <img 
                                class="bio__avatar"
                                src="{{avatar}}" 
-                               {{ lazyload "eager" }} 
+                               {{ lazyload "lazy" }} 
                                alt="{{name}}">                           
                         {{/if}}
                         <div class="bio__info">
