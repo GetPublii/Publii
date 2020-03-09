@@ -203,7 +203,7 @@ export default {
 
                 this.images.push({
                     fullImagePath: data.baseImage.url,
-                    thumbnailPath: data.thumbnailPath[0],
+                    thumbnailPath: data.thumbnailPath,
                     thumbnailHeight: data.thumbnailDimensions ? data.thumbnailDimensions.height : '',
                     thumbnailWidth: data.thumbnailDimensions ? data.thumbnailDimensions.width : '',
                     dimensions: data.baseImage.size.join('x'),
