@@ -71,14 +71,14 @@
     "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
-    "electron": "^8.0.1",
+    "electron": "^8.1.1",
     "electron-packager": "^14.0.0",
     "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "8.0.1",
+    "electronVersion": "8.1.1",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
