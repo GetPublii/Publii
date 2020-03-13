@@ -414,8 +414,14 @@
                             </label>
 
                             <template v-for="(field, index) of postViewThemeSettings">
+                                <separator
+                                    v-if="displayField(field) && field.type === 'separator'"
+                                    :label="field.label"
+                                    :is-line="true"
+                                    :note="field.note" />
+                                
                                 <label
-                                    v-if="displayField(field)"
+                                    v-if="displayField(field) && field.type !== 'separator'"
                                     :key="'post-view-field-' + index">
                                     {{ field.label }}
 

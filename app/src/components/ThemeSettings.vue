@@ -384,7 +384,7 @@ export default {
             return tabs;
         },
         postViewThemeSettings () {
-            return this.$store.state.currentSite.themeSettings.postConfig;
+            return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');
         },
         postTemplates () {
             return this.$store.state.currentSite.themeSettings.postTemplates;
