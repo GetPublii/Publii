@@ -239,10 +239,10 @@ export default {
  * Main container for the app
  */
 .app {
-   background: var(--bg-primary);
+    background: var(--bg-primary);
 
     &-view {
-       background: var(--bg-primary);
+        background: var(--bg-primary);
         font-size: 1.6rem;
         height: 100%;
         left: 0;
@@ -269,6 +269,12 @@ export default {
         position: absolute;
         top: 2.2rem;
         width: 100%;
+    }
+
+    a {
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-app-region: no-drag;
     }
 }
 
