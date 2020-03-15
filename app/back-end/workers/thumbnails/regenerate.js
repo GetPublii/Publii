@@ -46,6 +46,8 @@ function regenerateImages(mediaPath, catalog) {
         return isImage(image, fullImagePath);
     });
 
+    context.numberOfImages = images.length;
+
     if(!images.length) {
         process.send({
             type: 'empty'
@@ -64,8 +66,8 @@ function regenerateImages(mediaPath, catalog) {
  * @param fullPath
  * @param catalog
  */
-function regenerateImage(images, fullPath, catalog) {
-    if(!images.length) {
+function regenerateImage(images, fullPath, catalog) {    
+    if (!images.length) {
         return;
     }
 
