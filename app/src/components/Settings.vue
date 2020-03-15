@@ -1713,6 +1713,8 @@ export default {
                         type: 'success',
                         lifeTime: 3
                     });
+
+                    this.buttonsLocked = false;
                 }
 
                 if(data.message === 'empty-name') {
