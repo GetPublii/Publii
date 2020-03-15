@@ -84,11 +84,21 @@ class GithubPages {
         /*
          * Create CNAME file if necessary
          */
-        if(this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
+        if (this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
             let cnameFilePath = path.join(self.deployment.inputDir, 'CNAME');
+            let domainName = this.deployment.siteConfig.domain;
+            
+            if (domainName.indexOf('//') > -1) {
+                domainName = domainName.split('//')[1];
+            }
+
+            if (domainName.indexOf('/') === 0) {
+                domainName = domainName.slice(1);
+            }
+
             fs.writeFileSync(
                 cnameFilePath,
-                this.deployment.siteConfig.domain.replace('https://', '')
+                domainName
             );
         }
 
