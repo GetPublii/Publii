@@ -9,7 +9,7 @@
             </p-button>
 
             <p-button
-                :onClick="save"
+                :onClick="checkBeforeSave"
                 slot="buttons">
                 Save Settings
             </p-button>
@@ -201,7 +201,7 @@
 
         <p-footer>
             <p-button
-                :onClick="save"
+                :onClick="checkBeforeSave"
                 slot="buttons">
                 Save Settings
             </p-button>
@@ -240,6 +240,7 @@ export default {
             postsOrdering: 'id DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
+            originalSitesLocation: '',
             locations: {
                 sites: '',
                 backups: '',
@@ -320,6 +321,7 @@ export default {
     },
     mounted () {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
+        this.originalSitesLocation = this.locations.sites;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
@@ -353,6 +355,21 @@ export default {
                     this.$router.push('/site/!/posts/');
                 }
             }
+        },
+        checkBeforeSave () {
+            if (this.originalSitesLocation !== this.locations.sites) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: 'The sites location has been changed. The new desitination folder will be cleared up before moving there your sites files. Do you want to continue?',
+                    okClick: this.save,
+                    okLabel: 'OK',
+                    cancelLabel: 'Cancel'
+                });
+
+                return;
+            }
+            
+            this.save();
         },
         save () {
             let newSettings = {
