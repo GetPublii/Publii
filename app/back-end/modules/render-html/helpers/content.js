@@ -88,6 +88,10 @@ class ContentHelper {
 
         // Wrap iframes into <div class="post__iframe">
         preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
+            if (matches.indexOf('data-responsive="false"') > -1) {
+                return matches;
+            }
+            
             return '<div class="post__iframe">' + matches + '</div>';
         });
 
