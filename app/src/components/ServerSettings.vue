@@ -908,6 +908,10 @@ export default {
     },
     computed: {
         currentDomain () {
+            if (this.$store.state.currentSite.config.domain === '.') {
+                return './';
+            }
+
             return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file://', '');
         },
         currentHttpProtocol () {
@@ -995,8 +999,8 @@ export default {
         fullDomainName () {
             let domain = this.prepareDomain();
 
-            if (domain === '' && this.deploymentSettings.relativeUrls) {
-                domain = '/';
+            if ((domain === '' || domain === '.') && this.deploymentSettings.relativeUrls) {
+                domain = './';
             }
 
             if (this.deploymentSettings.relativeUrls) {
@@ -1273,7 +1277,7 @@ export default {
         },
         toggleDomainName () {
             if (this.deploymentSettings.relativeUrls) {
-                this.domain = '/';
+                this.domain = './';
             } else {
                 this.domain = '';
             }

@@ -47,6 +47,7 @@ class Renderer {
         this.errorLog = [];
         this.previewMode = false;
         this.ampMode = false;
+        this.useRelativeUrls = siteConfig.deployment.relativeUrls;
         this.translations = {
             user: false,
             theme: false
@@ -93,22 +94,19 @@ class Renderer {
         if (themeValidationResults === true) {
             await this.renderSite();
 
-            if(this.errorLog.length === 0) {
+            if (this.errorLog.length === 0) {
                 return true;
             }
 
             return this.errorLog;
-        } else {
-            this.errorLog.push({
-                message: 'An error (1010) occurred during parsing config.json file of the theme.',
-                desc: 'Please check your theme config.json file as it seems to be corrupted.'
-            });
-
-            return this.errorLog;
         }
+        
+        this.errorLog.push({
+            message: 'An error (1010) occurred during parsing config.json file of the theme.',
+            desc: 'Please check your theme config.json file as it seems to be corrupted.'
+        });
 
-        // Return validation error message
-        return themeValidationResults;
+        return this.errorLog;
     }
 
     /*
@@ -202,6 +200,7 @@ class Renderer {
         this.generateTags();
         this.sendProgress(70, 'Generating author pages');
         this.generateAuthors();
+        this.siteConfig.domain = this.siteConfig.originalDomain;
         this.sendProgress(75, 'Generating other pages');
         this.generate404s();
         this.generateSearch();
@@ -366,6 +365,8 @@ class Renderer {
         } else if (this.siteConfig.domain === '/') {
             this.siteConfig.domain = '';
         }
+
+        this.siteConfig.originalDomain = this.siteConfig.domain;
 
         if(
             this.siteConfig.advanced &&
@@ -541,6 +542,10 @@ class Renderer {
         }
 
         if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
+            if (this.useRelativeUrls) {
+                this.siteConfig.domain = this.siteConfig.originalDomain;
+            }
+
             let context = contextGenerator.getContext(0, postsPerPage);
             let output = '';
 
@@ -607,10 +612,18 @@ class Renderer {
                 globalContext.renderer.isLastPage = currentPage === totalPages;
 
                 if (currentPage > 1) {
+                    if (this.useRelativeUrls) {
+                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+                    }
+                    
                     let pagePart = this.siteConfig.advanced.urls.pageName;
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
                 } else {
+                    if (this.useRelativeUrls) {
+                        this.siteConfig.domain = this.siteConfig.originalDomain;
+                    }
+                    
                     globalContext.website.pageUrl = this.siteConfig.domain + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
                 }
@@ -729,10 +742,19 @@ class Renderer {
             }
 
             this.menuContext = ['post', postSlugs[i]];
+            
+            if (this.useRelativeUrls) {
+                this.siteConfig.domain = this.siteConfig.originalDomain;
+            }
+            
             globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '.html';
             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '.html';
 
             if (this.siteConfig.advanced.urls.cleanUrls) {
+                if (this.useRelativeUrls) {
+                    this.siteConfig.domain = this.siteConfig.originalDomain + '../';
+                }
+                
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '/';
             }
@@ -960,10 +982,18 @@ class Renderer {
                 let context = contextGenerator.getContext(tagIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['tag', tagSlug];
+                if (this.useRelativeUrls) {
+                   this.siteConfig.domain = this.siteConfig.originalDomain + '../';
+                }
+
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                 if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
+                    if (this.useRelativeUrls) {
+                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+                    }
+                   
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                 }
@@ -1040,18 +1070,35 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
+                        
+                        if (this.useRelativeUrls) {
+                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../';
+                        }
+
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
+                            if (this.useRelativeUrls) {
+                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
+                            }
+
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         }
                     } else {
+                        if (this.useRelativeUrls) {
+                            this.siteConfig.domain = this.siteConfig.originalDomain + '../';
+                        }
+
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
+                            if (this.useRelativeUrls) {
+                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+                            }
+
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                         }
@@ -1204,6 +1251,11 @@ class Renderer {
                 let context = contextGenerator.getContext(authorsIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['author', authorUsername];
+                
+                if (this.useRelativeUrls) {
+                    this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+                }
+
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.renderer.isFirstPage = true;
@@ -1274,9 +1326,18 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
+                        
+                        if (this.useRelativeUrls) {
+                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
+                        }
+
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                     } else {
+                        if (this.useRelativeUrls) {
+                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+                        }
+
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                     }
