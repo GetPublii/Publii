@@ -69,6 +69,7 @@ class App {
             return;
         }
 
+        this.loadAdditionalConfig();
         this.checkThemes();
         this.loadSites();
         this.loadThemes();
@@ -387,6 +388,13 @@ class App {
             return true;
         }
 
+        return true;
+    }
+
+    /**
+     * Load additional config data
+     */
+    loadAdditionalConfig () {
         /*
          * Try to get TinyMCE overrided config
          */
@@ -394,7 +402,7 @@ class App {
             this.tinymceOverridedConfig = JSON.parse(fs.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
         } catch (e) {}
 
-        if(this.appConfig.sitesLocation) {
+        if (this.appConfig.sitesLocation) {
             this.sitesDir = this.appConfig.sitesLocation;
             this.app.sitesDir = this.appConfig.sitesLocation;
         } else {
@@ -402,8 +410,6 @@ class App {
             this.sitesDir = path.join(this.appDir, 'sites');
             this.app.sitesDir = path.join(this.appDir, 'sites');
         }
-
-        return true;
     }
 
     /**
