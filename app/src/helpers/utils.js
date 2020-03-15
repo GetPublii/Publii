@@ -44,7 +44,11 @@ class Utils {
     static generateErrorLog(errorData, returnText = false) {
         let output = '';
 
-        if(returnText) {
+        if (!Array.isArray(errorData) && errorData.message) {
+            errorData = errorData.message;
+        }
+        
+        if (returnText) {
             for (let i = 0; i < errorData.length; i++) {
                 if (i > 0) {
                     output += "\n";
