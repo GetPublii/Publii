@@ -15,6 +15,7 @@
                         class="post-editor-form-title"
                         contenteditable="true"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
+                        @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
                         @keyup="updateTitle" />   
 
@@ -306,6 +307,10 @@ export default {
                 postID: this.postID,
                 selection: selectedText
             });
+        },
+        pasteTitle (e) {
+            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
         }
     },
     beforeDestroy () {

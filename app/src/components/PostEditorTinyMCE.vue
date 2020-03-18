@@ -12,6 +12,7 @@
                         class="post-editor-form-title"
                         contenteditable="true"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
+                        @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
                         @keyup="updateTitle" />                
 
@@ -319,6 +320,10 @@ export default {
             this.iframeFocusCheckTimeout = setTimeout(() => {
                 this.checkIframeFocus();
             }, 1000);
+        },
+        pasteTitle (e) {
+            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
         }
     },
     beforeDestroy () {
