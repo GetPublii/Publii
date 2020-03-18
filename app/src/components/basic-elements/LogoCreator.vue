@@ -24,13 +24,25 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'logo-creator',
-    data: function() {
+    data () {
         return {
             activeIcon: 1,
             activeColor: 1,
-            icons: [
+            icons: []
+        };
+    },
+    computed: {
+        colors: function() {
+            return Array(16).fill().map((e, i) => i+1);
+        }
+    },
+    mounted () {
+        Vue.nextTick(() => {
+            this.icons = [
                 'web-pizza',
                 'web-ice-cream',
                 'web-school',
@@ -88,13 +100,8 @@ export default {
                 'web-umbrella',
                 'web-radio',
                 'web-layers'
-            ]
-        };
-    },
-    computed: {
-        colors: function() {
-            return Array(16).fill().map((e, i) => i+1);
-        }
+            ];
+        });
     },
     methods: {
         changeIcon: function(newIndex) {
