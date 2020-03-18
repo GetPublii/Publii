@@ -1,5 +1,7 @@
 <template>
-    <div class="options-sidebar-wrapper">
+    <div 
+        :key="'author-view-' + authorData.id"
+        class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
                 <template v-if="authorData.id">Edit author</template>

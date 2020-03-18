@@ -1,5 +1,7 @@
 <template>
-    <div class="options-sidebar-wrapper">
+    <div 
+        :key="'tag-view-' + tagData.id"
+        class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
                 <template v-if="tagData.id">Edit tag</template>

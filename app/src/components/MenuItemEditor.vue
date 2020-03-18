@@ -1,5 +1,7 @@
 <template>
-    <div class="options-sidebar-wrapper">
+    <div 
+        :key="'menu-item-view-' + id"
+        class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
                 <template v-if="menuItemID !== ''">Edit menu item</template>
