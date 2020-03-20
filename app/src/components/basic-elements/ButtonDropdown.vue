@@ -1,5 +1,10 @@
 <template>
-    <div :class="{ 'button': true, 'is-green': isGreen, 'has-icon': hasIcon }">
+    <div :class="{ 
+        'button': true, 
+        'is-green': isGreen, 
+        'has-icon': hasIcon,
+        'disabled': this.disabled
+    }">
         <span 
             class="button-trigger"
             :style="'min-width:' + minWidth + 'px;'"
@@ -55,6 +60,10 @@ export default {
         'minWidth': {
             default: 150,
             type: Number
+        },
+        'disabled': {
+            default: false,
+            type: Boolean
         }
     },
     computed: {
@@ -250,7 +259,6 @@ export default {
         background-color: var(--button-green-bg);
 
         .button-trigger {            
-
             &:hover {
                 background: var(--button-green-hover-bg);  
             }
@@ -266,6 +274,28 @@ export default {
                 &::before {
                     background: rgba(black, .1);
                 }                
+            }
+        }
+
+        &.disabled {
+            background-color: var(--popup-btn-cancel-hover-bg);
+            color: var(--popup-btn-cancel-color);
+            cursor: not-allowed;
+            pointer-events: none;
+
+            &:hover {
+                background-color: var(--popup-btn-cancel-hover-bg);
+                color: var(--popup-btn-cancel-color);
+            }
+
+            .button-toggle {
+                background: var(--popup-btn-cancel-hover-bg);
+                border-left: 1px solid var(--popup-btn-cancel-hover-bg);
+
+                &:hover {
+                    background-color: var(--popup-btn-cancel-hover-bg);
+                    color: var(--popup-btn-cancel-color);
+                }
             }
         }
     }

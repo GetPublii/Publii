@@ -14,13 +14,12 @@
                     Save Settings
                 </p-button>
 
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    defaultValue="full-site" />
             </p-header>
 
             <fields-group title="Basic settings">
@@ -391,10 +390,25 @@ export default {
         },
         hasPostTemplates () {
             return !!Object.keys(this.postTemplates).length;
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full site',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render frontpage',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
         }
-    },
-    beforeMount () {
-
     },
     mounted () {
         setTimeout (() => {
@@ -554,14 +568,14 @@ export default {
                 this.saveSettings(false);
             }, 500);
         },
-        saveAndPreview () {
+        saveAndPreview (renderingType = false) {
             this.$bus.$emit('theme-settings-before-save');
 
             setTimeout(() => {
-                this.saveSettings(true);
+                this.saveSettings(true, renderingType);
             }, 500);
         },
-        saveSettings(showPreview = false) {
+        saveSettings(showPreview = false, renderingType = false) {
             let newConfig = {
                 config: Object.assign({}, this.basic),
                 customConfig: Object.assign({}, this.custom),
@@ -579,7 +593,7 @@ export default {
             // Settings saved
             ipcRenderer.once('app-site-theme-config-saved', (event, data) => {
                 if (data.status === true) {
-                    this.savedSettings(showPreview);
+                    this.savedSettings(showPreview, renderingType);
                     this.$store.commit('setThemeConfig', data);
                     this.$bus.$emit('message-display', {
                         message: 'Theme settings has been successfully saved.',
@@ -591,7 +605,7 @@ export default {
                 this.loadSettings();
             });
         },
-        savedSettings(showPreview = false) {
+        savedSettings(showPreview = false, renderingType = false) {
             if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
@@ -604,7 +618,13 @@ export default {
                     return;
                 }
 
-                this.$bus.$emit('rendering-popup-display');
+                if (renderingType === 'homepage') {
+                    this.$bus.$emit('rendering-popup-display', {
+                        homepageOnly: true
+                    });
+                } else {
+                    this.$bus.$emit('rendering-popup-display');
+                }
             }
         },
         reset () {

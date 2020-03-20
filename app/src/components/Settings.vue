@@ -12,13 +12,12 @@
                     Save Settings
                 </p-button>
 
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    defaultValue="full-site" />
             </p-header>
 
             <fields-group title="Basic settings">
@@ -1584,6 +1583,24 @@ export default {
         },
         postPages () {
             return this.$store.state.currentSite.posts.map(post => post.id);
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full site',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render frontpage',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
         }
     },
     beforeMount () {
@@ -1608,10 +1625,10 @@ export default {
         }, 0);
     },
     methods: {
-        saveAndPreview () {
-            this.save(null, true);
+        saveAndPreview (renderingType = false) {
+            this.save(true, renderingType);
         },
-        save (e, showPreview = false) {
+        save (showPreview = false, renderingType = false) {
             this.buttonsLocked = true;
 
             if (!this.validate()) {
@@ -1686,8 +1703,6 @@ export default {
 
                 if(data.status === true) {
                     if(data.thumbnailsRegenerateRequired && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
-                        this.saved(newSettings, siteName, showPreview);
-                        
                         ipcRenderer.send('app-site-regenerate-thumbnails-required', {
                             name: this.$store.state.currentSite.config.name
                         });
@@ -1705,6 +1720,8 @@ export default {
                             newThemeConfig: data.newThemeConfig
                         });
                     }
+
+                    this.saved(newSettings, siteName, showPreview, renderingType);
                 }
 
                 if(data.message === 'success-save') {
@@ -1757,7 +1774,7 @@ export default {
                 });
             });
         },
-        saved (newSettings, oldName, showPreview = false) {
+        saved (newSettings, oldName, showPreview = false, renderingType = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
 
             if (newSettings.theme) {
@@ -1799,7 +1816,13 @@ export default {
                         return;
                     }
 
-                    this.$bus.$emit('rendering-popup-display');
+                    if (renderingType === 'homepage') {
+                        this.$bus.$emit('rendering-popup-display', {
+                            homepageOnly: true
+                        });
+                    } else {
+                        this.$bus.$emit('rendering-popup-display');
+                    }
                 }
             }, 1000);
         },

@@ -92,6 +92,7 @@ class DeployEvents {
             postData: false,
             previewMode: false,
             singlePageMode: false,
+            homepageOnlyMode: false,
             previewLocation: this.app.appConfig.previewLocation
         });
 

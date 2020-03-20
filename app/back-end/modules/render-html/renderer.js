@@ -74,7 +74,7 @@ class Renderer {
             featuredImages: {}
         };
 
-        if (postID !== false) {
+        if (postID !== false && postID !== 'home') {
             this.postID = postID;
             this.postData = postData;
         }
@@ -83,10 +83,11 @@ class Renderer {
     /*
      * Renders the pages
      */
-    async render(previewMode = false, previewLocation = '', singlePageMode = false) {
+    async render(previewMode = false, previewLocation = '', mode = 'full') {
         this.previewMode = previewMode;
         this.previewLocation = previewLocation;
-        this.singlePageMode = singlePageMode;
+        this.singlePageMode = mode === 'page';
+        this.homepageOnlyMode = mode === 'home';
         this.setIO();
         this.emptyOutputDir();
         let themeValidationResults = this.themeIsValid();
@@ -136,6 +137,8 @@ class Renderer {
         try {
             if (this.singlePageMode) {
                 this.renderPostPreview();
+            } else if (this.homepageOnlyMode) {
+                this.renderHomepagePreview();
             } else {
                 await this.renderFullPreview();
             }
@@ -227,6 +230,32 @@ class Renderer {
         this.loadCommonData();
         this.generatePartials();
         this.generatePost();
+        this.generateCSS();
+
+        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.postID]);
+
+        process.send({
+            type: 'app-rendering-preview',
+            result: true
+        });
+    }
+
+    /**
+     * Renders homepage preview
+     */
+    renderHomepagePreview() {
+        this.loadSiteConfig();
+        this.loadSiteTranslations();
+        this.loadDataFromDB();
+        this.loadThemeConfig();
+        this.loadThemeFiles();
+        this.registerHelpers();
+        this.registerThemeHelpers();
+        this.loadContentStructure();
+        this.loadCommonData();
+        this.generatePartials();
+        this.generateFrontpage();
         this.generateCSS();
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);

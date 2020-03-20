@@ -9,12 +9,21 @@ process.on('message', async function(msg){
         let postData = msg.postData;
         let previewMode = msg.previewMode;
         let singlePageMode = msg.singlePageMode;
+        let homepageOnlyMode = msg.homepageOnlyMode;
         let previewLocation = msg.previewLocation;
         let renderer = new Renderer(appDir, sitesDir, siteConfig, postID, postData);
         let result;
 
+        let mode = 'full';
+
+        if (singlePageMode) {
+            mode = 'page';
+        } else if (homepageOnlyMode) {
+            mode = 'home';
+        }
+
         try {
-            result = await renderer.render(previewMode, previewLocation, singlePageMode);
+            result = await renderer.render(previewMode, previewLocation, mode);
         } catch (e) {
             process.send({
                 type: 'app-rendering-results',

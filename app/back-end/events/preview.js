@@ -42,11 +42,11 @@ class PreviewEvents {
      * Renders website
      *
      * @param site
-     * @param postID
+     * @param pageToRender
      * @param postData
      * @param event
      */
-    renderSite(site, postID, postData, event) {
+    renderSite(site, pageToRender, postData, event) {
         let self = this;
         let resultsRetrieved = false;
         let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
@@ -59,9 +59,14 @@ class PreviewEvents {
         });
         let previewMode = true;
         let singlePageMode = false;
+        let homepageOnlyMode = false;
 
-        if(postID !== false) {
-            singlePageMode = true;
+        if (pageToRender !== false) {
+            if (pageToRender === 'home') {
+                homepageOnlyMode = true;
+            } else {
+                singlePageMode = true;
+            }
         }
 
         rendererProcess.on('disconnect', function(data) {
@@ -90,10 +95,11 @@ class PreviewEvents {
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
             siteConfig: this.app.sites[site],
-            postID: postID,
+            postID: pageToRender,
             postData: postData,
             previewMode: previewMode,
             singlePageMode: singlePageMode,
+            homepageOnlyMode: homepageOnlyMode,
             previewLocation: this.app.appConfig.previewLocation
         });
 
