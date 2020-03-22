@@ -208,7 +208,6 @@ export default {
 
     &-trigger {
         border-radius: 3px;
-            
         display: block;
         height: 4.2rem;
         left: 0;
@@ -225,13 +224,12 @@ export default {
 
         &-icon {
             align-items: center;
-            background: var(--button-green-bg-alt);
             display: flex;
             height: 4.2rem;
             justify-content: center;
             position: absolute;
             top: 0;
-            right: 4.4rem;
+            right: 4.8rem;
             width: 4.4rem;
 
             .icon {
@@ -301,16 +299,20 @@ export default {
             padding: .2rem 2rem;
             position: relative;
             text-align: left;
+            transition: var(--transition);
 
             &:hover {
-                background: var(--gray-1);
+                background: var(--gray-7);
+
+                .button-dropdown-item-icon .icon {
+                    color: var(--icon-tertiary-color);
+                }
             }
 
             &-icon {
                 align-items: center;
-                background: var(--gray-7);
+                bottom: 0;
                 display: flex;
-                height: 4.4rem;
                 justify-content: center;
                 position: absolute;
                 right: 0;
@@ -318,7 +320,8 @@ export default {
                 width: 4.4rem;
 
                 .icon {
-                    color: var(--gray-3);
+                    color: var(--icon-secondary-color);
+                    transition: var(--transition);
                 }
             }
         }
@@ -390,7 +393,7 @@ export default {
 
     &.has-icon-preview {
         .button-trigger {
-            padding-right: 11rem;
+            padding-right: 9.5rem;
         }
 
         .button-dropdown-item {

@@ -97,15 +97,15 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Render full site',
+                    label: 'Render full website',
                     activeLabel: 'Save & Preview',
                     value: 'full-site',
-                    icon: 'full-preview-browser',
+                    icon: 'full-preview-monitor',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render frontpage',
+                    label: 'Render front page only',
                     activeLabel: 'Save & Preview',
                     value: 'homepage',
                     icon: 'quick-preview',
