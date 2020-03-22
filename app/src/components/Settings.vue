@@ -17,6 +17,8 @@
                     buttonColor="green"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
                     defaultValue="full-site" />
             </p-header>
 
@@ -1591,12 +1593,14 @@ export default {
                     activeLabel: 'Save & Preview',
                     value: 'full-site',
                     isVisible: () => true,
+                    icon: 'full-preview-browser',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
                     label: 'Render frontpage',
                     activeLabel: 'Save & Preview',
                     value: 'homepage',
+                    icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
                 }

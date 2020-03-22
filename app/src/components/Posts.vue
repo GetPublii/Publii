@@ -11,10 +11,11 @@
 
             <btn-dropdown
                 slot="buttons"
-                buttonIcon="add-site-mono"
                 buttonColor="green"
+                localStorageKey="publii-current-editor"
+                :previewIcon="true"
                 :items="dropdownItems"
-                :defaultValue="retrieveCurrentEditor()" />
+                defaultValue="blockeditor" />
         </p-header>
 
         <ul
@@ -503,6 +504,7 @@ export default {
                     label: 'Use Block editor',
                     activeLabel: 'Add new post',
                     value: 'blockeditor',
+                    icon: 'block',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'blockeditor')
                 },
@@ -510,6 +512,7 @@ export default {
                     label: 'Use WYSIWYG editor',
                     activeLabel: 'Add new post',
                     value: 'tinymce',
+                    icon: 'wysiwyg',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
                 },
@@ -517,6 +520,7 @@ export default {
                     label: 'Use Markdown editor',
                     activeLabel: 'Add new post',
                     value: 'markdown',
+                    icon: 'markdown',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'markdown')
                 }
@@ -567,7 +571,6 @@ export default {
     methods: {
         addNewPost (editorType) {
             let siteName = this.$route.params.name;
-            localStorage.setItem('publii-current-editor', editorType);
 
             if(this.filterValue.trim() !== '' && this.$store.state.app.config.alwaysSaveSearchState) {
                 localStorage.setItem('publii-posts-search-value', this.filterValue);
@@ -800,15 +803,6 @@ export default {
             let postsWithGivenStatus = selectedPosts.filter(item => item.status.indexOf(status) > -1);
 
             return !!postsWithGivenStatus.length;
-        },
-        retrieveCurrentEditor () {
-            let currentEditor = localStorage.getItem('publii-current-editor');
-
-            if (!currentEditor) {
-                currentEditor = 'blockeditor';
-            }
-
-            return currentEditor;
         }
     },
     beforeDestroy () {

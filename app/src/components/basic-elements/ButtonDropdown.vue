@@ -3,7 +3,8 @@
         'button': true, 
         'is-green': isGreen, 
         'has-icon': hasIcon,
-        'disabled': this.disabled
+        'has-icon-preview': previewIcon,
+        'disabled': disabled
     }">
         <span 
             class="button-trigger"
@@ -16,6 +17,15 @@
                 :name="buttonIcon" />
 
             {{ currentLabel }}
+        </span>
+
+        <span 
+            v-if="previewIcon && currentIcon"
+            class="button-trigger-icon">
+            <icon
+                size="s"
+                properties="not-clickable"
+                :name="currentIcon" />
         </span>
 
         <span 
@@ -32,6 +42,15 @@
                 class="button-dropdown-item" 
                 @click="doAction(item.value)">
                 {{ item.label }}
+
+                <div 
+                    v-if="previewIcon"
+                    class="button-dropdown-item-icon">
+                    <icon
+                        size="s"
+                        properties="not-clickable"
+                        :name="item.icon" />
+                </div>
             </div>
         </div>
     </div>
@@ -64,6 +83,14 @@ export default {
         'disabled': {
             default: false,
             type: Boolean
+        },
+        'previewIcon': {
+            default: false,
+            type: Boolean
+        },  
+        'localStorageKey': {
+            default: false,
+            type: [String, Boolean]
         }
     },
     computed: {
@@ -82,6 +109,15 @@ export default {
             }
 
             return '';
+        },
+        currentIcon () {
+            let foundedItem = this.items.filter(item => item.value === this.value);
+
+            if (foundedItem.length && foundedItem[0].icon) {
+                return foundedItem[0].icon;
+            }
+
+            return false;
         }
     },
     data () {
@@ -94,6 +130,16 @@ export default {
     },
     mounted () {
         this.setValue(this.defaultValue);
+
+        if (this.localStorageKey) {
+            let retrievedValue = localStorage.getItem(this.localStorageKey);
+            let values = this.filteredItems.map(item => item.value);
+
+            if (retrievedValue && values.indexOf(retrievedValue) > -1) {
+                this.setValue(retrievedValue);
+            }
+        }
+
         this.$bus.$on('document-body-clicked', this.hideDropdown);
 
         if (this.buttonColor === 'green') {
@@ -108,6 +154,11 @@ export default {
         doAction (actionName) {
             this.value = actionName;
             this.items.filter(item => item.value === this.value)[0].onClick();
+            
+            if (this.localStorageKey) {
+                localStorage.setItem(this.localStorageKey, actionName);
+            }
+
             this.hideDropdown();
         },
         doCurrentAction () {
@@ -142,7 +193,7 @@ export default {
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
     font-size: 15px;
     font-weight: 500;
     height: 4.2rem;
@@ -170,6 +221,22 @@ export default {
             
         &:hover {
             background: var(--button-hover-bg);  
+        }
+
+        &-icon {
+            align-items: center;
+            background: var(--button-green-bg-alt);
+            display: flex;
+            height: 4.2rem;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            right: 4.4rem;
+            width: 4.4rem;
+
+            .icon {
+                color: var(--white)
+            }
         }
     }
 
@@ -232,10 +299,27 @@ export default {
             border-top: 1px solid var(--border-light-color);
             color: var(--text-primary-color);
             padding: .2rem 2rem;
+            position: relative;
             text-align: left;
 
             &:hover {
                 background: var(--gray-1);
+            }
+
+            &-icon {
+                align-items: center;
+                background: var(--gray-7);
+                display: flex;
+                height: 4.4rem;
+                justify-content: center;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 4.4rem;
+
+                .icon {
+                    color: var(--gray-3);
+                }
             }
         }
     }
@@ -297,6 +381,20 @@ export default {
                     color: var(--popup-btn-cancel-color);
                 }
             }
+
+            .button-trigger-icon {
+                background: var(--popup-btn-cancel-hover-bg);
+            }
+        }
+    }
+
+    &.has-icon-preview {
+        .button-trigger {
+            padding-right: 11rem;
+        }
+
+        .button-dropdown-item {
+            padding: .2rem 6rem .2rem 2rem;
         }
     }
 }
