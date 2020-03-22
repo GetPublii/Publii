@@ -86,6 +86,11 @@ class ContentHelper {
             return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
         });
 
+        // Wrap galleries with classes into div with gallery-wrapper CSS class
+        preparedText = preparedText.replace(/<div class="gallery"[\s\S]*?<\/div>?/gmi, function(matches, p1, classes) {
+            return '<div class="gallery-wrapper">' + matches + '</div>';
+        });
+
         // Wrap iframes into <div class="post__iframe">
         preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
             if (matches.indexOf('data-responsive="false"') > -1) {
