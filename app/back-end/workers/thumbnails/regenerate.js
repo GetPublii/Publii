@@ -46,7 +46,7 @@ function regenerateImages(mediaPath, catalog) {
         return isImage(image, fullImagePath);
     });
 
-    context.numberOfImages = images.length;
+    // context.numberOfImages = images.length;
 
     if(!images.length) {
         process.send({

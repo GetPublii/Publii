@@ -5,7 +5,7 @@
         <div class="site-settings">
             <p-header title="Site Settings">
                 <p-button
-                    @click.native="save"
+                    @click.prevent.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -1436,7 +1436,7 @@
                     defaultValue="full-site" />
 
                 <p-button
-                    @click.native="save"
+                    @click.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
