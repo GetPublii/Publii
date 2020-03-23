@@ -302,7 +302,7 @@ export default {
             transition: var(--transition);
 
             &:hover {
-                background: var(--gray-7);
+                background: var(--gray-1);
 
                 .button-dropdown-item-icon .icon {
                     color: var(--icon-tertiary-color);
