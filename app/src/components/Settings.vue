@@ -1426,13 +1426,14 @@
             </fields-group>
 
             <p-footer>
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    defaultValue="full-site" />
 
                 <p-button
                     @click.native="save"
