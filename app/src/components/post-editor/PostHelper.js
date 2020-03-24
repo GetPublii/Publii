@@ -73,7 +73,7 @@ class PostHelper {
             'creationDate': creationDate,
             'modificationDate': Date.now(),
             'template': postData.template,
-            'featuredImage': PostHelper.getMediaPath($store, postID) + postData.featuredImage.path,
+            'featuredImage': postData.featuredImage.path === null ? '' : PostHelper.getMediaPath($store, postID) + postData.featuredImage.path,
             'featuredImageFilename': postData.featuredImage.path,
             'featuredImageData': {
                 alt: postData.featuredImage.alt,
@@ -167,7 +167,7 @@ class PostHelper {
 
         // Set image
         if (data.featuredImage) {
-            postData.featuredImage.path = data.featuredImage.url;
+            postData.featuredImage.path = !data.featuredImage.url ? '' : data.featuredImage.url;
 
             if(data.featuredImage.additional_data) {
                 try {
