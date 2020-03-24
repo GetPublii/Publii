@@ -173,7 +173,7 @@ class Image extends Model {
         };
 
         if (!siteConfig.advanced.responsiveImages) {
-            return [];
+            return ['NO-RESPONSIVE-IMAGES'];
         }
 
         if (!this.allowedImageExtension(imageExtension)) {
