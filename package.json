@@ -68,12 +68,11 @@
     "webpack": "^4.41.5",
     "webpack-bundle-analyzer": "^2.9.2",
     "webpack-cli": "^3.3.10",
-    "webpack-dashboard": "^1.0.2"
+    "webpack-dashboard": "^1.0.2",
+    "electron": "^8.1.1",
+    "electron-packager": "^14.0.0"
   },
   "dependencies": {
-    "electron": "^8.1.1",
-    "electron-packager": "^14.0.0",
-    "handlebars": "^4.2.0",
     "opencollective": "^1.0.3"
   },
   "build": {
