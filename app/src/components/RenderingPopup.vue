@@ -41,6 +41,7 @@ export default {
             this.progressColor = 'blue';
             this.progressIsStopped = false;
             this.isPostPreview = false;
+            this.isHomepagePreview = false;
 
             if (config && config.homepageOnly) {
                 this.isHomepagePreview = true;
