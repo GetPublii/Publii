@@ -44,9 +44,11 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "electron": "^8.2.0",
     "electron-builder": "^22.3.2",
     "electron-installer-dmg": "^0.2.1",
     "electron-osx-sign": "^0.4.11",
+    "electron-packager": "^14.0.0",
     "electron-rebuild": "^1.10.0",
     "electron-updater": "^4.2.0",
     "electron-windows-installer": "^1.4.4",
@@ -68,16 +70,14 @@
     "webpack": "^4.41.5",
     "webpack-bundle-analyzer": "^2.9.2",
     "webpack-cli": "^3.3.10",
-    "webpack-dashboard": "^1.0.2",
-    "electron": "^8.1.1",
-    "electron-packager": "^14.0.0"
+    "webpack-dashboard": "^1.0.2"
   },
   "dependencies": {
     "opencollective": "^1.0.3"
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "8.1.1",
+    "electronVersion": "8.2.0",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
