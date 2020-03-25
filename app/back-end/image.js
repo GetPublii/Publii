@@ -11,6 +11,10 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
+// Default config
+const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+
+// Sharp is loaded depending on the platform
 let sharp;
 
 if (process.platform !== 'linux') {
@@ -161,10 +165,12 @@ class Image extends Model {
      * Save responsive images
      */
     createResponsiveImages(originalPath, imageType = 'contentImages') {
+        let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
         let themesHelper = new Themes(this.application, { site: this.site });
         let currentTheme = themesHelper.currentTheme();
         let siteConfigPath = path.join(this.siteDir, 'input', 'config', 'site.config.json');
         let siteConfig = JSON.parse(fs.readFileSync(siteConfigPath));
+        siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
         let imagesQuality = 60;
         let imageExtension = path.parse(originalPath).ext;
         let imageDimensions = {
