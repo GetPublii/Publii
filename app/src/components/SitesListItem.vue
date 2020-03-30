@@ -6,7 +6,8 @@
         
         <span class="single-site-icon">
             <icon
-                :name="siteLogoIcon"                
+                :name="siteLogoIcon"
+                iconset="svg-map-site"                
                 customWidth="22"
                 customHeight="22" />
         </span>
