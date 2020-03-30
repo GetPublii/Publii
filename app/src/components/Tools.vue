@@ -9,6 +9,7 @@
                     <router-link :to="getUrl(item.link)">
                         <icon
                             :name="item.icon"
+                            iconset="svg-map-tools"
                             customWidth="50"
                             customHeight="46" />
                         {{ item.name }}

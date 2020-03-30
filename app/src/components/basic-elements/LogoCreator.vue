@@ -5,7 +5,8 @@
             :data-icon="activeIcon">
             <icon
                 size="xl"
-                :name="icons[activeIcon - 1]" />
+                :name="icons[activeIcon - 1]" 
+                iconset="svg-map-site"/>
         </div>
 
         <ul class="logo-creator-icon">
@@ -17,7 +18,8 @@
                 <icon                   
                     size="m"
                     properties="not-clickable"
-                    :name="icon" />
+                    :name="icon" 
+                    iconset="svg-map-site"/>
             </li>
         </ul>
     </div>
