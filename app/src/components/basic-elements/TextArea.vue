@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :id="anchor">
         <textarea
             :id="editorID"
             :data-id="editorID"
@@ -45,6 +45,10 @@ export default {
         spellcheck: {
             default: true,
             type: Boolean
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data: function() {

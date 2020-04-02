@@ -1,5 +1,7 @@
 <template>
-    <div class="color-picker">
+    <div 
+        :id="anchor"
+        class="color-picker">
         <div
             class="color-picker-preview"
             @click="togglePicker"
@@ -27,7 +29,11 @@ export default {
         'chrome-picker': Chrome
     },
     props: {
-        'value': {
+        value: {
+            default: '',
+            type: String
+        },
+        anchor: {
             default: '',
             type: String
         }

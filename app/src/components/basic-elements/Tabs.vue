@@ -1,5 +1,7 @@
 <template>
-    <div class="tabs">
+    <div 
+        class="tabs"
+        @click="detectInternalNavigation">
         <ul>
             <li
                 v-for="(item, index) in items"
@@ -36,12 +38,12 @@ export default {
             type: Function
         }
     },
-    data: function() {
+    data () {
         return {
             activeItem: false
         }
     },
-    mounted: function() {
+    mounted () {
         let lastOpenedTab = window.sessionStorage.getItem(this.id);
 
         if(lastOpenedTab && this.items.indexOf(lastOpenedTab) > -1) {
@@ -51,10 +53,30 @@ export default {
         }
     },
     methods: {
-        toggle: function(newActiveItem) {
+        detectInternalNavigation (e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('data-internal-link')) {
+                e.preventDefault();
+
+                let linkData = e.target.getAttribute('data-internal-link');
+                linkData = linkData.split('#');
+
+                if (linkData.length === 2) {
+                    this.toggle(linkData[0], linkData[1]);
+                } else {
+                    this.toggle(linkData[0]);
+                }
+            }
+        },
+        toggle (newActiveItem, scrollTo = false) {
             this.activeItem = newActiveItem;
             window.sessionStorage.setItem(this.id, newActiveItem);
             this.onToggle();
+
+            setTimeout(() => {
+                if (scrollTo !== false) {
+                    document.querySelector('#' + scrollTo).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+                }
+            }, 0);
         }
     }
 }

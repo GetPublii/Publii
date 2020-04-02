@@ -121,6 +121,7 @@
                                     :max="field.max"
                                     :step="field.step"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field"></range-slider>
 
                                 <separator
@@ -128,6 +129,7 @@
                                     slot="field"
                                     :type="field.size"
                                     :label="field.label"
+                                    :anchor="field.anchor"
                                     :note="field.note"></separator>
 
                                 <text-area
@@ -135,6 +137,7 @@
                                     slot="field"
                                     :rows="field.rows"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :cols="field.cols"></text-area>
 
@@ -143,17 +146,20 @@
                                     slot="field"
                                     :id="'theme-settings-' + index"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     :wysiwyg="true"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"
                                     v-model="custom[field.name]"
                                     slot="field"
+                                    :anchor="field.anchor"
                                     :addMediaFolderPath="true"></image-upload>
 
                                 <small-image-upload
                                     v-if="field.type === 'smallupload'"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field"></small-image-upload>
 
                                 <radio-buttons
@@ -161,6 +167,7 @@
                                     :items="field.options"
                                     :name="field.name"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field" />
 
                                 <dropdown
@@ -168,18 +175,21 @@
                                     slot="field"
                                     :multiple="field.multiple"
                                     v-model="custom[field.name]"
+                                    :id="field.anchor"
                                     :items="getDropdownOptions(field.options)"></dropdown>
 
                                 <switcher
                                     v-if="field.type === 'checkbox'"
                                     v-model="custom[field.name]"
                                     :lower-zindex="true"
+                                    :anchor="field.anchor"
                                     slot="field"></switcher>
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     v-model="custom[field.name]"
                                     :data-field="field.name"
+                                    :anchor="field.anchor"
                                     slot="field"></color-picker>
 
                                 <posts-dropdown
@@ -187,18 +197,21 @@
                                     v-model="custom[field.name]"
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></authors-dropdown>
 
                                 <text-input
@@ -212,6 +225,7 @@
                                     :pattern="field.pattern"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small

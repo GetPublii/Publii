@@ -1,6 +1,7 @@
 <template>
     <v-select
         ref="dropdown"
+        :id="anchor"
         :options="postPages"
         v-model="selectedPost"
         :custom-label="postLabels"
@@ -22,6 +23,10 @@ export default {
         multiple: {
             type: Boolean,
             default: false
+        },
+        anchor: {
+            default: '',
+            type: String
         },
         value: {},
         allowedPostStatus: {

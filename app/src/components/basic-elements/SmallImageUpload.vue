@@ -1,5 +1,7 @@
 <template>
-    <div :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
+    <div 
+        :id="anchor"
+        :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
         <span class="upload-path">
             <template v-if="!isUploading">{{ fileName }}</template>
             <template v-if="isUploading">Loading image...</template>
@@ -39,6 +41,10 @@ export default {
         onRemove: {
             default: () => false,
             type: Function
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data () {

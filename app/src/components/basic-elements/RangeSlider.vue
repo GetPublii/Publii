@@ -1,5 +1,7 @@
 <template>
-    <div class="input-range-wrapper">
+    <div 
+        :id="anchor"
+        class="input-range-wrapper">
         <input
             type="range"
             v-model="content"
@@ -46,6 +48,10 @@ export default {
         'step': {
             default: '',
             type: [String, Number]
+        },
+        'anchor': {
+            default: '',
+            type: String
         }
     },
     watch: {

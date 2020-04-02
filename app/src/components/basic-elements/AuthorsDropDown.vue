@@ -8,6 +8,7 @@
         :show-labels="false"
         @select="closeDropdown()"
         :multiple="mutliple"
+        :id="anchor"
         :placeholder="placeholder"></v-select>
 </template>
 
@@ -23,7 +24,11 @@ export default {
             type: String,
             default: 'Select author'
         },
-        value: {}
+        value: {},
+        anchor: {
+            default: '',
+            type: String
+        }
     },
     data () {
         return {

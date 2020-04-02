@@ -1,5 +1,7 @@
 <template>
-    <div :class="cssClasses">
+    <div 
+        :id="anchor"
+        :class="cssClasses">
         <icon
             v-if="icon"
             size="s"
@@ -55,6 +57,10 @@ export default {
     },
     props: {
         'id': {
+            default: '',
+            type: String
+        },
+        'anchor': {
             default: '',
             type: String
         },

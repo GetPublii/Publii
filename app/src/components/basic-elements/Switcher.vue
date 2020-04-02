@@ -1,5 +1,7 @@
 <template>
-    <span :class="{ 'has-label': label }">
+    <span 
+        :id="anchor"
+        :class="{ 'has-label': label }">
         <span
             :class="cssClasses"
             @click="toggle"></span>
@@ -29,6 +31,10 @@ export default {
         lowerZindex: {
             default: false,
             type: Boolean
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data: function() {

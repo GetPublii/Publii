@@ -1,5 +1,7 @@
 <template>
-    <div :class="wrapperCssClasses">
+    <div 
+        :id="anchor"
+        :class="wrapperCssClasses">
         <div
             :class="inputCssClasses"
             :data-path="filePath"
@@ -71,6 +73,10 @@ export default {
         addMediaFolderPath: {
             default: false,
             type: Boolean
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data () {

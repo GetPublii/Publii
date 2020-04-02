@@ -1,5 +1,5 @@
 <template>
-    <div :class="cssClasses">
+    <div :class="cssClasses" :id="anchor">
         <div class="separator-wrapper">
             <label v-if="label">{{ label }}</label>
         </div>
@@ -17,6 +17,10 @@ export default {
     name: 'separator',
     props: {
         'label': {
+            default: '',
+            type: String
+        },
+        'anchor': {
             default: '',
             type: String
         },

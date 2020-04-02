@@ -1,5 +1,7 @@
 <template>
-    <div class="radio-buttons">
+    <div 
+        :id="anchor"
+        class="radio-buttons">
         <template v-for="(item, index) in items">
             <input
                 type="radio"
@@ -37,6 +39,10 @@ export default {
         value: {
             default: '',
             type: [String, Number]
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data: function() {
