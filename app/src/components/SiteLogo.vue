@@ -7,7 +7,8 @@
             class="site-logo-bg">
             <icon                 
                 :name="logoIcon"               
-                size="s" />
+                size="s" 
+                iconset="svg-map-site"/>
         </span>
 
         <span class="site-logo-name">

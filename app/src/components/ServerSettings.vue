@@ -42,56 +42,64 @@
                    <icon
                       customWidth="69"
                       customHeight="42"                   
-                      name="ftp" />
+                      name="ftp" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'sftp'" title="SFTP">
                    <icon
                       customWidth="69"
                       customHeight="42"                   
-                      name="sftp" />
+                      name="sftp" 
+                      iconset="svg-map-server"/>
                 </div>               
 
                 <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
                    <icon
                       customWidth="48"
                       customHeight="48"                    
-                      name="aws" />
+                      name="aws" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages">
                     <icon
                       customWidth="129"
                       customHeight="42"                     
-                      name="githubpages" />
+                      name="githubpages" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages">
                     <icon
                       customWidth="113"
                       customHeight="40"                     
-                      name="gitlab" />
+                      name="gitlab" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'netlify'" title="Netlify">
                    <icon
                       customWidth="102"
                       customHeight="48"                     
-                      name="netlify" />
+                      name="netlify" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud">
                     <icon
                       customWidth="167"
                       customHeight="40"                     
-                      name="googlecloud" />
+                      name="googlecloud" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
-                      name="zip" />
+                      name="zip" 
+                      iconset="svg-map-server"/>
                 </div>
             </div>
 

@@ -118,7 +118,7 @@
                             size="s"
                             :name="item.icon"
                             :customCssClasses="'file ' + item.icon"
-                            iconset="file-extensions-map"
+                            iconset="svg-map-file-extensions"
                             customWidth="22"
                             customHeight="24" />
 
