@@ -335,6 +335,10 @@ li {
         cursor: move !important;
         padding: 4 * $spacing 10 * $spacing;
         position: relative;
+
+        &:hover {
+            background: var(--gray-6);  
+        }
         
         .menu-item-label {
             color: var(--text-primary-color);
@@ -360,7 +364,7 @@ li {
             &:active,
             &:focus,
             &:hover {
-                color: var(--headings-color);
+                color: var(--headings-color)
             }
 
             &:hover {                  
