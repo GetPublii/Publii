@@ -2,7 +2,9 @@
     <section
         class="content"
         ref="content">
-        <div class="server-settings">
+        <div
+            v-if="isLoaded" 
+            class="server-settings">
             <p-header 
                 v-if="deploymentMethodSelected !== ''" 
                 :title="getDeploymentMethodName(deploymentMethodSelected) + ' settings'">
@@ -104,33 +106,31 @@
             </div>
 
             <fields-group v-if="deploymentMethodSelected !== ''">
-                
-                  <div class="msg msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
-                <template v-if="deploymentMethodSelected === 'ftp'">
-                     FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
-                </template>
+                <div class="msg msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                    <template v-if="deploymentMethodSelected === 'ftp'">
+                        FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
+                    </template>
 
-                <template v-if="deploymentMethodSelected === 'netlify'">
-                    Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
-                </template>
+                    <template v-if="deploymentMethodSelected === 'netlify'">
+                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
+                    </template>
 
-                <template v-if="deploymentMethodSelected === 'github-pages'">
-                    Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
-                </template>
+                    <template v-if="deploymentMethodSelected === 'github-pages'">
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
+                    </template>
 
-                <template v-if="deploymentMethodSelected === 'gitlab-pages'">
-                    Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
-                </template>
+                    <template v-if="deploymentMethodSelected === 'gitlab-pages'">
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
+                    </template>
 
-                <template v-if="deploymentMethodSelected === 's3'">
-                    Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
-                </template>
+                    <template v-if="deploymentMethodSelected === 's3'">
+                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
+                    </template>
 
-                <template v-if="deploymentMethodSelected === 'google-cloud'">
-                    Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
-                </template>
-            </div>
-
+                    <template v-if="deploymentMethodSelected === 'google-cloud'">
+                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                    </template>
+                </div>
 
                 <field
                     id="domain"
@@ -884,6 +884,7 @@ export default {
     name: 'server-settings',
     data () {
         return {
+            isLoaded: false,
             domain: '',
             httpProtocols: {
                 'https': 'https://',
@@ -963,6 +964,7 @@ export default {
         }
     },
     async mounted () {
+        this.isLoaded = false;
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
@@ -976,6 +978,7 @@ export default {
 
         setTimeout(() => {
             this.setPortValue();
+            this.isLoaded = true;
         }, 0);
     },
     methods: {
