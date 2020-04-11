@@ -10,7 +10,7 @@
             </p-button>
 
             <p-button
-                @click.native="save"
+                @click.native="save(false, false)"
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">

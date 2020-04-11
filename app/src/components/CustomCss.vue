@@ -10,7 +10,7 @@
             </p-button>
 
             <p-button
-                @click.native="save"
+                @click.native="save(false, false)"
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
@@ -188,6 +188,8 @@ export default {
             }, 500);
         },
         saved (showPreview, renderingType = false) {
+            console.log('SP', showPreview);
+
             this.$bus.$emit('message-display', {
                 message: 'Custom CSS has been successfully saved.',
                 type: 'success',
