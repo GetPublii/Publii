@@ -173,7 +173,10 @@ class SiteEvents {
 
             // Save the password in the keychain
             if (passwordSafeStorage) {
-                if (config.settings.deployment.password !== '') {
+                if (
+                    config.settings.deployment.password !== '' && 
+                    config.settings.deployment.password !== 'publii ' + slug(config.settings.name)
+                ) {
                     passwordData = await self.loadPassword(
                         config.settings,
                         'publii',
@@ -182,7 +185,10 @@ class SiteEvents {
                     config.settings.deployment.password = passwordData.toSave;
                 }
 
-                if(config.settings.deployment.passphrase !== '') {
+                if (
+                    config.settings.deployment.passphrase !== '' && 
+                    config.settings.deployment.passphrase !== 'publii-passphrase ' + slug(config.settings.name)
+                ) {
                     passphraseData = await self.loadPassword(
                         config.settings,
                         'publii-passphrase',
@@ -191,7 +197,11 @@ class SiteEvents {
                     config.settings.deployment.passphrase = passphraseData.toSave;
                 }
 
-                if(config.settings.deployment.s3.id !== '' && config.settings.deployment.s3.key !== '') {
+                if (
+                    config.settings.deployment.s3.id !== '' && 
+                    config.settings.deployment.s3.key !== '' && 
+                    config.settings.deployment.s3.id !== 'publii-s3-id ' + slug(config.settings.name)
+                ) {
                     s3IdData = await self.loadPassword(
                         config.settings,
                         'publii-s3-id',
@@ -206,7 +216,10 @@ class SiteEvents {
                     config.settings.deployment.s3.key = s3KeyData.toSave;
                 }
 
-                if(config.settings.deployment.github.token !== '') {
+                if (
+                    config.settings.deployment.github.token !== '' &&
+                    config.settings.deployment.github.token !== 'publii-gh-token ' + slug(config.settings.name)
+                ) {
                     ghTokenData = await self.loadPassword(
                         config.settings,
                         'publii-gh-token',
@@ -215,7 +228,10 @@ class SiteEvents {
                     config.settings.deployment.github.token = ghTokenData.toSave;
                 }
 
-                if(config.settings.deployment.gitlab.token !== '') {
+                if (
+                    config.settings.deployment.gitlab.token !== '' && 
+                    config.settings.deployment.gitlab.token !== 'publii-gl-token ' + slug(config.settings.name)
+                ) {
                     glTokenData = await self.loadPassword(
                         config.settings,
                         'publii-gl-token',
@@ -224,7 +240,11 @@ class SiteEvents {
                     config.settings.deployment.gitlab.token = glTokenData.toSave;
                 }
 
-                if(config.settings.deployment.netlify.id !== '' && config.settings.deployment.netlify.token !== '') {
+                if (
+                    config.settings.deployment.netlify.id !== '' && 
+                    config.settings.deployment.netlify.token !== '' &&
+                    config.settings.deployment.netlify.token !== 'publii-netlify-token ' + slug(config.settings.name)
+                ) {
                     netlifyIdData = await self.loadPassword(
                         config.settings,
                         'publii-netlify-id',
