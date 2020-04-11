@@ -168,7 +168,7 @@ class GitlabPages {
         }).then(projects => {
             this.projectID = projects[0].id;
 
-            this.client.RepositoryFiles.showRaw(this.projectID, '/publii-files.json', this.branch).then(response => {
+            this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
                 fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), JSON.stringify(response), err => {
                     if (err) {
                         console.log('(!) An error occurred during writing files-remote.json file: ', err);
@@ -198,7 +198,7 @@ class GitlabPages {
                 console.log('(!) REMOTE FILE DOWNLOADED');
             }).catch(err => {
                 console.log('(!) REMOTE FILE NOT DOWNLOADED');
-                console.log('(!) ERROR WHILE DOWNLOADING files-remote.json: ', err.error);
+                console.log('(!) ERROR WHILE DOWNLOADING publii-files.json: ', err.error);
                 this.deployment.compareFilesList(false);
             });
         }).catch(err => {
