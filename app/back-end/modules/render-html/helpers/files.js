@@ -120,6 +120,10 @@ class Files {
             dirs.push('posts/' + postIDs[i]);
         }
 
+        if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
+            fs.mkdir(path.join(basePathOutput));
+        }
+
         if (!UtilsHelper.dirExists(path.join(basePathOutput, 'posts'))) {
             fs.mkdir(path.join(basePathOutput, 'posts'));
         }
