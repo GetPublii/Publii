@@ -39,35 +39,6 @@
             @click="unLink">
             <svg width="15" height="15"><path d="M6.23,13.09a1,1,0,0,1-.36,1.37,3.71,3.71,0,0,1-1.42.5,3.31,3.31,0,0,1-.55,0,3.87,3.87,0,0,1-2.35-.8A4,4,0,0,1,.52,13,4,4,0,0,1,0,11.59a3.84,3.84,0,0,1,.08-1.51A4,4,0,0,1,.78,8.66L2.05,7a3.73,3.73,0,0,1,1.16-1,3.71,3.71,0,0,1,1.42-.5,3.63,3.63,0,0,1,1.5.08,3.88,3.88,0,0,1,1.4.68,1,1,0,0,1,.18,1.4,1,1,0,0,1-1.4.19,1.89,1.89,0,0,0-.68-.34,1.74,1.74,0,0,0-.72,0,1.73,1.73,0,0,0-.69.24,1.82,1.82,0,0,0-.56.51L2.39,9.85A2,2,0,0,0,2,11.31a2,2,0,0,0,.24.72,1.89,1.89,0,0,0,.51.58,1.72,1.72,0,0,0,.68.33,1.75,1.75,0,0,0,.72,0,1.73,1.73,0,0,0,.69-.24A1,1,0,0,1,6.23,13.09ZM14.6,6.33a3.77,3.77,0,0,0-.94-1.2,4.2,4.2,0,0,0-1.29-.75A6,6,0,0,0,9.76,4a1,1,0,0,0-.92,1.07A1,1,0,0,0,9.91,6a4,4,0,0,1,1.74.24,2.53,2.53,0,0,1,.71.39,1.93,1.93,0,0,1,.45.58,1.83,1.83,0,0,1,.19.72,1.86,1.86,0,0,1-.53,1.39,2,2,0,0,1-.64.47A2.21,2.21,0,0,1,11,10l-2.2.13A2.06,2.06,0,0,1,8,10a2,2,0,0,1-.66-.37,2,2,0,0,1-.46-.59,1,1,0,0,0-1.78.9A3.88,3.88,0,0,0,6,11.17a4,4,0,0,0,1.33.76,4.24,4.24,0,0,0,1.32.21H9l2.2-.14a4.07,4.07,0,0,0,1.54-.39,4.14,4.14,0,0,0,1.24-.91A3.88,3.88,0,0,0,15,7.85,3.77,3.77,0,0,0,14.6,6.33ZM4.11,3.45A1,1,0,0,0,5,4a1,1,0,0,0,.45-.1,1,1,0,0,0,.44-1.35l-1-2a1,1,0,1,0-1.78.9Zm3.44.45A1,1,0,0,0,8,4a1,1,0,0,0,.89-.55l1-2A1,1,0,1,0,8.11.55l-1,2A1,1,0,0,0,7.55,3.9Z" /></svg>
         </button>
-
-        <select
-            id="inline-toolbar-style"
-            ref="inline-toolbar-style"
-            @change="applyStyle">
-            <option value="">Select style</option>
-            <option value="p">Paragraph</option>
-            <option value="h2">Heading 2</option>
-            <option value="h3">Heading 3</option>
-            <option value="h4">Heading 4</option>
-            <option value="code">Code</option>
-            <option value="pre">Pre</option>
-            <option value="blockquote">Blockquote</option>
-        </select>
-
-        <select
-            v-if="customFormats.length"
-            id="inline-toolbar-format"
-            ref="inline-toolbar-format"
-            @change="applyFormat">
-            <option value="">Select style</option>
-            <option
-                v-for="(format, index) in customFormats"
-                :value="'custom-' + format.title.toLowerCase()"
-                :key="'format-' + index">
-                {{ format.title }}
-            </option>
-            <option value="-">Remove styles</option>
-        </select>
     </div>
 </template>
 
@@ -136,28 +107,11 @@ export default {
         });
     },
     methods: {
-        init(customFormats) {
+        init () {
             let iframe = document.getElementById('post-editor_ifr');
             this.win = iframe.contentWindow.window;
             this.doc = this.win.document;
             this.body = this.doc.body;
-            this.customFormats = customFormats;
-        },
-
-        applyStyle (e) {
-            tinymce.activeEditor.execCommand('FormatBlock', false, $(e.target).val());
-        },
-
-        applyFormat (e) {
-            if($(e.target).val() !== '-') {
-                tinymce.activeEditor.execCommand('mceToggleFormat', false, $(e.target).val());
-            } else {
-                for(let i = 0; i < this.customFormats.length; i++) {
-                    tinymce.activeEditor.formatter.remove('custom-' + this.customFormats[i].title.toLowerCase());
-                }
-
-                $(this.$refs['inline-toolbar-format']).val('');
-            }
         },
 
         toggle (format) {
@@ -196,37 +150,6 @@ export default {
                     left: this.calculateLeft(rect) + "px",
                     top: this.calculateTop(rect) + "px"
                 });
-
-                let currentTag = tinymce.activeEditor.selection.getNode().nodeName.toLowerCase();
-
-                if(currentTag !== 'body') {
-                    $(this.$refs['inline-toolbar-style']).val(currentTag);
-                } else {
-                    $(this.$refs['inline-toolbar-style']).val('');
-                }
-
-                if(['body', 'p', 'code', 'pre', 'h2', 'h3', 'h4', 'blockquote'].indexOf(currentTag) === -1) {
-                    $(this.$refs['inline-toolbar-style']).css('display', 'none');
-                } else {
-                    $(this.$refs['inline-toolbar-style']).css('display', 'inline');
-                }
-
-                let formatSet = false;
-
-                for(let i = 0; i < this.customFormats.length; i++) {
-                    let name = 'custom-' + this.customFormats[i].title.toLowerCase();
-                    let status = tinymce.activeEditor.formatter.canApply(name);
-                    $(this.$refs['inline-toolbar-format']).find('option[value="' + name + '"]').prop('disabled', !status);
-
-                    if(tinymce.activeEditor.formatter.match(name)) {
-                        $(this.$refs['inline-toolbar-format']).val(name);
-                        formatSet = true;
-                    }
-                }
-
-                if(!formatSet) {
-                    $(this.$refs['inline-toolbar-format']).val('');
-                }
 
                 this.updateLinkButtons();
             } else {
