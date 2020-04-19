@@ -1433,6 +1433,7 @@
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
                     :previewIcon="true"
+                    :isReversed="true"
                     defaultValue="full-site" />
 
                 <p-button

@@ -4,6 +4,7 @@
         'is-green': isGreen, 
         'has-icon': hasIcon,
         'has-icon-preview': previewIcon,
+        'is-reversed': isReversed,
         'disabled': disabled
     }">
         <span 
@@ -91,6 +92,10 @@ export default {
         'localStorageKey': {
             default: false,
             type: [String, Boolean]
+        },
+        'isReversed': {
+            default: false,
+            type: Boolean
         }
     },
     computed: {
