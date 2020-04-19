@@ -172,6 +172,8 @@ export default {
             this.possibleDataLoss = true;
         });
 
+        this.$refs['post-title'].focus();
+
         this.iframeFocusCheckTimeout = setTimeout(() => {
             this.checkIframeFocus();
         }, 1000);

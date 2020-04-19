@@ -174,6 +174,7 @@ export default {
         window.prompt = this.linkPopupHandler;
         this.$refs.linkPopup.setSimpleMdeInstance(this.simplemde);
         inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
+        this.$refs['post-title'].focus();
     },
     methods: {
         detectEnterInTitle (event) {
