@@ -43,6 +43,32 @@ class Image extends Model {
         }
     }
 
+    /**
+     * Generate unique file name
+     */
+    generateFileName (fileName, suffix, dirPath) {
+        let newPath = '';
+        let fileSuffix = '';
+        let finalFileName = path.parse(fileName);
+
+        if (suffix > 1) {
+            fileSuffix = '-' + suffix;
+        }
+
+        finalFileName = slug(finalFileName.name, false, true) + fileSuffix + finalFileName.ext;
+        newPath = path.join(dirPath, finalFileName);
+
+        if (this.imageType === 'galleryImages') {
+            newPath = path.join(galleryDirPath, finalFileName);
+        }
+
+        if (fs.existsSync(newPath)) {
+            return this.generateFileName(fileName, suffix + 1, dirPath);
+        }
+
+        return newPath;
+    }
+
     /*
      * Save Image
      */
@@ -101,13 +127,7 @@ class Image extends Model {
             fs.mkdirSync(responsiveDirPath);
         }
 
-        let finalFileName = path.parse(fileName);
-        finalFileName = slug(finalFileName.name, false, true) + finalFileName.ext;
-        newPath = path.join(dirPath, finalFileName);
-
-        if (this.imageType === 'galleryImages') {
-            newPath = path.join(galleryDirPath, finalFileName);
-        }
+        newPath = this.generateFileName(fileName, 1, dirPath);
 
         // Store main image
         try {
