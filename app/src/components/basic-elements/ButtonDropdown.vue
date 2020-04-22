@@ -405,5 +405,19 @@ export default {
             padding: .2rem 6rem .2rem 2rem;
         }
     }
+
+    &.is-reversed {
+        .button-toggle::after {
+            border-color: transparent transparent var(--white);
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        .button-dropdown {
+            border-radius: 5px 5px 0 0;
+            bottom: 42px;
+            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.125);
+            top: unset;
+        }
+    }
 }
 </style>
