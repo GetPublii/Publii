@@ -510,6 +510,13 @@ class App {
             }
         });
 
+        this.mainWindow.webContents.on('app-command', (e, cmd) => {
+            // disable back/forward mouse buttons
+            if (cmd === 'browser-backward' || cmd === 'browser-forward') {
+                e.preventDefault();
+            }
+        });
+
         this.mainWindow.webContents.on('did-finish-load', function() {
             let appVersionInfo = {
                 version: self.versionData,
