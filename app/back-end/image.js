@@ -46,7 +46,7 @@ class Image extends Model {
     /**
      * Generate unique file name
      */
-    generateFileName (fileName, suffix, dirPath) {
+    generateFileName (fileName, suffix, dirPath, galleryDirPath) {
         let newPath = '';
         let fileSuffix = '';
         let finalFileName = path.parse(fileName);
@@ -63,7 +63,7 @@ class Image extends Model {
         }
 
         if (fs.existsSync(newPath)) {
-            return this.generateFileName(fileName, suffix + 1, dirPath);
+            return this.generateFileName(fileName, suffix + 1, dirPath, galleryDirPath);
         }
 
         return newPath;
@@ -127,7 +127,7 @@ class Image extends Model {
             fs.mkdirSync(responsiveDirPath);
         }
 
-        newPath = this.generateFileName(fileName, 1, dirPath);
+        newPath = this.generateFileName(fileName, 1, dirPath, galleryDirPath);
 
         // Store main image
         try {
