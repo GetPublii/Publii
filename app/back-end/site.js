@@ -383,7 +383,9 @@ class Site {
                 }
 
                 if(fs.lstatSync(path.join(mediaPath, catalog, file)).isFile()) {
-                    numberOfImages++;
+                    if (path.parse(file).ext !== '') {
+                        numberOfImages++;
+                    }
                 }
             }
         }

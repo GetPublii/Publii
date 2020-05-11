@@ -64,7 +64,8 @@ export default {
             progressColor: 'blue',
             progressIsStopped: false,
             regeneratingThumbnails: false,
-            regenerateIsDone: false
+            regenerateIsDone: false,
+            savedSettingsCallbac: false
         };
     },
     mounted () {
@@ -76,6 +77,7 @@ export default {
             this.progressIsStopped = false;
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
+            this.savedSettingsCallback = config.savedSettingsCallback || false;
         });
 
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
@@ -89,6 +91,10 @@ export default {
             this.progressIsStopped = false;
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
+
+            if (this.savedSettingsCallback) {
+                this.$bus.$emit('regenerate-thumbnails-close', this.savedSettingsCallback);
+            }
         },
         regenerate () {
             if (this.regeneratingThumbnails) {
@@ -124,6 +130,10 @@ export default {
                     this.message = 'All thumbnails have been created.';
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
+
+                    if (this.savedSettingsCallback) {
+                        this.skip();
+                    }
                 });
             }, 350);
         },

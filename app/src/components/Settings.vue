@@ -1629,6 +1629,8 @@ export default {
             this.$refs['logo-creator'].changeIcon(this.logo.icon);
             this.$refs['logo-creator'].changeColor(this.logo.color);
         }, 0);
+
+        this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
     },
     methods: {
         saveAndPreview (renderingType = false) {
@@ -1708,16 +1710,32 @@ export default {
                 }
 
                 if(data.status === true) {
-                    if(data.thumbnailsRegenerateRequired && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
+                    if (
+                        data.thumbnailsRegenerateRequired && 
+                        this.$store.state.currentSite.posts && 
+                        this.$store.state.currentSite.posts.length > 0
+                    ) {
                         ipcRenderer.send('app-site-regenerate-thumbnails-required', {
                             name: this.$store.state.currentSite.config.name
                         });
 
                         ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
                             if (data.message) {
-                                this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: false });
+                                this.$bus.$emit('regenerate-thumbnails-display', { 
+                                    qualityChanged: false,
+                                    savedSettingsCallback: {
+                                        newSettings, 
+                                        siteName, 
+                                        showPreview, 
+                                        renderingType
+                                    }
+                                });
+                            } else {
+                                this.saved(newSettings, siteName, showPreview, renderingType);
                             }
                         });
+                    } else {
+                        this.saved(newSettings, siteName, showPreview, renderingType);
                     }
 
                     if(data.newThemeConfig) {
@@ -1726,8 +1744,6 @@ export default {
                             newThemeConfig: data.newThemeConfig
                         });
                     }
-
-                    this.saved(newSettings, siteName, showPreview, renderingType);
                 }
 
                 if(data.message === 'success-save') {
@@ -1779,6 +1795,10 @@ export default {
                     this.$store.commit('switchSite', result.data);
                 });
             });
+        },
+        savedFromPopup (callbackData) {
+            console.log('CD:', callbackData);
+            this.saved(callbackData.newSettings, callbackData.siteName, callbackData.showPreview, callbackData.renderingType);
         },
         saved (newSettings, oldName, showPreview = false, renderingType = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
@@ -1956,6 +1976,9 @@ export default {
         closeDropdown (refID) {
             this.$refs[refID].isOpen = false;
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('regenerate-thumbnails-close', this.savedFromPopup);
     }
 }
 </script>
