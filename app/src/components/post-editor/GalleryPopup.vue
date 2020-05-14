@@ -95,6 +95,18 @@
                     </select>
                 </label>
 
+                <label>
+                    Align:
+                    <select
+                        v-model="columns"
+                        class="gallery-popup-config-cols">
+                        <option :value="1">Centered</option>
+                        <option :value="2">Wide</option>
+                        <option :value="3">Full-width</option>
+
+                    </select>
+                </label>
+
                 <p-button
                     @click.native="addImages"
                     slot="buttons"
@@ -367,7 +379,7 @@ h1 {
         label {
             align-items: center;
             display: flex;
-            width: 280px;
+            margin-right: 30px;
         }
 
         select {
@@ -383,9 +395,10 @@ h1 {
             min-width: 100px;
             min-height: 48px;
             outline: none;
+            margin-left: 10px;
             padding: 0 12px 0 18px;
             position: relative;
-            width: 200px;
+            width: 140px;
 
             &:not([multiple]) {
                 background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
