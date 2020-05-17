@@ -198,7 +198,7 @@ class Image extends Model {
             height: false
         };
 
-        if (!siteConfig.advanced.responsiveImages) {
+        if (!siteConfig.advanced.responsiveImages && imageType !== 'galleryImages') {
             return ['NO-RESPONSIVE-IMAGES'];
         }
 
