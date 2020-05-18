@@ -98,12 +98,11 @@
                 <label>
                     Align:
                     <select
-                        v-model="columns"
+                        v-model="layout"
                         class="gallery-popup-config-cols">
-                        <option :value="1">Centered</option>
-                        <option :value="2">Wide</option>
-                        <option :value="3">Full-width</option>
-
+                        <option value="">Centered</option>
+                        <option value="gallery--wide">Wide</option>
+                        <option value="gallery--full">Full-width</option>
                     </select>
                 </label>
 
@@ -153,6 +152,7 @@ export default {
             isUploading: false,
             images: [],
             columns: 3,
+            layout: '',
             uploadProgress: 0,
             uploadMessage: '',
             imagesToUpload: 0
@@ -239,12 +239,19 @@ export default {
             let galleryHandler = $(this.galleryElement);
             let images = $(galleryHandler).find('.gallery__item');
             this.columns = galleryHandler.attr('data-columns') || 3;
+            this.layout = '';
 
-            if(!images.length) {
+            if (galleryHandler.hasClass('gallery--wide')) {
+                this.layout = 'gallery--wide';
+            } else if (galleryHandler.hasClass('gallery--full')) {
+                this.layout = 'gallery--full';
+            }
+
+            if (!images.length) {
                 return;
             }
 
-            for(let image of images) {
+            for (let image of images) {
                 image = $(image);
 
                 this.images.push({
@@ -313,6 +320,10 @@ export default {
             }
 
             $(this.galleryElement).attr('data-columns', this.columns);
+
+            if (this.layout !== '') {
+                $(this.galleryElement).addClass(this.layout);
+            }
 
             return {
                 gallery: this.galleryElement,
