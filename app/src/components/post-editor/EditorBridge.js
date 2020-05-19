@@ -276,9 +276,9 @@ class EditorBridge {
 
             // Writers Panel
             let updateWritersPanel = function () {
-                window.app.$bus.$emit('writers-panel-refresh');
+                 window.app.$bus.$emit('writers-panel-refresh');
             };
-            let throttledUpdate = Utils.throttledFunction(updateWritersPanel, 250);
+            let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
