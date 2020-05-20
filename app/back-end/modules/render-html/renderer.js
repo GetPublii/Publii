@@ -258,8 +258,9 @@ class Renderer {
         this.generateFrontpage();
         this.generateCSS();
 
+        let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.postID]);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
 
         process.send({
             type: 'app-rendering-preview',
