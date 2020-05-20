@@ -334,10 +334,14 @@
                                 <label>
                                     Meta robots index:
                                     <dropdown
+                                        v-if="!$parent.postData.canonicalUrl"
                                         id="post-meta-robots"
                                         v-model="$parent.postData.metaRobots"
                                         :items="metaRobotsOptions">
                                     </dropdown>
+                                    <div v-else>
+                                        <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                    </div>
                                 </label>
 
                                 <label>

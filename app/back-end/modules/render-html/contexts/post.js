@@ -52,6 +52,7 @@ class RendererContextPost extends RendererContext {
 
             if(results.canonicalUrl) {
                 this.canonicalUrl = results.canonicalUrl;
+                this.metaRobots = '';
             }
         }
 
