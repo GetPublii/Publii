@@ -22,8 +22,10 @@ class SiteEvents {
         /*
          * Reload site config and data
          */
-        ipcMain.on('app-site-reload', function(event, config) {
+        ipcMain.on('app-site-reload', (event, config) => {
             let result = appInstance.reloadSite(config.siteName);
+            let language = this.getSiteLanguage(appInstance, config.siteName);
+            this.setSpellcheckerLanguage (appInstance, language);
             event.sender.send('app-site-reloaded', result);
         });
 
@@ -307,8 +309,10 @@ class SiteEvents {
         /*
          * Switch website
          */
-        ipcMain.on('app-site-switch', function (event, config) {
+        ipcMain.on('app-site-switch', (event, config) => {
             let result = appInstance.switchSite(config.site);
+            let language = this.getSiteLanguage(appInstance, config.siteName);
+            this.setSpellcheckerLanguage (appInstance, language);
             event.sender.send('app-site-switched', result);
         });
 
@@ -491,6 +495,55 @@ class SiteEvents {
             newPassword: '',
             toSave: ''
         };
+    }
+
+    getSiteLanguage (appInstance, siteName) {
+        if (process.platform === 'darwin') {
+            return 'null';
+        }
+
+        let configPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
+        let config = fs.readFileSync(configPath, 'utf8');
+        
+        try {
+            config = JSON.parse(config);
+
+            if (config.language) {
+                if (config.language === 'custom') {
+                    return config.customLanguage;
+                }
+
+                return config.language;
+            }
+        } catch (e) {
+            console.log('(!) An error occurred during detecting site language');
+        }
+
+        return 'null';
+    }
+
+    setSpellcheckerLanguage (appInstance, language) {
+        if (process.platform === 'darwin') {
+            return;
+        }
+
+        let availableLanguages = appInstance.mainWindow.webContents.session.getSpellCheckerLanguages();
+        language = language.toLocaleLowerCase();
+
+        if (availableLanguages.indexOf(language) > -1) {
+            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            return;
+        }
+
+        language = language.split('-');
+        language = language[0];
+
+        if (availableLanguages.indexOf(language) > -1) {
+            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            return;
+        }
+
+        console.log('(!) Unable to set spellchecker to use selected language - ' + language);
     }
 }
 

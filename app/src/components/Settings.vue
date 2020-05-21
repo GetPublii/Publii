@@ -71,6 +71,12 @@
                         slot="field"
                         id="spellchecking"
                         v-model="spellchecking" />
+                    <small
+                        v-if="hasNonAutomaticSpellchecker && spellcheckIsNotSupported"
+                        slot="note"
+                        class="note is-invalid">
+                        The spellchecker does not support your selected website language. We recommend to disable this feature.
+                    </small>
                 </field>
 
                 <field
@@ -1450,7 +1456,7 @@
 
 <script>
 import fs from 'fs';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import GdprGroups from './basic-elements/GdprGroups';
@@ -1477,7 +1483,8 @@ export default {
             currentTheme: '',
             currentThemeVersion: '',
             advanced: {},
-            errors: []
+            errors: [],
+            spellcheckerLanguages: false
         };
     },
     computed: {
@@ -1607,6 +1614,33 @@ export default {
                     onClick: this.saveAndPreview.bind(this, 'homepage')
                 }
             ]
+        },
+        hasNonAutomaticSpellchecker () {
+            return process.platform !== 'darwin';
+        },
+        spellcheckIsNotSupported () {
+            if (this.spellcheckerLanguages === false) {
+                return false;
+            }
+
+            let language = this.language;
+
+            if (language === 'custom') {
+                language = this.customLanguage;
+            }
+
+            if (this.spellcheckerLanguages.indexOf(language) > -1) {
+                return false;
+            } else {
+                language = language.split('-');
+                language = language[0];
+
+                if (this.spellcheckerLanguages.indexOf(language) > -1) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     },
     beforeMount () {
@@ -1631,6 +1665,11 @@ export default {
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
+        this.spellcheckerLanguages = remote.getCurrentWebContents().session.getSpellCheckerLanguages();
+        
+        if (this.spellcheckerLanguages.length) {
+            this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());
+        }
     },
     methods: {
         saveAndPreview (renderingType = false) {
