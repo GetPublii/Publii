@@ -1,4 +1,5 @@
-const { remote } = require('electron');
+const { remote, shell } = require('electron');
+const { Menu, MenuItem } = remote;
 
 if (process.platform !== 'darwin') {
     let language = remote.getGlobal('spellCheckerLanguage');
