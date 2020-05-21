@@ -16,6 +16,10 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
             return '';
         }
 
+        if (options.data.root.metaRobotsRaw === 'index, follow') {
+            return '';
+        }
+
         if (options.data.root.metaRobotsRaw !== '') {
             output = '<meta name="robots" content="' + options.data.root.metaRobotsRaw + '" />';
         }
