@@ -498,7 +498,7 @@ class SiteEvents {
     }
 
     getSiteLanguage (appInstance, siteName) {
-        if (process.platform === 'darwin') {
+        if (process.platform === 'darwin' || !siteName) {
             return 'null';
         }
 
