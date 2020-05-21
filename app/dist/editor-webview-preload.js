@@ -3,7 +3,7 @@ const { remote } = require('electron');
 if (process.platform !== 'darwin') {
     let language = remote.getGlobal('spellCheckerLanguage');
     language = language.toLocaleLowerCase();
-    let availableLanguages = remote.getCurrentWebContents().session.getSpellCheckerLanguages();
+    let availableLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
     
     if (availableLanguages.indexOf(language) > -1) {
         remote.getCurrentWebContents().session.setSpellCheckerLanguages([language]);

@@ -1665,7 +1665,7 @@ export default {
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
-        this.spellcheckerLanguages = remote.getCurrentWebContents().session.getSpellCheckerLanguages();
+        this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
         
         if (this.spellcheckerLanguages.length) {
             this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());

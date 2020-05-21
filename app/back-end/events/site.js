@@ -527,7 +527,7 @@ class SiteEvents {
             return;
         }
 
-        let availableLanguages = appInstance.mainWindow.webContents.session.getSpellCheckerLanguages();
+        let availableLanguages = appInstance.mainWindow.webContents.session.availableSpellCheckerLanguages;
         language = language.toLocaleLowerCase();
 
         if (availableLanguages.indexOf(language) > -1) {
