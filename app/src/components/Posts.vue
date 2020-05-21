@@ -15,7 +15,7 @@
                 localStorageKey="publii-current-editor"
                 :previewIcon="true"
                 :items="dropdownItems"
-                defaultValue="blockeditor" />
+                defaultValue="tinymce" />
         </p-header>
 
         <ul
