@@ -501,20 +501,20 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Use Block editor',
-                    activeLabel: 'Add new post',
-                    value: 'blockeditor',
-                    icon: 'block',
-                    isVisible: () => true,
-                    onClick: this.addNewPost.bind(this, 'blockeditor')
-                },
-                {
                     label: 'Use WYSIWYG editor',
                     activeLabel: 'Add new post',
                     value: 'tinymce',
                     icon: 'wysiwyg',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
+                },
+                {
+                    label: 'Use Block editor',
+                    activeLabel: 'Add new post',
+                    value: 'blockeditor',
+                    icon: 'block',
+                    isVisible: () => true,
+                    onClick: this.addNewPost.bind(this, 'blockeditor')
                 },
                 {
                     label: 'Use Markdown editor',
