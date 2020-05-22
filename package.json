@@ -130,7 +130,8 @@
       "minimumSystemVersion": "10.10"
     },
     "nsis": {
-      "oneClick": true
+      "oneClick": true,
+      "createDesktopShortcut": "always"
     },
     "dmg": {
       "sign": false,
