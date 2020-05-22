@@ -12,12 +12,14 @@
                 v-if="hasInput"
                 :type="inputIsPassword ? 'password' : 'text'"
                 :value="defaultText"
+                :spellcheck="false"
                 ref="input" />
 
             <div class="buttons">
                 <p-button
-                    type="medium no-border-radius half-width"
-                    :onClick="onOk">
+                    :type="isDanger ? 'medium no-border-radius half-width danger' : 'medium no-border-radius half-width'"
+                    :onClick="onOk"
+                    ref="okButton">
                     {{ okLabel }}
                 </p-button>
 
@@ -44,6 +46,7 @@ export default {
             okClick: () => false,
             cancelClick: () => false,
             okLabel: 'OK',
+            isDanger: false,
             cancelLabel: 'Cancel',
             defaultText: ''
         };
@@ -58,6 +61,8 @@ export default {
     },
     mounted () {
         this.$bus.$on('confirm-display', (config) => {
+            document.body.classList.add('has-popup-visible');
+
             setTimeout(() => {
                 this.isVisible = true;
                 this.message = config.message;
@@ -66,8 +71,9 @@ export default {
                 this.inputIsPassword = config.inputIsPassword || false;
                 this.okLabel = config.okLabel || "OK";
                 this.cancelLabel = config.cancelLabel || "Cancel";
-                this.defaultText = config.defaultText || "";
-
+                this.defaultText = config.defaultText || "";   
+                this.isDanger = config.isDanger || false;             
+                
                 if(config.okClick) {
                     this.okClick = config.okClick;
                 } else {
@@ -79,14 +85,22 @@ export default {
                 } else {
                     this.cancelClick = () => false;
                 }
+
+                setTimeout(() => {
+                    if (config.hasInput) {
+                        console.log(this.$refs);
+                        this.$refs.input.$el.querySelector('input').focus();
+                    }
+                }, 100);
             }, 0);
         });
-
+        
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         onOk () {
             this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
 
             if(this.hasInput) {
                 this.okClick(this.$refs.input.content);
@@ -96,6 +110,7 @@ export default {
         },
         onCancel () {
             this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
             this.cancelClick();
         },
         onDocumentKeyDown (e) {
@@ -105,6 +120,11 @@ export default {
         },
         onEnterKey () {
             this.onOk();
+
+            setTimeout(() => {
+                this.isVisible = false;
+                document.body.classList.remove('has-popup-visible');
+            }, 100);
         }
     },
     beforeDestroy () {
@@ -122,38 +142,17 @@ export default {
     z-index: 100005;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
+.popup {   
     max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    min-width: 60rem;    
+    padding: 4rem;   
 }
 
 .message {
-    color: $color-5;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    text-align: left;
+    padding: 0;   
 
     & + * {
         margin-top: 2rem;
-    }
-
-    &.text-centered {
-        text-align: center;
     }
 }
 

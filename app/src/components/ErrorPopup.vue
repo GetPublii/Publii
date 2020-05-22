@@ -12,7 +12,7 @@
                 class="error-log"
                 v-html="errors"></div>
 
-            <textarea ref="error-log">{{ text }}</textarea>
+            <textarea spellcheck="false" ref="error-log">{{ text }}</textarea>
 
             <div class="buttons">
                 <p-button
@@ -68,20 +68,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+.popup {   
+    padding: 4rem;   
     width: 60rem;
 
     .error-log {
@@ -101,17 +89,8 @@ textarea {
     width: 1px;
 }
 
-.message {
-    color: $color-5;
-    font-weight: 400;
-    margin: 0;
-    padding: 0 0 4rem 0;
-    position: relative;
-    text-align: left;
-
-    &.text-centered {
-        text-align: center;
-    }
+.message { 
+    padding: 0 0 4rem 0;   
 }
 
 .buttons {

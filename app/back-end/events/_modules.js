@@ -14,6 +14,7 @@ module.exports = {
     MenuEvents: require('./menu.js'),
     PreviewEvents: require('./preview.js'),
     NotificationsEvents: require('./notifications.js'),
+    ThemeUpdatesEvents: require('./theme-updates.js'),
     BackupEvents: require('./backup.js'),
     AuthorEvents: require('./author.js'),
     AuthorsEvents: require('./authors.js'),

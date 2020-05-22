@@ -56,7 +56,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .col {
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
     padding: 1.6rem 0;
     text-align: left;
 
@@ -74,20 +74,20 @@ export default {
     &.titles {
         .title {
             font-size: 1.6rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
         }
 
         .tag {
-            color: $color-7;
+            color: var(--text-light-color);
             font-size: 1.2rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-normal);
 
             &:active,
             &:focus,
             &:hover {
-                color: $link-color;
+                color: var(--link-primary-color);
             }
         }
 
@@ -101,13 +101,13 @@ export default {
     &.names {
         .name {
             font-size: 1.6rem;
-            font-weight: 400;
+            font-weight: var(--font-weight-normal);
             margin: 0;
             text-transform: none;
         }
 
         .is-main-author {
-            color: $color-7;
+            color: var(--text-light-color);
         }
     }
 
@@ -122,7 +122,7 @@ export default {
         }
 
         .modify-date {
-            color: $color-7;
+            color: var(--text-light-color);
             font-size: 1.2rem;
             margin: .2rem 0 0 0;
         }
@@ -135,12 +135,12 @@ export default {
         .tags,
         .authors {
             a {
-                color: $color-7;
+                color: var(--text-light-color);
 
                 &:active,
                 &:focus,
                 &:hover {
-                    color: $link-color;
+                    color: var(--link-primary-color);
                 }
             }
         }

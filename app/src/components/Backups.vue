@@ -1,7 +1,7 @@
 <template>
     <section class="content backups">
         <p-header
-            v-if="!(noLocation || noBackups)"
+            v-if="!noBackups"
             title="Backups">
 
             <p-button
@@ -22,24 +22,10 @@
         </p-header>
 
         <empty-state
-            v-if="noLocation"
-            imageName="backup-path.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="Set your default backup location."
-            description="Your backup save file path hasn't been specified; let's fix that!">
-            <p-button
-                slot="button"
-                :onClick="goToSettings">
-                Set the backup location
-            </p-button>
-        </empty-state>
-
-        <empty-state
             v-if="noBackups"
             imageName="backups.svg"
-            imageWidth="254"
-            imageHeight="284"
+            imageWidth="344"
+            imageHeight="286"
             title="No backups available"
             description="You don't have any backups, yet. Let's create the first one!">
             <p-button
@@ -48,12 +34,12 @@
                 type="icon"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">Create the first backup</template>
+                <template v-if="!operationInProgress">Create backup</template>
                 <template v-if="operationInProgress">Creating backup&hellip;</template>
             </p-button>
         </empty-state>
 
-        <collection v-if="!(noLocation || noBackups)">
+        <collection v-if="!noBackups">
             <collection-header slot="header">
                 <collection-cell width="40px">
                     <checkbox
@@ -153,7 +139,6 @@ export default {
             items: [],
             operationInProgress: false,
             selectedItems: [],
-            noLocation: this.$store.state.app.config.backupsLocation === '',
             fileToRename: '',
             fileToRestore: ''
         };

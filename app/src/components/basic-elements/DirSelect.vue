@@ -8,6 +8,7 @@
             :id="id"
             :placeholder="placeholder"
             :value="value"
+            :spellcheck="false"
             properties="keyboard-blocked" />
 
         <span
@@ -68,18 +69,12 @@ export default {
             mainProcess.selectDirectory('dir-select');
 
             ipcRenderer.once('app-directory-selected', (event, data) => {
-                if(data.path === undefined) {
+                if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
 
-                if(typeof data.path === "object") {
-                    this.$refs.input.content = data.path[0];
-                    this.fieldValue = data.path[0];
-                } else {
-                    this.$refs.input.content = data.path;
-                    this.fieldValue = data.path;
-                }
-
+                this.$refs.input.content = data.path.filePaths[0];
+                this.fieldValue = data.path.filePaths[0];
                 this.onChange(this.fieldValue);
                 this.$emit('input', this.fieldValue);
             });
@@ -106,8 +101,8 @@ export default {
     }
 
     .clear {
-       border-radius: 50%;
-        color: $color-7;
+        border-radius: 50%;
+        color: var(--warning);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
@@ -116,21 +111,20 @@ export default {
         position: absolute;
         right: 1.5rem;
         text-align: center;
-        transition: all .3s ease-out;         
-                    top: 50%;
-                    transform: translateY(-50%); 
-                    width: 3rem;
+        transition: var(--transition);           
+        top: 50%;
+        transform: translateY(-50%); 
+        width: 3rem;
 
         &:active,
-                    &:focus,
-                    &:hover {
-                        color: $color-4;
-                    }
+        &:focus,
+        &:hover {
+            color: var(--icon-tertiary-color);
+        }
         
-                     &:hover {
-                        background: $color-helper-8;
-                    } 
-                      
+        &:hover {
+            background: var(--input-border-color);
+        }      
     }
 
     svg {
@@ -141,12 +135,12 @@ export default {
     }
 
     & ~ small.note {
-        color: $danger-color;
+        color: var(--warning);
         padding: 1rem 0;
         width: 100%;
 
         svg {
-            fill: $danger-color;
+            fill: var(--warning);
             height: 1.8rem!important;
             margin-left: 1.3rem;
             position: relative;

@@ -12,9 +12,10 @@
             class="add-more-theme">
                 <a href="https://marketplace.getpublii.com/" target="_blank">
                     <icon                   
-                        size="l"
+                        customWidth="50"
+                        customHeight="46"
                         properties="not-clickable"
-                        name="add-site-mono" />
+                        name="add" />
                 
                     <h3>Get more themes</h3>  
                 </a>
@@ -69,28 +70,7 @@ export default {
                 sourcePath: e.dataTransfer.files[0].path
             });
 
-            ipcRenderer.once('app-theme-uploaded', this.uploadedTheme);
-        },
-        uploadedTheme (event, data) {
-            this.$store.commit('replaceAppThemes', data.themes);
-            this.$store.commit('updateSiteThemes');
-
-            let messageConfig = {
-                message: '',
-                type: 'success',
-                lifeTime: 3
-            };
-
-            if(data.status === 'added') {
-                messageConfig.message = 'Theme has been successfully added.';
-            } else if(data.status === 'updated') {
-                messageConfig.message = 'Theme has been successfully updated.';
-            } else if(data.status === 'wrong-format') {
-                messageConfig.message = 'The uploaded files are incorrect. Please upload theme directory or theme ZIP file.';
-                messageConfig.type = 'warning';
-            }
-
-            this.$bus.$emit('message-display', messageConfig);
+            ipcRenderer.once('app-theme-uploaded', this.$parent.uploadedTheme);
         }
     }
 }
@@ -105,6 +85,7 @@ export default {
     grid-gap: 5rem 3rem; 
     overflow: hidden;
     position: relative;
+    user-select: none;
 
     &.theme-is-over {
         & > * {
@@ -114,12 +95,24 @@ export default {
 }
 
 .add-more-theme {   
-    background: $color-1;   
+    background: var(--gray-1);   
+    border: 1px solid transparent;  
     border-radius: 4px;
     margin: 0;   
+    transition: var(--transition);
     
     &:hover {
-         background: $color-2;
+         background: var(--bg-primary);
+         border-color: var(--secondary-color);
+         box-shadow: 0 0 26px rgba(black, .07);
+        
+         svg {
+             fill: var(--primary-color);
+         }
+        
+         h3 {
+             color: var(--primary-color);
+         }
     }
     
     & > a {  
@@ -132,14 +125,16 @@ export default {
     }
     
     h3 {
-         color: $color-10;  
-         font-size: 1.7rem; 
+         color: var(--text-primary-color);
+         font-size: 1.6rem; 
          font-weight: 500; 
-         margin-bottom: 0;          
+         margin-bottom: 0;    
+         transition: inherit;
     }
     
     svg {
-        fill: $color-10;         
+         fill: var(--gray-5);   
+         transition: inherit;
     }
 }
 </style>

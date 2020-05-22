@@ -1,0 +1,117 @@
+.post-editor {
+   background: var(--bg-primary);
+
+    &-wrapper {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        padding-top: 7.8rem;
+        user-select: none;
+    }
+
+    .appbar {
+        height: 2.2rem!important;
+        position: absolute!important;
+        width: 100%;
+    }
+
+    &-field-select-tags {
+        width: 480px;
+    }
+
+    &-form {
+        height: calc(100vh - 7.8rem);
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+
+        & > div {
+            padding: 4rem 4rem 3rem 4rem;
+        }
+    }
+
+    #post-stats-button {
+        bottom: 2rem;
+        height: auto;
+        line-height: 1;
+        left: 1.8rem;
+        position: absolute;
+        text-align: center;        
+        z-index: 101;
+    }
+}
+
+/*
+ * Windows & linux adjustments
+ */
+body[data-os="win"] {
+    .post-editor {
+        .topbar {
+            height: 2.2rem;
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor {
+        .appbar {
+            height: 0!important;
+        }
+
+        .topbar {
+            height: 0;
+        }
+    }
+}
+
+/*
+ * Special styles for win & linux
+ */
+
+body[data-os="win"] {
+    .post-editor-wrapper {
+        height: 100vh;
+        
+    }
+
+    .post-editor-form {       
+
+        &-content {
+            height: calc( 100vh - 27.6rem );
+        }
+    }
+}
+
+body[data-os="linux"] {
+    .post-editor-wrapper {
+        height: 100vh;
+        padding-top: 5.6rem;
+    }
+
+    .post-editor-form {
+        height: calc(100vh - 5.6rem);
+
+        &-content {
+            height: calc( 100vh - 24.8rem );
+        }
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+@media (max-height: 900px) {
+    .post-editor-form {
+        & > div {
+            padding: 3rem 3rem 3rem 4rem;
+        }
+    }
+}
+
+@media (max-width: 1400px) {    
+    .post-editor-form {
+        & > div {
+            padding: 3rem 3rem 3rem 4rem;
+        }
+    }
+}

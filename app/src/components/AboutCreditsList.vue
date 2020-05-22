@@ -7,7 +7,7 @@
                 {{ licenseData.name }}
                 <a
                     class="credits-toggle"
-                    @click="itemClicked($event, licenseData.id, licenseData.url)"
+                    @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
                     :href="licenseData.href"
                     :target="licenseData.target">
                     License
@@ -30,13 +30,9 @@
 
 <script>
 import { remote, ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 
 export default {
     name: 'about-credits-list',
-    mixins: [
-        ExternalLinks
-    ],
     props: [
         'licenses'
     ],
@@ -133,12 +129,20 @@ export default {
     }
 
     &-item {
-        border-bottom: 1px solid $color-8;
+        border-bottom: 1px solid var(--border-light-color);
         padding: 1.4rem 0;
 
         & > a {
+            color: var(--link-secondary-color);
             float: right;
+            font-size: 1.4rem;
             margin-left: 5rem;
+            
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--link-secondary-hover-color);
+            }
         }
 
         &:last-of-type {

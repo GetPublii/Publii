@@ -11,7 +11,15 @@ const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const Jimp = require('jimp');
-const sharp = require('sharp');
+// Default config
+const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+
+// Sharp is loaded depending on the platform
+let sharp;
+
+if (process.platform !== 'linux') {
+    sharp = require('sharp');
+}
 
 class Image extends Model {
     constructor(appInstance, imageData) {
@@ -33,6 +41,32 @@ class Image extends Model {
         if (imageData.imageType) {
             this.imageType = imageData.imageType;
         }
+    }
+
+    /**
+     * Generate unique file name
+     */
+    generateFileName (fileName, suffix, dirPath, galleryDirPath) {
+        let newPath = '';
+        let fileSuffix = '';
+        let finalFileName = path.parse(fileName);
+
+        if (suffix > 1) {
+            fileSuffix = '-' + suffix;
+        }
+
+        finalFileName = slug(finalFileName.name, false, true) + fileSuffix + finalFileName.ext;
+        newPath = path.join(dirPath, finalFileName);
+
+        if (this.imageType === 'galleryImages') {
+            newPath = path.join(galleryDirPath, finalFileName);
+        }
+
+        if (fs.existsSync(newPath)) {
+            return this.generateFileName(fileName, suffix + 1, dirPath, galleryDirPath);
+        }
+
+        return newPath;
     }
 
     /*
@@ -93,13 +127,7 @@ class Image extends Model {
             fs.mkdirSync(responsiveDirPath);
         }
 
-        let finalFileName = path.parse(fileName);
-        finalFileName = slug(finalFileName.name, false, true) + finalFileName.ext;
-        newPath = path.join(dirPath, finalFileName);
-
-        if (this.imageType === 'galleryImages') {
-            newPath = path.join(galleryDirPath, finalFileName);
-        }
+        newPath = this.generateFileName(fileName, 1, dirPath, galleryDirPath);
 
         // Store main image
         try {
@@ -157,16 +185,22 @@ class Image extends Model {
      * Save responsive images
      */
     createResponsiveImages(originalPath, imageType = 'contentImages') {
+        let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
         let themesHelper = new Themes(this.application, { site: this.site });
         let currentTheme = themesHelper.currentTheme();
         let siteConfigPath = path.join(this.siteDir, 'input', 'config', 'site.config.json');
         let siteConfig = JSON.parse(fs.readFileSync(siteConfigPath));
+        siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
         let imagesQuality = 60;
         let imageExtension = path.parse(originalPath).ext;
         let imageDimensions = {
             width: false, 
             height: false
         };
+
+        if (!siteConfig.advanced.responsiveImages && imageType !== 'galleryImages') {
+            return ['NO-RESPONSIVE-IMAGES'];
+        }
 
         if (!this.allowedImageExtension(imageExtension)) {
             return [];
@@ -438,6 +472,10 @@ class Image extends Model {
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
+        if (process.platform === 'linux') {
+            return true;
+        }
+
         return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
     }
 }

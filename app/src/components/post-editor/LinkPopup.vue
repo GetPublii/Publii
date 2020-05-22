@@ -68,11 +68,28 @@
                     <input
                         slot="field"
                         type="text"
+                        spellcheck="false"
                         v-model="external"
                         class="link-popup-field-external" />
                 </field>
 
-                <field label="Link target:">
+                <field
+                    v-if="type === 'file'"
+                    label="File:">
+                    <v-select
+                        slot="field"
+                        ref="fileSelect"
+                        :options="filesList"
+                        v-model="file"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('fileSelect')"
+                        placeholder="Select file"></v-select>
+                </field>
+
+                <field 
+                    v-if="!markdown"
+                    label="Link target:">
                     <v-select
                         slot="field"
                         ref="targetSelect"
@@ -88,19 +105,25 @@
                     <input
                         slot="field"
                         type="text"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         v-model="label"
                         class="link-popup-field-label" />
                 </field>
 
-                <field label="Link title attribute:">
+                <field 
+                    v-if="!markdown"
+                    label="Link title attribute:">
                     <input
                         slot="field"
                         type="text"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
                         v-model="title"
                         class="link-popup-field-title" />
                 </field>
 
-                <field label="Rel attribute:">
+                <field 
+                    v-if="!markdown"
+                    label="Rel attribute:">
                     <switcher
                         slot="field"
                         label="nofollow"
@@ -113,6 +136,15 @@
                         slot="field"
                         label="ugc"
                         v-model="rel.ugc" />
+                </field>
+
+                <field 
+                    v-if="!markdown && type === 'file'"
+                    label="Download attribute:">
+                    <switcher
+                        slot="field"
+                        label=""
+                        v-model="downloadAttr" />
                 </field>
             </div>
 
@@ -134,32 +166,42 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
     name: 'link-popup',
+    props: {
+        'markdown': {
+            default: false
+        }
+    },
     data () {
         return {
             postID: 0,
             isVisible: false,
+            simplemdeInstance: null,
             type: 'post',
             post: null,
             tag: null,
             author: null,
+            file: null,
             external: '',
             target: '',
             label: '',
             title: '',
+            downloadAttr: false,
             rel: {
                 nofollow: false,
                 sponsored: false,
                 ugc: false
-            }
+            },
+            filesList: []
         };
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'external' ];
+            return [ 'post', 'tag', 'author', 'frontpage', 'external', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -190,6 +232,9 @@ export default {
             this.parseContent(config.selection);
             this.isVisible = true;
         });
+
+        this.loadFiles();
+        this.$bus.$on('link-popup-updated', this.addLink);
     },
     methods: {
         customTypeLabels (value) {
@@ -199,6 +244,7 @@ export default {
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'external': return 'External link';
+                case 'file': return 'File from File Manager';
             }
         },
         customTagLabels (value) {
@@ -227,8 +273,10 @@ export default {
             this.post = null;
             this.tag = null;
             this.author = null;
+            this.file = null;
             this.external = '';
             this.target = '';
+            this.downloadAttr = false;
             this.label = '';
             this.title = '';
             this.rel = {
@@ -238,53 +286,46 @@ export default {
             };
         },
         parseContent (content) {
-            if(!content) {
+            if (!content) {
                 return;
             }
 
+            if (this.markdown) {
+                this.parseMarkdownContent(content);
+            } else {
+                this.parseHTMLContent(content);
+            }
+        },
+        parseHTMLContent (content) {
             let rawText = strip_tags(content);
             let linkContent = content.match(/>(.*?)<\/a>/);
             let titleContent = content.match(/title="(.*?)"/);
             let targetContent = content.match(/target="(.*?)"/);
             let urlContent = content.match(/href="(.*?)"/);
             let relContent = content.match(/rel="(.*?)"/);
+            let downloadContent = content.match(/<a.*?(download="download").*?>/);
 
             this.type = 'post';
 
-            if(linkContent && linkContent[1]) {
+            if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
             } else {
                 this.label = rawText;
             }
 
-            if(titleContent && titleContent[1]) {
+            if (titleContent && titleContent[1]) {
                 this.title = titleContent[1];
             }
 
-            if(targetContent && targetContent[1]) {
+            if (targetContent && targetContent[1]) {
                 this.target = targetContent[1];
             }
 
-            if(urlContent && urlContent[1]) {
-                if(urlContent[1].indexOf('/post/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
-                    this.type = 'post';
-                    this.post = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/tag/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
-                    this.type = 'tag';
-                    this.tag = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/author/') !== -1) {
-                    let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
-                    this.type = 'author';
-                    this.author = parseInt(id, 10);
-                } else if(urlContent[1].indexOf('/frontpage/') !== -1) {
-                    this.type = 'frontpage';
-                } else {
-                    this.type = 'external';
-                    this.external = urlContent[1];
-                }
+            if (downloadContent && downloadContent[1]) {
+                this.downloadAttr = true;
             }
+
+            this.parseUrlContent(urlContent);
 
             let relValues = ['nofollow', 'sponsored', 'ugc'];
 
@@ -294,13 +335,52 @@ export default {
                 }
             }
         },
+        parseMarkdownContent (content) {
+            let linkContent = content.match(/\[(.*?)\]/);
+            let urlContent = content.match(/\((.*?)\)/);
+            this.type = 'post';
+
+            if (linkContent && linkContent[1]) {
+                this.label = linkContent[1];
+            } else {
+                this.label = content;
+            }
+
+            this.parseUrlContent(urlContent);
+        },
+        parseUrlContent (urlContent) {
+            if (urlContent && urlContent[1]) {
+                if (urlContent[1].indexOf('/post/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
+                    this.type = 'post';
+                    this.post = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/tag/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
+                    this.type = 'tag';
+                    this.tag = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/author/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
+                    this.type = 'author';
+                    this.author = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
+                    this.type = 'frontpage';
+                } else if (urlContent[1].indexOf('/file/') !== -1) {
+                    this.type = 'file';
+                    this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
+                } else {
+                    this.type = 'external';
+                    this.external = urlContent[1];
+                }
+            }
+        },
         setLink () {
             let response = {
                 url: '',
                 title: '',
                 target: '',
                 text: this.label,
-                rel: this.rel
+                rel: this.rel,
+                downloadAttr: this.downloadAttr
             };
 
             if (this.type !== 'external') {
@@ -329,10 +409,89 @@ export default {
             this.cleanPopup();
             this.isVisible = false;
             this.$bus.$emit('link-popup-updated', false);
+        },
+        addLink (response) {
+            if (this.markdown) {
+                this.addLinkMarkdown(response);
+            } else {
+                this.addLinkHTML(response);
+            }
+        },
+        addLinkMarkdown (response) {
+            if (response) {
+                this.simplemdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);  
+            }
+        },
+        addLinkHTML (response) {
+            if ($('#link-toolbar').css('display') !== 'none' || $('#inline-toolbar').css('display') !== 'none') {
+                return;
+            }
+
+            if (response) {
+                let relAttr = [];
+                let downloadAttr = '';
+
+                if (response.rel && response.rel.nofollow) {
+                    relAttr.push('nofollow');
+                }
+
+                if (response.rel && response.rel.sponsored) {
+                    relAttr.push('sponsored');
+                }
+
+                if (response.rel && response.rel.ugc) {
+                    relAttr.push('ugc');
+                }
+
+                if (response.target.indexOf('_blank') > -1) {
+                    relAttr.push('noopener');
+                    relAttr.push('noreferrer');
+                }
+
+                if (relAttr.length) {
+                    relAttr = ' rel="' + relAttr.join(' ') + '"';
+                }
+
+                if (response.downloadAttr && response.url.indexOf('#INTERNAL_LINK#/file/') > -1) {
+                    downloadAttr = ' download="download" '
+                }
+
+                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
+            
+                if (tinymce.activeEditor.selection.getContent() === '') {
+                    tinymce.activeEditor.insertContent(linkHTML);
+                } else {
+                    tinymce.activeEditor.selection.setContent('');
+                    tinymce.activeEditor.selection.setContent(linkHTML);
+                }
+            }
+        },
+        setSimpleMdeInstance (instance) {
+            this.simplemdeInstance = instance;
+        },
+        loadFiles () {
+            ipcRenderer.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                this.filesList = data.map(file => file.name);
+
+                ipcRenderer.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'media/files'
+                }); 
+
+                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+                });
+            });
         }
     },
     beforeDestroy () {
         this.$bus.$off('init-link-popup');
+        this.$bus.$off('link-popup-updated', this.addLink);
     }
 }
 </script>
@@ -349,21 +508,14 @@ h1 {
     text-align: center;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
+.popup {   
     max-width: 60rem;
-    min-width: 60rem;
-    overflow: hidden;
-    padding: 4rem;
-    position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    min-width: 60rem;   
+    padding: 4rem;   
+
+    &.popup-link-add {
+        overflow: visible;
+    }
 
     .field {
         .switcher {
@@ -374,12 +526,9 @@ h1 {
 }
 
 .message {
-    color: $color-7;
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    position: relative;
+    color: var(--gray-4);
+    font-size: 1.8rem;   
+    padding: 0;    
 }
 
 .buttons {
@@ -388,5 +537,13 @@ h1 {
     position: relative;
     text-align: center;
     top: 1px;
+
+    & > .button {
+        border-radius: 0 0 0 .6rem;
+
+        & + .button {
+            border-radius: 0 0 .6rem 0;
+        }
+    }
 }
 </style>

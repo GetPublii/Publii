@@ -1,5 +1,5 @@
 <template>
-    <div :class="cssClasses">
+    <div :class="cssClasses" :id="anchor">
         <div class="separator-wrapper">
             <label v-if="label">{{ label }}</label>
         </div>
@@ -17,6 +17,10 @@ export default {
     name: 'separator',
     props: {
         'label': {
+            default: '',
+            type: String
+        },
+        'anchor': {
             default: '',
             type: String
         },
@@ -75,7 +79,7 @@ export default {
     }
 
     &.line > .separator-wrapper:before {
-        border-top: 1px dashed $color-8;
+        border-top: 2px solid var(--input-border-color);
         content: "";
         left: 0;
         position: absolute;
@@ -88,11 +92,11 @@ export default {
         position: relative;
 
         & > label {
-            background: $color-10;
-            color: $color-helper-7;
-            font-size: 1.6rem;
+            background: var(--bg-primary);
+            color: var(--headings-color);
+            font-size: 1.7rem;
             font-weight: 600;
-            padding-right: .5rem;
+            padding-right: .75rem;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);

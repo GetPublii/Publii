@@ -1,5 +1,7 @@
 <template>
-    <div class="color-picker">
+    <div 
+        :id="anchor"
+        class="color-picker">
         <div
             class="color-picker-preview"
             @click="togglePicker"
@@ -8,6 +10,7 @@
             v-model="content"
             :readonly="true"
             @click="togglePicker"
+            spellcheck="false"
             type="colorpicker" />
 
         <chrome-picker
@@ -26,7 +29,11 @@ export default {
         'chrome-picker': Chrome
     },
     props: {
-        'value': {
+        value: {
+            default: '',
+            type: String
+        },
+        anchor: {
             default: '',
             type: String
         }
@@ -128,6 +135,33 @@ export default {
 
         &.is-visible {
             display: block;
+        }  
+
+        /deep/ .vc-chrome-body {
+            background-color: var(--bg-primary);
+        }   
+        
+        /deep/ .vc-input__input {
+            background-color: var(--input-bg);
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
+            color: var(--text-primary-color);
+        }
+        
+        /deep/ .vc-chrome-toggle-icon {
+            
+            path {
+               fill: var(--icon-primary-color);
+            }
+            
+            &:hover {
+               path {
+                  fill: var(--icon-tertiary-color);
+               }
+            }
+        }
+        
+        /deep/ .vc-chrome-toggle-icon-highlight {
+            background: var(--input-border-color);
         }
     }
 }

@@ -48,7 +48,7 @@ export default {
 @import '../scss/variables.scss';
 
 .import-stats {
-    border-bottom: 2px solid $color-9;
+    border-bottom: 2px solid var(--gray-1);
     padding: 4rem 0 3rem 0;
 
     & > strong {

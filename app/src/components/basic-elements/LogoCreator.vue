@@ -2,24 +2,12 @@
     <div class="logo-creator">
         <div
             class="logo-creator-preview"
-            :data-color="activeColor"
             :data-icon="activeIcon">
             <icon
-                :data-color="activeColor"
                 size="xl"
-                :name="icons[activeIcon - 1]" />
+                :name="icons[activeIcon - 1]" 
+                iconset="svg-map-site"/>
         </div>
-
-        <ul class="logo-creator-color">
-            <li
-                v-for="(color, index) in colors"
-                class="logo-creator-color-block"
-                :data-color="index + 1"
-                :data-status="isActiveColor(index + 1)"
-                @click="changeColor(index + 1)"
-                >
-            </li>
-        </ul>
 
         <ul class="logo-creator-icon">
             <li
@@ -27,24 +15,36 @@
                 :data-status="isActiveIcon(index + 1)"
                 @click="changeIcon(index + 1)"
                 class="logo-creator-icon-block" >
-                <icon
-                    primaryColor="color-5"
+                <icon                   
                     size="m"
                     properties="not-clickable"
-                    :name="icon" />
+                    :name="icon" 
+                    iconset="svg-map-site"/>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'logo-creator',
-    data: function() {
+    data () {
         return {
             activeIcon: 1,
             activeColor: 1,
-            icons: [
+            icons: []
+        };
+    },
+    computed: {
+        colors: function() {
+            return Array(16).fill().map((e, i) => i+1);
+        }
+    },
+    mounted () {
+        Vue.nextTick(() => {
+            this.icons = [
                 'web-pizza',
                 'web-ice-cream',
                 'web-school',
@@ -76,14 +76,34 @@ export default {
                 'web-planet',
                 'web-watch',
                 'web-idea',
-                'web-pulse'
-            ]
-        };
-    },
-    computed: {
-        colors: function() {
-            return Array(16).fill().map((e, i) => i+1);
-        }
+                'web-pulse',
+                'web-bell',
+                'web-briefcase',
+                'web-clipboard',
+                'web-command',
+                'web-cpu',
+                'web-droplet',
+                'web-dollar-sign',
+                'web-edit-2',
+                'web-eye',
+                'web-feather',
+                'web-file-text',
+                'web-flag',
+                'web-home',
+                'web-image',
+                'web-moon',
+                'web-percent',
+                'web-power',
+                'web-shield',
+                'web-smartphone',
+                'web-speaker',
+                'web-sun',
+                'web-tv',
+                'web-umbrella',
+                'web-radio',
+                'web-layers'
+            ];
+        });
     },
     methods: {
         changeIcon: function(newIndex) {
@@ -125,31 +145,22 @@ export default {
 @import '../../scss/mixins.scss';
 
 .logo-creator {
+    display: flex;
     margin-bottom: 32px;
     max-width: 100%;
     overflow: hidden;
     text-align: center;
 
-    &-preview {
-        border-radius: 50%;
-        border: 1px solid $color-helper-8;
-        float: left;
-        height: 9rem;
+    &-preview {          
         line-height: 100%;
+        min-width: 23rem;
         overflow: hidden;
-        text-align: center;
-        width: 9rem;
-
-        & > svg {
-            margin: 2rem;
-        }
-
-        @include logoSVGColors();
+        padding: 1rem;
+        text-align: left;       
     }
 
-    &-color {
-        float: right;
-        margin: 0 0 1rem 2rem;
+    &-color {        
+        margin: 0 0 1rem;
         padding: 0;       
 
         &-block {  
@@ -164,8 +175,6 @@ export default {
             transition: all .2s ease-out;
             width: 3.2rem;
 
-            @include logoColors();
-
             &[data-status="active"] {
                 transform: scale(1);
             }
@@ -178,31 +187,33 @@ export default {
 
     &-icon {
         float: right;
-        margin: 0 0 0 1rem;
-        padding: 0;  
-        max-width: 560px;
+        margin: 0;
+        padding: 0;
 
         &-block {
+            color: var(--icon-secondary-color);
             cursor: pointer;
             display: block;
             float: left;
             height: 3rem;
             list-style-type: none;
-            padding: 0;
-            transition: all .2s ease-out;
-            will-change: transform;
-            width: 3.5rem;
+            padding: 0 1px 0 0;
+            transition: all .2s ease-out;  
+            
+            &:hover {
+                color: var(--icon-tertiary-color);
+            }
 
-            & > svg {
+            & > svg {                 
                 margin: .5rem;
             }
 
             &[data-status="active"] {
+                color: var(--icon-tertiary-color);
                 transform: scale(1);
             }
 
-            &[data-status="inactive"] {
-                opacity: .35;
+            &[data-status="inactive"] {               
                 transform: scale(.75);
             }
         }

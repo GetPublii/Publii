@@ -16,12 +16,19 @@ const normalizePath = require('normalize-path');
 class GithubPages {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
+        let server = '';
+
+        if (this.deployment.siteConfig) {
+            server = this.deployment.siteConfig.deployment.github.server;
+        } else {
+            server = this.deployment.github.server;
+        }
+
         this.connection = false;
-        this.debugOutput = [];
         this.client = new githubApi({
             version: "3.0.0",
             protocol: "https",
-            host: this.deployment.siteConfig.deployment.github.server,
+            host: server,
             pathPrefix: "",
             timeout: 30000,
             headers: {
@@ -77,11 +84,21 @@ class GithubPages {
         /*
          * Create CNAME file if necessary
          */
-        if(this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
+        if (this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
             let cnameFilePath = path.join(self.deployment.inputDir, 'CNAME');
+            let domainName = this.deployment.siteConfig.domain;
+            
+            if (domainName.indexOf('//') > -1) {
+                domainName = domainName.split('//')[1];
+            }
+
+            if (domainName.indexOf('/') === 0) {
+                domainName = domainName.slice(1);
+            }
+
             fs.writeFileSync(
                 cnameFilePath,
-                this.deployment.siteConfig.domain.replace('https://', '')
+                domainName
             );
         }
 
@@ -117,11 +134,9 @@ class GithubPages {
 
                 await self.deploy();
             } catch (err) {
-                self.deployment.outputLog.push('- - - GH ERROR  - - -');
-                self.deployment.outputLog.push(JSON.stringify(err));
-                self.deployment.outputLog.push('- - - - - - - - - - -');
-                self.deployment.saveConnectionErrorLog(JSON.stringify(err));
-                self.saveConnectionDebugLog();
+                console.log('- - - GH ERROR  - - -');
+                console.log(JSON.stringify(err));
+                console.log('- - - - - - - - - - -');
 
                 process.send({
                     type: 'web-contents',
@@ -230,8 +245,6 @@ class GithubPages {
             let result = await this.createReference(sha);
             
             if(result === false) {
-                self.deployment.saveConnectionLog();
-
                 setTimeout(function () {
                     process.exit();
                 }, 1000);
@@ -257,17 +270,13 @@ class GithubPages {
                 }
             });
 
-            self.deployment.saveConnectionLog();
-
             setTimeout(function () {
                 process.exit();
             }, 1000);
         } catch (err) {
-            self.deployment.outputLog.push('- - - GH ERROR  - - -');
-            self.deployment.outputLog.push(JSON.stringify(err));
-            self.deployment.outputLog.push('- - - - - - - - - - -');
-            self.deployment.saveConnectionErrorLog(JSON.stringify(err));
-            self.saveConnectionDebugLog();
+            console.log('- - - GH ERROR  - - -');
+            console.log(JSON.stringify(err));
+            console.log('- - - - - - - - - - -');
 
             process.send({
                 type: 'web-contents',
@@ -601,7 +610,7 @@ class GithubPages {
             }
         });
 
-        let logPath = path.join(this.deployment.appDir, 'logs', 'github-tree.txt');
+        let logPath = path.join(this.deployment.appDir, 'github-tree.txt');
         fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
 
         return this.apiRequest(
@@ -699,11 +708,6 @@ class GithubPages {
         }
 
         return true;
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }
 

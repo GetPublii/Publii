@@ -1,15 +1,22 @@
 <template>
     <li :title="title">
+        <a 
+            v-if="!path"
+            href="#"
+            @click.prevent="onClick">
+            {{ label }}
+        </a>
+
         <router-link
-            v-if="!isExternal"
+            v-if="path && !isExternal"
             :to="path">
             {{ label }}
         </router-link>
 
         <a
-            v-if="isExternal"
+            v-if="path && isExternal"
             :href="path"
-            @click="openExternalLink">
+            target="_blank">
             {{ label }}
         </a>
     </li>
@@ -21,17 +28,18 @@ import { shell } from 'electron'
 export default {
     name: 'topbar-dropdown-item',
     props: [
+        'onClick',
         'label',
         'path',
         'title'
     ],
     computed: {
-        isExternal: function() {
+        isExternal () {
             return this.path.indexOf('http://') === 0 || this.path.indexOf('https://') === 0;
         }
     },
     methods: {
-        openExternalLink: function(e) {
+        openExternalLink (e) {
             e.preventDefault();
             shell.openExternal(this.path);
         }
@@ -44,7 +52,8 @@ li {
     & > a {
         display: block;
         font-weight: 400;
-        padding: .5rem 4rem;
+        padding: .5rem 3rem;
+        white-space: nowrap;
     }
 }
 </style>

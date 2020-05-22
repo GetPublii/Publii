@@ -98,11 +98,12 @@ export default {
      background: transparent;
      bottom: 0;
      pointer-events: none;
-     position: absolute;
+     position: fixed;
      left: 50%;
      top: 4.2rem;
      transform: translate(-50%, 0);
      max-width: 48rem;
+     user-select: none;
      width: 100%;
      z-index: 100003;
 
@@ -131,10 +132,10 @@ export default {
 
          &-content {
              align-items: center;
-             background: $color-10;
+             background: var(--popup-bg);
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
              border-radius: 6px;
-             color: $color-5;
+             color: var(--text-primary-color);
              font-size: 1.5rem;            
              display: flex;
              justify-content: center;  
@@ -146,7 +147,7 @@ export default {
              max-width: 48rem;            
 
              a {
-                 color: $color-10;
+                 color: var(--white);
                  cursor: pointer;
                  text-decoration: underline;
 
@@ -171,12 +172,6 @@ export default {
              margin: 0;
          }
      }
-}
-
-body[data-os="win"] {
-    .messages {
-        top: 5.6rem;
-    }
 }
 
 body[data-os="linux"] {

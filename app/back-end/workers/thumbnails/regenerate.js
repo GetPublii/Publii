@@ -64,8 +64,8 @@ function regenerateImages(mediaPath, catalog) {
  * @param fullPath
  * @param catalog
  */
-function regenerateImage(images, fullPath, catalog) {
-    if(!images.length) {
+function regenerateImage (images, fullPath, catalog) {    
+    if (!images.length) {
         return;
     }
 
@@ -80,7 +80,18 @@ function regenerateImage(images, fullPath, catalog) {
     let imageType = getImageType(context, image, catalog);
     let promises = imageHelper.createResponsiveImages(fullImagePath, imageType);
 
-    if(!promises.length && context.totalProgress >= context.numberOfImages) {
+    if (promises[0] === 'NO-RESPONSIVE-IMAGES') {
+        process.send({
+            type: 'progress',
+            value: 100,
+            files: ['The responsive images are disabled under site settings - all responsive images has been removed.']
+        });
+
+        finishProcess();
+        return;
+    }
+
+    if (!promises.length && context.totalProgress >= context.numberOfImages) {
         finishProcess();
         return;
     }
@@ -97,7 +108,7 @@ function regenerateImage(images, fullPath, catalog) {
                 files: results
             });
 
-            if(context.totalProgress >= context.numberOfImages) {
+            if (context.totalProgress >= context.numberOfImages) {
                 finishProcess();
                 return;
             }

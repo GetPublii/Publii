@@ -4,8 +4,11 @@ const electron = require('electron');
 const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
 const dialog = electron.dialog;
+const ipcMain = electron.ipcMain;
+const fs = require('fs');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
+const passwordSafeStorage = require('keytar');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
@@ -15,11 +18,11 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 let mainWindow;
 let appInstance;
 
-electronApp.on('window-all-closed', function() {
+electronApp.on('window-all-closed', function () {
     electronApp.quit();
 });
 
-electronApp.on('ready', function() {
+electronApp.on('ready', function () {
     let startupSettings = {
         'mainWindow': mainWindow,
         'app': electronApp,
@@ -31,6 +34,10 @@ electronApp.on('ready', function() {
     }
 
     appInstance = new App(startupSettings);
+
+    ipcMain.on('publii-set-spellchecker-language', (event, language) => {
+        global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
+    });
 });
 
 // Export function to quit the app from the application menu on macOS
@@ -44,7 +51,7 @@ exports.selectDirectory = function(fieldName = false) {
 
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openDirectory']
-    }, function(selectedPath) {
+    }).then(selectedPath => {
         mainWindowHandler.webContents.send('app-directory-selected', {
             path: selectedPath,
             fieldName: fieldName
@@ -58,7 +65,7 @@ exports.selectFile = function(fieldName = false) {
 
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openFile', 'showHiddenFiles']
-    }, function(selectedPath) {
+    }).then(selectedPath => {
         mainWindowHandler.webContents.send('app-file-selected', {
             path: selectedPath,
             fieldName: fieldName
@@ -73,7 +80,7 @@ exports.selectFiles = function (fieldName = false, filters = []) {
     dialog.showOpenDialog(mainWindowHandler, {
         properties: ['openFile', 'multiSelections'],
         filters: filters
-    }, function(selectedPaths) {
+    }).then(selectedPaths => {
         mainWindowHandler.webContents.send('app-files-selected', {
             paths: selectedPaths,
             fieldName: fieldName
@@ -85,3 +92,29 @@ exports.selectFiles = function (fieldName = false, filters = []) {
 exports.slug = function (input) {
     return createSlug(input);
 };
+
+// Load password from Keytar
+exports.loadPassword = async function (type, passwordKey) {
+    if (passwordKey.indexOf(type) === 0) {
+        let passwordData = passwordKey.split(' ');
+        let service = passwordData[0];
+        let account = passwordData[1];
+        let retrievedPassword = '';
+
+        if (passwordSafeStorage) {
+            try {
+                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+            } catch (e) {
+                console.log('(!) Cannot retrieve password via keytar');
+            }
+        }
+
+        if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
+            retrievedPassword = '';
+        }
+
+        return retrievedPassword;
+    }
+
+    return '';
+}

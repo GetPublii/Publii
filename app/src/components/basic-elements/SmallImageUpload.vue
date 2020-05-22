@@ -1,5 +1,7 @@
 <template>
-    <div :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
+    <div 
+        :id="anchor"
+        :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
         <span class="upload-path">
             <template v-if="!isUploading">{{ fileName }}</template>
             <template v-if="isUploading">Loading image...</template>
@@ -9,6 +11,7 @@
             v-if="isEmpty"
             type="file"
             ref="input"
+            spellcheck="false"
             class="upload-input"
             @change="valueChanged">
 
@@ -38,6 +41,10 @@ export default {
         onRemove: {
             default: () => false,
             type: Function
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data () {
@@ -124,45 +131,57 @@ export default {
     }
 
     .upload-remove {
-        color: $color-3;
+        border-radius: 50%;
+        color: var(--warning);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 2rem;
-        line-height: 1.9rem;
+        height: 3rem;                   
+        line-height: 1.1; 
+        padding: 0;
         position: absolute;
         right: 1.5rem;
-        text-align: center;
-        top: 1.4rem;
-        transition: all .3s ease-out;
-        width: 2rem;
-
+        text-align: center; 
+        top: 50%;  
+        transition: var(--transition);   
+        transform: translateY(-50%);             
+        width: 3rem;
+                                
+        &:active,
+        &:focus,
         &:hover {
-            color: $color-4;
+            color: var(--icon-tertiary-color);
         }
+        
+        &:hover {
+            background: var(--input-border-color);
+        }  
     }
 
     .upload-input {
         display: block;
         position: absolute;
-        right: .55rem;
-        top: .55rem;
+        right: .7rem;
+        top: .7rem;
         width: 16rem!important;
 
         &::-webkit-file-upload-button {
             -webkit-appearance: none;
-            background: $color-7;
-            border: 1px solid $color-7;
+            background: var(--button-gray-bg);
+            border: 1px solid var(--button-gray-bg);
             border-radius: 3px;
-            color: $color-10;
-            font-weight: bold;
+            color: var(--white);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.5rem;
             padding: .5rem;
             text-align: center;
             width: 16rem;
+            outline: none;
 
             &:hover {
-                background: $color-6;
-                border-color: $color-6;
+               background: var(--button-gray-hover-bg);
+               border-color: var(--button-gray-hover-bg);
             }
         }
     }

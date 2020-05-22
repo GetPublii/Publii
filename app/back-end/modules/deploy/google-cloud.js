@@ -15,7 +15,6 @@ class GoogleCloud {
         this.econnresetCounter = 0;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
-        this.logTimer = false;
     }
 
     async initConnection() {
@@ -58,11 +57,6 @@ class GoogleCloud {
             type: 'web-contents',
             message: 'app-connection-in-progress'
         });
-
-        this.logTimer = setInterval(() => {
-            self.saveConnectionDebugLog();
-        }, 5000);
-
 
         process.send({
             type: 'web-contents',
@@ -125,10 +119,10 @@ class GoogleCloud {
         this.connection.upload(fileToUpload, {
             destination: fileDestination
         }, function(err) {
-            self.deployment.outputLog.push('-> files.publii.json');
+            console.log('-> files.publii.json');
 
             if (err) {
-                self.deployment.outputLog.push(err);
+                console.log(err);
             }
 
             process.send({
@@ -148,8 +142,6 @@ class GoogleCloud {
                 }
             });
 
-            self.deployment.saveConnectionLog();
-
             setTimeout(function () {
                 process.exit();
             }, 1000);
@@ -168,11 +160,11 @@ class GoogleCloud {
             public: true
         }, function(err) {
             if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR UPLOAD FILE - - -');
-                self.deployment.outputLog.push(output);
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                console.log(err);
+                console.log('- - -ERROR UPLOAD FILE - - -');
+                console.log(output);
+                console.log(err);
+                console.log('- - - - - - - - - - - - - - ');
 
                 setTimeout(() => {
                     if(!self.softUploadErrors[input]) {
@@ -187,7 +179,7 @@ class GoogleCloud {
                         self.hardUploadErrors.push(input);
 
                         self.deployment.currentOperationNumber++;
-                        self.deployment.outputLog.push('UPL HARD ERR ' + input + ' -> ' + output);
+                        console.log('UPL HARD ERR ' + input + ' -> ' + output);
                         self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                         process.send({
@@ -204,7 +196,7 @@ class GoogleCloud {
                 }, 500);
             } else {
                 self.deployment.currentOperationNumber++;
-                self.deployment.outputLog.push('UPL ' + input + ' -> ' + output);
+                console.log('UPL ' + input + ' -> ' + output);
                 self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                 process.send({
@@ -238,14 +230,14 @@ class GoogleCloud {
 
         this.connection.file(input).delete(function (err) {
             self.deployment.currentOperationNumber++;
-            self.deployment.outputLog.push('DEL ' + input);
+            console.log('DEL ' + input);
 
             if (err) {
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - -ERROR REMOVE FILE - - -');
-                self.deployment.outputLog.push(input);
-                self.deployment.outputLog.push(err);
-                self.deployment.outputLog.push('- - - - - - - - - - - - - - ');
+                console.log(err);
+                console.log('- - -ERROR REMOVE FILE - - -');
+                console.log(input);
+                console.log(err);
+                console.log('- - - - - - - - - - - - - - ');
             }
 
             self.deployment.progressOfDeleting += self.deployment.progressPerFile;
@@ -254,7 +246,7 @@ class GoogleCloud {
                 type: 'web-contents',
                 message: 'app-uploading-progress',
                 value: {
-                    progress: 40 + Math.floor(self.deployment.progressOfDeleting),
+                    progress: 8 + Math.floor(self.deployment.progressOfDeleting),
                     operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
                 }
             });
@@ -299,16 +291,6 @@ class GoogleCloud {
                 app.mainWindow.webContents.send('app-deploy-test-error');
             }
         }, 15000);
-    }
-
-    saveConnectionDebugLog() {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-        let softUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'soft-upload-errors-log.txt');
-        let hardUploadErrorsPath = path.join(this.deployment.appDir, 'logs', 'hard-upload-errors-log.txt');
-
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
-        fs.writeFileSync(softUploadErrorsPath, JSON.stringify(this.softUploadErrors, null, 4));
-        fs.writeFileSync(hardUploadErrorsPath, JSON.stringify(this.hardUploadErrors, null, 4));
     }
 }
 

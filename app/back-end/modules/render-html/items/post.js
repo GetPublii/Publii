@@ -27,11 +27,15 @@ class PostItem {
         if (metaData && metaData.value) {
             this.metaData = JSON.parse(metaData.value);
         }
+
+        if (!this.metaData.editor) {
+            this.metaData.editor = 'tinymce';
+        }
     }
 
     prepareData() {
         let postURL = this.siteConfig.domain + '/' + this.post.slug + '.html';
-        let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer);
+        let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer, this.metaData.editor);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
@@ -73,7 +77,8 @@ class PostItem {
             isExcludedOnHomepage: this.post.status.indexOf('excluded_homepage') > -1,
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
             template: this.post.template,
-            hasCustomExcerpt: hasCustomExcerpt
+            hasCustomExcerpt: hasCustomExcerpt,
+            editor: this.metaData.editor || 'tinymce'
         };
 
         if (this.postData.template === '*') {
@@ -92,7 +97,12 @@ class PostItem {
 
             if (this.metaData.mainTag && !isNaN(parseInt(this.metaData.mainTag, 10))) {
                 let mainTagID = parseInt(this.metaData.mainTag, 10);
-                this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+
+                if (this.renderer.cachedItems.tags[mainTagID]) {
+                    this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+                } else {
+                    this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
+                }
             } else {
                 this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
             }

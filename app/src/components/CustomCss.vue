@@ -2,7 +2,7 @@
     <section class="content tools-custom-css">
         <p-header title="Custom CSS">
             <p-button
-                :onClick="goBack"
+                @click.native="goBack"
                 slot="buttons"
                 type="outline"
                 :disabled="buttonsLocked">
@@ -10,20 +10,21 @@
             </p-button>
 
             <p-button
-                :onClick="save"
+                @click.native="save(false, false)"
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
                 Save changes
             </p-button>
 
-            <p-button
-                :onClick="saveAndPreview"
+            <btn-dropdown
                 slot="buttons"
-                type="primary"
-                :disabled="!siteHasTheme || buttonsLocked">
-                Save &amp; Preview
-            </p-button>
+                buttonColor="green"
+                :items="dropdownItems"
+                :disabled="!siteHasTheme || buttonsLocked"
+                :previewIcon="true"
+                localStorageKey="publii-preview-mode"
+                defaultValue="full-site" />
         </p-header>
 
         <ul class="filters">
@@ -112,6 +113,26 @@ export default {
         },
         isMac: function () {
             return window.process.platform === 'darwin';
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full website',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    icon: 'full-preview-monitor',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render front page only',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    icon: 'quick-preview',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
         }
     },
     mounted: function() {
@@ -140,8 +161,7 @@ export default {
                 this.$refs.codemirrorAmp.editor.refresh();
             });
         },
-        save: function(e, showPreview = false) {
-            e.preventDefault();
+        save (showPreview = false, renderingType = false) {
             this.$refs.codemirrorNormal.editor.save();
             this.$refs.codemirrorAmp.editor.save();
 
@@ -154,24 +174,33 @@ export default {
             });
 
             ipcRenderer.once('app-site-css-saved', (event, data) => {
-                this.saved(showPreview);
+                this.saved (showPreview, renderingType);
             });
         },
-        saveAndPreview: function(e) {
-            this.save(e, true);
+        saveAndPreview () {
+            this.save(true);
         },
-        saved: function(showPreview) {
+        saveAndPreview (renderingType = false) {
+            this.$bus.$emit('theme-settings-before-save');
+
+            setTimeout(() => {
+                this.save(true, renderingType);
+            }, 500);
+        },
+        saved (showPreview, renderingType = false) {
+            console.log('SP', showPreview);
+
             this.$bus.$emit('message-display', {
                 message: 'Custom CSS has been successfully saved.',
                 type: 'success',
                 lifeTime: 3
             });
 
-            if(showPreview) {
+            if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                        okLabel: 'Go to application settings',
+                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                        okLabel: 'Go to app settings',
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -179,7 +208,13 @@ export default {
                     return;
                 }
 
-                this.$bus.$emit('rendering-popup-display');
+                if (renderingType === 'homepage') {
+                    this.$bus.$emit('rendering-popup-display', {
+                        homepageOnly: true
+                    });
+                } else {
+                    this.$bus.$emit('rendering-popup-display');
+                }
             }
         },
         filterCssClasses (type) {
@@ -202,7 +237,7 @@ export default {
 @import '../scss/variables.scss';
 
 .editor-note {
-    color: $color-6;
+    color: var(--gray-4);
     display: block;
     margin-top: 2rem;
 
@@ -226,27 +261,28 @@ export default {
     margin: -2rem 0 0 0;
     padding: 0;
     position: relative;
+    user-select: none;
     z-index: 1;
 
     .label {
-        color: $color-7;
+        color: var(--gray-4);
         float: left;
         margin-right: 1rem;
     }
 
     .filter-value {
-        color: $color-7;
+        color: var(--gray-4);
         cursor: pointer;
         display: inline-block;
         margin-right: 1rem;
 
         &.filter-active {
-            color: $link-color;
+            color: var(--link-primary-color);
             cursor: default;
         }
 
         &:hover {
-            color: $link-color;
+            color: var(--link-primary-color);
         }
 
         &:last-child {

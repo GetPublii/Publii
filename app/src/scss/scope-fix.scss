@@ -4,15 +4,15 @@
 .popup {
     .error-log {
         strong {
-            color: $color-3;
+            color: var(--warning);
             font-size: 1.6rem;
             font-weight: normal;
         }
 
         pre {
             background: rgba(0, 0, 0, .025);
-            border: 1px solid $color-9;
-            color: $color-6;
+            border: 1px solid var(--gray-1);
+            color: var(--gray-4);
             font-size: 1.2rem;
             padding: .5rem 1rem;
             white-space: pre-wrap;
@@ -25,7 +25,7 @@
  * vue-multiselect
  */
 .multiselect__tags {
-    padding: 0 4rem .5rem 0.5rem;
+   // padding: 0 4rem .5rem 0.5rem;
 
     &-wrap {
         display: inline;
@@ -33,10 +33,10 @@
 }
 
 .multiselect__tag {
-    background: $color-helper-8;
+    background: var(--input-border-color);
     border: none;
     border-radius: 3px;
-    color: $color-4;
+    color: var(--text-primary-color);
     display: inline-block;
     font-size: 1.4rem;
     font-style: italic;
@@ -63,7 +63,7 @@
         width: 10px;
 
         &:after {
-            color: #999!important;
+            color: var(--icon-secondary-color)!important;
         }
 
         &:focus,
@@ -71,15 +71,15 @@
             background: transparent;
 
             &:after {
-                color: #333!important;
+                color: var(--icon-tertiary-color)!important;
             }
         }
     }
 }
 
 .multiselect__input {
-    height: 45px;
-    line-height: 45px;
+    height: 47px;
+    line-height: 47px;
     margin-top: .75rem;
 }
 
@@ -88,13 +88,13 @@
     padding: 4px 6px 4px 0;
 
     &:before {
-        border-color: $color-7 transparent transparent;
+        border-color: var(--icon-secondary-color) transparent transparent;
         border-width: 6px 5px;
     }
 }
 
 .multiselect__option--selected {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-weight: 600;
 }
 
@@ -129,7 +129,7 @@
 
 .field {
     .mce-tinymce {
-        border: 1px solid $color-8;
+        border: 1px solid var(--input-border-color);
         border-radius: 3px;
     }
 
@@ -148,7 +148,7 @@
                 padding: .4rem .5rem;
 
                 &:hover {
-                    background: $color-9;
+                    background: var(--gray-1);
                 }
             }
         }
@@ -161,7 +161,15 @@
 
 .source-code-editor {
     .CodeMirror {
-        height: 100%;
+        min-height: calc(100vh - 10rem); 
+    }
+}
+
+body[data-os="linux"] {
+    .source-code-editor {        
+        .CodeMirror {
+            min-height: calc(100vh - 8rem);
+        }
     }
 }
 

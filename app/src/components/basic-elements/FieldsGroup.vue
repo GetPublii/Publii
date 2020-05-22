@@ -29,19 +29,19 @@ export default {
 
 fieldset {
     border: none;
-    border: 1px solid $color-8;
+    border: 1px solid var(--input-border-color);
     margin: 0 0 5rem;
     padding: 3rem;
 
     & > legend {
-        color: $color-4;
+        color: var(--headings-color);
         font-size: 1.8rem;
         font-weight: 600;
         margin-left: -1rem;
         padding: 0 0.8rem;
 
         &.is-danger {
-            color: $color-3;
+            color: var(--warning);
         }
 
         & + p,

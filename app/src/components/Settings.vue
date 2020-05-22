@@ -5,20 +5,21 @@
         <div class="site-settings">
             <p-header title="Site Settings">
                 <p-button
-                    @click.native="save"
+                    @click.prevent.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
                     Save Settings
                 </p-button>
 
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    defaultValue="full-site" />
             </p-header>
 
             <fields-group title="Basic settings">
@@ -34,6 +35,7 @@
                         ref="name"
                         id="name"
                         key="name"
+                        :spellcheck="false"
                         v-model="name" />
                 </field>
 
@@ -58,7 +60,23 @@
                         id="customLanguage"
                         ref="customLanguage"
                         key="customLanguage"
+                        :spellcheck="false"
                         v-model="customLanguage" />
+                </field>
+
+                <field
+                    id="spellchecking"
+                    label="Enable spellchecker">
+                    <switcher
+                        slot="field"
+                        id="spellchecking"
+                        v-model="spellchecking" />
+                    <small
+                        v-if="hasNonAutomaticSpellchecker && spellcheckIsNotSupported"
+                        slot="note"
+                        class="note is-invalid">
+                        The spellchecker does not support your selected website language. We recommend to disable this feature.
+                    </small>
                 </field>
 
                 <field
@@ -115,6 +133,7 @@
                                 id="meta-title"
                                 v-model="advanced.metaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                         </field>
@@ -128,6 +147,7 @@
                                 v-model="advanced.metaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -172,6 +192,7 @@
                                 slot="field"
                                 v-model="advanced.postMetaTitle"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="70" />
                             <small
                                 slot="note"
@@ -189,6 +210,7 @@
                                 v-model="advanced.postMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -219,6 +241,7 @@
                                 id="tag-meta-title"
                                 v-model="advanced.tagMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -237,6 +260,7 @@
                                 v-model="advanced.tagMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -309,6 +333,7 @@
                                 id="author-meta-title"
                                 v-model="advanced.authorMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -327,6 +352,7 @@
                                 v-model="advanced.authorMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -399,6 +425,7 @@
                                 id="author-meta-title"
                                 v-model="advanced.errorMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -417,6 +444,7 @@
                                 v-model="advanced.errorMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -446,6 +474,7 @@
                                 id="search-meta-title"
                                 v-model="advanced.searchMetaTitle"
                                 slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :charCounter="true"
                                 :preferredCount="70" />
                             <small
@@ -464,6 +493,7 @@
                                 v-model="advanced.searchMetaDescription"
                                 slot="field"
                                 :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
                         </field>
 
@@ -515,6 +545,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('tags-prefix') > -1 }"
                                 @click.native="clearErrors('tags-prefix')"
                                 v-model="advanced.urls.tagsPrefix"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -532,6 +563,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('authors-prefix') > -1 }"
                                 @click.native="clearErrors('authors-prefix')"
                                 v-model="advanced.urls.authorsPrefix"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -548,6 +580,7 @@
                                 :class="{ 'is-invalid': errors.indexOf('pagination-phrase') > -1 }"
                                 @click.native="clearErrors('pagination-phrase')"
                                 v-model="advanced.urls.pageName"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 slot="note"
@@ -565,6 +598,7 @@
                                 @click.native="clearErrors('error-page')"
                                 :readonly="!themeHasSupportForErrorPage"
                                 v-model="advanced.urls.errorPage"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForErrorPage"
@@ -583,6 +617,7 @@
                                 @click.native="clearErrors('search-page')"
                                 :readonly="!themeHasSupportForSearchPage"
                                 v-model="advanced.urls.searchPage"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForSearchPage"
@@ -652,6 +687,7 @@
                             label="Excluded files">
                             <text-area
                                 slot="field"
+                                :spellcheck="false"
                                 v-model="advanced.sitemapExcludedFiles" />
                             <small
                                 slot="note"
@@ -701,7 +737,13 @@
                             <input
                                 slot="field"
                                 type="text"
+                                spellcheck="false"
                                 v-model="advanced.openGraphAppId" />
+                            <small
+                                slot="note"
+                                class="note">
+                                Read how to obtain <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
+                            </small>
                         </field>
                     </div>
 
@@ -722,6 +764,7 @@
                             <text-input
                                 id="twitter-username"
                                 v-model="advanced.twitterUsername"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -796,6 +839,7 @@
                             <text-input
                                 id="amp-ga-id"
                                 v-model="advanced.ampGaId"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -841,11 +885,12 @@
                             <text-input
                                 id="amp-share-facebook-id"
                                 v-model="advanced.ampShareFacebookId"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 class="note"
                                 slot="note">
-                                Facebook App ID
+                                Please provide <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
                             </small>
                         </field>
 
@@ -911,6 +956,7 @@
                             <text-input
                                 id="amp-footer-text"
                                 v-model="advanced.ampFooterText"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
                     </div>
@@ -945,6 +991,7 @@
                             <text-input
                                 id="gdpr-popup-title-primary"
                                 v-model="advanced.gdpr.popupTitlePrimary"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -956,6 +1003,7 @@
                                 id="gdpr-popup-desc"
                                 v-model="advanced.gdpr.popupDesc"
                                 :rows="6"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -966,6 +1014,7 @@
                             <text-input
                                 id="gdpr-readmore-link-label"
                                 v-model="advanced.gdpr.readMoreLinkLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1004,6 +1053,7 @@
                             <text-input
                                 id="gdpr-page-url"
                                 v-model="advanced.gdpr.articleExternalUrl"
+                                :spellcheck="false"
                                 slot="field" />
                         </field>
 
@@ -1014,6 +1064,7 @@
                             <text-input
                                 id="gdpr-save-button-label"
                                 v-model="advanced.gdpr.saveButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1036,6 +1087,7 @@
                             <text-input
                                 id="gdpr-popup-label"
                                 v-model="advanced.gdpr.badgeLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
@@ -1046,6 +1098,7 @@
                             <text-input
                                 id="gdpr-behaviour-link"
                                 v-model="advanced.gdpr.behaviourLink"
+                                :spellcheck="false"
                                 slot="field" />
                             <small
                                 class="note"
@@ -1101,6 +1154,38 @@
                                     id="html-compression-remove-comments"
                                     v-model="advanced.htmlCompressionRemoveComments" />
                             </label>
+                        </field>
+
+                        <field
+                            id="media-lazyload"
+                            label="Enable media lazy load">
+                            <label slot="field">
+                                <switcher
+                                    id="media-lazyload"
+                                    v-model="advanced.mediaLazyLoad" />
+                            </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                Enable this option if you want to use native lady loading that lazy loads images, videos and iframes.
+                            </small>
+                        </field>
+                        
+                        <field
+                            id="responsive-images"
+                            label="Enable responsive images">
+                            <label slot="field">
+                                <switcher
+                                    id="responsive-images"
+                                    v-model="advanced.responsiveImages" />
+                            </label>
+                            
+                            <small
+                                slot="note"
+                                class="note">
+                                Enable this option if you want to deliver different sized images at different screen resolutions depending on breakpoints defined through config.json file in a theme's folder.
+                            </small>
                         </field>
 
                         <field
@@ -1178,6 +1263,7 @@
                                 <text-input
                                     id="feed-title-value"
                                     type="text"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="advanced.feed.titleValue" />
                             </label>
                         </field>
@@ -1298,6 +1384,11 @@
                                 v-model="advanced.hiddenPostsListingOrder"
                                 :items="orderOptions"></dropdown>
                         </field>
+                        
+                        <separator                            
+                            type="small"
+                            :is-line="true"
+                            label="" />
 
                         <field
                             id="related-posts-criteria"
@@ -1340,30 +1431,19 @@
                 </tabs>
             </fields-group>
 
-            <fields-group
-                title="Delete website"
-                type="danger">
-                <p>Are you sure you want to permanently REMOVE this website? Once confirmed this action cannot be undone - Double-check to make sure you're deleting the right website!</p>
-
-                <p-button
-                    @click.native="askForRemove"
-                    type="danger icon"
-                    icon="trash">
-                    Delete website
-                </p-button>
-            </fields-group>
-
             <p-footer>
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    :isReversed="true"
+                    defaultValue="full-site" />
 
                 <p-button
-                    @click.native="save"
+                    @click.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -1376,8 +1456,7 @@
 
 <script>
 import fs from 'fs';
-import { ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
+import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import GdprGroups from './basic-elements/GdprGroups';
@@ -1385,14 +1464,11 @@ import ThemesDropdown from './basic-elements/ThemesDropdown';
 
 export default {
     name: 'site-settings',
-    mixins: [
-        ExternalLinks
-    ],
     components: {
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
     },
-    data: function() {
+    data () {
         return {
             buttonsLocked: false,
             logo: {
@@ -1401,13 +1477,14 @@ export default {
             },
             language: '',
             customLanguage: '',
+            spellchecking: false,
             name: '',
             theme: '',
             currentTheme: '',
             currentThemeVersion: '',
             advanced: {},
             errors: [],
-            previousQuality: false
+            spellcheckerLanguages: false
         };
     },
     computed: {
@@ -1517,12 +1594,60 @@ export default {
         },
         postPages () {
             return this.$store.state.currentSite.posts.map(post => post.id);
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full website',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    isVisible: () => true,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render front page only',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    icon: 'quick-preview',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
+        },
+        hasNonAutomaticSpellchecker () {
+            return process.platform !== 'darwin';
+        },
+        spellcheckIsNotSupported () {
+            if (this.spellcheckerLanguages === false) {
+                return false;
+            }
+
+            let language = this.language;
+
+            if (language === 'custom') {
+                language = this.customLanguage;
+            }
+
+            if (this.spellcheckerLanguages.indexOf(language) > -1) {
+                return false;
+            } else {
+                language = language.split('-');
+                language = language[0];
+
+                if (this.spellcheckerLanguages.indexOf(language) > -1) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     },
     beforeMount () {
         this.logo.color = this.$store.state.currentSite.config.logo.color;
         this.logo.icon = this.$store.state.currentSite.config.logo.icon;
         this.language = this.$store.state.currentSite.config.language;
+        this.spellchecking = this.$store.state.currentSite.config.spellchecking;
 
         if (!this.availableLanguages[this.language]) {
             this.customLanguage = this.language;
@@ -1538,12 +1663,19 @@ export default {
             this.$refs['logo-creator'].changeIcon(this.logo.icon);
             this.$refs['logo-creator'].changeColor(this.logo.color);
         }, 0);
+
+        this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
+        this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
+        
+        if (this.spellcheckerLanguages.length) {
+            this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());
+        }
     },
     methods: {
-        saveAndPreview () {
-            this.save(null, true);
+        saveAndPreview (renderingType = false) {
+            this.save(true, renderingType);
         },
-        save (e, showPreview = false) {
+        save (showPreview = false, renderingType = false) {
             this.buttonsLocked = true;
 
             if (!this.validate()) {
@@ -1553,7 +1685,6 @@ export default {
 
             let siteName = this.$store.state.currentSite.config.name;
             let newTheme = this.$store.state.currentSite.config.theme;
-            this.previousQuality = this.$store.state.currentSite.config.advanced.imagesQuality;
 
             if(this.theme !== '') {
                 newTheme = this.theme;
@@ -1562,6 +1693,7 @@ export default {
             let newSettings = {};
             newSettings.name = this.name;
             newSettings.displayName = this.name;
+            newSettings.spellchecking = this.spellchecking;
             newSettings.logo = {
                 icon: this.$refs['logo-creator'].getActiveIcon(),
                 color: this.$refs['logo-creator'].getActiveColor()
@@ -1572,6 +1704,7 @@ export default {
             } else {
                 newSettings.language = this.language;
             }
+
             // Remove GDPR script groups with empty name or ID
             this.advanced.gdpr.groups = this.advanced.gdpr.groups.filter(group => {
                 if (group.name === '') {
@@ -1616,34 +1749,32 @@ export default {
                 }
 
                 if(data.status === true) {
-                    if(data.themeChanged && this.$store.state.currentSite.posts && this.$store.state.currentSite.posts.length > 0) {
-                        this.saved(newSettings, siteName, showPreview);
-                        
+                    if (
+                        data.thumbnailsRegenerateRequired && 
+                        this.$store.state.currentSite.posts && 
+                        this.$store.state.currentSite.posts.length > 0
+                    ) {
                         ipcRenderer.send('app-site-regenerate-thumbnails-required', {
                             name: this.$store.state.currentSite.config.name
                         });
 
                         ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
                             if (data.message) {
-                                this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: false });
+                                this.$bus.$emit('regenerate-thumbnails-display', { 
+                                    qualityChanged: false,
+                                    savedSettingsCallback: {
+                                        newSettings, 
+                                        siteName, 
+                                        showPreview, 
+                                        renderingType
+                                    }
+                                });
+                            } else {
+                                this.saved(newSettings, siteName, showPreview, renderingType);
                             }
                         });
                     } else {
-                        this.saved(newSettings, siteName, showPreview);
-
-                        if(this.previousQuality !== this.$store.state.currentSite.config.advanced.imagesQuality) {
-                            ipcRenderer.send('app-site-regenerate-thumbnails-required', {
-                                name: this.$store.state.currentSite.config.name
-                            });
-
-                            ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
-                                if (data.message) {
-                                    this.$bus.$emit('regenerate-thumbnails-display', { qualityChanged: true });
-                                }
-                            });
-
-                            this.previousQuality = this.$store.state.currentSite.config.advanced.imagesQuality;
-                        }
+                        this.saved(newSettings, siteName, showPreview, renderingType);
                     }
 
                     if(data.newThemeConfig) {
@@ -1660,6 +1791,8 @@ export default {
                         type: 'success',
                         lifeTime: 3
                     });
+
+                    this.buttonsLocked = false;
                 }
 
                 if(data.message === 'empty-name') {
@@ -1702,10 +1835,14 @@ export default {
                 });
             });
         },
-        saved(newSettings, oldName, showPreview = false) {
+        savedFromPopup (callbackData) {
+            console.log('CD:', callbackData);
+            this.saved(callbackData.newSettings, callbackData.siteName, callbackData.showPreview, callbackData.renderingType);
+        },
+        saved (newSettings, oldName, showPreview = false, renderingType = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
 
-            if(newSettings.theme) {
+            if (newSettings.theme) {
                 newSettings.theme =    newSettings.theme.replace(/^site-/, '')
                                                         .replace(/^app-/, '')
                                                         .replace(/^install-use-/, '')
@@ -1726,17 +1863,17 @@ export default {
                 this.setCurrentTheme();
 
                 // Remove old entry if user changed the site name
-                if(oldName !== this.$store.state.currentSite.config.name) {
+                if (oldName !== this.$store.state.currentSite.config.name) {
                     this.$store.commit('removeWebsite', oldName);
                 }
 
                 this.buttonsLocked = false;
 
-                if(showPreview) {
+                if (showPreview) {
                     if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                         this.$bus.$emit('confirm-display', {
-                            message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                            okLabel: 'Go to application settings',
+                            message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                            okLabel: 'Go to app settings',
                             okClick: () => {
                                 this.$router.push(`/app-settings/`);
                             }
@@ -1744,12 +1881,18 @@ export default {
                         return;
                     }
 
-                    this.$bus.$emit('rendering-popup-display');
+                    if (renderingType === 'homepage') {
+                        this.$bus.$emit('rendering-popup-display', {
+                            homepageOnly: true
+                        });
+                    } else {
+                        this.$bus.$emit('rendering-popup-display');
+                    }
                 }
             }, 1000);
         },
         validate () {
-            if(this.advanced.urls.tagsPrefix.trim() === '' && !!this.advanced.urls.cleanUrls) {
+            if (this.advanced.urls.tagsPrefix.trim() === '' && !!this.advanced.urls.cleanUrls) {
                 this.$bus.$emit('message-display', {
                     message: 'Tags prefix cannot be empty if pretty URLs are enabled.',
                     type: 'warning',
@@ -1762,7 +1905,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.authorsPrefix.trim() === '') {
+            if (this.advanced.urls.authorsPrefix.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Authors prefix cannot be empty.',
                     type: 'warning',
@@ -1775,7 +1918,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.authorsPrefix.trim() === this.advanced.urls.tagsPrefix.trim()) {
+            if (this.advanced.urls.authorsPrefix.trim() === this.advanced.urls.tagsPrefix.trim()) {
                 this.$bus.$emit('message-display', {
                     message: 'Authors prefix cannot be the same as tags prefix.',
                     type: 'warning',
@@ -1789,7 +1932,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.pageName.trim() === '') {
+            if (this.advanced.urls.pageName.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Pagination phrase cannot be empty.',
                     type: 'warning',
@@ -1802,7 +1945,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.errorPage.trim() === '') {
+            if (this.advanced.urls.errorPage.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Error page filename cannot be empty.',
                     type: 'warning',
@@ -1815,7 +1958,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.searchPage.trim() === '') {
+            if (this.advanced.urls.searchPage.trim() === '') {
                 this.$bus.$emit('message-display', {
                     message: 'Search page filename cannot be empty.',
                     type: 'warning',
@@ -1828,7 +1971,7 @@ export default {
                 return false;
             }
 
-            if(this.advanced.urls.errorPage.trim() === this.advanced.urls.searchPage.trim()) {
+            if (this.advanced.urls.errorPage.trim() === this.advanced.urls.searchPage.trim()) {
                 this.$bus.$emit('message-display', {
                     message: 'Error page filename cannot be the same as search page filename.',
                     type: 'warning',
@@ -1851,7 +1994,7 @@ export default {
         setCurrentTheme () {
             this.currentTheme = this.$store.state.currentSite.config.theme;
 
-            if(this.currentTheme !== '') {
+            if (this.currentTheme !== '') {
                 let oldName = this.currentTheme;
                 this.currentTheme = this.$store.state.currentSite.themes.filter(theme => theme.directory === this.currentTheme);
 
@@ -1866,56 +2009,15 @@ export default {
                 this.currentThemeVersion = this.$store.state.currentSite.themeSettings.version;
             }
         },
-        askForRemove () {
-            this.$bus.$emit('confirm-display', {
-                message: `Do you really want to remove this website? This action cannot be undone. To confirm deletion, please enter the website name to be deleted (${this.websiteName}) below:`,
-                okClick: this.removeWebsite,
-                hasInput: true,
-                okLabel: 'Remove website'
-            });
-        },
-        removeWebsite (name) {
-            if (name !== this.websiteName) {
-                this.$bus.$emit('alert-display', {
-                    message: 'Provided name is not the same as the current site name: ' + this.websiteName
-                });
-
-                return;
-            }
-
-            ipcRenderer.send('app-site-delete', {
-                site: this.websiteName
-            });
-
-            ipcRenderer.once('app-site-deleted', () => {
-                this.$store.commit('removeWebsite', this.websiteName);
-                let sites = Object.keys(this.$store.state.sites);
-
-                if(sites.length > 0) {
-                    this.$router.push({ path: `/site/${sites[0]}` });
-                    window.localStorage.setItem('publii-last-opened-website', sites[0]);
-                    this.$bus.$emit('message-display', {
-                        message: 'Website has been removed. Switched to: ' + sites[0],
-                        type: 'success',
-                        lifeTime: 3
-                    });
-                    return;
-                }
-
-                this.$router.push({ path: `/site/!` });
-                this.$bus.$emit('message-display', {
-                    message: 'Website has been removed.',
-                    type: 'success',
-                    lifeTime: 3
-                });
-            });
-        },
         customPostLabels (value) {
             return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
         },
         closeDropdown (refID) {
             this.$refs[refID].isOpen = false;
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('regenerate-thumbnails-close', this.savedFromPopup);
     }
 }
 </script>
@@ -1925,7 +2027,8 @@ export default {
 
 .site-settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
+    user-select: none;
 
     .multiple-checkboxes {
         label {

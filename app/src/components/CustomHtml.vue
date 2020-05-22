@@ -2,7 +2,7 @@
     <section class="content tools-custom-html">
         <p-header title="Custom HTML">
             <p-button
-                :onClick="goBack"
+                @click.native="goBack"
                 slot="buttons"
                 type="outline"
                 :disabled="buttonsLocked">
@@ -10,20 +10,21 @@
             </p-button>
 
             <p-button
-                :onClick="save"
+                @click.native="save(false, false)"
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
                 Save changes
             </p-button>
 
-            <p-button
-                :onClick="saveAndPreview"
+            <btn-dropdown
                 slot="buttons"
-                type="primary"
-                :disabled="!siteHasTheme || buttonsLocked">
-                Save &amp; Preview
-            </p-button>
+                buttonColor="green"
+                :items="dropdownItems"
+                :disabled="!siteHasTheme || buttonsLocked"
+                :previewIcon="true"
+                localStorageKey="publii-preview-mode"
+                defaultValue="full-site" />
         </p-header>
 
         <fields-group>
@@ -92,6 +93,26 @@ export default {
         },
         isMac: function () {
             return window.process.platform === 'darwin';
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full website',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    icon: 'full-preview-monitor',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render front page only',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    icon: 'quick-preview',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
         }
     },
     mounted: function() {
@@ -162,8 +183,7 @@ export default {
                 }
             }, 0);
         },
-        save: function(e, showPreview = false) {
-            e.preventDefault();
+        save (showPreview = false, renderingType = false) {
             let customCodeEditors = document.querySelectorAll('.tools-custom-html textarea');
 
             for(let editor of Object.keys(this.editors)) {
@@ -211,7 +231,7 @@ export default {
             // Settings saved
             ipcRenderer.once('app-site-config-saved', (event, data) => {
                 if(data.status === true) {
-                    this.saved(newSettings, showPreview);
+                    this.saved (newSettings, showPreview, renderingType);
 
                     if(data.newThemeConfig) {
                         this.$store.commit('refreshSiteThemeConfig', data);
@@ -236,10 +256,10 @@ export default {
                 });
             });
         },
-        saveAndPreview: function(e) {
-            this.save(e, true);
+        saveAndPreview (renderingType = false) {
+            this.save(true, renderingType);
         },
-        saved: function(newSettings, showPreview) {
+        saved (newSettings, showPreview, renderingType = false) {
             let siteName = this.$store.state.currentSite.config.name;
 
             this.$store.commit('refreshSiteConfig', {
@@ -247,11 +267,11 @@ export default {
                 siteName: siteName
             });
 
-            if(showPreview) {
+            if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                        okLabel: 'Go to application settings',
+                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                        okLabel: 'Go to app settings',
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -259,7 +279,13 @@ export default {
                     return;
                 }
 
-                this.$bus.$emit('rendering-popup-display');
+                if (renderingType === 'homepage') {
+                    this.$bus.$emit('rendering-popup-display', {
+                        homepageOnly: true
+                    });
+                } else {
+                    this.$bus.$emit('rendering-popup-display');
+                }
             }
         }
     },
@@ -273,7 +299,7 @@ export default {
 @import '../scss/variables.scss';
 
 .editor-note {
-    color: $color-6;
+   color: var(--gray-4);
 
     span {
         display: inline-block;

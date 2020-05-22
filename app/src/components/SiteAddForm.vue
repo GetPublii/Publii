@@ -21,6 +21,7 @@
                     <text-input
                         ref="site-name"
                         id="site-name"
+                        :spellcheck="false"
                         changeEventName="add-website-name-changed"
                         :customCssClasses="siteNameCssClasses" />
                 </div>
@@ -38,6 +39,7 @@
                     <text-input
                         ref="author-name"
                         id="author-name"
+                        :spellcheck="false"
                         changeEventName="add-website-author-changed"
                         :customCssClasses="authorNameCssClasses" />
                 </div>
@@ -150,7 +152,7 @@ export default {
             this.checkWebsiteName();
             this.checkAuthorName();
 
-            if(this.siteNameError || this.authorNameError) {
+            if (this.siteNameError || this.authorNameError) {
                 return true;
             }
 
@@ -159,7 +161,7 @@ export default {
         addWebsite (e) {
             let self = this;
 
-            if(this.formIsInvalid()) {
+            if (this.formIsInvalid()) {
                 return;
             }
 
@@ -168,22 +170,42 @@ export default {
             setTimeout(() => {
                 ipcRenderer.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
 
-                ipcRenderer.once('app-site-created', function(event, data) {
-                    self.overlayIsVisible = false;
-
-                    if(data !== false) {
-                        data.authors = self.setAuthor(data.authorName);
-                        self.$store.commit('addNewSite', data);
-                        window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
-                        self.$router.push(`/site/${data.siteConfig.name}`)
-                    } else {
-                        self.$bus.$emit('alert-display', {
-                            message: 'Site using this name exists!',
-                            textCentered: true
-                        });
-
-                        self.siteNameError = true;
+                ipcRenderer.once('app-site-creation-error', (event, data) => {
+                    this.overlayIsVisible = false;
+                    if (data.name) {
+                        this.siteNameError = true;
                     }
+
+                    if (data.author) {
+                        this.authorNameError = true;
+                    }
+
+                    ipcRenderer.removeAllListeners('app-site-created');
+                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
+                });
+
+                ipcRenderer.once('app-site-creation-duplicate', (event, data) => {
+                    this.overlayIsVisible = false;
+                    this.siteNameError = true;
+
+                    this.$bus.$emit('alert-display', {
+                        message: 'Site using this name exists!',
+                        textCentered: true
+                    });
+
+                    ipcRenderer.removeAllListeners('app-site-created');
+                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                });
+
+                ipcRenderer.once('app-site-created', (event, data) => {
+                    this.overlayIsVisible = false;
+                    data.authors = self.setAuthor(data.authorName);
+                    this.$store.commit('addNewSite', data);
+                    window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
+                    this.$router.push(`/site/${data.siteConfig.name}`);
+                    
+                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
                 });
             }, 250);
         },
@@ -234,9 +256,9 @@ export default {
  * Site create form
  */
 .site-create {
-    background: $color-10;
+    background: var(--popup-bg);
     border-radius: 5px;
-    box-shadow: 0 0 60px rgba($color-4, 0.05);
+    box-shadow: 0 0 60px rgba($color-4, 0.07);
     font-size: 1.6rem;
     margin: 0;
     left: 50%;
@@ -245,14 +267,19 @@ export default {
     text-align: center;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
+    user-select: none;
     width: 770px;
 
     &-form {
         overflow: hidden;
+        
+        /deep/ .logo-creator-preview {
+            min-width: 10rem !important;
+        }
     }
 
     .title {
-        color: $color-4;
+        color: var(--text-primary-color);
         font-size: 1.8rem;
         font-weight: 600;
         margin: 0 0 4rem 0!important;
@@ -272,7 +299,7 @@ export default {
         }
 
         &-error {
-            color: $color-3;
+            color: var(--warning);
         }
 
         &:last-child {
@@ -293,11 +320,15 @@ export default {
             border-radius: 0 0 0 3px;
 
             & + .button {
-                box-shadow: inset 0 0 0 1px $color-8!important;
+                box-shadow: none!important;
+                border-top: 1px solid var(--input-border-color);
                 border-radius: 0 0 3px 0;
+                color: var(--popup-btn-cancel-color);
                 margin-left: 0;
+                
                 &:hover {
-                    background: $color-9;
+                   background: var(--popup-btn-cancel-hover-bg);
+                   color: var(--popup-btn-cancel-hover-color);
                 }
             }
         }
@@ -312,10 +343,10 @@ export default {
             
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-7, 0.2);
-                border-right: 2px solid rgba($color-7, 0.2);
-                border-bottom: 2px solid rgba($color-7, 0.2);
-                border-left: 2px solid $color-7;
+                border-top: 2px solid var(--border-light-color);
+                border-right: 2px solid var(--border-light-color);
+                border-bottom: 2px solid var(--border-light-color);
+                border-left: 2px solid var(--gray-4);
                 border-radius: 50%;
                 display: block;   
                 height: 3.5rem;

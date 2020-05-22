@@ -7,9 +7,9 @@
             :width="imageWidth"
             alt="">
 
-        <h2 v-if="title">
+        <h3 v-if="title">
             {{ title }}
-        </h2>
+        </h3>
 
         <p v-if="description">
             {{ description }}
@@ -48,7 +48,8 @@ export default {
     },
     computed: {
         imagePath: function() {
-            return 'src/assets/svg/' + this.imageName;
+            let theme = this.$store.state.app.theme;
+            return '../src/assets/svg/' + theme + '/' + this.imageName;
         },
         hasButtonSlot: function() {
             return !!this.$slots['button'];
@@ -59,53 +60,5 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../scss/variables.scss';
-
-.empty-state {
-    clear: both;
-    color: $color-7;
-    font-size: 1.6rem;
-    left: 0;
-    padding: 20px;
-    position: absolute;
-    text-align: center;
-    top: 40%;
-    transform: translateY(-40%);
-    width: 100%;
-
-    h2 {       
-        font-weight: 400;
-        text-transform: none;
-    }
-
-    p {       
-        margin: -1.5rem 0 4rem 0;
-    }
-
-    img {
-        height: 284px;
-        margin: 0 auto 3.5rem;
-        width: 258px;
-    }
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .empty-state {
-        img {
-            max-width: 22rem;
-            margin-bottom: 0.5rem;
-        }
-    }
-}
-
-@media (max-width: 1400px) {
-    .empty-state {
-        img {
-            max-width: 22rem;
-            margin-bottom: 0.5rem;
-        }
-    }
-}
+@import '../../scss/empty-states.scss';
 </style>

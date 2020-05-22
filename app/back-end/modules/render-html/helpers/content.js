@@ -5,6 +5,8 @@
 
 const slug = require('./../../../helpers/slug');
 const path = require('path');
+const MarkdownToHtml = require('./../text-renderers/markdown');
+const BlocksToHtml = require('./../text-renderers/blockeditor');
 const normalizePath = require('normalize-path');
 const URLHelper = require('./url');
 const UtilsHelper = require('./../../../helpers/utils');
@@ -23,7 +25,7 @@ class ContentHelper {
      * @param renderer
      * @returns {string}
      */
-    static prepareContent(postID, originalText, siteDomain, themeConfig, renderer) {
+    static prepareContent(postID, originalText, siteDomain, themeConfig, renderer, editor = 'tinymce') {
         let ampMode = renderer.ampMode;
         let domain = normalizePath(siteDomain);
         domain = URLHelper.fixProtocols(domain);
@@ -37,6 +39,7 @@ class ContentHelper {
 
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
+        preparedText = ContentHelper.parseText(preparedText, editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
         if(ampMode) {
@@ -53,6 +56,9 @@ class ContentHelper {
         if (preparedText.indexOf('class="post__toc') === -1) {
            preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, ''); 
         }
+
+        // Reduce download="download" to download
+        preparedText = preparedText.replace(/download="download"/gmi, 'download');
     
         // Remove contenteditable attributes
         preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
@@ -61,17 +67,36 @@ class ContentHelper {
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
         // Find all images and add srcset and sizes attributes
-        preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
-            return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, domain);
-        });
+        if (renderer.siteConfig.advanced.responsiveImages) {
+            preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"/gmi, function(matches, url) {
+                return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, domain);
+            });
+        }
+
+        // Add loading="lazy" attributes to img, video, audio, iframe tags
+        if (renderer.siteConfig.advanced.mediaLazyLoad) {
+            preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
+            preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
+            preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
+            preparedText = preparedText.replace(/<iframe\s/gmi, '<iframe loading="lazy" ');
+        }
 
         // Wrap images with classes into <figure>
-        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img.*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
+        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
             return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
+        });
+
+        // Wrap galleries with classes into div with gallery-wrapper CSS class
+        preparedText = preparedText.replace(/<div class="gallery"[\s\S]*?<\/div>?/gmi, function(matches, p1, classes) {
+            return '<div class="gallery-wrapper">' + matches + '</div>';
         });
 
         // Wrap iframes into <div class="post__iframe">
         preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
+            if (matches.indexOf('data-responsive="false"') > -1) {
+                return matches;
+            }
+            
             return '<div class="post__iframe">' + matches + '</div>';
         });
 
@@ -85,6 +110,36 @@ class ContentHelper {
         }
 
         return preparedText;
+    }
+
+    /**
+     * Parse text using a editor-specific parser
+     * 
+     * @param {*} inputText 
+     * @param {*} editor 
+     */
+    static parseText (inputText, editor = 'tinymce') {
+        if (editor === 'tinymce') {
+            return inputText;
+        }
+
+        if (editor === 'markdown') {
+            inputText = ContentHelper.prepareMarkdown(inputText);
+            return MarkdownToHtml.parse(inputText);
+        }
+
+        if (editor === 'blockeditor') {
+            return BlocksToHtml.parse(inputText);
+        }
+    }
+
+    /**
+     * Prepares markdown code to display
+     * @param input 
+     */
+    static prepareMarkdown (input) {
+        input = input.replace(/\-\-\-READMORE\-\-\-/gmi, '<hr id="read-more" />');
+        return input;
     }
 
     /**
@@ -124,6 +179,10 @@ class ContentHelper {
         // Add dots at the end if the text was longer than the limit
         if(textLength > length && text.trim().substr(-1) !== '.') {
             text += '&hellip;';
+        }
+
+        if (text.trim() === '&hellip;') {
+            return '';
         }
 
         return text;
@@ -414,6 +473,7 @@ class ContentHelper {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'file');
 
         return text;
     }
@@ -430,18 +490,38 @@ class ContentHelper {
     static prepareInternalLinks(text, renderer, type) {
         // Extract URLs
         let regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/[0-9]{1,}', 'gmi');
+
+        if (type === 'file') {
+            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?\"', 'gmi');
+        }
+
         let urls = [...new Set(text.match(regexp))];
 
+        // We need to remove trailing '"' char from the files matches
+        if (type === 'file') {
+            urls = urls.map(file => file.replace(/"$/, ''));
+        }
+
         // When there is no internal links of given type - return unmodified text
-        if(urls.length === 0) {
+        if (urls.length === 0) {
             return text;
         }
 
         // Get proper URLs for frontpage
-        if(type === 'frontpage') {
+        if (type === 'frontpage') {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
             text = text.split(url).join(link);
+
+            return text;
+        }
+
+        // Get proper URLs for the files
+        if (type === 'file') {
+            for (let url of urls) {
+                let link = url.replace('#INTERNAL_LINK#/file/', renderer.siteConfig.domain + '/');
+                text = text.split(url).join(link);
+            }
 
             return text;
         }

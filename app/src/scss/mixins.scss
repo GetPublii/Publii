@@ -24,7 +24,89 @@
 @mixin logoSVGColors() {
     @for $i from 1 through 16 {
         &[data-color="#{$i}"] {
-            fill: #{map-get($logo-colors, #{'bg' + $i})};           
+            color: #{map-get($logo-colors, #{'bg' + $i})};           
         }
     }
+}
+
+/*
+ * Typography mixins (for editor.scss)
+ */
+
+// Links
+@mixin links ($link, $hover, $active, $focus) {
+    & {
+        border-bottom: 3px solid rgba(var(--yellow), 1);
+        color: $link;
+        cursor: pointer;
+        text-decoration: none !important;
+        text-decoration-skip-ink: auto;
+    }
+
+    &:hover {
+        background: rgba(var(--yellow), .2);
+        color: $hover;
+    }
+
+    &:active {
+        color: $active;
+    }
+
+    &:focus {
+        color: $focus;
+        outline: 2px dotted var(--secondary-color);
+    }
+}
+
+// Horizontal and vertical centering helper
+@mixin centerXY($horizontal: true, $vertical: true) {
+    position: absolute;
+
+    @if ($horizontal and $vertical) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @else if ($horizontal) {
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    @else if ($vertical) {
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+}
+
+
+// Fluid typography
+@mixin fluid-type($properties, $min-vw, $max-vw, $min-value, $max-value) {
+    & {
+        @each $property in $properties {
+            #{$property}: $min-value;
+        }
+
+        @media screen and (min-width: $min-vw) {
+            @each $property in $properties {
+                #{$property}: calc(#{$min-value} + #{strip-unit($max-value - $min-value)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+            }
+        }
+
+        @media screen and (min-width: $max-vw) {
+            @each $property in $properties {
+                #{$property}: $max-value;
+            }
+        }
+    }
+}
+
+
+@function strip-unit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+// Baseline for Vertical Rhythm
+@function baseline($value){
+  @return ($baseline) * $value
 }

@@ -85,37 +85,42 @@ export default {
     position: relative;        
     
     &-thumbnail {
-        border: 1px solid $color-helper-10;
+        border: 1px solid var(--gray-1);
         border-radius: 4px;
         display: block;
         height: auto;       
         max-width: 100%;        
-        transition: all .25s ease-out;        
+        transition: var(--transition);        
     }
 
     &-delete {      
-        background: $color-10;
+        background: var(--bg-primary);
         border-radius: 50%;
         height: 3rem;
-        display: inline-block;
-        fill: $color-7;
+        display: inline-block;      
         position: absolute;
         right: 1.4rem;
         text-align: center;        
-        width: 3rem;
-        
-        &:hover {
-            fill: $color-3;           
-        }
+        width: 3rem;        
         
         & > svg {
-            vertical-align: bottom;
+             fill: var(--icon-secondary-color);
+             transform: scale(.9);
+             transition: var(--transition);
+             vertical-align: middle;
+        }
+        
+        &:hover {
+             & > svg {
+                fill: var(--warning);
+                transform: scale(1);
+             }
         }
     }
 
     &-name { 
         align-items: center;
-        background: $color-9;
+        background: var(--gray-1);
         border-radius: 0 0 4px 4px;
         display: flex;        
         justify-content: space-between;
@@ -132,7 +137,7 @@ export default {
     }
 
     &-version {
-        color: $color-7;
+        color: var(--text-light-color);
         display: block;
         font-size: 1.2rem;
         font-weight: 400;

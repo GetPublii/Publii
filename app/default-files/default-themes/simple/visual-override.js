@@ -4,7 +4,80 @@
 
 var generateOverride = function (params) {
     let output = '';
-
+    
+      if (
+        params.pageWidth !== '42rem' ||
+        params.logoColor !== '#FFFFFF' || 
+        params.primaryColor !== '#D73A42' || 
+        params.textColor !== '#17181E' || 
+        params.headingColor !== '#17181E' || 
+        params.linkColor !== '#D73A42' || 
+        params.linkHoverColor !== '#17181E' ||
+        params.backgroundMenu !== '#17181E' ||
+        params.linkColorMenu !== '#FFFFFF' ||
+        params.linkHoverColorMenu !== 'rgba(255,255,255,0.7)' ||          
+        params.submenuBg !== '#17181E' ||
+        params.submenuLinkColor !== 'rgba(255,255,255,0.7)' ||
+        params.submenuLinkHoverColor !== '#FFFFFF' ||
+        params.submenuLinkHoverBgMenu !== 'rgba(255,255,255,0.05)' ||
+        params.submenuBg !== '#17181E' ||          
+        params.fontHeadignsWeight !== '700' ||
+        params.fontHeadingsTransform !== 'none' ||
+        params.heightHero !== '80vh' ||
+        params.heroBackground !== '#17181E' ||
+        params.heroHeadingColor !== '#FFFFFF' ||
+        params.heroTextColor !== 'rgba(255,255,255,0.75)' ||
+        params.heroLink !== '#FFFFFF' ||
+        params.heroLinkHover !== 'rgba(255,255,255,0.75)' ||
+        params.heroBorderColor !== 'rgba(255,255,255,0.3)' || 
+        params.footerBg !== '#17181E' ||
+        params.footerTextColor !== '#747577' ||
+        params.footerLinkColor !== '#FFFFFF' ||
+        params.footerLinkHoverColor !== 'rgba(255,255,255,0.7)') {
+        output += `
+        :root {
+           --entry-width:        ${params.pageWidth}; 
+           --page-margin:        6vw;  
+           --dark:               #17181E;
+           --gray-1:             #61666C;
+           --gray-2:             #747577;
+           --gray-3:             #E6E7EB;
+           --gray-4:             #F7F8FB;
+           --bg-color:           #FFFFFF;
+           --logo-color:         ${params.logoColor}; 
+           --primary-color:      ${params.primaryColor};   
+           --text-color:         ${params.textColor}; 
+           --headings-color:     ${params.headingColor};
+           --border-color:       #D1D1D2;
+           --link-color:         ${params.linkColor}; 
+           --link-color-hover:   ${params.linkHoverColor};         
+           --navbar-bg:          ${params.backgroundMenu}; 
+           --navbar-link-color:  ${params.linkColorMenu}; 
+           --navbar-link-color-hover: ${params.linkHoverColorMenu}; 
+           --navbar-icon:        #FFFFFF;
+           --dropdown-menu-bg:   ${params.submenuBg}; 
+           --dropdown-menu-link-color: ${params.submenuLinkColor}; 
+           --dropdown-menu-link-color-hover: ${params.submenuLinkHoverColor}; 
+           --dropdown-menu-link-background-hover: ${params.submenuLinkHoverBgMenu}; 
+           --mobile-menu-bg:     #FFFFFF;
+           --mobile-menu-link-color: #17181E;
+           --mobile-menu-link-color-hover: #17181E;
+           --headings-weight:    ${params.fontHeadignsWeight};
+           --headings-transform: ${params.fontHeadingsTransform};
+           --hero-height:        ${params.heightHero};
+           --hero-bg:            ${params.heroBackground};
+           --hero-heading-color: ${params.heroHeadingColor};
+           --hero-text-color:    ${params.heroTextColor};
+           --hero-link-color:    ${params.heroLink};
+           --hero-link-color-hover: ${params.heroLinkHover};
+           --hero-border-color:  ${params.heroBorderColor};
+           --footer-bg: ${params.footerBg};
+           --footer-text-color:    ${params.footerTextColor};
+           --footer-link-color:    ${params.footerLinkColor};
+           --footer-link-color-hover: ${params.footerLinkHoverColor};
+        }`;
+    } 
+    
     if (params.minFontSize !== '1.1' || params.maxFontSize !== '1.2') {
         output += `
         html {
@@ -24,182 +97,20 @@ var generateOverride = function (params) {
         }`;
     }
 
-    if (params.pageWidth !== '42rem') {
-        output += `
-        .wrapper {
-               max-width: ${params.pageWidth};
-        }
-
-        .feed__image {
-               max-width: calc(${params.pageWidth} + 20%);
-        }
-
-        @media all and (min-width: 56.25em) {
-               .post__image--wide > img {
-                     width: calc(${params.pageWidth} + 20%);
-               }
-        }`;
-    }
-
-    if (params.textColor !== '#17181E') {
-        output += `
-        body,
-        blockquote::before,
-        pre > code {
-               color: ${params.textColor};
-        }`;
-    }
-
-    if (params.headingColor !== '#17181E' || params.fontH1Transform !== 'none') {
-        output += `
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-               color: ${params.headingColor};              
-               text-transform: ${params.fontH1Transform};  
-        }
-
-        .dropcap::first-letter{
-               color: ${params.headingColor}; 
-        }
-
-        hr::before {
-               color: ${params.headingColor};
-
-        }`;
-    }
-
-    if (params.linkColor !== '#D73A42') {
-        output += `
-        a,
-        .invert:hover,
-        .invert:active,
-        .invert:focus {
-               color: ${params.linkColor};
-        }`;
-    }
-
-    if (params.linkHoverColor !== '#17181E') {
-        output += `
-        a:hover,
-        a:active,
-        a:focus {
-               color: ${params.linkHoverColor};
-        }
-
-        .invert {
-               color: ${params.linkHoverColor};
-        }`;
-    }
-
     if (params.primaryColor !== '#D73A42') {
         output += `
-        ::-moz-selection {
-               background: ${params.primaryColor};
-        }
-
-        ::selection {
-               background: ${params.primaryColor};
-        }
-
-        [type=text]:focus,
-        [type=url]:focus,
-        [type=tel]:focus,
-        [type=number]:focus,
-        [type=email]:focus,
-        [type=search]:focus,
-        textarea:focus,
-        select:focus,
-        select[multiple]:focus {
-               border-color: ${params.primaryColor};
-        }
-
+      
         input[type=checkbox]:checked + label:before{
                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 8'%3e%3cpolygon points='9.53 0 4.4 5.09 1.47 2.18 0 3.64 2.93 6.54 4.4 8 5.87 6.54 11 1.46 9.53 0' fill='${params.primaryColor.replace('#', '%23')}'/%3e%3c/svg%3e");
         }
 
         input[type=radio]:checked + label:before {
                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3ccircle cx='4' cy='4' r='4' fill='${params.primaryColor.replace('#', '%23')}'/%3e%3c/svg%3e");
-        }
-
-        code {
-               color: ${params.primaryColor};
-
-        }`;
-    }
-
-    if (params.primaryColor) {
-        output += `
-        .cookie-popup,
-        .cookie-popup__save {
-               background: ${params.primaryColor};      
-        }`;
-    }
-
-    if (params.buttonBg !== '#17181E' || params.buttonColor !== '#FFFFFF') {
-        output += `
-        .btn,
-        [type=button],
-        [type=submit],
-        button {
-               background: ${params.buttonBg};
-               border-color: ${params.buttonBg};
-               color: ${params.buttonColor};
-        }`;
-    }
-    
-    
-    if (params.logoColor !== '#FFFFFF') {
-        output += `
-        .logo {
-               color: ${params.logoColor} !important;
-        }`;
-    }
-
-    if(params.backgroundMenu !== '#17181E') {
-        output += `
-         .top.is-visible  {
-               background: ${params.backgroundMenu};  
-         } 
-
-         .navbar .navbar__toggle {
-               background: ${params.backgroundMenu};
-        }`;
-    }
-
-    if (params.linkColorMenu !== '#FFFFFF') {
-        output += `
-        .navbar .navbar__menu li a,
-        .navbar .navbar__menu li span[aria-haspopup="true"] {
-               color: ${params.linkColorMenu};
-        }
-
-        .navbar .navbar__menu li span {
-               color: ${params.linkColorMenu};
         
+
         }`;
     }
 
-    if (params.linkHoverColorMenu !== 'rgba(255, 255, 255, 0.7)') {
-        output += `
-        .navbar .navbar__menu li a:active,
-        .navbar .navbar__menu li a:focus,
-        .navbar .navbar__menu li a:hover,
-        .navbar .navbar__menu li span[aria-haspopup="true"]:active,
-        .navbar .navbar__menu li span[aria-haspopup="true"]:focus,
-        .navbar .navbar__menu li span[aria-haspopup="true"]:hover   {
-               color: ${params.linkHoverColorMenu};
-        }      
-
-        .navbar .navbar__menu > li:hover > a,
-        .navbar .navbar__menu > li:hover > span[aria-haspopup="true"] {
-               color: ${params.linkHoverColorMenu};  
-                 }`;
-    }
-    
     if (params.submenu === 'custom') {
         output += `
         .navbar .navbar__submenu {
@@ -215,58 +126,7 @@ var generateOverride = function (params) {
         .navbar .has-submenu .has-submenu:hover > .navbar__submenu.is-right-submenu {
                left: -${params.submenuWidth}px; 
         }`;
-    }
-    
-    if(params.submenuBg !== '#17181E') {
-        output += `
-         .navbar .navbar__submenu  {
-               background: ${params.submenuBg};             
-        }`;
-    }
-    
-    if(params.submenuLinkColor !== 'rgba(255, 255, 255, 0.7)') {
-        output += `
-         .navbar .navbar__submenu li a,
-         .navbar .navbar__submenu li span[aria-haspopup="true"] {
-               color: ${params.submenuLinkColor} !important;  
-         }
-
-         .navbar .navbar__submenu li span {
-               color: ${params.submenuLinkColor} !important; 
-        }`;
-    }
-    
-    if(params.submenuLinkHoverColor !== '#FFFFFF' || params.submenuLinkHoverBgMenu !== 'rgba(255, 255, 255, 0.05)') {
-        output += `
-         .navbar .navbar__submenu li a:active,
-         .navbar .navbar__submenu li a:focus,
-         .navbar .navbar__submenu li a:hover,
-         .navbar .navbar__submenu li span[aria-haspopup="true"]:active,
-         .navbar .navbar__submenu li span[aria-haspopup="true"]:focus,
-         .navbar .navbar__submenu li span[aria-haspopup="true"]:hover {
-               background: ${params.submenuLinkHoverBgMenu};     
-               color: ${params.submenuLinkHoverColor} !important;    
-         }
-
-         .navbar .navbar__submenu li:hover > a,
-         .navbar .navbar__submenu li:hover > span[aria-haspopup="true"] {
-               color: ${params.submenuLinkHoverColor} !important;  
-        }`;
-    }
-
-    if (params.heightHero !== '80vh') {
-        output += `
-        .hero {
-              height: ${params.heightHero}        
-        }`;
-    }
-
-    if (params.heroBackground !== '#17181E') {
-        output += `
-        .hero {
-               background: ${params.heroBackground};
-        }`;
-    }
+    }   
 
     if (params.heroOverlay === 'color') {
         if (params.heroOverlayColor) {
@@ -284,76 +144,6 @@ var generateOverride = function (params) {
                   background: linear-gradient(to ${params.heroOverlayGradientDirection}, transparent 0%, ${params.heroOverlayGradient} 100%);
            }`;
         }
-    }
-
-    if (params.heroHeadingColor !== '#FFFFFF') {
-        output += `
-        .hero__content h1 {
-               color: ${params.heroHeadingColor};
-        }`;
-    }
-
-    if (params.heroTextColor !== 'rgba(255, 255, 255, 0.75)') {
-        output += `
-        .hero__content {
-               color: ${params.heroTextColor};
-        }`;
-    }
-
-    if (params.heroLink !== '#FFFFFF') {
-        output += `
-        .hero__content a {
-               color: ${params.heroLink};
-        }`;
-    }
-
-    if (params.heroLinkHover !== 'rgba(255, 255, 255, 0.75)') {
-        output += `
-        .hero__content {
-               color: ${params.heroLinkHover};
-        }`;
-    }
-
-    if (params.heroBorderColor !== 'rgba(255, 255, 255, 0.3)') {
-        output += `
-        .post__meta--author {
-               border-color: ${params.heroBorderColor};        
-        }`;
-    }
-    
-    if (params.footerBg !== '#17181E') {
-        output += `
-        .footer {
-               background: ${params.footerBg};
-        }`;
-    }
-    
-    if (params.footerTextColor !== '#747577') {
-        output += `
-        .footer__copyright {
-               color: ${params.footerTextColor};
-        }`;
-    }
-    
-    if (params.footerLinkColor !== '#FFFFFF') {
-        output += `
-        .footer a {
-               color: ${params.footerLinkColor};
-        }`;
-    }
-    
-    if (params.footerLinkHoverColor !== 'rgba(255, 255, 255, 0.7)') {
-        output += `
-        .footer a:hover {
-               color: ${params.footerLinkHoverColor};
-        }`;
-    }
-    
-    if (params.footerIconColor !== '#FFFFFF') {
-        output += `
-        .footer__social svg {
-               fill: ${params.footerIconColor};
-        }`;
     }
 
     if (params.galleryItemGap !== '0.28333rem') {
@@ -422,33 +212,19 @@ var generateOverride = function (params) {
         }`;    	 
     }	
 
-    if(params.lazyLoad) {
-        if(params.lazyLoadEffect !== 'blur') {
-            output += ` 
-            .lazyload,
-            .lazyloading {
+    if(params.lazyLoadEffect === 'fadein') {
+        output += ` 
+         img[loading] {
                opacity: 0;
-            }
-            .lazyloaded {
+         }
+
+         img.is-loaded {
                opacity: 1;
                transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1); 
-            }`;    	 
-        }
-
-        if (params.lazyLoadEffect === 'blur') {
-            output += ` 
-            .lazyload,
-            .lazyloading {
-               -webkit-filter: blur(5px);
-               filter: blur(5px);
-               transition: filter 400ms, -webkit-filter 400ms;
-            }
-            .lazyloaded {
-               -webkit-filter: blur(0);
-               filter: blur(0);
-            }`;
-        }
-    }
+         }`;    	 
+    } 
+        
+  
     return output;
 }
 

@@ -1,5 +1,7 @@
 <template>
-    <div class="tabs">
+    <div 
+        class="tabs"
+        @click="detectInternalNavigation">
         <ul>
             <li
                 v-for="(item, index) in items"
@@ -36,12 +38,12 @@ export default {
             type: Function
         }
     },
-    data: function() {
+    data () {
         return {
             activeItem: false
         }
     },
-    mounted: function() {
+    mounted () {
         let lastOpenedTab = window.sessionStorage.getItem(this.id);
 
         if(lastOpenedTab && this.items.indexOf(lastOpenedTab) > -1) {
@@ -51,10 +53,30 @@ export default {
         }
     },
     methods: {
-        toggle: function(newActiveItem) {
+        detectInternalNavigation (e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('data-internal-link')) {
+                e.preventDefault();
+
+                let linkData = e.target.getAttribute('data-internal-link');
+                linkData = linkData.split('#');
+
+                if (linkData.length === 2) {
+                    this.toggle(linkData[0], linkData[1]);
+                } else {
+                    this.toggle(linkData[0]);
+                }
+            }
+        },
+        toggle (newActiveItem, scrollTo = false) {
             this.activeItem = newActiveItem;
             window.sessionStorage.setItem(this.id, newActiveItem);
             this.onToggle();
+
+            setTimeout(() => {
+                if (scrollTo !== false) {
+                    document.querySelector('#' + scrollTo).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+                }
+            }, 0);
         }
     }
 }
@@ -74,23 +96,24 @@ export default {
         list-style-type: none;
         margin: 0;
         padding: 0;
+        user-select: none;
         width: 18rem;
 
         & > li {           
-            color: $color-4;
+            color: var(--tab-color);
             cursor: pointer;
             padding: 0.8rem 1.2rem;
             position: relative;
             width: 100%;
 
             &.active {
-                background: $color-1!important;
+                background: var(--tab-active-bg)!important;
                 border-radius: 3px;
-                color: $color-10;
+                color: var(--tab-active-color);
                 transition: all .125s ease-out;
 
                 &:after {
-                    background: $color-10;
+                   background: var(--bg-primary);
                     content: "";
                     height: 100%;
                     position: absolute;
@@ -101,7 +124,7 @@ export default {
             }
 
             &:hover {
-                background: rgba($color-helper-8, 0.4);
+                background: var(--tab-hover-color);
                 border-radius: 3px;
             }
 
@@ -112,7 +135,7 @@ export default {
     }
 
     & > .content {
-        border-left: 1px solid $color-8;
+        border-left: 1px solid var(--input-border-color);
         margin-left: auto;
         padding-left: 4rem;
         width: calc( 100% - 22rem);
@@ -122,6 +145,7 @@ export default {
 
             &.active {
                 display: block;
+               
             }
         }
     }

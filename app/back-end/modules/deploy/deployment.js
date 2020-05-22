@@ -45,7 +45,6 @@ class Deployment {
         this.filesToRemove = [];
         this.filesToUpload = [];
         this.operationsCounter = 0;
-        this.outputLog = [];
     }
 
     /**
@@ -60,13 +59,13 @@ class Deployment {
 
         switch(deploymentConfig.protocol) {
             case 'sftp':
-            case 'sftp+key':        connection = new SFTP();        break;
-            case 's3':              connection = new S3();          break;
-            case 'netlify':         connection = new Netlify();     break;
-            case 'google-cloud':    connection = new GoogleCloud(); break;
-            case 'github-pages':    connection = new GithubPages(); break;
-            case 'gitlab-pages':    connection = new GitlabPages(); break;
-            default:                connection = new FTP();         break;
+            case 'sftp+key':        connection = new SFTP();                        break;
+            case 's3':              connection = new S3();                          break;
+            case 'netlify':         connection = new Netlify();                     break;
+            case 'google-cloud':    connection = new GoogleCloud();                 break;
+            case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
+            case 'gitlab-pages':    connection = new GitlabPages();                 break;
+            default:                connection = new FTP();                         break;
         }
 
         if(connection) {
@@ -293,7 +292,7 @@ class Deployment {
         }
 
         this.currentOperationNumber = 0;
-        this.outputLog.push('Founded ' + this.operationsCounter + ' operations to do');
+        console.log('Founded ' + this.operationsCounter + ' operations to do');
         this.progressPerFile = 90.0 / this.operationsCounter;
         this.sortFiles();
 
@@ -399,6 +398,8 @@ class Deployment {
                 this.client.removeDirectory(normalizePath(path.join(this.outputDir, fileToRemove.path)));
             }
         } else {
+            self.progressOfUploading = self.progressOfDeleting;
+
             process.send({
                 type: 'web-contents',
                 message: 'app-uploading-progress',
@@ -498,40 +499,18 @@ class Deployment {
     };
 
     /**
-     * Functions used to store the current connection logs
-     */
-    saveConnectionLog() {
-        let output = this.outputLog.join("\r\n");
-        let logPath = path.join(this.appDir, 'logs', 'connection-log.txt');
-
-        fs.writeFileSync(logPath, output);
-    }
-
-    /**
      * Save connection files log
      *
      * @param files
      * @param suffix
      */
     saveConnectionFilesLog(files, suffix = '') {
-        if(suffix !== '') {
+        if (suffix !== '') {
             suffix = '-' + suffix;
         }
 
-        let logPath = path.join(this.appDir, 'logs', 'connection-files-log' + suffix + '.txt');
-
+        let logPath = path.join(this.appDir, 'connection-files-log' + suffix + '.txt');
         fs.writeFileSync(logPath, files);
-    }
-
-    /**
-     * Save connection error log
-     *
-     * @param message
-     */
-    saveConnectionErrorLog(message) {
-        let logPath = path.join(this.appDir, 'logs', 'connection-error-log.txt');
-
-        fs.writeFileSync(logPath, message);
     }
 }
 

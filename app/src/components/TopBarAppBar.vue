@@ -5,7 +5,7 @@
             ref="minimize"
             class="appbar-button appbar-minimize">
             <icon
-                size="xxs"
+                size="xxxs"
                 name="win-minimize" />
         </span>
 
@@ -15,7 +15,7 @@
             ref="maximize"
             class="appbar-button appbar-maximize">
             <icon
-                size="xxs"
+                size="xxxs"
                 name="win-maximize" />
         </span>
 
@@ -25,7 +25,7 @@
             ref="unmaximize"
             class="appbar-button appbar-unmaximize">
             <icon
-                size="xxs"
+                size="xxxs"
                 name="win-expand" />
         </span>
 
@@ -34,7 +34,7 @@
             ref="close"
             class="appbar-button appbar-close">
             <icon
-                size="xxs"
+                size="xxxs"
                 name="win-close" />
         </span>
     </div>
@@ -82,12 +82,12 @@ export default {
 .appbar {
     -webkit-app-region: drag; // necessary for making window draggable
     -webkit-user-select: none; // remove conflict with the text selection
-    background: $color-helper-8;
+    background: var(--border-light-color);
     height: 2.2rem;
     padding: 0;
     position: relative;
     text-align: right;
-    z-index: 103;
+    z-index: 999999;
 
     &-button {
         display: none;
@@ -95,24 +95,24 @@ export default {
 }
 
 body[data-os="win"] {
-    .appbar {
-        height: 3.6rem;
+    .appbar {        
 
         &-button {
             -webkit-app-region: no-drag; // Make the buttons clickable again
             display: inline-block;
-            height: 3.6rem;
-            padding: 1.2rem 0.75rem;
+            height: 2.2rem;
+            padding: 6px 0.75rem;
             vertical-align: top;
-            width: 3.8rem;
+            width: 2.4rem;
 
             & > svg {
                 display: block;
+                fill: var(--icon-tertiary-color);
                 margin: 0 auto;
             }
 
             &:hover {
-                background: $color-8;
+                background: var(--input-border-color);                
             }
         }
 
@@ -125,10 +125,10 @@ body[data-os="win"] {
 
         &-close {
             &:hover {
-                background: $color-3;
+                background: var(--warning);
 
                 & > svg {
-                    fill: $color-10;
+                    fill: var(--white);
                 }
             }
         }

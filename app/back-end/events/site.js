@@ -22,10 +22,11 @@ class SiteEvents {
         /*
          * Reload site config and data
          */
-        ipcMain.on('app-site-reload', function(event, config) {
-            appInstance.reloadSite(config.siteName).then(result => {
-                event.sender.send('app-site-reloaded', result);
-            });
+        ipcMain.on('app-site-reload', (event, config) => {
+            let result = appInstance.reloadSite(config.siteName);
+            let language = this.getSiteLanguage(appInstance, config.siteName);
+            this.setSpellcheckerLanguage (appInstance, language);
+            event.sender.send('app-site-reloaded', result);
         });
 
         /*
@@ -34,7 +35,7 @@ class SiteEvents {
         ipcMain.on('app-site-config-save', async function (event, config) {
             let siteName = '';
             let siteNames = Object.keys(appInstance.sites);
-            let themeChanged = false;
+            let thumbnailsRegenerateRequired = false;
 
             if (siteNames.indexOf(config.site) !== -1) {
                 siteName = config.site;
@@ -103,183 +104,215 @@ class SiteEvents {
 
             // Check for empty names
             if (
-                siteName !== '' &&
-                config.settings.name !== ''
+                siteName === '' ||
+                config.settings.name === ''
             ) {
-                let configFile = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
-                let oldConfig = fs.readFileSync(configFile, 'utf8');
-                let themesPath = path.join(appInstance.sitesDir, siteName, 'input', 'themes');
-                let newThemeConfig = {};
-                oldConfig = JSON.parse(oldConfig);
-
-                if (config.settings.theme === '' && oldConfig.theme) {
-                    config.settings.theme = oldConfig.theme;
-                } else {
-                    let themes = new Themes(appInstance, {
-                        site: siteName
-                    });
-
-                    if(self.prepareThemeName(config.settings.theme) !== oldConfig.theme) {
-                        themeChanged = true;
-                    }
-
-                    config.settings.theme = themes.changeTheme(config.settings.theme, oldConfig.theme);
-                    let themeConfigPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'theme.config.json');
-                    let themePath = path.join(themesPath, config.settings.theme);
-                    newThemeConfig = Themes.loadThemeConfig(themeConfigPath, themePath);
-                }
-
-                if(
-                    config.settings.advanced &&
-                    config.settings.advanced.ampImage &&
-                    config.settings.advanced.ampImage !== ''
-                ) {
-                    let filename = path.parse(config.settings.advanced.ampImage);
-                    config.settings.advanced.ampImage = filename.base;
-                }
-
-                if(
-                    config.settings.advanced &&
-                    config.settings.advanced.openGraphImage &&
-                    config.settings.advanced.openGraphImage !== ''
-                ) {
-                    let filename = path.parse(config.settings.advanced.openGraphImage);
-                    config.settings.advanced.openGraphImage = filename.base;
-                }
-
-                let passwordData = false;
-                let passphraseData = false;
-                let s3IdData = false;
-                let s3KeyData = false;
-                let ghTokenData = false;
-                let glTokenData = false;
-                let netlifyIdData = false;
-                let netlifyTokenData = false;
-
-                // Save the password in the keychain
-                if(passwordSafeStorage) {
-                    if(config.settings.deployment.password !== '') {
-                        passwordData = await self.loadPassword(
-                            config.settings,
-                            'publii',
-                            config.settings.deployment.password
-                        );
-                        config.settings.deployment.password = passwordData.toSave;
-                    }
-
-                    if(config.settings.deployment.passphrase !== '') {
-                        passphraseData = await self.loadPassword(
-                            config.settings,
-                            'publii-passphrase',
-                            config.settings.deployment.passphrase
-                        );
-                        config.settings.deployment.passphrase = passphraseData.toSave;
-                    }
-
-                    if(config.settings.deployment.s3.id !== '' && config.settings.deployment.s3.key !== '') {
-                        s3IdData = await self.loadPassword(
-                            config.settings,
-                            'publii-s3-id',
-                            config.settings.deployment.s3.id
-                        );
-                        s3KeyData = await self.loadPassword(
-                            config.settings,
-                            'publii-s3-key',
-                            config.settings.deployment.s3.key
-                        );
-                        config.settings.deployment.s3.id = s3IdData.toSave;
-                        config.settings.deployment.s3.key = s3KeyData.toSave;
-                    }
-
-                    if(config.settings.deployment.github.token !== '') {
-                        ghTokenData = await self.loadPassword(
-                            config.settings,
-                            'publii-gh-token',
-                            config.settings.deployment.github.token
-                        );
-                        config.settings.deployment.github.token = ghTokenData.toSave;
-                    }
-
-                    if(config.settings.deployment.gitlab.token !== '') {
-                        glTokenData = await self.loadPassword(
-                            config.settings,
-                            'publii-gl-token',
-                            config.settings.deployment.gitlab.token
-                        );
-                        config.settings.deployment.gitlab.token = glTokenData.toSave;
-                    }
-
-                    if(config.settings.deployment.netlify.id !== '' && config.settings.deployment.netlify.token !== '') {
-                        netlifyIdData = await self.loadPassword(
-                            config.settings,
-                            'publii-netlify-id',
-                            config.settings.deployment.netlify.id
-                        );
-                        netlifyTokenData = await self.loadPassword(
-                            config.settings,
-                            'publii-netlify-token',
-                            config.settings.deployment.netlify.token
-                        );
-                        config.settings.deployment.netlify.id = netlifyIdData.toSave;
-                        config.settings.deployment.netlify.token = netlifyTokenData.toSave;
-                    }
-                }
-
-                // Save config
-                fs.writeFileSync(configFile, JSON.stringify(config.settings, null, 4));
-
-                if(passwordData && passwordData.newPassword) {
-                    config.settings.deployment.password = passwordData.newPassword;
-                }
-
-                if(passphraseData && passphraseData.newPassword) {
-                    config.settings.deployment.passphrase = passphraseData.newPassword;
-                }
-
-                if(s3IdData && s3IdData.newPassword) {
-                    config.settings.deployment.s3.id = s3IdData.newPassword;
-                }
-
-                if(s3KeyData && s3KeyData.newPassword) {
-                    config.settings.deployment.s3.key = s3KeyData.newPassword;
-                }
-
-                if(ghTokenData && ghTokenData.newPassword) {
-                    config.settings.deployment.github.token = ghTokenData.newPassword;
-                }
-
-                if(netlifyIdData && netlifyIdData.newPassword) {
-                    config.settings.deployment.netlify.id = netlifyIdData.newPassword;
-                }
-
-                if(netlifyTokenData && netlifyTokenData.newPassword) {
-                    config.settings.deployment.netlify.token = netlifyTokenData.newPassword;
-                }
-
-                appInstance.sites[config.settings.name] = config.settings;
-
-                // Send success message
-                event.sender.send('app-site-config-saved', {
-                    status: true,
-                    siteName: siteName,
-                    message: 'success-save',
-                    themeName: config.settings.theme,
-                    newThemeConfig: newThemeConfig,
-                    themeChanged: themeChanged
-                });
-            } else {
                 event.sender.send('app-site-config-saved', {
                     status: false,
                     message: 'empty-name'
                 });
+
+                return;
             }
+
+            let configFile = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
+            let oldConfig = fs.readFileSync(configFile, 'utf8');
+            let themesPath = path.join(appInstance.sitesDir, siteName, 'input', 'themes');
+            let newThemeConfig = {};
+            oldConfig = JSON.parse(oldConfig);
+
+            if (config.settings.theme === '' && oldConfig.theme) {
+                config.settings.theme = oldConfig.theme;
+            } else {
+                let themes = new Themes(appInstance, {
+                    site: siteName
+                });
+
+                if(self.prepareThemeName(config.settings.theme) !== oldConfig.theme) {
+                    thumbnailsRegenerateRequired = true;
+                }
+
+                config.settings.theme = themes.changeTheme(config.settings.theme, oldConfig.theme);
+                let themeConfigPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'theme.config.json');
+                let themePath = path.join(themesPath, config.settings.theme);
+                newThemeConfig = Themes.loadThemeConfig(themeConfigPath, themePath);
+            }
+
+
+            if (
+                (oldConfig.advanced && oldConfig.advanced.responsiveImages !== config.settings.advanced.responsiveImages) ||
+                (oldConfig.advanced && oldConfig.advanced.imagesQuality !== config.settings.advanced.imagesQuality)
+            ) {
+                thumbnailsRegenerateRequired = true;
+            }
+
+            if(
+                config.settings.advanced &&
+                config.settings.advanced.ampImage &&
+                config.settings.advanced.ampImage !== ''
+            ) {
+                let filename = path.parse(config.settings.advanced.ampImage);
+                config.settings.advanced.ampImage = filename.base;
+            }
+
+            if(
+                config.settings.advanced &&
+                config.settings.advanced.openGraphImage &&
+                config.settings.advanced.openGraphImage !== ''
+            ) {
+                let filename = path.parse(config.settings.advanced.openGraphImage);
+                config.settings.advanced.openGraphImage = filename.base;
+            }
+
+            let passwordData = false;
+            let passphraseData = false;
+            let s3IdData = false;
+            let s3KeyData = false;
+            let ghTokenData = false;
+            let glTokenData = false;
+            let netlifyIdData = false;
+            let netlifyTokenData = false;
+
+            // Save the password in the keychain
+            if (passwordSafeStorage) {
+                if (
+                    config.settings.deployment.password !== '' && 
+                    config.settings.deployment.password !== 'publii ' + slug(config.settings.name)
+                ) {
+                    passwordData = await self.loadPassword(
+                        config.settings,
+                        'publii',
+                        config.settings.deployment.password
+                    );
+                    config.settings.deployment.password = passwordData.toSave;
+                }
+
+                if (
+                    config.settings.deployment.passphrase !== '' && 
+                    config.settings.deployment.passphrase !== 'publii-passphrase ' + slug(config.settings.name)
+                ) {
+                    passphraseData = await self.loadPassword(
+                        config.settings,
+                        'publii-passphrase',
+                        config.settings.deployment.passphrase
+                    );
+                    config.settings.deployment.passphrase = passphraseData.toSave;
+                }
+
+                if (
+                    config.settings.deployment.s3.id !== '' && 
+                    config.settings.deployment.s3.key !== '' && 
+                    config.settings.deployment.s3.id !== 'publii-s3-id ' + slug(config.settings.name)
+                ) {
+                    s3IdData = await self.loadPassword(
+                        config.settings,
+                        'publii-s3-id',
+                        config.settings.deployment.s3.id
+                    );
+                    s3KeyData = await self.loadPassword(
+                        config.settings,
+                        'publii-s3-key',
+                        config.settings.deployment.s3.key
+                    );
+                    config.settings.deployment.s3.id = s3IdData.toSave;
+                    config.settings.deployment.s3.key = s3KeyData.toSave;
+                }
+
+                if (
+                    config.settings.deployment.github.token !== '' &&
+                    config.settings.deployment.github.token !== 'publii-gh-token ' + slug(config.settings.name)
+                ) {
+                    ghTokenData = await self.loadPassword(
+                        config.settings,
+                        'publii-gh-token',
+                        config.settings.deployment.github.token
+                    );
+                    config.settings.deployment.github.token = ghTokenData.toSave;
+                }
+
+                if (
+                    config.settings.deployment.gitlab.token !== '' && 
+                    config.settings.deployment.gitlab.token !== 'publii-gl-token ' + slug(config.settings.name)
+                ) {
+                    glTokenData = await self.loadPassword(
+                        config.settings,
+                        'publii-gl-token',
+                        config.settings.deployment.gitlab.token
+                    );
+                    config.settings.deployment.gitlab.token = glTokenData.toSave;
+                }
+
+                if (
+                    config.settings.deployment.netlify.id !== '' && 
+                    config.settings.deployment.netlify.token !== '' &&
+                    config.settings.deployment.netlify.token !== 'publii-netlify-token ' + slug(config.settings.name)
+                ) {
+                    netlifyIdData = await self.loadPassword(
+                        config.settings,
+                        'publii-netlify-id',
+                        config.settings.deployment.netlify.id
+                    );
+                    netlifyTokenData = await self.loadPassword(
+                        config.settings,
+                        'publii-netlify-token',
+                        config.settings.deployment.netlify.token
+                    );
+                    config.settings.deployment.netlify.id = netlifyIdData.toSave;
+                    config.settings.deployment.netlify.token = netlifyTokenData.toSave;
+                }
+            }
+
+            // Save config
+            fs.writeFileSync(configFile, JSON.stringify(config.settings, null, 4));
+
+            if(passwordData && passwordData.newPassword) {
+                config.settings.deployment.password = passwordData.newPassword;
+            }
+
+            if(passphraseData && passphraseData.newPassword) {
+                config.settings.deployment.passphrase = passphraseData.newPassword;
+            }
+
+            if(s3IdData && s3IdData.newPassword) {
+                config.settings.deployment.s3.id = s3IdData.newPassword;
+            }
+
+            if(s3KeyData && s3KeyData.newPassword) {
+                config.settings.deployment.s3.key = s3KeyData.newPassword;
+            }
+
+            if(ghTokenData && ghTokenData.newPassword) {
+                config.settings.deployment.github.token = ghTokenData.newPassword;
+            }
+
+            if(netlifyIdData && netlifyIdData.newPassword) {
+                config.settings.deployment.netlify.id = netlifyIdData.newPassword;
+            }
+
+            if(netlifyTokenData && netlifyTokenData.newPassword) {
+                config.settings.deployment.netlify.token = netlifyTokenData.newPassword;
+            }
+
+            appInstance.sites[config.settings.name] = config.settings;
+
+            // Send success message
+            event.sender.send('app-site-config-saved', {
+                status: true,
+                siteName: siteName,
+                message: 'success-save',
+                themeName: config.settings.theme,
+                newThemeConfig: newThemeConfig,
+                thumbnailsRegenerateRequired: thumbnailsRegenerateRequired
+            });
         });
 
         /*
          * Switch website
          */
-        ipcMain.on('app-site-switch', function (event, config) {
+        ipcMain.on('app-site-switch', (event, config) => {
             let result = appInstance.switchSite(config.site);
+            let language = this.getSiteLanguage(appInstance, config.siteName);
+            this.setSpellcheckerLanguage (appInstance, language);
             event.sender.send('app-site-switched', result);
         });
 
@@ -322,8 +355,24 @@ class SiteEvents {
          */
         ipcMain.on('app-site-create', function (event, config, authorName) {
             config.name = slug(config.name);
+
+            if (config.name.trim() === '') {
+                event.sender.send('app-site-creation-error', {
+                    name: config.name.trim() === '',
+                    author: slug(authorName).trim() === ''
+                });
+
+                return;
+            }
+
             let site = new Site(appInstance, config);
             let result = site.create(authorName);
+
+            if (result === false) {
+                event.sender.send('app-site-creation-duplicate');
+                return;
+            }
+
             config.theme = 'simple';
             appInstance.sites[config.name] = config;
 
@@ -337,13 +386,11 @@ class SiteEvents {
 
             appInstance.db = new sqlite(dbPath);
 
-            if(result !== false) {
-                result = {
-                    siteConfig: appInstance.sites[config.name],
-                    siteDir: siteDir,
-                    authorName: authorName
-                }
-            }
+            result = {
+                siteConfig: appInstance.sites[config.name],
+                siteDir: siteDir,
+                authorName: authorName
+            };
 
             event.sender.send('app-site-created', result);
         });
@@ -380,8 +427,15 @@ class SiteEvents {
         ipcMain.on('app-site-delete', function (event, config) {
             Site.delete(appInstance, config.site);
             delete appInstance.sites[config.site];
-
             event.sender.send('app-site-deleted', true);
+        });
+
+        /*
+         * Clone website
+         */
+        ipcMain.on('app-site-clone', function (event, config) {
+            let clonedWebsiteData = Site.clone(appInstance, config.catalogName, config.siteName);
+            event.sender.send('app-site-cloned', clonedWebsiteData);
         });
 
         /*
@@ -418,7 +472,11 @@ class SiteEvents {
             let existingPassword = await passwordSafeStorage.getPassword(type, account);
 
             if (newPassword !== '') {
-                await passwordSafeStorage.setPassword(type, account, newPassword);
+                if (newPassword === 'publii ' + account) {
+                    newPassword = existingPassword;
+                } else {
+                    await passwordSafeStorage.setPassword(type, account, newPassword);
+                }
             } else if (existingPassword !== null) {
                 // Remove the password from the storage if it still exists
                 // and user provided an empty password now
@@ -437,6 +495,55 @@ class SiteEvents {
             newPassword: '',
             toSave: ''
         };
+    }
+
+    getSiteLanguage (appInstance, siteName) {
+        if (process.platform === 'darwin' || !siteName) {
+            return 'null';
+        }
+
+        let configPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
+        let config = fs.readFileSync(configPath, 'utf8');
+        
+        try {
+            config = JSON.parse(config);
+
+            if (config.language) {
+                if (config.language === 'custom') {
+                    return config.customLanguage;
+                }
+
+                return config.language;
+            }
+        } catch (e) {
+            console.log('(!) An error occurred during detecting site language');
+        }
+
+        return 'null';
+    }
+
+    setSpellcheckerLanguage (appInstance, language) {
+        if (process.platform === 'darwin') {
+            return;
+        }
+
+        let availableLanguages = appInstance.mainWindow.webContents.session.availableSpellCheckerLanguages;
+        language = language.toLocaleLowerCase();
+
+        if (availableLanguages.indexOf(language) > -1) {
+            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            return;
+        }
+
+        language = language.split('-');
+        language = language[0];
+
+        if (availableLanguages.indexOf(language) > -1) {
+            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            return;
+        }
+
+        console.log('(!) Unable to set spellchecker to use selected language - ' + language);
     }
 }
 

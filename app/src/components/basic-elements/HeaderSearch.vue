@@ -2,7 +2,6 @@
     <div :class="cssClasses">
         <icon
             size="xs"
-            primaryColor="color-5"
             name="magnifier-small"
             @click.native="open" />
 
@@ -10,6 +9,7 @@
             type="search"
             v-model="value"
             :placeholder="placeholder"
+            :spellcheck="$store.state.currentSite.config.spellchecking"
             ref="input-field"
             @keyup="updateValue" />
 
@@ -87,11 +87,16 @@ export default {
 
     & > svg {
         cursor: pointer;
+        fill: var(--icon-primary-color);
         left: 1.5rem;
         position: absolute;
         top: 1.4rem;
-        transition: all .25s ease-out;
+        transition: var(--transition);
         z-index: 1;
+        
+        &:hover {
+            fill: var(--icon-tertiary-color);
+        }
     }
 
     & > input { 
@@ -105,7 +110,7 @@ export default {
         pointer-events: none;
         position: relative;
         top: -0.125rem;
-        transition: all .25s ease-out;
+        transition: var(--transition);
         transform: scaleX(.25);
         transform-origin: left center;
         width: calc(100% - 3rem); 
@@ -114,12 +119,12 @@ export default {
     & > span {
         animation: close-delay .3s ease-out .3s forwards;
         border-radius: 50%;
-        color: $color-7;
+        color: var(--icon-secondary-color);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
         height: 3rem;
-        line-height: 1.1;       
+        line-height: 1;       
         opacity: 0;
         padding: 0;
         position: absolute;
@@ -134,21 +139,26 @@ export default {
         &:active,
         &:focus,
         &:hover {
-            color: $color-4;
+            color: var(--icon-tertiary-color);
         }
         
         &:hover {
-            background: $color-helper-8;
+            background: var(--input-border-color);
         }
     }
 
     &.is-opened {
         & > svg {
             left: 3rem;
+            cursor: default;
+            
+            &:hover {
+                fill: var(--icon-primary-color);
+            }
         }
 
         & > input {
-            background: $color-9;           
+            background: var(--input-bg-light);           
             opacity: 1;
             pointer-events: auto;
             transform: scaleX(1);

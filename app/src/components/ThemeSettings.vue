@@ -14,13 +14,14 @@
                     Save Settings
                 </p-button>
 
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    defaultValue="full-site" />
             </p-header>
 
             <fields-group title="Basic settings">
@@ -31,7 +32,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.postsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -41,7 +49,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.tagsPostsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all tag posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -51,7 +66,14 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="-1"
+                        step="1"
                         v-model="basic.authorsPostsPerPage" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        Use -1 as value if you need to display all authors posts on page.
+                    </small>
                 </field>
 
                 <field
@@ -61,6 +83,8 @@
                         slot="field"
                         ref="name"
                         type="number"
+                        min="0"
+                        step="1"
                         v-model="basic.excerptLength" />
                 </field>
 
@@ -83,7 +107,7 @@
                         v-for="(groupName, index) of customSettingsTabs"
                         :slot="'tab-' + index"
                         :key="'tab-' + index">
-                        <div v-if="groupName !== 'Post options'">
+                        <div v-if="groupName !== 'Post options' && groupName !== 'Translations'">
                             <field
                                 v-for="(field, subindex) of getFieldsByGroupName(groupName)"
                                 v-if="checkDependencies(field.dependencies)"
@@ -97,6 +121,7 @@
                                     :max="field.max"
                                     :step="field.step"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field"></range-slider>
 
                                 <separator
@@ -104,6 +129,7 @@
                                     slot="field"
                                     :type="field.size"
                                     :label="field.label"
+                                    :anchor="field.anchor"
                                     :note="field.note"></separator>
 
                                 <text-area
@@ -111,6 +137,8 @@
                                     slot="field"
                                     :rows="field.rows"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :cols="field.cols"></text-area>
 
                                 <text-area
@@ -118,17 +146,20 @@
                                     slot="field"
                                     :id="'theme-settings-' + index"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     :wysiwyg="true"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"
                                     v-model="custom[field.name]"
                                     slot="field"
+                                    :anchor="field.anchor"
                                     :addMediaFolderPath="true"></image-upload>
 
                                 <small-image-upload
                                     v-if="field.type === 'smallupload'"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field"></small-image-upload>
 
                                 <radio-buttons
@@ -136,6 +167,7 @@
                                     :items="field.options"
                                     :name="field.name"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     slot="field" />
 
                                 <dropdown
@@ -143,18 +175,21 @@
                                     slot="field"
                                     :multiple="field.multiple"
                                     v-model="custom[field.name]"
+                                    :id="field.anchor"
                                     :items="getDropdownOptions(field.options)"></dropdown>
 
                                 <switcher
                                     v-if="field.type === 'checkbox'"
                                     v-model="custom[field.name]"
                                     :lower-zindex="true"
+                                    :anchor="field.anchor"
                                     slot="field"></switcher>
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     v-model="custom[field.name]"
                                     :data-field="field.name"
+                                    :anchor="field.anchor"
                                     slot="field"></color-picker>
 
                                 <posts-dropdown
@@ -162,18 +197,21 @@
                                     v-model="custom[field.name]"
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
+                                    :anchor="field.anchor"
                                     slot="field"></authors-dropdown>
 
                                 <text-input
@@ -185,7 +223,9 @@
                                     :size="field.size"
                                     :step="field.step"
                                     :pattern="field.pattern"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="custom[field.name]"
+                                    :anchor="field.anchor"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small
@@ -202,7 +242,7 @@
                                 <small
                                     slot="note"
                                     class="note">
-                                    The Post options section allows you to set global options for what extra information should be included in your posts. Changes made in this section will affect all posts on your site, but you can also override the global settings on the Post Edit screen for each individual post if necessary.<br><br>
+                                    The Post options section allows you to set global options for what extra information should be included in your posts. Changes made in this section will affect all posts on your site, but you can also override the App Settings on the Post Edit screen for each individual post if necessary.<br><br>
                                 </small>
                             </field>
 
@@ -239,13 +279,15 @@
                                     v-if="field.type === 'text' || field.type === 'number'"
                                     :type="field.type"
                                     slot="field"
-                                    placeholder="Leave it blank to use default value"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
                                     v-model="postView[field.name]" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
-                                    placeholder="Leave it blank to use default value"
+                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="postView[field.name]" />
 
                                 <color-picker
@@ -262,18 +304,30 @@
                                 </small>
                             </field>
                         </div>
+
+                        <div v-if="groupName === 'Translations'">
+                            <field>
+                                <small
+                                    slot="note"
+                                    class="note">
+                                    If you need to translate theme phrases to languages other than english - please check our documentation regarding <a href="https://getpublii.com/dev/translations-api/" target="_blank" rel="noopener">Translations API</a><br><br>
+                                </small>
+                            </field>
+                        </div>
                     </div>
                 </tabs>
             </fields-group>
 
             <p-footer>
-                <p-button
-                    @click.native="saveAndPreview"
+                <btn-dropdown
                     slot="buttons"
-                    type="primary"
-                    :disabled="!siteHasTheme || buttonsLocked">
-                    Save &amp; Preview
-                </p-button>
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    :isReversed="true"
+                    defaultValue="full-site" />
 
                 <p-button
                     @click.native="save"
@@ -292,20 +346,6 @@
                 </p-button>
             </p-footer>
         </div>
-
-        <empty-state
-            v-if="!siteHasTheme"
-            imageName="theme.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="You haven't selected any theme"
-            description="Please go to the Settings and select the theme first.">
-            <p-button
-                slot="button"
-                :onClick="goToSettings">
-                Go to settings
-            </p-button>
-        </empty-state>
     </section>
 </template>
 
@@ -313,7 +353,6 @@
 import fs from 'fs';
 import Vue from 'vue';
 import { ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
 import PostsDropDown from './basic-elements/PostsDropDown';
 import TagsDropDown from './basic-elements/TagsDropDown';
 import AuthorsDropDown from './basic-elements/AuthorsDropDown';
@@ -326,9 +365,6 @@ export default {
         'posts-dropdown': PostsDropDown,
         'tags-dropdown': TagsDropDown
     },
-    mixins: [
-        ExternalLinks
-    ],
     data: function() {
         return {
             buttonsLocked: false,
@@ -360,21 +396,39 @@ export default {
             });
 
             tabs.push('Post options');
+            tabs.push('Translations');
 
             return tabs;
         },
         postViewThemeSettings () {
-            return this.$store.state.currentSite.themeSettings.postConfig;
+            return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');
         },
         postTemplates () {
             return this.$store.state.currentSite.themeSettings.postTemplates;
         },
         hasPostTemplates () {
             return !!Object.keys(this.postTemplates).length;
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Render full website',
+                    activeLabel: 'Save & Preview',
+                    value: 'full-site',
+                    isVisible: () => true,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: 'Render front page only',
+                    activeLabel: 'Save & Preview',
+                    value: 'homepage',
+                    icon: 'quick-preview',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                }
+            ]
         }
-    },
-    beforeMount () {
-
     },
     mounted () {
         setTimeout (() => {
@@ -534,14 +588,14 @@ export default {
                 this.saveSettings(false);
             }, 500);
         },
-        saveAndPreview () {
+        saveAndPreview (renderingType = false) {
             this.$bus.$emit('theme-settings-before-save');
 
             setTimeout(() => {
-                this.saveSettings(true);
+                this.saveSettings(true, renderingType);
             }, 500);
         },
-        saveSettings(showPreview = false) {
+        saveSettings(showPreview = false, renderingType = false) {
             let newConfig = {
                 config: Object.assign({}, this.basic),
                 customConfig: Object.assign({}, this.custom),
@@ -559,7 +613,7 @@ export default {
             // Settings saved
             ipcRenderer.once('app-site-theme-config-saved', (event, data) => {
                 if (data.status === true) {
-                    this.savedSettings(showPreview);
+                    this.savedSettings(showPreview, renderingType);
                     this.$store.commit('setThemeConfig', data);
                     this.$bus.$emit('message-display', {
                         message: 'Theme settings has been successfully saved.',
@@ -571,12 +625,12 @@ export default {
                 this.loadSettings();
             });
         },
-        savedSettings(showPreview = false) {
+        savedSettings(showPreview = false, renderingType = false) {
             if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                        okLabel: 'Go to application settings',
+                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                        okLabel: 'Go to app settings',
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -584,7 +638,13 @@ export default {
                     return;
                 }
 
-                this.$bus.$emit('rendering-popup-display');
+                if (renderingType === 'homepage') {
+                    this.$bus.$emit('rendering-popup-display', {
+                        homepageOnly: true
+                    });
+                } else {
+                    this.$bus.$emit('rendering-popup-display');
+                }
             }
         },
         reset () {
@@ -626,7 +686,8 @@ export default {
 
 .theme-settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
+    user-select: none;
 
     .multiple-checkboxes {
         label {

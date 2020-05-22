@@ -14,7 +14,7 @@
             @click.prevent.stop="syncWebsite"
         >
             <span v-html="icon" class="sidebar-sync-link-icon"></span>
-            {{ status }}
+            <span>{{ status }}</span>
         </a>
 
         <sub
@@ -127,8 +127,8 @@ export default {
 
             if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The preview catalog does not exist. Please go to the Application Settings and select the correct preview directory first.',
-                    okLabel: 'Go to application settings',
+                    message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
+                    okLabel: 'Go to app settings',
                     okClick: () => {
                         this.$router.push(`/app-settings/`);
                     }
@@ -188,57 +188,53 @@ export default {
 
 .sidebar {
     &-sync {
-        bottom: 5rem;
-        left: 5rem;
+        bottom: 3rem;
+        left: 4rem;
         position: absolute;
-        right: 5rem;
+        right: 4rem;
 
         &-icon {
-            fill: $color-10;
-            float: left;
-            margin-top: .2rem;
-            transform-origin: 59% 51%;
-            width: 2rem;
+            fill: var(--white);           
         }
 
         & > sub {
-            color: rgba(255, 255, 255, .75);
+            color: var(--sidebar-link-color);
             display: block;
             font-size: 1.3rem;
             letter-spacing: .5px;
             margin: 0 -2.5rem;
+            opacity: var(--sidebar-link-opacity);
             padding: 1.5rem 0 1rem 0;
             text-align: center;
-            width: calc(100% + 5rem);
+            width: calc(100% + 4rem);
         }
 
         &-link {
-            background: rgba($color-10, .18);
+            align-items: center;
+            background: var(--sidebar-sync-btn-bg);
             border-radius: 3px;
-            color: $color-10;
-            display: block;
+            color: var(--sidebar-sync-btn-color);
+            display: flex;
             font-size: 1.6rem;
             font-weight: 500;
-            padding: 1.4rem 2.4rem 1.4rem 6.5rem;
+            justify-content: center;
+            padding: 1.4rem 2.4rem;
             position: relative;  
             
             // sync cloud icon
             .sidebar-sync-icon {
-                height: 2.2rem;
-                left: 2.05rem;
-                position: absolute;   
-                top: 50%;
-                transform: translate(0, -50%);
+                height: 2.2rem;  
+                display: inherit;
                 width: 3rem;
 
                 path {
-                    fill: $color-10;
-                    transition: all .25s ease-out;
+                    fill: var(--white);
+                    transition: var(--transition);
                 }
 
                 polygon {
-                    fill: $color-1;
-                    transition: all .25s ease-out;
+                    fill: var(--primary-color);
+                    transition: var(--transition);
                 }
             }
 
@@ -246,7 +242,7 @@ export default {
             &:focus .sidebar-sync-icon,
             &:hover .sidebar-sync-icon {
                 path {
-                    fill: $color-10;
+                    fill: var(--white);
                 }
 
                 polygon {
@@ -264,16 +260,12 @@ export default {
             
             // interjection mark icon
             .sidebar-interjection-icon {
-                height: 2.3rem;
-                left: 2.05rem;
-                margin-top: 0;
-                position: absolute;   
-                top: 50%;
-                transform: translate(0, -50%);
+                display: block;
+                height: 2.3rem;                
                 width: 2.4rem;
 
                 path {
-                    fill: $color-10;                   
+                    fill: var(--white);                   
                 }
             }
 
@@ -281,7 +273,7 @@ export default {
             &:focus,
             &:hover {
                 background: $color-helper-6;
-                color: $color-10;
+                color: var(--white);
 
                 .sidebar-sync-icon {
                     fill: $color-helper-6;
@@ -289,12 +281,10 @@ export default {
             }
             
             &-icon {               
-                display: inline-block;
-                height: 100%;               
-                left: 0; 
-                position: absolute;
-                top: 0; 
-                width: 100%;
+                display: block;
+                height: 100%;  
+                margin-right: 1.2rem;
+                width: auto;
             }
         }
 
@@ -307,20 +297,16 @@ export default {
         &-noftp {}
         
         &-preparing { 
-            display: inline-block;            
-            left: 2.5rem;    
-            height: 2.1rem;
-            position: absolute;   
-            top: 50%;
-            transform: translate(0, -50%);
+            display: block;              
+            height: 2.1rem;           
             width: 2.1rem;
             
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba($color-10, 0.2);
-                border-right: 2px solid rgba($color-10, 0.2);
-                border-bottom: 2px solid rgba($color-10, 0.2);
-                border-left: 2px solid $color-10;
+                border-top: 2px solid rgba(255,255,255, .2);
+                border-right: 2px solid rgba(255,255,255, .2);
+                border-bottom: 2px solid rgba(255,255,255, .2);
+                border-left: 2px solid var(--white);
                 border-radius: 50%;
                 display: inline-block;   
                 height: 2.1rem;
@@ -336,9 +322,9 @@ export default {
     }
 
     &-preview-link {
-        border: 2px solid rgba(255, 255, 255, 0.38);
+        border: 2px solid var(--sidebar-preview-btn-border-color);
         border-radius: 3px;
-        color: $color-10!important;
+        color: var(--sidebar-preview-btn-color) !important;
         display: block;
         margin-bottom: 1rem;
         padding: 1.2rem 2.4rem;
@@ -350,8 +336,8 @@ export default {
         }
 
         &:hover {
-            border-color: $color-10;
-            color: $color-10!important;
+            border-color: var(--sidebar-preview-btn-border-hover-color) !important;
+            color: var(--sidebar-preview-btn-hover-color) !important;
         }
 
         &.is-disabled {
@@ -375,19 +361,6 @@ export default {
 @keyframes spin {
     100% {
         transform: rotate(360deg);
-    }
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 736px), (min-height: 737px) and (max-height: 900px), (max-width: 1400px) {
-    .sidebar {
-        &-sync {
-            bottom: 3rem;
-            left: 4rem;
-            right: 4rem;
-        }
     }
 }
 </style>

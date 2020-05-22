@@ -1,5 +1,5 @@
 .overlay {
-    background-color: rgba(0, 0, 0, 0.35);
+    background: var(--overlay);
     bottom: 0;
     display: block;
     height: auto;
@@ -10,12 +10,53 @@
     text-align: center;
     top: 0;
     z-index: 100002;
+    
+    &.as-page {
+       background: var(--bg-primary);
+       height: 100vh;   
+       padding: 4.4rem 3.2rem;
+       pointer-events: auto;   
+       width: 100vw;    
+        
+       h1 {
+          font-size: 2.2rem;
+          margin-bottom: 1.5rem;
+       }
+    }
 }
 
+.popup {
+    background-color: var(--popup-bg);
+    border: none;
+    border-radius: .6rem;
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 400;
+    left: 50%;  
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    user-select: none;
+}
+
+.message {
+    color: var(--text-primary-color);
+    font-weight: 400;
+    margin: 0;
+    padding: 4rem;
+    position: relative;
+    text-align: left;
+
+    &.text-centered {
+        text-align: center;
+    }
+}
 
 h1,
 h2 {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-size: 1.8rem;
     font-weight: 500;
     margin: 0 0 7rem 0;
@@ -29,8 +70,8 @@ h1 {
 
 body[data-os="win"] {
     .overlay {
-        height: calc(100% - 36px);
-        top: 36px;
+        height: calc(100% - 22px);
+        top: 22px;
     }
 }
 

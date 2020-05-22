@@ -1,5 +1,7 @@
 <template>
-    <div class="input-range-wrapper">
+    <div 
+        :id="anchor"
+        class="input-range-wrapper">
         <input
             type="range"
             v-model="content"
@@ -46,6 +48,10 @@ export default {
         'step': {
             default: '',
             type: [String, Number]
+        },
+        'anchor': {
+            default: '',
+            type: String
         }
     },
     watch: {
@@ -101,7 +107,7 @@ export default {
 
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
-            background: $color-1;
+            background: var(--primary-color);
             border: none;
             border-radius: 50%;
             box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
@@ -113,7 +119,7 @@ export default {
         }
 
         &::-webkit-slider-runnable-track {
-            background: $color-8;
+            background: var(--input-border-color);
             border: none;
             cursor: pointer;
             height: 2px;
@@ -122,7 +128,7 @@ export default {
         }
 
         &:focus::-webkit-slider-runnable-track {
-            background: rgba($color-1, .5);
+            background: rgba(var(--primary-color-rgb), .5);
             outline: none;
         }
     }

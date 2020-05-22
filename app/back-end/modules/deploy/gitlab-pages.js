@@ -7,17 +7,11 @@ const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const Gitlab = require('gitlab/dist/es5').default
-const list = require('ls-all');
-const crypto = require('crypto');
-const countFiles = require('count-files');
-const moment = require('moment');
-const normalizePath = require('normalize-path');
 
 class GitlabPages {
     constructor (deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
         this.repository = '';
         this.user = '';
         this.branch = '';
@@ -174,7 +168,7 @@ class GitlabPages {
         }).then(projects => {
             this.projectID = projects[0].id;
 
-            this.client.RepositoryFiles.showRaw(this.projectID, '/publii-files.json', this.branch).then(response => {
+            this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
                 fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), JSON.stringify(response), err => {
                     if (err) {
                         console.log('(!) An error occurred during writing files-remote.json file: ', err);
@@ -204,7 +198,7 @@ class GitlabPages {
                 console.log('(!) REMOTE FILE DOWNLOADED');
             }).catch(err => {
                 console.log('(!) REMOTE FILE NOT DOWNLOADED');
-                console.log('(!) ERROR WHILE DOWNLOADING files-remote.json: ', err.error);
+                console.log('(!) ERROR WHILE DOWNLOADING publii-files.json: ', err.error);
                 this.deployment.compareFilesList(false);
             });
         }).catch(err => {
@@ -586,11 +580,6 @@ class GitlabPages {
         }
 
         return true;
-    }
-
-    saveConnectionDebugLog () {
-        let logPath = path.join(this.deployment.appDir, 'logs', 'connection-debug-log.txt');
-        fs.writeFileSync(logPath, this.debugOutput.join("\n"));
     }
 }
 

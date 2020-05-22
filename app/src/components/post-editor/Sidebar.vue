@@ -1,5 +1,5 @@
 <template>
-    <div class="post-editor-sidebar">
+    <div :class="{ 'post-editor-sidebar': true, 'is-visible': isVisible }">
         <div>
             <div class="post-editor-sidebar-header">
                 Post settings
@@ -11,22 +11,10 @@
                     @click="openItem('status')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
                         name="sidebar-status"/>
 
                     <span class="post-editor-settings-label">Status</span>
-                    
-                    <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-                    
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -102,73 +90,72 @@
                                         </template>
 
                                         <template v-if="$parent.postData.creationDate.text">
-                                            Change custom post date 
+                                            Change post date 
 
                                             <small>
                                                 ({{ $parent.postData.creationDate.text }})
                                             </small>
-
-                                            <a 
-                                                href="#" 
+                                                
+                                            <span
                                                 class="post-date-reset"
                                                 @click.stop.prevent="resetCreationDate()">
-                                                
-                                                <icon
-                                                    size="m"
-                                                    name="sidebar-close"/>
-                                            </a>
+                                                &times;
+                                            </span>
+                                            
                                         </template>
                                     </a>
                                 </dd>
                             </dl>                        
                         </div>
 
-                        <label id="post-featured-wrapper">
-                            <switcher
-                                v-model="$parent.postData.isFeatured" />
-                            <span>
-                                Mark as featured 
-                            </span>
+                        <div class="post-action">
+                            <label id="post-featured-wrapper">
+                                <switcher
+                                    v-model="$parent.postData.isFeatured" />
+                                <span>
+                                    Mark as featured 
+                                </span>
 
-                            <icon
-                                title="Mark as featured"
-                                class="switcher-item-icon-helper"
-                                name="featured-post"
-                                size="xs"
-                                primaryColor="color-helper-1" />
-                        </label>
+                                <icon
+                                    title="Mark as featured"
+                                    class="switcher-item-icon-helper"
+                                    name="featured-post"
+                                    size="xs"
+                                    primaryColor="color-helper-1" />
+                            </label>
 
-                        <label id="post-hidden-wrapper">
-                            <switcher 
-                                title="Post will not appear in any generated post lists such as tag or author pages"
-                                v-model="$parent.postData.isHidden" />
-                            <span title="Post will not appear in any generated post lists such as tag or author pages">
-                                Hide post
-                            </span>
+                            <label id="post-hidden-wrapper">
+                                <switcher 
+                                    title="Post will not appear in any generated post lists such as tag or author pages"
+                                    v-model="$parent.postData.isHidden" />
+                                <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                    Hide post
+                                </span>
 
-                            <icon
-                                title="Hide Post"
-                                class="switcher-item-icon-helper"
-                                name="hidden-post"
-                                size="xs"
-                                primaryColor="color-6" />
-                        </label>
+                                <icon
+                                    title="Hide Post"
+                                    class="switcher-item-icon-helper"
+                                    name="hidden-post"
+                                    size="xs"
+                                    primaryColor="color-6" />
+                            </label>
 
-                        <label id="post-excluded-homepage-wrapper">
-                            <switcher 
-                                title="Post will not appear on homepage listing"
-                                v-model="$parent.postData.isExcludedOnHomepage" />
-                            <span title="Post will not appear on homepage listing">
-                                Exclude from homepage
-                            </span>
+                            <label id="post-excluded-homepage-wrapper">
+                                <switcher 
+                                    title="Post will not appear on homepage listing"
+                                    v-model="$parent.postData.isExcludedOnHomepage" />
+                                <span title="Post will not appear on homepage listing">
+                                    Exclude from homepage
+                                </span>
 
-                            <icon
-                                title="Exclude from homepage"
-                                class="switcher-item-icon-helper"
-                                name="excluded-post"
-                                size="xs"
-                                primaryColor="color-3"/>
-                        </label>
+                                <icon
+                                    title="Exclude from homepage"
+                                    class="switcher-item-icon-helper"
+                                    name="excluded-post"
+                                    size="xs"
+                                    primaryColor="color-3"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,22 +166,10 @@
                     @click="openItem('image')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
                         name="sidebar-image"/>
 
                     <span class="post-editor-settings-label">Featured image</span>
-
-                   <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -214,18 +189,21 @@
                             <label>Alternative text
                                 <text-input
                                     ref="featured-image-alt"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.alt" />
                             </label>
 
                             <label>Caption
                                 <text-input
                                     ref="featured-image-caption"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.caption" />
                             </label>
 
                             <label>Credits
                                 <text-input
                                     ref="featured-image-credits"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.credits" />
                             </label>
                         </div>
@@ -238,22 +216,10 @@
                         @click="openItem('tags')">
                         <icon
                             class="post-editor-settings-icon"
-                            size="m"
+                            size="s"
                             name="sidebar-tags"/>
 
                         <span class="post-editor-settings-label">Tags</span>
-
-                        <span
-                            class="post-editor-settings-icon-open"
-                            name="sidebar-arrow">                        
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-close"
-                            name="sidebar-arrow"
-                            @click.native="closeItem">
-                            &times;
-                        </span>
                     </div>
 
                     <div
@@ -310,7 +276,7 @@
                         @click="openItem('seo')">
                         <icon
                             class="post-editor-settings-icon"
-                            size="m"
+                            size="s"
                             name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">
@@ -321,18 +287,6 @@
                                 class="post-editor-settings-label-warning">
                                 Post slug is too long
                             </span>
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-open"
-                            name="sidebar-arrow">                        
-                        </span>
-
-                        <span
-                            class="post-editor-settings-icon-close"
-                            name="sidebar-arrow"
-                            @click.native="closeItem">
-                            &times;
                         </span>
                     </div>
 
@@ -347,6 +301,7 @@
                                     <input
                                         type="text"
                                         v-model="$parent.postData.slug"
+                                        spellcheck="false"
                                         @keyup="$parent.slugUpdated">
                                     <small 
                                         v-if="$parent.postData.slug.length > 250"
@@ -360,6 +315,7 @@
                                     <text-input
                                         type="text"
                                         v-model="$parent.postData.metaTitle"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         placeholder="Leave blank to use a default Page title"
                                         :charCounter="true"
                                         :preferredCount="70" />
@@ -371,16 +327,21 @@
                                     <text-area
                                         v-model="$parent.postData.metaDescription"
                                         :charCounter="true"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :preferredCount="160"></text-area>
                                 </label>
 
                                 <label>
                                     Meta robots index:
                                     <dropdown
+                                        v-if="!$parent.postData.canonicalUrl"
                                         id="post-meta-robots"
                                         v-model="$parent.postData.metaRobots"
                                         :items="metaRobotsOptions">
                                     </dropdown>
+                                    <div v-else>
+                                        <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                    </div>
                                 </label>
 
                                 <label>
@@ -388,6 +349,7 @@
                                     <input
                                         type="text"
                                         v-model="$parent.postData.canonicalUrl"
+                                        spellcheck="false"
                                         placeholder="Leave blank to use a default Page URL" />
                                 </label>
                             </div>
@@ -402,22 +364,10 @@
                     @click="openItem('other')">
                     <icon
                         class="post-editor-settings-icon"
-                        size="m"
+                        size="s"
                         name="sidebar-options"/>
 
                     <span class="post-editor-settings-label">Other options</span>
-
-                    <span
-                        class="post-editor-settings-icon-open"
-                        name="sidebar-arrow">                        
-                    </span>
-  
-                    <span
-                        class="post-editor-settings-icon-close"
-                        name="sidebar-arrow"
-                        @click.native="closeItem">
-                        &times;
-                    </span>
                 </div>
 
                 <div
@@ -468,8 +418,14 @@
                             </label>
 
                             <template v-for="(field, index) of postViewThemeSettings">
+                                <separator
+                                    v-if="displayField(field) && field.type === 'separator'"
+                                    :label="field.label"
+                                    :is-line="true"
+                                    :note="field.note" />
+                                
                                 <label
-                                    v-if="displayField(field)"
+                                    v-if="displayField(field) && field.type !== 'separator'"
                                     :key="'post-view-field-' + index">
                                     {{ field.label }}
 
@@ -486,6 +442,7 @@
                                         v-if="field.type === 'text' || field.type === 'number'"
                                         :type="field.type"
                                         class="post-view-settings"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :placeholder="fieldPlaceholder(field)"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
@@ -493,6 +450,7 @@
                                         v-if="field.type === 'textarea'"
                                         class="post-view-settings"
                                         :placeholder="fieldPlaceholder(field)"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="$parent.postData.postViewOptions[field.name]" />
 
                                     <color-picker
@@ -519,6 +477,12 @@
 <script>
 export default {
     name: 'post-editor-sidebar',
+    props: {
+        'isVisible': {
+            default: false,
+            type: Boolean
+        }
+    },
     data () {
         return {
             openedItem: 'status',
@@ -754,42 +718,49 @@ export default {
 
 .post-editor {
     &-sidebar {
-        background: $color-10;
-        height: calc(100vh - 7.8rem);
+        background: var(--option-sidebar-bg);
+        border-left: 1px solid var(--input-border-color);
+        height: calc(100vh - 2.2rem);
         overflow: auto;
-        position: relative;
-        width: 50rem;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 2.2rem;       
+        width: 44.2rem;
+        z-index: 99999;
 
-        &:after {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-            linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-            bottom: 0;
+        &.is-visible {   
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        &:before {
+            background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
-            height: 40px;
-            left: auto;
-            pointer-events: none;
+            height: 10rem;
             position: fixed;
-            right: 5px;
-            width: 49.5rem;
+            top: 2.2rem;
+            right: 0;
+            width: 44.1rem;
             z-index: 1;
         }
 
         & > div {
-            padding: 3.6rem 0 0 0;
+            padding: 9rem 0 0 0;
         }
 
         &-header {
             font-size: 1.8rem;
-            margin-top: -3.6rem;
-            padding: calc(1rem + 0.6vw) 3.6rem;
+            margin-top: 0;
+            padding: 0 3.6rem 1.5rem;
         }
 
-        .post-info {
-            border-bottom: 1px solid rgba($color-8, .4);
+        .post-info {            
             display: grid;
-            grid-template-columns: 50% 50%;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
+            grid-template-columns: repeat(2, 49%);
+            grid-gap: 0 2%;
+            margin-bottom: 1rem;
             
             &--nogrid {
                  display: block;
@@ -800,20 +771,27 @@ export default {
             }
 
             dt {
-                color: $color-4;
+                color: var(--label-color);
+                font-size: 1.5rem;
                 margin: 0 0 .5rem 0;
             }
 
             dd {
-                color: $color-7;
+                color: var(--gray-4);
                 font-size: 1.4rem;
                 margin: 0;
-            }
-        }
+                
+                a {
+                    display: block;
+                    position: relative;
+                    white-space: nowrap;
+                }
+            }           
+        }            
 
         .post-editor-settings {
             .post-author-selector {
-                border-bottom: 1px solid $color-9;
+                border-bottom: 1px solid var(--gray-1);
                 margin-bottom: 2rem;
                 padding-bottom: 0;
             }
@@ -826,31 +804,49 @@ export default {
                 }
 
                 small {
-                    color: $color-6;
+                    color: var(--gray-4);
                     padding: 0 .5rem;
                     position: relative;
                     top: -1px;
                 }
 
                 &-reset {
-                    color: $color-3;
+                    border-radius: 50%;
+                    color: var(--icon-secondary-color);           
                     font-size: 2.4rem;
+                    font-weight: 300;
+                    height: 3rem; 
                     line-height: 1;
-                    position: relative;
-                    top: 1px;
-                    vertical-align: middle;
+                    position: absolute;
+                    right: 0;
+                    text-align: center;       
+                    transition: var(--transition);         
+                    top: 50%;
+                    transform: translate(0, -50%);         
+                    width: 3rem;
                     
                     .icon {
                         cursor: pointer;
-                        fill: $color-3;
-                        transition: all .3s ease-out;
-                    }
+                        fill: currentColor;                        
+                    }                    
                     
-                    
-                    &:hover .icon {
-                        fill: $color-4;
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        color: var(--headings-color);
                     }
+        
+                    &:hover {
+                        background: var(--input-border-color);
+                    }  
                 }
+            }
+            
+            .post-action {            
+               label {
+                  font-weight: 400;
+                  line-height: 1.8;
+               }
             }
         }
 
@@ -859,7 +855,7 @@ export default {
             margin-bottom: 0;
 
             &-error {
-                color: $color-3;
+                color: var(--warning);
                 display: block;
                 font-size: 1.4rem;
                 padding: .5rem 0;
@@ -889,8 +885,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                background: $color-9;
-                padding: 0 3.6rem 3.6rem 3.6rem;
+                padding: 0 3.6rem 3.6rem;
 
                 .image-uploader {
                     margin-top: 0;
@@ -899,157 +894,76 @@ export default {
 
             &-header {
                 align-items: center;               
-                border-top: 1px solid rgba($color-8, .45);
-                border-bottom: 1px solid rgba($color-8, .45);
-                color: $link-color;
+                border-top: 1px solid var(--input-border-color);     
+                color: var(--link-tertiary-color);
                 cursor: pointer;
                 display: flex;
                 height: 6.4rem;
+                margin-left: 3.6rem;
                 margin-top: -1px;
-                padding: 0 3.6rem;
+                padding: 0;
                 position: relative;
-                transition: all .25s ease-out;
+                transition: var(--transition);
                 user-select: none;
-
+                width: calc(100% - 7.2rem);
+    
                 &:hover {
-                    background: rgba($color-9, .5);
-                    color: $color-4;
-
-                    .post-editor-settings {
-                        &-icon {
-                            fill: $color-5;
-
-                            &-open {
-                                border-top-color: $color-5;
-                            }
-                        }
-                    }
+                    color: var(--link-tertiary-hover-color);                    
                 }
 
                 &.is-open {
-                    background: $color-9;
-                    border-bottom-color: $color-9;
-
                     .post-editor-settings {
                         &-label {
-                            color: $color-4;
-                            font-weight: 500;
-                            left: -4.8rem;
+                            left: -3.6rem;
                         }
 
                         &-icon {
                             left: -1.6rem;
                             position: relative;
                             opacity: 0;
-
-                            &-open {
-                                opacity: 0;
-                            }
-
-                            &-close {
-                                opacity: 1;                                
-                            }
                         }
                     }
                 }
             }
 
-            &-label {
-                font-weight: 400;
+            &-label {                
+                font-weight: 600;
                 left: 0;
                 position: relative;
                 transition: left .25s ease-out, color .0s ease-out;
                 width: calc(100% - 5.8rem);
 
                 &-warning {
-                    color: $color-3;
+                    color: var(--warning);
                     font-size: 1.2rem;
                     margin-left: 1rem;
                 }
             }
 
             &-icon {
-                fill: $grey-icon-color; 
+                fill: var(--primary-color); 
                 left: 0;
                 height: 2.4rem;
-                margin-right: 2.4rem;
+                margin-right: 1.6rem;
                 opacity: 1;
                 position: relative;
-                transition: all .25s ease-out;
+                transition: var(--transition);
                 width: 2.4rem;
-
-                &-open,
-                &-close {
-                    position: absolute;
-                    height: 2.4rem;
-                    right: 3.6rem;
-                    top: 2.3rem;
-                    width: 2.4rem;
-
-                    &:hover {
-                        fill: $color-4;
-                    }
-                }
-
-                &-open {  
-                  border-color: $color-7 transparent transparent;
-                    border-style: solid;
-                    border-width: 6px 5px;
-                    opacity: 1;                     
-                    cursor: pointer;                   
-                    height: 3px;
-                    left: auto;
-                    line-height: 1.1; 
-                    padding: 0;
-                    position: absolute;
-                    right: calc(4.5rem - 6px);
-                    width: 6px;
-                    text-align: center;       
-                    transition: all .3s ease-out;         
-                    top: calc(50% - 3px)                    
-                }
-
-                &-close {
-                    opacity: 0;
-                    border-radius: 50%;
-                    color: $color-7;
-                    cursor: pointer;
-                    font-size: 2.4rem;
-                    font-weight: 300;
-                    height: 3rem;
-                    left: auto;
-                    line-height: 1.1; 
-                    padding: 0;
-                    position: absolute;
-                    right: 3rem;
-                    text-align: center;       
-                    transition: all .3s ease-out;         
-                    top: 50%;
-                    transform: translate(0, -50%); 
-                    width: 3rem;
-                                
-                    &:active,
-                    &:focus,
-                    &:hover {
-                        color: $color-4;
-                    }
-        
-                    &:hover {
-                        background: $color-helper-8;
-                    }  
-                }
             }
 
             label {
+                color: var(--label-color);
                 display: block;
-                line-height: 2;
-                margin: 0 0 1rem 0;
+                font-size: 1.5rem;
+                font-weight: 500;
+                line-height: 2.6;
+                margin: 0 0 1.2rem 0;
 
                 input[type="text"],
                 input[type="number"],
                 select,
                 textarea {
-                    background-color: $color-10;
+                    background-color: var(--input-bg);
                     width: 100%;
                 }
 
@@ -1063,7 +977,7 @@ export default {
                         width: 70%;
                     }
                 }
-            }
+            }            
 
             #post-featured-wrapper {
                 margin-top: 0;
@@ -1072,15 +986,15 @@ export default {
 
         .note {
             clear: both;
+            color: var(--text-light-color);
             display: block;
             font-size: 1.4rem;
             font-style: italic;
-            line-height: 1.4;
-            opacity: .6;
+            line-height: 1.4;            
             padding-top: .5rem;
 
             &.is-warning {
-                color: $color-3;
+                color: var(--warning);
                 opacity: 1;
             }
         }
@@ -1097,47 +1011,13 @@ export default {
  * Special styles for win
  */
 
-body[data-os="win"] {
-    .post-editor-sidebar {
-        height: calc(100vh - 9.4rem);
-    }
-}
-
 body[data-os="linux"] {
     .post-editor-sidebar {
-        height: calc(100vh - 5.6rem);
-    }
-}
+        height: 100vh;
+        top: 0;
 
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .post-editor-sidebar {
-        width: 40rem;
-
-        &:after {
-            width: 39.5rem;
-        }
-    }
-}
-
-@media (max-width: 1200px) {
-    .post-editor-sidebar {
-        width: 40rem;
-
-        &:after {
-            width: 39.5rem;
-        }
-
-        .post-editor-settings {
-            &-header {
-                padding: 0 3rem;
-            }
-
-            &-content {
-                padding: 0 3rem 3rem 3rem;
-            }
+        &:before {
+            top: 0;
         }
     }
 }
@@ -1153,12 +1033,12 @@ body > .select2-container {
     font-size: 1.4rem;
 
     .select2-results__option--highlighted[aria-selected] {
-        background: $color-1;
+        background: var(--primary-color);
     }
 
     .select2-dropdown {
-        background-color: $color-10;
-        border: 1px solid $color-8;
+        background-color: var(--white);
+        border: 1px solid var(--input-border-color);
         border-radius: 3px;
     }
 }

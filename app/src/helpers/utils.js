@@ -44,7 +44,11 @@ class Utils {
     static generateErrorLog(errorData, returnText = false) {
         let output = '';
 
-        if(returnText) {
+        if (!Array.isArray(errorData) && errorData.message) {
+            errorData = errorData.message;
+        }
+        
+        if (returnText) {
             for (let i = 0; i < errorData.length; i++) {
                 if (i > 0) {
                     output += "\n";
@@ -172,6 +176,30 @@ class Utils {
             str = str.replace(/\/$/, '');
         }
         return str;
+    }
+
+    /**
+     * Check if the provided link is a valid URL
+     */
+    static getValidUrl(urlToCheck) {
+        if (typeof urlToCheck !== 'string') {
+            return false;
+        }
+
+        let url;
+        let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:'];
+
+        try {
+            url = new URL(urlToCheck);
+        } catch (e) {
+            return false;
+        }
+
+        if (allowedProtocols.indexOf(url.protocol) > -1) {
+            return url.href.replace(/\s/gmi, '');
+        }
+
+        return false;
     }
 }
 

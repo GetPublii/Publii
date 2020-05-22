@@ -1,35 +1,10 @@
-/*
- * color palette
- */
-$color-0: #71c0ff;
 $color-1: #42a5f5;
-$color-2: #40b771;
-$color-3: #ef5350;
 $color-4: #2a2e30;
-$color-5: #3d464e;
-$color-6: #707277;
-$color-7: #8e929d;
 $color-8: #dddddd;
-$color-9: #f6f7f8;
-$color-10: #fff;
 
-$color-helper-1: #FFD54F;
-$color-helper-2: #5765A2;
-$color-helper-3: #A57C3A;
-$color-helper-4: #D48CDA;
-$color-helper-5: #FFF8E1;
 $color-helper-6: #ffc400;
-$color-helper-7: #1d2a38;
+$color-helper-7: #1e2128;
 $color-helper-8: #e5e6e8;
-$color-helper-9: #d5d5d5;
-$color-helper-10: rgba($color-helper-8, 0.5);
-
-$link-color: #328ed8;
-$link-hover-color: #2a2e30;
-
-$grey-icon-color: $color-7; 
-$danger-color: #ef5350;
-$post-editor-sidebar-color: #f6f7f8; 
 
 /*
  * Logo color sets
@@ -61,8 +36,56 @@ $primary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen"
 $secondary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
 /*
- * Dimensions
+ * Others
  */
 
-$baseline: 1.5;
-$spacing: 0.25rem; // ($baseline / 6)
+$wrapper: 960px;
+$spacing: 0.25rem; // ($baseline / 6.4)
+
+// Modular scale
+
+$modularscale: (
+  base: 1em,
+  ratio: 1.125 //$major-second 
+); 
+
+// Min and Max screen width
+$minScreen: 49rem;
+$maxScreen: 100rem; 
+
+
+// Baseline
+$line-height: 1.6;
+$baseline: 1.6rem / 7; 
+
+
+// Font size map
+$font: ( 
+	min: 1em,
+	max: 1.15em 
+);
+
+$h1: ( 
+	min: (ms(5)), 
+	max: (ms(6))
+); 
+$h2: ( 
+	min: (ms(3)),
+	max: (ms(4))
+);
+$h3: ( 
+	min: (ms(2)),
+	max: (ms(3))
+);
+$h4: ( 
+	min: (ms(1)),
+	max: (ms(2))
+);
+$h5: ( 
+	min: (ms(0)),
+	max: (ms(1))
+);
+$h6: ( 
+	min: (ms(0)),
+	max: (ms(0)) 
+);

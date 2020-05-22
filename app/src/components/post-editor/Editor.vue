@@ -1,11 +1,13 @@
 <template>
     <textarea id="post-editor"
               class="post-editor-form-content post-editor-field-content is-hidden"
+              :spellcheck="$store.state.currentSite.config.spellchecking"
               data-name="main-content"></textarea>
 </template>
 
 <script>
 import EditorBridge from './EditorBridge.js';
+import { webFrame } from 'electron';
 
 export default {
     name: 'editor',
@@ -21,6 +23,9 @@ export default {
             } else {
                 this.editorInstance.reloadEditor();
             }
+        },
+        focus () {
+            this.editorInstance.focus();
         }
     },
     beforeDestroy () {
@@ -32,5 +37,4 @@ export default {
 <style lang="scss">
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
-@import '../../scss/editor-overrides.scss';
 </style>

@@ -5,13 +5,13 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
-const passwordSafeStorage = require('keytar');
 const fileExists = require('file-exists');
 const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
 const electron = require('electron');
+const shell = electron.shell;
 const Menu = electron.Menu;
 const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
@@ -69,12 +69,12 @@ class App {
             return;
         }
 
+        this.loadAdditionalConfig();
         this.checkThemes();
-        this.loadSites().then(() => {
-            this.loadThemes();
-            this.initWindow();
-            this.initWindowEvents();
-        });
+        this.loadSites();
+        this.loadThemes();
+        this.initWindow();
+        this.initWindowEvents();
     }
 
     /**
@@ -88,7 +88,6 @@ class App {
             fs.mkdirSync(path.join(this.appDir, 'sites'));
             fs.mkdirSync(path.join(this.appDir, 'config'));
             fs.mkdirSync(path.join(this.appDir, 'themes'));
-            fs.mkdirSync(path.join(this.appDir, 'logs'));
             fs.copySync(
                 path.join(__dirname, '..', 'default-files', 'default-themes').replace('app.asar', 'app.asar.unpacked'),
                 path.join(this.appDir, 'themes'),
@@ -99,8 +98,8 @@ class App {
             );
         }
 
-        if (!fs.existsSync(path.join(this.appDir, 'logs'))) {
-            fs.mkdirSync(path.join(this.appDir, 'logs'));
+        if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
+            fs.mkdirSync(path.join(this.appDir, 'backups'));
         }
     }
 
@@ -134,7 +133,7 @@ class App {
                         }
                     );
                 } catch (err) {
-                    fs.appendFile(this.appDir + '/logs/themes-copy-errors.txt', JSON.stringify(err));
+                    fs.appendFile(this.app.getPath('logs') + '/themes-copy-errors.txt', JSON.stringify(err));
                 }
             } else {
                 // For existing themes - compare versions
@@ -173,9 +172,9 @@ class App {
      *
      * @returns {object}
      */
-    async reloadSite(siteName) {
+    reloadSite(siteName) {
         let siteData = this.switchSite(siteName);
-        let siteConfig = await this.loadSite(siteName);
+        let siteConfig = this.loadSite(siteName);
 
         return {
             data: siteData,
@@ -254,19 +253,19 @@ class App {
      * @param storeInConfig
      * @returns {object}
      */
-    async loadSite(siteName) {
+    loadSite(siteName) {
         let dirPath = path.join(this.sitesDir, siteName);
         let fileStat = fs.statSync(dirPath);
 
         // check directories only
-        if(!fileStat.isDirectory()) {
+        if (!fileStat.isDirectory()) {
             return;
         }
 
         // check if the config file exists
         let configFilePath = path.join(dirPath, 'input', 'config', 'site.config.json');
 
-        if(!fileExists(configFilePath)) {
+        if (!fileExists(configFilePath)) {
             return;
         }
 
@@ -288,16 +287,15 @@ class App {
         // Migrate old author data if necessary
         siteConfig = SiteConfigMigrator.moveOldAuthorData(this, siteConfig);
 
-        // Load passwords
-        siteConfig = await this.loadPasswords(siteConfig);
+        // set site data
         this.sites[siteConfig.name] = JSON.parse(JSON.stringify(siteConfig));
 
-        if(this.sites[siteConfig.name].logo.icon.indexOf('#') > -1) {
+        if (this.sites[siteConfig.name].logo.icon.indexOf('#') > -1) {
             this.sites[siteConfig.name].logo.icon = this.sites[siteConfig.name].logo.icon.split('#')[1];
         }
 
         // Fill displayName fields for old websites without it
-        if(!this.sites[siteConfig.name].displayName) {
+        if (!this.sites[siteConfig.name].displayName) {
             this.sites[siteConfig.name].displayName = siteConfig.name;
         }
 
@@ -307,74 +305,13 @@ class App {
     /**
      * Load websites
      */
-    async loadSites() {
+    loadSites() {
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
 
-        for(let siteName of files) {
-            await this.loadSite(siteName);
+        for (let siteName of files) {
+            this.loadSite(siteName);
         }
-    }
-
-    /**
-     * Load password from Keytar
-     */
-    async loadPassword(type, passwordKey) {
-         if(passwordKey.indexOf(type) === 0) {
-            let passwordData = passwordKey.split(' ');
-            let service = passwordData[0];
-            let account = passwordData[1];
-            let retrievedPassword = '';
-
-            if (passwordSafeStorage) {
-                try {
-                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
-                } catch (e) {
-                    console.log('(!) Cannot retrieve password via keytar');
-                }
-            }
-
-            if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
-                retrievedPassword = '';
-            }
-
-            return retrievedPassword;
-        }
-
-        return '';
-    }
-
-    /**
-     * Load passwords if its are stored in the keychain
-     */
-    async loadPasswords(siteConfig) {
-        if(siteConfig.deployment) {
-            siteConfig.deployment.password = await this.loadPassword('publii', siteConfig.deployment.password);
-
-            if(siteConfig.deployment.passphrase) {
-                siteConfig.deployment.passphrase = await this.loadPassword('publii-passphrase', siteConfig.deployment.passphrase);
-            }
-
-            if(siteConfig.deployment.s3) {
-                siteConfig.deployment.s3.id = await this.loadPassword('publii-s3-id', siteConfig.deployment.s3.id);
-                siteConfig.deployment.s3.key = await this.loadPassword('publii-s3-key', siteConfig.deployment.s3.key);
-            }
-
-            if(siteConfig.deployment.netlify) {
-                siteConfig.deployment.netlify.id = await this.loadPassword('publii-netlify-id', siteConfig.deployment.netlify.id);
-                siteConfig.deployment.netlify.token = await this.loadPassword('publii-netlify-token', siteConfig.deployment.netlify.token);
-            }
-
-            if(siteConfig.deployment.github) {
-                siteConfig.deployment.github.token = await this.loadPassword('publii-gh-token', siteConfig.deployment.github.token);
-            }
-
-            if(siteConfig.deployment.gitlab) {
-                siteConfig.deployment.gitlab.token = await this.loadPassword('publii-gl-token', siteConfig.deployment.gitlab.token);
-            }
-        }
-
-        return siteConfig;
     }
 
     /**
@@ -388,7 +325,7 @@ class App {
         this.dirPaths = {
             sites: normalizePath(path.join(this.appDir, 'sites')),
             temp: normalizePath(path.join(this.appDir, 'temp')),
-            logs: normalizePath(path.join(this.appDir, 'logs'))
+            logs: normalizePath(this.app.getPath('logs'))
         };
     }
 
@@ -451,6 +388,13 @@ class App {
             return true;
         }
 
+        return true;
+    }
+
+    /**
+     * Load additional config data
+     */
+    loadAdditionalConfig () {
         /*
          * Try to get TinyMCE overrided config
          */
@@ -458,7 +402,7 @@ class App {
             this.tinymceOverridedConfig = JSON.parse(fs.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
         } catch (e) {}
 
-        if(this.appConfig.sitesLocation) {
+        if (this.appConfig.sitesLocation) {
             this.sitesDir = this.appConfig.sitesLocation;
             this.app.sitesDir = this.appConfig.sitesLocation;
         } else {
@@ -466,8 +410,6 @@ class App {
             this.sitesDir = path.join(this.appDir, 'sites');
             this.app.sitesDir = path.join(this.appDir, 'sites');
         }
-
-        return true;
     }
 
     /**
@@ -493,11 +435,19 @@ class App {
     initWindow() {
         let self = this;
         let windowParams = this.windowBounds;
+
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
-            nodeIntegration: true
+            nodeIntegration: true,
+            webviewTag: true,
+            spellcheck: true,
+            preload: path.join(__dirname, 'app-preload.js')
         };
+
+        if (this.appConfig.appTheme === 'dark') {
+            windowParams.backgroundColor = '#202128';
+        }
 
         let displays = electron.screen.getAllDisplays();
         let externalDisplay = displays.find((display) => {
@@ -524,15 +474,48 @@ class App {
             windowParams.frame = false;
         }
 
-        if (process.platform === 'linux') {
-          windowParams.icon = path.join(__dirname, '..', 'src', 'assets', 'installation', '1024x1024.png');
-        }
-
         Menu.setApplicationMenu(null);
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);
+        this.mainWindow.loadURL('file://' + this.basedir + '/dist/index.html');
         this.mainWindow.removeMenu();
-        this.mainWindow.loadURL('file://' + this.basedir + '/index.html');
+
+        // Register search shortcut listener
+        this.mainWindow.webContents.on('before-input-event', (e, input) => {
+            if (input.key === 'f' && (input.meta || input.control)) {
+                this.mainWindow.webContents.send('app-show-search-form');     
+            }
+        });
+
+        // Prevent from creating new windows in the Electron context
+        this.mainWindow.webContents.on('new-window', function(event, urlToOpen) {
+            event.preventDefault();
+
+            if (typeof urlToOpen !== 'string') {
+                return false;
+            }
+        
+            let url;
+            let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:'];
+        
+            try {
+                url = new URL(urlToOpen);
+            } catch (e) {
+                return false;
+            }
+        
+            if (allowedProtocols.indexOf(url.protocol) > -1) {
+                url = url.href.replace(/\s/gmi, '');
+                shell.openExternal(url);
+            }
+        });
+
+        this.mainWindow.webContents.on('app-command', (e, cmd) => {
+            // disable back/forward mouse buttons
+            if (cmd === 'browser-backward' || cmd === 'browser-forward') {
+                e.preventDefault();
+            }
+        });
 
         this.mainWindow.webContents.on('did-finish-load', function() {
             let appVersionInfo = {

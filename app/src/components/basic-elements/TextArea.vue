@@ -1,9 +1,11 @@
 <template>
-    <div>
+    <div :id="anchor">
         <textarea
             :id="editorID"
             :data-id="editorID"
             :rows="rows"
+            class="publii-textarea"
+            :spellcheck="spellcheck"
             v-model="content"></textarea>
         <char-counter
             v-if="charCounter"
@@ -39,6 +41,14 @@ export default {
         preferredCount: {
             default: 0,
             type: Number
+        },
+        spellcheck: {
+            default: true,
+            type: Boolean
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data: function() {
@@ -80,6 +90,7 @@ export default {
     },
     methods: {
         initWysiwyg () {
+            let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
             let secondToolbarStructure = "formatselect removeformat code undo redo";
 
@@ -91,13 +102,12 @@ export default {
                 selector: 'textarea[data-id="' + this.editorID + '"]',
                 content_css: this.getTinyMCECSSFiles(),
                 plugins: "autolink link lists paste code",
-                toolbar1: "bold italic link unlink blockquote alignleft aligncenter alignright alignjustify bullist numlist",
+                toolbar1: "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist",
                 toolbar2: secondToolbarStructure,
                 toolbar3: "",
                 preview_styles: false,
                 resize: false,
                 menubar: false,
-                statusbar: false,
                 forced_root_block: "",
                 force_br_newlines: false,
                 force_p_newlines: true,
@@ -115,7 +125,15 @@ export default {
                 height: 320,
                 entity_encoding: "raw",
                 allow_script_urls: true,
-                style_formats: customFormats
+                style_formats: customFormats,
+                contextmenu: false,
+                browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
+                setup: function (editor) {
+                    editor.on('init', function () {
+                        let iframe = document.querySelector('#' + self.editorID + '_ifr');
+                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$store.state.app.theme);
+                    });
+                }
             });
         },
         generateID () {
@@ -199,7 +217,7 @@ export default {
             let customEditorCSS = pathToEditorCSS;
 
             return [
-                'dist/css/editor-options.css?v=0710',
+                'css/editor-options.css?v=0710',
                 customEditorCSS
             ].join(',');
         }
@@ -213,15 +231,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+@import '../../scss/editor/post-editors-common.scss';
+@import '../../scss/editor/editor-overrides.scss';
 
-textarea {
-    background-color: $color-10;
+.publii-textarea {
+    background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px $color-8;
-    color: $color-5;
+    box-shadow: inset 0 0 0 1px var(--input-border-color);
+    color: var(--text-primary-color);
     display: block;
     font: 400 1.6rem/1.5 $secondary-font;
     max-width: 100%;
@@ -232,7 +253,7 @@ textarea {
     width: 100%;
 
     &:focus {
-        box-shadow: inset 0 0 2px 1px $color-1;
+        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
     }
 
     &[disabled],
@@ -241,7 +262,7 @@ textarea {
         cursor: not-allowed;
 
         &:focus {
-            box-shadow: inset 0 0 0 1px $color-8;
+            box-shadow: inset 0 0 0 1px var(--input-border-color);
         }
     }
 }

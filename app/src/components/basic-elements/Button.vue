@@ -9,9 +9,7 @@
             properties="not-clickable"
             :name="icon" />
 
-        <slot v-if="!isPreloader">
-            Button
-        </slot>
+        <slot v-if="!isPreloader"></slot>
 
         <span
             v-if="isPreloader"
@@ -65,18 +63,21 @@ export default {
                 'button-muted': types.indexOf('muted') > -1,
                 'button-cancel-popup': types.indexOf('cancel-popup') > -1,
                 'button-icon': types.indexOf('icon') > -1,
+                'button-only-icon': types.indexOf('only-icon') > -1,
                 'button-bottom': types.indexOf('bottom') > -1,
                 'button-medium': types.indexOf('medium') > -1,
                 'button-small': types.indexOf('small') > -1,
                 'button-full-width': types.indexOf('full-width') > -1,
                 'button-half-width': types.indexOf('half-width') > -1,
+                'button-quarter-width': types.indexOf('quarter-width') > -1,
                 'button-no-border-radius': types.indexOf('no-border-radius') > -1,
                 'button-disabled': types.indexOf('disabled') > -1 || this.disabled,
                 'button-disabled-with-events': types.indexOf('disabled-with-events') > -1,
                 'button-preloader': this.isPreloader,
                 'button-light': types.indexOf('light') > -1,
                 'button-active': types.indexOf('active') > -1,
-                'button-delete': types.indexOf('delete') > -1
+                'button-delete': types.indexOf('delete') > -1,
+                'button-clean': types.indexOf('clean') > -1,
             }
         }
     }
@@ -91,11 +92,11 @@ export default {
  */
 
 .button {
-    background: $color-1;
+    background: var(--button-bg);
     border: none;
     border-radius: 3px;
     box-shadow: none;
-    color: $color-10;
+    color: var(--white);
     cursor: pointer;
     display: inline-block;
     font: {
@@ -107,7 +108,7 @@ export default {
     line-height: 4.1rem;
     padding: 0 1.3rem;
     position: relative;
-    transition: all .25s ease-out;
+    transition: var(--transition);
     user-select: none;
     white-space: nowrap;
 
@@ -119,98 +120,117 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: lighten($color-1, 10%);
-        color: $color-10;
+        background: var(--button-hover-bg);
+        color: var(--white);
     }
 
     &-link {
-        background: $color-10;
-        color: $color-1;
+       background: var(--bg-primary);
+        color: var(--primary-color);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-9;
-            color: $color-1;
+            background: var(--gray-1);
+            color: var(--primary-color);
         }
     }
 
     &-primary,
     &-success {
-        background: $color-2;
+        background: var(--button-green-bg);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: lighten($color-2, 10%);
-            color: $color-10;
+            background: var(--button-green-hover-bg);
+            color: var(--white);
         }
     }
 
     &-cancel-popup {
-        background: $color-10;
+        background: var(--popup-btn-cancel-bg);
         border: none;
-        border-top: 1px solid $color-8;
-        color: $color-6;
+        border-top: 1px solid var(--input-border-color);
+        color: var(--popup-btn-cancel-color);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-9;
-            color: $color-6;
+            background: var(--popup-btn-cancel-hover-bg);
+            color: var(--popup-btn-cancel-hover-color);
         }
     }
 
     &-danger,
     &-error {
-        background: $color-3;
+        background: var(--button-red-bg);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: lighten($color-3, 10%);
-            color: $color-10;
+            background: var(--button-red-hover-bg);
+            color: var(--white);
         }
     }
 
     &-muted {
-        background: $color-7;
+        background: var(--gray-4);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-1;
-            color: $color-10;
+            background: var(--primary-color);
+            color: var(--white);
         }
     }
 
     &-outline {
         background: transparent;
-        box-shadow: inset 0 0 0 2px $color-8;
-        color: $color-5;
+        box-shadow: inset 0 0 0 2px var(--input-border-color);
+        color: var(--text-primary-color);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
             background: transparent;
-            box-shadow: inset 0 0 0 2px darken($color-8, 20%);
-            color: $color-5;
+            box-shadow: inset 0 0 0 2px var(--gray-3);
+            color: var(--text-primary-color);
 
             &:disabled {
-                box-shadow: inset 0 0 0 2px $color-8;
+                box-shadow: inset 0 0 0 2px var(--input-border-color);
             }
+        }
+    }
+    
+     &-clean {
+        background: transparent;
+        box-shadow: none;
+        color: var(--link-primary-color);        
+        font: {
+           size: 1.5rem;           
+           weight: 400;
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: transparent;
+            box-shadow: none;
+            color: var(--link-primary-hover-color);
         }
     }
 
     & > svg {
         display: inline-block;
-        fill: $color-10;
+        fill: var(--white);
         left: 1.8rem;
         position: absolute;
         top: 50%;
@@ -218,7 +238,7 @@ export default {
     }
 
     &-bottom {
-        background: $color-2;
+        background: var(--button-green-bg);
         border-radius: 0 0 3px 3px;
         display: block;
         height: 5.6rem;
@@ -231,7 +251,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-5;
+            background: var(--button-green-hover-bg);
         }
 
         & > svg {
@@ -244,8 +264,8 @@ export default {
 
         &.button-outline {
             background: transparent;
-            box-shadow: inset 0 0 0 2px $color-8;
-            color: $color-5;
+            box-shadow: inset 0 0 0 2px var(--input-border-color);
+            color: var(--text-primary-color);
 
             &:active,
             &:focus,
@@ -253,10 +273,10 @@ export default {
             &.button-active {
                 background: transparent;
                 box-shadow: inset 0 0 0 2px darken($color-8, 20%);
-                color: $color-5;
+                color: var(--text-primary-color);
 
                 &:disabled {
-                    box-shadow: inset 0 0 0 2px $color-8;
+                    box-shadow: inset 0 0 0 2px var(--input-border-color);
                 }
             }
         }
@@ -275,6 +295,10 @@ export default {
         height: 3.8rem;
         line-height: 3.9rem;
         padding: 0 1.4rem;
+    }
+    
+    &-quarter-width {       
+        width: 25%;
     }
 
     &-half-width {
@@ -310,16 +334,37 @@ export default {
 
         &.button-outline {
             & > svg {
-                fill: $color-7;
+                fill: var(--icon-primary-color);
+                transition: var(--transition);
             }
+            
+            &:active,
+            &:focus,
+            &:hover {
+                
+               & > svg {
+                fill: var(--icon-tertiary-color);
+               } 
+            }
+        }
+        
+        &.button-clean {
+            & > svg {
+                fill: var(--icon-primary-color);
+            }
+        }
+
+        &.button-only-icon {
+            padding: 0;
+            width: 48px;
         }
     }
 
     &-preloader {
         .preloader {
             animation: rotate .6s infinite linear;
-            border: .2rem solid $color-8;
-            border-top: .2rem solid $color-7;
+            border: .2rem solid var(--input-border-color);
+            border-top: .2rem solid var(--gray-4);
             border-radius: 50%;
             clear: both;
             display: block;
@@ -345,42 +390,42 @@ export default {
     }
 
     &-light {
-        background: $color-10;
-        color: $color-7;
+        background: var(--bg-primary);
+        color: var(--text-light-color);
         font-weight: 500;
         padding-left: 3.8rem;
 
         & > svg {
-            fill: $color-7;
-            transition: all .25s ease-out;
+            fill: var(--icon-secondary-color);
+            transition: var(--transition);
         }
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: $color-9;
-            color: $color-5;
+            background: var(--gray-1);
+            color: var(--text-primary-color);
 
             & > svg {
-                fill: $color-5;
+                fill: var(--icon-tertiary-color);
             }
         }  
 
         &.button-delete {
-            color: $danger-color;
+            color: var(--button-red-bg);
             
             & > svg {
-                fill: $danger-color;
+                fill: var(--button-red-bg);
             }
         }    
     }
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: $color-helper-10;
-        border-color: $color-8;
-        color: $color-7;
+        background-color: var(--popup-btn-cancel-hover-bg);
+        border-color: var(--input-border-color);
+        color: var(--popup-btn-cancel-color);
         cursor: not-allowed;
         pointer-events: none;
     }

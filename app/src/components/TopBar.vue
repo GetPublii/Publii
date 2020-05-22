@@ -3,10 +3,6 @@
         <topbar-appbar />
 
         <div class="topbar-inner">
-            <img src="../assets/images/logo.png" class="topbar-logo" alt="Logo">
-            <topbar-notification />
-            <topbar-sites v-if="displayIcon" />
-            <topbar-preview-link v-if="displayIcon" />
             <topbar-dropdown />
         </div>
     </div>
@@ -14,32 +10,13 @@
 
 <script>
 import TopBarAppBar from './TopBarAppBar';
-import TopBarSites from './TopBarSites';
-import TopBarNotification from './TopBarNotification';
 import TopBarDropDown from './TopBarDropDown';
-import TopBarPreviewLink from './TopBarPreviewLink';
 
 export default {
     name: 'topbar',
     components: {
         'topbar-appbar': TopBarAppBar,
-        'topbar-sites': TopBarSites,
-        'topbar-notification': TopBarNotification,
-        'topbar-dropdown': TopBarDropDown,
-        'topbar-preview-link': TopBarPreviewLink
-    },
-    computed: {
-        displayIcon: function() {
-            let excludedPaths = [
-                '/site/!/posts'
-            ];
-
-            if (excludedPaths.indexOf(this.$route.path) > -1) {
-                return false;
-            }
-
-            return true;
-        }
+        'topbar-dropdown': TopBarDropDown
     }
 }
 </script>
@@ -48,9 +25,9 @@ export default {
 @import '../scss/variables.scss';
 
 .topbar {
-    background: $color-9;
+    background: var(--gray-1);
     font-size: 1.6rem;
-    height: 7.8rem;
+    height: 2.2rem;
     position: absolute;
     top: 0;
     -webkit-app-region: no-drag;
@@ -58,38 +35,36 @@ export default {
     width: 100%;
 
     & > .topbar-inner {
-        background: $color-10;
-        box-shadow: 0 0 1px rgba(0, 0, 0, .3);
-        display: flex;
         align-items: center;
-        padding: 0 calc(3rem - 3px) 0 5rem;
+        display: flex;             
+        padding: 0;
         position: absolute;
+        right: 0;
         top: 2.2rem;
-        width: 100%;
+        width: 40px;
         z-index: 102;
     }
+}
+    
+/*
+ * Responsive improvements
+ */
 
-    &-logo {
-        display: block;
-        height: 5.6rem;
-        margin-right: auto;
-        width: auto;
+@media (max-height: 900px) {
+    .topbar > .topbar-inner {
+        width: 35px;
     }
 }
 
-body[data-os="win"] {
-    .topbar {
-        height: 9.2rem;
-
-        & > .topbar-inner {
-            top: 3.6rem;
-        }
+@media (max-width: 1400px) {
+    .topbar > .topbar-inner {
+        width: 35px;
     }
 }
 
 body[data-os="linux"] {
     .topbar {
-        height: 5.6rem;
+        height: 0;
 
         & > .topbar-inner {
             top: 0;
@@ -97,19 +72,4 @@ body[data-os="linux"] {
     }
 }
 
-/*
- * Responsive improvements
- */
-
-@media (max-height: 900px) {
-    .topbar > .topbar-inner {
-        padding: 0 calc(2rem - 3px) 0 4rem;
-    }
-}
-
-@media (max-width: 1400px) {
-    .topbar > .topbar-inner {
-        padding: 0 calc(2rem - 3px) 0 4rem;
-    }
-}
 </style>

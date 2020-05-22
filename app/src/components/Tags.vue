@@ -128,10 +128,10 @@
         <empty-state
             v-if="showEmptyState"
             imageName="tags.svg"
-            imageWidth="254"
-            imageHeight="284"
+            imageWidth="344"
+            imageHeight="286"
             title="No tags available"
-            description="You don't have any tag, yet. Let's fix that!">
+            description="You don't have any tag, yet. Let's create the first one!">
             <p-button
                 slot="button"
                 icon="add-site-mono"
@@ -311,7 +311,7 @@ export default {
     overflow-x: hidden!important;
 
     &.no-scroll {
-        overflow: hidden;
+        overflow: hidden!important;
     }
 
     .header {
@@ -330,7 +330,7 @@ export default {
         margin-left: 3px;
         position: relative;
         &:after {
-             border-top: solid 5px rgba($color-7, .7);
+             border-top: solid 5px var(--icon-secondary-color);
              border-left: solid 5px transparent;
              border-right: solid 5px transparent;
              content: "";
@@ -352,27 +352,8 @@ export default {
     .order-descending {
         &:after {
             border-top-color: transparent; 
-            border-bottom: solid 5px rgba($color-7, .7);                      
+            border-bottom: solid 5px var(--icon-secondary-color);                      
         }
-    }
-}
-
-.tag-form-wrapper {
-    right: 0;
-
-    &.v-enter-active,
-    &.v-leave-active {
-        transition: all .25s ease;
-    }
-
-    &.v-enter,
-    &.v-leave-to {
-        right: -55rem;
-    }
-
-    &.v-enter-to,
-    &.v-leave {
-        right: 0;
     }
 }
 </style>

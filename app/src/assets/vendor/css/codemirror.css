@@ -4,7 +4,7 @@
   /* Set height, width, borders, and global font properties here */
   font-family: Lucida Console, Monaco, Monospace;
   height: 300px;
-  color: black;
+  color: var(--text-primary-color);
 }
 
 /* PADDING */
@@ -17,14 +17,14 @@
 }
 
 .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
-  background-color: white; /* The little square between H and V scrollbars */
+  background-color: var(--bg-primary); /* The little square between H and V scrollbars */
 }
 
 /* GUTTER */
 
 .CodeMirror-gutters {
-  border-right: 1px solid #ddd;
-  background-color: #f7f7f7;
+  border-right: 1px solid var(--input-border-color);
+  background-color: var(--input-bg-light);
   white-space: nowrap;
 }
 .CodeMirror-linenumbers {}
@@ -33,17 +33,17 @@
   padding: 0 3px 0 5px;
   min-width: 20px;
   text-align: right;
-  color: #999;
+  color: var(--text-light-color);
   white-space: nowrap;
 }
 
-.CodeMirror-guttermarker { color: black; }
+.CodeMirror-guttermarker { color: var(--code-21); }
 .CodeMirror-guttermarker-subtle { color: #999; }
 
 /* CURSOR */
 
 .CodeMirror-cursor {
-  border-left: 1px solid black;
+  border-left: 1px solid var(--text-primary-color);
   border-right: none;
   width: 0;
 }
@@ -54,7 +54,7 @@
 .cm-fat-cursor .CodeMirror-cursor {
   width: auto;
   border: 0 !important;
-  background: #7e7;
+  background: var(--success);
 }
 .cm-fat-cursor div.CodeMirror-cursors {
   z-index: 1;
@@ -65,7 +65,7 @@
   border: 0;
   -webkit-animation: blink 1.06s steps(1) infinite;
   animation: blink 1.06s steps(1) infinite;
-  background-color: #7e7;
+  background-color: var(--success);
 }
 @-webkit-keyframes blink {
   0% {}
@@ -89,7 +89,7 @@
   overflow: hidden;
 }
 .CodeMirror-ruler {
-  border-left: 1px solid #ccc;
+  border-left: 1px solid var(--input-border-color);
   top: 0; bottom: 0;
   position: absolute;
 }
@@ -97,48 +97,48 @@
 /* DEFAULT THEME */
 
 .cm-s-default { font-weight: 400; }
-.cm-s-default .cm-header {color: blue;}
-.cm-s-default .cm-quote {color: #090;}
-.cm-negative {color: #d44;}
-.cm-positive {color: #292;}
+.cm-s-default .cm-header {color: var(--code-4);}
+.cm-s-default .cm-quote {color: var(--code-18);}
+.cm-negative {color: var(--code-8);}
+.cm-positive {color: var(--code-17);}
 .cm-header, .cm-strong {font-weight: bold;}
 .cm-em {font-style: italic;}
 .cm-link {text-decoration: underline;}
 .cm-strikethrough {text-decoration: line-through;}
 
-.cm-s-default .cm-keyword {color: #708;}
-.cm-s-default .cm-atom {color: #219;}
-.cm-s-default .cm-number {color: #164;}
-.cm-s-default .cm-def {color: #00f;}
+.cm-s-default .cm-keyword {color: var(--code-1);}
+.cm-s-default .cm-atom {color: var(--code-2);}
+.cm-s-default .cm-number {color: var(--code-3);}
+.cm-s-default .cm-def {color: var(--code-4);}
 .cm-s-default .cm-variable,
 .cm-s-default .cm-punctuation,
 .cm-s-default .cm-property,
 .cm-s-default .cm-operator {}
-.cm-s-default .cm-variable-2 {color: #05a;}
-.cm-s-default .cm-variable-3 {color: #085;}
-.cm-s-default .cm-comment {color: #a50;}
-.cm-s-default .cm-string {color: #a11;}
-.cm-s-default .cm-string-2 {color: #f50;}
-.cm-s-default .cm-meta {color: #555;}
-.cm-s-default .cm-qualifier {color: #555;}
-.cm-s-default .cm-builtin {color: #30a;}
-.cm-s-default .cm-bracket {color: #997;}
-.cm-s-default .cm-tag {color: #170;}
-.cm-s-default .cm-attribute {color: #00c;}
-.cm-s-default .cm-hr {color: #999;}
-.cm-s-default .cm-link {color: #00c;}
+.cm-s-default .cm-variable-2 {color: var(--code-5);}
+.cm-s-default .cm-variable-3 {color: var(--code-6);}
+.cm-s-default .cm-comment {color: var(--code-7);}
+.cm-s-default .cm-string {color: var(--code-8);}
+.cm-s-default .cm-string-2 {color: var(--code-9);}
+.cm-s-default .cm-meta {color: var(--code-10);}
+.cm-s-default .cm-qualifier {color: var(--code-10);}
+.cm-s-default .cm-builtin {color: var(--code-11);}
+.cm-s-default .cm-bracket {color: var(--code-19);}
+.cm-s-default .cm-tag {color: var(--code-12);}
+.cm-s-default .cm-attribute {color: var(--code-14);}
+.cm-s-default .cm-hr {color: var(--code-15);}
+.cm-s-default .cm-link {color: var(--code-14);}
 
-.cm-s-default .cm-error {color: #f00;}
-.cm-invalidchar {color: #f00;}
+.cm-s-default .cm-error {color: var(--code-16);}
+.cm-invalidchar {color: var(--code-16);}
 
 .CodeMirror-composing { border-bottom: 2px solid; }
 
 /* Default styles for common addons */
 
-div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}
-div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
+div.CodeMirror span.CodeMirror-matchingbracket {color: var(--code-18);}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: var(--code-16);}
 .CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
-.CodeMirror-activeline-background {background: #e8f2ff;}
+.CodeMirror-activeline-background {background: var(--code-20);}
 
 /* STOP */
 
@@ -148,7 +148,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror {
   position: relative;
   overflow: hidden;
-  background: white;
+  background: var(--bg-primary);
 }
 
 .CodeMirror-scroll {
@@ -310,12 +310,12 @@ div.CodeMirror-dragcursors {
   visibility: visible;
 }
 
-.CodeMirror-selected { background: #d9d9d9; }
-.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+.CodeMirror-selected { background: var(--code-20); }
+.CodeMirror-focused .CodeMirror-selected { background: var(--code-20); }
 .CodeMirror-crosshair { cursor: crosshair; }
-.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
-.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }
-.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: var(--code-20); }
+.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: var(--code-20); }
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: var(--code-20); }
 
 .cm-searching {
   background: #ffa;

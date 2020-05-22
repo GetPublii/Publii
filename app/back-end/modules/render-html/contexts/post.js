@@ -29,6 +29,7 @@ class RendererContextPost extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.postMetaTitle;
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
         this.canonicalUrl = this.post.url;
+        this.hasCustomCanonicalUrl = false;
         this.metaRobots = '';
 
         if (this.siteConfig.advanced.postMetaDescription === '') {
@@ -46,12 +47,14 @@ class RendererContextPost extends RendererContext {
                 this.metaDescription = results.metaDesc;
             }
 
-            if(results.metaRobots) {
+            if (results.metaRobots) {
                 this.metaRobots = results.metaRobots;
             }
 
-            if(results.canonicalUrl) {
+            if (results.canonicalUrl) {
                 this.canonicalUrl = results.canonicalUrl;
+                this.hasCustomCanonicalUrl = true;
+                this.metaRobots = '';
             }
         }
 
@@ -395,6 +398,7 @@ class RendererContextPost extends RendererContext {
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,
+            hasCustomCanonicalUrl: this.hasCustomCanonicalUrl,
             canonicalUrl: this.canonicalUrl,
             previousPost: this.previousPost,
             previousSimilarPost: this.previousSimilarPost,

@@ -41,7 +41,7 @@ export default {
     width: calc(100% - 10rem);
 
     &:after {
-        background: linear-gradient(transparent, #fff);
+        background: linear-gradient(transparent, var(--bg-primary));
         bottom: 0;
         content: "";
         height: 100px;
@@ -49,7 +49,7 @@ export default {
         pointer-events: none;
         position: absolute;
         right: 5px;
-        z-index: 1;
+        z-index: 9999;
     }
 
     &.is-add-form-opened {

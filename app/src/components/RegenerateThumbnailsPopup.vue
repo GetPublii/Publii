@@ -8,18 +8,13 @@
                 size="xl"
                 primaryColor="color-8" />
 
-            <div class="render-popup-text">
-                <template v-if="qualityChanged">
-                    Image quality has been changed.
-                </template>
+            <h1>
+                Your theme or thumbnail settings has been changed.
+            </h1>
 
-                <template v-if="!qualityChanged">
-                    Your theme has been changed.
-                </template>
-
-                <br>
-                We recommend that you regenerate thumbnails.
-            </div>
+            <p class="popup-info">
+                Pressing the Regenerate thumbnails button will start generating new image sizes defined by your new theme.
+            </p>
 
             <progress-bar
                 :color="progressColor"
@@ -64,25 +59,25 @@ export default {
     data () {
         return {
             isVisible: false,
-            qualityChanged: false,
             message: '',
             progress: 0,
             progressColor: 'blue',
             progressIsStopped: false,
             regeneratingThumbnails: false,
-            regenerateIsDone: false
+            regenerateIsDone: false,
+            savedSettingsCallbac: false
         };
     },
     mounted () {
         this.$bus.$on('regenerate-thumbnails-display', (config) => {
             this.isVisible = true;
-            this.qualityChanged = config.qualityChanged;
             this.message = '';
             this.progress = 0;
             this.progressColor = 'blue';
             this.progressIsStopped = false;
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
+            this.savedSettingsCallback = config.savedSettingsCallback || false;
         });
 
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
@@ -90,13 +85,16 @@ export default {
     methods: {
         skip () {
             this.isVisible = false;
-            this.qualityChanged = false;
             this.message = '';
             this.progress = 0;
             this.progressColor = 'blue';
             this.progressIsStopped = false;
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
+
+            if (this.savedSettingsCallback) {
+                this.$bus.$emit('regenerate-thumbnails-close', this.savedSettingsCallback);
+            }
         },
         regenerate () {
             if (this.regeneratingThumbnails) {
@@ -132,6 +130,10 @@ export default {
                     this.message = 'All thumbnails have been created.';
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
+
+                    if (this.savedSettingsCallback) {
+                        this.skip();
+                    }
                 });
             }, 350);
         },
@@ -166,25 +168,17 @@ export default {
     z-index: 100006;
 }
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    overflow: hidden;
-    padding: 4rem 4rem 6rem 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+.popup {  
+    padding: 4rem 4rem 6rem 4rem;   
     width: 60rem;
+
+    &-info {
+        margin: -1.5rem 0 4rem;
+    }
 }
 
 .message {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-weight: 400;
     margin: 0;
     padding: 4rem;
@@ -195,10 +189,9 @@ export default {
         text-align: center;
     }
 }
-
 .buttons {
     display: flex;
-    margin: 4rem -4rem -6rem -4rem;
+    margin: 0 -4rem -6rem -4rem;
     position: relative;
     text-align: center;
     top: 1px;

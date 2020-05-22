@@ -10,7 +10,9 @@ export default {
             status: ''
         },
         editorOpened: false,
-        windowIsMaximized: false
+        editorType: 'blockeditor',
+        windowIsMaximized: false,
+        theme: localStorage.getItem('publii-theme') === 'dark' ? 'dark' : 'default' 
     },
     // Persistent components
     components: {

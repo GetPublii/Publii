@@ -26,7 +26,9 @@ class EditorBridge {
             setup: this.setupEditor.bind(this, customFormats),
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
-            style_formats: customFormats
+            style_formats: customFormats,
+            statusbar: true,
+            browser_spellcheck: window.app.$store.state.currentSite.config.spellchecking
         });
 
         // Remove style selector when there is no custom styles from the theme
@@ -43,20 +45,24 @@ class EditorBridge {
         tinymce.init(editorConfig);
     }
 
+    focus () {
+        this.tinymceEditor.focus();
+    }
+
     setupEditor(customFormats, editor) {
         let self = this;
         this.tinymceEditor = editor;
         this.addEditorButtons();
 
         editor.on('init', () => {
-            $('.mce-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
-            $('.mce-tinymce').addClass('is-loaded');
+            $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
+            $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
             // Scroll the editor to bottom in order to avoid issues
             // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
-
+            
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
@@ -73,6 +79,10 @@ class EditorBridge {
                 }
             }, false);
 
+            // Support for dark mode
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$store.state.app.theme);
+
+            // Add inline editors
             this.addInlineEditor(customFormats);
             this.addLinkEditor(iframe);
 
@@ -134,9 +144,6 @@ class EditorBridge {
                 }
             });
 
-            /*
-             * @ToDo: implement popup with image position
-             */
             iframe.contentWindow.window.document.body.addEventListener("click", (e) => {
                 let clickedElement = e.path[0];
                 let showPopup = false;
@@ -164,11 +171,6 @@ class EditorBridge {
                 } else if(e.path[1] && e.path[1].tagName === 'FIGURE') {
                     clickedElement = e.path[1];
                     showPopup = true;
-                }
-
-                if(showPopup) {
-                    //var positionY = clickedElement.getBoundingRect().top;
-                    //var positionX = clickedElement.getBoundingRect().left
                 }
 
                 if(clickedElement.tagName === 'A') {
@@ -260,8 +262,10 @@ class EditorBridge {
                         ipcRenderer.once('app-image-uploaded', (event, data) => {
                             this.callbackForTinyMCE(data.baseImage.url, {
                                 alt: '',
-                                height: data.baseImage.size[1],
-                                width: data.baseImage.size[0]
+                                dimensions: {
+                                    height: data.baseImage.size[1],
+                                    width: data.baseImage.size[0]
+                                }
                             });
                         });
 
@@ -271,47 +275,21 @@ class EditorBridge {
             });
 
             // Writers Panel
-            let statusbar = editor.theme.panel && editor.theme.panel.find('#statusbar')[0];
             let updateWritersPanel = function () {
-                window.app.$bus.$emit('writers-panel-refresh');
+                 window.app.$bus.$emit('writers-panel-refresh');
             };
-            let throttledUpdate = Utils.throttledFunction(updateWritersPanel, 125);
-
-            if (statusbar) {
-                statusbar.insert({
-                    type: 'label',
-                    name: 'publii-text-stats',
-                    classes: 'publii-text-stats',
-                    disabled: editor.settings.readonly
-                }, 0);
-
-                let words = $('#counter-words').text();
-                let linkText = $('.post-editor-writers-panel').hasClass('is-hidden') ? 'View Stats' : 'Hide Stats';
-                $('.mce-publii-text-stats').html(`<svg class="sidebar-icon" width="19" height="19" viewbox="0 0 19 19"><path d="M3,7v10c0,0.5-0.5,1-1,1s-1-0.5-1-1V7c0-0.5,0.5-1,1-1S3,6.5,3,7z M7,1C6.5,1,6,1.5,6,2v15c0,0.5,0.5,1,1,1s1-0.5,1-1V2
-    C8,1.5,7.5,1,7,1z M12,10c-0.5,0-1,0.5-1,1v6c0,0.5,0.5,1,1,1s1-0.5,1-1v-6C13,10.5,12.5,10,12,10z M17,6c-0.5,0-1,0.5-1,1v10
-    c0,0.5,0.5,1,1,1s1-0.5,1-1V7C18,6.5,17.5,6,17,6z"/></svg> <a href="#" class="mce-publii-text-stats-link">${linkText}</a> &nbsp; • &nbsp; <span>Words: ${words}</span>`);
-                $('.mce-publii-text-stats-link').on('click', function(e) {
-                    e.preventDefault();
-
-                    if($(this).text() === 'View Stats') {
-                        window.app.$bus.$emit('writers-panel-open');
-                    } else {
-                        window.app.$bus.$emit('writers-panel-close');
-                    }
-                });
-
-                editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
-            }
+            let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
+            editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 this.hideToolbarsOnCopy();
             });
         });
 
-        editor.addButton('gallery', {
-            icon: 'images',
+        editor.ui.registry.addButton('gallery', {
+            icon: 'gallery',
             tooltip: "Insert Gallery",
-            onclick: function () {
+            onAction: function () {
                 editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
             }
         });
@@ -332,7 +310,7 @@ class EditorBridge {
         let customEditorCSS = pathToEditorCSS;
 
         return [
-            'dist/css/editor.css?v=0710',
+            'css/editor.css?v=0710',
             customEditorCSS
         ].join(',');
     }
@@ -437,11 +415,22 @@ class EditorBridge {
     }
 
     addEditorButtons() {
-        this.tinymceEditor.addButton("sourcecode", {
-            icon:"code",
+        this.tinymceEditor.ui.registry.addButton("publiilink", {
+            icon: 'link',
+            tooltip: 'Insert/edit link',
+            onAction: () => {
+                window.app.$bus.$emit('init-link-popup', {
+                    postID: this.postID,
+                    selection: tinymce.activeEditor.selection.getContent()
+                });
+            }
+        });
+        
+        this.tinymceEditor.ui.registry.addButton("sourcecode", {
+            icon: 'sourcecode',
             tooltip: "Source code",
             text: "HTML",
-            onclick: () => {
+            onAction: () => {
                 let content = this.tinymceEditor.getContent({
                     source_view: true
                 });
@@ -450,10 +439,9 @@ class EditorBridge {
             }
         });
 
-        this.tinymceEditor.addButton('readmore', {
+        this.tinymceEditor.ui.registry.addButton('readmore', {
             text: 'Read more',
-            icon: false,
-            onclick: () => {
+            onAction: () => {
                 this.tinymceEditor.insertContent('<hr id="read-more">' + "\n");
             }
         });
@@ -464,6 +452,7 @@ class EditorBridge {
         let win = iframe.contentWindow.window;
         let doc = win.document;
         let body = doc.body;
+
         window.app.$bus.$emit('init-inline-editor', customFormats);
 
         $(doc.querySelector('html')).on('mouseup', (e) => {
@@ -519,20 +508,20 @@ class EditorBridge {
     }
 
     initEditorDragNDropImages(editor) {
-        let editorArea = $('.mce-tinymce');
+        let editorArea = $('.tox-tinymce');
         let postEditor = $('.post-editor');
         let hoverState = false;
         let tinymceOverlay = $('.tinymce-overlay');
 
         postEditor.on('dragover', () => {
-            if(!this.postEditorInnerDragging) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
         });
 
         tinymceOverlay.on('dragover', e => {
-            if(!this.postEditorInnerDragging) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
@@ -592,15 +581,15 @@ class EditorBridge {
         }
 
         if(!files[0] || !files[0].path) {
-            $('.mce-tinymce').removeClass('is-hovered');
-            $('.mce-tinymce').removeClass('is-loading-image');
+            $('.tox-tinymce').removeClass('is-hovered');
+            $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').text('Drag your image here');
 
             this.contentImageUploading = false;
             return;
         }
 
-        $('.mce-tinymce').addClass('is-loading-image');
+        $('.tox-tinymce').addClass('is-loading-image');
         $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
         ipcRenderer.send('app-image-upload', {
@@ -618,8 +607,8 @@ class EditorBridge {
                 tinymce.activeEditor.insertContent('<figure class="post__image"><img alt="" src="' + data.url + '"/></figure>');
             }
 
-            $('.mce-tinymce').removeClass('is-hovered');
-            $('.mce-tinymce').removeClass('is-loading-image');
+            $('.tox-tinymce').removeClass('is-hovered');
+            $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
 
             this.contentImageUploading = false;

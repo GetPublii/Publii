@@ -25,13 +25,19 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
     }).map(post => {
         let additionalData = JSON.parse(post.additional_data);
         let mainTag = '';
+        let postEditor = 'tinymce';
 
         if (additionalData && additionalData.mainTag) {
             mainTag = parseInt(additionalData.mainTag, 10);
         }
 
+        if (additionalData && additionalData.editor) {
+            postEditor = additionalData.editor;
+        }
+
         return {
             id: post.id,
+            editor: postEditor,
             title: post.title,
             slug: post.slug,
             tags: postGetTags(state, post.id),

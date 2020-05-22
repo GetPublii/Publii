@@ -3,8 +3,8 @@
         id="app"
         :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }">
         <message />
+        <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
         <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
-
         <section>
             <router-view />
         </section>
@@ -14,6 +14,7 @@
         <rendering-popup />
         <regenerate-thumbnails-popup />
         <error-popup />
+        <sites-popup />
         <sync-popup />
         <subscription-popup />
     </div>
@@ -24,9 +25,11 @@ import { remote } from 'electron';
 import { mapGetters } from 'vuex';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
+import TopBarNotification from './TopBarNotification';
 import Message from './Message';
 import RenderingPopup from './RenderingPopup';
 import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
+import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SubscriptionPopup from './SubscriptionPopup';
@@ -42,9 +45,11 @@ export default {
         'message': Message,
         'topbar': TopBar,
         'topbar-appbar': TopBarAppBar,
+        'topbar-notification': TopBarNotification,
         'rendering-popup': RenderingPopup,
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
+        'sites-popup': SitesPopup,
         'sync-popup': SyncPopup,
         'subscription-popup': SubscriptionPopup
     },
@@ -223,6 +228,7 @@ export default {
 @import '../scss/vendor/normalize.css';
 @import '../scss/vendor/vue-multiselect.scss';
 @import '../scss/variables.scss';
+@import '../scss/css-variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/global.scss';
 @import '../scss/forms.scss';
@@ -233,10 +239,10 @@ export default {
  * Main container for the app
  */
 .app {
-    background: $color-10;
+    background: var(--bg-primary);
 
     &-view {
-        background: $color-10;
+        background: var(--bg-primary);
         font-size: 1.6rem;
         height: 100%;
         left: 0;
@@ -250,7 +256,7 @@ export default {
         font-size: 1.6rem;
         left: 0;
         position: absolute;
-        top: 7.8rem;
+        top: 2.2rem;
         width: 35rem;
         z-index: 1;
     }
@@ -258,30 +264,25 @@ export default {
 
 #app {
     & > .topbar + section {
-        height: calc(100vh - 7.8rem);
+        height: calc(100vh - 2.2rem);
         overflow: auto;
         position: absolute;
-        top: 7.8rem;
+        top: 2.2rem;
         width: 100%;
+    }
+
+    a {
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-app-region: no-drag;
     }
 }
 
-body[data-os="win"] {
-    #app {
-        & > .topbar + section {
-            height: calc(100vh - 8.7rem);
-            top: 8.7rem;
-        }
-    }
-
+body[data-os="win"] {    
     .app {
         &-view {
-            border: 1px solid $grey-icon-color;
+            border: 1px solid var(--icon-secondary-color);
             overflow: hidden;
-        }
-
-        &-site-sidebar {
-            top: 8.7rem;
         }
     }
 }
@@ -289,19 +290,19 @@ body[data-os="win"] {
 body[data-os="linux"] {
     #app {
         & > .topbar + section {
-            height: calc(100vh - 5.6rem);
-            top: 5.6rem;
+            height: 100vh;
+            top: 0;
         }
     }
 
     .app {
         &-view {
-            border: 1px solid $grey-icon-color;
+            border: 1px solid var(--icon-secondary-color);
             overflow: hidden;
         }
 
         &-site-sidebar {
-            top: 5.6rem;
+            top: 0;
         }
     }
 }

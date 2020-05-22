@@ -46,5 +46,6 @@ module.exports = {
     getTagsHelper: require('./get-tags.js'),
     concatenate: require('./concatenate.js'),
     contains: require('./contains.js'),
-    join: require('./join.js')
+    join: require('./join.js'),
+    lazyloadHelper: require('./lazyload.js')
 };

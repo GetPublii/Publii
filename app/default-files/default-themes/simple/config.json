@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.0.4.0",
+    "version": "2.2.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -293,7 +293,7 @@
             "name": "linkHoverColorMenu",
             "label": "Link hover color",
             "group": "Navbar",
-            "value": "rgba(255, 255, 255, 0.7)",
+            "value": "rgba(255,255,255,0.7)",
             "type": "colorpicker"
         },
         {
@@ -356,7 +356,7 @@
             "name": "submenuLinkColor",
             "label": "Link color",
              "group": "Navbar",
-            "value": "rgba(255, 255, 255, 0.7)",
+            "value": "rgba(255,255,255,0.7)",
             "type": "colorpicker"
         },
         {
@@ -370,7 +370,7 @@
             "name": "submenuLinkHoverBgMenu",
             "label": "Link hover background",
              "group": "Navbar",
-            "value": "rgba(255, 255, 255, 0.05)",
+            "value": "rgba(255,255,255,0.05)",
             "type": "colorpicker"
         },
         
@@ -572,7 +572,7 @@
             "name": "heroTextColor",
             "label": "Text color",
             "group": "Hero section",
-            "value": "rgba(255, 255, 255, 0.75)",
+            "value": "rgba(255,255,255,0.75)",
             "type": "colorpicker"
         },
         {
@@ -586,14 +586,14 @@
             "name": "heroLinkHover",
             "label": "Link hover color",
             "group": "Hero section",
-            "value": "rgba(255, 255, 255, 0.75)",
+            "value": "rgba(255,255,255,0.75)",
             "type": "colorpicker"
         },
         {
             "name": "heroBorderColor",
             "label": "Border color",
             "group": "Hero section",
-            "value": "rgba(255, 255, 255, 0.3)",
+            "value": "rgba(255,255,255,0.3)",
             "type": "colorpicker"
         },
 
@@ -763,9 +763,42 @@
             "label": "Headings",
             "group": "Fonts",
             "size": "big"
-        },        
+        },  
         {
-            "name": "fontH1Transform",
+            "name": "fontHeadignsWeight",
+            "label": "H1-H6 font weight",
+            "group": "Fonts",            
+            "value": "700",
+            "type": "select",
+            "options": [
+                {
+                    "label": "300",
+                    "value": "300"
+                },
+                {
+                    "label": "400",
+                    "value": "400"
+                },
+                {
+                    "label": "500",
+                    "value": "500"
+                },
+                {
+                    "label": "600",
+                    "value": "600"
+                },
+                {
+                    "label": "700",
+                    "value": "700"
+                },
+                {
+                    "label": "900",
+                    "value": "900"
+                }
+            ]
+        },
+        {
+            "name": "fontHeadingsTransform",
             "label": "H1-H6 text transform",
             "group": "Fonts",            
             "value": "none",
@@ -1044,7 +1077,7 @@
             "name": "footerLinkHoverColor",
             "label": "Link hover color",
             "group": "Footer",
-            "value": "rgba(255, 255, 255, 0.7)",
+            "value": "rgba(255,255,255,0.7)",
             "type": "colorpicker"
         },
         {
@@ -1292,20 +1325,12 @@
             "label": " ",
             "group": "Additional",
             "size": "small"
-         },
-        {
-            "name": "lazyLoad",
-            "group": "Additional",
-            "label": "Lazy Load",
-            "note": "The SEO-friendly high-performance lazy loader improves load times by deferring downloading of images until after the initial page load is complete.",
-            "value": true,
-            "type": "checkbox"
-        },
+         },       
         {
             "name": "lazyLoadEffect",
             "label": "Lazy load effects",
             "group": "Additional",
-            "note": "<strong>'Blur up'</strong> and <strong>'Fade in - LQIP'</strong> options use Low Quality Image Placeholder pattern; it means that initially load the low-quality images; once the page loaded they are replaced with the full quality images;<p><strong>'Fade in'</strong> does not use LQIP, but instead loads the images a lot faster; we recommended it for best-perceived performance; one minus of this technic is that 'src' attribute is missing, which causes HTML5 validation to fail.</p>",
+            "note": "This option works only if the 'Media lazy load' option is enabled in the Website Speed tab under Site Settings",
             "value": "fadein",
             "type": "select",
             "options": [
@@ -1314,16 +1339,8 @@
                     "value": "fadein"
                 },
                 {
-                    "label": "Fade in - LQIP",
-                    "value": "fadeinlqip"
-                },
-                {
-                    "label": "Blur up",
-                    "value": "blur"
-            }],
-            "dependencies": [{
-                "field": "lazyLoad",
-                "value": "true"
+                    "label": "None",
+                    "value": "none"                
             }]
         },
         {

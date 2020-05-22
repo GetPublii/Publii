@@ -1,8 +1,8 @@
 <template>
-    <div class="progress-wrapper">
+    <div :class="cssWrapperClasses">
         <div class="progress">
             <div
-                :class="cssClasses"
+                :class="cssBarClasses"
                 :style="'width: ' + progress + '%'">
             </div>
         </div>
@@ -34,10 +34,18 @@ export default {
         message: {
             default: '',
             type: String
+        },
+        cssClasses: {
+            default: () => ({}),
+            type: Object
         }
     },
     computed: {
-        cssClasses: function() {
+        cssWrapperClasses () {
+            let defaultCss = { 'progress-wrapper': true };
+            return Object.assign(defaultCss, this.cssClasses);
+        },
+        cssBarClasses () {
             return {
                 'progress-bar': true,
                 'is-stopped': this.stopped,
@@ -54,17 +62,17 @@ export default {
 @import '../../scss/variables.scss';
 
 .progress {
-    background: $color-8;
+    background: var(--input-border-color);
     border: none;
     border-radius: 3px;
     height: 6px;
-    margin: 4rem auto 5rem auto;
+    margin: 0 auto;
     padding: 0;
     position: relative;
     width: 100%;
 
     &-bar {
-        background: $color-1;
+        background: var(--input-border-focus);
         border-radius: 3px;
         height: 6px;
         margin: 0;
@@ -72,74 +80,43 @@ export default {
         position: relative;
         transition: width .2s ease-out;
         width: 0;
-
-        &:after {
-            animation: progressbar 2s linear infinite;
-            background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent);
-            background-size: 16px 16px;
-            border-radius: 3px;
-            bottom: 0;
-            content: "";
-            left: 0;
-            overflow: hidden;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 1;
-        }
-
-        &.is-stopped {
-            &:after {
-                display: none;
+       
+        @at-root {
+            .sync-progress-bar {               
+                .progress-bar {
+                     background: rgba(var(--yellow), 1);
+                }
             }
         }
+
+        &.is-stopped {}
 
         &.is-success {
-            background: $color-2;
-
-            &:after {
-                display: none;
-            }
+            background: var(--success);
         }
 
         &.is-error {
-            background: $color-3;
-
-            &:after {
-                display: none;
-            }
+            background: var(--warning);
         }
 
         &.is-warning {
             background: $color-helper-6;
-
-            &:after {
-                display: none;
-            }
         }
     }
 
     &-wrapper {
+        padding: 0 0 7rem;
         position: relative;
     }
 
     &-message {
+        color: var(--text-light-color);
         font-size: 1.3rem;
         padding: 0;
         position: absolute;
         text-align: center;
-        top: .75rem;
+        bottom: 2rem;
         width: 100%;
-    }
-}
-
-@-webkit-keyframes progressbar {
-    0% {
-        background-position: 0 0;
-    }
-
-    100% {
-        background-position: 48px 48px;
     }
 }
 </style>

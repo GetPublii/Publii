@@ -1,12 +1,18 @@
 <template>
     <div
-        class="topbar-notification"
+        class="topbar-notifications"
         v-if="notification.visible"
         :data-timestamp="notification.timestamp" >
-        <span
+        <div class="topbar-notification">
+            <div class="topbar-notification-content">
+                <icon
+                    size="l"
+                    primaryColor="color-helper-1"
+                    name="info" />
+        <p
             ref="content"
             v-html="notification.text">
-        </span>
+        </p>
 
         <span
             class="topbar-notification-close"
@@ -14,6 +20,7 @@
             @click="closeNotification">
             &times;
         </span>
+        </div></div>
     </div>
 </template>
 
@@ -76,13 +83,13 @@ export default {
             if(closeTimestamp === null || data.notification.timestamp > parseInt(closeTimestamp, 10)) {
                 this.$store.commit('setNotification', {
                     timestamp: data.notification.timestamp,
-                    text: data.notification.text,
+                    text: data.notification.content,
                     visible: true
                 });
             } else {
                 this.$store.commit('setNotification', {
                     timestamp: data.notification.timestamp,
-                    text: data.notification.text,
+                    text: data.notification.content,
                     visible: false
                 });
             }
@@ -95,14 +102,6 @@ export default {
                 if (this.contentEventsAdded) {
                     return;
                 }
-
-                this.$refs.content.addEventListener('click', e => {
-                    if(e.target.tagName === 'A') {
-                        e.preventDefault();
-                        shell.openExternal(e.target.getAttribute('href'));
-                        this.closeNotification();
-                    }
-                });
 
                 this.contentEventsAdded = true;
             }, 500);
@@ -118,31 +117,95 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 
-.topbar {
-    &-notification {
-        -webkit-app-region: no-drag; // Make the links clickable again   
-        align-items: center;
-        border-right: 1px solid $color-helper-8;
-        display: inline-flex;
-        font-size: 1.4rem;
-        font-weight: 400;
-        margin: 0 2rem 0 0;
-        order: 1;
-        padding: .9rem 2rem;
-        position: relative;
+.topbar-notifications {
+     background: transparent;
+     bottom: 0;
+     pointer-events: none;
+     position: fixed;
+     left: 50%;
+     top: 4.2rem;
+     transform: translate(-50%, 0);     
+     user-select: none;
+     width: 100%;
+     z-index: 100003;
 
-        &-close {
-            -webkit-app-region: no-drag; // Make the button clickable again   
-            background: $color-9;
+     .topbar-notification {
+         animation: messages-animation .24s cubic-bezier(.17,.67,.6,1.34) forwards;
+         display: flex;
+         justify-content: center;
+         margin: 0;
+         opacity: 1;
+         padding: 0;
+         position: relative;
+         white-space: nowrap;
+         width: 100%;
+
+         @at-root {
+                  @keyframes messages-animation {
+                     from {
+                          opacity: 0;
+                          transform: scale(0.6);
+                     }
+                     to {
+                          opacity: 1;
+                          transform: scale(1);
+                     }
+                 }
+            }
+
+         &-content {
+             align-items: center;
+             background: var(--popup-bg);
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+             border-radius: 6px;
+             color: var(--text-primary-color);
+             font-size: 1.5rem;            
+             display: flex;
+             justify-content: center;  
+             line-height: 1.4;
+             margin: 0;
+             padding: 2rem;
+             pointer-events: all;
+             position: absolute;                     
+
+             a {
+                 color: var(--white);
+                 cursor: pointer;
+                 text-decoration: underline;
+
+                 &:active,
+                 &:focus,
+                 &:hover {
+                     opacity: .75;
+                 }
+             }
+
+             p {
+                 margin: 0 0 0 2rem;
+             }
+             
+             .icon {
+                 flex-shrink: 0;
+             }
+         }
+
+         &-icon {
+             display: block;            
+             margin: 0;
+         }
+         
+         &-close {
+            -webkit-app-region: no-drag; // Make the button clickable again  
+            background: var(--input-bg-light);
             border-radius: 50%;
-            color: $color-7;
+            color: var(--icon-secondary-color);
             cursor: pointer;
             font-size: 2.1rem;
             font-weight: 300;
             height: 2.4rem;
             left: auto;
-            line-height: 1.1; 
-            margin: 0 1.9rem;
+            line-height: 1; 
+            margin-left: 2rem;
             text-align: center;       
             transition: all .3s ease-out;            
             width: 2.4rem;
@@ -150,12 +213,20 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                color: $color-4;
+                 color: var(--icon-tertiary-color);
             }
         
             &:hover {
-                background: $color-helper-8;
+               background: var(--input-border-color);
             }  
+        }
+     }
+}
+
+body[data-os="linux"] {
+    .topbar {
+        &-notification {
+            top: 0;
         }
     }
 }

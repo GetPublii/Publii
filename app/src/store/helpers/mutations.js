@@ -36,7 +36,14 @@ export default {
     setAppConfig (state, newAppConfig) {
         state.app.config = Utils.deepMerge(state.app.config, newAppConfig);
     },
+    setAppTheme (state, newTheme) {
+        state.app.theme = newTheme;
+    },
     setSiteDir (state, newSitesLocation) {
+        if (!state.currentSite.siteDir) {
+            return;
+        }
+
         state.currentSite.siteDir = state.currentSite.siteDir.replace(
             state.app.config.sitesLocation,
             newSitesLocation
@@ -83,6 +90,12 @@ export default {
     },
     removeWebsite (state, name) {
         Vue.delete(state.sites, name);
+    },
+    cloneWebsite (state, data) {
+        let copiedData = JSON.parse(JSON.stringify(state.sites[data.clonedWebsiteCatalog]));
+        copiedData.name = data.newSiteCatalog;
+        copiedData.displayName = data.newSiteName;
+        Vue.set(state.sites, data.newSiteCatalog, copiedData);
     },
     addNewSite (state, siteData) {
         state.currentSite = {
@@ -147,6 +160,12 @@ export default {
                 order: authorsOrdering[1]
             }
         });
+
+        /*
+        if (window.spellCheckHandler) {
+            window.spellCheckHandler.switchLanguage(state.currentSite.config.language);
+        }
+        */
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);

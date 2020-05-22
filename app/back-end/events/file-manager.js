@@ -13,7 +13,7 @@ class FileManagerEvents {
      *
      * @param appInstance
      */
-    constructor(appInstance) {
+    constructor (appInstance) {
         let self = this;
         this.app = appInstance;
 
@@ -133,49 +133,88 @@ class FileManagerEvents {
             case '':
             case 'txt':
             case 'rdf':
-            case 'doc':
-            case 'docx':
-            case 'xls':
-            case 'xlsx':
                 return 'txt';
-            case 'js':
-            case 'css':
+            case 'doc':
+                return 'doc';
+            case 'docx':
+                return 'docx';
+            case 'xls':
+                return 'xls';
+            case 'xlsx':
+                return 'xlsx';
+            case 'pdf':
+                return 'pdf';
+            case 'asp':
+            case 'aspx': 
+            case 'cfm':
+            case 'cgi':
+            case 'pl':
+            case 'jsp':
             case 'php':
-            case 'html':
-            case 'htm':
-            case 'xml':
+            case 'py':
+            case 'rss':
+            case 'xhtml':
+            case 'vue':
+            case 'scss':
                 return 'code';
-            case 'jpg':
-            case 'jpeg':
-            case 'png':
+            case 'js':
+                return 'js'; 
+            case 'css':
+                return 'css';
+            case 'html':
+                return 'html';
+            case 'htm':
+                return 'htm';
+            case 'xml':
+                return 'xml';
             case 'webp':
             case 'bmp':
-            case 'gif':
-            case 'svg':
                 return 'img';
-            case 'mp4':
+            case 'jpg':
+                return 'jpg';
+            case 'jpeg':
+                return 'jpeg';
+            case 'png':
+                return 'png';
+            case 'svg':
+                return 'svg';
+            case 'gif':
+                return 'gif';
             case 'webm':
-            case 'ogg':
+            case 'ogg': 
             case 'flv':
-            case 'avi':
-            case 'mov':
             case 'wmv':
             case 'm4v':
             case '3gp':
+            case '3g2':
+            case 'mkv':
+            case 'mpg':
+            case 'mpeg':
+            case 'rm':
+            case 'swf':
+            case 'vob':
                 return 'video';
+            case 'avi':
+                return 'avi';
+            case 'mov':
+                return 'mov';
+            case 'mp4':
+                return 'mp4';
             case 'tar':
-            case 'zip':
-            case 'rar':
+            case 'zip':            
             case 'gz':
             case 'iso':
             case 'dmg':
             case 'bz2':
-            case 'lz':
-            case '7z':
+            case 'lz':          
             case 'ace':
             case 'apk':
             case 'jar':
                 return 'zip';
+            case '7z':
+                return '7z';
+            case 'rar':
+                return 'rar';
             case 'mp3':
             case '3gp':
             case 'aac':
@@ -186,9 +225,7 @@ class FileManagerEvents {
             case 'wav':
             case 'wma':
             case 'vox':
-                return 'music';
-            case 'pdf':
-                return 'pdf';
+                return 'music';            
             default:
                 return 'unknown';
         }

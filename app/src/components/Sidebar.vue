@@ -1,5 +1,6 @@
 <template>
     <aside class="sidebar">
+        <topbar-sites />
         <sidebar-menu />
         <sidebar-sync-button />
     </aside>
@@ -8,12 +9,14 @@
 <script>
 import SidebarMenu from './SidebarMenu';
 import SidebarSyncButton from './SidebarSyncButton';
+import SidebarSites from './SidebarSites';
 
 export default {
     name: 'sidebar',
     components: {
         'sidebar-menu': SidebarMenu,
-        'sidebar-sync-button': SidebarSyncButton
+        'sidebar-sync-button': SidebarSyncButton,
+        'topbar-sites': SidebarSites
     }
 }
 </script>
@@ -22,34 +25,13 @@ export default {
 @import '../scss/variables.scss';
 
 .sidebar {
-    background: $color-1;
+    background: var(--sidebar-bg);
+    background: linear-gradient(to bottom, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%);
     height: 100%;
-    padding: 4.4rem 5rem;
+    padding: 0 4rem 3rem;
     position: absolute;
     -webkit-app-region: no-drag;
     -webkit-user-select: none;
     width: 100%;
-}
-
-/*
- * Responsive improvements
- */
-@media (max-height: 736px) {
-    .sidebar {
-        padding: 4rem 4rem 3rem;
-    }
-}
-
-@media (min-height: 737px) and (max-height: 900px) {
-    .sidebar {
-        padding: 4rem 4rem 3rem;
-    }
-}
-
-
-@media (max-width: 1400px) {
-    .sidebar {
-        padding: 4rem 4rem 3rem;
-    }
 }
 </style>

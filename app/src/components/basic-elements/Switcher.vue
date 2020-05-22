@@ -1,5 +1,7 @@
 <template>
-    <span :class="{ 'has-label': label }">
+    <span 
+        :id="anchor"
+        :class="{ 'has-label': label }">
         <span
             :class="cssClasses"
             @click="toggle"></span>
@@ -29,6 +31,10 @@ export default {
         lowerZindex: {
             default: false,
             type: Boolean
+        },
+        anchor: {
+            default: '',
+            type: String
         }
     },
     data: function() {
@@ -116,7 +122,7 @@ export default {
 
         &:after {
             left: 14px;
-            background: #42a5f5;
+            background: var(--input-border-focus);
         }
     }
 }

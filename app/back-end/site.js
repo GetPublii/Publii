@@ -39,7 +39,7 @@ class Site {
      * Create a new site
      */
     create(authorName) {
-        if(!this.siteExists()) {
+        if (!this.siteExists()) {
             this.createDirectories();
             this.copyDefaultTheme();
             this.createConfigFiles();
@@ -278,8 +278,8 @@ class Site {
         let regenerateProcess = childProcess.fork(__dirname + '/workers/thumbnails/regenerate', {
             stdio: [
                 null,
-                fs.openSync(this.application.appDir + "/logs/regenerate-process.log", "w"),
-                fs.openSync(this.application.appDir + "/logs/regenerate-errors.log", "w"),
+                fs.openSync(this.application.app.getPath('logs') + "/regenerate-process.log", "w"),
+                fs.openSync(this.application.app.getPath('logs') + "/regenerate-errors.log", "w"),
                 'ipc'
             ]
         });
@@ -383,7 +383,9 @@ class Site {
                 }
 
                 if(fs.lstatSync(path.join(mediaPath, catalog, file)).isFile()) {
-                    numberOfImages++;
+                    if (path.parse(file).ext !== '') {
+                        numberOfImages++;
+                    }
                 }
             }
         }
@@ -416,6 +418,61 @@ class Site {
                 fs.removeSync(sitePath);
             }
         }, 500);
+    }
+
+    /*
+     * Clone website
+     */
+    static clone(appInstance, catalogName, siteName) {
+        let newCatalogName = slug(siteName).toLowerCase();
+        let sitePath = path.join(appInstance.sitesDir, catalogName);
+        let newCatalogFreeName = Site.findFreeName(newCatalogName, appInstance.sitesDir);
+        let newSitePath = path.join(appInstance.sitesDir, newCatalogFreeName);
+        fs.copySync(sitePath, newSitePath);
+        Site.updateNameInSiteConfig(newSitePath, newCatalogFreeName, siteName);
+        
+        return {
+            siteName: siteName,
+            siteCatalog: newCatalogName
+        };
+    }
+
+    /**
+     * 
+     * Find first free name
+     * 
+     * e.g. XYZ -> XYZ copy
+     * e.g. XYZ copy -> XYZ copy copy
+     * 
+     * @param {string} name 
+     */
+    static findFreeName (name, basePath) {
+        let baseName = name;
+        let dirPath = path.join(basePath, baseName);
+        let currentName = baseName;
+
+        while (UtilsHelper.dirExists(dirPath)) {
+            currentName = baseName + '-copy';
+            dirPath = path.join(basePath, currentName);
+        }
+
+        return currentName;
+    }
+
+    /**
+     * Update site.config.json to use a new name of the website
+     * 
+     * @param {string} sitePath 
+     * @param {string} newNameSlug 
+     */
+    static updateNameInSiteConfig (sitePath, newSiteSlug, newSiteName) {
+        let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
+        let siteConfig = fs.readFileSync(configFilePath);
+        siteConfig = JSON.parse(siteConfig);
+        siteConfig.name = newSiteSlug;
+        siteConfig.displayName = newSiteName;
+        siteConfig = JSON.stringify(siteConfig, null, 4);
+        fs.writeFileSync(configFilePath, siteConfig);
     }
 
     /*

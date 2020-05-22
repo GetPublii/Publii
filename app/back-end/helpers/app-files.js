@@ -97,7 +97,7 @@ class AppFilesHelper {
                 }
             );
         } catch(e) {
-            console.log('ERROR OCCURRED: ' + site);
+            console.log('ERROR OCCURRED: ' + site, e);
             return false;
         }
 

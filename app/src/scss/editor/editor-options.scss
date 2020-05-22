@@ -1,9 +1,10 @@
 /*
  * Basic files
  */
-
+@import '../vendor/modularscale';
 @import '../mixins';
 @import '../variables';
+@import '../css-variables';
 @import 'scrollbar';
 
 /*
@@ -46,11 +47,6 @@ td {
     padding: 0;
 }
 
-body {
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
 img {
     height: auto;
     max-width: 100%;
@@ -60,28 +56,17 @@ img {
 /*
  * Main rules
  */
-html {
-    font-size: 1rem;
-}
 
 html {
     height: 100%;
-    overflow-y: auto!important;
-}
+    overflow-y: auto !important;
 
-@media screen and (min-width: 62rem) {
-    html {
-        font-size: calc(1rem + 0.1 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    html {
-        font-size: 1.1rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
 }
 
 body#tinymce {
+    background: var(--bg-primary);
+    color: var(--text-editor-body-color);
     -webkit-font-smoothing: antialiased;
     font-size: inherit;
     line-height: 1.6;
@@ -93,44 +78,36 @@ body#tinymce {
     }
 }
 
-a {
-    color: $link-color;
-    text-decoration: none;
-    -webkit-transition: all 0.12s linear 0s;
-    transition: all 0.12s linear 0s;
+a:not(.btn) {
+    @include links (var(--link-primary-color), var(--link-primary-color), var(--link-primary-color), var(--link-primary-color));
 }
 
-a:hover {
-    color: $link-color;
-    text-decoration: underline;
-}
 
-a:active {
-    color: $link-color;
-}
-
-a:focus {
-    outline: none;
-}
-
-blockquote,
 p,
 ul,
 ol,
 dl,
 table,
 hr {
-    margin-top: 1.6rem;
+    margin-top: baseline(4);
 }
 
+blockquote,
 figure {
-    margin-top: 2.4rem;
-    margin-bottom: 2.4rem;
+    margin-top: baseline(4);
+    margin-bottom: baseline(4);
+}
+
+pre,
+table,
+script {
+    margin-top: baseline(4);
+    margin-bottom: baseline(5);
 }
 
 figcaption {
     clear: both;
-    color: $color-6;
+    color: var(--gray-4);
     font-style: italic;
     font-size: 0.7rem;
     margin: 0.8rem 0 0;
@@ -143,211 +120,160 @@ h3,
 h4,
 h5,
 h6 {
-    color: $color-4;
-    font-weight: 600;
+    color: var(--headings-color);
+    font-weight: var(--font-weight-bold);
     letter-spacing: -0.03rem;
-    line-height: 1.2;
-    margin-top: 3.2rem;
+    line-height: 1.3;
+    margin-top: baseline(5);
 }
 
 h1 {
-    margin: 0;
-}
-
-h1 {
-    font-size: 1.60181rem;
-}
-
-@media screen and (min-width: 62rem) {
-    h1 {
-        font-size: calc(1.60181rem + 0.67889 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    h1 {
-        font-size: 2.2807rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
 }
 
 h2 {
-    font-size: 1.42383rem;
-}
-
-@media screen and (min-width: 62rem) {
-    h2 {
-        font-size: calc(1.42383rem + 0.17798 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    h2 {
-        font-size: 1.60181rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
 }
 
 h3 {
-    font-size: 1.26563rem;
-}
-
-@media screen and (min-width: 62rem) {
-    h3 {
-        font-size: calc(1.26563rem + 0.1582 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    h3 {
-        font-size: 1.42383rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
 }
 
 h4 {
-    font-size: 1.125rem;
-}
-
-@media screen and (min-width: 62rem) {
-    h4 {
-        font-size: calc(1.125rem + 0.14063 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    h4 {
-        font-size: 1.26563rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
 }
 
 h5 {
-    font-size: 1rem;
-}
-
-@media screen and (min-width: 62rem) {
-    h5 {
-        font-size: calc(1rem + 0.125 * ((100vw - 62rem) / 47));
-    }
-}
-
-@media screen and (min-width: 109rem) {
-    h5 {
-        font-size: 1.125rem;
-    }
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
 }
 
 h6 {
-    font-size: 0.88889rem;
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
 }
 
-@media screen and (min-width: 62rem) {
-    h6 {
-        font-size: calc(0.88889rem + 0.11111 * ((100vw - 62rem) / 47));
+h2,
+h3,
+h4,
+h5,
+h6 {
+    & + p {
+        margin-top: baseline(3);
     }
-}
-
-@media screen and (min-width: 109rem) {
-    h6 {
-        font-size: 1rem;
-    }
-}
-
-p {
-    margin-top: 1.6rem;
 }
 
 b,
 strong {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 }
 
 blockquote {
-    border-left: 0.3rem solid $color-1;
+    background: var(--gray-1);
+    border-left: 3px solid var(--primary-color);
     font-style: italic;
-    padding: 0.8rem 0 0.8rem 1.86667rem;
-}
+    padding: baseline(2) 0 baseline(2) baseline(8);
 
-blockquote cite {
-    color: $color-4;
-    display: block;
-    font-size: 0.9rem;
-    margin-top: 0.8rem;
-}
-
-blockquote cite:before {
-    content: "- ";
+    & > :nth-child(1) {
+        margin-top: 0;
+    }
 }
 
 ul,
 ol {
     margin-left: 2rem;
+
+    & > li {
+        list-style: inherit;
+        padding-left: baseline(2);
+    }
+
+    ul,
+    ol {
+        margin-bottom: baseline(2);
+        margin-top: baseline(2);
+    }
 }
 
-ul > li,
-ol > li {
-    list-style-position: outside;
-    padding-left: 0.4rem;
-}
-
-dl dt {
-    font-weight: 700;
+dl {
+    dt {
+        font-weight: var(--font-weight-bold);
+    }
 }
 
 pre {
-    margin: 1.6rem 0 0;
-    padding: 1.6rem 3.2rem;
+    background-color: var(--gray-1);
+    font-size: ms(-1);
+    padding: baseline(6);
     white-space: pre-wrap;
     word-wrap: break-word;
+
+    & > code {
+        background: none;
+        color: var(--headings-color);
+        display: inline-block;
+        font-size: ms(-1);
+        font-weight: normal;
+        padding: 0;
+    }
 }
 
-code,
-pre {
-    background-color: $color-9;
-    font-family: "Monaco", "Courier New", monospace;
-    font-size: 0.8rem;
+code {
+    background-color: #ffeeee;
+    border-radius: 2px;
+    color: var(--warning);
+    font-size: ms(-1);
+    font-family: var(--font-monospace);
+    padding: baseline(1) baseline(2);
 }
 
 table {
+    border: 1px solid var(--input-border-color);
     border-collapse: collapse;
     border-spacing: 0;
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
     vertical-align: top;
     text-align: left;
-    white-space: nowrap;
+    width: 100%;
+
+    th {
+        font-weight: var(--font-weight-semibold);
+        padding: baseline(2.5) baseline(4);
+    }
+
+    td {
+        border-top: 1px solid var(--input-border-color);
+        padding: baseline(2.5) baseline(4);
+    }
 }
 
-table th {
-    border-bottom: 2px solid $color-helper-8;
-    font-weight: 700;
-    padding: 0.8rem 1.33333rem;
+kbd {
+    background: var(--headings-color);
+    border-radius: 2px;
+    color: var(--bg-primary);
+    font-family: var(--font-monospace);
+    font-size: 0.8888em;
+    padding: baseline(0.5) baseline(1.5);
 }
 
-table tr:nth-child(2n) {
-    background: $color-9;
+sub,
+sup {
+    font-size: 65%;
 }
 
-table td {
-    padding: 0.8rem 1.33333rem;
+small {
+    font-size: ms(-2);
 }
 
-hr#read-more {
+hr:not(#read-more) {
+    background: none;
     border: none;
-    border-top: 3px solid $color-helper-8;
-    margin: 1.6rem 0;
-    position: relative;
+    height: auto;
+    line-height: 1;
+    max-width: none;
+    text-align: center;
 
-    &:after {
-        background: #fff;
-        color: $color-7;
-        content: "Read more";
-        font-size: 1rem;
-        left: 50%;
-        line-height: 1;
-        padding: 0 .5rem;
-        position: absolute;
-        top: -0.8rem;
-        -webkit-transform: translateX(-50%);
-        transform: translateX(-50%);
+    &::before {
+        content: "* * *";
+        color: var(--headings-color);
+        font-size: 30px;
     }
 }
 

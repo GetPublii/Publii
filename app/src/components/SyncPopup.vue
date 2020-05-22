@@ -1,52 +1,63 @@
 <template>
-    <div class="overlay" v-if="isVisible">
+    <div class="overlay as-page" v-if="isVisible">
         <div class="popup sync">
             <div
                 v-if="isInSync && noIssues"
-                class="sync-success">
-                <icon
-                    size="xl"
-                    name="success"
-                    primaryColor="color-2" />
+                class="sync-success">                
 
-                <h2>Your website is now in sync</h2>
+                <h1>Your website is now in sync</h1>
 
                 <p
                     v-if="isGithubPages"
-                    class="description alert">
-                    <strong>Remember!</strong> Changes on Github Pages can be visible in a few minutes from the deployment.
+                    class="description">
+                    <strong>Note:</strong> Changes on Github Pages can be visible in a few minutes from the deployment, <br>so be patient and wait for a while.
                 </p>
 
                 <p
                     v-if="isGitlabPages"
-                    class="description alert">
-                    <strong>Remember!</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment.
+                    class="description">
+                    <strong>Note:</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment,  <br>so be patient and wait for a while.
                 </p>
 
                 <p
                     v-if="isManual"
-                    class="description alert">
-                    Your website files has been prepared. Use the "Get website files" button below to get your files in order to manually deploy them.
+                    class="description">
+                    Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
                 </p>
+
+                <p 
+                    v-if="!(isGithubPages || isGitlabPages || isManual)"
+                    class="description">
+                    All files have been successfully uploaded to your server. <br>Visit your website by clicking the button below.
+                </p>
+
+                <div class="progress-bars-wrapper">
+                    <progress-bar
+                        :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
+                        color="green"
+                        :progress="100" 
+                        :stopped="false"
+                        message="" />
+                </div>
 
                 <div class="buttons">
                     <p-button
                         v-if="!isManual"
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium quarter-width"
                         :onClick="openWebsite">
                         Visit your website
                     </p-button>
 
                     <p-button
                         v-if="isManual"
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium quarter-width"
                         :onClick="showFolder">
                         Get website files
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium half-width no-border-radius">
+                        type="outline medium quarter-width">
                         OK
                     </p-button>
                 </div>
@@ -55,12 +66,8 @@
             <div
                 v-if="isInSync && !noIssues"
                 class="sync-success">
-                <icon
-                    size="xl"
-                    name="warning"
-                    primaryColor="color-helper-6" />
-
-                <h2>Some files were not synced properly.</h2>
+               
+                <h1>Some files were not synced properly.</h1>
 
                 <p class="description">
                     Please check hard-upload-errors-log.txt files using the Tools -&gt; Log Viewer tool.
@@ -68,14 +75,14 @@
 
                 <div class="buttons">
                     <p-button
-                        type="primary medium no-border-radius half-width"
+                        type="primary medium  quarter-width"
                         :onClick="openWebsite">
                         Visit your website
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium half-width no-border-radius">
+                        type="outline medium quarter-width ">
                         OK
                     </p-button>
                 </div>
@@ -85,41 +92,41 @@
                 v-if="properConfig && !isInSync"
                 class="sync-todo">
                 <div class="heading">
-                    <h1>Website synchronization</h1>
+                    <h1>Website synchronization</h1>                    
 
                     <p class="description">
-                        After clicking the "Sync your website" button, your website will be rendered and uploaded to the server specified in the "Server Settings" page.
-                    </p>
-
-                    <p class="description alert">
-                        <strong>Remember!</strong> Any duplicate files or filenames already in the destination location that match the Publii-generated files will be overwritten.
+                        Any duplicate files or filenames already in the destination location <br>that match the Publii-generated files will be overwritten.
                     </p>
                 </div>
 
-                <progress-bar
-                    :color="renderingProgressColor"
-                    :progress="renderingProgress"
-                    :stopped="renderingProgressIsStopped"
-                    :message="messageFromRenderer" />
+                <div class="progress-bars-wrapper">
+                    <progress-bar
+                        :cssClasses="{ 'rendering-progress-bar': true }"
+                        :color="renderingProgressColor"
+                        :progress="renderingProgress"
+                        :stopped="renderingProgressIsStopped"
+                        :message="messageFromRenderer" />
 
-                <progress-bar
-                    v-if="!isManual"
-                    :color="uploadingProgressColor"
-                    :progress="uploadingProgress"
-                    :stopped="uploadingProgressIsStopped"
-                    :message="messageFromUploader" />
+                    <progress-bar
+                        v-if="!isManual && !renderingInProgress && (uploadInProgress || syncInProgress || isInSync || uploadError)"
+                        :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
+                        :color="uploadingProgressColor"
+                        :progress="uploadingProgress"
+                        :stopped="uploadingProgressIsStopped"
+                        :message="messageFromUploader" />
+                </div>
 
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
-                        :type="syncInProgress ? 'disabled medium no-border-radius half-width': 'medium no-border-radius half-width'"
+                        :type="syncInProgress ? 'disabled medium quarter-width': 'medium quarter-width'"
                         :disabled="syncInProgress">
                         Sync your website
                     </p-button>
 
                     <p-button
                         :onClick="cancelSync"
-                        type="cancel-popup medium no-border-radius half-width">
+                        type="outline medium quarter-width">
                         Cancel
                     </p-button>
                 </div>
@@ -127,24 +134,23 @@
 
             <div
                 v-if="noDomainConfig"
-                class="sync-issues-to-resolve">
-                <icon
-                    name="settings"
-                    size="xl"
-                    primaryColor="color-8" />
+                class="sync-issues-to-resolve">                
 
-                <h2>Make sure the domain name is set.</h2>
+                <h1>Make sure the domain name is set.</h1>
+                <p class="description">                   
+                    Your website cannot currently be synced as the settings appear to lack a domain name. <br>Check your server settings to ensure a domain name has been entered.
+                </p>
 
                 <div class="buttons">
                     <p-button
-                        type="medium no-border-radius half-width"
+                        type="medium  quarter-width"
                         :onClick="goToServerSettings">
                         Go to Settings
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="cancel-popup medium no-border-radius half-width">
+                        type="outline medium  quarter-width">
                         Cancel
                     </p-button>
                 </div>
@@ -152,23 +158,22 @@
 
             <div
                 v-if="!noDomainConfig && noServerConfig"
-                class="sync-issues-to-resolve">
-                <icon
-                    name="server"
-                    size="xl"
-                    primaryColor="color-8" />
+                class="sync-issues-to-resolve">                
 
-                <h2>Make sure the destination server is properly configured.</h2>
+                <h1>Make sure the destination server is properly configured.</h1>
+                <p class="description">
+                    Your website cannot currently be synced as the destination server has not been configured correctly. <br>Check your server settings to ensure that the correct information has been entered.
+                </p>
 
                 <div class="buttons">
                     <p-button
-                        type="medium no-border-radius half-width"
+                        type="medium  quarter-width"
                         :onClick="goToServerSettings">
                         Go to Settings
                     </p-button>
 
                     <p-button
-                        type="cancel-popup medium no-border-radius half-width"
+                        type="outline medium  quarter-width"
                         :onClick="close">
                         Cancel
                     </p-button>
@@ -189,7 +194,7 @@ export default {
             isVisible: false,
             renderingInProgress: false,
             uploadInProgress: false,
-            messageFromRenderer: '',
+            messageFromRenderer: 'true',
             renderingProgress: 0,
             renderingProgressColor: 'blue',
             renderingProgressIsStopped: false,
@@ -351,8 +356,14 @@ export default {
             this.close();
         },
         openWebsite: function() {
-            let url = this.$store.state.currentSite.config.domain;
-            shell.openExternal(url);
+            let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
+
+            if (urlToOpen) {
+                shell.openExternal(urlToOpen);
+            } else {
+                alert('Sorry! The website link seems to be invalid.');
+            }
+
             this.close();
         },
         showFolder: function() {
@@ -366,7 +377,7 @@ export default {
         startSync: function() {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
+                    message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
                     okLabel: 'Go to settings',
                     okClick: () => {
                         let siteName = this.$route.params.name;
@@ -436,7 +447,7 @@ export default {
             });
         },
         renderingProgressUpdate: function(event, data) {
-            if(this.renderingProgress > data.progress) {
+            if (this.renderingProgress > data.progress) {
                 return;
             }
 
@@ -671,33 +682,33 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    overflow: hidden;
-    padding: 4rem 4rem 6rem 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 70rem;
+.popup {       
+    background: none;
+    max-width: $wrapper;
+    overflow: visible;
+    width: 100%;
 
     .description {
+        color: var(--text-light-color);
+        font-size: 1.4rem;
+        line-height: 1.4;
+        margin: auto;
         padding: 0 1rem;
-        text-align: left;
-    }
+        text-align: center;      
 
-    .description.alert {
-        background: $color-helper-5;
-        font-size: 1.5rem;
-        margin-bottom: 3rem;
-        padding: 1rem 2rem;
-        text-align: left;
+        &.alert {
+            background: var(--highlighted);
+            border-radius: .2em;
+            color: var(--text-primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 1rem 2rem;
+            text-align: left;
+        }
+        
+        strong {
+            color: var(--text-primary-color); 
+        }
     }
 }
 
@@ -710,7 +721,7 @@ export default {
 }
 
 .message {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-weight: 400;
     margin: 0;
     padding: 4rem;
@@ -724,9 +735,24 @@ export default {
 
 .buttons {
     display: flex;
-    margin: 4rem -4rem -6rem -4rem;
+    justify-content: center;
+    margin-top: 4rem;
     position: relative;
     text-align: center;
     top: 1px;
+}
+
+.progress-bars-wrapper {
+    margin-top: 7rem;
+    margin-bottom: -4rem;
+    position: relative;
+
+    .progress-wrapper + .progress-wrapper {
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+    }
 }
 </style>

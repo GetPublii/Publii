@@ -55,7 +55,7 @@ export default {
 
 .credits {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
     padding: 4.4rem 0;
 
     & > .heading {

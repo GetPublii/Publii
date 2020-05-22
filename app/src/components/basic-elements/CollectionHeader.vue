@@ -15,8 +15,8 @@ export default {
 
 .header {
     align-items: center;
-    background: $color-10;
-    border-bottom: 1px solid $color-helper-8;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light-color);
     display: flex;
     overflow-y: scroll; 
     position: relative;

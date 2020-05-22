@@ -118,9 +118,9 @@
                             size="s"
                             :name="item.icon"
                             :customCssClasses="'file ' + item.icon"
-                            iconset="file-extensions-map"
-                            customWidth="16"
-                            customHeight="20" />
+                            iconset="svg-map-file-extensions"
+                            customWidth="22"
+                            customHeight="24" />
 
                         {{ item.name }}
                     </a>
@@ -205,8 +205,8 @@ export default {
         });
 
         ipcRenderer.on('app-files-selected', (event, data) => {
-            if(data.paths !== undefined) {
-                this.uploadFile(data.paths);
+            if (data.paths !== undefined && data.paths.filePaths.length) {
+                this.uploadFile(data.paths.filePaths);
             }
         });
 
@@ -402,16 +402,21 @@ export default {
         margin-top: -1.5rem;
 
         .directory-link {
-            color: $color-7;
+            color: var(--text-light-color);
             cursor: pointer;
             font-size: 1.4rem;
+            transition: var(--transition);
+            
+            &:hover {
+                color: var(--link-primary-color);
+            }
 
             & + .directory-link {
                 margin-left: 2rem;
             }
 
             &.is-active {
-                color: $color-1;
+                color: var(--primary-color);
             }
         }
     }

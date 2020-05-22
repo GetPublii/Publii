@@ -2,10 +2,20 @@
     <section
         class="content"
         ref="content">
-        <div class="server-settings">
+        <div
+            v-if="isLoaded" 
+            class="server-settings">
             <p-header 
                 v-if="deploymentMethodSelected !== ''" 
-                title="Server Settings">
+                :title="getDeploymentMethodName(deploymentMethodSelected) + ' settings'">
+                <p-button
+                    @click.native="deploymentMethodSelected = ''"
+                    slot="buttons"
+                    title="Click to change currently used deployment method"
+                    type="outline">
+                    Change server type
+                </p-button>
+
                 <p-button
                     @click.native="visitWebsite"
                     slot="buttons"
@@ -19,11 +29,11 @@
                     slot="buttons">
                     Save Settings
                 </p-button>
-            </p-header>
+            </p-header>          
 
             <p-header 
                 v-if="deploymentMethodSelected === ''" 
-                title="Select a server type:">
+                title="Select server type:">
             </p-header>
 
             <div 
@@ -34,62 +44,94 @@
                    <icon
                       customWidth="69"
                       customHeight="42"                   
-                      name="ftp" />
+                      name="ftp" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'sftp'" title="SFTP">
                    <icon
                       customWidth="69"
                       customHeight="42"                   
-                      name="sftp" />
+                      name="sftp" 
+                      iconset="svg-map-server"/>
                 </div>               
 
                 <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
                    <icon
                       customWidth="48"
                       customHeight="48"                    
-                      name="aws" />
+                      name="aws" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages">
                     <icon
                       customWidth="129"
                       customHeight="42"                     
-                      name="githubpages" />
+                      name="githubpages" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages">
                     <icon
                       customWidth="113"
                       customHeight="40"                     
-                      name="gitlab" />
+                      name="gitlab" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'netlify'" title="Netlify">
                    <icon
                       customWidth="102"
                       customHeight="48"                     
-                      name="netlify" />
+                      name="netlify" 
+                      iconset="svg-map-server"/>
                 </div>
 
                 <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud">
                     <icon
                       customWidth="167"
                       customHeight="40"                     
-                      name="googlecloud" />
+                      name="googlecloud" 
+                      iconset="svg-map-server"/>
                 </div>
                 
                 <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
-                      name="zip" />
+                      name="zip" 
+                      iconset="svg-map-server"/>
                 </div>
             </div>
 
-            <fields-group 
-                v-if="deploymentMethodSelected !== ''"
-                title="Destination Server">
+            <fields-group v-if="deploymentMethodSelected !== ''">
+                <div class="msg msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                    <template v-if="deploymentMethodSelected === 'ftp'">
+                        FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
+                    </template>
+
+                    <template v-if="deploymentMethodSelected === 'netlify'">
+                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
+                    </template>
+
+                    <template v-if="deploymentMethodSelected === 'github-pages'">
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
+                    </template>
+
+                    <template v-if="deploymentMethodSelected === 'gitlab-pages'">
+                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
+                    </template>
+
+                    <template v-if="deploymentMethodSelected === 's3'">
+                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
+                    </template>
+
+                    <template v-if="deploymentMethodSelected === 'google-cloud'">
+                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                    </template>
+                </div>
+
                 <field
                     id="domain"
                     label="Domain">
@@ -105,6 +147,7 @@
                         slot="field"
                         id="domain"
                         key="domain"
+                        :spellcheck="false"
                         v-model="domain" />
                     <small 
                         v-if="deploymentMethodSelected === 'github-pages'"
@@ -130,7 +173,7 @@
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
-                        Please remember: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                        Note: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -149,61 +192,7 @@
                     <small
                         class="note"
                         slot="note">
-                        Please remember: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
-                    </small>
-                </field>
-
-                <field
-                    id="deploymentMethod"
-                    label="Protocol">
-                    <dropdown
-                        slot="field"
-                        id="deploymentMethod"
-                        key="protocol"
-                        :items="deploymentMethods"
-                        v-model="deploymentMethodSelected"></dropdown>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'ftp'">
-                        The FTP protocol uses an unencrypted transmission.<br>
-                        We strongly recommend to use FTPS or SFTP protocols if possible.
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'netlify'">
-                        Read how to <a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">configure a website using Netlify</a>.
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'github-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">configure a website using Github Pages</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'gitlab-pages'">
-                        Read how to <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">configure a website using GitLab Pages</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 's3'">
-                        Read how to <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">configure a website using S3</a>
-                    </small>
-
-                    <small
-                        class="note"
-                        slot="note"
-                        v-if="deploymentMethodSelected === 'google-cloud'">
-                        Read how to <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">configure a website using Google Cloud</a>
+                        Note: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -238,6 +227,7 @@
                         slot="field"
                         id="server"
                         key="server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('server') > -1 }"
                         @keyup.native="cleanError('server')"
                         v-model="deploymentSettings.server" />
@@ -257,6 +247,7 @@
                         slot="field"
                         id="username"
                         key="username"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('username') > -1 }"
                         @keyup.native="cleanError('username')"
                         v-model="deploymentSettings.username" />
@@ -269,6 +260,19 @@
                 </field>
 
                 <field
+                    v-if="['sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
+                    id="sftp-auth-method"
+                    label="Authentication method">
+                    <radio-buttons
+                        slot="field"
+                        id="sftp-auth-method"
+                        name="sftp-auth-method"
+                        key="sftp-auth-method"
+                        :items="sftpAuthMethodItems"
+                        v-model="deploymentMethodSelected" />
+                </field>
+
+                <field
                     v-if="['ftp', 'ftp+tls', 'sftp'].indexOf(deploymentMethodSelected) > -1 && !deploymentSettings.askforpassword"
                     id="password"
                     label="Password">
@@ -277,6 +281,7 @@
                         id="password"
                         type="password"
                         key="password"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('password') > -1 }"
                         @keyup.native="cleanError('password')"
                         v-model="deploymentSettings.password" />
@@ -321,7 +326,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="sftpkey"
-                    label="Your key">
+                    label="Your private key">
                     <file-select
                         id="sftpkey"
                         :class="{ 'is-invalid': errors.indexOf('key') > -1 }"
@@ -345,6 +350,7 @@
                         slot="field"
                         id="passphrase"
                         type="password"
+                        :spellcheck="false"
                         key="passphrase"
                         v-model="deploymentSettings.passphrase" />
 
@@ -363,6 +369,7 @@
                         slot="field"
                         id="path"
                         key="path"
+                        :spellcheck="false"
                         v-model="deploymentSettings.path" />
 
                     <small
@@ -388,6 +395,7 @@
                         slot="field"
                         id="gh-server"
                         key="gh-server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-server') > -1 }"
                         @keyup.native="cleanError('github-server')"
                         v-model="deploymentSettings.github.server" />
@@ -406,6 +414,7 @@
                         slot="field"
                         id="gh-user"
                         key="gh-user"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-user') > -1 }"
                         @keyup.native="cleanError('github-user')"
                         v-model="deploymentSettings.github.user" />
@@ -425,6 +434,7 @@
                         slot="field"
                         id="gh-repo"
                         key="gh-repo"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-repo') > -1 }"
                         @keyup.native="cleanError('github-repo')"
                         v-model="deploymentSettings.github.repo" />
@@ -444,6 +454,7 @@
                         slot="field"
                         id="gh-branch"
                         key="gh-branch"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-branch') > -1 }"
                         @keyup.native="cleanError('github-branch')"
                         v-model="deploymentSettings.github.branch" />
@@ -469,6 +480,7 @@
                         id="gh-token"
                         type="password"
                         key="gh-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('github-token') > -1 }"
                         @keyup.native="cleanError('github-token')"
                         v-model="deploymentSettings.github.token" />
@@ -505,6 +517,7 @@
                         slot="field"
                         id="gl-server"
                         key="gl-server"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-server') > -1 }"
                         @keyup.native="cleanError('gitlab-server')"
                         v-model="deploymentSettings.gitlab.server" />
@@ -523,6 +536,7 @@
                         slot="field"
                         id="gl-repo"
                         key="gl-repo"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-repo') > -1 }"
                         @keyup.native="cleanError('gitlab-repo')"
                         v-model="deploymentSettings.gitlab.repo" />
@@ -542,6 +556,7 @@
                         slot="field"
                         id="gl-branch"
                         key="gl-branch"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-branch') > -1 }"
                         @keyup.native="cleanError('gitlab-branch')"
                         v-model="deploymentSettings.gitlab.branch" />
@@ -567,6 +582,7 @@
                         id="gl-token"
                         type="password"
                         key="gl-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('gitlab-token') > -1 }"
                         @keyup.native="cleanError('gitlab-token')"
                         v-model="deploymentSettings.gitlab.token" />
@@ -586,6 +602,7 @@
                         slot="field"
                         id="netlify-id"
                         key="netlify-id"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('netlify-id') > -1 }"
                         @keyup.native="cleanError('netlify-id')"
                         v-model="deploymentSettings.netlify.id" />
@@ -606,6 +623,7 @@
                         id="netlify-token"
                         type="password"
                         key="netlify-token"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('netlify-token') > -1 }"
                         @keyup.native="cleanError('netlify-token')"
                         v-model="deploymentSettings.netlify.token" />
@@ -626,6 +644,7 @@
                         id="s3-id"
                         type="password"
                         key="s3-id"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-id') > -1 }"
                         @keyup.native="cleanError('s3-id')"
                         v-model="deploymentSettings.s3.id" />
@@ -646,6 +665,7 @@
                         id="s3-key"
                         type="password"
                         key="s3-key"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-key') > -1 }"
                         @keyup.native="cleanError('s3-key')"
                         v-model="deploymentSettings.s3.key" />
@@ -665,6 +685,7 @@
                         slot="field"
                         id="s3-bucket"
                         key="s3-bucket"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('s3-bucket') > -1 }"
                         @keyup.native="cleanError('s3-bucket')"
                         v-model="deploymentSettings.s3.bucket" />
@@ -704,6 +725,7 @@
                         slot="field"
                         id="s3-prefix"
                         key="s3-prefix"
+                        :spellcheck="false"
                         v-model="deploymentSettings.s3.prefix" />
                     <small
                         slot="note"
@@ -751,6 +773,7 @@
                         slot="field"
                         id="google-bucket"
                         key="google-bucket"
+                        :spellcheck="false"
                         :class="{ 'is-invalid': errors.indexOf('google-bucket') > -1 }"
                         @keyup.native="cleanError('google-bucket')"
                         v-model="deploymentSettings.google.bucket" />
@@ -770,6 +793,7 @@
                         slot="field"
                         id="google-prefix"
                         key="google-prefix"
+                        :spellcheck="false"
                         v-model="deploymentSettings.google.prefix" />
                     <small
                         slot="note"
@@ -786,7 +810,7 @@
                         slot="field"
                         id="manual-output"
                         key="manual-output"
-                        :items="{ '': 'Select output type', 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
+                        :items="{ 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
                         :class="{ 'is-invalid': errors.indexOf('manual-output') > -1 }"
                         @click.native="cleanError('manual-output')"
                         v-model="deploymentSettings.manual.output"></dropdown>
@@ -849,24 +873,22 @@
 
 <script>
 import Vue from 'vue';
-import { shell, ipcRenderer } from 'electron';
-import ExternalLinks from './mixins/ExternalLinks';
+import { shell, ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
 import s3ACLs from './configs/s3ACLs.js';
+const mainProcess = remote.require('./main');
 
 export default {
     name: 'server-settings',
-    mixins: [
-        ExternalLinks
-    ],
     data () {
         return {
+            isLoaded: false,
             domain: '',
             httpProtocols: {
-                'http': 'http://',
                 'https': 'https://',
+                'http': 'http://',
                 'file': 'file://',
                 'dat': 'dat://',
                 'ipfs': 'ipfs://',
@@ -895,15 +917,19 @@ export default {
     },
     computed: {
         currentDomain () {
+            if (this.$store.state.currentSite.config.domain === '.') {
+                return './';
+            }
+
             return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file://', '');
         },
         currentHttpProtocol () {
             if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {
                 return 'file';
-            } else if (this.$store.state.currentSite.config.domain.indexOf('https') === 0) {
-                return 'https';
-            } else {
+            } else if (this.$store.state.currentSite.config.domain.indexOf('http:') === 0) {
                 return 'http';
+            } else {
+                return 'https';
             }
         },
         siteIsOnline () {
@@ -922,6 +948,12 @@ export default {
             } else {
                 return 'After the initial sync, your website will be available online';
             }
+        },
+        sftpAuthMethodItems () {
+            return [
+                { value: "sftp", label: "Password" }, 
+                { value: "sftp+key", label: "Key file" }
+            ];
         }
     },
     watch: {
@@ -931,14 +963,22 @@ export default {
             }, 0);
         }
     },
-    mounted () {
+    async mounted () {
+        this.isLoaded = false;
         this.domain = this.currentDomain;
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
-        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment))));
+        let storedDeploymentSettings = JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment));
+        storedDeploymentSettings = await this.loadPasswords(storedDeploymentSettings);
+        Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, storedDeploymentSettings));
+
+        if (this.deploymentSettings.manual.output === '') {
+            this.deploymentSettings.manual.output = 'catalog';
+        }
 
         setTimeout(() => {
             this.setPortValue();
+            this.isLoaded = true;
         }, 0);
     },
     methods: {
@@ -951,8 +991,6 @@ export default {
                 case 'sftp':
                 case 'sftp+key':
                     this.deploymentSettings.port = '22'; break;
-                case 'ftp+implicit+tls':
-                    this.deploymentSettings.port = '990'; break;
                 case 's3':
                 case 'github-pages':
                 case 'gitlab-pages':
@@ -972,8 +1010,8 @@ export default {
         fullDomainName () {
             let domain = this.prepareDomain();
 
-            if (domain === '' && this.deploymentSettings.relativeUrls) {
-                domain = '/';
+            if ((domain === '' || domain === '.') && this.deploymentSettings.relativeUrls) {
+                domain = './';
             }
 
             if (this.deploymentSettings.relativeUrls) {
@@ -1035,6 +1073,8 @@ export default {
             });
         },
         saved (newSettings) {
+            newSettings.deployment = this.setHiddenPasswords(JSON.parse(JSON.stringify(newSettings.deployment)));
+
             this.$store.commit('setSiteConfig', {
                 name: this.$store.state.currentSite.config.name,
                 config: newSettings
@@ -1231,7 +1271,13 @@ export default {
                 return false;
             }
 
-            shell.openExternal(this.$store.state.currentSite.config.domain);
+            let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
+
+            if (urlToOpen) {
+                shell.openExternal(urlToOpen);
+            } else {
+                alert('Sorry! The website link seems to be invalid.');
+            }
         },
         cleanError (field) {
             let pos = this.errors.indexOf(field);
@@ -1242,10 +1288,80 @@ export default {
         },
         toggleDomainName () {
             if (this.deploymentSettings.relativeUrls) {
-                this.domain = '/';
+                this.domain = './';
             } else {
                 this.domain = '';
             }
+        },
+        getDeploymentMethodName (method) {
+            switch (method) {
+                case 'github-pages': return 'Github Pages';
+                case 'gitlab-pages': return 'GitLab Pages';
+                case 'netlify': return 'Netlify';
+                case 's3': return 'Amazon S3';
+                case 'google-cloud': return 'Google Cloud';
+                case 'ftp': return 'FTP';
+                case 'sftp':
+                case 'sftp+key': return 'SFTP';
+                case 'ftp+tls': return 'FTP with SSL/TLS';
+                case 'manual': return 'Manual upload';
+            }
+
+            return '';
+        },
+        async loadPasswords (deploymentSettings) {
+            deploymentSettings.password = await mainProcess.loadPassword('publii', deploymentSettings.password);
+
+            if (deploymentSettings.passphrase) {
+                deploymentSettings.passphrase = await mainProcess.loadPassword('publii-passphrase', deploymentSettings.passphrase);
+            }
+
+            if (deploymentSettings.s3) {
+                deploymentSettings.s3.id = await mainProcess.loadPassword('publii-s3-id', deploymentSettings.s3.id);
+                deploymentSettings.s3.key = await mainProcess.loadPassword('publii-s3-key', deploymentSettings.s3.key);
+            }
+
+            if (deploymentSettings.netlify) {
+                deploymentSettings.netlify.id = await mainProcess.loadPassword('publii-netlify-id', deploymentSettings.netlify.id);
+                deploymentSettings.netlify.token = await mainProcess.loadPassword('publii-netlify-token', deploymentSettings.netlify.token);
+            }
+
+            if (deploymentSettings.github) {
+                deploymentSettings.github.token = await mainProcess.loadPassword('publii-gh-token', deploymentSettings.github.token);
+            }
+
+            if (deploymentSettings.gitlab) {
+                deploymentSettings.gitlab.token = await mainProcess.loadPassword('publii-gl-token', deploymentSettings.gitlab.token);
+            }
+
+            return deploymentSettings;
+        },
+        setHiddenPasswords (deploymentSettings) {
+            deploymentSettings.password = 'publii ' + this.$store.state.currentSite.config.name;
+
+            if (deploymentSettings.passphrase) {
+                deploymentSettings.passphrase = 'publii-passphrase ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.s3) {
+                deploymentSettings.s3.id = 'publii-s3-id ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.s3.key = 'publii-s3-key ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.netlify) {
+                deploymentSettings.netlify.id = 'publii-netlify-id ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.netlify.token = 'publii-netlify-token ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.github) {
+                deploymentSettings.github.token = 'publii-gh-token ' + this.$store.state.currentSite.config.name;
+            }
+
+            if (deploymentSettings.gitlab) {
+                deploymentSettings.gitlab.token = 'publii-gl-token ' + this.$store.state.currentSite.config.name;
+            }
+
+            return deploymentSettings;
         }
     }
 }
@@ -1253,10 +1369,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .server-settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
+    user-select: none;
 
     #http-protocol {
         float: left;
@@ -1269,7 +1387,7 @@ export default {
     }
 
     .is-invalid + .note {
-        color: $color-3;
+        color: var(--warning);
     }
     
     &-intro {       
@@ -1279,26 +1397,27 @@ export default {
         
         & > div {
             align-items: center;
-            background: $color-9;
-            border: 2px solid transparent;
+            background: var(--gray-1);
+            border: 1px solid transparent;
+            border-radius: 3px;
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
-            transition: all .25s ease-out;
+            transition: var(--transition);
             
             &:hover {
-                background: $color-10;
-                border-color: $color-0;
+                background: var(--bg-primary);
+                border-color: var(--primary-color);
                 box-shadow: 0 0 26px rgba(black, .07);
                 cursor: pointer;
                 
                 & > svg {
-                    fill: $color-1;
+                    fill: var(--primary-color);
                 }
             }
             
             & > svg {
-                fill: $color-5;
+                fill: var(--gray-5);
                 transition: inherit;
             }
         }
@@ -1306,6 +1425,10 @@ export default {
 
     #relative-urls {
         margin-top: 0;
+    }
+    
+    .msg {
+        margin-bottom: 3rem;
     }
 }
 </style>

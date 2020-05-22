@@ -49,18 +49,25 @@ class Import {
      */
     checkFile() {
         if (this.parser.isWXR()) {
-            let result = this.parser.getWxrStats();
+            try {
+                let result = this.parser.getWxrStats();
 
-            if(result) {
+                if (result) {
+                    return {
+                        status: 'success',
+                        message: result
+                    };
+                }
+
                 return {
-                    status: 'success',
-                    message: result
+                    status: 'error',
+                    message: 'An error occurred during parsing selected WXR file'
                 };
-            }
-
-            return {
-                status: 'error',
-                message: 'An error occurred during parsing selected WXR file'
+            } catch (e) {
+                return {
+                    status: 'error',
+                    message: 'An error occurred during parsing selected WXR file'
+                };
             }
         }
 

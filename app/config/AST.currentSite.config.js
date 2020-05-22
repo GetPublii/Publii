@@ -8,11 +8,14 @@ const AstCurrentSiteConfig = {
     },
     domain: '',
     language: 'en',
+    spellchecking: true,
     advanced: {
         cssCompression: 1,
         htmlCompression: 1,
         htmlCompressionRemoveComments: 1,
         imagesQuality: 60,
+        responsiveImages: 1,
+        mediaLazyLoad: 1,
         versionSuffix: 1,
         sitemapEnabled: 1,
         sitemapAddTags: 1,
@@ -163,7 +166,7 @@ const AstCurrentSiteConfig = {
             prefix: ''
         },
         manual: {
-            output: '',
+            output: 'catalog',
             outputDirectory: ''
         }
     }

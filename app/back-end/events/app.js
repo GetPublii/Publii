@@ -51,12 +51,12 @@ class AppEvents {
                             appInstance.appConfig = config;
                         }
         
-                        appInstance.loadSites().then(() => {
-                            event.sender.send('app-config-saved', {
-                                status: true,
-                                message: 'success-save',
-                                sites: appInstance.sites
-                            });
+                        appInstance.loadSites();
+                        
+                        event.sender.send('app-config-saved', {
+                            status: true,
+                            message: 'success-save',
+                            sites: appInstance.sites
                         });
                     }, 500);
                 }
@@ -71,6 +71,21 @@ class AppEvents {
 
             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
             appInstance.appConfig = config;
+        });
+
+        /*
+         * Save app color theme config
+         */
+        ipcMain.on('app-save-color-theme', function (event, theme) {
+            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+
+            try {
+                appConfig = JSON.parse(appConfig);
+                appConfig.appTheme = theme;
+                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+            } catch (e) {
+                console.log('(!) App was unable to save the color theme');
+            }
         });
 
         /*
@@ -183,7 +198,7 @@ class AppEvents {
          * Load log files list
          */
         ipcMain.on('app-log-files-load', function(event) {
-            let logPath = path.join(appInstance.appDir, 'logs');
+            let logPath = appInstance.app.getPath('logs');
             let files = fs.readdirSync(logPath).filter(function(file) {
                 return file.substr(-4) === '.txt' || file.substr(-4) === '.log';
             });
@@ -197,7 +212,7 @@ class AppEvents {
          * Load specific log file
          */
         ipcMain.on('app-log-file-load', function(event, filename) {
-            let filePath = path.join(appInstance.appDir, 'logs', filename);
+            let filePath = path.join(appInstance.app.getPath('logs'), filename);
             let fileContent = fs.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {

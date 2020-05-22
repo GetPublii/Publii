@@ -97,7 +97,7 @@ export default {
             return style.join(';')
         },
         iconPath: function() {
-            return `src/assets/svg/${this.iconset}.svg#${this.name}`;
+            return `../src/assets/svg/${this.iconset}.svg#${this.name}`;
         }
     }
 }
@@ -108,8 +108,8 @@ export default {
 
 .icon {
     &.size-xxxs {
-        height: 8px;
-        width: 8px;
+        height: 10px;
+        width: 10px;
     }
 
     &.size-xxs {
@@ -157,10 +157,10 @@ export default {
     }
 
     &.file {
-        fill: $color-9;
-        margin-right: 1rem;
+        fill: var(--gray-1);
+        margin: -2px 1rem -2px 0;
         position: relative!important;
-        top: 5px!important;
+        top: 4px!important;
     }
 
     &.file--txt {

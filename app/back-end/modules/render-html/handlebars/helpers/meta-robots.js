@@ -11,7 +11,12 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('metaRobots', function (options) {
         let output = '';
 
-        if (rendererInstance.ampMode) {
+        // If canonical is set or AMP is currently rendered - skip meta robots tag
+        if (rendererInstance.ampMode || options.data.root.hasCustomCanonicalUrl) {
+            return '';
+        }
+
+        if (options.data.root.metaRobotsRaw === 'index, follow') {
             return '';
         }
 

@@ -9,17 +9,17 @@
                 placeholder="Filter or search posts..."
                 onChangeEventName="posts-filter-value-changed" />
 
-            <p-button
-                :onClick="addNewPost"
+            <btn-dropdown
                 slot="buttons"
-                type="primary icon"
-                icon="add-site-mono">
-                Add new post
-            </p-button>
+                buttonColor="green"
+                localStorageKey="publii-current-editor"
+                :previewIcon="true"
+                :items="dropdownItems"
+                defaultValue="tinymce" />
         </p-header>
 
         <ul
-            v-if="hasPosts"
+            v-if="dataLoaded && hasPosts"
             class="filters">
             <li
                 :class="filterCssClasses('all')"
@@ -69,7 +69,7 @@
             </li>
         </ul>
 
-        <collection v-if="!emptySearchResults && hasPosts">
+        <collection v-if="dataLoaded && !emptySearchResults && hasPosts">
             <collection-header slot="header">
                 <collection-cell width="40px">
                     <checkbox
@@ -173,7 +173,7 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="trash"
-                        type="small light icon"
+                        type="small light icon delete"
                         :onClick="bulkTrash">
                         Move to trash
                     </p-button>
@@ -294,7 +294,7 @@
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id)">                           
+                            @click.prevent.stop="editPost(item.id, item.editor)">                           
 
                           {{ item.title }}
 
@@ -386,21 +386,49 @@
             v-if="emptySearchResults"
             description="There are no posts matching your criteria."></empty-state>
 
-        <empty-state
-            v-if="!hasPosts"
-            imageName="posts.svg"
-            imageWidth="254"
-            imageHeight="284"
-            title="No posts available"
-            description="You don't have any post, yet. Let's fix that!">
-            <p-button
-                slot="button"
-                icon="add-site-mono"
-                type="icon"
-                :onClick="addNewPost">
-                Add new post
-            </p-button>
-        </empty-state>
+        <div
+            v-if="dataLoaded && !hasPosts"
+            class="empty-state post">
+            
+           <div>               
+                <img :src="'../src/assets/svg/' + $store.state.app.theme + '/wysiwyg-editor.svg'" height="286" width="331" />
+                <h3>WYSIWYG editor</h3>
+                <p>This editor provides a familiar word-processing experience, with additional tools for users that want to control every aspect of their page content.</p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'tinymce')">
+                    Add new post
+                </p-button>    
+           </div>
+           
+           <div>
+                <img :src="'../src/assets/svg/' + $store.state.app.theme + '/block-editor.svg'" height="286" width="331" />
+                <h3>Block editor</h3>
+                <p>A modern and intuitive editor with shortkey and markdown support to make blogging easy, with no need to worry about HTML or other code elements.</p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'blockeditor')">
+                    Add new post 
+                </p-button>    
+           </div>
+            
+           <div>                
+                <img :src="'../src/assets/svg/' + $store.state.app.theme + '/markdown-editor.svg'" height="286" width="331" />
+                <h3>Markdown editor</h3>
+                <p>This editor supports Markdown syntax as shorthand for producing content quickly; great for extensive, no-frills projects such as documentation. </p>
+                <p-button
+                    slot="button"
+                    icon="add-site-mono"
+                    type="icon"
+                    :onClick="addNewPost.bind(this, 'markdown')">
+                    Add new post
+                </p-button>    
+           </div>
+        </div>
     </section>
 </template>
 
@@ -416,6 +444,7 @@ export default {
     data () {
         return {
             bulkDropdownVisible: false,
+            dataLoaded: false,
             filterValue: '',
             selectedItems: [],
             orderBy: 'id',
@@ -469,6 +498,34 @@ export default {
         showModificationDateAsColumn () {
             return this.$store.state.app.config.showModificationDateAsColumn;
         },
+        dropdownItems () {
+            return [
+                {
+                    label: 'Use WYSIWYG editor',
+                    activeLabel: 'Add new post',
+                    value: 'tinymce',
+                    icon: 'wysiwyg',
+                    isVisible: () => true,
+                    onClick: this.addNewPost.bind(this, 'tinymce')
+                },
+                {
+                    label: 'Use Block editor',
+                    activeLabel: 'Add new post',
+                    value: 'blockeditor',
+                    icon: 'block',
+                    isVisible: () => true,
+                    onClick: this.addNewPost.bind(this, 'blockeditor')
+                },
+                {
+                    label: 'Use Markdown editor',
+                    activeLabel: 'Add new post',
+                    value: 'markdown',
+                    icon: 'markdown',
+                    isVisible: () => true,
+                    onClick: this.addNewPost.bind(this, 'markdown')
+                }
+            ]
+        },
         showPostSlugs () {
             return this.$store.state.app.config.showPostSlugs;
         }
@@ -476,7 +533,6 @@ export default {
     mounted () {
         this.orderBy = this.$store.state.ordering.posts.orderBy;
         this.order = this.$store.state.ordering.posts.order;
-
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
@@ -507,9 +563,13 @@ export default {
                 this.saveOrdering(order[0], order[1]);
             }
         });
+
+        if (this.$store.state.currentSite.posts) {
+            this.dataLoaded = true;
+        }
     },
     methods: {
-        addNewPost () {
+        addNewPost (editorType) {
             let siteName = this.$route.params.name;
 
             if(this.filterValue.trim() !== '' && this.$store.state.app.config.alwaysSaveSearchState) {
@@ -517,9 +577,9 @@ export default {
             }
 
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/');
+            this.$router.push('/site/' + siteName + '/posts/editor/' + editorType + '/');
         },
-        editPost (id) {
+        editPost (id, editorType) {
             let siteName = this.$route.params.name;
 
             if(this.filterValue.trim() !== '') {
@@ -527,7 +587,7 @@ export default {
             }
 
             this.$store.commit('setEditorOpenState', true);
-            this.$router.push('/site/' + siteName + '/posts/editor/' + id);
+            this.$router.push('/site/' + siteName + '/posts/editor/' + editorType + '/' + id);
 
             return false;
         },
@@ -686,6 +746,8 @@ export default {
             });
         },
         whenSiteLoaded () {
+            this.dataLoaded = true;
+
             setTimeout(() => {
                 this.setFilter('');
             }, 0);
@@ -753,6 +815,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/empty-states.scss';
 
 .header {
     .col {
@@ -770,7 +833,7 @@ export default {
     margin-left: 3px;
     position: relative;
     &:after {
-        border-top: solid 5px rgba($color-7, .7);
+        border-top: solid 5px var(--icon-secondary-color);
         border-left: solid 5px transparent;
         border-right: solid 5px transparent;
         content: "";
@@ -792,7 +855,7 @@ export default {
 .order-descending {
     &:after {
         border-top-color: transparent; 
-        border-bottom: solid 5px rgba($color-7, .7);                 
+        border-bottom: solid 5px var(--icon-secondary-color);                 
     }
 }
 
@@ -816,7 +879,7 @@ export default {
     }
 
     .post-slug {
-        color: $color-7;
+        color: var(--gray-4);
         font-size: 11px;
         margin-top: 5px;
     }
@@ -828,27 +891,29 @@ export default {
     margin: -2rem 0 0 0;
     padding: 0;
     position: relative;
+    user-select: none;
     z-index: 1;
 
     .label {
-        color: $color-7;
+        color: var(--text-light-color);
         float: left;
         margin-right: 1rem;
     }
 
     .filter-value {
-        color: $color-7;
+        color: var(--text-light-color);
         cursor: pointer;
         display: inline-block;
         margin-right: 1rem;
+        transition: var(--transition);
 
         &.filter-active {
-            color: $link-color;
+            color: var(--link-primary-color);
             cursor: default;
         }
 
         &:hover {
-            color: $link-color;
+            color: var(--link-primary-color);
         }
 
         &:last-child {
@@ -858,7 +923,7 @@ export default {
 }
 
 .tools {
-    background: $color-10;
+   background: var(--bg-primary);
     display: flex;
     
     .button {
@@ -868,7 +933,7 @@ export default {
         
          &::before {
              content: "";
-             background: $color-9;  border-radius: 3px;
+             background: var(--gray-1);  border-radius: 3px;
              display: block;
              left: -2px;
              opacity: 0;
@@ -883,7 +948,8 @@ export default {
         }
         
         & + .button {
-            margin: 0; position: relative;
+            margin: 0; 
+            position: relative;
         }
         
         &:hover { 
@@ -900,7 +966,7 @@ export default {
         position: relative;
 
         .dropdown {
-            background: $color-10;
+           background: var(--bg-secondary);
             border-radius: 3px;
             box-shadow: 0 2px 8px rgba(29, 39, 52, 0.15);
             left: 0;
@@ -913,7 +979,7 @@ export default {
             z-index: 1;
 
             li {
-                color: $color-7;
+                color: var(--text-light-color);
                 cursor: pointer;
                 display: block;
                 font-size: 1.4rem;
@@ -922,8 +988,8 @@ export default {
                 white-space: nowrap;
 
                 &:hover { 
-                    background: $color-9;
-                    color: $color-5;
+                    background: var(--gray-1);
+                    color: var(--text-primary-color);
                 }
                 
                 & > svg {

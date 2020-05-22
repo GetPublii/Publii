@@ -1,0 +1,68 @@
+.empty-state {
+    clear: both;
+    color: var(--text-light-color);
+    font-size: 1.6rem;
+    left: 0;
+    padding: 0 2vw;
+    position: absolute;
+    text-align: center;
+    top: 40%;
+    transform: translateY(-40%);
+    user-select: none;
+    width: 100%;
+
+    &.post {
+        display: grid;
+        grid-template-columns: repeat(3, fit-content(400px));
+        grid-gap: 2vw;
+        justify-content: center;
+    }
+
+    h3 {
+        color: var(--text-primary-color);
+        text-transform: none;
+    }
+
+    p {
+        margin: -0.5rem 0 3rem;
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+@media (max-height: 900px) {
+    .empty-state {
+        img {
+            height: auto;
+            max-width: 26rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 17px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+}
+
+@media (max-width: 1400px) {
+    .empty-state {
+        img {
+            height: auto;
+            max-width: 26rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 17px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+}

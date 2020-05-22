@@ -12,9 +12,11 @@
             class="gdpr-group"
             :key="'gdpr-group-' + index">
             <text-input
+                :spellcheck="$store.state.currentSite.config.spellchecking"
                 v-model="group.name" />
 
             <text-input
+                :spellcheck="false"
                 v-model="group.id" />
 
             <icon
@@ -99,11 +101,11 @@ export default {
 
         .icon {
             cursor: pointer;
-            fill: $color-3;
-            transition: all .3s ease-out;
+            fill: var(--warning);          
+            transition: all .3s ease-out;           
             
             &:hover {
-                fill: $color-4;
+                fill: var(--icon-tertiary-color);
             }
         }
     }

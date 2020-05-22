@@ -1,6 +1,6 @@
 <template>
     <section class="settings site-settings-app">
-        <p-header title="Global Settings">
+        <p-header title="App Settings">
             <p-button
                 :onClick="goBack"
                 type="outline"
@@ -9,7 +9,7 @@
             </p-button>
 
             <p-button
-                :onClick="save"
+                :onClick="checkBeforeSave"
                 slot="buttons">
                 Save Settings
             </p-button>
@@ -44,6 +44,11 @@
                     id="images-resize-engine"
                     :items="imageResizeEngines"
                     v-model="imageResizeEnginesSelected"></dropdown>
+                <small
+                    slot="note"
+                    class="note">
+                    Sharp resize engine is much faster than Jimp, but is also less stable. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine.
+                </small>
             </field>
 
             <field
@@ -134,7 +139,7 @@
                 label="Backup location">
                 <dir-select
                     id="backups-location"
-                    placeholder="Set it if you want to use backup tool"
+                    placeholder="Leave blank to use default backups directory"
                     v-model="locations.backups"
                     slot="field" />
                 <small
@@ -196,7 +201,7 @@
 
         <p-footer>
             <p-button
-                :onClick="save"
+                :onClick="checkBeforeSave"
                 slot="buttons">
                 Save Settings
             </p-button>
@@ -216,6 +221,12 @@ export default {
         GoToLastOpenedWebsite
     ],
     data () {
+        let imageResizeEngine = 'sharp';
+
+        if (process.platform === 'linux') {
+            imageResizeEngine = 'jimp';
+        }
+
         return {
             alwaysSaveSearchState: false,
             screensSelected: '',
@@ -229,6 +240,7 @@ export default {
             postsOrdering: 'id DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
+            originalSitesLocation: '',
             locations: {
                 sites: '',
                 backups: '',
@@ -252,6 +264,12 @@ export default {
             };
         },
         imageResizeEngines () {
+            if (process.platform === 'linux') {
+                return {
+                    'jimp': 'Jimp'
+                };
+            }
+
             return {
                 'sharp': 'Sharp',
                 'jimp': 'Jimp'
@@ -303,6 +321,7 @@ export default {
     },
     mounted () {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
+        this.originalSitesLocation = this.locations.sites;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
         this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
@@ -317,6 +336,10 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+
+        if (process.platform === 'linux') {
+            this.imageResizeEnginesSelected = 'jimp';
+        }
     },
     methods: {
         goBack () {
@@ -332,6 +355,21 @@ export default {
                     this.$router.push('/site/!/posts/');
                 }
             }
+        },
+        checkBeforeSave () {
+            if (this.originalSitesLocation !== this.locations.sites) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: 'The sites location has been changed. The new desitination folder will be cleared up before moving there your sites files. Do you want to continue?',
+                    okClick: this.save,
+                    okLabel: 'OK',
+                    cancelLabel: 'Cancel'
+                });
+
+                return;
+            }
+            
+            this.save();
         },
         save () {
             let newSettings = {
@@ -374,13 +412,13 @@ export default {
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {
-                    message: 'Global settings has been successfully saved.',
+                    message: 'App settings has been successfully saved.',
                     type: 'success',
                     lifeTime: 3
                 });
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'An error occurred during saving the Global Settings. Please try again.',
+                    message: 'An error occurred during saving the App Settings. Please try again.',
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -395,7 +433,8 @@ export default {
 
 .settings {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: $wrapper;
     padding: 4.4rem 0;
+    user-select: none;
 }
 </style>

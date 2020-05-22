@@ -7,7 +7,7 @@
             </p>
 
             <progress-bar
-                v-if="!isPostPreview"
+                v-if="!isPostPreview && !isHomepagePreview"
                 :color="progressColor"
                 :progress="progress"
                 :stopped="progressIsStopped"
@@ -26,6 +26,7 @@ export default {
         return {
             isVisible: false,
             isPostPreview: false,
+            isHomepagePreview: false,
             messageFromRenderer: '',
             progress: 0,
             progressColor: 'blue',
@@ -40,8 +41,12 @@ export default {
             this.progressColor = 'blue';
             this.progressIsStopped = false;
             this.isPostPreview = false;
+            this.isHomepagePreview = false;
 
-            if (config && config.postData) {
+            if (config && config.homepageOnly) {
+                this.isHomepagePreview = true;
+                this.runRenderingPreview(false, true);
+            } else if (config && config.postData) {
                 this.isPostPreview = true;
                 this.runRenderingPreview(config);
             } else {
@@ -52,7 +57,7 @@ export default {
         ipcRenderer.on('app-rendering-progress', this.renderingProgress);
     },
     methods: {
-        runRenderingPreview (postConfig = false) {
+        runRenderingPreview (postConfig = false, homepageOnly = false) {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
                     message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
@@ -74,8 +79,12 @@ export default {
 
             if (postConfig) {
                 renderConfig.postID = postConfig.postID;
-                renderConfig.postData =  postConfig.postData;
+                renderConfig.postData = postConfig.postData;
                 renderConfig.source = 'post-editor';
+            }
+
+            if (homepageOnly) {
+                renderConfig.postID = 'home';
             }
 
             ipcRenderer.send('app-preview-render', renderConfig);
@@ -87,7 +96,7 @@ export default {
                         "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
                     });
 
-                    if (postConfig) {
+                    if (postConfig || homepageOnly) {
                         setTimeout(() => {
                             this.isVisible = false;
                         }, 500);
@@ -143,20 +152,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {
-    background-color: $color-10;
-    border: none;
-    border-radius: .6rem;
-    display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
-    left: 50%;
-    overflow: hidden;
-    padding: 4rem 4rem 1rem 4rem;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+.popup {  
+    padding: 4rem 4rem 1rem 4rem;   
     width: 60rem;
 
     &-info {
@@ -165,7 +162,7 @@ export default {
 }
 
 .message {
-    color: $color-5;
+    color: var(--text-primary-color);
     font-weight: 400;
     margin: 0;
     padding: 4rem;
