@@ -101,8 +101,8 @@
                         v-model="layout"
                         class="gallery-popup-config-cols">
                         <option value="">Centered</option>
-                        <option value="gallery--wide">Wide</option>
-                        <option value="gallery--full">Full-width</option>
+                        <option value="gallery-wrapper--wide">Wide</option>
+                        <option value="gallery-wrapper--full">Full-width</option>
                     </select>
                 </label>
 
@@ -241,10 +241,10 @@ export default {
             this.columns = galleryHandler.attr('data-columns') || 3;
             this.layout = '';
 
-            if (galleryHandler.hasClass('gallery--wide')) {
-                this.layout = 'gallery--wide';
-            } else if (galleryHandler.hasClass('gallery--full')) {
-                this.layout = 'gallery--full';
+            if (galleryHandler.hasClass('gallery-wrapper--wide')) {
+                this.layout = 'gallery-wrapper--wide';
+            } else if (galleryHandler.hasClass('gallery-wrapper--full')) {
+                this.layout = 'gallery-wrapper--full';
             }
 
             if (!images.length) {

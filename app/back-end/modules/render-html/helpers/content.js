@@ -87,8 +87,8 @@ class ContentHelper {
         });
 
         // Wrap galleries with classes into div with gallery-wrapper CSS class
-        preparedText = preparedText.replace(/<div class="gallery"[\s\S]*?<\/div>?/gmi, function(matches, p1, classes) {
-            return '<div class="gallery-wrapper">' + matches + '</div>';
+        preparedText = preparedText.replace(/<div class="gallery([\s\S]*?)"[\s\S]*?<\/div>?/gmi, function(matches, classes) {
+            return '<div class="gallery-wrapper' + classes + '">' + matches.replace(classes, '') + '</div>';
         });
 
         // Wrap iframes into <div class="post__iframe">
