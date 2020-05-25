@@ -6,64 +6,47 @@ var generateOverride = function (params) {
     let output = '';
     
       if (
-        params.pageWidth !== '42rem' ||
-        params.logoColor !== '#FFFFFF' || 
-        params.primaryColor !== '#D73A42' || 
-        params.textColor !== '#17181E' || 
-        params.headingColor !== '#17181E' || 
-        params.linkColor !== '#D73A42' || 
-        params.linkHoverColor !== '#17181E' ||
-        params.backgroundMenu !== '#17181E' ||
-        params.linkColorMenu !== '#FFFFFF' ||
-        params.linkHoverColorMenu !== 'rgba(255,255,255,0.7)' ||          
-        params.submenuBg !== '#17181E' ||
-        params.submenuLinkColor !== 'rgba(255,255,255,0.7)' ||
-        params.submenuLinkHoverColor !== '#FFFFFF' ||
-        params.submenuLinkHoverBgMenu !== 'rgba(255,255,255,0.05)' ||
-        params.submenuBg !== '#17181E' ||          
+        params.pageMargin !== '6vw' ||
+        params.pageWidth !== '42rem' || 
+        params.navbarHeight !== '4.4rem' || 
+        params.lineHeight !== '1.7' || 
+        params.fontNormalWeight !== '400' || 
+        params.fontBoldWeight !== '700' || 
         params.fontHeadignsWeight !== '700' ||
         params.fontHeadingsTransform !== 'none' ||
+        params.primaryColor !== '#D73A42' || 
+        params.textColor !== '#17181E' || 
+        params.headingColor !== '#17181E' ||      
         params.heightHero !== '80vh' ||
         params.heroBackground !== '#17181E' ||
         params.heroHeadingColor !== '#FFFFFF' ||
         params.heroTextColor !== 'rgba(255,255,255,0.75)' ||
         params.heroLink !== '#FFFFFF' ||
         params.heroLinkHover !== 'rgba(255,255,255,0.75)' ||
-        params.heroBorderColor !== 'rgba(255,255,255,0.3)' || 
-        params.footerBg !== '#17181E' ||
-        params.footerTextColor !== '#747577' ||
-        params.footerLinkColor !== '#FFFFFF' ||
-        params.footerLinkHoverColor !== 'rgba(255,255,255,0.7)') {
+        params.heroBorderColor !== 'rgba(255,255,255,0.3)') {
         output += `
         :root {
+           --page-margin:        ${params.pageMargin};
            --entry-width:        ${params.pageWidth}; 
-           --page-margin:        6vw;  
+           --navbar-height:      4.4rem; 
+           --line-height:        ${params.lineHeight}; 
+           --font-weight-normal: ${params.fontNormalWeight}; 
+           --font-weight-bold:   ${params.fontBoldWeight}; 
+           --headings-weight:    ${params.fontHeadignsWeight};
+           --headings-transform: ${params.fontHeadingsTransform};
+           --white:              #FFFFFF;
+           --white-rgb:          255,255,255;
+           --black:              #000000;
            --dark:               #17181E;
            --gray-1:             #61666C;
            --gray-2:             #747577;
-           --gray-3:             #E6E7EB;
-           --gray-4:             #F7F8FB;
-           --bg-color:           #FFFFFF;
-           --logo-color:         ${params.logoColor}; 
-           --primary-color:      ${params.primaryColor};   
+           --light:              #E6E7EB;
+           --lighter:            #F3F3F3;
+           --color:              ${params.primaryColor};   
+           --color-rgb:          ${params.primaryColor.replace('#', '').match(/[a-f0-9]{2,2}/gmi).map(n => parseInt(n, 16)).join(', ')};
            --text-color:         ${params.textColor}; 
-           --headings-color:     ${params.headingColor};
-           --border-color:       #D1D1D2;
-           --link-color:         ${params.linkColor}; 
-           --link-color-hover:   ${params.linkHoverColor};         
-           --navbar-bg:          ${params.backgroundMenu}; 
-           --navbar-link-color:  ${params.linkColorMenu}; 
-           --navbar-link-color-hover: ${params.linkHoverColorMenu}; 
-           --navbar-icon:        #FFFFFF;
-           --dropdown-menu-bg:   ${params.submenuBg}; 
-           --dropdown-menu-link-color: ${params.submenuLinkColor}; 
-           --dropdown-menu-link-color-hover: ${params.submenuLinkHoverColor}; 
-           --dropdown-menu-link-background-hover: ${params.submenuLinkHoverBgMenu}; 
-           --mobile-menu-bg:     #FFFFFF;
-           --mobile-menu-link-color: #17181E;
-           --mobile-menu-link-color-hover: #17181E;
-           --headings-weight:    ${params.fontHeadignsWeight};
-           --headings-transform: ${params.fontHeadingsTransform};
+           --headings-color:     ${params.headingColor};      
+           --logo-color:         #FFFFFF;
            --hero-height:        ${params.heightHero};
            --hero-bg:            ${params.heroBackground};
            --hero-heading-color: ${params.heroHeadingColor};
@@ -71,10 +54,12 @@ var generateOverride = function (params) {
            --hero-link-color:    ${params.heroLink};
            --hero-link-color-hover: ${params.heroLinkHover};
            --hero-border-color:  ${params.heroBorderColor};
-           --footer-bg: ${params.footerBg};
-           --footer-text-color:    ${params.footerTextColor};
-           --footer-link-color:    ${params.footerLinkColor};
-           --footer-link-color-hover: ${params.footerLinkHoverColor};
+        }
+       
+        @media all and (min-width: 56.25em) {
+                :root {
+                  --navbar-height: ${params.navbarHeight};
+                }
         }`;
     } 
     

@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.2.0.0",
+    "version": "2.2.1.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -54,10 +54,17 @@
     "customConfig": [
 
         {
+            "name": "pageMargin",
+            "label": "Page width",
+            "group": "Layout",
+            "value": "6vw",
+            "type": "text"
+        },
+        {
             "name": "pageWidth",
             "label": "Page width",
             "group": "Layout",
-            "note": "Use of \"rem\" units recommended; also use others (px, vw, %); for full-screen set to 100%",
+            "note": "For full-screen width, set to 100%",
             "value": "42rem",
             "type": "text"
         },
@@ -260,50 +267,14 @@
             "label": "Read more button",
             "value": true,
             "type": "checkbox"
-        },
+        },   
         {
-            "name": "separator",
-            "type": "separator",
-            "label": "Logo",
+            "name": "navbarHeight",
             "group": "Navbar",
-            "size": "small"
-        },        
-        {
-            "name": "logoColor",
-            "label": "Color",
-            "group": "Navbar",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },        
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Main menu",
-            "group": "Navbar",
-            "size": "big"
-        },
-        {
-            "name": "linkColorMenu",
-            "label": "Link color",
-            "group": "Navbar",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkHoverColorMenu",
-            "label": "Link hover color",
-            "group": "Navbar",
-            "value": "rgba(255,255,255,0.7)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "backgroundMenu",
-            "label": "Background",
-            "group": "Navbar",
-            "note": "Visible while scrolling back to the top of the website.",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
+            "label": "Navbar height",
+            "value": "6rem",
+            "type": "text"
+        },    
         {
             "name": "separator",
             "type": "separator",
@@ -344,36 +315,7 @@
                 "field": "submenu",
                 "value": "custom"
             }]
-        },       
-        {
-            "name": "submenuBg",
-            "label": "Background",
-            "group": "Navbar",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "submenuLinkColor",
-            "label": "Link color",
-             "group": "Navbar",
-            "value": "rgba(255,255,255,0.7)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "submenuLinkHoverColor",
-            "label": "Link hover color",
-             "group": "Navbar",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-        {
-            "name": "submenuLinkHoverBgMenu",
-            "label": "Link hover background",
-             "group": "Navbar",
-            "value": "rgba(255,255,255,0.05)",
-            "type": "colorpicker"
-        },
-        
+        },              
         {
             "name": "separator",
             "type": "separator",
@@ -409,7 +351,7 @@
         {
             "name": "heightHero",
             "label": "Height",
-            "group": "Hero section",
+            "group": "Hero Section",
             "note": "Use of VH units recommended; for full-screen set to 100vh",
             "value": "80vh",
             "type": "text"
@@ -418,12 +360,12 @@
             "name": "separator",
             "type": "separator",
             "label": " ",
-            "group": "Hero section",
+            "group": "Hero Section",
             "size": "small"
         },
         {
             "name": "displayHeroImage",
-            "group": "Hero section",
+            "group": "Hero Section",
             "label": "Image assignment",
             "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
             "value": false,
@@ -433,7 +375,7 @@
         {
             "name": "uploadHero",
             "label": "Image",
-            "group": "Hero section",
+            "group": "Hero Section",
             "value": "",
             "type": "upload",
             "upload": true
@@ -441,7 +383,7 @@
         {
             "name": "uploadHeroAlt",
             "label": "Image Alt text",
-            "group": "Hero section",
+            "group": "Hero Section",
             "placeholder": "Add an alternative text to the hero image",
             "value": "",
             "type": "text"
@@ -449,7 +391,7 @@
         {
             "name": "uploadHeroCaption",
             "label": "Image Caption",
-            "group": "Hero section",
+            "group": "Hero Section",
             "placeholder": "Add text caption to the hero image",
             "value": "",
             "type": "text"
@@ -459,19 +401,19 @@
             "name": "separator",
             "type": "separator",
             "label": " ",
-            "group": "Hero section",
+            "group": "Hero Section",
             "size": "small"
         },
         {
             "name": "textHero",
             "label": "Text",
-            "group": "Hero section",
+            "group": "Hero Section",
             "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
             "type": "wysiwyg"
         },
         {
             "name": "siteOwner",
-            "group": "Hero section",
+            "group": "Hero Section",
             "label": "Site owner",
             "note": "Displays the avatar and the name of the website owner (Main author)",
             "value": true,
@@ -480,21 +422,59 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
-            "group": "Hero section",
+            "label": "Apperance",
+            "group": "Hero Section",           
+            "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
             "size": "small"
         },
-         {
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Main colors",
+            "group": "Colors",
+            "size": "small"
+        },
+        {
+            "name": "primaryColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#D73A42",
+            "type": "colorpicker"
+        },             
+        {
+            "name": "headingColor",
+            "label": "Headings color",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "anchor": "hero",
+            "name": "separator",
+            "type": "separator",
+            "label": "Hero Section",
+            "group": "Colors",
+            "size": "big"
+        },
+        {
             "name": "heroBackground",
             "label": "Background",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "#17181E",
             "type": "colorpicker"
         },  
         {
             "name": "heroOverlay",
             "label": "Overlay",
-            "group": "Hero section",
+            "group": "Colors",
             "note": "The overlay works with the image and only when it has been fully loaded.",
             "value": "gradient",
             "type": "select",
@@ -512,7 +492,7 @@
         {
             "name": "heroOverlayColor",
             "label": "",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "rgba(0, 0, 0, 0.64)",
             "type": "colorpicker",
             "dependencies": [{
@@ -523,7 +503,7 @@
         {
             "name": "heroOverlayGradient",
             "label": "",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "rgba(0, 0, 0, 0.64)",
             "type": "colorpicker",
             "dependencies": [{
@@ -534,7 +514,7 @@
         {
             "name": "heroOverlayGradientDirection",
             "label": "",
-            "group": "Hero section",
+            "group": "Colors",
             "note": "Gradient direction",
             "value": "bottom",
             "type": "select",
@@ -564,117 +544,38 @@
         {
             "name": "heroHeadingColor",
             "label": "Heading (H1) color",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "#FFFFFF",
             "type": "colorpicker"
         },
         {
             "name": "heroTextColor",
             "label": "Text color",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "rgba(255,255,255,0.75)",
             "type": "colorpicker"
         },
         {
             "name": "heroLink",
             "label": "Link color",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "#FFFFFF",
             "type": "colorpicker"
         },
         {
             "name": "heroLinkHover",
             "label": "Link hover color",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "rgba(255,255,255,0.75)",
             "type": "colorpicker"
         },
         {
             "name": "heroBorderColor",
             "label": "Border color",
-            "group": "Hero section",
+            "group": "Colors",
             "value": "rgba(255,255,255,0.3)",
             "type": "colorpicker"
         },
-
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Main colors",
-            "group": "Colors",
-            "size": "small"
-        },
-        {
-            "name": "primaryColor",
-            "label": "Primary color",
-            "group": "Colors",
-            "value": "#D73A42",
-            "type": "colorpicker"
-        },        
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Colors",
-            "size": "small"
-        },       
-        {
-            "name": "headingColor",
-            "label": "Headings color",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "textColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Colors",
-            "size": "small"
-         },
-        {
-            "name": "linkColor",
-            "label": "Link color",
-            "group": "Colors",
-            "value": "#D73A42",
-            "type": "colorpicker"
-        },
-        {
-            "name": "linkHoverColor",
-            "label": "Link hover color",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        }, 
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Colors",
-            "size": "small"
-         },
-         {
-            "name": "buttonBg",
-            "label": "Buttons background",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "buttonColor",
-            "label": "Buttons color",
-            "group": "Colors",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-    
         {
             "name": "separator",
             "type": "separator",
@@ -733,7 +634,7 @@
             "type": "separator",
             "label": "",
             "group": "Fonts",
-            "size": "small"
+            "size": "big"
         },
         {
             "name": "minFontSize",
@@ -757,6 +658,97 @@
             "max": 3,
             "step": 0.05
         },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Fonts",
+            "size": "big"
+        },
+        {
+            "name": "fontNormalWeight",
+            "label": "Normal font weight",
+            "group": "Fonts",            
+            "value": "400",
+            "type": "select",
+            "options": [
+                {
+                    "label": "300",
+                    "value": "300"
+                },
+                {
+                    "label": "400",
+                    "value": "400"
+                },
+                {
+                    "label": "500",
+                    "value": "500"
+                },
+                {
+                    "label": "600",
+                    "value": "600"
+                },
+                {
+                    "label": "700",
+                    "value": "700"
+                },
+                {
+                    "label": "900",
+                    "value": "900"
+                }
+            ]
+        },
+        {
+            "name": "fontBoldWeight",
+            "label": "Bold font weight",
+            "group": "Fonts",            
+            "value": "600",
+            "type": "select",
+            "options": [
+                {
+                    "label": "300",
+                    "value": "300"
+                },
+                {
+                    "label": "400",
+                    "value": "400"
+                },
+                {
+                    "label": "500",
+                    "value": "500"
+                },
+                {
+                    "label": "600",
+                    "value": "600"
+                },
+                {
+                    "label": "700",
+                    "value": "700"
+                },
+                {
+                    "label": "900",
+                    "value": "900"
+                }
+            ]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Fonts",
+            "size": "big"
+        },
+        {
+            "name": "lineHeight",
+            "label": "Line height",
+            "group": "Fonts",
+            "note": "The default line-height for the entire website",
+            "value": "1.7",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.1
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -827,7 +819,7 @@
             "name": "search",
             "label": "Search",
             "group": "Search",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
@@ -1045,49 +1037,6 @@
             "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii Static CMS</a>",
             "type": "wysiwyg"
         },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Footer",
-            "size": "small"
-        },        
-        {
-            "name": "footerBg",
-            "label": "Background",
-            "group": "Footer",
-            "value": "#17181E",
-            "type": "colorpicker"
-        }, 
-        {
-            "name": "footerTextColor",
-            "label": "Text color",
-            "group": "Footer",
-            "value": "#747577",
-            "type": "colorpicker"
-        }, 
-        {
-            "name": "footerLinkColor",
-            "label": "Link color",
-            "group": "Footer",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        }, 
-        {
-            "name": "footerLinkHoverColor",
-            "label": "Link hover color",
-            "group": "Footer",
-            "value": "rgba(255,255,255,0.7)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "footerIconColor",
-            "label": "Follow buttons color",
-            "group": "Footer",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-
         {
             "name": "galleryItemGap",
             "label": "Item spacing",
