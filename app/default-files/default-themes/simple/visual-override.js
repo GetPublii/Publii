@@ -197,6 +197,13 @@ var generateOverride = function (params) {
         }`;    	 
     }	
 
+    if(params.galleryZoom !== true) {
+        output += `   
+        .pswp--zoom-allowed .pswp__img {
+            cursor: default !important  
+        }`;    	 
+    }
+
     if(params.lazyLoadEffect === 'fadein') {
         output += ` 
          img[loading] {
