@@ -29,7 +29,7 @@ class NetlifyAPI {
         let hashesOfFilesToUpload = deployData.body.required;
         let filesToUpload = this.getFilesToUpload(localFilesList, hashesOfFilesToUpload);
         this.events.onStart(filesToUpload.length);
-
+        
         for (let i = 0; i < filesToUpload.length; i++) {
             let filePath = filesToUpload[i];
             
@@ -79,7 +79,7 @@ class NetlifyAPI {
 
     async makeApiRequest (method, endpoint, data) {
         let endpointUrl = this.apiUrl + endpoint.replace(':site_id', this.siteID);
-
+        
         return asyncRequest({
             method: method,
             uri: endpointUrl,
@@ -99,12 +99,13 @@ class NetlifyAPI {
         let endpointUrl = this.apiUrl + 'deploys/' + deployID + '/files' + filePath;
         let fullFilePath = this.getFilePath(this.inputDir, filePath, true);
         let fileContent = await asyncReadFile(fullFilePath);
-
+        
         return asyncRequest({
             method: 'PUT',
             uri: endpointUrl,
             headers: {
-                'User-Agent': 'Publii'
+                'User-Agent': 'Publii',
+                'Content-Type': 'application/octet-stream'
             },
             body: fileContent,
             auth: {
