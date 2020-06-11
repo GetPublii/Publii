@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -87,8 +87,10 @@ export default {
 
             if (currentTheme === 'dark') {
                 theme = 'default';
+                remote.nativeTheme.themeSource = 'light';
             } else {
                 theme = 'dark';
+                remote.nativeTheme.themeSource = 'dark';
             }
 
             this.$store.commit('setAppTheme', theme);

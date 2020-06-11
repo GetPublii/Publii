@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote, nativeTheme } from 'electron';
 import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
@@ -104,6 +104,12 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
         },
         mounted () {
             document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
+
+            if (this.$store.state.app.theme === 'default') {
+                remote.nativeTheme.themeSource = 'light';
+            } else if (this.$store.state.app.theme === 'dark') {
+                remote.nativeTheme.themeSource = 'dark';
+            }
         }
     });
 });
