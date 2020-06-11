@@ -65,7 +65,7 @@ export default {
             progressIsStopped: false,
             regeneratingThumbnails: false,
             regenerateIsDone: false,
-            savedSettingsCallbac: false
+            savedSettingsCallback: false
         };
     },
     mounted () {
