@@ -47,7 +47,7 @@ class Renderer {
         this.errorLog = [];
         this.previewMode = false;
         this.ampMode = false;
-        this.useRelativeUrls = siteConfig.deployment.relativeUrls;
+        this.useRelativeUrls = false; // siteConfig.deployment.relativeUrls;
         this.translations = {
             user: false,
             theme: false
