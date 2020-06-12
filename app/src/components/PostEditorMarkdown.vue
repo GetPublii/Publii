@@ -310,7 +310,7 @@ export default {
             });
         },
         pasteTitle (e) {
-            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            let text = (e.originalEvent || e).clipboardData.getData('text/plain').replace(/\n/gmi, '');
             document.execCommand('insertText', false, text);
         }
     },
