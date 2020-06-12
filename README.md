@@ -82,4 +82,4 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 
 ## License
-Copyright (c) 2018 TidyCustoms. General Public License v3.0, read [LICENSE](https://getpublii.com/license.html) for details.
+Copyright (c) 2020 TidyCustoms. General Public License v3.0, read [LICENSE](https://getpublii.com/license.html) for details.
