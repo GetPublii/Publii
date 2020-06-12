@@ -18,7 +18,7 @@
             <btn-dropdown
                 ref="dropdown-button"
                 :items="dropdownItems"
-                :min-width="210"
+                :min-width="184"
                 :defaultValue="retrieveCurrentAction()" />
 
             <p-button
@@ -230,7 +230,7 @@ export default {
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: 94px;
+                width: 120px;
             }
 
             &:nth-child(3) {
