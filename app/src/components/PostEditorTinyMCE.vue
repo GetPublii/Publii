@@ -385,6 +385,14 @@ export default {
     }
 }
 
+@media (min-width: 1800px) {
+    .post-editor-form #post-title {
+        margin: 0 auto 2.6rem;
+        max-width: calc(100% - 880px);
+        width: 100%;
+    }
+}
+
 /*
  * Special styles for win & linux
  */

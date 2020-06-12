@@ -402,6 +402,14 @@ export default {
     }
 }
 
+@media (min-width: 1800px) {
+    .post-editor-markdown .post-editor-form #post-title {
+        margin: 0 auto 2.6rem;
+        max-width: calc(100% - 880px);
+        width: 100%;
+    }
+}
+
 #post-help-button {
     bottom: 20px;
     position: absolute;
