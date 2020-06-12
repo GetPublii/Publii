@@ -388,6 +388,10 @@ export default {
                     border: none;
                     height: auto!important;
                     padding: 0;
+
+                    .CodeMirror-selected {
+                        background: var(--text-selection-color)!important;
+                    }
                 }
 
                 .CodeMirror-advanced-dialog + .CodeMirror {
