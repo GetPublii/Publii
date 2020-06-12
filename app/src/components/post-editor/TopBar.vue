@@ -24,13 +24,12 @@
             <p-button
                 type="outline"
                 @click.native="cancelPost">
-                <template v-if="!$parent.possibleDataLoss">Close</template>
-                <template v-if="$parent.possibleDataLoss">Cancel</template>
+                Back to posts
             </p-button>
 
             <p-button 
-                icon="settings"
-                type="outline icon only-icon"
+                :icon="$parent.sidebarVisible ? 'win-close' : 'settings'"
+                type="outline icon only-icon icon-smaller"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
