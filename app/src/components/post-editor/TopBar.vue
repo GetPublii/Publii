@@ -28,8 +28,9 @@
             </p-button>
 
             <p-button 
-                :icon="$parent.sidebarVisible ? 'win-close' : 'settings'"
-                type="outline icon only-icon icon-smaller"
+                icon="settings"
+
+                :type="$parent.sidebarVisible ? 'outline icon only-icon-color' : 'outline icon only-icon'"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
