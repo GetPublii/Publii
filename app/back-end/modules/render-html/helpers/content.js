@@ -42,7 +42,7 @@ class ContentHelper {
         preparedText = ContentHelper.parseText(preparedText, editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
-        if(ampMode) {
+        if (ampMode) {
             preparedText = preparedText.replace(/<publii-non-amp>[\s\S]*?<\/publii-non-amp>/gmi, '');
             preparedText = preparedText.replace(/<publii-amp>/gmi, '');
             preparedText = preparedText.replace(/<\/publii-amp>/gmi, '');
@@ -74,7 +74,7 @@ class ContentHelper {
         }
 
         // Add loading="lazy" attributes to img, video, audio, iframe tags
-        if (renderer.siteConfig.advanced.mediaLazyLoad) {
+        if (renderer.siteConfig.advanced.mediaLazyLoad && !ampMode) {
             preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
             preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
             preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
