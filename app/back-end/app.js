@@ -536,7 +536,7 @@ class App {
 
         if (process.platform === 'linux') {
             this.mainWindow.webContents.on('before-input-event', (event, input) => {
-                if (input.control && input.code === 'KeyQ') {
+                if (input.control && input.key === 'a') {
                     this.app.quit();
                 }
             });
