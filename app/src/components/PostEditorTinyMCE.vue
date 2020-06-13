@@ -98,7 +98,6 @@ export default {
             possibleDataLoss: false,
             unwatchDataLoss: null,
             sidebarVisible: false,
-            iframeFocusCheckTimeout: false,
             postData: {
                 editor: this.$options.editorType,
                 title: '',
@@ -173,10 +172,6 @@ export default {
         });
 
         this.$refs['post-title'].focus();
-
-        this.iframeFocusCheckTimeout = setTimeout(() => {
-            this.checkIframeFocus();
-        }, 1000);
     },
     methods: {
         updateTitle () {
@@ -313,16 +308,6 @@ export default {
                 localStorage.setItem('publii-writers-panel', 'opened');
             }
         },
-        checkIframeFocus () {
-            if (!document.getElementById('post-editor_ifr').contentDocument.hasFocus()) {
-                document.getElementById('inline-toolbar').style.display = 'none';
-                document.getElementById('link-toolbar').style.display = 'none';
-            }
-
-            this.iframeFocusCheckTimeout = setTimeout(() => {
-                this.checkIframeFocus();
-            }, 1000);
-        },
         pasteTitle (e) {
             let text = (e.originalEvent || e).clipboardData.getData('text/plain').replace(/\n/gmi, '');
             document.execCommand('insertText', false, text);
@@ -336,7 +321,6 @@ export default {
         $('#custom-post-editor-script').remove();
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
-        clearTimeout(this.iframeFocusCheckTimeout);
     }
 };
 </script>
