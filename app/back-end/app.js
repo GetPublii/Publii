@@ -538,6 +538,29 @@ class App {
             });
         }
 
+        this.mainWindow.on('close', function(e) {
+            let currentWindowURL = e.sender.webContents.getURL();
+
+            if (
+                currentWindowURL.indexOf('/posts/editor/blockeditor/') === -1 &&
+                currentWindowURL.indexOf('/posts/editor/markdown/') === -1 &&
+                currentWindowURL.indexOf('/posts/editor/tinymce/') === -1
+            ) {
+                return;
+            }
+
+            const choice = dialog.showMessageBoxSync(this, {
+                type: 'question',
+                buttons: ['Yes', 'No'],
+                title: 'Confirm',
+                message: "Are you sure you want to quit? \nAll unsaved changes will be lost."
+            });
+            
+            if (choice === 1) {
+                e.preventDefault();
+            }
+        });
+
         // Open Dev Tools
         if(this.appConfig.openDevToolsInMain) {
             this.mainWindow.webContents.openDevTools();
