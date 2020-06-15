@@ -12,7 +12,7 @@ export default {
         editorOpened: false,
         editorType: 'blockeditor',
         windowIsMaximized: false,
-        theme: ['system', 'dark', 'default'].indexOf(localStorage.getItem('publii-theme')) > -1 ? localStorage.getItem('publii-theme') : 'system' 
+        theme: ['system', 'dark', 'default'].indexOf(localStorage.getItem('publii-theme')) > -1 ? localStorage.getItem('publii-theme') : 'default' 
     },
     // Persistent components
     components: {

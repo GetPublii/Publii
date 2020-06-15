@@ -23,11 +23,7 @@
                     slot="field"
                     id="start"
                     v-model="theme"
-                    :items="{
-                        'system': 'Use system colors',
-                        'default': 'Light mode',
-                        'dark': 'Dark mode'
-                    }"></dropdown>
+                    :items="availableColorSchemes"></dropdown>
             </field>
             
             <field
@@ -255,7 +251,7 @@ export default {
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
             originalSitesLocation: '',
-            theme: 'system',
+            theme: 'default',
             locations: {
                 sites: '',
                 backups: '',
@@ -270,6 +266,20 @@ export default {
             return {
                 '': 'Open the last used website',
                 ...websites
+            };
+        },
+        availableColorSchemes () {
+            if (process.platform === 'darwin') {
+                return {
+                    'system': 'Use system colors',
+                    'default': 'Light mode',
+                    'dark': 'Dark mode'
+                };
+            }
+
+            return {
+                'default': 'Light mode',
+                'dark': 'Dark mode'
             };
         },
         timeFormats () {
