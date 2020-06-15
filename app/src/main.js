@@ -102,14 +102,84 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
         components: {
             'App': App
         },
+        data () {
+            return {
+                skipThemeChangeEvents: false
+            };
+        },
         mounted () {
-            document.querySelector('html').setAttribute('data-theme', this.$store.state.app.theme);
+            this.getAppTheme();
+        },
+        methods: {
+            getAppTheme () {
+                let currentTheme = this.$store.state.app.theme;
 
-            if (this.$store.state.app.theme === 'default') {
-                remote.nativeTheme.themeSource = 'light';
-            } else if (this.$store.state.app.theme === 'dark') {
-                remote.nativeTheme.themeSource = 'dark';
+                if (currentTheme === 'default') {
+                    remote.nativeTheme.themeSource = 'light';
+                } else if (currentTheme === 'dark') {
+                    remote.nativeTheme.themeSource = 'dark';
+                } else {
+                    if (remote.nativeTheme.shouldUseDarkColors) {
+                        currentTheme = 'dark';
+                    } else {
+                        currentTheme = 'default';
+                    }
+                }
+
+                document.querySelector('html').setAttribute('data-theme', currentTheme);
+                this.$bus.$on('app-theme-change', this.toggleTheme);
+
+                remote.nativeTheme.on('updated', () => {
+                    if (this.skipThemeChangeEvents) {
+                        return;
+                    }
+
+                    this.$bus.$emit('app-theme-change');
+                });
+            },
+            toggleTheme () {
+                this.skipThemeChangeEvents = true;
+                let currentTheme = this.$store.state.app.theme;
+                let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
+                let theme;
+
+                if (currentTheme === 'dark') {
+                    theme = 'dark';
+                    remote.nativeTheme.themeSource = 'dark';
+                    currentTheme = 'dark';
+                } else if (currentTheme === 'default') {
+                    theme = 'default';
+                    remote.nativeTheme.themeSource = 'light';
+                    currentTheme = 'default';
+                } else {
+                    theme = 'system';
+                    remote.nativeTheme.themeSource = 'system';
+                    currentTheme = 'system';
+
+                    if (remote.nativeTheme.shouldUseDarkColors) {
+                        theme = 'dark';
+                    } else {
+                        theme = 'default';
+                    }
+                }
+
+                this.$store.commit('setAppTheme', currentTheme);
+                localStorage.setItem('publii-theme', currentTheme);
+                ipcRenderer.send('app-save-color-theme', currentTheme);
+
+                for (let i = 0; i < iframes.length; i++) {
+                    iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
+                }
+
+                document.querySelector('html').setAttribute('data-theme', theme);
+
+                setTimeout(() => {
+                    this.skipThemeChangeEvents = false;
+                }, 500);
             }
+        },
+        beforeDestroy () {
+            this.$bus.$off('app-theme-change', this.toggleTheme);
         }
     });
 });
