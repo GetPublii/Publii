@@ -367,6 +367,7 @@ class WxrParser {
             let postSlug = slug(posts[i].title);
             let postAuthor = this.temp.authors[slug(posts[i]['dc:creator'])];
             let postText = this.preparePostText(posts[i]['content:encoded'], postImages);
+            let postStatus = posts[i]['wp:status'] === 'draft' ? 'draft' : 'published'
             let postTags = '';
             let postTitle = typeof posts[i].title === 'string' ? posts[i].title : 'Untitled';
 
@@ -396,7 +397,7 @@ class WxrParser {
                 title: postTitle,
                 slug: postSlug,
                 author: postAuthor,
-                status: 'published',
+                status: postStatus,
                 tags: postTags,
                 text: postText,
                 creationDate: moment(posts[i]['wp:post_date']).format('x'),
