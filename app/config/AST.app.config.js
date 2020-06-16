@@ -16,7 +16,7 @@ const AstAppConfig = {
     postsOrdering: 'id DESC',
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
-    appTheme: 'default'
+    appTheme: 'system'
 };
 
 module.exports = AstAppConfig;

@@ -269,15 +269,8 @@ export default {
             };
         },
         availableColorSchemes () {
-            if (process.platform === 'darwin') {
-                return {
-                    'system': 'Use system colors',
-                    'default': 'Light mode',
-                    'dark': 'Dark mode'
-                };
-            }
-
             return {
+                'system': 'Use system colors',
                 'default': 'Light mode',
                 'dark': 'Dark mode'
             };
