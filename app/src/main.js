@@ -108,10 +108,10 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
             };
         },
         mounted () {
-            this.getAppTheme();
+            this.setupAppTheme();
         },
         methods: {
-            getAppTheme () {
+            setupAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'default') {
@@ -136,6 +136,19 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
 
                     this.$bus.$emit('app-theme-change');
                 });
+            },
+            getCurrentAppTheme () {
+                let currentTheme = this.$store.state.app.theme;
+
+                if (currentTheme === 'system') {
+                    if (remote.nativeTheme.shouldUseDarkColors) {
+                        return 'dark';
+                    } else {
+                        return 'default';
+                    }
+                } 
+
+                return currentTheme;
             },
             toggleTheme () {
                 this.skipThemeChangeEvents = true;

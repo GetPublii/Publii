@@ -131,7 +131,7 @@ export default {
                 setup: function (editor) {
                     editor.on('init', function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$store.state.app.theme);
+                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$root.getCurrentAppTheme());
                     });
                 }
             });

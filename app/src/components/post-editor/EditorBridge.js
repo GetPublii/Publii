@@ -80,7 +80,7 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$store.state.app.theme);
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$root.getCurrentAppTheme());
 
             // Add inline editors
             this.addInlineEditor(customFormats);
