@@ -200,6 +200,22 @@
                 </field>
 
                 <field
+                    v-if="['ftp', 'ftp+tls'].indexOf(deploymentMethodSelected) > -1"
+                    id="secure-connection"
+                    label="FTPS"
+                    :labelSeparated="true">
+                    <switcher
+                        slot="field"
+                        id="secure-connection"
+                        key="secure-connection"
+                        :value="deploymentMethodSelected === 'ftp+tls'"
+                        @click.native="toggleFtpDeploymentMethod" />
+                    <template slot="second-label">
+                        Use FTP with SSL/TLS
+                    </template>
+                </field>
+
+                <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="server"
                     label="Server">
@@ -1330,6 +1346,13 @@ export default {
             }
 
             return deploymentSettings;
+        },
+        toggleFtpDeploymentMethod () {
+            if (this.deploymentMethodSelected === 'ftp+tls') {
+                this.deploymentMethodSelected = 'ftp';
+            } else {
+                this.deploymentMethodSelected = 'ftp+tls';
+            }
         }
     }
 }
