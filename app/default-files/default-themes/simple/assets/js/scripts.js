@@ -426,6 +426,12 @@ window.addEventListener('scroll', function (e) {
         if (relatedContainer) {
             relatedContainer.classList.remove(config.relatedContainerForOverlayMenuClass);
         }
+
+        var menuOverlay = document.querySelector('.' + config.mobileMenuSidebarOverlayClass);
+
+        if (menuOverlay) {
+            menuOverlay.classList.add(config.hiddenElementClass);
+        }
     }
 
     /**
