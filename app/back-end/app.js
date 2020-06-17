@@ -616,6 +616,16 @@ class App {
 
         return true;
     }
+
+    /**
+     * Function used to add sites to the back-end sites list
+     * 
+     * @param {string} siteCatalog 
+     * @param {onkject} siteData 
+     */
+    addSite (siteCatalog, siteData) {
+        this.sites[siteCatalog] = siteData;
+    }
 }
 
 module.exports = App;
