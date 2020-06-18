@@ -77,7 +77,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "8.3.0",
+    "electronVersion": "8.3.2",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
