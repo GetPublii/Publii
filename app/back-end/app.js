@@ -10,11 +10,7 @@ const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 // Electron classes
-const electron = require('electron');
-const shell = electron.shell;
-const Menu = electron.Menu;
-const dialog = electron.dialog;
-const BrowserWindow = electron.BrowserWindow;
+const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow } = require('electron');
 // Collection classes
 const Posts = require('./posts.js');
 const Tags = require('./tags.js');
@@ -343,7 +339,7 @@ class App {
         }
 
         if (!this.windowBounds) {
-            let screens = electron.screen.getAllDisplays();
+            let screens = screen.getAllDisplays();
             let width = screens[0].workAreaSize.width;
             let height = screens[0].workAreaSize.height;
            
@@ -442,14 +438,15 @@ class App {
             nodeIntegration: true,
             webviewTag: true,
             spellcheck: true,
-            preload: path.join(__dirname, 'app-preload.js')
+            preload: path.join(__dirname, 'app-preload.js'),
+            icon: path.join(__dirname, 'assets', 'icon.png')
         };
 
-        if (this.appConfig.appTheme === 'dark') {
+        if (this.appConfig.appTheme === 'dark' || (this.appConfig.appTheme === 'system' && nativeTheme.shouldUseDarkColors)) {
             windowParams.backgroundColor = '#202128';
         }
 
-        let displays = electron.screen.getAllDisplays();
+        let displays = screen.getAllDisplays();
         let externalDisplay = displays.find((display) => {
             return display.bounds.x !== 0 || display.bounds.y !== 0;
         });
@@ -459,9 +456,9 @@ class App {
             !externalDisplay &&
             (
                 windowParams.x < 0 ||
-                windowParams.x > electron.screen.getPrimaryDisplay().workAreaSize.width ||
+                windowParams.x > screen.getPrimaryDisplay().workAreaSize.width ||
                 windowParams.y < 0 ||
-                windowParams.y > electron.screen.getPrimaryDisplay().workAreaSize.height
+                windowParams.y > screen.getPrimaryDisplay().workAreaSize.height
             )
         ) {
             windowParams.x = 0;
@@ -535,11 +532,34 @@ class App {
 
         if (process.platform === 'linux') {
             this.mainWindow.webContents.on('before-input-event', (event, input) => {
-                if (input.control && input.code === 'KeyQ') {
+                if (input.control && input.key === 'a') {
                     this.app.quit();
                 }
             });
         }
+
+        this.mainWindow.on('close', function(e) {
+            let currentWindowURL = e.sender.webContents.getURL();
+
+            if (
+                currentWindowURL.indexOf('/posts/editor/blockeditor/') === -1 &&
+                currentWindowURL.indexOf('/posts/editor/markdown/') === -1 &&
+                currentWindowURL.indexOf('/posts/editor/tinymce/') === -1
+            ) {
+                return;
+            }
+
+            const choice = dialog.showMessageBoxSync(this, {
+                type: 'question',
+                buttons: ['Yes', 'No'],
+                title: 'Confirm',
+                message: "Are you sure you want to quit? \nAll unsaved changes will be lost."
+            });
+            
+            if (choice === 1) {
+                e.preventDefault();
+            }
+        });
 
         // Open Dev Tools
         if(this.appConfig.openDevToolsInMain) {
@@ -595,6 +615,16 @@ class App {
         }
 
         return true;
+    }
+
+    /**
+     * Function used to add sites to the back-end sites list
+     * 
+     * @param {string} siteCatalog 
+     * @param {onkject} siteData 
+     */
+    addSite (siteCatalog, siteData) {
+        this.sites[siteCatalog] = siteData;
     }
 }
 

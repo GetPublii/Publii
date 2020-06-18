@@ -18,19 +18,19 @@
             <btn-dropdown
                 ref="dropdown-button"
                 :items="dropdownItems"
-                :min-width="210"
+                :min-width="184"
                 :defaultValue="retrieveCurrentAction()" />
 
             <p-button
                 type="outline"
                 @click.native="cancelPost">
-                <template v-if="!$parent.possibleDataLoss">Close</template>
-                <template v-if="$parent.possibleDataLoss">Cancel</template>
+                Back to posts
             </p-button>
 
             <p-button 
                 icon="settings"
-                type="outline icon only-icon"
+
+                :type="$parent.sidebarVisible ? 'outline icon only-icon-color' : 'outline icon only-icon'"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
@@ -230,7 +230,7 @@ export default {
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: 94px;
+                width: 120px;
             }
 
             &:nth-child(3) {

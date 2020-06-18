@@ -22,7 +22,7 @@
                 <input
                     v-model="label"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
-                    @keyup.native="cleanError('label')"
+                    @keyup="cleanError('label')"
                     type="text">
             </label>
 
@@ -47,7 +47,7 @@
                 <span>Internal link</span>
                 <input
                     v-model="internalLink"
-                    @keyup.native="cleanError('internalLink')"
+                    @keyup="cleanError('internalLink')"
                     spellcheck="false"
                     type="text" />
             </label>
@@ -59,7 +59,7 @@
                 <span>External URL</span>
                 <input
                     v-model="externalLink"
-                    @keyup.native="cleanError('externalLink')"
+                    @keyup="cleanError('externalLink')"
                     spellcheck="false"
                     type="text" />
             </label>

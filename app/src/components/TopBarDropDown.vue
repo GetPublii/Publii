@@ -18,8 +18,8 @@
                 path="/app-themes" />
             <topbar-dropdown-item
                 class="topbar-app-submenu-separator" 
-                :onClick="toggleTheme"
-                :label="$store.state.app.theme === 'dark' ? 'Switch to Light mode' : 'Switch to Dark mode'" />
+                path="/app-settings"
+                label="Change application theme" />
             <topbar-dropdown-item
                 label="Help"
                 title="Check Publii documentation"
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -79,27 +79,6 @@ export default {
             this.$bus.$off('document-body-clicked', this.hideSubmenu);
             this.$bus.$emit('document-body-clicked');
             this.$bus.$on('document-body-clicked', this.hideSubmenu);
-        },
-        toggleTheme () {
-            let currentTheme = this.$store.state.app.theme;
-            let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
-            let theme;
-
-            if (currentTheme === 'dark') {
-                theme = 'default';
-            } else {
-                theme = 'dark';
-            }
-
-            this.$store.commit('setAppTheme', theme);
-            localStorage.setItem('publii-theme', theme);
-            ipcRenderer.send('app-save-color-theme', theme);
-
-            for (let i = 0; i < iframes.length; i++) {
-                iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
-            }
-
-            document.querySelector('html').setAttribute('data-theme', theme);
         }
     },
     beforeDestroy () {

@@ -44,13 +44,17 @@ window.addEventListener('scroll', function (e) {
         submenuWidth: 300,
         doubleClickTime: 500,
         mobileMenuExpandableSubmenus: false,
+        isHoverMenu: true,
         // selectors
         wrapperSelector: '.navbar',
         buttonSelector: '.navbar__toggle',
         menuSelector: '.navbar__menu',
         submenuSelector: '.navbar__submenu',
         mobileMenuSidebarLogoSelector: null,
+        mobileMenuSidebarLogoUrl: null,
         relatedContainerForOverlayMenuSelector: null,
+        // attributes 
+        ariaButtonAttribute: 'aria-haspopup',
         // CSS classes
         separatorItemClass: 'is-separator',
         parentItemClass: 'has-submenu',
@@ -93,6 +97,12 @@ window.addEventListener('scroll', function (e) {
         } else if (config.mobileMenuMode === 'sidebar') {
             initMobileMenuSidebar();
         }
+
+        initClosingMenuOnClickLink();
+
+        if (!config.isHoverMenu) {
+            initAriaAttributes();
+        }
     };
 
     /**
@@ -102,7 +112,9 @@ window.addEventListener('scroll', function (e) {
         var submenuParents = document.querySelectorAll(config.wrapperSelector + ' .' + config.parentItemClass);
 
         for (var i = 0; i < submenuParents.length; i++) {
-            submenuParents[i].addEventListener('mouseenter', function () {
+            var eventTrigger = config.isHoverMenu ? 'mouseenter' : 'click';
+
+            submenuParents[i].addEventListener(eventTrigger, function () {
                 var submenu = this.querySelector(config.submenuSelector);
                 var itemPosition = this.getBoundingClientRect().left;
                 var widthMultiplier = 2;
@@ -154,11 +166,13 @@ window.addEventListener('scroll', function (e) {
                 submenu.setAttribute('aria-hidden', false);
             });
 
-            submenuParents[i].addEventListener('mouseleave', function () {
-                var submenu = this.querySelector(config.submenuSelector);
-                submenu.removeAttribute('style');
-                submenu.setAttribute('aria-hidden', true);
-            });
+            if (config.isHoverMenu) {
+                submenuParents[i].addEventListener('mouseleave', function () {
+                    var submenu = this.querySelector(config.submenuSelector);
+                    submenu.removeAttribute('style');
+                    submenu.setAttribute('aria-hidden', true);
+                });
+            }
         }
     }
 
@@ -186,7 +200,7 @@ window.addEventListener('scroll', function (e) {
             var relatedContainer = document.querySelector(config.relatedContainerForOverlayMenuSelector);
             menuWrapper.classList.toggle(config.hiddenElementClass);
             button.classList.toggle(config.openedMenuClass);
-            button.setAttribute('aria-expanded', button.classList.contains(config.openedMenuClass));
+            button.setAttribute(config.ariaButtonAttribute, button.classList.contains(config.openedMenuClass));
 
             if (button.classList.contains(config.openedMenuClass)) {
                 document.documentElement.classList.add(config.noScrollClass);
@@ -216,6 +230,8 @@ window.addEventListener('scroll', function (e) {
 
         if (config.mobileMenuSidebarLogoSelector !== null) {
             menuContentHTML = document.querySelector(config.mobileMenuSidebarLogoSelector).outerHTML;
+        } else if (config.mobileMenuSidebarLogoUrl !== null) {
+            menuContentHTML = '<img src="' + config.mobileMenuSidebarLogoUrl + '" alt="" />';
         }
 
         menuContentHTML += document.querySelector(config.menuSelector).outerHTML;
@@ -243,7 +259,7 @@ window.addEventListener('scroll', function (e) {
             menuWrapper.classList.add(config.hiddenElementClass);
             menuOverlay.classList.add(config.hiddenElementClass);
             button.classList.remove(config.openedMenuClass);
-            button.setAttribute('aria-expanded', false);
+            button.setAttribute(config.ariaButtonAttribute, false);
             document.documentElement.classList.remove(config.noScrollClass);
         });
 
@@ -254,8 +270,8 @@ window.addEventListener('scroll', function (e) {
             menuWrapper.classList.toggle(config.hiddenElementClass);
             menuOverlay.classList.toggle(config.hiddenElementClass);
             button.classList.toggle(config.openedMenuClass);
-            button.setAttribute('aria-expanded', button.classList.contains(config.openedMenuClass));
-            document.documentElement.classList.add(config.noScrollClass);
+            button.setAttribute(config.ariaButtonAttribute, button.classList.contains(config.openedMenuClass));
+            document.documentElement.classList.toggle(config.noScrollClass);
         });
     }
 
@@ -299,6 +315,9 @@ window.addEventListener('scroll', function (e) {
                         submenu.removeAttribute('style');
                         submenu.classList.remove(config.openedMenuClass);
                     }, config.animationSpeed);
+
+                    content.setAttribute('aria-hidden', true);
+                    content.parentNode.firstElementChild.setAttribute('aria-expanded', false);
                 } else {
                     var height = content.clientHeight;   
                     submenu.classList.add(config.openedMenuClass);
@@ -311,6 +330,9 @@ window.addEventListener('scroll', function (e) {
                     setTimeout(function () {
                         submenu.removeAttribute('style');
                     }, config.animationSpeed);
+
+                    content.setAttribute('aria-hidden', false);
+                    content.parentNode.firstElementChild.setAttribute('aria-expanded', true);
                 }
             });
 
@@ -331,10 +353,84 @@ window.addEventListener('scroll', function (e) {
                             this.setAttribute('data-last-click', currentTime);
                         } else if (lastClick + config.doubleClickTime > currentTime) {
                             e.stopPropagation();
+                            closeMenu(this, true);
                         }
                     });
                 }
             }
+        }
+    }
+
+    /**
+     * Set aria-* attributes according to the current activity state
+     */
+    function initAriaAttributes () {
+        var allAriaElements = document.querySelectorAll(config.wrapperSelector + ' ' + '*[aria-hidden]');
+
+        for (var i = 0; i < allAriaElements.length; i++) {
+            var ariaElement = allAriaElements[i];
+
+            if (
+                ariaElement.parentNode.classList.contains('active') ||
+                ariaElement.parentNode.classList.contains('active-parent')
+            ) {
+                ariaElement.setAttribute('aria-hidden', 'false');
+                ariaElement.parentNode.firstElementChild.setAttribute('aria-expanded', true);
+            } else {
+                ariaElement.setAttribute('aria-hidden', 'true');
+                ariaElement.parentNode.firstElementChild.setAttribute('aria-expanded', false);
+            }
+        }
+    }
+
+    /**
+     * Close menu on click link
+     */
+    function initClosingMenuOnClickLink () {
+        var links = document.querySelectorAll(config.menuSelector + ' a');
+
+        for (var i = 0; i < links.length; i++) {
+            if (links[i].parentNode.classList.contains(config.parentItemClass)) {
+                continue;
+            }
+
+            links[i].addEventListener('click', function (e) {
+                closeMenu(this, false);
+            });
+        }
+    }
+
+    /**
+     * Close menu
+     */
+    function closeMenu (clickedLink, forceClose) {
+        if (forceClose === false) {
+            if (clickedLink.parentNode.classList.contains(config.parentItemClass)) {
+                return;
+            }
+        }
+
+        var relatedContainer = document.querySelector(config.relatedContainerForOverlayMenuSelector);
+        var button = document.querySelector(config.buttonSelector);
+        var menuWrapper = document.querySelector('.' + config.mobileMenuOverlayClass);
+
+        if (!menuWrapper) {
+            menuWrapper = document.querySelector('.' + config.mobileMenuSidebarClass);
+        }
+
+        menuWrapper.classList.add(config.hiddenElementClass);
+        button.classList.remove(config.openedMenuClass);
+        button.setAttribute(config.ariaButtonAttribute, false);
+        document.documentElement.classList.remove(config.noScrollClass);
+
+        if (relatedContainer) {
+            relatedContainer.classList.remove(config.relatedContainerForOverlayMenuClass);
+        }
+
+        var menuOverlay = document.querySelector('.' + config.mobileMenuSidebarOverlayClass);
+
+        if (menuOverlay) {
+            menuOverlay.classList.add(config.hiddenElementClass);
         }
     }
 

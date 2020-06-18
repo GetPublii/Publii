@@ -17,6 +17,16 @@
 
         <fields-group title="Basic Settings">
             <field
+                id="theme"
+                label="Color theme">
+                <dropdown
+                    slot="field"
+                    id="start"
+                    v-model="theme"
+                    :items="availableColorSchemes"></dropdown>
+            </field>
+            
+            <field
                 id="start"
                 label="Load at start:">
                 <dropdown
@@ -211,7 +221,7 @@
 
 <script>
 import fs from 'fs';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -241,6 +251,7 @@ export default {
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
             originalSitesLocation: '',
+            theme: 'default',
             locations: {
                 sites: '',
                 backups: '',
@@ -255,6 +266,13 @@ export default {
             return {
                 '': 'Open the last used website',
                 ...websites
+            };
+        },
+        availableColorSchemes () {
+            return {
+                'system': 'Use system colors',
+                'default': 'Light mode',
+                'dark': 'Dark mode'
             };
         },
         timeFormats () {
@@ -336,6 +354,7 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+        this.theme = this.getAppTheme();
 
         if (process.platform === 'linux') {
             this.imageResizeEnginesSelected = 'jimp';
@@ -423,6 +442,18 @@ export default {
                     lifeTime: 3
                 });
             }
+
+            this.$store.commit('setAppTheme', this.theme);
+            this.$bus.$emit('app-theme-change');
+        },
+        getAppTheme () {
+            let theme = localStorage.getItem('publii-theme');
+
+            if (theme === 'system' || theme === 'dark' || theme === 'default') {
+                return theme;
+            }
+
+            return 'system';
         }
     }
 }
