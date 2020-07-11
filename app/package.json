@@ -43,7 +43,7 @@
     "github": "^9.2.0",
     "gitlab": "^3.11.4",
     "glob-move": "^1.0.1",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.6",
     "html-minifier": "^3.0.2",
     "image-downloader": "^3.3.0",
     "image-size": "^0.5.0",
