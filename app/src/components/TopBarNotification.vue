@@ -26,6 +26,7 @@
 
 <script>
 import { ipcRenderer, shell } from 'electron';
+import appBuildData from './../../back-end/builddata.json';
 
 export default {
     name: 'topbar-notification',
@@ -81,11 +82,19 @@ export default {
             let closeTimestamp = localStorage.getItem('publii-notification-close-timestamp');
 
             if(closeTimestamp === null || data.notification.timestamp > parseInt(closeTimestamp, 10)) {
-                this.$store.commit('setNotification', {
-                    timestamp: data.notification.timestamp,
-                    text: data.notification.content,
-                    visible: true
-                });
+                if (!data.notification.publiiMaxVersion || this.appIsOlderThan(data.notification.publiiMaxVersion)) {
+                    this.$store.commit('setNotification', {
+                        timestamp: data.notification.timestamp,
+                        text: data.notification.content,
+                        visible: true
+                    });
+                } else {
+                    this.$store.commit('setNotification', {
+                        timestamp: data.notification.timestamp,
+                        text: data.notification.content,
+                        visible: false
+                    });    
+                }
             } else {
                 this.$store.commit('setNotification', {
                     timestamp: data.notification.timestamp,
@@ -109,6 +118,39 @@ export default {
         closeNotification(event) {
             localStorage.setItem('publii-notification-close-timestamp', this.notification.timestamp);
             this.$store.commit('setNotification', false);
+        },
+        appIsOlderThan (versionToCheck) {
+            if (this.compareVersions(appBuildData.version, versionToCheck) === 1) {
+                return false;
+            }
+
+            return true;
+        },
+        compareVersions (versionOfApp, versionToCheck) {
+            if (versionOfApp === versionToCheck) {
+                return 0;
+            }
+
+            versionOfApp = versionOfApp.split('.');
+            versionToCheck = versionToCheck.split('.');
+
+            let howManyParts = Math.min(versionOfApp.length, versionToCheck.length);
+
+            for (let i = 0; i < howManyParts; i++) {
+                if (parseInt(versionOfApp[i], 10) > parseInt(versionToCheck[i], 10)) {
+                    return 1;
+                } else if (parseInt(versionOfApp[i], 10) < parseInt(versionToCheck[i], 10)) {
+                    return -1;
+                }
+            }
+
+            if (versionOfApp.length > versionToCheck.length) {
+                return 1;
+            } else if (versionOfApp.length < versionToCheck.length) {
+                return -1;
+            }
+
+            return 0;
         }
     }
 }
