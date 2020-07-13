@@ -50,6 +50,14 @@
             </label>
 
             <label>
+                <span>Website:</span>
+                <input
+                    v-model="authorData.website"
+                    spellcheck="false"
+                    type="text">
+            </label>
+
+            <label>
                 <span>Avatar:</span>
                 <image-upload
                     slot="field"
@@ -193,6 +201,7 @@ export default {
             this.authorData.name = params.name || '';
             this.authorData.username = params.username || '';
             this.authorData.email = params.email || '';
+            this.authorData.website = params.website || '';
             this.authorData.avatar = params.avatar || '';
             this.authorData.useGravatar = params.useGravatar || false;
             this.authorData.description = params.description || '';
@@ -217,6 +226,7 @@ export default {
                 username: this.authorData.username,
                 config: JSON.stringify({
                     email: this.authorData.email,
+                    website: this.authorData.website,
                     avatar: this.authorData.avatar,
                     useGravatar: this.authorData.useGravatar,
                     description: this.authorData.description,

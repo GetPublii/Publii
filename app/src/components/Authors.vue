@@ -217,6 +217,7 @@ export default {
                 name: '',
                 username: '',
                 email: '',
+                website: '',
                 avatar: '',
                 useGravatar: false,
                 description: '',

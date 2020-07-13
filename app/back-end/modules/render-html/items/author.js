@@ -40,6 +40,7 @@ class AuthorItem {
             avatar: '',
             avatarImage: '',
             email: '',
+            website: '',
             description: '',
             postsNumber: 0,
             url: '',
