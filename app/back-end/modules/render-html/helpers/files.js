@@ -15,23 +15,20 @@ class Files {
     static copyRootFiles(inputDir, outputDir) {
         let inputPath = path.join(inputDir, 'root-files');
         let outputPath = path.join(outputDir);
-        let filesToCopy = fs.readdirSync(inputPath);
+        
+        fs.copySync(
+            path.join(inputPath),
+            path.join(outputPath),
+            {
+                filter: (src, dest) => {
+                    if (src.substr(-9) === '.DS_Store' || src.substr(-9) === 'Thumbs.db') {
+                        return false;
+                    }
 
-        // Copy each file from the list
-        for(let file of filesToCopy) {
-            if(!UtilsHelper.fileExists(path.join(inputPath, file))) {
-                continue;
+                    return true;
+                }
             }
-
-            if(file === '.DS_Store' || file === 'Thumbs.db') {
-                continue;
-            }
-
-            fs.copySync(
-                path.join(inputPath, file),
-                path.join(outputPath, file)
-            );
-        }
+        );
     }
 
     /**
