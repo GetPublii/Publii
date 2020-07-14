@@ -2,6 +2,10 @@
 
     <symbol id="unknown" viewBox="0 0 22 24">
        <path d="M15,0H3A3,3,0,0,0,0,3V21a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7Z" fill="#c4c3c3"/><polyline points="15 0 15 7 22 7" fill="#525353" fill-opacity="0.39"/>
+     </symbol>    
+
+     <symbol id="catalog" viewBox="0 0 22 24">
+       <path d="M15,0H3A3,3,0,0,0,0,3V21a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7Z" fill="#c4c3c3"/><polyline points="15 0 15 7 22 7" fill="#525353" fill-opacity="0.39"/>
      </symbol>        
     
     <symbol id="txt" viewBox="0 0 22 24">
