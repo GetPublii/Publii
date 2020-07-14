@@ -163,6 +163,10 @@
     .CodeMirror {
         min-height: calc(100vh - 10rem); 
     }
+
+    .CodeMirror-advanced-dialog + .CodeMirror-wrap {
+        padding-bottom: 103px;
+    }
 }
 
 body[data-os="linux"] {
