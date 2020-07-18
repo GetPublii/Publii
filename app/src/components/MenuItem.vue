@@ -158,7 +158,7 @@ export default {
     },
     methods: {
         elementExists () {
-            if(this.type !== 'post' && this.type !== 'tag'/* && this.type !== 'author'*/) {
+            if(this.type !== 'post' && this.type !== 'tag' && this.type !== 'author') {
                 return true;
             }
 
@@ -186,21 +186,23 @@ export default {
                 }
             }
 
-            /*if(this.type === 'author') {
-                validItems = AST.currentSite.authors.filter(
-                    author => author.id == elementID
+            if(this.type === 'author') {
+                validItems = this.$store.state.currentSite.authors.filter(
+                    author => author.username === this.link
                 );
 
-                if(!AST.currentSite.config.advanced.displayEmptyAuthors) {
-                    let assignedPosts = AST.currentSite.postsAuthors.filter(
-                        postAuthor => postAuthor.authorID == elementID
+                let authorID = validItems[0] ? validItems[0].id : null;
+
+                if(authorID && !this.$store.state.currentSite.config.advanced.displayEmptyAuthors) {
+                    let assignedPosts = this.$store.state.currentSite.postsAuthors.filter(
+                        postAuthor => postAuthor.authorID == authorID
                     );
 
                     if (assignedPosts.length === 0) {
                         return false;
                     }
                 }
-            }*/
+            }
 
             return validItems.length > 0;
         },
