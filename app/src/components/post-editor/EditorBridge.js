@@ -173,11 +173,17 @@ class EditorBridge {
                     showPopup = true;
                 }
 
-                if(clickedElement.tagName === 'A') {
+                if(clickedElement.tagName === 'A' || clickedElement.parentNode.tagName === 'A') {
                     let selection = iframe.contentWindow.window.getSelection();
                     selection.removeAllRanges();
                     let range = iframe.contentWindow.window.document.createRange();
-                    range.selectNode(clickedElement);
+                    
+                    if (clickedElement.tagName === 'A') {
+                        range.selectNode(clickedElement);
+                    } else if (clickedElement.parentNode && clickedElement.parentNode.tagName === 'A') {
+                        range.selectNode(clickedElement.parentNode);
+                    }
+
                     selection.addRange(range);
 
                     if (this.checkInlineLinkTrigger(clickedElement)) {
@@ -419,10 +425,19 @@ class EditorBridge {
             icon: 'link',
             tooltip: 'Insert/edit link',
             onAction: () => {
-                window.app.$bus.$emit('init-link-popup', {
-                    postID: this.postID,
-                    selection: tinymce.activeEditor.selection.getContent()
-                });
+                let selectedNode = tinymce.activeEditor.selection.getNode();
+
+                if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
+                    window.app.$bus.$emit('init-link-popup', {
+                        postID: this.postID,
+                        selection: selectedNode.parentNode.outerHTML
+                    });
+                } else {
+                    window.app.$bus.$emit('init-link-popup', {
+                        postID: this.postID,
+                        selection: tinymce.activeEditor.selection.getContent()
+                    });
+                }
             }
         });
         

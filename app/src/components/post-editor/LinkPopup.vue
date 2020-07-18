@@ -167,7 +167,6 @@
 
 <script>
 import { ipcRenderer } from 'electron';
-import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
     name: 'link-popup',
@@ -297,7 +296,6 @@ export default {
             }
         },
         parseHTMLContent (content) {
-            let rawText = strip_tags(content);
             let linkContent = content.match(/>(.*?)<\/a>/);
             let titleContent = content.match(/title="(.*?)"/);
             let targetContent = content.match(/target="(.*?)"/);
@@ -310,7 +308,7 @@ export default {
             if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
             } else {
-                this.label = rawText;
+                this.label = content;
             }
 
             if (titleContent && titleContent[1]) {
@@ -456,14 +454,15 @@ export default {
                     downloadAttr = ' download="download" '
                 }
 
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
-            
-                if (tinymce.activeEditor.selection.getContent() === '') {
-                    tinymce.activeEditor.insertContent(linkHTML);
-                } else {
-                    tinymce.activeEditor.selection.setContent('');
-                    tinymce.activeEditor.selection.setContent(linkHTML);
+                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.target}${relAttr}>`;
+                let linkHTMLContent = response.text;
+                let linkHTMLEnd = `</a>`;
+
+                if (linkHTMLContent === '') {
+                    linkHTMLContent = tinymce.activeEditor.selection.getContent();
                 }
+
+                tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
             }
         },
         setSimpleMdeInstance (instance) {
