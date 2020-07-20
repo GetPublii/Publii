@@ -50,8 +50,8 @@ class RendererContextFeed extends RendererContext {
                 author: this.getAuthor('post', post.id),
                 text: contentMode === 'fullText' ? post.text : false,
                 excerpt: post.excerpt,
-                createdAt: post.created_at,
-                modifiedAt: post.created_at > post.modified_at ? post.created_at : post.modified_at, // Get higher date - created_at or modified_at
+                createdAt: post.createdAt,
+                modifiedAt: post.createdAt > post.modifiedAt ? post.createdAt : post.modifiedAt, // Get higher date - created_at or modified_at
                 categories: this.getPostCategories(post.id),
                 thumbnail: this.getPostThumbnail(post.id)
             }
@@ -103,8 +103,9 @@ class RendererContextFeed extends RendererContext {
         let latestDate = 0;
 
         for(let i = 0; i < this.posts.length; i++) {
+
             if(this.posts[i].modifiedAt > latestDate) {
-                latestDate = this.posts[i].modified_at;
+                latestDate = this.posts[i].modifiedAt;
             }
         }
 
