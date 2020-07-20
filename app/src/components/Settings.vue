@@ -101,6 +101,11 @@
                         key="theme"
                         v-model="theme"></themes-dropdown>
                 </field>
+
+                <div v-if="!currentThemeHasSupportedFeaturesList">
+                    <icon name="alert" size="m" />
+                    Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.
+                </div>
             </fields-group>
 
             <fields-group title="Advanced options">
@@ -1488,6 +1493,9 @@ export default {
         };
     },
     computed: {
+        currentThemeHasSupportedFeaturesList () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures;
+        },
         advancedTabs () {
             return [
                 'SEO',
