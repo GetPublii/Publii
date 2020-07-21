@@ -139,6 +139,21 @@ class TemplateHelper {
     }
 
     /*
+     * Save a compiled Handlebars template for tags list
+     */
+    saveOutputTagsListFile(content) {
+        let filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.tagsPrefix, 'index.html');
+        let dirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.tagsPrefix);
+
+        if(!Utils.dirExists(dirPath)) {
+            fs.mkdirSync(dirPath);
+        }
+
+        content = this.compressHTML(content);
+        fs.writeFile(filePath, content, {'flags': 'w'});
+    }
+    
+    /*
      * Save a compiled Handlebars template under
      * a specified tag filename
      */

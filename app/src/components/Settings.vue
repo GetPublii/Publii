@@ -102,7 +102,9 @@
                         v-model="theme"></themes-dropdown>
                 </field>
 
-                <div v-if="!currentThemeHasSupportedFeaturesList">
+                <div 
+                    v-if="!currentThemeHasSupportedFeaturesList"
+                    class="alert">
                     <icon name="alert" size="m" />
                     Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.
                 </div>
@@ -231,6 +233,77 @@
                                 class="note">
                                 If this option is enabled your post pages won't display text which is placed above "Read more" element in the post editor.
                             </small>
+                        </field>
+
+                        <separator
+                            v-if="advanced.urls.tagsPrefix !== ''"
+                            type="medium"
+                            label="Tags list page" />
+
+                        <div 
+                            v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
+                            class="alert">
+                            <icon name="alert" size="m" />
+                            Your theme does not support tags list page. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.
+                        </div>
+
+                        <field
+                            v-if="advanced.urls.tagsPrefix !== ''"
+                            id="render-tags-list"
+                            label="Render tags list page">
+                            <switcher
+                                slot="field"
+                                id="render-tags-list"
+                                v-model="advanced.renderTagsList" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If this option is enabled the index.html with list of all tags will be rendered in the tags directory.
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="tags-list-meta-title"
+                            :withCharCounter="true"
+                            label="Page Title:">
+                            <text-input
+                                id="tags-list-meta-title"
+                                v-model="advanced.tagsMetaTitle"
+                                slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :charCounter="true"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                The following variables can be used in the Tags List Page Title: %sitename
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="tags-list-meta-description"
+                            label="Meta Description:">
+                            <text-area
+                                id="tags-list-meta-description"
+                                v-model="advanced.tagsMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="meta-robots-tags-list"
+                            label="Meta Robots:">
+                            <dropdown
+                                id="meta-robots-tags-list"
+                                slot="field"
+                                :items="seoOptions"
+                                v-model="advanced.metaRobotsTagsList">
+                            </dropdown>
                         </field>
 
                         <separator
@@ -1495,6 +1568,9 @@ export default {
     computed: {
         currentThemeHasSupportedFeaturesList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures;
+        },
+        currentThemeSupportsTagsList () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
         },
         advancedTabs () {
             return [

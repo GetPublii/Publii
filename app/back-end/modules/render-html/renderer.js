@@ -18,6 +18,7 @@ const RendererContext = require('./renderer-context.js');
 const RendererContextPost = require('./contexts/post.js');
 const RendererContextPostPreview = require('./contexts/post-preview.js');
 const RendererContextTag = require('./contexts/tag.js');
+const RendererContextTags = require('./contexts/tags.js');
 const RendererContextAuthor = require('./contexts/author.js');
 const RendererContextHome = require('./contexts/home.js');
 const RendererContextFeed = require('./contexts/feed.js');
@@ -201,6 +202,7 @@ class Renderer {
         this.generatePosts();
         this.sendProgress(60, 'Generating tag pages');
         this.generateTags();
+        this.generateTagsList();
         this.sendProgress(70, 'Generating author pages');
         this.generateAuthors();
         this.siteConfig.domain = this.siteConfig.originalDomain;
@@ -911,6 +913,65 @@ class Renderer {
         }
 
         return PostViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+    }
+
+    /*
+     * Generate tag pages
+     */
+    generateTagsList(ampMode = false) {
+        // Check if we should render tags list
+        if (
+            this.siteConfig.advanced.urls.tagsPrefix === '' ||
+            !this.themeConfig.supportedFeatures ||
+            !this.themeConfig.supportedFeatures.tagsList ||
+            !this.siteConfig.advanced.renderTagsList
+        ) {
+            return false;
+        }
+        
+        console.time(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
+        let inputFile = ampMode ? 'amp-tags.hbs' : 'tags.hbs';
+        
+        // Load template
+        let compiledTemplate = this.compileTemplate(inputFile);
+
+        if (!compiledTemplate) {
+            return false;
+        }
+
+        // Create global context
+        let globalContext = this.createGlobalContext('tags');
+
+        // Render tags list
+        globalContext.context = ['tags'];
+        let contextGenerator = new RendererContextTags(this);
+        let context = contextGenerator.getContext();
+        this.menuContext = ['tags'];
+
+        if (this.useRelativeUrls) {
+            this.siteConfig.domain = this.siteConfig.originalDomain + '../';
+        }
+
+        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
+            if (this.useRelativeUrls) {
+                this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
+            }
+            
+            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+        }
+
+        globalContext.renderer.isFirstPage = true;
+        globalContext.renderer.isLastPage = true;
+        globalContext.pagination = false;
+
+        if (!this.siteConfig.advanced.ampIsEnabled) {
+            globalContext.website.ampUrl = '';
+        }
+
+        let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+        this.templateHelper.saveOutputTagsListFile(output);
+        console.timeEnd(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
     }
 
     /*
