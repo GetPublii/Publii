@@ -1557,6 +1557,7 @@ export default {
             customLanguage: '',
             spellchecking: false,
             name: '',
+            uuid: '',
             theme: '',
             currentTheme: '',
             currentThemeVersion: '',
@@ -1739,6 +1740,11 @@ export default {
         }
 
         this.name = this.$store.state.currentSite.config.displayName;
+
+        if (this.$store.state.currentSite.config.uuid) {
+            this.uuid = this.$store.state.currentSite.config.uuid;
+        }
+
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
     },
@@ -1776,6 +1782,11 @@ export default {
 
             let newSettings = {};
             newSettings.name = this.name;
+
+            if (this.uuid) {
+                newSettings.uuid = this.uuid;
+            }
+
             newSettings.displayName = this.name;
             newSettings.spellchecking = this.spellchecking;
             newSettings.logo = {

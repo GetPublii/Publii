@@ -1,4 +1,5 @@
 const AstCurrentSiteConfig = {
+    uuid: '',
     name: '',
     displayName: '',
     synced: false,

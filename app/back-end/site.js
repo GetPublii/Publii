@@ -17,6 +17,7 @@ class Site {
     constructor(appInstance, config, maintenanceMode = false) {
         this.application = appInstance;
         this.name = config.name;
+        this.uuid = config.uuid;
         this.displayName = config.displayName;
         // In maintenance mode we need only the website name
         if (!maintenanceMode) {
@@ -89,6 +90,7 @@ class Site {
     createConfigFiles() {
         let configDir = path.join(this.siteDir, 'input', 'config');
         let siteConfig = {
+            'uuid': 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000),
             'name': this.name,
             'displayName': this.displayName,
             'author': this.author,
@@ -96,6 +98,7 @@ class Site {
             'theme': 'simple'
         };
 
+        this.uuid = siteConfig.uuid;
         fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig, null, 4));
         fs.writeFileSync(path.join(configDir, 'menu.config.json'), '[]');
         fs.writeFileSync(path.join(configDir, 'theme.config.json'), '{}');
@@ -429,7 +432,7 @@ class Site {
         let newCatalogFreeName = Site.findFreeName(newCatalogName, appInstance.sitesDir);
         let newSitePath = path.join(appInstance.sitesDir, newCatalogFreeName);
         fs.copySync(sitePath, newSitePath);
-        Site.updateNameInSiteConfig(newSitePath, newCatalogFreeName, siteName);
+        Site.updateNameAndUUIDInSiteConfig(newSitePath, newCatalogFreeName, siteName);
         let configFilePath = path.join(newSitePath, 'input', 'config', 'site.config.json');
         let siteConfig = fs.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
@@ -469,11 +472,12 @@ class Site {
      * @param {string} sitePath 
      * @param {string} newNameSlug 
      */
-    static updateNameInSiteConfig (sitePath, newSiteSlug, newSiteName) {
+    static updateNameAndUUIDInSiteConfig (sitePath, newSiteSlug, newSiteName) {
         let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
         let siteConfig = fs.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
         siteConfig.name = newSiteSlug;
+        siteConfig.uuid = 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000);
         siteConfig.displayName = newSiteName;
         siteConfig = JSON.stringify(siteConfig, null, 4);
         fs.writeFileSync(configFilePath, siteConfig);
