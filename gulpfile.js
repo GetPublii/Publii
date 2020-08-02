@@ -7,7 +7,6 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const exec = require('child_process').exec;
 const fs = require('fs');
-const info = require('./app/package.json');
 
 /*
  * Paths configuration
