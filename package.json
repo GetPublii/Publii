@@ -35,19 +35,22 @@
   "keywords": [],
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "css-loader": "^4.2.0",
+    "css-loader": "^0.28.7",
     "electron": "^8.4.1",
     "electron-builder": "^22.8.0",
-    "file-loader": "^6.0.0",
+    "file-loader": "^4.2.0",
     "glob": "^7.1.6",
     "gulp": "^3.9.0",
     "gulp-sass": "^4.1.0",
     "mocha": "^8.1.0",
     "node-loader": "^1.0.1",
+    "node-sass": "^4.14.1",
     "sass-loader": "^9.0.2",
     "vue-loader": "^15.9.3",
+    "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.44.1"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {},
   "build": {
