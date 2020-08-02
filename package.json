@@ -12,7 +12,6 @@
   "main": "app/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode=development --progress --colors --watch",
-    "dashboard": "node_modules/webpack-dashboard/bin/webpack-dashboard.js -- cross-env NODE_ENV=development webpack --progress --colors --watch",
     "prod": "cross-env NODE_ENV=production webpack --mode=production --progress --colors --hide-modules",
     "build": "cross-env NODE_ENV=development gulp build",
     "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
@@ -25,8 +24,7 @@
     "copy-vendor-files": "cp -r app/src/helpers/vendor/tinymce app/dist/vendor/tinymce && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
     "packager:win": "electron-builder build --win --x64",
     "packager:osx": "electron-builder build --mac",
-    "packager:linux": "electron-builder build --linux",
-    "osx-sign": "electron-osx-sign Publii-darwin-x64/Publii.app"
+    "packager:linux": "electron-builder build --linux"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
