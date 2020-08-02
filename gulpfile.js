@@ -7,8 +7,6 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const exec = require('child_process').exec;
 const fs = require('fs');
-const electron = require('gulp-electron');
-const winInstaller = require('electron-windows-installer');
 const info = require('./app/package.json');
 
 /*

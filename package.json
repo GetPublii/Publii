@@ -26,7 +26,6 @@
     "packager:win": "electron-builder build --win --x64",
     "packager:osx": "electron-builder build --mac",
     "packager:linux": "electron-builder build --linux",
-    "postinstall": "opencollective postinstall",
     "osx-sign": "electron-osx-sign Publii-darwin-x64/Publii.app"
   },
   "repository": {
@@ -37,44 +36,26 @@
   },
   "keywords": [],
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "electron": "^8.4.0",
     "electron-builder": "^22.3.2",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-osx-sign": "^0.4.11",
-    "electron-packager": "^14.0.0",
-    "electron-rebuild": "^1.10.0",
-    "electron-updater": "^4.2.0",
-    "electron-windows-installer": "^1.4.4",
     "file-loader": "^1.1.4",
     "glob": "^7.1.4",
     "gulp": "^3.9.0",
-    "gulp-electron": "^0.1.3",
     "gulp-file-include": "^0.13.7",
     "gulp-sass": "^4.0.1",
     "mocha": "^3.2.0",
     "node-loader": "^0.6.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^8.0.0",
-    "slug": "^0.9.1",
-    "ssh2-sftp-client": "^5.0.2",
     "vue": "^2.6.11",
     "vue-loader": "^15.8.3",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.41.5",
-    "webpack-bundle-analyzer": "^2.9.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dashboard": "^1.0.2"
+    "webpack-cli": "^3.3.10"
   },
-  "dependencies": {
-    "opencollective": "^1.0.3"
-  },
+  "dependencies": {},
   "build": {
     "appId": "com.tidycustoms.publii",
     "electronVersion": "8.4.0",
@@ -156,9 +137,5 @@
   },
   "appImage": {
     "license": "license.txt"
-  },
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/Publii"
   }
 }
