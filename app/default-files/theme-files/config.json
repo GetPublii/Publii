@@ -20,6 +20,8 @@
         "authorsFeaturedPostsNumber": 0,
         "create404page": false,
         "createSearchPage": false,
+        "createAuthorPages": true,
+        "createTagPages": true,
         "customHTML": false,
         "includeHandlebarsInHelpers": false
     },

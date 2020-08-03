@@ -243,7 +243,11 @@ class RendererContext {
                     name: this.themeConfig.name,
                     version: this.themeConfig.version,
                     author: this.themeConfig.author
-                }
+                },
+                createAuthorPages: RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig),
+                createTagPages: RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig),
+                createSearchPage: RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig),
+                create404page: RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)
             },
             pagination: false,
             headCustomCode: this.siteConfig.advanced.customHeadCode || '',

@@ -1,5 +1,4 @@
 {{> amp-head}}
-
     <main class="wrap-page">
         <div class="page-title">           
                 {{#tag}}
@@ -49,7 +48,12 @@
                 
                 <p class="card-meta">                     
                    {{#author}}
-                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                        {{ translate 'post.publishedBy' }} 
+                        {{#if @renderer.createAuthorPages}}
+                            <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                        {{else}}
+                            {{name}}
+                        {{/if}}
                     {{/author}} 
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
                         {{#checkIf @config.custom.formatDate '!=' 'custom'}}
@@ -59,14 +63,10 @@
                         {{/checkIf}}
                     </time>
                 </p>
-               
             </div>
-          
         </article>
         {{/each}}
 
-        {{> amp-pagination}}
-        
+        {{> amp-pagination}} 
     </main>
-	
 {{> amp-footer}}

@@ -42,7 +42,12 @@
                 <h1> {{title}} </h1>
                 <p class="post-meta"> 
                     {{#author}}
-                    {{ translate 'post.publishedBy' }} <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                        {{ translate 'post.publishedBy' }}
+                        {{#if @renderer.createAuthorPages}}
+                            <a href="{{url}}" rel="nofollow" title="{{name}}">{{name}}</a>
+                        {{else}}
+                            {{name}}
+                        {{/if}}
                     {{/author}} 
                     <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
                         {{#checkIf @config.custom.formatDate '!=' 'custom'}}
@@ -61,7 +66,11 @@
                    <ul class="post-tag">                   
                      {{#each tags}}
                        <li>
+                           {{#if @renderer.createTagPages}}
                            <a href="{{url}}">{{name}}</a>
+                           {{else}}
+                           {{name}}
+                           {{/if}}
                         </li>
                      {{/each}}
                   </ul>

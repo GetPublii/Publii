@@ -201,15 +201,29 @@ class Renderer {
         this.generateFrontpage();
         this.sendProgress(20, 'Generating posts');
         this.generatePosts();
-        this.sendProgress(60, 'Generating tag pages');
-        this.generateTags();
-        this.generateTagsList();
-        this.sendProgress(70, 'Generating author pages');
-        this.generateAuthors();
-        this.siteConfig.domain = this.siteConfig.originalDomain;
+
+        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+            this.sendProgress(60, 'Generating tag pages');
+            this.generateTags();
+            this.generateTagsList();
+        }
+
+        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+            this.sendProgress(70, 'Generating author pages');
+            this.generateAuthors();
+            this.siteConfig.domain = this.siteConfig.originalDomain;
+        }
+
         this.sendProgress(75, 'Generating other pages');
-        this.generate404s();
-        this.generateSearch();
+
+        if (!RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
+            this.generate404s();
+        }
+
+        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
+            this.generateSearch();
+        }
+        
         this.generateFeeds();
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
@@ -476,6 +490,7 @@ class Renderer {
     loadThemeConfig() {
         let themeConfigPath = path.join(this.inputDir, 'config', 'theme.config.json');
         let tempThemeConfig = Themes.loadThemeConfig(themeConfigPath, this.themeDir);
+        console.log('THEME:', tempThemeConfig);
         this.themeConfig = JSON.parse(JSON.stringify(tempThemeConfig));
         this.themeConfig.config = {};
         this.themeConfig.customConfig = {};
@@ -1462,11 +1477,6 @@ class Renderer {
      */
     generate404s() {
         console.time("404");
-        // Check if the page should be rendered
-        if (!RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
-            return;
-        }
-
         // Load template
         let inputFile = '404.hbs';
         let template = this.templateHelper.loadTemplate(inputFile);
@@ -1499,11 +1509,6 @@ class Renderer {
      */
     generateSearch() {
         console.time("SEARCH");
-        // Check if the page should be rendered
-        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
-            return;
-        }
-
         // Load template
         let inputFile = 'search.hbs';
         let compiledTemplate = this.compileTemplate('search.hbs');
@@ -1730,8 +1735,15 @@ class Renderer {
         // Prepare files
         this.generateFrontpage(true);
         this.generatePosts(true);
-        this.generateTags(true);
-        this.generateAuthors(true);
+
+        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+            this.generateTags(true);
+        }
+
+        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+            this.generateAuthors(true);
+        }
+
         console.timeEnd("AMP");
     }
 
