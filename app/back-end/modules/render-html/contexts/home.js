@@ -1,5 +1,6 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
+const RendererHelpers = require('./../helpers/helpers.js');
 
 /**
  * Class used create context
@@ -14,8 +15,9 @@ class RendererContextHome extends RendererContext {
 
         // Retrieve post
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && this.themeConfig.renderer.includeFeaturedInPosts === false) {
+        if (shouldSkipFeaturedPosts) {
             includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
         }
 
@@ -74,16 +76,11 @@ class RendererContextHome extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) == false;
+        let featuredPostsNumber = RendererHelpers.getRendererOptionValue('featuredPostsNumber', this.themeConfig);
 
         // Remove featured posts from posts if featured posts not allowed
-        if(
-            this.themeConfig.renderer &&
-            this.themeConfig.renderer.includeFeaturedInPosts === false &&
-            (
-                this.themeConfig.renderer.featuredPostsNumber > 0 ||
-                this.themeConfig.renderer.featuredPostsNumber === -1
-            )
-        ) {
+        if (shouldSkipFeaturedPosts && (featuredPostsNumber > 0 || featuredPostsNumber === -1)) {
             let featuredPostsIds = this.featuredPosts.map(post => post.id);
             this.posts = this.posts.filter(post => featuredPostsIds.indexOf(post.id) === -1);
         }
@@ -125,8 +122,9 @@ class RendererContextHome extends RendererContext {
 
     getPostsNumber() {
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && this.themeConfig.renderer.includeFeaturedInPosts === false) {
+        if (shouldSkipFeaturedPosts) {
             includeFeaturedPosts = 'AND status NOT LIKE "%featured%"';
         }
 

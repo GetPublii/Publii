@@ -3,6 +3,7 @@ const Author = require('./items/author');
 const Tag = require('./items/tag');
 const FeaturedImage = require('./items/featured-image');
 const PostViewSettingsHelper = require('./helpers/post-view-settings.js');
+const RendererHelpers = require('./helpers/helpers.js');
 
 class RendererCache {
     /**
@@ -63,8 +64,9 @@ class RendererCache {
     getTagPostCounts() {
         console.time('TAGS POST COUNT - QUERY');
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.tagsIncludeFeaturedInPosts) {
+        if (shouldSkipFeaturedPosts) {
             includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
         }
 
@@ -123,8 +125,9 @@ class RendererCache {
     getAuthorPostCounts() {
         console.time('AUTHORS POST COUNT - QUERY');
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('authorsIncludeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.authorsIncludeFeaturedInPosts) {
+        if (shouldSkipFeaturedPosts) {
             includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
         }
 

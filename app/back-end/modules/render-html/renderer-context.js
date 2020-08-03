@@ -5,6 +5,7 @@ const slug = require('./../../helpers/slug');
 const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
 const RendererCache = require('./renderer-cache');
+const RendererHelpers = require('./helpers/helpers.js');
 const UtilsHelper = require('./../../helpers/utils');
 
 /*
@@ -453,12 +454,12 @@ class RendererContext {
         let postsLimit = 'LIMIT 5';
 
         if(this.themeConfig.renderer) {
-            if (type === 'homepage' && this.themeConfig.renderer.featuredPostsNumber) {
-                postsLimit = 'LIMIT ' + this.themeConfig.renderer.featuredPostsNumber;
-            } else if (type === 'author' && this.themeConfig.renderer.authorsFeaturedPostsNumber) {
-                postsLimit = 'LIMIT ' + this.themeConfig.renderer.authorsFeaturedPostsNumber;
-            } else if (type === 'tag' && this.themeConfig.renderer.tagsFeaturedPostsNumber) {
-                postsLimit = 'LIMIT ' + this.themeConfig.renderer.tagsFeaturedPostsNumber;
+            if (type === 'homepage' && RendererHelpers.getRendererOptionValue('featuredPostsNumber', this.themeConfig)) {
+                postsLimit = 'LIMIT ' + RendererHelpers.getRendererOptionValue('featuredPostsNumber', this.themeConfig);
+            } else if (type === 'author' && RendererHelpers.getRendererOptionValue('authorsFeaturedPostsNumber', this.themeConfig)) {
+                postsLimit = 'LIMIT ' + RendererHelpers.getRendererOptionValue('authorsFeaturedPostsNumber', this.themeConfig);
+            } else if (type === 'tag' && RendererHelpers.getRendererOptionValue('tagsFeaturedPostsNumber', this.themeConfig)) {
+                postsLimit = 'LIMIT ' + RendererHelpers.getRendererOptionValue('tagsFeaturedPostsNumber', this.themeConfig);
             }
 
             if (postsLimit === 'LIMIT -1') {

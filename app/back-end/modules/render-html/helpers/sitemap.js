@@ -9,6 +9,7 @@ const path = require('path');
 const util = require('util');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
+const RendererHelpers = require('./../helpers/helpers.js');
 
 /**
  * Class used to generate sitemap.xml file
@@ -224,11 +225,11 @@ class Sitemap {
             'index.html'
         ];
 
-        if(this.themeConfig.renderer.create404page && this.siteConfig.advanced.urls.errorPage) {
+        if(RendererHelpers.getRendererOptionValue('create404page', this.themeConfig) && this.siteConfig.advanced.urls.errorPage) {
             internalsList.push(this.siteConfig.advanced.urls.errorPage);
         }
 
-        if(this.themeConfig.renderer.createSearchPage && this.siteConfig.advanced.urls.searchPage) {
+        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig) && this.siteConfig.advanced.urls.searchPage) {
             internalsList.push(this.siteConfig.advanced.urls.searchPage);
         }
 

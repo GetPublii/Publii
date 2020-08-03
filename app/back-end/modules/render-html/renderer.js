@@ -24,6 +24,7 @@ const RendererContextHome = require('./contexts/home.js');
 const RendererContextFeed = require('./contexts/feed.js');
 const RendererContext404 = require('./contexts/404.js');
 const RendererContextSearch = require('./contexts/search.js');
+const RendererHelpers = require('./helpers/helpers.js');
 const themeConfigValidator = require('./validators/theme-config.js');
 const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
@@ -1462,7 +1463,7 @@ class Renderer {
     generate404s() {
         console.time("404");
         // Check if the page should be rendered
-        if (!this.themeConfig.renderer.create404page) {
+        if (!RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
             return;
         }
 
@@ -1499,7 +1500,7 @@ class Renderer {
     generateSearch() {
         console.time("SEARCH");
         // Check if the page should be rendered
-        if(!this.themeConfig.renderer.createSearchPage) {
+        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
             return;
         }
 
