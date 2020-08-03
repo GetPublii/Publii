@@ -15,7 +15,7 @@ class RendererContextHome extends RendererContext {
         // Retrieve post
         let includeFeaturedPosts = '';
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.includeFeaturedInPosts) {
+        if(this.themeConfig.renderer && this.themeConfig.renderer.includeFeaturedInPosts === false) {
             includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
         }
 
@@ -78,7 +78,7 @@ class RendererContextHome extends RendererContext {
         // Remove featured posts from posts if featured posts not allowed
         if(
             this.themeConfig.renderer &&
-            this.themeConfig.renderer.includeFeaturedInPosts &&
+            this.themeConfig.renderer.includeFeaturedInPosts === false &&
             (
                 this.themeConfig.renderer.featuredPostsNumber > 0 ||
                 this.themeConfig.renderer.featuredPostsNumber === -1
@@ -126,7 +126,7 @@ class RendererContextHome extends RendererContext {
     getPostsNumber() {
         let includeFeaturedPosts = '';
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.includeFeaturedInPosts) {
+        if(this.themeConfig.renderer && this.themeConfig.renderer.includeFeaturedInPosts === false) {
             includeFeaturedPosts = 'AND status NOT LIKE "%featured%"';
         }
 

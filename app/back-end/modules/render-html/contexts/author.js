@@ -20,8 +20,9 @@ class RendererContextAuthor extends RendererContext {
 
         // Retrieve post
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = this.themeConfig.renderer && this.themeConfig.renderer.authorsIncludeFeaturedInPosts === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.authorsIncludeFeaturedInPosts) {
+        if (shouldSkipFeaturedPosts) {
             includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
         }
 
@@ -76,7 +77,7 @@ class RendererContextAuthor extends RendererContext {
         // Remove featured posts from posts if featured posts allowed
         if(
             this.themeConfig.renderer &&
-            this.themeConfig.renderer.authorsIncludeFeaturedInPosts &&
+            this.themeConfig.renderer.authorsIncludeFeaturedInPosts === false &&
             (
                 this.themeConfig.renderer.authorsFeaturedPostsNumber > 0 ||
                 this.themeConfig.renderer.authorsFeaturedPostsNumber === -1

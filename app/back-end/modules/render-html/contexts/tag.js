@@ -17,7 +17,7 @@ class RendererContextTag extends RendererContext {
         // Retrieve post
         let includeFeaturedPosts = '';
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.tagsIncludeFeaturedInPosts) {
+        if(this.themeConfig.renderer && this.themeConfig.renderer.tagsIncludeFeaturedInPosts === false) {
             includeFeaturedPosts = 'p.status NOT LIKE "%featured%" AND';
         }
 
@@ -85,7 +85,7 @@ class RendererContextTag extends RendererContext {
         // Remove featured posts from posts if featured posts allowed
         if(
             this.themeConfig.renderer &&
-            this.themeConfig.renderer.tagsIncludeFeaturedInPosts &&
+            this.themeConfig.renderer.tagsIncludeFeaturedInPosts === false &&
             (
                 this.themeConfig.renderer.tagsFeaturedPostsNumber > 0 ||
                 this.themeConfig.renderer.tagsFeaturedPostsNumber === -1
