@@ -91,12 +91,6 @@ class Files {
                             filePath,
                             destinationPath
                         );
-                    } else {
-                        // let dirToCheckPath = normalizePath(item.path);
-
-                        // if (!UtilsHelper.dirExists(overridesPath)) {
-
-                        // }
                     }
                 });
             });
