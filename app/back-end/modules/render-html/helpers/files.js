@@ -71,7 +71,7 @@ class Files {
         });
 
         // Check for overrided asset files
-        if(UtilsHelper.dirExists(overridesPath)) {
+        if (UtilsHelper.dirExists(overridesPath)) {
             list([overridesPath], {
                 recurse: true,
                 flatten: true
@@ -80,7 +80,7 @@ class Files {
                     let filename = path.parse(item.path).base;
                     return themeConfig.files.ignoreAssets.indexOf(filename) === -1
                 }).forEach(item => {
-                    if(item.mode.dir === false) {
+                    if (item.mode.dir === false) {
                         let filePath = normalizePath(item.path);
                         let destinationPath = filePath.replace(
                             normalizePath(overridesPath),
@@ -91,6 +91,12 @@ class Files {
                             filePath,
                             destinationPath
                         );
+                    } else {
+                        // let dirToCheckPath = normalizePath(item.path);
+
+                        // if (!UtilsHelper.dirExists(overridesPath)) {
+
+                        // }
                     }
                 });
             });
