@@ -305,6 +305,19 @@ class UtilsHelper {
 
         return themeConfig;
     }
+
+    /**
+     * Require file without cache
+     */
+    static requireWithNoCache(module, params = false) {
+        delete require.cache[require.resolve(module)];
+
+        if (params) {
+            return require(module)(params);
+        }
+
+        return require(module);
+    }
 }
 
 module.exports = UtilsHelper;

@@ -378,9 +378,9 @@ class Renderer {
         let themeHelpers;
         
         if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
-            themeHelpers = this.requireWithNoCache(helpersFilePath, Handlebars);
+            themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath, Handlebars);
         } else {
-            themeHelpers = this.requireWithNoCache(helpersFilePath);
+            themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath);
         }
 
         // Check if the returned value is an object
@@ -490,7 +490,6 @@ class Renderer {
     loadThemeConfig() {
         let themeConfigPath = path.join(this.inputDir, 'config', 'theme.config.json');
         let tempThemeConfig = Themes.loadThemeConfig(themeConfigPath, this.themeDir);
-        console.log('THEME:', tempThemeConfig);
         this.themeConfig = JSON.parse(JSON.stringify(tempThemeConfig));
         this.themeConfig.config = {};
         this.themeConfig.customConfig = {};
@@ -1580,7 +1579,7 @@ class Renderer {
         // check if the theme contains theme-variables.js file
         if (UtilsHelper.fileExists(themeVariablesPath)) {
             try {
-                let generateOverride = this.requireWithNoCache(themeVariablesPath);
+                let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
                 let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
                 return generateOverride(visualParams) + styleCSS;
             } catch(e) {
@@ -1633,7 +1632,7 @@ class Renderer {
         // check if the theme contains visual-override.js file
         if (UtilsHelper.fileExists(overridePath)) {
             try {
-                let generateOverride = this.requireWithNoCache(overridePath);
+                let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
                 let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
                 return generateOverride(visualParams);
             } catch(e) {
@@ -1859,16 +1858,6 @@ class Renderer {
         }
 
         return output;
-    }
-
-    requireWithNoCache(module, params = false) {
-        delete require.cache[require.resolve(module)];
-
-        if (params) {
-            return require(module)(params);
-        }
-
-        return require(module);
     }
 }
 
