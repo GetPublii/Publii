@@ -139,12 +139,12 @@ class SFTP {
                 this.deployment.compareFilesList(false);
             }
         }).catch(err => {
-            console.log('ERR (2): ' + err + ' [<- files.publii.json]');
+            console.log('ERR (2): ' + err + ' (' + err.stack + ')' + ' [<- files.publii.json]');
             
             try {
                 this.deployment.compareFilesList(false);
             } catch (err) {
-                console.log('ERR (3): ' + err + ' [<- files.publii.json]');
+                console.log('ERR (3): ' + err + ' (' + err.stack + ')' + ' [<- files.publii.json]');
             }
         });
     }
