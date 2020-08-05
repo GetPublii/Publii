@@ -22,6 +22,10 @@ class Netlify {
         let token = this.deployment.siteConfig.deployment.netlify.token;
         let account = slug(this.deployment.siteConfig.name);
 
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
+
         if(siteID === 'publii-netlify-id ' + account) {
             siteID = await passwordSafeStorage.getPassword('publii-netlify-id', account);
         }
@@ -138,12 +142,16 @@ class Netlify {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let client;
         let siteID = deploymentConfig.netlify.id;
         let token = deploymentConfig.netlify.token;
         let account = slug(siteName);
         let waitForTimeout = true;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if(siteID === 'publii-netlify-id ' + account) {
             siteID = await passwordSafeStorage.getPassword('publii-netlify-id', account);

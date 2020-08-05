@@ -33,12 +33,16 @@ class GitlabPages {
         this.currentUploadProgress = 0;
     }
 
-    async testConnection (app, deploymentConfig, siteName) {
+    async testConnection (app, deploymentConfig, siteName, uuid) {
         let repository = deploymentConfig.gitlab.repo;
         let branchName = deploymentConfig.gitlab.branch;
         let token = deploymentConfig.gitlab.token;
         let account = slug(siteName);
         this.waitForTimeout = true;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if (token === 'publii-gl-token ' + account) {
             token = await passwordSafeStorage.getPassword('publii-gl-token', account);
@@ -134,6 +138,10 @@ class GitlabPages {
         this.waitForTimeout = true;
         let token = this.deployment.siteConfig.deployment.gitlab.token;
         let account = slug(this.deployment.siteConfig.name);
+
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
 
         if (token === 'publii-gl-token ' + account) {
             token = await passwordSafeStorage.getPassword('publii-gl-token', account);

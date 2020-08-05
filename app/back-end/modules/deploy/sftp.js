@@ -20,8 +20,11 @@ class SFTP {
         let ftpPassword = this.deployment.siteConfig.deployment.password;
         let passphrase = this.deployment.siteConfig.deployment.passphrase;
         let account = slug(this.deployment.siteConfig.name);
-
         this.connection = new sftpClient();
+
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
 
         if(ftpPassword === 'publii ' + account) {
             ftpPassword = await passwordSafeStorage.getPassword('publii', account);
@@ -306,12 +309,16 @@ class SFTP {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, siteConfig) {
         let client = new sftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
         let passphrase = deploymentConfig.passphrase;
         let account = slug(siteName);
+
+        if (siteConfig.uuid) {
+            account = siteConfig.uuid;
+        }
 
         if(ftpPassword === 'publii ' + account) {
             ftpPassword = await passwordSafeStorage.getPassword('publii', account);

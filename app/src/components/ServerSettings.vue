@@ -1119,7 +1119,8 @@ export default {
 
             ipcRenderer.send('app-deploy-test', {
                 siteName: this.$store.state.currentSite.config.name,
-                deploymentConfig: deploymentSettings
+                deploymentConfig: deploymentSettings,
+                uuid: this.$store.state.currentSite.config.uuid
             });
 
             ipcRenderer.once('app-deploy-test-success', (event, data) => {

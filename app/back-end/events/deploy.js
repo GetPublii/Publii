@@ -66,7 +66,7 @@ class DeployEvents {
 
         ipcMain.on('app-deploy-test', async (event, data) => {
             try {
-                await this.testConnection(data.deploymentConfig, data.siteName);
+                await this.testConnection(data.deploymentConfig, data.siteName, data.uuid);
             } catch (err) {
                 console.log('Test connection error:', err);
             }
@@ -165,9 +165,9 @@ class DeployEvents {
         });
     }
 
-    testConnection(deploymentConfig, siteName) {
+    testConnection(deploymentConfig, siteName, uuid) {
         let deployment = new Deployment(this.app.app.getPath('logs'), this.app.sitesDir, deploymentConfig);
-        deployment.testConnection(this.app, deploymentConfig, siteName);
+        deployment.testConnection(this.app, deploymentConfig, siteName, uuid);
     }
 }
 

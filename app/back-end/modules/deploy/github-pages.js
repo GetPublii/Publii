@@ -55,6 +55,10 @@ class GithubPages {
         this.waitForTimeout = true;
         let account = slug(this.deployment.siteConfig.name);
 
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
+
         if (this.token === 'publii-gh-token ' + account) {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
@@ -165,13 +169,17 @@ class GithubPages {
         }, 15000);
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let token = deploymentConfig.github.token;
         let repository = deploymentConfig.github.repo;
         let user = deploymentConfig.github.user;
         let branch = 'heads/' + deploymentConfig.github.branch;
         let account = slug(siteName);
         this.waitForTimeout = true;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if(token === 'publii-gh-token ' + account) {
             token = await passwordSafeStorage.getPassword('publii-gh-token', account);
