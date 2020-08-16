@@ -9,6 +9,10 @@ const stripTags = require('striptags');
  */
 function socialMetaTagsHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('socialMetaTags', function (contextData) {
+        if (rendererInstance.siteConfig.deployment.relativeUrls) {
+            return new Handlebars.SafeString('');
+        }
+
         let output = '';
         let openGraphEnabled = rendererInstance.siteConfig.advanced.openGraphEnabled;
         let openGraphImage = rendererInstance.siteConfig.advanced.openGraphImage;

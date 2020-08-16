@@ -225,11 +225,11 @@ class Sitemap {
             'index.html'
         ];
 
-        if(RendererHelpers.getRendererOptionValue('create404page', this.themeConfig) && this.siteConfig.advanced.urls.errorPage) {
+        if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig) && this.siteConfig.advanced.urls.errorPage) {
             internalsList.push(this.siteConfig.advanced.urls.errorPage);
         }
 
-        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig) && this.siteConfig.advanced.urls.searchPage) {
+        if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig) && this.siteConfig.advanced.urls.searchPage) {
             internalsList.push(this.siteConfig.advanced.urls.searchPage);
         }
 

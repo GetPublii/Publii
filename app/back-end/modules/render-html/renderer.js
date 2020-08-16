@@ -1,5 +1,6 @@
 // Necessary packages
 const fs = require('fs-extra');
+const listAll = require('ls-all');
 const path = require('path');
 const moment = require('moment');
 const Handlebars = require('handlebars');
@@ -49,7 +50,7 @@ class Renderer {
         this.errorLog = [];
         this.previewMode = false;
         this.ampMode = false;
-        this.useRelativeUrls = false; // siteConfig.deployment.relativeUrls;
+        this.useRelativeUrls = siteConfig.deployment.relativeUrls;
         this.translations = {
             user: false,
             theme: false
@@ -163,6 +164,13 @@ class Renderer {
         await this.generateWWW();
         this.generateAMP();
         console.timeEnd("RENDERING");
+
+        if (this.siteConfig.deployment.relativeUrls) {
+            console.time("RELATIVE URLS");
+            await this.relativizeUrls();
+            console.timeEnd("RELATIVE URLS");
+        }
+
         this.sendProgress(100, 'Website files are ready to upload');
         this.db.close();
     }
@@ -211,24 +219,30 @@ class Renderer {
         if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
             this.sendProgress(70, 'Generating author pages');
             this.generateAuthors();
-            this.siteConfig.domain = this.siteConfig.originalDomain;
         }
 
         this.sendProgress(75, 'Generating other pages');
 
-        if (!RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
+        if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
             this.generate404s();
         }
 
-        if (!RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
+        if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
             this.generateSearch();
         }
         
-        this.generateFeeds();
+        if (!this.siteConfig.deployment.relativeUrls) {
+            this.generateFeeds();
+        }
+
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
         await this.copyFiles();
-        await this.generateSitemap();
+
+        if (!this.siteConfig.deployment.relativeUrls) {
+            await this.generateSitemap();
+        }
+
         this.sendProgress(90, 'Finishing the render process');
     }
 
@@ -413,6 +427,10 @@ class Renderer {
             this.siteConfig.domain = '';
         }
 
+        if (!this.previewMode && this.siteConfig.deployment.relativeUrls) {
+            this.siteConfig.domain = '#PUBLII_RELATIVE_URL_BASE#';
+        }
+
         this.siteConfig.originalDomain = this.siteConfig.domain;
 
         if(
@@ -589,10 +607,6 @@ class Renderer {
         }
 
         if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
-            if (this.useRelativeUrls) {
-                this.siteConfig.domain = this.siteConfig.originalDomain;
-            }
-
             let context = contextGenerator.getContext(0, postsPerPage);
             let output = '';
 
@@ -658,19 +672,11 @@ class Renderer {
                 globalContext.renderer.isFirstPage = currentPage === 1;
                 globalContext.renderer.isLastPage = currentPage === totalPages;
 
-                if (currentPage > 1) {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                    }
-                    
+                if (currentPage > 1) {                    
                     let pagePart = this.siteConfig.advanced.urls.pageName;
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
-                } else {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain;
-                    }
-                    
+                } else {                    
                     globalContext.website.pageUrl = this.siteConfig.domain + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
                 }
@@ -788,20 +794,11 @@ class Renderer {
                 fileSlug = postTemplates[i] === '' ? 'DEFAULT' : postTemplates[i];
             }
 
-            this.menuContext = ['post', postSlugs[i]];
-            
-            if (this.useRelativeUrls) {
-                this.siteConfig.domain = this.siteConfig.originalDomain;
-            }
-            
+            this.menuContext = ['post', postSlugs[i]];    
             globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '.html';
             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '.html';
 
-            if (this.siteConfig.advanced.urls.cleanUrls) {
-                if (this.useRelativeUrls) {
-                    this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                }
-                
+            if (this.siteConfig.advanced.urls.cleanUrls) {                
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '/';
             }
@@ -963,15 +960,7 @@ class Renderer {
         let context = contextGenerator.getContext();
         this.menuContext = ['tags'];
 
-        if (this.useRelativeUrls) {
-            this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-        }
-
-        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-            if (this.useRelativeUrls) {
-                this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-            }
-            
+        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
         }
@@ -1088,18 +1077,10 @@ class Renderer {
                 let context = contextGenerator.getContext(tagIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['tag', tagSlug];
-                if (this.useRelativeUrls) {
-                   this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                }
-
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
-                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                    }
-                   
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                 }
@@ -1176,35 +1157,18 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            if (this.useRelativeUrls) {
-                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
-                            }
-
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         }
                     } else {
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            if (this.useRelativeUrls) {
-                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                            }
-
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                         }
@@ -1357,11 +1321,6 @@ class Renderer {
                 let context = contextGenerator.getContext(authorsIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['author', authorUsername];
-                
-                if (this.useRelativeUrls) {
-                    this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                }
-
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.renderer.isFirstPage = true;
@@ -1432,18 +1391,9 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                     } else {
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                     }
@@ -1858,6 +1808,39 @@ class Renderer {
         }
 
         return output;
+    }
+
+    /**
+     * Make URLs in the HTML files relative
+     */
+    async relativizeUrls () {
+        let files = await listAll([this.outputDir], { recurse: true, flatten: true });
+        files = files.filter(file => file.path.substr(-5) === '.html' && file.mode.dir === false);
+        files = files.map(file => file.path.replace(this.outputDir, ''));
+        
+        for (let file of files) {
+            this.relativizeUrlsInFile(file, this.outputDir);
+        }
+    }
+
+    /**
+     * Make URLs relative in a given HTML file
+     * 
+     * @param {string} file - relative path to file
+     * @param {string} outputDir - output dir
+     */
+    relativizeUrlsInFile (file, outputDir) {
+        let filePath = path.join(outputDir, file);
+        let content = fs.readFileSync(filePath, 'utf8');
+        let depth = file.split('/').length - 2;
+        let relativeDomain = './' + '../'.repeat(depth);
+
+        if (relativeDomain.length) {
+            relativeDomain = relativeDomain.slice(0, -1);
+        }
+
+        content = content.replace(/#PUBLII_RELATIVE_URL_BASE#/gmi, relativeDomain);
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 }
 
