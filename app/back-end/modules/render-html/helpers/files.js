@@ -44,7 +44,7 @@ class Files {
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath);
 
         // Create the assets directory
-        fs.mkdirSync(outputPath);
+        fs.ensureDirSync(outputPath);
 
         // Copy each directory and file from the assets catalog
         list([assetsPath], {
