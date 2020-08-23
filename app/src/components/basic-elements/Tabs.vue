@@ -144,8 +144,11 @@ export default {
             display: none;
 
             &.active {
-                display: block;
-               
+                display: block;            
+            }
+
+            .msg {
+                margin: 2rem 0;
             }
         }
     }

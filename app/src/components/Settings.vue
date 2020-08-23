@@ -243,7 +243,7 @@
                         <div 
                             v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
                             class="msg msg-icon msg-alert">
-                            <icon name="warning" size="l" />
+                            <icon name="warning" customWidth="28" customHeight="28" />
                             <p>Your theme does not support tags list page. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
                         </div>
 
