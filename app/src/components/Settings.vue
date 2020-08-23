@@ -104,9 +104,9 @@
 
                 <div 
                     v-if="!currentThemeHasSupportedFeaturesList"
-                    class="alert">
-                    <icon name="alert" size="m" />
-                    Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.
+                    class="msg msg-icon msg-alert">
+                    <icon name="warning" customWidth="28" customHeight="28"/>
+                    <p>Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
                 </div>
             </fields-group>
 
@@ -242,9 +242,9 @@
 
                         <div 
                             v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
-                            class="alert">
-                            <icon name="alert" size="m" />
-                            Your theme does not support tags list page. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support tags list page. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
                         </div>
 
                         <field
@@ -2119,6 +2119,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .site-settings {
     margin: 0 auto;
