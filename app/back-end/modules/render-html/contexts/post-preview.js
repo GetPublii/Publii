@@ -165,9 +165,9 @@ class RendererContextPostPreview extends RendererContext {
                 WHERE
                     p.created_at ${operator} ${this.post.createdAt} AND
                     p.id != @postID AND
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%trashed%" AND
-                    p.status NOT LIKE "%hidden%"
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%hidden%'
                     ${tagsCondition}
                 GROUP BY
                     p.id
@@ -187,9 +187,9 @@ class RendererContextPostPreview extends RendererContext {
                 WHERE
                     created_at ${operator} ${this.post.createdAt} AND
                     id != @postID AND
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%trashed%" AND
-                    status NOT LIKE "%hidden%"
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%hidden%'
                 ORDER BY
                     ${temporaryPostsOrdering}
                 LIMIT 1
@@ -237,7 +237,7 @@ class RendererContextPostPreview extends RendererContext {
 
         if(stringsToCompare.length) {
             for (let toCompare of stringsToCompare) {
-                postTitleConditions.push(' LOWER(p.title) LIKE LOWER("%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%") ')
+                postTitleConditions.push(' LOWER(p.title) LIKE LOWER(\'%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%\') ')
             }
 
             postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
@@ -265,9 +265,9 @@ class RendererContextPostPreview extends RendererContext {
                 p.id = pt.post_id
             WHERE
                 p.id != @postID AND
-                p.status LIKE "%published%" AND
-                p.status NOT LIKE "%trashed%" AND
-                p.status NOT LIKE "%hidden%"
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%hidden%'
                 ${conditions}
             GROUP BY
                 p.id

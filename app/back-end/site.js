@@ -68,6 +68,7 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'website'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'posts'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'themes'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'languages'));
         fs.mkdirSync(path.join(this.siteDir, 'output'));
@@ -229,9 +230,12 @@ class Site {
         // Remove all old responsive directories
         let mediaPath = path.join(this.siteDir, 'input', 'media');
         let catalogs = fs.readdirSync(path.join(mediaPath, 'posts'));
+        let tagCatalogs = fs.readdirSync(path.join(mediaPath, 'tags'));
         let galleryCatalogs = [];
         catalogs = catalogs.map(catalog => 'posts/' + catalog);
+        tagCatalogs = tagCatalogs.map(catalog => 'tags/' + catalog);
         catalogs.push('website');
+        catalogs = catalogs.concat(tagCatalogs);
         catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
 
         for(let catalog of catalogs) {
@@ -522,6 +526,7 @@ class Site {
      * Adds (if missing):
      * - input/root-files directory
      * - input/media/files directory
+     * - input/media/tags directory
      *
      * Moves .htaccess, robots.txt and _redirects files to root-files directory
      *
@@ -530,16 +535,19 @@ class Site {
     static checkFilesConsistency(appInstance, siteName) {
         let siteBasePath = path.join(appInstance.sitesDir, siteName, 'input');
         let rootFilesPath = path.join(siteBasePath, 'root-files');
+        let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
 
-        // Check if root-files exists
         if(!UtilsHelper.dirExists(rootFilesPath)) {
-            // When there is no root-files - create missing dirs
             fs.mkdirSync(rootFilesPath);
         }
 
         if(!UtilsHelper.dirExists(mediaFilesPath)) {
             fs.mkdirSync(mediaFilesPath);
+        }
+
+        if(!UtilsHelper.dirExists(tagImagesPath)) {
+            fs.mkdirSync(tagImagesPath);
         }
 
         // Move files - if exists to new root-files directory
@@ -548,6 +556,7 @@ class Site {
             '.htaccess':  path.join(siteBasePath, 'config', '.htaccess'),
             '_redirects': path.join(siteBasePath, 'config', '_redirects')
         };
+
         let fileNames = Object.keys(filesToMove);
 
         for(let i = 0; i < fileNames.length; i++) {

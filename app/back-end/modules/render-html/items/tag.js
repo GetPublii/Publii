@@ -34,9 +34,14 @@ class TagItem {
             slug: this.tag.slug,
             description: this.tag.description,
             additionalData: this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {},
+            featuredImage: {},
             postsNumber: this.getPostsNumber(),
             url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml)
         };
+
+        if (this.renderer.cachedItems.featuredImages.tags[this.tagData.id]) {
+            this.tagData.featuredImage = this.renderer.cachedItems.featuredImages.tags[this.tagData.id];
+        }
     }
 
     /**

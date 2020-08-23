@@ -63,10 +63,14 @@ export default {
             default: '',
             type: String
         },
-        'post-id': {
+        'item-id': {
             type: [String, Number]
         },
         onRemove: {
+            default: () => false,
+            type: Function
+        },
+        onAdd: {
             default: () => false,
             type: Function
         },
@@ -76,6 +80,10 @@ export default {
         },
         anchor: {
             default: '',
+            type: String
+        },
+        imageType: {
+            default: 'optionImages',
             type: String
         }
     },
@@ -132,7 +140,7 @@ export default {
         labelText () {
             let label = 'Drop to upload your photo or';
 
-            if (this.postId || this.postId === 0) {
+            if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages') {
                 label = 'Drop featured image here or';
             }
 
@@ -165,10 +173,14 @@ export default {
             return false;
         },
         mediaPath () {
-            if (this.postId) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.postId + '/';
-            } else if (this.postId === 0) {
+            if (this.itemId && this.imageType !== 'tagImages') {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
+            } else if (this.itemId === 0 && this.imageType !== 'tagImages') {
                 return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+            } else if (this.itemId && this.imageType === 'tagImages') {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
+            } else if (this.itemId === 0 && this.imageType === 'tagImages') {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
             }
 
             if (this.addMediaFolderPath) {
@@ -221,8 +233,13 @@ export default {
                 imageType: 'optionImages'
             };
 
-            if (this.postId || this.postId === 0) {
-                uploadData.id = this.postId;
+            if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = 'tagImages';
+            }
+
+            if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages') {
+                uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
             }
 
@@ -233,6 +250,7 @@ export default {
                 this.isHovered = false;
                 this.filePath = normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
+                this.onAdd();
             });
         },
         setImage (newPath, addMedia = false) {

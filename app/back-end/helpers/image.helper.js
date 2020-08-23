@@ -83,7 +83,7 @@ class ImageHelper {
         let simplifiedFilePath = normalizePath(finalFilePath).replace(this.getMediaPath(), '');
         simplifiedFilePath = simplifiedFilePath.replace('/', '').replace('\\', '');
 
-        let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, @id, @path, "", "", @data)`);
+        let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, @id, @path, '', '', @data)`);
         imagesSqlQuery.run({
             id: this.postID, 
             path: simplifiedFilePath, 
@@ -125,12 +125,12 @@ class ImageHelper {
     /*
      * Delete images connected with a specific post ID
      */
-    static deleteImagesDirectory(siteDir, postID) {
-        let dirPath = path.join(siteDir, 'input', 'media', 'posts', (postID).toString());
-        let responsiveDirPath = path.join(siteDir, 'input', 'media', 'posts', (postID).toString(), 'responsive');
-        let galleryDirPath = path.join(siteDir, 'input', 'media', 'posts', (postID).toString(), 'gallery');
+    static deleteImagesDirectory(siteDir, itemType, itemID) {
+        let dirPath = path.join(siteDir, 'input', 'media', itemType, (itemID).toString());
+        let responsiveDirPath = path.join(siteDir, 'input', 'media', itemType, (itemID).toString(), 'responsive');
+        let galleryDirPath = path.join(siteDir, 'input', 'media', itemType, (itemID).toString(), 'gallery');
 
-        for(let directoryPath of [galleryDirPath, responsiveDirPath, dirPath]) {
+        for (let directoryPath of [galleryDirPath, responsiveDirPath, dirPath]) {
             if (Utils.dirExists(directoryPath)) {
                 fs.readdirSync(directoryPath).forEach(function (file) {
                     let curPath = path.join(directoryPath, file);

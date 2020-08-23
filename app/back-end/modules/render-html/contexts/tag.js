@@ -20,7 +20,7 @@ class RendererContextTag extends RendererContext {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'p.status NOT LIKE "%featured%" AND';
+            includeFeaturedPosts = 'p.status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -40,9 +40,9 @@ class RendererContextTag extends RendererContext {
                 ON
                     p.id = pt.post_id
                 WHERE
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%hidden%" AND
-                    p.status NOT LIKE "%trashed%" AND
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%hidden%' AND
+                    p.status NOT LIKE '%trashed%' AND
                     ${includeFeaturedPosts}
                     pt.tag_id = @tagID
                 ORDER BY

@@ -21,9 +21,9 @@ class RendererContextFeed extends RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE "%published%" AND
-                status NOT LIKE "%hidden%" AND
-                status NOT LIKE "%trashed%"
+                status LIKE '%published%' AND
+                status NOT LIKE '%hidden%' AND
+                status NOT LIKE '%trashed%'
             ORDER BY
                 created_at DESC
             LIMIT

@@ -101,13 +101,13 @@ class URLHelper {
      * Creates an image URL
      *
      * @param domain
-     * @param postID
+     * @param itemID
      * @param imageURL
      * @param type
      * @returns {string}
      */
-    static createImageURL(domain, postID, imageURL, type = 'post') {
-        let output = [domain, 'media', type + 's', postID, imageURL];
+    static createImageURL(domain, itemID, imageURL, type = 'post') {
+        let output = [domain, 'media', type + 's', itemID, imageURL];
         output = normalizePath(output.join('/'));
         output = URLHelper.fixProtocols(output);
 

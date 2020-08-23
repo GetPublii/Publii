@@ -198,7 +198,7 @@ class ContentHelper {
      * @param baseUrl
      * @returns {*}
      */
-    static getFeaturedImageSrcset(baseUrl, themeConfig) {
+    static getFeaturedImageSrcset(baseUrl, themeConfig, type = 'post') {
         if(!ContentHelper._isImage(baseUrl) || !UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
@@ -206,6 +206,12 @@ class ContentHelper {
         let dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'featuredImages');
         let dimensionsData = UtilsHelper.responsiveImagesData(themeConfig, 'featuredImages');
         let groups = UtilsHelper.responsiveImagesGroups(themeConfig, 'featuredImages');
+
+        if (type === 'tag') {
+            dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'tagImages');
+            dimensionsData = UtilsHelper.responsiveImagesData(themeConfig, 'tagImages');
+            groups = UtilsHelper.responsiveImagesGroups(themeConfig, 'tagImages');
+        }
 
         if(!dimensions) {
             dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'contentImages');
@@ -255,16 +261,20 @@ class ContentHelper {
     /**
      * Returns content of the sizes attribute for featured image
      */
-    static getFeaturedImageSizes(themeConfig) {
+    static getFeaturedImageSizes(themeConfig, type = 'post') {
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
 
-        if(UtilsHelper.responsiveImagesConfigExists(themeConfig, 'featuredImages')) {
+        if (type === 'tag' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'tagImages')) {
+            return themeConfig.files.responsiveImages.tagImages.sizes;
+        }
+
+        if (type === 'post' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'featuredImages')) {
             return themeConfig.files.responsiveImages.featuredImages.sizes;
         }
 
-        if(UtilsHelper.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
+        if (UtilsHelper.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
             return themeConfig.files.responsiveImages.contentImages.sizes;
         }
 

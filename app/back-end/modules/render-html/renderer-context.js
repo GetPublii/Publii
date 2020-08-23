@@ -356,8 +356,8 @@ class RendererContext {
                 FROM
                     posts
                 WHERE
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%trashed%"
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%trashed%'
                 ORDER BY
                     ${postsOrdering}
         `).all();
@@ -405,9 +405,9 @@ class RendererContext {
                     posts_tags.post_id = posts.id
                 WHERE
                     posts_tags.tag_id = @tagID AND
-                    posts.status LIKE "%published%" AND
-                    posts.status NOT LIKE "%hidden%" AND
-                    posts.status NOT LIKE "%trashed%"
+                    posts.status LIKE '%published%' AND
+                    posts.status NOT LIKE '%hidden%' AND
+                    posts.status NOT LIKE '%trashed%'
                 ORDER BY
                     ${postsOrdering}
         `).all({
@@ -435,9 +435,9 @@ class RendererContext {
                 FROM
                     posts
                 WHERE
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%" AND
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%hidden%' AND
+                    status NOT LIKE '%trashed%' AND
                     authors LIKE @authorID
                 ORDER BY
                     ${postsOrdering}
@@ -477,10 +477,10 @@ class RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE "%published%" AND
-                status LIKE "%featured%" AND
-                status NOT LIKE "%trashed%" AND
-                status NOT LIKE "%hidden%"
+                status LIKE '%published%' AND
+                status LIKE '%featured%' AND
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%hidden%'
             ORDER BY
                 ${this.featuredPostsOrdering}
             ${postsLimit}
@@ -496,9 +496,9 @@ class RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE "%published%" AND
-                status LIKE "%hidden%" AND
-                status NOT LIKE "%trashed%"
+                status LIKE '%published%' AND
+                status LIKE '%hidden%' AND
+                status NOT LIKE '%trashed%'
             ORDER BY
                 ${this.hiddenPostsOrdering}
         `).all();

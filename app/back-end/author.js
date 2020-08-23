@@ -82,7 +82,7 @@ class Author extends Model {
      * @returns {{status: boolean, message: string, authors: *}}
      */
     addAuthor() {
-        let sqlQuery = this.db.prepare(`INSERT INTO authors VALUES(null, @name, @slug, "", @config, @additionalData)`);
+        let sqlQuery = this.db.prepare(`INSERT INTO authors VALUES(null, @name, @slug, '', @config, @additionalData)`);
         sqlQuery.run({
             name: this.name,
             slug: slug(this.username),
@@ -108,7 +108,7 @@ class Author extends Model {
                         SET
                             name = @name,
                             username = @slug,
-                            password = "",
+                            password = '',
                             config = @config,
                             additional_data = @additionalData
                         WHERE
@@ -197,7 +197,7 @@ class Author extends Model {
         }
 
         let authorsSqlQuery = this.db.prepare(`DELETE FROM authors WHERE id = @id`);
-        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = "1" WHERE authors LIKE @id`);
+        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = '1' WHERE authors LIKE @id`);
         
         authorsSqlQuery.run({
             id: this.id.toString()

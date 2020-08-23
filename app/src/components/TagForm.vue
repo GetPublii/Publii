@@ -42,6 +42,52 @@
             </label>
 
             <label>
+                <span>Featured image:</span>
+                <image-upload
+                    slot="field"
+                    type="small"
+                    id="featured-image"
+                    :item-id="tagData.id"
+                    ref="tag-featured-image"
+                    imageType="tagImages"
+                    :onRemove="() => { hasFeaturedImage = false }"
+                    :onAdd="() => { hasFeaturedImage = true } "
+                    v-model="tagData.additionalData.featuredImage" />
+
+                <small 
+                    v-if="!currentThemeHasSupportForTagImages"
+                    slot="note"
+                    class="note not-supported">
+                    Your theme does not support featured images for tags.
+                </small>
+
+                <div
+                    v-if="hasFeaturedImage"
+                    class="image-uploader-settings-form">
+                    <label>Alternative text
+                        <text-input
+                            ref="featured-image-alt"
+                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                            v-model="tagData.additionalData.featuredImageAlt" />
+                    </label>
+
+                    <label>Caption
+                        <text-input
+                            ref="featured-image-caption"
+                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                            v-model="tagData.additionalData.featuredImageCaption" />
+                    </label>
+
+                    <label>Credits
+                        <text-input
+                            ref="featured-image-credits"
+                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                            v-model="tagData.additionalData.featuredImageCredits" />
+                    </label>
+                </div>
+            </label>
+
+            <label>
                 <span>Page Title:</span>
                 <text-input
                     v-model="tagData.additionalData.metaTitle"
@@ -112,12 +158,17 @@ export default {
     data: function() {
         return {
             errors: [],
+            hasFeaturedImage: false,
             tagData: {
                 id: 0,
                 name: '',
                 slug: '',
                 description: '',
                 additionalData: {
+                    featuredImage: '',
+                    featuredImageAlt: '',
+                    featuredImageCaption: '',
+                    featuredImageCredits: '',
                     metaTitle: '',
                     metaDescription: '',
                     template: ''
@@ -126,6 +177,9 @@ export default {
         };
     },
     computed: {
+        currentThemeHasSupportForTagImages () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagImages;
+        },
         metaFieldAttrs: function() {
             let text = 'Leave it blank to use a default page title';
 
@@ -168,9 +222,17 @@ export default {
             this.tagData.slug = params.slug || '';
             this.tagData.description = params.description || '';
             this.tagData.additionalData = {};
+            this.tagData.additionalData.featuredImage = params.additionalData.featuredImage || '';
+            this.tagData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
+            this.tagData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
+            this.tagData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
             this.tagData.additionalData.metaTitle = params.additionalData.metaTitle || '';
             this.tagData.additionalData.metaDescription = params.additionalData.metaDescription || '';
             this.tagData.additionalData.template = params.additionalData.template || '';
+
+            if (this.tagData.additionalData.featuredImage) {
+                this.hasFeaturedImage = true;
+            }
         });
     },
     methods: {
@@ -191,8 +253,6 @@ export default {
             this.saveData(tagData);
         },
         validate () {
-            console.log(JSON.stringify(this.tagData));
-
             if (this.tagData.name.trim() === '') {
                 this.errors.push('name');
             }
@@ -283,4 +343,9 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
+
+.note.not-supported {
+    color: var(--warning);
+    font-style: italic;
+}
 </style>

@@ -180,7 +180,7 @@
                         ref="image-content">
                         <image-upload
                             ref="featured-image"
-                            :post-id="$parent.postID"
+                            :item-id="$parent.postID"
                             v-model="$parent.postData.featuredImage.path" />
 
                         <div

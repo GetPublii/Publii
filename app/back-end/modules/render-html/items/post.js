@@ -21,7 +21,7 @@ class PostItem {
     }
 
     getMetaData () {
-        let metaDataQuery = this.db.prepare('SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = "_core"');
+        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = '_core'`);
         let metaData = metaDataQuery.get({ postID: this.post.id});
 
         if (metaData && metaData.value) {
@@ -87,8 +87,8 @@ class PostItem {
 
         this.postData.featuredImage = {};
 
-        if (this.renderer.cachedItems.featuredImages[this.postData.id]) {
-            this.postData.featuredImage = this.renderer.cachedItems.featuredImages[this.postData.id];
+        if (this.renderer.cachedItems.featuredImages.posts[this.postData.id]) {
+            this.postData.featuredImage = this.renderer.cachedItems.featuredImages.posts[this.postData.id];
         }
 
         if (this.renderer.cachedItems.postTags[this.postID]) {

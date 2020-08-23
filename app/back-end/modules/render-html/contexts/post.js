@@ -11,7 +11,7 @@ const stripTags = require('striptags');
 class RendererContextPost extends RendererContext {
     loadData() {
         // Retrieve meta data
-        let metaDataQuery = this.db.prepare('SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = "_core"');
+        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = '_core'`);
         this.metaData = metaDataQuery.get({ postID: this.postID});
         this.allTags = this.renderer.commonData.tags;
         this.menus = this.renderer.commonData.menus;
@@ -167,9 +167,9 @@ class RendererContextPost extends RendererContext {
                 WHERE
                     ${sortCondition} AND
                     p.id != @postID AND
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%trashed%" AND
-                    p.status NOT LIKE "%hidden%"
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%trashed%'AND
+                    p.status NOT LIKE '%hidden%'
                     ${tagsCondition}
                 GROUP BY
                     p.id
@@ -196,9 +196,9 @@ class RendererContextPost extends RendererContext {
                     WHERE
                         ${sortCondition} AND
                         id != @postID AND
-                        status LIKE "%published%" AND
-                        status NOT LIKE "%trashed%" AND
-                        status NOT LIKE "%hidden%"
+                        status LIKE '%published%' AND
+                        status NOT LIKE '%trashed%' AND
+                        status NOT LIKE '%hidden%'
                     ORDER BY
                         ${temporaryPostsOrdering}
                     LIMIT 1
@@ -250,7 +250,7 @@ class RendererContextPost extends RendererContext {
 
             if(stringsToCompare.length) {
                 for (let toCompare of stringsToCompare) {
-                    postTitleConditions.push(' LOWER(p.title) LIKE LOWER("%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%") ')
+                    postTitleConditions.push(' LOWER(p.title) LIKE LOWER(\'%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%\') ')
                 }
 
                 postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
@@ -303,9 +303,9 @@ class RendererContextPost extends RendererContext {
                     p.id = pt.post_id
                 WHERE
                     p.id != @postID AND
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%trashed%" AND
-                    p.status NOT LIKE "%hidden%"
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%hidden%'
                     ${conditionsLowerPriority}
             `;
         }
@@ -327,9 +327,9 @@ class RendererContextPost extends RendererContext {
                         p.id = pt.post_id
                     WHERE
                         p.id != @postID AND
-                        p.status LIKE "%published%" AND
-                        p.status NOT LIKE "%trashed%" AND
-                        p.status NOT LIKE "%hidden%"
+                        p.status LIKE '%published%' AND
+                        p.status NOT LIKE '%trashed%' AND
+                        p.status NOT LIKE '%hidden%'
                         ${conditions}
                     ${secondQuery}
                     GROUP BY

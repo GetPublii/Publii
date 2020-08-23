@@ -21,6 +21,8 @@ class RendererCache {
      * Generate cache for all necessary items
      */
     create() {
+        // Set tag-related items
+        this.getFeaturedTagImages();
         // We need tag posts count before storing tags
         this.getTagPostCounts();
         this.getTags();
@@ -28,7 +30,7 @@ class RendererCache {
         this.getAuthorPostCounts();
         this.getAuthors();
         // Set post-related items
-        this.getFeaturedImages();
+        this.getFeaturedPostImages();
         this.getPostTags();
         // At the end we get posts as it uses other cached items
         this.getPosts();
@@ -67,7 +69,7 @@ class RendererCache {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
+            includeFeaturedPosts = 'AND p.status NOT LIKE \'%featured%\'';
         }
 
         let tagsPostCount = this.db.prepare(`
@@ -81,9 +83,9 @@ class RendererCache {
             ON
                 p.id = pt.post_id
             WHERE
-                p.status LIKE "%published%" AND
-                p.status NOT LIKE "%hidden%" AND
-                p.status NOT LIKE "%trashed%"
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%hidden%' AND
+                p.status NOT LIKE '%trashed%'
                 ${includeFeaturedPosts}
             GROUP BY
                 pt.tag_id;
@@ -128,7 +130,7 @@ class RendererCache {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('authorsIncludeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'AND p.status NOT LIKE "%featured%"';
+            includeFeaturedPosts = 'AND p.status NOT LIKE \'%featured%\'';
         }
 
         let authorPostCounts = this.db.prepare(`
@@ -142,9 +144,9 @@ class RendererCache {
                 ON
                 p.authors = a.id
             WHERE
-                p.status LIKE "%published%" AND
-                p.status NOT LIKE "%hidden%" AND
-                p.status NOT LIKE "%trashed%"
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%hidden%' AND
+                p.status NOT LIKE '%trashed%'
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id
@@ -161,12 +163,12 @@ class RendererCache {
     /**
      * Retrieves featured images data
      */
-    getFeaturedImages() {
-        console.time('FEATURED IMAGES - QUERY');
+    getFeaturedPostImages() {
+        console.time('FEATURED POST IMAGES - QUERY');
         let featuredImages = this.db.prepare(`
             SELECT
                 pi.id AS id,
-                pi.post_id AS post_id,
+                pi.post_id AS item_id,
                 pi.url AS url,
                 pi.additional_data AS additional_data
             FROM
@@ -178,11 +180,51 @@ class RendererCache {
             ORDER BY
                 pi.id DESC
         `).all();
-        console.timeEnd('FEATURED IMAGES - QUERY');
+        console.timeEnd('FEATURED POST IMAGES - QUERY');
 
-        console.time('FEATURED IMAGES - STORE');
-        featuredImages.map(image => new FeaturedImage(image, this.renderer));
-        console.timeEnd('FEATURED IMAGES - STORE');
+        console.time('FEATURED POST IMAGES - STORE');
+        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages'));
+        console.timeEnd('FEATURED POST IMAGES - STORE');
+    }
+
+    /**
+     * Retrieves tags featured images data
+     */
+    getFeaturedTagImages() {
+        console.time('FEATURED TAG IMAGES - QUERY');
+        let tagsData = this.db.prepare(`
+            SELECT
+                t.id AS item_id,
+                t.additional_data AS additional_data
+            FROM
+                tags as t
+            ORDER BY
+                t.id DESC
+        `).all();
+        console.timeEnd('FEATURED TAG IMAGES - QUERY');
+
+        console.time('FEATURED TAG IMAGES - STORE');
+        for (let i = 0; i < tagsData.length; i++) {
+            let additionalData = false;
+            
+            if (tagsData[i].additional_data) {
+                additionalData = JSON.parse(tagsData[i].additional_data);
+            }
+
+            if (additionalData && additionalData.featuredImage) {
+                new FeaturedImage({
+                    id: 0,
+                    item_id: tagsData[i].item_id,
+                    url: additionalData.featuredImage,
+                    additional_data: JSON.stringify({
+                        alt: additionalData.featuredImageAlt,
+                        caption: additionalData.featuredImageCaption,
+                        credits: additionalData.featuredImageCredits
+                    })
+                }, this.renderer, 'tagImages');
+            }
+        }
+        console.timeEnd('FEATURED TAG IMAGES - STORE');
     }
 
     /**
@@ -229,8 +271,8 @@ class RendererCache {
             FROM
                 posts
             WHERE
-                status NOT LIKE "%trashed%" AND
-                status NOT LIKE "%draft%"
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%draft%'
             ORDER BY
                 id ASC;
         `).all();
@@ -272,7 +314,7 @@ class RendererCache {
             WHERE
                 post_id = @id
                 AND
-                key = "postViewSettings"
+                key = 'postViewSettings'
         `).get({
             id: postID
         });

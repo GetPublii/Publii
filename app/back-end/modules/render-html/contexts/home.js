@@ -18,7 +18,7 @@ class RendererContextHome extends RendererContext {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
+            includeFeaturedPosts = 'status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -35,10 +35,10 @@ class RendererContextHome extends RendererContext {
                     posts
                 WHERE
                     ${includeFeaturedPosts}
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%" AND
-                    status NOT LIKE "%excluded_homepage%"
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%hidden%' AND
+                    status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%excluded_homepage%'
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
@@ -125,7 +125,7 @@ class RendererContextHome extends RendererContext {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'AND status NOT LIKE "%featured%"';
+            includeFeaturedPosts = 'AND status NOT LIKE \'%featured%\'';
         }
 
         let results = this.db.prepare(`
@@ -134,13 +134,13 @@ class RendererContextHome extends RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE "%published%"
+                status LIKE '%published%'
                 AND
-                status NOT LIKE "%hidden%"
+                status NOT LIKE '%hidden%'
                 AND
-                status NOT LIKE "%trashed%"
+                status NOT LIKE '%trashed%'
                 AND 
-                status NOT LIKE "%excluded_homepage%"
+                status NOT LIKE '%excluded_homepage%'
                 ${includeFeaturedPosts}
             GROUP BY
                 id

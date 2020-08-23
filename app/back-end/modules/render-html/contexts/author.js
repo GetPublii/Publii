@@ -24,7 +24,7 @@ class RendererContextAuthor extends RendererContext {
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('authorsIncludeFeaturedInPosts', this.themeConfig) === false;
 
         if (shouldSkipFeaturedPosts) {
-            includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
+            includeFeaturedPosts = 'status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -40,9 +40,9 @@ class RendererContextAuthor extends RendererContext {
                 FROM
                     posts
                 WHERE
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%" AND
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%hidden%' AND
+                    status NOT LIKE '%trashed%' AND
                     ${includeFeaturedPosts}
                     authors LIKE @authorID
                 ORDER BY

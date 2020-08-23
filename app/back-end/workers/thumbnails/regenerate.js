@@ -177,27 +177,21 @@ function getImageType(context, image, catalog) {
     let featuredImage = false;
     let preparedCatalog = catalog.replace('posts/', '');
 
-    if(context.postImagesRef && context.postImagesRef[0]) {
+    if (context.postImagesRef && context.postImagesRef[0]) {
         featuredImage = context.postImagesRef.filter(xref => xref.post_id == preparedCatalog);
-    }
-
-    if(featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
+    } else if (featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
         console.log('(i) Featured image detected (' + image + ')', preparedCatalog);
         imageType = 'featuredImages';
-    }
-
-    if(catalog === 'website') {
+    } else if(catalog === 'website') {
         console.log('(i) Website image detected (' + image + ')', preparedCatalog);
         imageType = 'optionImages';
-    }
-
-    // Check if "gallery" is at the end of catalog path
-    if(catalog.indexOf('gallery') === catalog.length - 7) {
+    } else if(catalog.indexOf('tags') > -1) {
+        console.log('(i) Tag image detected (' + image + ')', preparedCatalog);
+        imageType = 'tagImages';
+    } else if(catalog.substr(-7) === 'gallery') {
         console.log('(i) Gallery image detected (' + image + ')', preparedCatalog);
         imageType = 'galleryImages';
-    }
-
-    if (imageType === 'contentImages') {
+    } else if (imageType === 'contentImages') {
         console.log('(i) Content image detected (' + image + ')', preparedCatalog);
     }
 

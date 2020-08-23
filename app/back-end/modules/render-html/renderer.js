@@ -74,7 +74,10 @@ class Renderer {
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
-            featuredImages: {}
+            featuredImages: {
+                posts: {},
+                tags: {}
+            }
         };
 
         if (postID !== false && postID !== 'home') {
@@ -728,8 +731,8 @@ class Renderer {
             FROM
                 posts
             WHERE
-                status LIKE "%published%" AND
-                status NOT LIKE "%trashed%"
+                status LIKE '%published%' AND
+                status NOT LIKE '%trashed%'
             ORDER BY
                 id ASC
         `).all();
@@ -914,7 +917,7 @@ class Renderer {
                 WHERE
                     post_id = @postID
                     AND
-                    key = "postViewSettings"
+                    key = 'postViewSettings'
             `).get({
                 postID: postID
             });
@@ -1718,7 +1721,10 @@ class Renderer {
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
-            featuredImages: {}
+            featuredImages: {
+                posts: {},
+                tags: {}
+            }
         };
         globalContextGenerator.getCachedItems();
         this.contentStructure = globalContextGenerator.getContentStructure();

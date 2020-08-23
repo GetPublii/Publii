@@ -2,11 +2,12 @@
  * Tag instance
  */
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const Model = require('./model.js');
 const Tags = require('./tags.js');
 const slug = require('./helpers/slug');
+const ImageHelper = require('./helpers/image.helper.js');
 
 class Tag extends Model {
     constructor(appInstance, tagData, storeMode = true) {
@@ -78,6 +79,27 @@ class Tag extends Model {
             desc: this.description,
             data: JSON.stringify(this.additionalData)
         });
+
+        // Get the newly added item ID if necessary
+        if (this.id === 0) {
+            this.id = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
+
+            // Move images from the temp directory
+            let tempDirectoryExists = true;
+            let tempImagesDir = path.join(this.siteDir, 'input', 'media', 'tags', 'temp');
+           
+            try {
+                fs.statSync(tempImagesDir).isDirectory();
+            } catch (err) {
+                tempDirectoryExists = false;
+            }
+
+            if (tempDirectoryExists) {
+                let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'tags', (this.id).toString());
+                fs.copySync(tempImagesDir, finalImagesDir);
+                fs.removeSync(tempImagesDir);
+            }
+        }
 
         return {
             status: true,
@@ -195,6 +217,8 @@ class Tag extends Model {
         postTagsSqlQuery.run({
             id: this.id
         });
+
+        ImageHelper.deleteImagesDirectory(this.siteDir, 'tags', this.id);
         
         return {
             status: true,
