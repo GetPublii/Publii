@@ -15,113 +15,198 @@
                 &times;
             </span>
 
-            <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                <span>Name:</span>
-                <input
-                    v-model="authorData.name"
-                    @keyup="cleanError('name')"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    type="text">
-            </label>
+            <div class="author-settings-wrapper">
+                <div
+                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'basic' }"
+                    @click="openItem('basic')">
+                    <icon
+                        class="author-settings-icon"
+                        size="s"
+                        name="sidebar-status"/>
 
-            <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                <span>Slug:</span>
-                <input
-                    v-model="authorData.username"
-                    @keyup="cleanError('slug')"
-                    spellcheck="false"
-                    type="text">
-            </label>
+                    <span class="author-settings-label">Basic information</span>
+                </div>
 
-            <label>
-                <span>Description:</span>
-                <text-area
-                    v-model="authorData.description"
-                    :rows="4"></text-area>
-            </label>
+                <div
+                    class="author-settings"
+                    style="max-height: none;"
+                    ref="basic-content-wrapper">
+                    <div 
+                        class="author-settings-content"
+                        ref="basic-content">
+                        <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
+                            <span>Name:</span>
+                            <input
+                                v-model="authorData.name"
+                                @keyup="cleanError('name')"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                type="text">
+                        </label>
 
-            <label :class="{ 'is-invalid': errors.indexOf('email') > -1 }">
-                <span>E-mail:</span>
-                <input
-                    v-model="authorData.email"
-                    @keyup="emailChanged"
-                    spellcheck="false"
-                    type="text">
-            </label>
+                        <label>
+                            <span>Description:</span>
+                            <text-area
+                                v-model="authorData.description"
+                                :rows="4"></text-area>
+                        </label>
 
-            <label>
-                <span>Website:</span>
-                <input
-                    v-model="authorData.website"
-                    spellcheck="false"
-                    type="text">
-            </label>
+                        <label :class="{ 'is-invalid': errors.indexOf('email') > -1 }">
+                            <span>E-mail:</span>
+                            <input
+                                v-model="authorData.email"
+                                @keyup="emailChanged"
+                                spellcheck="false"
+                                type="text">
+                        </label>
 
-            <label>
-                <span>Avatar:</span>
-                <image-upload
-                    slot="field"
-                    type="small"
-                    id="author"
-                    ref="author-avatar"
-                    :onRemove="avatarRemoved"
-                    v-model="authorData.avatar" />
-            </label>
+                        <label>
+                            <span>Website:</span>
+                            <input
+                                v-model="authorData.website"
+                                spellcheck="false"
+                                type="text">
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-            <label class="use-gravatar">
-                <switcher
-                    slot="field"
-                    id="use-gravatar"
-                    @click.native="toggleGravatar"
-                    v-model="authorData.useGravatar" />
-                <small class="note">
-                    Use <a href="https://gravatar.com/" target="_blank">Gravatar </a> to provide your author avatar
-                </small>
-            </label>
+            <div class="author-settings-wrapper">
+                <div
+                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'image' }"
+                    @click="openItem('image')">
+                    <icon
+                        class="author-settings-icon"
+                        size="s"
+                        name="sidebar-image"/>
 
-            <label>
-                <span>Page title:</span>
-                <text-input
-                    v-model="authorData.metaTitle"
-                    type="text"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    :placeholder="metaFieldAttrs"
-                    :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"
-                    :charCounter="metaOptionsActive"
-                    :preferredCount="70" />
-            </label>
+                    <span class="author-settings-label">Avatar</span>
+                </div>
 
-            <label>
-                <span>Meta Description:</span>
-                <text-area
-                    v-model="authorData.metaDescription"
-                    :placeholder="metaFieldAttrs"
-                    :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"
-                    :charCounter="metaOptionsActive"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    :preferredCount="160"></text-area>
-            </label>
+                <div
+                    class="author-settings"
+                    ref="image-content-wrapper">
+                    <div 
+                        class="author-settings-content"
+                        ref="image-content">
+                        <label>
+                            <span>Avatar:</span>
+                            <image-upload
+                                slot="field"
+                                type="small"
+                                id="author"
+                                ref="author-avatar"
+                                :onRemove="avatarRemoved"
+                                v-model="authorData.avatar" />
+                        </label>
 
-            <label>
-                <span>Custom template:</span>
-                <dropdown
-                    v-if="currentThemeHasAuthorTemplates"
-                    ref="template"
-                    id="template"
-                    v-model="authorData.template"
-                    :items="authorTemplates"></dropdown>
+                        <label class="use-gravatar">
+                            <switcher
+                                slot="field"
+                                id="use-gravatar"
+                                @click.native="toggleGravatar"
+                                v-model="authorData.useGravatar" />
+                            <small class="note">
+                                Use <a href="https://gravatar.com/" target="_blank">Gravatar </a> to provide your author avatar
+                            </small>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-                <text-input
-                    v-if="!currentThemeHasAuthorTemplates"
-                    slot="field"
-                    id="template"
-                    placeholder="Not available in your theme"
-                    :spellcheck="false"
-                    :disabled="true"
-                    :readonly="true" />
-            </label>
+            <div class="author-settings-wrapper">
+                <div
+                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'seo' }"
+                    @click="openItem('seo')">
+                    <icon
+                        class="author-settings-icon"
+                        size="s"
+                        name="sidebar-seo"/>
+
+                    <span class="author-settings-label">SEO</span>
+                </div>
+
+                <div
+                    class="author-settings"
+                    ref="seo-content-wrapper">
+                    <div 
+                        class="author-settings-content"
+                        ref="seo-content">
+                        <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
+                            <span>Slug:</span>
+                            <input
+                                v-model="authorData.username"
+                                @keyup="cleanError('slug')"
+                                spellcheck="false"
+                                type="text">
+                        </label>
+
+                        <label class="with-char-counter">
+                            <span>Page title:</span>
+                            <text-input
+                                v-model="authorData.metaTitle"
+                                type="text"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :placeholder="metaFieldAttrs"
+                                :disabled="!metaOptionsActive"
+                                :readonly="!metaOptionsActive"
+                                :charCounter="metaOptionsActive"
+                                :preferredCount="70" />
+                        </label>
+
+                        <label class="with-char-counter">
+                            <span>Meta Description:</span>
+                            <text-area
+                                v-model="authorData.metaDescription"
+                                :placeholder="metaFieldAttrs"
+                                :disabled="!metaOptionsActive"
+                                :readonly="!metaOptionsActive"
+                                :charCounter="metaOptionsActive"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160"></text-area>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="author-settings-wrapper">
+                <div
+                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'other' }"
+                    @click="openItem('other')">
+                    <icon
+                        class="author-settings-icon"
+                        size="s"
+                        name="sidebar-options"/>
+
+                    <span class="author-settings-label">Other options</span>
+                </div>
+
+                <div
+                    class="author-settings"
+                    ref="other-content-wrapper">
+                    <div 
+                        class="author-settings-content"
+                        ref="other-content">
+                        <label>
+                            <span>Custom template:</span>
+                            <dropdown
+                                v-if="currentThemeHasAuthorTemplates"
+                                ref="template"
+                                id="template"
+                                v-model="authorData.template"
+                                :items="authorTemplates"></dropdown>
+
+                            <text-input
+                                v-if="!currentThemeHasAuthorTemplates"
+                                slot="field"
+                                id="template"
+                                placeholder="Not available in your theme"
+                                :spellcheck="false"
+                                :disabled="true"
+                                :readonly="true" />
+                        </label>
+                    </div>
+                </div>
+            </div>
 
             <div class="options-sidebar-buttons">
                 <p-button
@@ -152,6 +237,7 @@ export default {
     data () {
         return {
             errors: [],
+            openedItem: 'basic',
             authorData: {
                 id: 0,
                 name: '',
@@ -350,6 +436,41 @@ export default {
         },
         avatarRemoved () {
             this.authorData.useGravatar = false;
+        },
+        openItem (itemName) {
+            if (this.openedItem === itemName) {
+                this.closeItem();
+                return;
+            }
+
+            this.closeItem();
+            this.openedItem = itemName;
+            let contentWrapper = this.$refs[this.openedItem + '-content-wrapper'];
+            let content = this.$refs[this.openedItem + '-content'];
+            contentWrapper.style.maxHeight = content.clientHeight + "px";
+
+            setTimeout(function() {
+                contentWrapper.style.maxHeight = 'none';
+            }, 300);
+        },
+        closeItem () {
+            if (this.openedItem === '') {
+                return;
+            }
+
+            let contentWrapper = this.$refs[this.openedItem + '-content-wrapper'];
+            let content = this.$refs[this.openedItem + '-content'];
+            this.openedItem = '';
+
+            if (content.classList.contains('post-editor-settings-content-tags')) {
+                contentWrapper.style.overflow = 'hidden';
+            }
+
+            contentWrapper.style.maxHeight = content.clientHeight + "px";
+
+            setTimeout(function () {
+                contentWrapper.style.maxHeight = 0;
+            }, 50);
         }
     },
     beforeDestroy () {
@@ -367,5 +488,114 @@ export default {
         font-size: 1.6rem;
         font-weight: 400;
     }
+}
+
+.author-settings {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease-out;
+
+    &-content {
+        padding: 0 0 3.6rem;
+
+        .image-uploader {
+            margin-top: 0;
+        }
+    }
+
+    &-wrapper {
+        &:first-of-type {
+            .author-settings-header {
+                border-top: none;
+            }
+        }
+    }
+
+    &-header {
+        align-items: center;               
+        border-top: 1px solid var(--input-border-color);     
+        color: var(--link-tertiary-color);
+        cursor: pointer;
+        display: flex;
+        height: 6.4rem;
+        margin-left: 0;
+        margin-top: -1px;
+        padding: 0;
+        position: relative;
+        transition: var(--transition);
+        user-select: none;
+        width: 100%;
+
+        &:hover {
+            color: var(--link-tertiary-hover-color);                    
+        }
+
+        &.is-open {
+            .post-editor-settings {
+                &-label {
+                    left: -3.6rem;
+                }
+
+                &-icon {
+                    left: -1.6rem;
+                    position: relative;
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    &-label {                
+        font-weight: 600;
+        left: 0;
+        position: relative;
+        transition: left .25s ease-out, color .0s ease-out;
+        width: calc(100% - 5.8rem);
+
+        &-warning {
+            color: var(--warning);
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+    }
+
+    &-icon {
+        fill: var(--primary-color); 
+        left: 0;
+        height: 2.4rem;
+        margin-right: 1.6rem;
+        opacity: 1;
+        position: relative;
+        transition: var(--transition);
+        width: 2.4rem;
+    }
+
+    label {
+        color: var(--label-color);
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 500;
+        line-height: 2.6;
+        margin: 0 0 1.2rem 0;
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            background-color: var(--input-bg);
+            width: 100%;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        &.with-char-counter {
+            .note {
+                margin-top: -3rem;
+                width: 70%;
+            }
+        }
+    }            
 }
 </style>

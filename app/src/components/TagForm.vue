@@ -15,121 +15,205 @@
                 &times;
             </span>
 
-            <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                <span>Name:</span>
-                <input
-                    v-model="tagData.name"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    @keyup="cleanError('name')"
-                    type="text">
-            </label>
+            <div class="tag-settings-wrapper">
+                <div
+                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'basic' }"
+                    @click="openItem('basic')">
+                    <icon
+                        class="tag-settings-icon"
+                        size="s"
+                        name="sidebar-status"/>
 
-            <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                <span>Slug:</span>
-                <input
-                    v-model="tagData.slug"
-                    @keyup="cleanError('slug')"
-                    spellcheck="false"
-                    type="text">
-            </label>
-
-            <label>
-                <span>Description:</span>
-                <text-area
-                    v-model="tagData.description"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    :rows="4"></text-area>
-            </label>
-
-            <label>
-                <span>Featured image:</span>
-                <image-upload
-                    slot="field"
-                    type="small"
-                    id="featured-image"
-                    :item-id="tagData.id"
-                    ref="tag-featured-image"
-                    imageType="tagImages"
-                    :onRemove="() => { hasFeaturedImage = false }"
-                    :onAdd="() => { hasFeaturedImage = true } "
-                    v-model="tagData.additionalData.featuredImage" />
-
-                <small 
-                    v-if="!currentThemeHasSupportForTagImages"
-                    slot="note"
-                    class="note not-supported">
-                    Your theme does not support featured images for tags.
-                </small>
+                    <span class="tag-settings-label">Basic information</span>
+                </div>
 
                 <div
-                    v-if="hasFeaturedImage"
-                    class="image-uploader-settings-form">
-                    <label>Alternative text
-                        <text-input
-                            ref="featured-image-alt"
-                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                            v-model="tagData.additionalData.featuredImageAlt" />
-                    </label>
+                    class="tag-settings"
+                    style="max-height: none;"
+                    ref="basic-content-wrapper">
+                    <div 
+                        class="tag-settings-content"
+                        ref="basic-content">
+                        <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
+                            <span>Name:</span>
+                            <input
+                                v-model="tagData.name"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                @keyup="cleanError('name')"
+                                type="text">
+                        </label>
 
-                    <label>Caption
-                        <text-input
-                            ref="featured-image-caption"
-                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                            v-model="tagData.additionalData.featuredImageCaption" />
-                    </label>
-
-                    <label>Credits
-                        <text-input
-                            ref="featured-image-credits"
-                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                            v-model="tagData.additionalData.featuredImageCredits" />
-                    </label>
+                        <label>
+                            <span>Description:</span>
+                            <text-area
+                                v-model="tagData.description"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :rows="4"></text-area>
+                        </label>
+                    </div>
                 </div>
-            </label>
+            </div>
 
-            <label>
-                <span>Page Title:</span>
-                <text-input
-                    v-model="tagData.additionalData.metaTitle"
-                    type="text"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    :placeholder="metaFieldAttrs"
-                    :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"
-                    :charCounter="metaOptionsActive"
-                    :preferredCount="70" />
-            </label>
+            <div class="tag-settings-wrapper">
+                <div
+                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'image' }"
+                    @click="openItem('image')">
+                    <icon
+                        class="tag-settings-icon"
+                        size="s"
+                        name="sidebar-image"/>
 
-            <label>
-                <span>Meta Description</span>
-                <text-area
-                    v-model="tagData.additionalData.metaDescription"
-                    :placeholder="metaFieldAttrs"
-                    :disabled="!metaOptionsActive"
-                    :readonly="!metaOptionsActive"
-                    :charCounter="metaOptionsActive"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    :preferredCount="160"></text-area>
-            </label>
+                    <span class="tag-settings-label">Featured image</span>
+                </div>
 
-            <label>
-                <span>Custom template:</span>
-                <dropdown
-                    v-if="currentThemeHasTagTemplates"
-                    ref="template"
-                    id="template"
-                    v-model="tagData.additionalData.template"
-                    :items="tagTemplates"></dropdown>
+                <div
+                    class="tag-settings"
+                    ref="image-content-wrapper">
+                    <div 
+                        class="tag-settings-content"
+                        ref="image-content">
+                        <label>
+                            <image-upload
+                                slot="field"
+                                type="small"
+                                id="featured-image"
+                                :item-id="tagData.id"
+                                ref="tag-featured-image"
+                                imageType="tagImages"
+                                :onRemove="() => { hasFeaturedImage = false }"
+                                :onAdd="() => { hasFeaturedImage = true } "
+                                v-model="tagData.additionalData.featuredImage" />
 
-                <text-input
-                    v-if="!currentThemeHasTagTemplates"
-                    slot="field"
-                    id="template"
-                    :spellcheck="false"
-                    placeholder="Not available in your theme"
-                    :disabled="true"
-                    :readonly="true" />
-            </label>
+                            <small 
+                                v-if="!currentThemeHasSupportForTagImages"
+                                slot="note"
+                                class="note not-supported">
+                                Your theme does not support featured images for tags.
+                            </small>
+
+                            <div
+                                v-if="hasFeaturedImage"
+                                class="image-uploader-settings-form">
+                                <label>Alternative text
+                                    <text-input
+                                        ref="featured-image-alt"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="tagData.additionalData.featuredImageAlt" />
+                                </label>
+
+                                <label>Caption
+                                    <text-input
+                                        ref="featured-image-caption"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="tagData.additionalData.featuredImageCaption" />
+                                </label>
+
+                                <label>Credits
+                                    <text-input
+                                        ref="featured-image-credits"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="tagData.additionalData.featuredImageCredits" />
+                                </label>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tag-settings-wrapper">
+                <div
+                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'seo' }"
+                    @click="openItem('seo')">
+                    <icon
+                        class="tag-settings-icon"
+                        size="s"
+                        name="sidebar-seo"/>
+
+                    <span class="tag-settings-label">SEO</span>
+                </div>
+
+                <div
+                    class="tag-settings"
+                    ref="seo-content-wrapper">
+                    <div 
+                        class="tag-settings-content"
+                        ref="seo-content">
+                        <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
+                            <span>Slug:</span>
+                            <input
+                                v-model="tagData.slug"
+                                @keyup="cleanError('slug')"
+                                spellcheck="false"
+                                type="text">
+                        </label>
+
+                        <label class="with-char-counter">
+                            <span>Page Title:</span>
+                            <text-input
+                                v-model="tagData.additionalData.metaTitle"
+                                type="text"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :placeholder="metaFieldAttrs"
+                                :disabled="!metaOptionsActive"
+                                :readonly="!metaOptionsActive"
+                                :charCounter="metaOptionsActive"
+                                :preferredCount="70" />
+                        </label>
+
+                        <label class="with-char-counter">
+                            <span>Meta Description</span>
+                            <text-area
+                                v-model="tagData.additionalData.metaDescription"
+                                :placeholder="metaFieldAttrs"
+                                :disabled="!metaOptionsActive"
+                                :readonly="!metaOptionsActive"
+                                :charCounter="metaOptionsActive"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160"></text-area>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tag-settings-wrapper">
+                <div
+                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'other' }"
+                    @click="openItem('other')">
+                    <icon
+                        class="tag-settings-icon"
+                        size="s"
+                        name="sidebar-options"/>
+
+                    <span class="tag-settings-label">Other options</span>
+                </div>
+
+                <div
+                    class="tag-settings"
+                    ref="other-content-wrapper">
+                    <div 
+                        class="tag-settings-content"
+                        ref="other-content">
+                        <label>
+                            <span>Custom template:</span>
+                            <dropdown
+                                v-if="currentThemeHasTagTemplates"
+                                ref="template"
+                                id="template"
+                                v-model="tagData.additionalData.template"
+                                :items="tagTemplates"></dropdown>
+
+                            <text-input
+                                v-if="!currentThemeHasTagTemplates"
+                                slot="field"
+                                id="template"
+                                :spellcheck="false"
+                                placeholder="Not available in your theme"
+                                :disabled="true"
+                                :readonly="true" />
+                        </label>
+                    </div>
+                </div>
+            </div>
 
             <div class="options-sidebar-buttons">
                 <p-button
@@ -159,6 +243,7 @@ export default {
         return {
             errors: [],
             hasFeaturedImage: false,
+            openedItem: 'basic',
             tagData: {
                 id: 0,
                 name: '',
@@ -332,6 +417,41 @@ export default {
             }
 
             this.$bus.$emit('message-display', messageConfig);
+        },
+        openItem (itemName) {
+            if (this.openedItem === itemName) {
+                this.closeItem();
+                return;
+            }
+
+            this.closeItem();
+            this.openedItem = itemName;
+            let contentWrapper = this.$refs[this.openedItem + '-content-wrapper'];
+            let content = this.$refs[this.openedItem + '-content'];
+            contentWrapper.style.maxHeight = content.clientHeight + "px";
+
+            setTimeout(function() {
+                contentWrapper.style.maxHeight = 'none';
+            }, 300);
+        },
+        closeItem () {
+            if (this.openedItem === '') {
+                return;
+            }
+
+            let contentWrapper = this.$refs[this.openedItem + '-content-wrapper'];
+            let content = this.$refs[this.openedItem + '-content'];
+            this.openedItem = '';
+
+            if (content.classList.contains('post-editor-settings-content-tags')) {
+                contentWrapper.style.overflow = 'hidden';
+            }
+
+            contentWrapper.style.maxHeight = content.clientHeight + "px";
+
+            setTimeout(function () {
+                contentWrapper.style.maxHeight = 0;
+            }, 50);
         }
     },
     beforeDestroy () {
@@ -347,5 +467,114 @@ export default {
 .note.not-supported {
     color: var(--warning);
     font-style: italic;
+}
+
+.tag-settings {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease-out;
+
+    &-content {
+        padding: 0 0 3.6rem;
+
+        .image-uploader {
+            margin-top: 0;
+        }
+    }
+
+    &-wrapper {
+        &:first-of-type {
+            .tag-settings-header {
+                border-top: none;
+            }
+        }
+    }
+
+    &-header {
+        align-items: center;               
+        border-top: 1px solid var(--input-border-color);     
+        color: var(--link-tertiary-color);
+        cursor: pointer;
+        display: flex;
+        height: 6.4rem;
+        margin-left: 0;
+        margin-top: -1px;
+        padding: 0;
+        position: relative;
+        transition: var(--transition);
+        user-select: none;
+        width: 100%;
+
+        &:hover {
+            color: var(--link-tertiary-hover-color);                    
+        }
+
+        &.is-open {
+            .post-editor-settings {
+                &-label {
+                    left: -3.6rem;
+                }
+
+                &-icon {
+                    left: -1.6rem;
+                    position: relative;
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    &-label {                
+        font-weight: 600;
+        left: 0;
+        position: relative;
+        transition: left .25s ease-out, color .0s ease-out;
+        width: calc(100% - 5.8rem);
+
+        &-warning {
+            color: var(--warning);
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+    }
+
+    &-icon {
+        fill: var(--primary-color); 
+        left: 0;
+        height: 2.4rem;
+        margin-right: 1.6rem;
+        opacity: 1;
+        position: relative;
+        transition: var(--transition);
+        width: 2.4rem;
+    }
+
+    label {
+        color: var(--label-color);
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 500;
+        line-height: 2.6;
+        margin: 0 0 1.2rem 0;
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            background-color: var(--input-bg);
+            width: 100%;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        &.with-char-counter {
+            .note {
+                margin-top: -3rem;
+                width: 70%;
+            }
+        }
+    }            
 }
 </style>
