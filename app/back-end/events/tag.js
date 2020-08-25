@@ -29,6 +29,13 @@ class TagEvents {
 
             event.sender.send('app-tag-deleted', result);
         });
+
+        // Cancelled edition
+        ipcMain.on('app-tag-cancel', function(event, tagData) {
+            let tag = new Tag(appInstance, tagData);
+            let result = tag.checkAndCleanImages(true);
+            event.sender.send('app-tag-cancelled', result);
+        });
     }
 }
 

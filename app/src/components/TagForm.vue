@@ -238,7 +238,7 @@ import { ipcRenderer, remote } from 'electron';
 const mainProcess = remote.require('./main.js');
 
 export default {
-    name: 'options-sidebar',
+    name: 'tag-form-sidebar',
     data: function() {
         return {
             errors: [],
@@ -294,7 +294,7 @@ export default {
     mounted () {
         this.$bus.$on('show-tag-item-editor', params => {
             try {
-                if (typeof params.additionalData === 'string') {
+                if (typeof params.additionalData === 'string' && params.additionalData) {
                     params.additionalData = JSON.parse(params.additionalData);
                 }
             } catch (e) {
@@ -386,6 +386,13 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-tag-item-editor');
+            ipcRenderer.send('app-tag-cancel', {
+                site: this.$store.state.currentSite.config.name,
+                id: this.tagData.id,
+                additionalData: {
+                    featuredImage: this.tagData.additionalData.featuredImage
+                }
+            });
         },
         showMessage(message) {
             let messageConfig = {

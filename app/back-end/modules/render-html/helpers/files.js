@@ -143,6 +143,10 @@ class Files {
             }
         }
 
+        if (UtilsHelper.dirExists(path.join(basePathOutput, 'tags', 'temp'))) {
+            fs.removeSync(path.join(basePathOutput, 'tags', 'temp'));
+        }
+
         DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));
     }
 }

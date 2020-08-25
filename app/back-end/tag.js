@@ -8,6 +8,8 @@ const Model = require('./model.js');
 const Tags = require('./tags.js');
 const slug = require('./helpers/slug');
 const ImageHelper = require('./helpers/image.helper.js');
+const Themes = require('./themes.js');
+const Utils = require('./helpers/utils.js');
 
 class Tag extends Model {
     constructor(appInstance, tagData, storeMode = true) {
@@ -16,6 +18,10 @@ class Tag extends Model {
         this.tagsData = new Tags(appInstance, tagData);
         this.storeMode = storeMode;
 
+        if (tagData.additionalData) {
+            this.additionalData = tagData.additionalData;
+        }
+
         if(tagData.name || tagData.name === '') {
             this.name = tagData.name;
             this.slug = tagData.slug;
@@ -23,6 +29,8 @@ class Tag extends Model {
             this.additionalData = tagData.additionalData;
             this.prepareTagName();
         }
+
+        console.log(tagData);
     }
 
     /*
@@ -64,6 +72,8 @@ class Tag extends Model {
         if(this.id !== 0) {
             return this.updateTag();
         }
+
+        this.checkAndCleanImages();
 
         return this.addTag();
     }
@@ -231,6 +241,132 @@ class Tag extends Model {
      */
     createSlug(string) {
         return slug(string);
+    }
+
+    /*
+     * Remove unused images
+     */
+    checkAndCleanImages (cancelEvent = false) {
+        let tagDir = this.id;
+
+        if(this.id === 0) {
+            tagDir = 'temp';
+        }
+
+        let imagesDir = path.join(this.siteDir, 'input', 'media', 'tags', (tagDir).toString());
+        let tagDirectoryExists = true;
+
+        try {
+            fs.statSync(imagesDir).isDirectory();
+        } catch (err) {
+            tagDirectoryExists = false;
+        }
+
+        if(!tagDirectoryExists) {
+            return;
+        }
+
+        let images = fs.readdirSync(imagesDir);
+        this.cleanImages(images, imagesDir, cancelEvent);
+    }
+
+    /*
+     * Removes images from a given image dir
+     */
+    cleanImages(images, imagesDir, cancelEvent) {
+        let tagDir = this.id;
+        let featuredImage = path.parse(this.additionalData.featuredImage).base;
+
+        // If post is cancelled - get the previous featured image
+        if (cancelEvent && this.id !== 0) {
+            let featuredImageSqlQuery = `SELECT additional_data FROM tags WHERE id = @id`;
+
+            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
+                id: this.id 
+            });
+
+            if (featuredImageResult) {
+                try {
+                    featuredImageResult = JSON.parse(featuredImageResult);
+                    featuredImage = featuredImageResult.featuredImage;
+                } catch (e) {
+                    console.log('(!) An issue occurred during parsing tag additional data', this.id);
+                }
+            }
+        }
+
+        if (this.id === 0) {
+            tagDir = 'temp';
+        }
+
+        // Iterate through images
+        for (let i in images) {
+            let imagePath = images[i];
+            let fullPath = path.join(imagesDir, imagePath);
+
+            // Skip dirs and symlinks
+            if (imagePath === '.' || imagePath === '..' || imagePath === 'responsive') {
+                continue;
+            }
+
+            if ((cancelEvent && tagDir === 'temp') || featuredImage !== imagePath) {
+                try {
+                    fs.unlinkSync(fullPath);
+                } catch(e) {
+                    console.error(e);
+                }
+
+                this.removeResponsiveImages(fullPath);
+            }
+        }
+    }
+
+    /*
+     * Remove unused responsive images
+     */
+    removeResponsiveImages(originalPath) {
+        let themesHelper = new Themes(this.application, { site: this.site });
+        let currentTheme = themesHelper.currentTheme();
+
+        // If there is no selected theme
+        if (currentTheme === 'not selected') {
+            return;
+        }
+
+        // Load theme config
+        let themeConfig = Utils.loadThemeConfig(path.join(this.siteDir, 'input'), currentTheme);
+
+        // check if responsive images config exists
+        if(Utils.responsiveImagesConfigExists(themeConfig)) {
+            let dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
+            let featuredDimensions = Utils.responsiveImagesDimensions(themeConfig, 'tagImages');
+
+            if (featuredDimensions !== false) {
+                featuredDimensions.forEach(item => {
+                    if (dimensions.indexOf(item) === -1) {
+                        dimensions.push(item);
+                    }
+                });
+            }
+
+            let responsiveImagesDir = path.parse(originalPath).dir;
+            responsiveImagesDir = path.join(responsiveImagesDir, 'responsive');
+
+            if (typeof dimensions === "boolean") {
+                return;
+            }
+
+            // Remove responsive images of each size
+            for(let dimensionName of dimensions) {
+                let filename = path.parse(originalPath).name;
+                let extension = path.parse(originalPath).ext;
+                let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
+
+                if(Utils.fileExists(responsiveImagePath)){
+                    fs.unlinkSync(responsiveImagePath);
+                }
+            }
+        }
     }
 }
 
