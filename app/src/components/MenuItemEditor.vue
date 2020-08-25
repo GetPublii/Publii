@@ -436,4 +436,16 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
+
+.options-sidebar {
+    
+    h2 {              
+        margin-bottom: 1.2rem;
+    }
+
+    &-buttons {
+        border: none;
+        padding-top: 1.8rem;
+    }
+}
 </style>
