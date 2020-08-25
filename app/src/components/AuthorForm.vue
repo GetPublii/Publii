@@ -531,7 +531,7 @@ export default {
         }
 
         &.is-open {
-            .post-editor-settings {
+            .author-settings {
                 &-label {
                     left: -3.6rem;
                 }

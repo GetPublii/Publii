@@ -73,6 +73,12 @@
                         class="tag-settings-content"
                         ref="image-content">
                         <label>
+                            <div 
+                                v-if="!currentThemeHasSupportForTagImages"
+                                slot="note"
+                                class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />       
+                                <p>Your theme does not support featured images for tags.</p>
+                            </div>
                             <image-upload
                                 slot="field"
                                 type="small"
@@ -84,12 +90,6 @@
                                 :onAdd="() => { hasFeaturedImage = true } "
                                 v-model="tagData.additionalData.featuredImage" />
 
-                            <small 
-                                v-if="!currentThemeHasSupportForTagImages"
-                                slot="note"
-                                class="note not-supported">
-                                Your theme does not support featured images for tags.
-                            </small>
 
                             <div
                                 v-if="hasFeaturedImage"
@@ -470,11 +470,7 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
-
-.note.not-supported {
-    color: var(--warning);
-    font-style: italic;
-}
+@import '../scss/notifications.scss';
 
 .tag-settings {
     max-height: 0;
@@ -486,6 +482,10 @@ export default {
 
         .image-uploader {
             margin-top: 0;
+        }
+        
+        .msg {
+            margin: 0 0 2rem;
         }
     }
 
@@ -517,7 +517,7 @@ export default {
         }
 
         &.is-open {
-            .post-editor-settings {
+            .tag-settings {
                 &-label {
                     left: -3.6rem;
                 }

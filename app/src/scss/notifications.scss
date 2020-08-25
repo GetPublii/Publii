@@ -3,6 +3,7 @@
     border-left: 4px solid transparent;
     color: var(--text-light-color);
     font-size: 1.4rem;
+    line-height: 1.6;
     padding: 2rem 2rem 2rem 2.5rem;
 
     a {
@@ -19,6 +20,15 @@
 
         & > * {          
             margin: 0;
+        }
+    }
+
+    &-small {
+        line-height: 1.4;
+        padding: 1.4rem 1.4rem 1.4rem 1.7rem;
+
+        &.msg-icon {
+            grid-gap: 1.2rem;
         }
     }
 

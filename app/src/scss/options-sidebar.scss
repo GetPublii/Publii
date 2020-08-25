@@ -34,7 +34,7 @@
         border-bottom: 1px solid var(--input-border-color);
         font-size: 1.8rem;
         font-weight: 400;
-        margin-top: -0.2rem;
+        margin: -0.2rem 0 0;
         padding: 0 0 1.5rem;
         text-transform: none;
     }
@@ -92,6 +92,7 @@
     }
 
     &-buttons {
-        padding: 2rem 0 0 0;
+        border-top: 1px solid var(--input-border-color);
+        padding: 3rem 0 0 0;
     }
 }
