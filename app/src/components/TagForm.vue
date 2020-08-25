@@ -72,13 +72,13 @@
                     <div 
                         class="tag-settings-content"
                         ref="image-content">
-                        <label>
-                            <div 
-                                v-if="!currentThemeHasSupportForTagImages"
-                                slot="note"
-                                class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />       
-                                <p>Your theme does not support featured images for tags.</p>
-                            </div>
+                        <div 
+                            v-if="!currentThemeHasSupportForTagImages"
+                            slot="note"
+                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />       
+                            <p>Your theme does not support featured images for tags.</p>
+                        </div>
+                        <label>                          
                             <image-upload
                                 slot="field"
                                 type="small"
@@ -483,7 +483,7 @@ export default {
         .image-uploader {
             margin-top: 0;
         }
-        
+
         .msg {
             margin: 0 0 2rem;
         }
