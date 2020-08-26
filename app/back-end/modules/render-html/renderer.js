@@ -1508,7 +1508,7 @@ class Renderer {
         }
 
         // minify CSS if user enabled it
-        if(this.siteConfig.advanced.cssCompression === 1) {
+        if (this.siteConfig.advanced.cssCompression) {
             styleCSS = new CleanCSS({ compatibility: '*', rebase: false }).minify(styleCSS);
             console.log('CSS stats: ' + styleCSS.stats.efficiency + ' (' + styleCSS.stats.minifiedSize + '/' + styleCSS.stats.originalSize + ')');
             styleCSS = styleCSS.styles;
