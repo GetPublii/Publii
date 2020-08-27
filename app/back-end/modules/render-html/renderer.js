@@ -75,6 +75,7 @@ class Renderer {
             authors: {},
             authorsPostCounts: {},
             featuredImages: {
+                authors: {},
                 posts: {},
                 tags: {}
             }
@@ -1722,6 +1723,7 @@ class Renderer {
             authors: {},
             authorsPostCounts: {},
             featuredImages: {
+                authors: {},
                 posts: {},
                 tags: {}
             }

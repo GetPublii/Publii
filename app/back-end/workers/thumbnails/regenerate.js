@@ -188,6 +188,9 @@ function getImageType(context, image, catalog) {
     } else if(catalog.indexOf('tags') > -1) {
         console.log('(i) Tag image detected (' + image + ')', preparedCatalog);
         imageType = 'tagImages';
+    } else if(catalog.indexOf('authors') > -1) {
+        console.log('(i) Author image detected (' + image + ')', preparedCatalog);
+        imageType = 'authorImages';
     } else if(catalog.substr(-7) === 'gallery') {
         console.log('(i) Gallery image detected (' + image + ')', preparedCatalog);
         imageType = 'galleryImages';

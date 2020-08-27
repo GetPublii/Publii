@@ -211,6 +211,10 @@ class ContentHelper {
             dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'tagImages');
             dimensionsData = UtilsHelper.responsiveImagesData(themeConfig, 'tagImages');
             groups = UtilsHelper.responsiveImagesGroups(themeConfig, 'tagImages');
+        } else if (type === 'author') {
+            dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'authorImages');
+            dimensionsData = UtilsHelper.responsiveImagesData(themeConfig, 'authorImages');
+            groups = UtilsHelper.responsiveImagesGroups(themeConfig, 'authorImages');
         }
 
         if(!dimensions) {
@@ -268,13 +272,11 @@ class ContentHelper {
 
         if (type === 'tag' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'tagImages')) {
             return themeConfig.files.responsiveImages.tagImages.sizes;
-        }
-
-        if (type === 'post' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'featuredImages')) {
+        } else if (type === 'author' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'authorImages')) {
+            return themeConfig.files.responsiveImages.authorImages.sizes;
+        } else if (type === 'post' && UtilsHelper.responsiveImagesConfigExists(themeConfig, 'featuredImages')) {
             return themeConfig.files.responsiveImages.featuredImages.sizes;
-        }
-
-        if (UtilsHelper.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
+        } else if (UtilsHelper.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
             return themeConfig.files.responsiveImages.contentImages.sizes;
         }
 

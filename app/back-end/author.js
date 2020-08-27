@@ -1,9 +1,12 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const Model = require('./model.js');
 const Authors = require('./authors.js');
 const Posts = require('./posts.js');
 const slug = require('./helpers/slug');
+const ImageHelper = require('./helpers/image.helper.js');
+const Themes = require('./themes.js');
+const Utils = require('./helpers/utils.js');
 
 /**
  * Author Model - used for operations connected with author management
@@ -21,6 +24,10 @@ class Author extends Model {
         this.authorsData = new Authors(appInstance, authorData);
         this.postsData = new Posts(appInstance, authorData);
         this.storeMode = storeMode;
+
+        if (authorData.additionalData) {
+            this.additionalData = authorData.additionalData;
+        }
 
         if(authorData.name || authorData.name === '') {
             this.name = authorData.name;
@@ -73,6 +80,8 @@ class Author extends Model {
             return this.updateAuthor();
         }
 
+        this.checkAndCleanImages();
+
         return this.addAuthor();
     }
 
@@ -89,6 +98,27 @@ class Author extends Model {
             config: this.config,
             additionalData: this.additionalData
         });
+
+        // Get the newly added item ID if necessary
+        if (this.id === 0) {
+            this.id = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
+
+            // Move images from the temp directory
+            let tempDirectoryExists = true;
+            let tempImagesDir = path.join(this.siteDir, 'input', 'media', 'authors', 'temp');
+
+            try {
+                fs.statSync(tempImagesDir).isDirectory();
+            } catch (err) {
+                tempDirectoryExists = false;
+            }
+
+            if (tempDirectoryExists) {
+                let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'authors', (this.id).toString());
+                fs.copySync(tempImagesDir, finalImagesDir);
+                fs.removeSync(tempImagesDir);
+            }
+        }
 
         return {
             status: true,
@@ -207,6 +237,8 @@ class Author extends Model {
             id: this.id.toString()
         });
 
+        ImageHelper.deleteImagesDirectory(this.siteDir, 'authors', this.id);
+
         return {
             status: true,
             message: 'author-deleted',
@@ -214,6 +246,132 @@ class Author extends Model {
             postsAuthors: this.postsData.loadAuthorsXRef(),
             authors: this.authorsData.load()
         };
+    }
+
+    /*
+     * Remove unused images
+     */
+    checkAndCleanImages (cancelEvent = false) {
+        let authorDir = this.id;
+
+        if(this.id === 0) {
+            authorDir = 'temp';
+        }
+
+        let imagesDir = path.join(this.siteDir, 'input', 'media', 'authors', (authorDir).toString());
+        let authorDirectoryExists = true;
+
+        try {
+            fs.statSync(imagesDir).isDirectory();
+        } catch (err) {
+            authorDirectoryExists = false;
+        }
+
+        if(!authorDirectoryExists) {
+            return;
+        }
+
+        let images = fs.readdirSync(imagesDir);
+        this.cleanImages(images, imagesDir, cancelEvent);
+    }
+
+    /*
+     * Removes images from a given image dir
+     */
+    cleanImages(images, imagesDir, cancelEvent) {
+        let authorDir = this.id;
+        let featuredImage = path.parse(this.additionalData.featuredImage).base;
+
+        // If post is cancelled - get the previous featured image
+        if (cancelEvent && this.id !== 0) {
+            let featuredImageSqlQuery = `SELECT additional_data FROM authors WHERE id = @id`;
+
+            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
+                id: this.id 
+            });
+
+            if (featuredImageResult) {
+                try {
+                    featuredImageResult = JSON.parse(featuredImageResult);
+                    featuredImage = featuredImageResult.featuredImage;
+                } catch (e) {
+                    console.log('(!) An issue occurred during parsing author additional data', this.id);
+                }
+            }
+        }
+
+        if (this.id === 0) {
+            authorDir = 'temp';
+        }
+
+        // Iterate through images
+        for (let i in images) {
+            let imagePath = images[i];
+            let fullPath = path.join(imagesDir, imagePath);
+
+            // Skip dirs and symlinks
+            if (imagePath === '.' || imagePath === '..' || imagePath === 'responsive') {
+                continue;
+            }
+
+            if ((cancelEvent && authorDir === 'temp') || featuredImage !== imagePath) {
+                try {
+                    fs.unlinkSync(fullPath);
+                } catch(e) {
+                    console.error(e);
+                }
+
+                this.removeResponsiveImages(fullPath);
+            }
+        }
+    }
+
+    /*
+     * Remove unused responsive images
+     */
+    removeResponsiveImages(originalPath) {
+        let themesHelper = new Themes(this.application, { site: this.site });
+        let currentTheme = themesHelper.currentTheme();
+
+        // If there is no selected theme
+        if (currentTheme === 'not selected') {
+            return;
+        }
+
+        // Load theme config
+        let themeConfig = Utils.loadThemeConfig(path.join(this.siteDir, 'input'), currentTheme);
+
+        // check if responsive images config exists
+        if(Utils.responsiveImagesConfigExists(themeConfig)) {
+            let dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
+            let featuredDimensions = Utils.responsiveImagesDimensions(themeConfig, 'authorImages');
+
+            if (featuredDimensions !== false) {
+                featuredDimensions.forEach(item => {
+                    if (dimensions.indexOf(item) === -1) {
+                        dimensions.push(item);
+                    }
+                });
+            }
+
+            let responsiveImagesDir = path.parse(originalPath).dir;
+            responsiveImagesDir = path.join(responsiveImagesDir, 'responsive');
+
+            if (typeof dimensions === "boolean") {
+                return;
+            }
+
+            // Remove responsive images of each size
+            for(let dimensionName of dimensions) {
+                let filename = path.parse(originalPath).name;
+                let extension = path.parse(originalPath).ext;
+                let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
+
+                if(Utils.fileExists(responsiveImagePath)){
+                    fs.unlinkSync(responsiveImagePath);
+                }
+            }
+        }
     }
 }
 

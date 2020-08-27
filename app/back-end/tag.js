@@ -29,8 +29,6 @@ class Tag extends Model {
             this.additionalData = tagData.additionalData;
             this.prepareTagName();
         }
-
-        console.log(tagData);
     }
 
     /*

@@ -140,7 +140,7 @@ export default {
         labelText () {
             let label = 'Drop to upload your photo or';
 
-            if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages') {
+            if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages' && this.imageType !== 'authorImages') {
                 label = 'Drop featured image here or';
             }
 
@@ -173,14 +173,18 @@ export default {
             return false;
         },
         mediaPath () {
-            if (this.itemId && this.imageType !== 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
-            } else if (this.itemId === 0 && this.imageType !== 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
-            } else if (this.itemId && this.imageType === 'tagImages') {
+            if (this.itemId && this.imageType === 'tagImages') {
                 return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
+            } else if (this.itemId && this.imageType === 'authorImages') {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
             } else if (this.itemId === 0 && this.imageType === 'tagImages') {
                 return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
+            } else if (this.itemId === 0 && this.imageType === 'authorImages') {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+            } else if (this.itemId === 0) {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+            } else if (this.itemId) {
+                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
 
             if (this.addMediaFolderPath) {
@@ -236,9 +240,10 @@ export default {
             if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'tagImages';
-            }
-
-            if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages') {
+            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = 'authorImages';
+            } else if ((this.itemId || this.itemId === 0)) {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
             }

@@ -105,6 +105,9 @@ class Image extends Model {
         } else if (this.imageType === 'tagImages' && this.id) {
             dirPath = path.join(this.siteDir, 'input', 'media', 'tags', (this.id).toString());
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'tags', (this.id).toString(), 'responsive');
+        } else if (this.imageType === 'authorImages' && this.id) {
+            dirPath = path.join(this.siteDir, 'input', 'media', 'authors', (this.id).toString());
+            responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'authors', (this.id).toString(), 'responsive');
         } else {
             dirPath = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString());
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString(), 'responsive');
@@ -252,6 +255,9 @@ class Image extends Model {
         } else if (imageType === 'tagImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'tagImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'tagImages');
+        } else if (imageType === 'authorImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
+            dimensions = Utils.responsiveImagesDimensions(themeConfig, 'authorImages');
+            dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'authorImages');
         } else if (imageType === 'contentImages' && Utils.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'contentImages');

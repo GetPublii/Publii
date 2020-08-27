@@ -20,6 +20,8 @@ class FeaturedImageItem {
 
         if (type === 'tagImages') {
             this.itemType = 'tag';
+        } else if (type === 'authorImages') {
+            this.itemType = 'author';
         }
 
         this.prepareData();

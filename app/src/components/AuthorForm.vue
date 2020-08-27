@@ -79,7 +79,7 @@
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="author-settings-label">Avatar</span>
+                    <span class="author-settings-label">Avatar and featured image</span>
                 </div>
 
                 <div
@@ -108,6 +108,52 @@
                             <small class="note">
                                 Use <a href="https://gravatar.com/" target="_blank">Gravatar </a> to provide your author avatar
                             </small>
+                        </label>
+
+                        <label>
+                            <span>Featured image:</span>
+                            <image-upload
+                                slot="field"
+                                type="small"
+                                id="featured-image"
+                                :item-id="authorData.id"
+                                ref="author-featured-image"
+                                imageType="authorImages"
+                                :onRemove="() => { hasFeaturedImage = false }"
+                                :onAdd="() => { hasFeaturedImage = true } "
+                                v-model="authorData.additionalData.featuredImage" />
+
+                            <small 
+                                v-if="!currentThemeHasSupportForAuthorImages"
+                                slot="note"
+                                class="note not-supported">
+                                Your theme does not support featured images for authors.
+                            </small>
+
+                            <div
+                                v-if="hasFeaturedImage"
+                                class="image-uploader-settings-form">
+                                <label>Alternative text
+                                    <text-input
+                                        ref="featured-image-alt"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="authorData.additionalData.featuredImageAlt" />
+                                </label>
+
+                                <label>Caption
+                                    <text-input
+                                        ref="featured-image-caption"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="authorData.additionalData.featuredImageCaption" />
+                                </label>
+
+                                <label>Credits
+                                    <text-input
+                                        ref="featured-image-credits"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="authorData.additionalData.featuredImageCredits" />
+                                </label>
+                            </div>
                         </label>
                     </div>
                 </div>
@@ -233,10 +279,11 @@ import crypto from 'crypto';
 const mainProcess = remote.require('./main.js');
 
 export default {
-    name: 'options-sidebar',
+    name: 'author-form-sidebar',
     data () {
         return {
             errors: [],
+            hasFeaturedImage: false,
             openedItem: 'basic',
             authorData: {
                 id: 0,
@@ -249,11 +296,20 @@ export default {
                 metaTitle: '',
                 metaDescription: '',
                 template: '',
-                visibleIndexingOptions: false
+                visibleIndexingOptions: false,
+                additionalData: {
+                    featuredImage: '',
+                    featuredImageAlt: '',
+                    featuredImageCaption: '',
+                    featuredImageCredits: ''
+                }
             }
         };
     },
     computed: {
+        currentThemeHasSupportForAuthorImages () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorImages;
+        },
         metaFieldAttrs: function() {
             let text = 'Leave it blank to use a default page title';
 
@@ -282,6 +338,17 @@ export default {
     },
     mounted () {
         this.$bus.$on('show-author-item-editor', params => {
+            try {
+                if (typeof params.additionalData === 'string' && params.additionalData) {
+                    params.additionalData = JSON.parse(params.additionalData);
+                } else {
+                    params.additionalData = {};
+                }
+            } catch (e) {
+                console.warn('An error occurred during parsing author data for ID: ' + params.id);
+                params.additionalData = {};
+            }
+
             this.errors = [];
             this.authorData.id = params.id || 0;
             this.authorData.name = params.name || '';
@@ -295,6 +362,15 @@ export default {
             this.authorData.metaDescription = params.metaDescription || '';
             this.authorData.template = params.template || '';
             this.authorData.visibleIndexingOptions = params.visibleIndexingOptions || false;
+            this.authorData.additionalData = {};
+            this.authorData.additionalData.featuredImage = params.additionalData.featuredImage || '';
+            this.authorData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
+            this.authorData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
+            this.authorData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
+
+            if (this.authorData.additionalData && this.authorData.additionalData.featuredImage) {
+                this.hasFeaturedImage = true;
+            }
         });
     },
     methods: {
@@ -320,7 +396,7 @@ export default {
                     metaDescription: this.authorData.metaDescription,
                     template: this.authorData.template
                 }),
-                additionalConfig: ''
+                additionalData: JSON.stringify(this.authorData.additionalData)
             };
 
             this.saveData(authorData);
@@ -350,6 +426,13 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-author-item-editor');
+            ipcRenderer.send('app-author-cancel', {
+                site: this.$store.state.currentSite.config.name,
+                id: this.authorData.id,
+                additionalData: {
+                    featuredImage: this.authorData.additionalData.featuredImage
+                }
+            });
         },
         showMessage(message) {
             let msg = 'New author has been created';
@@ -597,5 +680,10 @@ export default {
             }
         }
     }            
+}
+
+.note.not-supported {
+    color: var(--warning);
+    font-style: italic;
 }
 </style>

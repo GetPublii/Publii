@@ -33,6 +33,8 @@ function returnSizesAttribute (group) {
             output = ' sizes="' + responsiveConfig.optionImages.sizes[group] + '" ';
         } else if (responsiveConfig.optionImages && responsiveConfig.tagImages.sizes) {
             output = ' sizes="' + responsiveConfig.tagImages.sizes[group] + '" ';
+        } else if (responsiveConfig.optionImages && responsiveConfig.authorImages.sizes) {
+            output = ' sizes="' + responsiveConfig.authorImages.sizes[group] + '" ';
         } else if(responsiveConfig.contentImages && responsiveConfig.contentImages.sizes) {
             output = ' sizes="' + responsiveConfig.contentImages.sizes[group] + '" ';
         }
@@ -41,6 +43,8 @@ function returnSizesAttribute (group) {
             output = ' sizes="' + responsiveConfig.optionImages.sizes + '" ';
         } else if(responsiveConfig.optionImages && responsiveConfig.tagImages.sizes) {
             output = ' sizes="' + responsiveConfig.tagImages.sizes + '" ';
+        } else if(responsiveConfig.optionImages && responsiveConfig.authorImages.sizes) {
+            output = ' sizes="' + responsiveConfig.authorImages.sizes + '" ';
         } else if(responsiveConfig.contentImages && responsiveConfig.contentImages.sizes) {
             output = ' sizes="' + responsiveConfig.contentImages.sizes + '" ';
         }

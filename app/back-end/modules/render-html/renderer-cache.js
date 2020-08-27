@@ -26,6 +26,8 @@ class RendererCache {
         // We need tag posts count before storing tags
         this.getTagPostCounts();
         this.getTags();
+        // Set author-related items
+        this.getFeaturedAuthorImages();
         // We need author posts count before storing tags
         this.getAuthorPostCounts();
         this.getAuthors();
@@ -97,6 +99,46 @@ class RendererCache {
             this.renderer.cachedItems.tagsPostCounts[tagPostCount.id] = tagPostCount.count;
         }
         console.timeEnd('TAGS POST COUNT - STORE');
+    }
+
+    /**
+     * Retrieves authors featured images data
+     */
+    getFeaturedAuthorImages() {
+        console.time('FEATURED AUTHOR IMAGES - QUERY');
+        let authorsData = this.db.prepare(`
+            SELECT
+                a.id AS item_id,
+                a.additional_data AS additional_data
+            FROM
+                authors as a
+            ORDER BY
+                a.id DESC
+        `).all();
+        console.timeEnd('FEATURED AUTHOR IMAGES - QUERY');
+
+        console.time('FEATURED AUTHOR IMAGES - STORE');
+        for (let i = 0; i < authorsData.length; i++) {
+            let additionalData = false;
+            
+            if (authorsData[i].additional_data) {
+                additionalData = JSON.parse(authorsData[i].additional_data);
+            }
+
+            if (additionalData && additionalData.featuredImage) {
+                new FeaturedImage({
+                    id: 0,
+                    item_id: authorsData[i].item_id,
+                    url: additionalData.featuredImage,
+                    additional_data: JSON.stringify({
+                        alt: additionalData.featuredImageAlt,
+                        caption: additionalData.featuredImageCaption,
+                        credits: additionalData.featuredImageCredits
+                    })
+                }, this.renderer, 'authorImages');
+            }
+        }
+        console.timeEnd('FEATURED AUTHOR IMAGES - STORE');
     }
 
     /**

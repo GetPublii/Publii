@@ -226,6 +226,7 @@ export default {
                 metaDescription: '',
                 template: '',
                 authorTemplates: [],
+                additionalData: {},
                 visibleIndexingOptions: false
             }));
 

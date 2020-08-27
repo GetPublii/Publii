@@ -296,9 +296,12 @@ export default {
             try {
                 if (typeof params.additionalData === 'string' && params.additionalData) {
                     params.additionalData = JSON.parse(params.additionalData);
+                } else {
+                    params.additionalData = {};
                 }
             } catch (e) {
                 console.warn('An error occurred during parsing tag data for ID: ' + params.id);
+                params.additionalData = {};
             }
 
             this.errors = [];
@@ -315,7 +318,7 @@ export default {
             this.tagData.additionalData.metaDescription = params.additionalData.metaDescription || '';
             this.tagData.additionalData.template = params.additionalData.template || '';
 
-            if (this.tagData.additionalData.featuredImage) {
+            if (this.tagData.additionalData && this.tagData.additionalData.featuredImage) {
                 this.hasFeaturedImage = true;
             }
         });

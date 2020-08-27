@@ -64,6 +64,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             metaDescription: config.metaDescription,
             template: config.template,
             authorTemplates: authorTemplates,
+            additionalData: author.additionalData,
             visibleIndexingOptions: indexingOptionsEnabled
         };
     });

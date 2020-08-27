@@ -107,7 +107,7 @@ class Files {
     static async copyMediaFiles (inputDir, outputDir, postIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        let dirs = ['website', 'files', 'tags'];
+        let dirs = ['website', 'files', 'tags', 'authors'];
 
         if (postIDs[0] === 0) {
             postIDs[0] = 'temp';
@@ -145,6 +145,10 @@ class Files {
 
         if (UtilsHelper.dirExists(path.join(basePathOutput, 'tags', 'temp'))) {
             fs.removeSync(path.join(basePathOutput, 'tags', 'temp'));
+        }
+
+        if (UtilsHelper.dirExists(path.join(basePathOutput, 'authors', 'temp'))) {
+            fs.removeSync(path.join(basePathOutput, 'authors', 'temp'));
         }
 
         DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));

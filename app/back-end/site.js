@@ -69,6 +69,7 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'posts'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'authors'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'themes'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'languages'));
         fs.mkdirSync(path.join(this.siteDir, 'output'));
@@ -231,11 +232,14 @@ class Site {
         let mediaPath = path.join(this.siteDir, 'input', 'media');
         let catalogs = fs.readdirSync(path.join(mediaPath, 'posts'));
         let tagCatalogs = fs.readdirSync(path.join(mediaPath, 'tags'));
+        let authorsCatalogs = fs.readdirSync(path.join(mediaPath, 'authors'));
         let galleryCatalogs = [];
         catalogs = catalogs.map(catalog => 'posts/' + catalog);
         tagCatalogs = tagCatalogs.map(catalog => 'tags/' + catalog);
+        authorsCatalogs = authorsCatalogs.map(catalog => 'authors/' + catalog);
         catalogs.push('website');
         catalogs = catalogs.concat(tagCatalogs);
+        catalogs = catalogs.concat(authorsCatalogs);
         catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
 
         for(let catalog of catalogs) {
@@ -527,6 +531,7 @@ class Site {
      * - input/root-files directory
      * - input/media/files directory
      * - input/media/tags directory
+     * - input/media/authors directory
      *
      * Moves .htaccess, robots.txt and _redirects files to root-files directory
      *
@@ -536,6 +541,7 @@ class Site {
         let siteBasePath = path.join(appInstance.sitesDir, siteName, 'input');
         let rootFilesPath = path.join(siteBasePath, 'root-files');
         let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
+        let authorImagesPath = path.join(siteBasePath, 'media', 'authors');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
 
         if(!UtilsHelper.dirExists(rootFilesPath)) {
@@ -548,6 +554,10 @@ class Site {
 
         if(!UtilsHelper.dirExists(tagImagesPath)) {
             fs.mkdirSync(tagImagesPath);
+        }
+
+        if(!UtilsHelper.dirExists(authorImagesPath)) {
+            fs.mkdirSync(authorImagesPath);
         }
 
         // Move files - if exists to new root-files directory
