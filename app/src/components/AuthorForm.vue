@@ -79,7 +79,7 @@
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="author-settings-label">Avatar and featured image</span>
+                    <span class="author-settings-label">Avatar and Featured image</span>
                 </div>
 
                 <div
@@ -110,51 +110,53 @@
                             </small>
                         </label>
 
-                        <label>
-                            <span>Featured image:</span>
-                            <image-upload
-                                slot="field"
-                                type="small"
-                                id="featured-image"
-                                :item-id="authorData.id"
-                                ref="author-featured-image"
-                                imageType="authorImages"
-                                :onRemove="() => { hasFeaturedImage = false }"
-                                :onAdd="() => { hasFeaturedImage = true } "
-                                v-model="authorData.additionalData.featuredImage" />
-
-                            <small 
+                        <div>
+                            <label class="no-margin">Featured image:</label>
+                            <div 
                                 v-if="!currentThemeHasSupportForAuthorImages"
                                 slot="note"
-                                class="note not-supported">
-                                Your theme does not support featured images for authors.
-                            </small>
-
-                            <div
-                                v-if="hasFeaturedImage"
-                                class="image-uploader-settings-form">
-                                <label>Alternative text
-                                    <text-input
-                                        ref="featured-image-alt"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="authorData.additionalData.featuredImageAlt" />
-                                </label>
-
-                                <label>Caption
-                                    <text-input
-                                        ref="featured-image-caption"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="authorData.additionalData.featuredImageCaption" />
-                                </label>
-
-                                <label>Credits
-                                    <text-input
-                                        ref="featured-image-credits"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="authorData.additionalData.featuredImageCredits" />
-                                </label>
+                                class="msg msg-small msg-icon msg-alert">
+                                <icon name="warning" size="m" />       
+                                <p>Your theme does not support featured images for authors.</p>
                             </div>
-                        </label>
+                            <label>
+                                <image-upload
+                                    slot="field"
+                                    type="small"
+                                    id="featured-image"
+                                    :item-id="authorData.id"
+                                    ref="author-featured-image"
+                                    imageType="authorImages"
+                                    :onRemove="() => { hasFeaturedImage = false }"
+                                    :onAdd="() => { hasFeaturedImage = true } "
+                                    v-model="authorData.additionalData.featuredImage" />
+
+                                <div
+                                    v-if="hasFeaturedImage"
+                                    class="image-uploader-settings-form">
+                                    <label>Alternative text
+                                        <text-input
+                                            ref="featured-image-alt"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="authorData.additionalData.featuredImageAlt" />
+                                    </label>
+
+                                    <label>Caption
+                                        <text-input
+                                            ref="featured-image-caption"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="authorData.additionalData.featuredImageCaption" />
+                                    </label>
+
+                                    <label>Credits
+                                        <text-input
+                                            ref="featured-image-credits"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="authorData.additionalData.featuredImageCredits" />
+                                    </label>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -565,11 +567,13 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
+@import '../scss/notifications.scss';
     
 .options-sidebar {
     .use-gravatar {
         font-size: 1.6rem;
         font-weight: 400;
+        margin-bottom: 2rem;
     }
 }
 
@@ -583,6 +587,10 @@ export default {
 
         .image-uploader {
             margin-top: 0;
+        }
+
+        .msg {
+            margin: 0 0 2rem;
         }
     }
 
@@ -679,11 +687,10 @@ export default {
                 width: 70%;
             }
         }
-    }            
-}
 
-.note.not-supported {
-    color: var(--warning);
-    font-style: italic;
+        &.no-margin {
+            margin: 0;
+        }
+    }            
 }
 </style>
