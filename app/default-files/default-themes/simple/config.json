@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.2.3.0",
+    "version": "2.3.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -17,6 +17,12 @@
             "afterPost": "After every post"
         }
     },
+    "supportedFeatures": {
+        "blockEditor": true,
+        "tagsList": true,
+        "tagImages": true,
+        "authorImages": true
+   },
     "config": [
 
         {
@@ -187,6 +193,20 @@
         {
             "name": "separator",
             "type": "separator",
+            "label": "Tags Page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "tagsDescription",
+            "group": "Layout",
+            "label": "Tag description",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
             "label": "Tag Page",
             "group": "Layout",
             "size": "big"
@@ -195,7 +215,7 @@
             "name": "tagFeaturedImage",
             "group": "Layout",
             "label": "Featured image",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
@@ -1544,6 +1564,66 @@
                         "width": 1600,
                         "height": "auto",
                         "group": "post"
+                    }
+                }
+            },
+
+            "tagImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
+                    }
+                }
+            },
+
+            "authorImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
                     }
                 }
             },

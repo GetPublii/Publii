@@ -1,28 +1,51 @@
 {{> head}}
 {{> top}}
 <main>
-   <div class="hero">
-      {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-         <figure class="hero__image hero__image--overlay">
-            <img
-               src="{{@config.custom.uploadHero}}"
-               {{#if @config.site.responsiveImages}}
-                  {{responsiveImageAttributes @config.custom.uploadHero}}
-               {{/if}}
-               {{ lazyload "eager" }}
-               {{imageDimensions @config.custom.uploadHero}}
-               alt="{{@config.custom.uploadHeroAlt}}">
+   {{#tag}}
+      <div class="hero">
+         {{#featuredImage}}
+            {{#if url}}
+               <figure class="hero__image hero__image--overlay">                      
+                  <img
+                     src="{{url}}"
+                     {{#if @config.site.responsiveImages}}                           
+                           {{responsiveImageAttributes 'tagImage' srcset sizes}}
+                     {{/if}}
+                     {{ lazyload "eager" }}
+                     height="{{height}}"
+                     width="{{width}}"
+                     alt="{{alt}}">
+                     
+                  {{#checkIfAny caption credits}}
+                     <figcaption>
+                        {{caption}}
+                        {{credits}}
+                     </figcaption>                      
+                  {{/checkIfAny}}                      
+               </figure>
+            {{else}}
+               {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+                  <figure class="hero__image hero__image--overlay">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{#if @config.site.responsiveImages}}
+                           {{responsiveImageAttributes @config.custom.uploadHero}}
+                        {{/if}}
+                        {{ lazyload "eager" }}
+                        {{imageDimensions @config.custom.uploadHero}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
 
-            {{#if @config.custom.uploadHeroCaption}}
-               <figcaption>
-                  {{@config.custom.uploadHeroCaption}}
-               </figcaption>
+                     {{#if @config.custom.uploadHeroCaption}}
+                        <figcaption>
+                           {{@config.custom.uploadHeroCaption}}
+                        </figcaption>
+                     {{/if}}
+                  </figure>
+               {{/checkIfAll}}
             {{/if}}
-         </figure>
-      {{/checkIfAll}}
-      <header class="hero__content">
-         <div class="wrapper">
-            {{#tag}}
+         {{/featuredImage}}
+         <header class="hero__content">
+            <div class="wrapper">           
                <h1>
                   {{name}}
                   <sup>({{postsNumber}})</sup>
@@ -31,15 +54,15 @@
                   <p>
                      {{description}}
                   </p>
-               {{/if}}
-            {{/tag}}
-         </div>
-      </header>
-   </div>
-   <div class="feed">
+               {{/if}}          
+            </div>
+         </header>
+      </div>
+   {{/tag}}
+   <div class="feed wrapper">
       {{#each posts}}
          <article class="feed__item">
-            <header class="wrapper">
+            <header>
                {{#checkIfAny @config.custom.tagAvatar @config.custom.tagAuthor @config.custom.tagDate}}
                   <div class="feed__meta">
                      {{#author}}
@@ -92,7 +115,7 @@
                   {{/if}}
                {{/featuredImage}}
             {{/if}}
-            <div class="wrapper">
+            <div>
                {{#if hasCustomExcerpt}}
                   {{{ excerpt }}}
                {{else}}
