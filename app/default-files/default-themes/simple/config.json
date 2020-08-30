@@ -58,7 +58,6 @@
         }
     ],
     "customConfig": [
-
         {
             "name": "pageMargin",
             "label": "Page width",
@@ -287,7 +286,22 @@
             "label": "Read more button",
             "value": true,
             "type": "checkbox"
-        },   
+        },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Post page",
+            "group": "Layout",
+            "size": "big"
+        }, 
+        {
+            "name": "relatedPostsNumber",
+            "label": "Related post",
+            "group": "Layout",
+            "note": "Specify number of related posts to show. Zero '0' means no posts.",
+            "value": "3",
+            "type": "text"
+        },
         {
             "name": "navbarHeight",
             "group": "Navbar",
