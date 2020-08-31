@@ -2,7 +2,7 @@
 {{> top}}
 <main>
    {{#author}}
-      <div class="hero">
+      <div class="hero author">
          {{#featuredImage}}
             {{#if url}}
                <figure class="hero__image hero__image--overlay">                      
@@ -59,7 +59,15 @@
                </h1>
                {{#if description}}
                   <p>{{description}}</p>
-               {{/if}}           
+               {{/if}}   
+               {{#if website}}
+                  <p class="post__meta post__meta--author author__website">
+                     <svg height="24" width="24" fill="currentColor" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#website"/>
+                     </svg>
+                     <a href="{{website}}" target="_blank" rel="nofollow noreferrer noopener">{{ translate 'author.visitWebsite' }}</a>
+                  </p>
+               {{/if}}  
             </div>
          </header>
       </div>
