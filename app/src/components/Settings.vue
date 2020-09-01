@@ -629,7 +629,7 @@
                                 slot="note"
                                 class="note">
                                 Prefixes entered here will be added before the tag slug in the URL e.g. <strong>https://example.com/TAG_PREFIX/tag-slug</strong>.<br>
-                                You can leave it empty if use of the clean URLs is disabled.
+                                You can leave it empty if use of the pretty URLs is disabled.
                             </small>
                         </field>
 
