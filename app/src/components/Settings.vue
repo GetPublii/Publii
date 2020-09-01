@@ -629,7 +629,7 @@
                                 slot="note"
                                 class="note">
                                 Prefixes entered here will be added before the tag slug in the URL e.g. <strong>https://example.com/TAG_PREFIX/tag-slug</strong>.<br>
-                                You can leave it empty if use of the pretty URLs is disabled.
+                                You can leave this field blank if the use of pretty URLs is disabled.
                             </small>
                         </field>
 
@@ -805,7 +805,8 @@
                             <small
                                 slot="note"
                                 class="note">
-                                When this option is enabled, og:title and twitter:title metatags will contain page title, instead of the post title, tag name or author name.
+                                When this option is enabled, og:title and twitter:title metatags will contain the page title instead of the post title, tag name or author name.
+                                
                             </small>
                         </field>
 
