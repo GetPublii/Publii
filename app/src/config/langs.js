@@ -92,22 +92,6 @@ module.exports = [
         code: 'et'
     },
     {
-        name: 'German',
-        code: 'de'
-    },
-    {
-        name: 'German (Austria)',
-        code: 'de-at'
-    },
-    {
-        name: 'German (Switzerland)',
-        code: 'de-ch'
-    },
-    {
-        name: 'Greek',
-        code: 'el'
-    },
-    {
         name: 'Finnish',
         code: 'fi'
     },
@@ -166,6 +150,22 @@ module.exports = [
     {
         name: 'French (Switzerland)',
         code: 'fr-ch'
+    },
+    {
+        name: 'German',
+        code: 'de'
+    },
+    {
+        name: 'German (Austria)',
+        code: 'de-at'
+    },
+    {
+        name: 'German (Switzerland)',
+        code: 'de-ch'
+    },
+    {
+        name: 'Greek',
+        code: 'el'
     },
     {
         name: 'Hebrew',
