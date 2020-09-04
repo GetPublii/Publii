@@ -41,6 +41,15 @@
         "nextPost": "Next"
     },
     
+    "tags": {
+        "tagsPageTitle": "Tags",
+        "description": "Collection of all tags"
+    },
+
+    "author": {
+        "visitWebsite": "Visit website"
+    },
+
     "error": {
         "404": "404",
         "message-1": "Page not found",

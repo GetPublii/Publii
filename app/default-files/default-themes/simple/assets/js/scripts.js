@@ -450,16 +450,6 @@ var comments = document.getElementById("js-comments");
       });
  }
 
-// Load comments
-var comments = document.getElementById("js-comments");  
-   if (comments) {
-      comments.addEventListener("click", function() {   
-          comments.classList.toggle("is-hidden");      
-             var container = document.getElementById("js-comments__inner");   
-             container.classList.toggle("is-visible");  
-      });
- }
-
 // Load search input area
 var searchButton = document.querySelector(".js-search-btn");
     searchOverlay = document.querySelector(".js-search-overlay");
