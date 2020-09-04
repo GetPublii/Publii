@@ -530,6 +530,23 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-api-rate-limiting"
+                    label="API rate limiting">
+                    <switcher	
+                        slot="field"	
+                        id="gh-api-rate-limiting"	
+                        key="gh-api-rate-limiting"	
+                        v-model="deploymentSettings.github.apiRateLimiting" />
+                    <small
+                        slot="note"
+                        class="note">
+                        Disable this option only if you are using Github Enterprise with disabled API rate limiting. Otherwhise disabling this option can cause deployment errors.
+                    </small>
+                </field>
+
+
+                <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-server"
                     label="Server">
