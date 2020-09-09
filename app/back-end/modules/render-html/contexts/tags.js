@@ -7,7 +7,7 @@ const RendererContext = require('../renderer-context.js');
  */
 class RendererContextTags extends RendererContext {
     loadData() {
-        this.tags = this.renderer.commonData.tags;
+        this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;

@@ -50,6 +50,14 @@
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :rows="4"></text-area>
                         </label>
+
+                        <label>
+                            <span>Is hidden tag:</span>
+                            <switcher
+                                :key="'is-hidden-tag-' + tagData.id"
+                                id="is-hidden"
+                                v-model="tagData.additionalData.isHidden" />
+                        </label>
                     </div>
                 </div>
             </div>
@@ -254,6 +262,7 @@ export default {
                     featuredImageAlt: '',
                     featuredImageCaption: '',
                     featuredImageCredits: '',
+                    isHidden: false,
                     metaTitle: '',
                     metaDescription: '',
                     template: ''
@@ -296,7 +305,7 @@ export default {
             try {
                 if (typeof params.additionalData === 'string' && params.additionalData) {
                     params.additionalData = JSON.parse(params.additionalData);
-                } else {
+                } else if (typeof params.additionalData !== 'object') {
                     params.additionalData = {};
                 }
             } catch (e) {
@@ -314,6 +323,7 @@ export default {
             this.tagData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
             this.tagData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
             this.tagData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
+            this.tagData.additionalData.isHidden = params.additionalData.isHidden || false;
             this.tagData.additionalData.metaTitle = params.additionalData.metaTitle || '';
             this.tagData.additionalData.metaDescription = params.additionalData.metaDescription || '';
             this.tagData.additionalData.template = params.additionalData.template || '';

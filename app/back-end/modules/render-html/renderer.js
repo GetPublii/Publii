@@ -999,6 +999,11 @@ class Renderer {
         `).all();
         tagsData = tagsData.map(tag => this.cachedItems.tags[tag.id]);
 
+        // Skip hidden tags
+        tagsData = tagsData.filter(tagData => {
+            return tagData.additionalData.isHidden !== true;
+        });
+
         // Remove empty tags - without posts
         if (!this.siteConfig.advanced.displayEmptyTags) {
             tagsData = tagsData.filter(tagData => {

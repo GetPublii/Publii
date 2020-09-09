@@ -23,6 +23,7 @@ class RendererContextPost extends RendererContext {
 
     prepareData() {
         this.post = this.renderer.cachedItems.posts[this.postID];
+        this.post.tags = this.post.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.featuredPosts = this.featuredPosts || [];
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];

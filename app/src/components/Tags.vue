@@ -99,7 +99,14 @@
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
-                        {{ item.name }}
+                        {{ item.name }} 
+
+                        <icon
+                            v-if="item.isHidden"
+                            size="xs"
+                            name="hidden-post"
+                            primaryColor="color-7"
+                            title="This tag is hidden" />
                     </a>
                 </collection-cell>
 
@@ -171,7 +178,10 @@ export default {
     },
     computed: {
         items: function() {
-            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order);
+            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
+                item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                return item;
+            });
         },
         hasTags: function() {
             return this.$store.state.currentSite.tags && !!this.$store.state.currentSite.tags.length;
@@ -226,6 +236,7 @@ export default {
                 slug: '',
                 description: '',
                 additionalData: {
+                    isHidden: false,
                     metaTitle: '',
                     metaDescription: '',
                     template: ''
@@ -355,5 +366,11 @@ export default {
             border-bottom: solid 5px var(--icon-secondary-color);                      
         }
     }
+}
+
+.col > a > .icon {
+    margin-left: 10px;
+    position: relative;
+    top: 2px;
 }
 </style>
