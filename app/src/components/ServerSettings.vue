@@ -137,7 +137,7 @@
 
                 <field
                     id="domain"
-                    label="Domain">
+                    label="Website URL">
                     <dropdown
                         v-if="!deploymentSettings.relativeUrls"
                         slot="field"
