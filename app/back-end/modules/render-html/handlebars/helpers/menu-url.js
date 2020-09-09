@@ -10,6 +10,7 @@ const slug = require('./../../../../helpers/slug');
  * - post
  * - tag
  * - frontpage
+ * - tags
  * - external
  * - internal
  *
@@ -69,6 +70,19 @@ function menuURLHelper(rendererInstance, Handlebars) {
         // Link to the frontpage - just the page domain name
         if(this.type === 'frontpage') {
             output = baseUrl + '/';
+
+            // In the preview mode we have to load URLs with
+            // index.html as filesystem on OS doesn't behave
+            // as the server environment and not redirect to
+            // a proper URL
+            if(rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                output += 'index.html';
+            }
+        }
+
+        // Link to the tags list - just the page domain name with tags prefix
+        if(this.type === 'tags') {
+            output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/';
 
             // In the preview mode we have to load URLs with
             // index.html as filesystem on OS doesn't behave

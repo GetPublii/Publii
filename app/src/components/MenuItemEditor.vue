@@ -201,7 +201,16 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'internal', 'external', 'separator' ];
+            return [ 
+                'post', 
+                'tag', 
+                'author', 
+                'frontpage', 
+                'internal', 
+                'tags', 
+                'external', 
+                'separator' 
+            ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -258,6 +267,7 @@ export default {
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'internal': return 'Internal link';
+                case 'tags': return 'Tags list link';
                 case 'external': return 'External link';
                 case 'separator': return 'Text separator';
             }
@@ -366,6 +376,8 @@ export default {
                 items: []
             };
 
+            console.log('MITEM:', menuItem);
+
             if(this.parentID === '') {
                 this.$store.commit('addNewMenuItem', {
                     menuItem: menuItem,
@@ -415,6 +427,7 @@ export default {
                 case 'author':    return this.authorPage;
                 case 'frontpage': return 'empty';
                 case 'internal':  return this.internalLink;
+                case 'tags':      return 'empty';
                 case 'external':  return this.externalLink;
                 case 'separator': return '';
             }
