@@ -44,7 +44,6 @@ const AstCurrentSiteConfig = {
         tagNoIndexPagination: false,
         tagNoPagination: false,
         metaRobotsTags: 'noindex, follow',
-        renderTagsList: true,
         tagsMetaTitle: 'All tags - %sitename',
         tagsMetaDescription: '',
         metaRobotsTagsList: 'noindex, follow',

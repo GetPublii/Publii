@@ -940,7 +940,7 @@ class Renderer {
             this.siteConfig.advanced.urls.tagsPrefix === '' ||
             !this.themeConfig.supportedFeatures ||
             !this.themeConfig.supportedFeatures.tagsList ||
-            !this.siteConfig.advanced.renderTagsList
+            !this.themeConfig.renderer.renderTagsList
         ) {
             return false;
         }

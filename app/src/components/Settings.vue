@@ -248,21 +248,6 @@
                         </div>
 
                         <field
-                            v-if="advanced.urls.tagsPrefix !== ''"
-                            id="render-tags-list"
-                            label="Render tags list page">
-                            <switcher
-                                slot="field"
-                                id="render-tags-list"
-                                v-model="advanced.renderTagsList" />
-                            <small
-                                slot="note"
-                                class="note">
-                                If this option is enabled the index.html with list of all tags will be rendered in the tags directory.
-                            </small>
-                        </field>
-
-                        <field
                             v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
                             id="tags-list-meta-title"
                             :withCharCounter="true"
