@@ -56,6 +56,7 @@ class RendererContextTags extends RendererContext {
             featuredPosts: this.featuredPosts,
             hiddenPosts: this.hiddenPosts,
             tags: this.tags,
+            tagsNumber: this.tags.length,
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
