@@ -200,7 +200,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'external', 'file' ];
+            return [ 'post', 'tag', 'author', 'frontpage', 'tags', 'external', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -242,6 +242,7 @@ export default {
                 case 'tag': return 'Tag link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
+                case 'tags': return 'Tags list link';
                 case 'external': return 'External link';
                 case 'file': return 'File from File Manager';
             }
@@ -362,6 +363,8 @@ export default {
                     this.author = parseInt(id, 10);
                 } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
                     this.type = 'frontpage';
+                } else if (urlContent[1].indexOf('/tags/') !== -1) {
+                    this.type = 'tags';
                 } else if (urlContent[1].indexOf('/file/') !== -1) {
                     this.type = 'file';
                     this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
@@ -382,7 +385,9 @@ export default {
             };
 
             if (this.type !== 'external') {
-                if (this.type !== 'frontpage') {
+                if (this.type === 'tags') {
+                    response.url = '#INTERNAL_LINK#/tags/1';
+                } else if (this.type !== 'frontpage') {
                     response.url = '#INTERNAL_LINK#/' + this.type + '/' + this[this.type];
                 } else {
                     response.url = '#INTERNAL_LINK#/frontpage/1';

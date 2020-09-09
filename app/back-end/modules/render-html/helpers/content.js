@@ -487,6 +487,7 @@ class ContentHelper {
     static setInternalLinks(text, renderer) {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'tags');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'file');
@@ -527,6 +528,20 @@ class ContentHelper {
         if (type === 'frontpage') {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
+            text = text.split(url).join(link);
+
+            return text;
+        }
+
+        // Get proper URLs for frontpage
+        if (type === 'tags') {
+            let url = '#INTERNAL_LINK#/tags/1';
+            let link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
+
+            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+                link = link + 'index.html';
+            }
+
             text = text.split(url).join(link);
 
             return text;
