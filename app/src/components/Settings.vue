@@ -244,7 +244,7 @@
                             v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>Your theme does not support tags list page. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
+                            <p>Your theme does not support Tags list page. </p>
                         </div>
 
                         <field
@@ -479,6 +479,13 @@
                             type="medium"
                             label="Error page" />
 
+                        <div 
+                            v-if="!currentThemeSupportsErrorPage" 
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support 404 Error page.</p>
+                        </div>
+
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="error-meta-title"
@@ -527,6 +534,13 @@
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
                             label="Search page" />
+
+                        <div 
+                            v-if="!currentThemeSupportsSearchPage" 
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support Search page.</p>
+                            </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
@@ -1559,6 +1573,15 @@ export default {
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
         },
+
+        currentThemeSupportsSearchPage () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage;
+        },
+
+        currentThemeSupportsErrorPage () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage;
+        },
+        
         advancedTabs () {
             return [
                 'SEO',
