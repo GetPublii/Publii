@@ -13,7 +13,7 @@ class RendererContextPost extends RendererContext {
         // Retrieve meta data
         let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = '_core'`);
         this.metaData = metaDataQuery.get({ postID: this.postID});
-        this.allTags = this.renderer.commonData.tags;
+        this.allTags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;

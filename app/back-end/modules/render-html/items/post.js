@@ -99,7 +99,11 @@ class PostItem {
                 let mainTagID = parseInt(this.metaData.mainTag, 10);
 
                 if (this.renderer.cachedItems.tags[mainTagID]) {
-                    this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+                    if (this.renderer.cachedItems.tags[mainTagID].additionalData.isHidded === true) {
+                        this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
+                    } else {
+                        this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+                    }
                 } else {
                     this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
                 }
