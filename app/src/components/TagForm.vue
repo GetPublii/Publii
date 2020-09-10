@@ -51,12 +51,20 @@
                                 :rows="4"></text-area>
                         </label>
 
-                        <label>
-                            <span>Is hidden tag:</span>
+                        <label class="tag-settings-hidden">                          
                             <switcher
                                 :key="'is-hidden-tag-' + tagData.id"
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden" />
+                            <span title="Tag will not appear in any generated tag list such as post or tag/s pages.">
+                                Hide tag
+                            </span>
+                            <icon
+                                    title="Hide Post"
+                                    class="switcher-item-icon-helper"
+                                    name="hidden-post"
+                                    size="xs"
+                                    primaryColor="color-6" />
                         </label>
                     </div>
                 </div>
@@ -575,7 +583,7 @@ export default {
         font-size: 1.5rem;
         font-weight: 500;
         line-height: 2.6;
-        margin: 0 0 1.2rem 0;
+        margin-bottom: 1.2rem;
 
         input[type="text"],
         input[type="number"],
@@ -595,6 +603,18 @@ export default {
                 width: 70%;
             }
         }
-    }            
+    } 
+
+    &-hidden {
+        font-weight: var(--font-weight-normal) !important;
+        line-height: 1.8 !important;
+        margin-top: 3rem;
+
+        svg {
+            margin: 0 .5rem;
+            position: relative;
+            top: .1rem;
+        }
+    }           
 }
 </style>

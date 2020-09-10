@@ -128,7 +128,7 @@
                                 <switcher 
                                     title="Post will not appear in any generated post lists such as tag or author pages"
                                     v-model="$parent.postData.isHidden" />
-                                <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                <span title="Post will not appear in any generated post list such as tag or author pages">
                                     Hide post
                                 </span>
 
@@ -844,7 +844,7 @@ export default {
             
             .post-action {            
                label {
-                  font-weight: 400;
+                  font-weight: var(--font-weight-normal);
                   line-height: 1.8;
                }
             }
