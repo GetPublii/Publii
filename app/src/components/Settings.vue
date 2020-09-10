@@ -1573,15 +1573,24 @@ export default {
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
         },
-
         currentThemeSupportsSearchPage () {
-            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage;
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createSearchPage
+            );
         },
-
         currentThemeSupportsErrorPage () {
-            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage;
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.create404page
+            );
         },
-        
         advancedTabs () {
             return [
                 'SEO',
