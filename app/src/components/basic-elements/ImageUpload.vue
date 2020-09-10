@@ -288,20 +288,16 @@ export default {
         border-radius: 3px;
         color: var(--gray-3);
         display: block;
+        font-size: 1.6rem;
+        font-weight: var(--font-weight-normal);
+        line-height: 1.5;
         margin: 0 0 -40px 0;
         text-align: center;
-        padding: 5rem;
+        padding: 3rem 5rem;
         position: relative;
         width: 100%;
 
         &.is-small {
-            padding: 2rem;
-
-            .upload-overlay {
-                svg {
-                    margin: 1.5rem auto;
-                }
-            }
         }
 
         &-wrapper {
@@ -396,7 +392,7 @@ export default {
         svg {
             display: block; 
             fill: var(--icon-secondary-color);
-            margin: 1rem auto 1.5rem;
+            margin: 0 auto 1.5rem;
            
         }
     }
@@ -429,7 +425,7 @@ export default {
                 border-top: 2px solid rgba(var(--primary-color-rgb), .2);
                 border-right: 2px solid rgba(var(--primary-color-rgb), .2);
                 border-bottom: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-left: 2px solid var(--primary-color-rgb);
+                border-left: 2px solid var(--primary-color);
                 border-radius: 50%;
                 display: block;   
                 height: 2.5rem;
