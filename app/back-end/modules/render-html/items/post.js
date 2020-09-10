@@ -93,22 +93,28 @@ class PostItem {
 
         if (this.renderer.cachedItems.postTags[this.postID]) {
             this.postData.tags = this.renderer.cachedItems.postTags[this.postID].map(tagID => this.renderer.cachedItems.tags[tagID]);
+            this.postData.tags = this.postData.tags.filter(tag => !tag.additionalData || tag.additionalData.isHidden !== true);
             this.postData.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
 
-            if (this.metaData.mainTag && !isNaN(parseInt(this.metaData.mainTag, 10))) {
-                let mainTagID = parseInt(this.metaData.mainTag, 10);
+            if (!this.postData.tags.length) {
+                this.postData.tags = [];
+                this.postData.mainTag = false;
+            } else {
+                if (this.metaData.mainTag && !isNaN(parseInt(this.metaData.mainTag, 10))) {
+                    let mainTagID = parseInt(this.metaData.mainTag, 10);
 
-                if (this.renderer.cachedItems.tags[mainTagID]) {
-                    if (this.renderer.cachedItems.tags[mainTagID].additionalData.isHidded === true) {
-                        this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
+                    if (this.renderer.cachedItems.tags[mainTagID]) {
+                        if (this.renderer.cachedItems.tags[mainTagID].additionalData.isHidden === true) {
+                            this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
+                        } else {
+                            this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+                        }
                     } else {
-                        this.postData.mainTag = JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
+                        this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
                     }
                 } else {
                     this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
                 }
-            } else {
-                this.postData.mainTag = JSON.parse(JSON.stringify(this.postData.tags[0]));
             }
         } else {
             this.postData.tags = [];
