@@ -148,23 +148,23 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
         if (typeof selectedTags === 'number') {
             let tagID = selectedTags;
-            postsData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length);    
+            postsData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length || post.hiddenTags.filter(tag => tag.id === tagID).length);    
         } else if (typeof selectedTags === 'string') {
             if (tagAs === 'slug') {
                 let tagsSlugs = [...new Set(selectedTags.split(','))];
 
                 if (operator === 'OR') {
-                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length || post.hiddenTags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
                 } else if (operator === 'AND') {
-                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length === tagsSlugs.length);
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length + post.hiddenTags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length === tagsSlugs.length);
                 }
             } else {
                 let tagsIDs = [...new Set(selectedTags.split(',').map(id => parseInt(id, 10)))];
 
                 if (operator === 'OR') {
-                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length);
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1 || post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length));
                 } else if (operator === 'AND') {
-                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length === tagsIDs.length);
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length + post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length === tagsIDs.length);
                 }
             }
         } else {
