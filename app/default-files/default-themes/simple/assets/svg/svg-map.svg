@@ -23,8 +23,8 @@
 	c0.39,0.35,1.02,0.35,1.4,0l2.81-2.55l2.81,2.55c0.39,0.35,1.02,0.35,1.4,0C16.1,13.38,16.1,12.81,15.71,12.46z"/>
     </symbol>
 
-	 <symbol id="website" viewBox="0 0 16 16">
-	   <path d="M8,1.33A6.67,6.67,0,1,1,1.33,8,6.67,6.67,0,0,1,8,1.33ZM9.89,9.89V6.11H6.11m0,3.78L9.89,6.11" fill="none"  stroke-linecap="round" stroke-linejoin="round"/>
+	<symbol id="website" viewBox="0 0 24 24">
+	   <path d="M12,2A10,10,0,1,1,2,12,10,10,0,0,1,12,2Zm3,13V9H9m.17,5.83,5.66-5.66" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
 
 	<!-- Social media icons -->
