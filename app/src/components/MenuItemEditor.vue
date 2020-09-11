@@ -203,11 +203,11 @@ export default {
         linkTypes () {
             return [ 
                 'post', 
-                'tag', 
+                'tag',
+                'tags',
                 'author', 
                 'frontpage', 
-                'internal', 
-                'tags', 
+                'internal',                 
                 'external', 
                 'separator' 
             ];
@@ -264,10 +264,10 @@ export default {
             switch (value) {
                 case 'post': return 'Post link';
                 case 'tag': return 'Tag link';
+                case 'tags': return 'Tags list link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
-                case 'internal': return 'Internal link';
-                case 'tags': return 'Tags list link';
+                case 'internal': return 'Internal link';               
                 case 'external': return 'External link';
                 case 'separator': return 'Text separator';
             }
@@ -424,10 +424,10 @@ export default {
             switch (type) {
                 case 'post':      return this.postPage;
                 case 'tag':       return this.tagPage;
+                case 'tags':      return 'empty';
                 case 'author':    return this.authorPage;
                 case 'frontpage': return 'empty';
                 case 'internal':  return this.internalLink;
-                case 'tags':      return 'empty';
                 case 'external':  return this.externalLink;
                 case 'separator': return '';
             }
