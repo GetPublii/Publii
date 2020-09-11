@@ -39,52 +39,23 @@ class RendererContextFeed extends RendererContext {
     prepareData() {
         let self = this;
         this.posts = this.posts || [];
+        this.posts = this.posts.map(post => this.renderer.cachedItems.posts[post.id]);
+
         this.posts = this.posts.map(post => {
-            let postURL = self.siteConfig.domain + '/' + post.slug + '.html';
-            let domainMediaPath = self.siteConfig.domain + '/media/posts/' + post.id + '/';
-            let preparedText = post.text.split('#DOMAIN_NAME#').join(domainMediaPath);
-            preparedText = ContentHelper.parseText(preparedText, post.editor);
             let contentMode = self.siteConfig.advanced.feed.showFullText ? 'fullText' : 'excerpt';
-            let text = this.cleanUpText(preparedText);
-            text = ContentHelper.setInternalLinks(text, self.renderer);
-            let excerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
-            excerpt = ContentHelper.setInternalLinks(excerpt, self.renderer);
-            let authorData = this.getAuthor('post', post.id);
-
-            if(contentMode !== 'fullText') {
-                text = false;
-            }
-
-            if(self.siteConfig.advanced.urls.cleanUrls) {
-                postURL = self.siteConfig.domain + '/' + post.slug + '/';
-
-                if(self.renderer.previewMode || self.siteConfig.advanced.urls.addIndex) {
-                    postURL += 'index.html';
-                }
-            }
 
             return {
                 title: post.title,
-                url: postURL,
-                author: authorData,
-                text: text,
-                excerpt: excerpt,
+                url: post.url,
+                author: this.getAuthor('post', post.id),
+                text: contentMode === 'fullText' ? post.text : false,
+                excerpt: post.excerpt,
                 createdAt: post.created_at,
-                // Get higher date - created_at or modified_at
-                modifiedAt: post.created_at > post.modified_at ? post.created_at : post.modified_at,
+                modifiedAt: post.created_at > post.modified_at ? post.created_at : post.modified_at, // Get higher date - created_at or modified_at
                 categories: this.getPostCategories(post.id),
                 thumbnail: this.getPostThumbnail(post.id)
             }
         });
-    }
-
-    cleanUpText (text) {
-        text = text.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
-        text = text.replace(/contenteditable="false"/gmi, '');
-        text = text.replace(/contenteditable="true"/gmi, '');
-        text = text.replace(/data\-[a-z\-0-9]{1,}=".*?"/gmi, '');
-
-        return text;
     }
 
     setContext() {

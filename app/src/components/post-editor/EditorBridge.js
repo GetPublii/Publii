@@ -80,7 +80,7 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$store.state.app.theme);
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$root.getCurrentAppTheme());
 
             // Add inline editors
             this.addInlineEditor(customFormats);
@@ -602,9 +602,9 @@ class EditorBridge {
 
         ipcRenderer.once('app-image-uploaded', (event, data) => {            
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
-                tinymce.activeEditor.insertContent('<figure class="post__image"><img alt="" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></figure>');
+                tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
-                tinymce.activeEditor.insertContent('<figure class="post__image"><img alt="" src="' + data.url + '"/></figure>');
+                tinymce.activeEditor.insertContent('<p><img alt="" src="' + data.url + '" class="post__image" /></p>');
             }
 
             $('.tox-tinymce').removeClass('is-hovered');

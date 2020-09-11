@@ -136,7 +136,6 @@
                     id="domain"
                     label="Domain">
                     <dropdown
-                        v-if="!deploymentSettings.relativeUrls"
                         slot="field"
                         id="http-protocol"
                         key="httpProtocol"
@@ -158,41 +157,22 @@
                     </small>
                     
                     <small
-                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
+                        v-if="httpProtocolSelected === 'file'"
                         class="note"
                         slot="note">
                         The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
                     </small>
                     <small
-                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs')"
+                        v-if="(httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs')"
                         class="note"
                         slot="note">
                         The "dat://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
                     </small>
                     <small
-                        v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
+                        v-if="httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
                         Note: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
-                    </small>
-                </field>
-
-                <field
-                    id="relative-urls"
-                    label=" ">
-                    <switcher
-                        slot="field"
-                        id="relative-urls"
-                        key="relative-urls"
-                        v-model="deploymentSettings.relativeUrls"
-                        @click.native="toggleDomainName" />
-                    <template slot="second-label">
-                        Use relative URLs
-                    </template>
-                    <small
-                        class="note"
-                        slot="note">
-                        Note: while using relative URLs, some features like Open Graph tags, sharing buttons etc. cannot work properly.
                     </small>
                 </field>
 
@@ -217,6 +197,22 @@
                         class="note">
                         The port field cannot be empty and must be a positive integer between 1 and 65535.
                     </small>
+                </field>
+
+                <field
+                    v-if="['ftp', 'ftp+tls'].indexOf(deploymentMethodSelected) > -1"
+                    id="secure-connection"
+                    label="FTPS"
+                    :labelSeparated="true">
+                    <switcher
+                        slot="field"
+                        id="secure-connection"
+                        key="secure-connection"
+                        :value="deploymentMethodSelected === 'ftp+tls'"
+                        @click.native="toggleFtpDeploymentMethod" />
+                    <template slot="second-label">
+                        Use FTP with SSL/TLS
+                    </template>
                 </field>
 
                 <field
@@ -1010,14 +1006,6 @@ export default {
         fullDomainName () {
             let domain = this.prepareDomain();
 
-            if ((domain === '' || domain === '.') && this.deploymentSettings.relativeUrls) {
-                domain = './';
-            }
-
-            if (this.deploymentSettings.relativeUrls) {
-                return domain;
-            }
-
             if(this.deploymentMethodSelected === 'github-pages') {
                 if(domain.indexOf('github.io') > -1) {
                     this.httpProtocolSelected = 'https';
@@ -1287,11 +1275,7 @@ export default {
             }
         },
         toggleDomainName () {
-            if (this.deploymentSettings.relativeUrls) {
-                this.domain = './';
-            } else {
-                this.domain = '';
-            }
+            this.domain = '';
         },
         getDeploymentMethodName (method) {
             switch (method) {
@@ -1362,6 +1346,13 @@ export default {
             }
 
             return deploymentSettings;
+        },
+        toggleFtpDeploymentMethod () {
+            if (this.deploymentMethodSelected === 'ftp+tls') {
+                this.deploymentMethodSelected = 'ftp';
+            } else {
+                this.deploymentMethodSelected = 'ftp+tls';
+            }
         }
     }
 }

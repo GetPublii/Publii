@@ -126,6 +126,8 @@ html[data-theme="default"] {
     --code-19: #997;
     --code-20: #d7d4f0;
     --code-21: #000;
+
+    --text-selection-color: #b6d8fd;
 }
   
 //dark
@@ -256,4 +258,6 @@ html[data-theme="dark"] {
     --code-19: #CCCCCC;
     --code-20: #282930;
     --code-21: #f2777a;
+
+    --text-selection-color: #94b6db;
 }

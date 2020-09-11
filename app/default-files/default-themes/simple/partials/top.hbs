@@ -19,7 +19,8 @@
                         class="search__input js-search-input"
                         type="search"
                         name="{{@config.custom.searchParam}}"
-                        placeholder="{{ translate 'search.placeholder' }}"
+                        placeholder="{{ translate 'search.placeholder' }}" 
+                        aria-label="{{ translate 'search.placeholder' }}"
                         autofocus="autofocus"/>
                   </form>
                   <button class="search__close js-search-close" aria-label="{{ translate 'search.close' }}">

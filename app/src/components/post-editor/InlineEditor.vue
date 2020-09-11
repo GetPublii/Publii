@@ -2,7 +2,8 @@
     <div
         id="inline-toolbar"
         ref="toolbar"
-        contenteditable="false">
+        contenteditable="false"
+        @click.stop>
        <button
             id="inline-toolbar-bold"
             class="tox-icon tox-tbtn__icon-wrap"
