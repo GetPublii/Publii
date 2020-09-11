@@ -64,6 +64,8 @@ export default {
                 'button-cancel-popup': types.indexOf('cancel-popup') > -1,
                 'button-icon': types.indexOf('icon') > -1,
                 'button-only-icon': types.indexOf('only-icon') > -1,
+                'button-only-icon-color': types.indexOf('only-icon-color') > -1,
+                'button-icon-smaller': types.indexOf('icon-smaller') > -1,
                 'button-bottom': types.indexOf('bottom') > -1,
                 'button-medium': types.indexOf('medium') > -1,
                 'button-small': types.indexOf('small') > -1,
@@ -357,6 +359,26 @@ export default {
         &.button-only-icon {
             padding: 0;
             width: 48px;
+        }
+
+        &.button-only-icon {
+            padding: 0;
+            width: 48px;
+        }
+
+        &.button-only-icon-color {
+            padding: 0;
+            width: 48px;
+
+             & > svg {
+                fill: var(--primary-color);
+            }
+        }
+
+        &.button-icon-smaller {
+            & > svg {
+                transform: translateY(-50%) scale(0.8);
+            }
         }
     }
 

@@ -42,7 +42,7 @@ class ContentHelper {
         preparedText = ContentHelper.parseText(preparedText, editor);
 
         // Remove content for AMP or non-AMP depending from ampMode value
-        if(ampMode) {
+        if (ampMode) {
             preparedText = preparedText.replace(/<publii-non-amp>[\s\S]*?<\/publii-non-amp>/gmi, '');
             preparedText = preparedText.replace(/<publii-amp>/gmi, '');
             preparedText = preparedText.replace(/<\/publii-amp>/gmi, '');
@@ -74,22 +74,26 @@ class ContentHelper {
         }
 
         // Add loading="lazy" attributes to img, video, audio, iframe tags
-        if (renderer.siteConfig.advanced.mediaLazyLoad) {
+        if (renderer.siteConfig.advanced.mediaLazyLoad && !ampMode) {
             preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
             preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
             preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
             preparedText = preparedText.replace(/<iframe\s/gmi, '<iframe loading="lazy" ');
         }
 
-        // Wrap images with classes into <figure>
-        preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
-            return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
-        });
+        if (editor === 'tinymce' || editor === 'markdown') {
+            // Wrap images with classes into <figure>
+            preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
+                return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
+            });
+        }
 
-        // Wrap galleries with classes into div with gallery-wrapper CSS class
-        preparedText = preparedText.replace(/<div class="gallery"[\s\S]*?<\/div>?/gmi, function(matches, p1, classes) {
-            return '<div class="gallery-wrapper">' + matches + '</div>';
-        });
+        if (editor === 'tinymce') {
+            // Wrap galleries with classes into div with gallery-wrapper CSS class
+            preparedText = preparedText.replace(/<div class="gallery([\s\S]*?)"[\s\S]*?<\/div>?/gmi, function(matches, classes) {
+                return '<div class="gallery-wrapper' + classes + '">' + matches.replace(classes, '') + '</div>';
+            });
+        }
 
         // Wrap iframes into <div class="post__iframe">
         preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {

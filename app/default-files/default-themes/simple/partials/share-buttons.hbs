@@ -72,7 +72,7 @@
 
 {{#if @config.custom.shareWhatsApp}}
    <a
-      href="https://wa.me/?text={{encodeUrlFragment title}} {{encodeUrlFragment url}}" 
+      href="https://api.whatsapp.com/send?text={{encodeUrlFragment title}} {{encodeUrlFragment url}}" 
       class="js-share whatsapp"
       rel="nofollow noopener noreferrer">
       <svg class="icon" aria-hidden="true" focusable="false">

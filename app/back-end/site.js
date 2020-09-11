@@ -430,7 +430,11 @@ class Site {
         let newSitePath = path.join(appInstance.sitesDir, newCatalogFreeName);
         fs.copySync(sitePath, newSitePath);
         Site.updateNameInSiteConfig(newSitePath, newCatalogFreeName, siteName);
-        
+        let configFilePath = path.join(newSitePath, 'input', 'config', 'site.config.json');
+        let siteConfig = fs.readFileSync(configFilePath);
+        siteConfig = JSON.parse(siteConfig);
+        appInstance.addSite(newCatalogFreeName, siteConfig);
+
         return {
             siteName: siteName,
             siteCatalog: newCatalogName

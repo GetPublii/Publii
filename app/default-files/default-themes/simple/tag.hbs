@@ -77,7 +77,8 @@
                {{#featuredImage}}
                   {{#if url}}
                      <div class="feed__image">
-                       <img
+                        <a href="{{../url}}">
+                           <img
                               src="{{url}}"
                               {{#if @config.site.responsiveImages}}
                                  {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
@@ -86,6 +87,7 @@
                               height="{{height}}"
                               width="{{width}}"
                               alt="{{alt}}">
+                           </a>
                        </div>
                   {{/if}}
                {{/featuredImage}}
