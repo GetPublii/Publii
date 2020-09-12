@@ -11,6 +11,7 @@
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
         "createContentStructure": true,
+        "createTagsList": true,
         "createSearchPage": true,
         "create404page": true,
         "customHTML": {
@@ -21,8 +22,10 @@
         "blockEditor": true,
         "tagsList": true,
         "tagImages": true,
-        "authorImages": true
-   },
+        "authorImages": true,
+        "searchPage": true,
+        "errorPage": true
+    },
     "config": [
 
         {
@@ -189,20 +192,7 @@
                 "value": "default"
             }]
         },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Tags Page",
-            "group": "Layout",
-            "size": "big"
-        },
-        {
-            "name": "tagsDescription",
-            "group": "Layout",
-            "label": "Tag description",
-            "value": true,
-            "type": "checkbox"
-        },
+       
         {
             "name": "separator",
             "type": "separator",
@@ -242,6 +232,27 @@
             "name": "tagReadMore",
             "group": "Layout",
             "label": "Read more button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Tags Page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "tagsPostCount",
+            "group": "Layout",
+            "label": "Post count",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagsDescription",
+            "group": "Layout",
+            "label": "Tag description",
             "value": true,
             "type": "checkbox"
         },

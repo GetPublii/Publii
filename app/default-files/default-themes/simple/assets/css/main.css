@@ -1602,6 +1602,10 @@ textarea {
 .feed--grid h2 {
   margin-top: 0;
 }
+.feed--grid sup {
+  font-size: 1.066666667rem;
+  vertical-align: top;
+}
 
 .post__image {
   display: inline-block;

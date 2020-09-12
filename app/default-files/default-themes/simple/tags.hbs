@@ -23,7 +23,8 @@
       <header class="hero__content">
          <div class="wrapper">
             <h1>
-               {{ translate 'tags.tagsPageTitle' }}
+               {{ translate 'tags.tagsPageTitle' }} 
+               <sup>({{tagsNumber}})</sup>
             </h1>
             <p>
                {{ translate 'tags.description' }}
@@ -39,7 +40,9 @@
                   <a href="{{url}}" class="invert">
                      {{name}}
                   </a>
-                  <sup>({{postsNumber}})</sup>
+                  {{#if @config.custom.tagsPostCount}}
+                     <sup>({{postsNumber}})</sup>
+                  {{/if}}
                </h2>
                {{#checkIfAll @config.custom.tagsDescription  description}}
                   <p>

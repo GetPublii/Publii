@@ -200,7 +200,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'tags', 'external', 'file' ];
+            return [ 'post', 'tag', 'tags', 'author', 'frontpage', 'external', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -240,9 +240,9 @@ export default {
             switch (value) {
                 case 'post': return 'Post link';
                 case 'tag': return 'Tag link';
+                case 'tags': return 'Tags list link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
-                case 'tags': return 'Tags list link';
                 case 'external': return 'External link';
                 case 'file': return 'File from File Manager';
             }
@@ -357,14 +357,14 @@ export default {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
                     this.type = 'tag';
                     this.tag = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/tags/') !== -1) {
+                    this.type = 'tags';
                 } else if (urlContent[1].indexOf('/author/') !== -1) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
                     this.type = 'author';
                     this.author = parseInt(id, 10);
                 } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
                     this.type = 'frontpage';
-                } else if (urlContent[1].indexOf('/tags/') !== -1) {
-                    this.type = 'tags';
                 } else if (urlContent[1].indexOf('/file/') !== -1) {
                     this.type = 'file';
                     this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
