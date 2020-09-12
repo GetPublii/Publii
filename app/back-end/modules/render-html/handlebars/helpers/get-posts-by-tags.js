@@ -162,7 +162,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
                 let tagsIDs = [...new Set(selectedTags.split(',').map(id => parseInt(id, 10)))];
 
                 if (operator === 'OR') {
-                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1 || post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length));
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length || post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length);
                 } else if (operator === 'AND') {
                     postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length + post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length === tagsIDs.length);
                 }

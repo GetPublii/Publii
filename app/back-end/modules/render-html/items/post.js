@@ -96,7 +96,7 @@ class PostItem {
             this.postData.tags = this.postData.tags.filter(tag => !tag.additionalData || tag.additionalData.isHidden !== true);
             this.postData.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
             this.postData.hiddenTags = this.renderer.cachedItems.postTags[this.postID].map(tagID => this.renderer.cachedItems.tags[tagID]);
-            this.postData.hiddenTags = this.postData.tags.filter(tag => tag.additionalData && tag.additionalData.isHidden === true);
+            this.postData.hiddenTags = this.postData.hiddenTags.filter(tag => tag.additionalData && tag.additionalData.isHidden === true);
             this.postData.hiddenTags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
 
             if (!this.postData.tags.length) {
