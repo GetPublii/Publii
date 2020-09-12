@@ -121,6 +121,7 @@ class PostItem {
             }
         } else {
             this.postData.tags = [];
+            this.postData.hiddenTags = [];
             this.postData.mainTag = false;
         }
     }
