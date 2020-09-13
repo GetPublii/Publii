@@ -88,11 +88,13 @@ class DeployEvents {
             appDir: this.app.app.getPath('logs'),
             sitesDir: this.app.sitesDir,
             siteConfig: this.app.sites[site],
-            postID: false,
+            itemID: false,
             postData: false,
             previewMode: false,
             singlePageMode: false,
             homepageOnlyMode: false,
+            tagOnlyMode: false,
+            authorOnlyMode: false,
             previewLocation: this.app.appConfig.previewLocation
         });
 

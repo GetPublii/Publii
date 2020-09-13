@@ -123,6 +123,7 @@ class Author extends Model {
         return {
             status: true,
             message: 'author-added',
+            authorID: this.id,
             postsAuthors: this.postsData.loadAuthorsXRef(),
             authors: this.authorsData.load()
         };

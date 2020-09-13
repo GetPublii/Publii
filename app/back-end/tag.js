@@ -112,6 +112,7 @@ class Tag extends Model {
         return {
             status: true,
             message: 'tag-added',
+            tagID: this.id,
             tags: this.tagsData.load()
         };
     }

@@ -17,19 +17,24 @@ class PreviewEvents {
         this.app = appInstance;
 
         ipcMain.on('app-preview-render', function (event, siteData) {
-            if(siteData.site && siteData.theme) {
-                let postID = false;
+            if (siteData.site && siteData.theme) {
+                let itemID = false;
+                let mode = false;
                 let postData = false;
 
-                if(siteData.postID !== false && typeof siteData.postID !== 'undefined') {
-                    postID = siteData.postID;
+                if (siteData.itemID !== false && typeof siteData.itemID !== 'undefined') {
+                    itemID = siteData.itemID;
                 }
 
-                if(siteData.postData) {
+                if (siteData.mode !== false && typeof siteData.mode !== 'undefined') {
+                    mode = siteData.mode;
+                }
+
+                if (siteData.postData) {
                     postData = siteData.postData;
                 }
 
-                self.renderSite(siteData.site, postID, postData, event);
+                self.renderSite(siteData.site, itemID, postData, mode, event);
             } else {
                 event.sender.send('app-preview-rendered', {
                     status: false
@@ -46,8 +51,9 @@ class PreviewEvents {
      * @param postData
      * @param event
      */
-    renderSite(site, pageToRender, postData, event) {
+    renderSite(site, itemID, postData, mode, event) {
         let self = this;
+        let previewMode = true;
         let resultsRetrieved = false;
         let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
@@ -57,18 +63,7 @@ class PreviewEvents {
                 'ipc'
             ]
         });
-        let previewMode = true;
-        let singlePageMode = false;
-        let homepageOnlyMode = false;
-
-        if (pageToRender !== false) {
-            if (pageToRender === 'home') {
-                homepageOnlyMode = true;
-            } else {
-                singlePageMode = true;
-            }
-        }
-
+        
         rendererProcess.on('disconnect', function(data) {
             setTimeout(function() {
                 if(!resultsRetrieved) {
@@ -95,11 +90,10 @@ class PreviewEvents {
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
             siteConfig: this.app.sites[site],
-            postID: pageToRender,
+            itemID: itemID,
             postData: postData,
             previewMode: previewMode,
-            singlePageMode: singlePageMode,
-            homepageOnlyMode: homepageOnlyMode,
+            mode: mode,
             previewLocation: this.app.appConfig.previewLocation
         });
 
@@ -112,7 +106,7 @@ class PreviewEvents {
                         status: true
                     });
 
-                    self.showPreview(site, singlePageMode);
+                    self.showPreview(site, mode);
                 } else {
                     let errorDesc = 'Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer. ';
                     let errorTitle = 'Rendering process crashed';
@@ -143,7 +137,7 @@ class PreviewEvents {
      *
      * @param siteData
      */
-    showPreview(siteName, postPreview) {
+    showPreview (siteName, mode) {
         let basePath = path.join(this.app.sitesDir, siteName, 'preview');
         let previewLocation = '';
 
@@ -159,7 +153,7 @@ class PreviewEvents {
 
         url = path.join(basePath, 'index.html');
 
-        if(postPreview) {
+        if (mode === 'tag' || mode === 'post' || mode === 'author') {
             url = path.join(basePath, 'preview.html');
         }
 

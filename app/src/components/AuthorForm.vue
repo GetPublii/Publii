@@ -1,6 +1,7 @@
 <template>
     <div 
         :key="'author-view-' + authorData.id"
+        :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
@@ -258,10 +259,17 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="primary"
-                    @click.native="save">
+                    type="secondary"
+                    @click.native="save(false)">
                     <template v-if="authorData.id">Save changes</template>
                     <template v-if="!authorData.id">Add new author</template>
+                </p-button>
+
+                <p-button
+                    :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
+                    type="primary"
+                    @click.native="saveAndPreview">
+                    Save &amp; Preview
                 </p-button>
 
                 <p-button
@@ -270,6 +278,12 @@
                     Cancel
                 </p-button>
             </div>
+
+            <small 
+                v-if="!currentThemeHasSupportForAuthorPages"
+                class="note">
+                The "Save &amp; Preview" option is unavailable due lack of support for author pages in your theme.
+            </small>
         </div>
     </div>
 </template>
@@ -282,6 +296,9 @@ const mainProcess = remote.require('./main.js');
 
 export default {
     name: 'author-form-sidebar',
+    props: [
+        'formAnimation'
+    ],
     data () {
         return {
             errors: [],
@@ -311,6 +328,9 @@ export default {
     computed: {
         currentThemeHasSupportForAuthorImages () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorImages;
+        },
+        currentThemeHasSupportForAuthorPages () {
+            return this.$store.state.currentSite.themeSettings.renderer.createAuthorPages;
         },
         metaFieldAttrs: function() {
             let text = 'Leave it blank to use a default page title';
@@ -376,7 +396,7 @@ export default {
         });
     },
     methods: {
-        save () {
+        save (showPreview = false) {
             if (this.authorData.username === '') {
                 this.authorData.username = mainProcess.slug(this.authorData.name);
             } else {
@@ -401,20 +421,35 @@ export default {
                 additionalData: JSON.stringify(this.authorData.additionalData)
             };
 
-            this.saveData(authorData);
+            this.saveData(authorData, showPreview);
         },
-        saveData(authorData) {
+        saveAndPreview () {
+            this.save(true);
+        },
+        saveData(authorData, showPreview = false) {
             // Send form data to the back-end
             ipcRenderer.send('app-author-save', authorData);
 
             ipcRenderer.once('app-author-saved', (event, data) => {
                 if(data.status !== false) {
                     if(authorData.id === 0) {
+                        let newlyAddedAuthor = JSON.parse(JSON.stringify(data.authors.filter(author => author.id === data.authorID)[0]));
+                        this.$bus.$emit('show-author-item-editor', newlyAddedAuthor);
                         this.close();
                         this.showMessage(data.message);
                     } else {
-                        this.close();
+                        if (!showPreview) {
+                            this.close();
+                        }
+
                         this.showMessage('success');
+
+                        if (showPreview) {
+                            this.$bus.$emit('rendering-popup-display', {
+                                authorOnly: true,
+                                itemID: this.authorData.id
+                            });
+                        }
                     }
 
                     this.$store.commit('setAuthors', data.authors);
@@ -692,5 +727,12 @@ export default {
             margin: 0;
         }
     }            
+}
+
+.note {
+    display: block;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 2rem 0;
 }
 </style>

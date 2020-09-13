@@ -149,7 +149,9 @@
         </empty-state>
 
         <transition>
-            <tag-form v-if="editorVisible" />
+            <tag-form 
+                v-if="editorVisible"
+                :form-animation="formAnimation" />
         </transition>
     </section>
 </template>
@@ -169,12 +171,24 @@ export default {
     },
     data: function() {
         return {
+            formAnimation: false,
             editorVisible: false,
             filterValue: '',
             orderBy: this.$store.state.ordering.tags.orderBy,
             order: this.$store.state.ordering.tags.order,
             selectedItems: []
         };
+    },
+    watch: {
+        editorVisible (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.formAnimation = true;
+
+                setTimeout(() => {
+                    this.formAnimation = false;
+                }, 500);
+            }
+        }
     },
     computed: {
         items: function() {

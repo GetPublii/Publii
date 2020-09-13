@@ -13,10 +13,10 @@
         width: 48rem;
         z-index: 9999;   
         
-
         &.v-enter-active,
         &.v-leave-active {
             transition: all .25s ease;
+            transition-delay: .1s;
         }
 
         &.v-enter,
@@ -27,6 +27,24 @@
         &.v-enter-to,
         &.v-leave {
             right: 0;
+        }
+
+        &[data-animate="false"] {
+            &.v-enter-active,
+            &.v-leave-active {
+                transition: none;
+                transition-delay: .1s;
+            } 
+            
+            &.v-enter,
+            &.v-leave-to {
+                right: 0;
+            }
+
+            &.v-enter-to,
+            &.v-leave {
+                right: 0;
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 <template>
     <div 
         :key="'tag-view-' + tagData.id"
+        :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
@@ -55,7 +56,8 @@
                             <switcher
                                 :key="'is-hidden-tag-' + tagData.id"
                                 id="is-hidden"
-                                v-model="tagData.additionalData.isHidden" />
+                                v-model="tagData.additionalData.isHidden"
+                                @click.native="toggleHiddenStatus" />
                             <span title="Tag will not appear in any generated tag list such as post or tag/s pages.">
                                 Hide tag
                             </span>
@@ -233,10 +235,17 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="primary"
-                    @click.native="save">
+                    type="secondary"
+                    @click.native="save(false)">
                     <template v-if="tagData.id">Save changes</template>
                     <template v-if="!tagData.id">Add new tag</template>
+                </p-button>
+
+                <p-button
+                    :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
+                    type="primary"
+                    @click.native="saveAndPreview">
+                    Save &amp; Preview
                 </p-button>
 
                 <p-button
@@ -245,6 +254,12 @@
                     Cancel
                 </p-button>
             </div>
+
+            <small 
+                v-if="!currentThemeHasSupportForTagPages"
+                class="note">
+                The "Save &amp; Preview" option is unavailable due lack of support for tag pages in your theme.
+            </small>
         </div>
     </div>
 </template>
@@ -252,14 +267,19 @@
 <script>
 import { ipcRenderer, remote } from 'electron';
 const mainProcess = remote.require('./main.js');
+import Vue from 'Vue';
 
 export default {
     name: 'tag-form-sidebar',
+    props: [
+        'formAnimation'
+    ],
     data: function() {
         return {
             errors: [],
             hasFeaturedImage: false,
             openedItem: 'basic',
+            currentTagIsHidden: false,
             tagData: {
                 id: 0,
                 name: '',
@@ -281,6 +301,9 @@ export default {
     computed: {
         currentThemeHasSupportForTagImages () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagImages;
+        },
+        currentThemeHasSupportForTagPages () {
+            return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
         },
         metaFieldAttrs: function() {
             let text = 'Leave it blank to use a default page title';
@@ -335,6 +358,7 @@ export default {
             this.tagData.additionalData.metaTitle = params.additionalData.metaTitle || '';
             this.tagData.additionalData.metaDescription = params.additionalData.metaDescription || '';
             this.tagData.additionalData.template = params.additionalData.template || '';
+            this.currentTagIsHidden = !!this.tagData.additionalData.isHidden;
 
             if (this.tagData.additionalData && this.tagData.additionalData.featuredImage) {
                 this.hasFeaturedImage = true;
@@ -342,7 +366,7 @@ export default {
         });
     },
     methods: {
-        save() {
+        save (showPreview = false) {
             if (this.tagData.slug.trim() === '' && this.tagData.name.trim() !== '') {
                 this.tagData.slug = mainProcess.slug(this.tagData.name);
             } else {
@@ -356,9 +380,14 @@ export default {
             let tagData = Object.assign({}, this.tagData);
             tagData.site = this.$store.state.currentSite.config.name;
 
-            this.saveData(tagData);
+            this.saveData(tagData, showPreview);
+        },
+        saveAndPreview () {
+            this.save(true);
         },
         validate () {
+            this.errors = [];
+
             if (this.tagData.name.trim() === '') {
                 this.errors.push('name');
             }
@@ -384,17 +413,28 @@ export default {
                 this.errors.splice(pos, 1);
             }
         },
-        saveData(tagData) {
+        saveData(tagData, showPreview = false) {
             ipcRenderer.send('app-tag-save', tagData);
 
             ipcRenderer.once('app-tag-saved', (event, data) => {
-                if(data.status !== false) {
+                if (data.status !== false) {
                     if(this.tagData.id === 0) {
-                        this.close();
+                        let newlyAddedTag = JSON.parse(JSON.stringify(data.tags.filter(tag => tag.id === data.tagID)[0]));
+                        this.$bus.$emit('show-tag-item-editor', newlyAddedTag);
                         this.showMessage(data.message);
                     } else {
-                        this.close();
+                        if (!showPreview) {
+                            this.close();
+                        }
+
                         this.showMessage('success');
+
+                        if (showPreview) {
+                            this.$bus.$emit('rendering-popup-display', {
+                                tagOnly: true,
+                                itemID: this.tagData.id
+                            });
+                        }
                     }
 
                     this.$store.commit('setTags', data.tags);
@@ -480,6 +520,9 @@ export default {
             setTimeout(function () {
                 contentWrapper.style.maxHeight = 0;
             }, 50);
+        },
+        toggleHiddenStatus () {
+            this.currentTagIsHidden = this.tagData.additionalData.isHidden;
         }
     },
     beforeDestroy () {
@@ -616,5 +659,12 @@ export default {
             top: .1rem;
         }
     }           
+}
+
+.note {
+    display: block;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 2rem 0;
 }
 </style>

@@ -157,12 +157,17 @@ class TemplateHelper {
      * Save a compiled Handlebars template under
      * a specified tag filename
      */
-    saveOutputTagFile(tagSlug, content) {
+    saveOutputTagFile(tagSlug, content, isTagPreview = false) {
         let filePath = path.join(this.outputDir, tagSlug, 'index.html');
         let dirPath = path.join(this.outputDir, tagSlug);
         let tagsPath = false;
 
-        if(this.siteConfig.advanced.urls.tagsPrefix !== '') {
+        if (isTagPreview) {
+            filePath = path.join(this.outputDir, 'preview.html');
+            content = this.compressHTML(content);
+            fs.writeFile(filePath, content, {'flags': 'w'});
+            return;
+        } else if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
             filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.tagsPrefix, tagSlug, 'index.html');
             dirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.tagsPrefix, tagSlug);
             tagsPath = path.join(this.outputDir, this.siteConfig.advanced.urls.tagsPrefix);
@@ -214,9 +219,17 @@ class TemplateHelper {
      * Save a compiled Handlebars template under
      * a specified author filename
      */
-    saveOutputAuthorFile(authorSlug, content) {
+    saveOutputAuthorFile(authorSlug, content, isAuthorPreview = false) {
         let filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, 'index.html');
         let dirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug);
+        
+        if (isAuthorPreview) {
+            filePath = path.join(this.outputDir, 'preview.html');
+            content = this.compressHTML(content);
+            fs.writeFile(filePath, content, {'flags': 'w'});
+            return;
+        }
+
         content = this.compressHTML(content);
         fs.mkdirSync(dirPath);
         fs.writeFile(filePath, content, {'flags': 'w'});

@@ -27,6 +27,8 @@ export default {
             isVisible: false,
             isPostPreview: false,
             isHomepagePreview: false,
+            isTagPreview: false,
+            isAuthorPreview: false,
             messageFromRenderer: '',
             progress: 0,
             progressColor: 'blue',
@@ -42,10 +44,18 @@ export default {
             this.progressIsStopped = false;
             this.isPostPreview = false;
             this.isHomepagePreview = false;
+            this.isTagPreview = false;
+            this.isAuthorPreview = false;
 
             if (config && config.homepageOnly) {
                 this.isHomepagePreview = true;
-                this.runRenderingPreview(false, true);
+                this.runRenderingPreview(false, 'home');
+            } else if (config && config.tagOnly) {
+                this.isTagPreview = true;
+                this.runRenderingPreview(config, 'tag');
+            } else if (config && config.authorOnly) {
+                this.isAuthorPreview = true;
+                this.runRenderingPreview(config, 'author');
             } else if (config && config.postData) {
                 this.isPostPreview = true;
                 this.runRenderingPreview(config);
@@ -57,7 +67,7 @@ export default {
         ipcRenderer.on('app-rendering-progress', this.renderingProgress);
     },
     methods: {
-        runRenderingPreview (postConfig = false, homepageOnly = false) {
+        runRenderingPreview (itemConfig = false, mode = false) {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
                     message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
@@ -77,14 +87,21 @@ export default {
                 "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
             };
 
-            if (postConfig) {
-                renderConfig.postID = postConfig.postID;
-                renderConfig.postData = postConfig.postData;
+            if (itemConfig) {
+                renderConfig.mode = 'post';
+                renderConfig.itemID = itemConfig.itemID;
+                renderConfig.postData = itemConfig.postData;
                 renderConfig.source = 'post-editor';
             }
 
-            if (homepageOnly) {
-                renderConfig.postID = 'home';
+            if (mode === 'home') {
+                renderConfig.mode = 'home';
+            } else if (mode === 'tag') {
+                renderConfig.mode = 'tag';
+                renderConfig.itemID = itemConfig.itemID;
+            } else if (mode === 'author') {
+                renderConfig.mode = 'author';
+                renderConfig.itemID = itemConfig.itemID;
             }
 
             ipcRenderer.send('app-preview-render', renderConfig);
@@ -96,7 +113,7 @@ export default {
                         "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
                     });
 
-                    if (postConfig || homepageOnly) {
+                    if (itemConfig || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
                             this.isVisible = false;
                         }, 500);
