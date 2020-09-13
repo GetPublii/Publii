@@ -237,15 +237,21 @@
                 <p-button
                     type="secondary"
                     @click.native="save(false)">
-                    <template v-if="tagData.id">Save changes</template>
+                    <template v-if="tagData.id">Save Changes</template>
                     <template v-if="!tagData.id">Add new tag</template>
                 </p-button>
 
                 <p-button
                     :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
-                    type="primary"
+                    type="primary" 
+                    class="tag-settings-preview-button"
                     @click.native="saveAndPreview">
                     Save &amp; Preview
+                    <span>
+                        <icon
+                            size="s"
+                            name="quick-preview"/>
+                    </span>
                 </p-button>
 
                 <p-button
@@ -258,7 +264,7 @@
             <small 
                 v-if="!currentThemeHasSupportForTagPages"
                 class="note">
-                The "Save &amp; Preview" option is unavailable due lack of support for tag pages in your theme.
+                The "Save &amp; Preview" option is not available due to lack of support for tag pages in your theme.
             </small>
         </div>
     </div>
@@ -618,6 +624,16 @@ export default {
         position: relative;
         transition: var(--transition);
         width: 2.4rem;
+    }
+
+    &-preview-button {
+        display: inline-flex; 
+
+        & > span {
+            align-self: center;
+            display: flex; 
+            margin-left: 1rem;
+        }
     }
 
     label {

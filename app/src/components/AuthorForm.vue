@@ -259,17 +259,23 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="secondary"
+                    type="secondary" 
                     @click.native="save(false)">
-                    <template v-if="authorData.id">Save changes</template>
+                    <template v-if="authorData.id">Save Changes</template>
                     <template v-if="!authorData.id">Add new author</template>
                 </p-button>
 
                 <p-button
                     :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
-                    type="primary"
+                    type="primary" 
+                    class="author-settings-preview-button"
                     @click.native="saveAndPreview">
-                    Save &amp; Preview
+                    Save &amp; Preview 
+                    <span>
+                        <icon
+                            size="s"
+                            name="quick-preview"/>
+                    </span>
                 </p-button>
 
                 <p-button
@@ -282,7 +288,7 @@
             <small 
                 v-if="!currentThemeHasSupportForAuthorPages"
                 class="note">
-                The "Save &amp; Preview" option is unavailable due lack of support for author pages in your theme.
+                The "Save &amp; Preview" option is not available due to lack of support for author pages in your theme.
             </small>
         </div>
     </div>
@@ -694,6 +700,16 @@ export default {
         position: relative;
         transition: var(--transition);
         width: 2.4rem;
+    }
+
+    &-preview-button {
+        display: inline-flex; 
+
+        & > span {
+            align-self: center;
+            display: flex; 
+            margin-left: 1rem;
+        }
     }
 
     label {

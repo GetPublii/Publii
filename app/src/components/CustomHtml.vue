@@ -14,7 +14,7 @@
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
-                Save changes
+                Save Changes
             </p-button>
 
             <btn-dropdown

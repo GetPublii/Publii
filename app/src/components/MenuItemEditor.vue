@@ -155,7 +155,7 @@
                     v-if="menuItemID !== ''"
                     type="primary"
                     @click.native="editMenuItem">
-                    Save changes
+                    Save Changes
                 </p-button>
 
                 <p-button
