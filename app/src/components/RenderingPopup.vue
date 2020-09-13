@@ -56,9 +56,9 @@ export default {
             } else if (config && config.authorOnly) {
                 this.isAuthorPreview = true;
                 this.runRenderingPreview(config, 'author');
-            } else if (config && config.postData) {
+            } else if (config && config.postOnly) {
                 this.isPostPreview = true;
-                this.runRenderingPreview(config);
+                this.runRenderingPreview(config, 'post');
             } else {
                 this.runRenderingPreview();
             }
@@ -87,14 +87,12 @@ export default {
                 "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
             };
 
-            if (itemConfig) {
+            if (mode === 'post' && itemConfig) {
                 renderConfig.mode = 'post';
                 renderConfig.itemID = itemConfig.itemID;
                 renderConfig.postData = itemConfig.postData;
                 renderConfig.source = 'post-editor';
-            }
-
-            if (mode === 'home') {
+            } else if (mode === 'home') {
                 renderConfig.mode = 'home';
             } else if (mode === 'tag') {
                 renderConfig.mode = 'tag';
@@ -113,7 +111,7 @@ export default {
                         "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
                     });
 
-                    if (itemConfig || mode === 'home' || mode === 'tag' || mode === 'author') {
+                    if (mode === 'post' || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
                             this.isVisible = false;
                         }, 500);

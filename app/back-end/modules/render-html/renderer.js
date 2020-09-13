@@ -90,7 +90,7 @@ class Renderer {
     async render(previewMode = false, previewLocation = '', mode = 'full') {
         this.previewMode = previewMode;
         this.previewLocation = previewLocation;
-        this.singlePageMode = mode === 'page';
+        this.singlePageMode = mode === 'post';
         this.homepageOnlyMode = mode === 'home';
         this.tagOnlyMode = mode === 'tag';
         this.authorOnlyMode = mode === 'author';

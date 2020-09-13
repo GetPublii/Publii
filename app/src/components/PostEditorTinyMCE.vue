@@ -245,8 +245,9 @@ export default {
                 this.savingPost(newPostStatus, postData, closeEditor);
             } else {
                 this.$bus.$emit('rendering-popup-display', {
-                    postID: this.postID,
-                    postData: postData
+                    itemID: this.postID,
+                    postData: postData,
+                    postOnly: true
                 });
             }
         },
