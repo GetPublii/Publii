@@ -236,7 +236,7 @@
                         </field>
 
                         <separator
-                            v-if="advanced.urls.tagsPrefix !== ''"
+                            v-if="advanced.urls.tagsPrefix !== '' && !advanced.noIndexThisPage"
                             type="medium"
                             label="Tags list page" />
 
@@ -480,7 +480,7 @@
                             label="Error page" />
 
                         <div 
-                            v-if="!currentThemeSupportsErrorPage" 
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsErrorPage" 
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
                             <p>Your theme does not support 404 Error page.</p>
@@ -536,7 +536,7 @@
                             label="Search page" />
 
                         <div 
-                            v-if="!currentThemeSupportsSearchPage" 
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage" 
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
                             <p>Your theme does not support Search page.</p>
