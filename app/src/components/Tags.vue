@@ -224,6 +224,26 @@ export default {
         },
         emptySearchResults: function() {
             return this.filterValue !== '' && !this.items.length;
+        },
+        selectedTagsAreNotHidden () {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let notHiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":false') > -1);
+            return !!notHiddenTags.length;
+        },
+        selectedTagsAreHidden () {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let hiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
+            return !!hiddenTags.length;
         }
     },
     beforeMount () {
@@ -371,26 +391,6 @@ export default {
                 orderBy: this.orderBy,
                 order: this.order
             });
-        },
-        selectedTagsAreNotHidden () {
-            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
-
-            if (!selectedTags.length) {
-                return false;
-            }
-
-            let tagsWithoutGivenStatus = selectedTags.filter(item => !item.additionalData.indexOf('"isHidden":false') === -1);
-            return !!tagsWithoutGivenStatus.length;
-        },
-        selectedTagsAreHidden (status) {
-            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
-
-            if (!selectedTags.length) {
-                return false;
-            }
-
-            let tagsWithGivenStatus = selectedPosts.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
-            return !!tagsWithGivenStatus.length;
         }
     },
     beforeDestroy () {
