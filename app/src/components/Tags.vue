@@ -81,6 +81,22 @@
                         :onClick="bulkDelete">
                         Delete
                     </p-button>
+
+                    <p-button
+                        v-if="selectedTagsAreNotHidden"
+                        icon="hidden-post"
+                        type="small light icon"
+                        :onClick="bulkHide">
+                        Hide
+                    </p-button>
+
+                    <p-button
+                        v-if="selectedTagsAreHidden"
+                        icon="hidden-post"
+                        type="small light icon"
+                        :onClick="bulkUnhide">
+                        Unhide
+                    </p-button>
                 </div>
             </collection-header>
 
@@ -193,7 +209,10 @@ export default {
     computed: {
         items: function() {
             return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
-                item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                if (item.additionalData) {
+                    item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                }
+
                 return item;
             });
         },
@@ -272,6 +291,39 @@ export default {
                 okClick: this.deleteSelected
             });
         },
+        bulkHide () {
+            this.changeStateForSelected('hidden');
+        },
+        bulkUnhide () {
+            this.changeStateForSelected('hidden', true);
+        },
+        changeStateForSelected (status, inverse = false) {
+            let itemsToChange = this.getSelectedItems();
+
+            this.$store.commit('changeTagsVisibility', {
+                tagsIDs: itemsToChange,
+                status: status,
+                inverse: inverse
+            });
+
+            ipcRenderer.send('app-tags-status-change', {
+                "site": this.$store.state.currentSite.config.name,
+                "ids": itemsToChange,
+                "status": status,
+                "inverse": inverse
+            });
+
+            ipcRenderer.once('app-tags-status-changed', () => {
+                this.selectedItems = [];
+                this.$forceUpdate();
+            });
+
+            this.$bus.$emit('message-display', {
+                message: 'Status of the selected tags has been changed',
+                type: 'success',
+                lifeTime: 3
+            });
+        },
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
 
@@ -319,6 +371,26 @@ export default {
                 orderBy: this.orderBy,
                 order: this.order
             });
+        },
+        selectedTagsAreNotHidden () {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let tagsWithoutGivenStatus = selectedTags.filter(item => !item.additionalData.indexOf('"isHidden":false') === -1);
+            return !!tagsWithoutGivenStatus.length;
+        },
+        selectedTagsAreHidden (status) {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let tagsWithGivenStatus = selectedPosts.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
+            return !!tagsWithGivenStatus.length;
         }
     },
     beforeDestroy () {

@@ -30,6 +30,22 @@ class TagEvents {
             event.sender.send('app-tag-deleted', result);
         });
 
+        // Status change
+        ipcMain.on('app-tags-status-change', function (event, tagData) {
+            let result = false;
+
+            for(let i = 0; i < tagData.ids.length; i++) {
+                let tag = new Tag(appInstance, {
+                    site: tagData.site,
+                    id: tagData.ids[i]
+                });
+
+                result = tag.changeStatus(tagData.status, tagData.inverse);
+            }
+
+            event.sender.send('app-tags-status-changed', result);
+        });
+
         // Cancelled edition
         ipcMain.on('app-tag-cancel', function(event, tagData) {
             let tag = new Tag(appInstance, tagData);

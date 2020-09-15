@@ -367,6 +367,39 @@ class Tag extends Model {
             }
         }
     }
+
+    /*
+     * Change tag visibility status
+     */
+    changeStatus(status, inverse = false) {
+        let selectQuery = this.db.prepare(`SELECT additional_data FROM tags WHERE id = @id`).all({ id: this.id });
+        let additionalData = selectQuery[0].additional_data;
+
+        try {
+            additionalData = JSON.parse(additionalData);
+
+            if (inverse) {
+                additionalData.isHidden = false;
+            } else {
+                additionalData.isHidden = true;
+            }
+        } catch (e) {
+            return false;
+        }
+
+        let updateQuery = this.db.prepare(`UPDATE
+                                        tags
+                                    SET
+                                        additional_data = @updatedData
+                                    WHERE
+                                        id = @id`);
+        updateQuery.run({
+            updatedData: JSON.stringify(additionalData),
+            id: this.id
+        });
+
+        return true;
+    }
 }
 
 module.exports = Tag;
