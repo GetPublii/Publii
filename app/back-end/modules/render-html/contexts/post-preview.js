@@ -308,7 +308,7 @@ class RendererContextPostPreview extends RendererContext {
             previousPost: this.previousPost,
             nextPost: this.nextPost,
             siteOwner: this.renderer.cachedItems.authors[1],
-            menus: this.menus
+            menus: this.menus.assigned
         };
     }
 
