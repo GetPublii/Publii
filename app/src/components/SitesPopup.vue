@@ -86,7 +86,7 @@ export default {
     top: 0;
     transition: all .25s ease-out;
     width: 100vw;
-    z-index: 1000;
+    z-index: 99999;
 
     &.is-hidden {
         pointer-events: none;
