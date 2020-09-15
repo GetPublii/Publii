@@ -1105,7 +1105,7 @@
                                 id="gdpr-page-type"
                                 key="gdpr-page-type"
                                 v-model="advanced.gdpr.articleLinkType"
-                                :items="{ 'internal': 'Internal page', 'external': 'External page' }"></dropdown>
+                                :items="{ 'internal': 'Internal page', 'external': 'External page', 'none': 'None' }"></dropdown>
                         </field>
 
                         <field
