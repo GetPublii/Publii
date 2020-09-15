@@ -8,6 +8,7 @@
             <div class="post-editor-settings-wrapper">
                 <div
                     :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'status' }"
+                    class="is-first" 
                     @click="openItem('status')">
                     <icon
                         class="post-editor-settings-icon"
@@ -747,13 +748,16 @@ export default {
         }
 
         & > div {
-            padding: 9rem 0 0 0;
+            padding: 10rem 0 0 0;
         }
 
         &-header {
-            font-size: 1.8rem;
+            color: var(--gray-3);
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-top: 0;
             padding: 0 3.6rem 1.5rem;
+            text-transform: uppercase;
         }
 
         .post-info {            
@@ -923,6 +927,10 @@ export default {
                             opacity: 0;
                         }
                     }
+                }
+
+                &.is-first {
+                   border: none;
                 }
             }
 

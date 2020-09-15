@@ -49,12 +49,12 @@
     }
 
     h2 {        
-        border-bottom: 1px solid var(--input-border-color);
-        font-size: 1.8rem;
-        font-weight: 400;
+        color: var(--gray-3);
+        font-size: 1.2rem;
+        font-weight: 600;
         margin: -0.2rem 0 0;
         padding: 0 0 1.5rem;
-        text-transform: none;
+        text-transform: uppercase;
     }
 
     label {
