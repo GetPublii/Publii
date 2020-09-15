@@ -318,7 +318,7 @@ export default {
                 this.errors.push('label');
             }
 
-            if(this.type === '') {
+            if(!this.type) {
                 this.errors.push('type');
             }
 
