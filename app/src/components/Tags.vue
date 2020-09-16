@@ -232,7 +232,7 @@ export default {
                 return false;
             }
 
-            let notHiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":false') > -1);
+            let notHiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":false') > -1 || item.additionalData.indexOf('"isHidden"') === -1);
             return !!notHiddenTags.length;
         },
         selectedTagsAreHidden () {
