@@ -266,7 +266,13 @@ class EditorBridge {
                         });
 
                         ipcRenderer.once('app-image-uploaded', (event, data) => {
-                            this.callbackForTinyMCE(data.baseImage.url, {
+                            let imagePath = data.baseImage.url;
+
+                            if (process.platform === 'win') {
+                                imagePath = imagePath.replace('file://', 'file:///');
+                            }
+
+                            this.callbackForTinyMCE(imagePath, {
                                 alt: '',
                                 dimensions: {
                                     height: data.baseImage.size[1],
