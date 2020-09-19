@@ -267,10 +267,7 @@ class EditorBridge {
 
                         ipcRenderer.once('app-image-uploaded', (event, data) => {
                             let imagePath = data.baseImage.url;
-
-                            if (process.platform === 'win32') {
-                                imagePath = imagePath.replace('file://', 'file:///');
-                            }
+                            imagePath = imagePath.replace('file://', 'file:///');
 
                             this.callbackForTinyMCE(imagePath, {
                                 alt: '',
