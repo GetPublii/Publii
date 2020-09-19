@@ -23,6 +23,7 @@
     "prepare-vendor-dist-dir": "if [ ! -d \"app/dist/vendor\" ]; then mkdir app/dist/vendor; fi && gulp prepare-editor-css",
     "copy-vendor-files": "cp -r app/src/helpers/vendor/tinymce app/dist/vendor/tinymce && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
     "packager:win": "electron-builder build --win --x64",
+    "packager:win32": "electron-builder build --win --x86",
     "packager:osx": "electron-builder build --mac",
     "packager:linux": "electron-builder build --linux"
   },
