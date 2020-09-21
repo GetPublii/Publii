@@ -11,6 +11,8 @@
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
         "createContentStructure": true,
+        "createTagPages": true,
+        "createAuthorPages": true,
         "createTagsList": true,
         "createSearchPage": true,
         "create404page": true,
