@@ -101,6 +101,13 @@
                         key="theme"
                         v-model="theme"></themes-dropdown>
                 </field>
+
+                <div 
+                    v-if="!currentThemeHasSupportedFeaturesList"
+                    class="msg msg-icon msg-alert">
+                    <icon name="warning" customWidth="28" customHeight="28"/>
+                    <p>Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
+                </div>
             </fields-group>
 
             <fields-group title="Advanced options">
@@ -226,6 +233,62 @@
                                 class="note">
                                 If this option is enabled your post pages won't display text which is placed above "Read more" element in the post editor.
                             </small>
+                        </field>
+
+                        <separator
+                            v-if="advanced.urls.tagsPrefix !== '' && !advanced.noIndexThisPage"
+                            type="medium"
+                            label="Tags list page" />
+
+                        <div 
+                            v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support Tags list page. </p>
+                        </div>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="tags-list-meta-title"
+                            :withCharCounter="true"
+                            label="Page Title:">
+                            <text-input
+                                id="tags-list-meta-title"
+                                v-model="advanced.tagsMetaTitle"
+                                slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :charCounter="true"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                The following variables can be used in the Tags List Page Title: %sitename
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="tags-list-meta-description"
+                            label="Meta Description:">
+                            <text-area
+                                id="tags-list-meta-description"
+                                v-model="advanced.tagsMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            id="meta-robots-tags-list"
+                            label="Meta Robots:">
+                            <dropdown
+                                id="meta-robots-tags-list"
+                                slot="field"
+                                :items="seoOptions"
+                                v-model="advanced.metaRobotsTagsList">
+                            </dropdown>
                         </field>
 
                         <separator
@@ -416,6 +479,13 @@
                             type="medium"
                             label="Error page" />
 
+                        <div 
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsErrorPage" 
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support 404 Error page.</p>
+                        </div>
+
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="error-meta-title"
@@ -464,6 +534,13 @@
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
                             label="Search page" />
+
+                        <div 
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage" 
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>Your theme does not support Search page.</p>
+                            </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
@@ -551,7 +628,7 @@
                                 slot="note"
                                 class="note">
                                 Prefixes entered here will be added before the tag slug in the URL e.g. <strong>https://example.com/TAG_PREFIX/tag-slug</strong>.<br>
-                                You can leave it empty if use of the clean URLs is disabled.
+                                You can leave this field blank if the use of pretty URLs is disabled.
                             </small>
                         </field>
 
@@ -727,7 +804,8 @@
                             <small
                                 slot="note"
                                 class="note">
-                                When this option is enabled, og:title and twitter:title metatags will contain page title, instead of the post title, tag name or author name.
+                                When this option is enabled, og:title and twitter:title metatags will contain the page title instead of the post title, tag name or author name.
+                                
                             </small>
                         </field>
 
@@ -1027,7 +1105,7 @@
                                 id="gdpr-page-type"
                                 key="gdpr-page-type"
                                 v-model="advanced.gdpr.articleLinkType"
-                                :items="{ 'internal': 'Internal page', 'external': 'External page' }"></dropdown>
+                                :items="{ 'internal': 'Internal page', 'external': 'External page', 'none': 'None' }"></dropdown>
                         </field>
 
                         <field
@@ -1479,6 +1557,7 @@ export default {
             customLanguage: '',
             spellchecking: false,
             name: '',
+            uuid: '',
             theme: '',
             currentTheme: '',
             currentThemeVersion: '',
@@ -1488,6 +1567,30 @@ export default {
         };
     },
     computed: {
+        currentThemeHasSupportedFeaturesList () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures;
+        },
+        currentThemeSupportsTagsList () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
+        },
+        currentThemeSupportsSearchPage () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createSearchPage
+            );
+        },
+        currentThemeSupportsErrorPage () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.create404page
+            );
+        },
         advancedTabs () {
             return [
                 'SEO',
@@ -1655,6 +1758,11 @@ export default {
         }
 
         this.name = this.$store.state.currentSite.config.displayName;
+
+        if (this.$store.state.currentSite.config.uuid) {
+            this.uuid = this.$store.state.currentSite.config.uuid;
+        }
+
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
     },
@@ -1692,6 +1800,11 @@ export default {
 
             let newSettings = {};
             newSettings.name = this.name;
+
+            if (this.uuid) {
+                newSettings.uuid = this.uuid;
+            }
+
             newSettings.displayName = this.name;
             newSettings.spellchecking = this.spellchecking;
             newSettings.logo = {
@@ -2024,6 +2137,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .site-settings {
     margin: 0 auto;

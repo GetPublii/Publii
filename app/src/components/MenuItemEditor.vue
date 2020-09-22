@@ -155,7 +155,7 @@
                     v-if="menuItemID !== ''"
                     type="primary"
                     @click.native="editMenuItem">
-                    Save changes
+                    Save Changes
                 </p-button>
 
                 <p-button
@@ -201,7 +201,16 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'internal', 'external', 'separator' ];
+            return [ 
+                'post', 
+                'tag',
+                'tags',
+                'author', 
+                'frontpage', 
+                'internal',                 
+                'external', 
+                'separator' 
+            ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -255,9 +264,10 @@ export default {
             switch (value) {
                 case 'post': return 'Post link';
                 case 'tag': return 'Tag link';
+                case 'tags': return 'Tags list link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
-                case 'internal': return 'Internal link';
+                case 'internal': return 'Internal link';               
                 case 'external': return 'External link';
                 case 'separator': return 'Text separator';
             }
@@ -308,7 +318,7 @@ export default {
                 this.errors.push('label');
             }
 
-            if(this.type === '') {
+            if(!this.type) {
                 this.errors.push('type');
             }
 
@@ -366,6 +376,8 @@ export default {
                 items: []
             };
 
+            console.log('MITEM:', menuItem);
+
             if(this.parentID === '') {
                 this.$store.commit('addNewMenuItem', {
                     menuItem: menuItem,
@@ -412,6 +424,7 @@ export default {
             switch (type) {
                 case 'post':      return this.postPage;
                 case 'tag':       return this.tagPage;
+                case 'tags':      return 'empty';
                 case 'author':    return this.authorPage;
                 case 'frontpage': return 'empty';
                 case 'internal':  return this.internalLink;
@@ -436,4 +449,16 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
+
+.options-sidebar {
+    
+    h2 {              
+        margin-bottom: 1.2rem;
+    }
+
+    &-buttons {
+        border: none;
+        padding-top: 1.8rem;
+    }
+}
 </style>

@@ -265,7 +265,7 @@ class App {
             return;
         }
 
-        // check if root-files directory exists - if not - recreate it and move some files to it
+        // check if all necessary files exists
         Site.checkFilesConsistency(this, siteName);
 
         // Load the config

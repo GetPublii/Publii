@@ -52,8 +52,13 @@ class GithubPages {
         this.user = this.deployment.siteConfig.deployment.github.user;
         this.branch = 'heads/' + this.deployment.siteConfig.deployment.github.branch;
         this.parallelOperations = parseInt(this.deployment.siteConfig.deployment.github.parallelOperations, 10);
+        this.apiRateLimiting = !!this.deployment.siteConfig.deployment.github.apiRateLimiting;
         this.waitForTimeout = true;
         let account = slug(this.deployment.siteConfig.name);
+
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
 
         if (this.token === 'publii-gh-token ' + account) {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
@@ -118,18 +123,20 @@ class GithubPages {
             }
 
             try {
-                let result = self.getAPIRateLimit();
+                if (self.apiRateLimiting) {
+                    let result = self.getAPIRateLimit();
 
-                if(result.remaining < 10) {
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-connection-error',
-                        value: {
-                            additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
-                        }
-                    });
+                    if(result.remaining < 10) {
+                        process.send({
+                            type: 'web-contents',
+                            message: 'app-connection-error',
+                            value: {
+                                additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                            }
+                        });
 
-                    return;
+                        return;
+                    }
                 }
 
                 await self.deploy();
@@ -142,7 +149,7 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'E2 ' + JSON.stringify(err)
+                        additionalMessage: 'E2 ' + err
                     }
                 });
 
@@ -165,13 +172,17 @@ class GithubPages {
         }, 15000);
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let token = deploymentConfig.github.token;
         let repository = deploymentConfig.github.repo;
         let user = deploymentConfig.github.user;
         let branch = 'heads/' + deploymentConfig.github.branch;
         let account = slug(siteName);
         this.waitForTimeout = true;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if(token === 'publii-gh-token ' + account) {
             token = await passwordSafeStorage.getPassword('publii-gh-token', account);
@@ -540,18 +551,20 @@ class GithubPages {
     }
 
     async createBlobs(files, reuploadSession = false) {
-        let result = await this.getAPIRateLimit();
-        
-        if(result.remaining < this.filesToUpdate + 10) {
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
-                }
-            });
+        if (this.apiRateLimiting) {
+            let result = await this.getAPIRateLimit();
+            
+            if(result.remaining < this.filesToUpdate + 10) {
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                    }
+                });
 
-            return [];
+                return [];
+            }
         }
 
         let filesToUpdate = [];

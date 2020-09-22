@@ -172,12 +172,17 @@ class SiteEvents {
             let glTokenData = false;
             let netlifyIdData = false;
             let netlifyTokenData = false;
+            let siteID = slug(config.settings.name);
+
+            if (config.settings.uuid) {
+                siteID = config.settings.uuid;
+            }
 
             // Save the password in the keychain
             if (passwordSafeStorage) {
                 if (
                     config.settings.deployment.password !== '' && 
-                    config.settings.deployment.password !== 'publii ' + slug(config.settings.name)
+                    config.settings.deployment.password !== 'publii ' + siteID
                 ) {
                     passwordData = await self.loadPassword(
                         config.settings,
@@ -189,7 +194,7 @@ class SiteEvents {
 
                 if (
                     config.settings.deployment.passphrase !== '' && 
-                    config.settings.deployment.passphrase !== 'publii-passphrase ' + slug(config.settings.name)
+                    config.settings.deployment.passphrase !== 'publii-passphrase ' + siteID
                 ) {
                     passphraseData = await self.loadPassword(
                         config.settings,
@@ -202,7 +207,7 @@ class SiteEvents {
                 if (
                     config.settings.deployment.s3.id !== '' && 
                     config.settings.deployment.s3.key !== '' && 
-                    config.settings.deployment.s3.id !== 'publii-s3-id ' + slug(config.settings.name)
+                    config.settings.deployment.s3.id !== 'publii-s3-id ' + siteID
                 ) {
                     s3IdData = await self.loadPassword(
                         config.settings,
@@ -220,7 +225,7 @@ class SiteEvents {
 
                 if (
                     config.settings.deployment.github.token !== '' &&
-                    config.settings.deployment.github.token !== 'publii-gh-token ' + slug(config.settings.name)
+                    config.settings.deployment.github.token !== 'publii-gh-token ' + siteID
                 ) {
                     ghTokenData = await self.loadPassword(
                         config.settings,
@@ -232,7 +237,7 @@ class SiteEvents {
 
                 if (
                     config.settings.deployment.gitlab.token !== '' && 
-                    config.settings.deployment.gitlab.token !== 'publii-gl-token ' + slug(config.settings.name)
+                    config.settings.deployment.gitlab.token !== 'publii-gl-token ' + siteID
                 ) {
                     glTokenData = await self.loadPassword(
                         config.settings,
@@ -245,7 +250,7 @@ class SiteEvents {
                 if (
                     config.settings.deployment.netlify.id !== '' && 
                     config.settings.deployment.netlify.token !== '' &&
-                    config.settings.deployment.netlify.token !== 'publii-netlify-token ' + slug(config.settings.name)
+                    config.settings.deployment.netlify.token !== 'publii-netlify-token ' + siteID
                 ) {
                     netlifyIdData = await self.loadPassword(
                         config.settings,
@@ -373,6 +378,7 @@ class SiteEvents {
                 return;
             }
 
+            config.uuid = site.uuid;
             config.theme = 'simple';
             appInstance.sites[config.name] = config;
 
@@ -467,6 +473,10 @@ class SiteEvents {
 
     async loadPassword(settings, type, newPassword) {
         let account = slug(settings.name);
+
+        if (settings.uuid) {
+            account = settings.uuid;
+        }
 
         if (!settings.deployment.askforpassword || type !== 'publii') {
             let existingPassword = await passwordSafeStorage.getPassword(type, account);

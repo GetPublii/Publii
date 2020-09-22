@@ -40,6 +40,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             output.push(activeParentClass);
         } else if(
             (this.type === 'frontpage' && context[0] === 'frontpage') ||
+            (this.type === 'tags' && context[0] === 'tags') ||
             (this.type === context[0] && this.link === context[1])
         ) {
             output.push(activeClass);
@@ -86,6 +87,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             output.push(activeParentClass);
         } else if(
             (this.type === 'frontpage' && context[0] === 'frontpage') ||
+            (this.type === 'tags' && context[0] === 'tags') ||
             (this.type === context[0] && this.link === context[1])
         ) {
             output.push(activeClass);
@@ -131,6 +133,7 @@ function hasActiveChild(items, context) {
     for(let i = 0; i < items.length; i++) {
         if(
             (items[i].type === 'frontpage' && context[0] === 'frontpage') ||
+            (items[i].type === 'tags' && context[0] === 'tags') ||
             (items[i].type === context[0] && items[i].link === context[1])
         ) {
             return true;

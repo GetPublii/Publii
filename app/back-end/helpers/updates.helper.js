@@ -71,7 +71,8 @@ class UpdatesHelper {
                 status: true,
                 notification: {
                     timestamp: response.timestamp,
-                    content: response[this.contentField]
+                    content: response[this.contentField],
+                    publiiMaxVersion: response.publiiMaxVersion
                 }
             });
         } else {

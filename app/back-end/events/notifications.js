@@ -12,9 +12,9 @@ class NotificationsEvents {
         ipcMain.on('app-notifications-retrieve', function(event, downloadNotifications) {
             let updatesHelper = new UpdatesHelper({
                 event: event,
-                filePath: path.join(appInstance.app.getPath('logs'), 'notifications-dev.json'),
+                filePath: path.join(appInstance.app.getPath('logs'), 'notifications.json'),
                 namespace: 'notifications',
-                url: 'https://getpublii.com/notifications-dev.json',
+                url: 'https://getpublii.com/notifications.json',
                 contentField: 'text',
                 forceDownload: downloadNotifications
             });

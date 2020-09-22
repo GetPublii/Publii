@@ -13,10 +13,10 @@
         width: 48rem;
         z-index: 9999;   
         
-
         &.v-enter-active,
         &.v-leave-active {
             transition: all .25s ease;
+            transition-delay: .1s;
         }
 
         &.v-enter,
@@ -28,15 +28,33 @@
         &.v-leave {
             right: 0;
         }
+
+        &[data-animate="false"] {
+            &.v-enter-active,
+            &.v-leave-active {
+                transition: none;
+                transition-delay: .1s;
+            } 
+            
+            &.v-enter,
+            &.v-leave-to {
+                right: 0;
+            }
+
+            &.v-enter-to,
+            &.v-leave {
+                right: 0;
+            }
+        }
     }
 
     h2 {        
-        border-bottom: 1px solid var(--input-border-color);
-        font-size: 1.8rem;
-        font-weight: 400;
-        margin-top: -0.2rem;
+        color: var(--gray-3);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: -0.2rem 0 0;
         padding: 0 0 1.5rem;
-        text-transform: none;
+        text-transform: uppercase;
     }
 
     label {
@@ -92,6 +110,7 @@
     }
 
     &-buttons {
-        padding: 2rem 0 0 0;
+        border-top: 1px solid var(--input-border-color);
+        padding: 3rem 0 0 0;
     }
 }

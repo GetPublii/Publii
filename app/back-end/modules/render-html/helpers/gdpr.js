@@ -1,6 +1,7 @@
 class Gdpr {
     static popupHtmlOutput (configuration, renderer) {
         let groups = ``;
+        let privacyPolicyLink = ``;
 
         for (let i = 0; i < configuration.groups.length; i++) {
             if (configuration.groups[i].id === '-' || configuration.groups[i].id === '') {
@@ -27,17 +28,19 @@ class Gdpr {
             </label>`;
         }
 
+        if (Gdpr.getPrivacyPolicyUrl(configuration, renderer) !== 'none') {
+            privacyPolicyLink = `<a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">${configuration.readMoreLinkLabel}</a>`;
+        }
+
         let output = `
         <div class="cookie-popup js-cookie-popup ${configuration.behaviour !== 'badge' ? 'cookie-popup--uses-link' : ''} ${configuration.behaviour !== 'link' ? 'cookie-popup--uses-badge' : ''}">
             ${configuration.popupTitlePrimary !== '' ? '<h2>' + configuration.popupTitlePrimary + '</h2>' : ''}
-            
+
             <p>
                 ${configuration.popupDesc}
-                <a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">
-                    ${configuration.readMoreLinkLabel}
-                </a>
+                ${privacyPolicyLink}
             </p>
-
+            
             <form>
                 ${groups}
 
@@ -333,6 +336,10 @@ class Gdpr {
     }
 
     static getPrivacyPolicyUrl (configuration, renderer) {
+        if (configuration.articleLinkType === 'none') {
+            return false;
+        }
+        
         if (configuration.articleLinkType === 'external') {
             return configuration.articleExternalUrl;
         }

@@ -29,6 +29,10 @@ class S3 {
         this.prefix = this.deployment.siteConfig.deployment.s3.prefix;
         this.waitForTimeout = true;
 
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
+
         if(s3Id === 'publii-s3-id ' + account) {
             s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);
         }
@@ -404,7 +408,7 @@ class S3 {
         return filePath;
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let s3Id = deploymentConfig.s3.id;
         let s3Key = deploymentConfig.s3.key;
         let bucket = deploymentConfig.s3.bucket;
@@ -412,6 +416,10 @@ class S3 {
         let region = deploymentConfig.s3.region;
         let account = slug(siteName);
         let waitForTimeout = true;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if(s3Id === 'publii-s3-id ' + account) {
             s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);

@@ -5,22 +5,13 @@ process.on('message', async function(msg){
         let appDir = msg.appDir;
         let sitesDir = msg.sitesDir;
         let siteConfig = msg.siteConfig;
-        let postID = msg.postID;
+        let itemID = msg.itemID;
         let postData = msg.postData;
         let previewMode = msg.previewMode;
-        let singlePageMode = msg.singlePageMode;
-        let homepageOnlyMode = msg.homepageOnlyMode;
+        let mode = msg.mode || 'full';
         let previewLocation = msg.previewLocation;
-        let renderer = new Renderer(appDir, sitesDir, siteConfig, postID, postData);
+        let renderer = new Renderer(appDir, sitesDir, siteConfig, itemID, postData);
         let result;
-
-        let mode = 'full';
-
-        if (singlePageMode) {
-            mode = 'page';
-        } else if (homepageOnlyMode) {
-            mode = 'home';
-        }
 
         try {
             result = await renderer.render(previewMode, previewLocation, mode);

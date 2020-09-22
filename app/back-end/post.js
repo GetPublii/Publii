@@ -122,7 +122,7 @@ class Post extends Model {
             WHERE
                 post_id = @id
                 AND
-                key = "_core"
+                key = '_core'
         `;
         let additionalDataResult = this.db.prepare(additionalDataSqlQuery).get({ id: this.id });
 
@@ -140,7 +140,7 @@ class Post extends Model {
             WHERE
                 post_id = @id
                 AND
-                key = "postViewSettings"
+                key = 'postViewSettings'
         `;
         let postViewResult = this.db.prepare(postViewSqlQuery).get({ id: this.id });
 
@@ -287,7 +287,7 @@ class Post extends Model {
         tagsSqlQuery.run({ id: this.id });
         imagesSqlQuery.run({ id: this.id });
         additionalDataSqlQuery.run({ id: this.id });
-        ImageHelper.deleteImagesDirectory(this.siteDir, this.id);
+        ImageHelper.deleteImagesDirectory(this.siteDir, 'posts', this.id);
 
         return true;
     }
@@ -480,7 +480,7 @@ class Post extends Model {
         if(result && result.length) {
             tagID = result[0].id;
         } else {
-            let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, @name, @slug, "", "")`);
+            let sqlQuery = this.db.prepare(`INSERT INTO tags VALUES(null, @name, @slug, '', '')`);
             sqlQuery.run({
                 name: tagName, 
                 slug: slug(tagName)
@@ -710,7 +710,7 @@ class Post extends Model {
      */
     saveAdditionalData() {
         // Remove old _core additional data
-        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "_core"`);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = '_core'`);
         sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
@@ -738,7 +738,7 @@ class Post extends Model {
         let additionalDataToSave = JSON.stringify(this.additionalData);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "_core", @data)`);
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, '_core', @data)`);
         storeSqlQuery.run({
             id: this.id, 
             data: additionalDataToSave
@@ -750,7 +750,7 @@ class Post extends Model {
      */
     savePostViewSettings() {
         // Remove old _core additional data
-        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = "postViewSettings"`);
+        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = 'postViewSettings'`);
         sqlQuery.run({ id: this.id })
 
         // Convert data to JSON string
@@ -761,7 +761,7 @@ class Post extends Model {
         let dataToSave = JSON.stringify(this.postViewSettings);
 
         // Store the data
-        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, "postViewSettings", @data)`);
+        let storeSqlQuery = this.db.prepare(`INSERT INTO posts_additional_data VALUES(null, @id, 'postViewSettings', @data)`);
         storeSqlQuery.run({
             id: this.id, 
             data: dataToSave

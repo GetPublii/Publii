@@ -18,7 +18,6 @@
         "shareButtons": {
             "shareWithFacebook": "Facebook",
             "shareWithTwitter": "Twitter",
-            "shareWithGooglePlus": "Google Plus",
             "shareWithPinterest": "Pinterest",
             "shareWithMix": "Mix",
             "shareWithLinkedIn": "LinkedIn",
@@ -41,6 +40,15 @@
         "nextPost": "Next"
     },
     
+    "tags": {
+        "tagsPageTitle": "Tags",
+        "description": "Collection of all tags"
+    },
+
+    "author": {
+        "visitWebsite": "Visit website"
+    },
+
     "error": {
         "404": "404",
         "message-1": "Page not found",

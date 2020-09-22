@@ -167,7 +167,6 @@
 
 <script>
 import { ipcRenderer } from 'electron';
-import strip_tags from './../../helpers/vendor/locutus/strings/strip_tags';
 
 export default {
     name: 'link-popup',
@@ -201,7 +200,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'author', 'frontpage', 'external', 'file' ];
+            return [ 'post', 'tag', 'tags', 'author', 'frontpage', 'external', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.map(tag => tag.id);
@@ -241,6 +240,7 @@ export default {
             switch (value) {
                 case 'post': return 'Post link';
                 case 'tag': return 'Tag link';
+                case 'tags': return 'Tags list link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'external': return 'External link';
@@ -297,7 +297,6 @@ export default {
             }
         },
         parseHTMLContent (content) {
-            let rawText = strip_tags(content);
             let linkContent = content.match(/>(.*?)<\/a>/);
             let titleContent = content.match(/title="(.*?)"/);
             let targetContent = content.match(/target="(.*?)"/);
@@ -310,7 +309,7 @@ export default {
             if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
             } else {
-                this.label = rawText;
+                this.label = content;
             }
 
             if (titleContent && titleContent[1]) {
@@ -358,6 +357,8 @@ export default {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
                     this.type = 'tag';
                     this.tag = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/tags/') !== -1) {
+                    this.type = 'tags';
                 } else if (urlContent[1].indexOf('/author/') !== -1) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
                     this.type = 'author';
@@ -384,7 +385,9 @@ export default {
             };
 
             if (this.type !== 'external') {
-                if (this.type !== 'frontpage') {
+                if (this.type === 'tags') {
+                    response.url = '#INTERNAL_LINK#/tags/1';
+                } else if (this.type !== 'frontpage') {
                     response.url = '#INTERNAL_LINK#/' + this.type + '/' + this[this.type];
                 } else {
                     response.url = '#INTERNAL_LINK#/frontpage/1';
@@ -456,14 +459,15 @@ export default {
                     downloadAttr = ' download="download" '
                 }
 
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
-            
-                if (tinymce.activeEditor.selection.getContent() === '') {
-                    tinymce.activeEditor.insertContent(linkHTML);
-                } else {
-                    tinymce.activeEditor.selection.setContent('');
-                    tinymce.activeEditor.selection.setContent(linkHTML);
+                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.target}${relAttr}>`;
+                let linkHTMLContent = response.text;
+                let linkHTMLEnd = `</a>`;
+
+                if (linkHTMLContent === '') {
+                    linkHTMLContent = tinymce.activeEditor.selection.getContent();
                 }
+
+                tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
             }
         },
         setSimpleMdeInstance (instance) {

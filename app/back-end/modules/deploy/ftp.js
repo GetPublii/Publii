@@ -25,6 +25,10 @@ class FTP {
         let account = slug(this.deployment.siteConfig.name);
         let secureConnection = false;
 
+        if (this.deployment.siteConfig.uuid) {
+            account = this.deployment.siteConfig.uuid;
+        }
+
         this.connection = new ftpClient();
 
         if(ftpPassword === 'publii ' + account) {
@@ -432,12 +436,16 @@ class FTP {
         );
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let client = new ftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
         let account = slug(siteName);
         let secureConnection = false;
+
+        if (uuid) {
+            account = uuid;
+        }
 
         if(ftpPassword === 'publii ' + account) {
             ftpPassword = await passwordSafeStorage.getPassword('publii', account);

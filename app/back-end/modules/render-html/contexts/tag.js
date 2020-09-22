@@ -1,5 +1,6 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
+const RendererHelpers = require('./../helpers/helpers.js');
 
 /**
  * Class used create context
@@ -16,9 +17,10 @@ class RendererContextTag extends RendererContext {
 
         // Retrieve post
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.tagsIncludeFeaturedInPosts) {
-            includeFeaturedPosts = 'p.status NOT LIKE "%featured%" AND';
+        if (shouldSkipFeaturedPosts) {
+            includeFeaturedPosts = 'p.status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -38,9 +40,9 @@ class RendererContextTag extends RendererContext {
                 ON
                     p.id = pt.post_id
                 WHERE
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%hidden%" AND
-                    p.status NOT LIKE "%trashed%" AND
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%hidden%' AND
+                    p.status NOT LIKE '%trashed%' AND
                     ${includeFeaturedPosts}
                     pt.tag_id = @tagID
                 ORDER BY
@@ -56,7 +58,7 @@ class RendererContextTag extends RendererContext {
             });
         }
 
-        this.tags = this.renderer.commonData.tags;
+        this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -81,16 +83,11 @@ class RendererContextTag extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
+        let featuredPostsNumber = RendererHelpers.getRendererOptionValue('tagsFeaturedPostsNumber', this.themeConfig);
 
         // Remove featured posts from posts if featured posts allowed
-        if(
-            this.themeConfig.renderer &&
-            this.themeConfig.renderer.tagsIncludeFeaturedInPosts &&
-            (
-                this.themeConfig.renderer.tagsFeaturedPostsNumber > 0 ||
-                this.themeConfig.renderer.tagsFeaturedPostsNumber === -1
-            )
-        ) {
+        if (shouldSkipFeaturedPosts && (featuredPostsNumber > 0 || featuredPostsNumber === -1)) {
             let featuredPostsIds = this.featuredPosts.map(post => post.id);
             this.posts = this.posts.filter(post => featuredPostsIds.indexOf(post.id) === -1);
         }

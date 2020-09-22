@@ -1,15 +1,50 @@
-.msg {    
-    border-radius: 4px;
+.msg {
+    background: var(--input-bg-light);
+    border-left: 4px solid transparent;
+    color: var(--text-light-color);
     font-size: 1.4rem;
-    padding: 1.5rem 2rem;
-    
+    line-height: 1.6;
+    padding: 2rem 2rem 2rem 2.5rem;
+
     a {
         &:hover {
             text-decoration: underline;
         }
     }
 
+    &-icon {
+        align-items: center;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        grid-gap: 2.2rem;
+
+        & > * {          
+            margin: 0;
+        }
+    }
+
+    &-small {
+        line-height: 1.4;
+        padding: 1.4rem 1.4rem 1.4rem 1.7rem;
+
+        &.msg-icon {
+            grid-gap: 1.2rem;
+        }
+    }
+
     &-info {
-        background-color: var(--highlighted);       
-    }   
+        border-color: var(--primary-color);
+
+        svg {
+            fill: var(--primary-color);
+        }
+    }
+
+    &-alert {
+        border-color: var(--warning);
+
+        svg {
+            fill: var(--warning);
+        }
+    }
 }

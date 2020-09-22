@@ -8,12 +8,14 @@ const responsiveSizes = require('./responsive-sizes.js');
  * {{responsiveImageAttributes @config.custom.imageOptionName [group]}}
  * 
  * {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+ * {{responsiveImageAttributes 'tagImage' srcset.post sizes.post}}
+ * {{responsiveImageAttributes 'authorImage' srcset.post sizes.post}}
  *
  * @returns {string} - string with the srcset and sizes attributes
  */
 function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveImageAttributes', function (firstParam, secondParam, thirdParam) {
-        if (firstParam === 'featuredImage') {
+        if (firstParam === 'featuredImage' || firstParam === 'tagImage' || firstParam === 'authorImage') {
             if (secondParam && thirdParam) {
                 return new Handlebars.SafeString('srcset="' + secondParam + '" sizes="' + thirdParam + '"');
             }

@@ -1,6 +1,7 @@
 // Necessary packages
 const RendererContext = require('../renderer-context');
 const slug = require('./../../../helpers/slug');
+const RendererHelpers = require('./../helpers/helpers.js');
 const path = require('path');
 
 /**
@@ -20,9 +21,10 @@ class RendererContextAuthor extends RendererContext {
 
         // Retrieve post
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('authorsIncludeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.authorsIncludeFeaturedInPosts) {
-            includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
+        if (shouldSkipFeaturedPosts) {
+            includeFeaturedPosts = 'status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -38,9 +40,9 @@ class RendererContextAuthor extends RendererContext {
                 FROM
                     posts
                 WHERE
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%" AND
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%hidden%' AND
+                    status NOT LIKE '%trashed%' AND
                     ${includeFeaturedPosts}
                     authors LIKE @authorID
                 ORDER BY
@@ -56,7 +58,7 @@ class RendererContextAuthor extends RendererContext {
             });
         }
 
-        this.tags = this.renderer.commonData.tags;
+        this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -72,16 +74,11 @@ class RendererContextAuthor extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('authorsIncludeFeaturedInPosts', this.themeConfig) === false;
+        let featuredPostsNumber = RendererHelpers.getRendererOptionValue('authorsFeaturedPostsNumber', this.themeConfig);
 
         // Remove featured posts from posts if featured posts allowed
-        if(
-            this.themeConfig.renderer &&
-            this.themeConfig.renderer.authorsIncludeFeaturedInPosts &&
-            (
-                this.themeConfig.renderer.authorsFeaturedPostsNumber > 0 ||
-                this.themeConfig.renderer.authorsFeaturedPostsNumber === -1
-            )
-        ) {
+        if (shouldSkipFeaturedPosts && (featuredPostsNumber > 0 || featuredPostsNumber === -1)) {
             let featuredPostsIds = this.featuredPosts.map(post => post.id);
             this.posts = this.posts.filter(post => featuredPostsIds.indexOf(post.id) === -1);
         }

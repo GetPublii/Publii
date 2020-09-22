@@ -1,5 +1,6 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
+const RendererHelpers = require('./../helpers/helpers.js');
 
 /**
  * Class used create context
@@ -14,9 +15,10 @@ class RendererContextHome extends RendererContext {
 
         // Retrieve post
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.includeFeaturedInPosts) {
-            includeFeaturedPosts = 'status NOT LIKE "%featured%" AND';
+        if (shouldSkipFeaturedPosts) {
+            includeFeaturedPosts = 'status NOT LIKE \'%featured%\' AND';
         }
 
         if(this.postsNumber === -1) {
@@ -33,10 +35,10 @@ class RendererContextHome extends RendererContext {
                     posts
                 WHERE
                     ${includeFeaturedPosts}
-                    status LIKE "%published%" AND
-                    status NOT LIKE "%hidden%" AND
-                    status NOT LIKE "%trashed%" AND
-                    status NOT LIKE "%excluded_homepage%"
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%hidden%' AND
+                    status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%excluded_homepage%'
                 ORDER BY
                     ${this.postsOrdering}
                 LIMIT
@@ -58,7 +60,7 @@ class RendererContextHome extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.metaDescription;
 
-        this.tags = this.renderer.commonData.tags;
+        this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -74,16 +76,11 @@ class RendererContextHome extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) == false;
+        let featuredPostsNumber = RendererHelpers.getRendererOptionValue('featuredPostsNumber', this.themeConfig);
 
         // Remove featured posts from posts if featured posts not allowed
-        if(
-            this.themeConfig.renderer &&
-            this.themeConfig.renderer.includeFeaturedInPosts &&
-            (
-                this.themeConfig.renderer.featuredPostsNumber > 0 ||
-                this.themeConfig.renderer.featuredPostsNumber === -1
-            )
-        ) {
+        if (shouldSkipFeaturedPosts && (featuredPostsNumber > 0 || featuredPostsNumber === -1)) {
             let featuredPostsIds = this.featuredPosts.map(post => post.id);
             this.posts = this.posts.filter(post => featuredPostsIds.indexOf(post.id) === -1);
         }
@@ -125,9 +122,10 @@ class RendererContextHome extends RendererContext {
 
     getPostsNumber() {
         let includeFeaturedPosts = '';
+        let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) === false;
 
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.includeFeaturedInPosts) {
-            includeFeaturedPosts = 'AND status NOT LIKE "%featured%"';
+        if (shouldSkipFeaturedPosts) {
+            includeFeaturedPosts = 'AND status NOT LIKE \'%featured%\'';
         }
 
         let results = this.db.prepare(`
@@ -136,13 +134,13 @@ class RendererContextHome extends RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE "%published%"
+                status LIKE '%published%'
                 AND
-                status NOT LIKE "%hidden%"
+                status NOT LIKE '%hidden%'
                 AND
-                status NOT LIKE "%trashed%"
+                status NOT LIKE '%trashed%'
                 AND 
-                status NOT LIKE "%excluded_homepage%"
+                status NOT LIKE '%excluded_homepage%'
                 ${includeFeaturedPosts}
             GROUP BY
                 id

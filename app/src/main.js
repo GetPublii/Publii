@@ -4,7 +4,6 @@ import Vue from 'vue';
 import store from './store/index';
 import router from './router';
 import App from './components/App';
-import babelPolyfill from 'babel-polyfill';
 
 // Basic elements
 import Alert from './components/basic-elements/Alert';

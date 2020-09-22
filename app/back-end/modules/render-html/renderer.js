@@ -1,5 +1,6 @@
 // Necessary packages
 const fs = require('fs-extra');
+const listAll = require('ls-all');
 const path = require('path');
 const moment = require('moment');
 const Handlebars = require('handlebars');
@@ -18,11 +19,13 @@ const RendererContext = require('./renderer-context.js');
 const RendererContextPost = require('./contexts/post.js');
 const RendererContextPostPreview = require('./contexts/post-preview.js');
 const RendererContextTag = require('./contexts/tag.js');
+const RendererContextTags = require('./contexts/tags.js');
 const RendererContextAuthor = require('./contexts/author.js');
 const RendererContextHome = require('./contexts/home.js');
 const RendererContextFeed = require('./contexts/feed.js');
 const RendererContext404 = require('./contexts/404.js');
 const RendererContextSearch = require('./contexts/search.js');
+const RendererHelpers = require('./helpers/helpers.js');
 const themeConfigValidator = require('./validators/theme-config.js');
 const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
@@ -37,7 +40,7 @@ const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.c
  */
 
 class Renderer {
-    constructor(appDir, sitesDir, siteConfig, postID = false, postData = false) {
+    constructor(appDir, sitesDir, siteConfig, itemID = false, postData = false) {
         this.appDir = appDir;
         this.sitesDir = sitesDir;
         this.siteConfig = siteConfig;
@@ -47,7 +50,7 @@ class Renderer {
         this.errorLog = [];
         this.previewMode = false;
         this.ampMode = false;
-        this.useRelativeUrls = false; // siteConfig.deployment.relativeUrls;
+        this.useRelativeUrls = siteConfig.deployment.relativeUrls;
         this.translations = {
             user: false,
             theme: false
@@ -71,13 +74,14 @@ class Renderer {
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
-            featuredImages: {}
+            featuredImages: {
+                authors: {},
+                posts: {},
+                tags: {}
+            }
         };
-
-        if (postID !== false && postID !== 'home') {
-            this.postID = postID;
-            this.postData = postData;
-        }
+        this.itemID = itemID;
+        this.postData = postData;
     }
 
     /*
@@ -86,8 +90,10 @@ class Renderer {
     async render(previewMode = false, previewLocation = '', mode = 'full') {
         this.previewMode = previewMode;
         this.previewLocation = previewLocation;
-        this.singlePageMode = mode === 'page';
+        this.singlePageMode = mode === 'post';
         this.homepageOnlyMode = mode === 'home';
+        this.tagOnlyMode = mode === 'tag';
+        this.authorOnlyMode = mode === 'author';
         this.setIO();
         this.emptyOutputDir();
         let themeValidationResults = this.themeIsValid();
@@ -139,6 +145,10 @@ class Renderer {
                 this.renderPostPreview();
             } else if (this.homepageOnlyMode) {
                 this.renderHomepagePreview();
+            } else if (this.tagOnlyMode) {
+                this.renderTagPreview();
+            } else if (this.authorOnlyMode) {
+                this.renderAuthorPreview();
             } else {
                 await this.renderFullPreview();
             }
@@ -161,6 +171,13 @@ class Renderer {
         await this.generateWWW();
         this.generateAMP();
         console.timeEnd("RENDERING");
+
+        if (this.siteConfig.deployment.relativeUrls) {
+            console.time("RELATIVE URLS");
+            await this.relativizeUrls();
+            console.timeEnd("RELATIVE URLS");
+        }
+
         this.sendProgress(100, 'Website files are ready to upload');
         this.db.close();
     }
@@ -199,19 +216,40 @@ class Renderer {
         this.generateFrontpage();
         this.sendProgress(20, 'Generating posts');
         this.generatePosts();
-        this.sendProgress(60, 'Generating tag pages');
-        this.generateTags();
-        this.sendProgress(70, 'Generating author pages');
-        this.generateAuthors();
-        this.siteConfig.domain = this.siteConfig.originalDomain;
+
+        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+            this.sendProgress(60, 'Generating tag pages');
+            this.generateTags();
+            this.generateTagsList();
+        }
+
+        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+            this.sendProgress(70, 'Generating author pages');
+            this.generateAuthors();
+        }
+
         this.sendProgress(75, 'Generating other pages');
-        this.generate404s();
-        this.generateSearch();
-        this.generateFeeds();
+
+        if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
+            this.generate404s();
+        }
+
+        if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
+            this.generateSearch();
+        }
+        
+        if (!this.siteConfig.deployment.relativeUrls) {
+            this.generateFeeds();
+        }
+
         this.generateCSS();
         this.sendProgress(80, 'Copying files');
         await this.copyFiles();
-        await this.generateSitemap();
+
+        if (!this.siteConfig.deployment.relativeUrls) {
+            await this.generateSitemap();
+        }
+
         this.sendProgress(90, 'Finishing the render process');
     }
 
@@ -233,7 +271,7 @@ class Renderer {
         this.generateCSS();
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.postID]);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
 
         process.send({
             type: 'app-rendering-preview',
@@ -261,6 +299,82 @@ class Renderer {
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+
+        process.send({
+            type: 'app-rendering-preview',
+            result: true
+        });
+    }
+
+    /**
+     * Renders tag page preview
+     */
+    renderTagPreview() {
+        this.loadSiteConfig();
+        this.loadSiteTranslations();
+        this.loadDataFromDB();
+        this.loadThemeConfig();
+        this.loadThemeFiles();
+        this.registerHelpers();
+        this.registerThemeHelpers();
+        this.loadContentStructure();
+        this.loadCommonData();
+        this.generatePartials();
+        this.generateTags(this.itemID);
+        this.generateCSS();
+
+        let postIDs = Object.keys(this.cachedItems.posts);
+        let postIDsToRender = [];
+
+        for (let i = 0; i < postIDs.length; i++) {
+            let postID = postIDs[i];
+            let foundedTags = this.cachedItems.posts[postID].tags.filter(tag => tag.id === this.itemID);
+
+            if (foundedTags.length) {
+                postIDsToRender.push(postIDs[i]);
+            }
+        }
+
+        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+
+        process.send({
+            type: 'app-rendering-preview',
+            result: true
+        });
+    }
+
+    /**
+     * Renders author page preview
+     */
+    renderAuthorPreview() {
+        this.loadSiteConfig();
+        this.loadSiteTranslations();
+        this.loadDataFromDB();
+        this.loadThemeConfig();
+        this.loadThemeFiles();
+        this.registerHelpers();
+        this.registerThemeHelpers();
+        this.loadContentStructure();
+        this.loadCommonData();
+        this.generatePartials();
+        this.generateAuthors(this.itemID);
+        this.generateCSS();
+
+        let postIDs = Object.keys(this.cachedItems.posts);
+        let postIDsToRender = [];
+
+        for (let i = 0; i < postIDs.length; i++) {
+            let postID = postIDs[i];
+            let usesCurrentAuthor = this.cachedItems.posts[postID].author.id === this.itemID;
+
+            if (usesCurrentAuthor) {
+                postIDsToRender.push(postIDs[i]);
+            }
+        }
+
+        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
 
         process.send({
             type: 'app-rendering-preview',
@@ -361,9 +475,9 @@ class Renderer {
         let themeHelpers;
         
         if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
-            themeHelpers = this.requireWithNoCache(helpersFilePath, Handlebars);
+            themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath, Handlebars);
         } else {
-            themeHelpers = this.requireWithNoCache(helpersFilePath);
+            themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath);
         }
 
         // Check if the returned value is an object
@@ -394,6 +508,10 @@ class Renderer {
             this.siteConfig.domain = 'file://' + this.outputDir;
         } else if (this.siteConfig.domain === '/') {
             this.siteConfig.domain = '';
+        }
+
+        if (!this.previewMode && this.siteConfig.deployment.relativeUrls) {
+            this.siteConfig.domain = '#PUBLII_RELATIVE_URL_BASE#';
         }
 
         this.siteConfig.originalDomain = this.siteConfig.domain;
@@ -572,10 +690,6 @@ class Renderer {
         }
 
         if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
-            if (this.useRelativeUrls) {
-                this.siteConfig.domain = this.siteConfig.originalDomain;
-            }
-
             let context = contextGenerator.getContext(0, postsPerPage);
             let output = '';
 
@@ -641,19 +755,11 @@ class Renderer {
                 globalContext.renderer.isFirstPage = currentPage === 1;
                 globalContext.renderer.isLastPage = currentPage === totalPages;
 
-                if (currentPage > 1) {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                    }
-                    
+                if (currentPage > 1) {                    
                     let pagePart = this.siteConfig.advanced.urls.pageName;
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
-                } else {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain;
-                    }
-                    
+                } else {                    
                     globalContext.website.pageUrl = this.siteConfig.domain + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
                 }
@@ -705,8 +811,8 @@ class Renderer {
             FROM
                 posts
             WHERE
-                status LIKE "%published%" AND
-                status NOT LIKE "%trashed%"
+                status LIKE '%published%' AND
+                status NOT LIKE '%trashed%'
             ORDER BY
                 id ASC
         `).all();
@@ -771,20 +877,11 @@ class Renderer {
                 fileSlug = postTemplates[i] === '' ? 'DEFAULT' : postTemplates[i];
             }
 
-            this.menuContext = ['post', postSlugs[i]];
-            
-            if (this.useRelativeUrls) {
-                this.siteConfig.domain = this.siteConfig.originalDomain;
-            }
-            
+            this.menuContext = ['post', postSlugs[i]];    
             globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '.html';
             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '.html';
 
-            if (this.siteConfig.advanced.urls.cleanUrls) {
-                if (this.useRelativeUrls) {
-                    this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                }
-                
+            if (this.siteConfig.advanced.urls.cleanUrls) {                
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '/';
             }
@@ -819,7 +916,7 @@ class Renderer {
      * Create post preview
      */
     generatePost() {
-        let postID = this.postID;
+        let postID = this.itemID;
         let postSlug = 'preview';
         let postTemplate = this.postData.template;
         let inputFile = 'post.hbs';
@@ -900,7 +997,7 @@ class Renderer {
                 WHERE
                     post_id = @postID
                     AND
-                    key = "postViewSettings"
+                    key = 'postViewSettings'
             `).get({
                 postID: postID
             });
@@ -916,22 +1013,88 @@ class Renderer {
     /*
      * Generate tag pages
      */
-    generateTags(ampMode = false) {
+    generateTagsList(ampMode = false) {
+        // Check if we should render tags list
+        if (
+            this.siteConfig.advanced.urls.tagsPrefix === '' ||
+            !this.themeConfig.supportedFeatures ||
+            !this.themeConfig.supportedFeatures.tagsList ||
+            !this.themeConfig.renderer.createTagsList
+        ) {
+            return false;
+        }
+        
+        console.time(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
+        let inputFile = ampMode ? 'amp-tags.hbs' : 'tags.hbs';
+        
+        // Load template
+        let compiledTemplate = this.compileTemplate(inputFile);
+
+        if (!compiledTemplate) {
+            return false;
+        }
+
+        // Create global context
+        let globalContext = this.createGlobalContext('tags');
+
+        // Render tags list
+        globalContext.context = ['tags'];
+        let contextGenerator = new RendererContextTags(this);
+        let context = contextGenerator.getContext();
+        this.menuContext = ['tags'];
+
+        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
+            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+        }
+
+        globalContext.renderer.isFirstPage = true;
+        globalContext.renderer.isLastPage = true;
+        globalContext.pagination = false;
+
+        if (!this.siteConfig.advanced.ampIsEnabled) {
+            globalContext.website.ampUrl = '';
+        }
+
+        let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+        this.templateHelper.saveOutputTagsListFile(output);
+        console.timeEnd(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
+    }
+
+    /*
+     * Generate tag pages
+     */
+    generateTags(tagID = false, ampMode = false) {
         console.time(ampMode ? 'TAGS-AMP' : 'TAGS');
         // Get tags
         let inputFile = ampMode ? 'amp-tag.hbs' : 'tag.hbs';
+        let queryCondition = '';
+
+        if (tagID !== false) {
+            queryCondition = `
+                WHERE 
+                    t.id = ${parseInt(tagID, 10)}
+            `;
+        }
+
         let tagsData = this.db.prepare(`
             SELECT
                 t.id AS id
             FROM
                 tags AS t
+            ${queryCondition}
             ORDER BY
                 name ASC
         `).all();
         tagsData = tagsData.map(tag => this.cachedItems.tags[tag.id]);
 
+        // Skip hidden tags
+        tagsData = tagsData.filter(tagData => {
+            return tagData.additionalData.isHidden !== true;
+        });
+
         // Remove empty tags - without posts
-        if (!this.siteConfig.advanced.displayEmptyTags) {
+        if (!this.siteConfig.advanced.displayEmptyTags && tagID === false) {
             tagsData = tagsData.filter(tagData => {
                 return tagData.postsNumber > 0;
             });
@@ -1008,22 +1171,15 @@ class Renderer {
                 postsPerPage = 5;
             }
 
-            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.tagNoPagination) {
+            // Check for disabled tag pagination, tag posts amount or tag preview mode to avoid pagination files
+            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.tagNoPagination || tagID !== false) {
                 let context = contextGenerator.getContext(tagIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['tag', tagSlug];
-                if (this.useRelativeUrls) {
-                   this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                }
-
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
-                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                    if (this.useRelativeUrls) {
-                        this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                    }
-                   
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
                     globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                     globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                 }
@@ -1042,7 +1198,7 @@ class Renderer {
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
-                this.templateHelper.saveOutputTagFile(tagSlug, output);
+                this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
@@ -1100,35 +1256,18 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            if (this.useRelativeUrls) {
-                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
-                            }
-
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         }
                     } else {
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            if (this.useRelativeUrls) {
-                                this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                            }
-
                             globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                             globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                         }
@@ -1146,8 +1285,8 @@ class Renderer {
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
 
                     if (offset === 0) {
-                        this.templateHelper.saveOutputTagFile(tagSlug, output);
-                    } else {
+                        this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
+                    } else if (tagID === false) {
                         // We increase the current page number as we need to start URLs from tag-slug/page/2
                         this.templateHelper.saveOutputTagPaginationFile(tagSlug, currentPage, output);
                     }
@@ -1166,7 +1305,7 @@ class Renderer {
     /*
      * Generate author pages
      */
-    generateAuthors(ampMode = false) {
+    generateAuthors(authorID = false, ampMode = false) {
         console.time(ampMode ? 'AUTHORS-AMP' : 'AUTHORS');
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
@@ -1177,6 +1316,14 @@ class Renderer {
         let authorsUsernames = [];
         let inputFile = ampMode ? 'amp-author.hbs' : 'author.hbs';
         let authorTemplates = [];
+        let queryCondition = '';
+
+        if (authorID !== false) {
+            queryCondition = `
+                WHERE 
+                    a.id = ${parseInt(authorID, 10)}
+            `;
+        }
         let authorsData = this.db.prepare(`
             SELECT
                 a.id AS id,
@@ -1190,6 +1337,7 @@ class Renderer {
                 posts AS p
             ON
                 CAST(p.authors AS INTEGER) = a.id
+            ${queryCondition}
             GROUP BY
                 a.id
             ORDER BY
@@ -1208,7 +1356,7 @@ class Renderer {
         });
 
         // Remove empty authors - without posts
-        if (!this.siteConfig.advanced.displayEmptyAuthors) {
+        if (!this.siteConfig.advanced.displayEmptyAuthors && authorID === false) {
             authorsData = authorsData.filter(authorData => {
                 return authorData.posts_number > 0;
             });
@@ -1277,15 +1425,10 @@ class Renderer {
                 postsPerPage = 5;
             }
 
-            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.authorNoPagination) {
+            if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.authorNoPagination || authorID !== false) {
                 let context = contextGenerator.getContext(authorsIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['author', authorUsername];
-                
-                if (this.useRelativeUrls) {
-                    this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                }
-
                 globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                 globalContext.renderer.isFirstPage = true;
@@ -1302,7 +1445,7 @@ class Renderer {
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
-                this.templateHelper.saveOutputAuthorFile(authorUsername, output);
+                this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
@@ -1356,18 +1499,9 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                     } else {
-                        if (this.useRelativeUrls) {
-                            this.siteConfig.domain = this.siteConfig.originalDomain + '../../';
-                        }
-
                         globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                         globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                     }
@@ -1384,8 +1518,8 @@ class Renderer {
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
 
                     if (offset === 0) {
-                        this.templateHelper.saveOutputAuthorFile(authorUsername, output);
-                    } else {
+                        this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
+                    } else if (authorID === false) {
                         // We increase the current page number as we need to start URLs from /authors/author-username/page/2
                         this.templateHelper.saveOutputAuthorPaginationFile(authorUsername, currentPage, output);
                     }
@@ -1400,11 +1534,6 @@ class Renderer {
      */
     generate404s() {
         console.time("404");
-        // Check if the page should be rendered
-        if (!this.themeConfig.renderer.create404page) {
-            return;
-        }
-
         // Load template
         let inputFile = '404.hbs';
         let template = this.templateHelper.loadTemplate(inputFile);
@@ -1437,11 +1566,6 @@ class Renderer {
      */
     generateSearch() {
         console.time("SEARCH");
-        // Check if the page should be rendered
-        if(!this.themeConfig.renderer.createSearchPage) {
-            return;
-        }
-
         // Load template
         let inputFile = 'search.hbs';
         let compiledTemplate = this.compileTemplate('search.hbs');
@@ -1489,7 +1613,7 @@ class Renderer {
         }
 
         // minify CSS if user enabled it
-        if(this.siteConfig.advanced.cssCompression === 1) {
+        if (this.siteConfig.advanced.cssCompression) {
             styleCSS = new CleanCSS({ compatibility: '*', rebase: false }).minify(styleCSS);
             console.log('CSS stats: ' + styleCSS.stats.efficiency + ' (' + styleCSS.stats.minifiedSize + '/' + styleCSS.stats.originalSize + ')');
             styleCSS = styleCSS.styles;
@@ -1513,7 +1637,7 @@ class Renderer {
         // check if the theme contains theme-variables.js file
         if (UtilsHelper.fileExists(themeVariablesPath)) {
             try {
-                let generateOverride = this.requireWithNoCache(themeVariablesPath);
+                let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
                 let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
                 return generateOverride(visualParams) + styleCSS;
             } catch(e) {
@@ -1566,7 +1690,7 @@ class Renderer {
         // check if the theme contains visual-override.js file
         if (UtilsHelper.fileExists(overridePath)) {
             try {
-                let generateOverride = this.requireWithNoCache(overridePath);
+                let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
                 let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
                 return generateOverride(visualParams);
             } catch(e) {
@@ -1668,8 +1792,15 @@ class Renderer {
         // Prepare files
         this.generateFrontpage(true);
         this.generatePosts(true);
-        this.generateTags(true);
-        this.generateAuthors(true);
+
+        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+            this.generateTags(false, true);
+        }
+
+        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+            this.generateAuthors(false, true);
+        }
+
         console.timeEnd("AMP");
     }
 
@@ -1695,7 +1826,11 @@ class Renderer {
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
-            featuredImages: {}
+            featuredImages: {
+                authors: {},
+                posts: {},
+                tags: {}
+            }
         };
         globalContextGenerator.getCachedItems();
         this.contentStructure = globalContextGenerator.getContentStructure();
@@ -1787,14 +1922,37 @@ class Renderer {
         return output;
     }
 
-    requireWithNoCache(module, params = false) {
-        delete require.cache[require.resolve(module)];
+    /**
+     * Make URLs in the HTML files relative
+     */
+    async relativizeUrls () {
+        let files = await listAll([this.outputDir], { recurse: true, flatten: true });
+        files = files.filter(file => file.path.substr(-5) === '.html' && file.mode.dir === false);
+        files = files.map(file => file.path.replace(this.outputDir, ''));
+        
+        for (let file of files) {
+            this.relativizeUrlsInFile(file, this.outputDir);
+        }
+    }
 
-        if (params) {
-            return require(module)(params);
+    /**
+     * Make URLs relative in a given HTML file
+     * 
+     * @param {string} file - relative path to file
+     * @param {string} outputDir - output dir
+     */
+    relativizeUrlsInFile (file, outputDir) {
+        let filePath = path.join(outputDir, file);
+        let content = fs.readFileSync(filePath, 'utf8');
+        let depth = file.split('/').length - 2;
+        let relativeDomain = './' + '../'.repeat(depth);
+
+        if (relativeDomain.length) {
+            relativeDomain = relativeDomain.slice(0, -1);
         }
 
-        return require(module);
+        content = content.replace(/#PUBLII_RELATIVE_URL_BASE#/gmi, relativeDomain);
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 }
 

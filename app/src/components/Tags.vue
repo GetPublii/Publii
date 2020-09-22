@@ -81,6 +81,22 @@
                         :onClick="bulkDelete">
                         Delete
                     </p-button>
+
+                    <p-button
+                        v-if="selectedTagsAreNotHidden"
+                        icon="hidden-post"
+                        type="small light icon"
+                        :onClick="bulkHide">
+                        Hide
+                    </p-button>
+
+                    <p-button
+                        v-if="selectedTagsAreHidden"
+                        icon="hidden-post"
+                        type="small light icon"
+                        :onClick="bulkUnhide">
+                        Unhide
+                    </p-button>
                 </div>
             </collection-header>
 
@@ -99,7 +115,14 @@
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
-                        {{ item.name }}
+                        {{ item.name }} 
+
+                        <icon
+                            v-if="item.isHidden"
+                            size="xs"
+                            name="hidden-post"
+                            primaryColor="color-7"
+                            title="This tag is hidden" />
                     </a>
                 </collection-cell>
 
@@ -142,7 +165,9 @@
         </empty-state>
 
         <transition>
-            <tag-form v-if="editorVisible" />
+            <tag-form 
+                v-if="editorVisible"
+                :form-animation="formAnimation" />
         </transition>
     </section>
 </template>
@@ -162,6 +187,7 @@ export default {
     },
     data: function() {
         return {
+            formAnimation: false,
             editorVisible: false,
             filterValue: '',
             orderBy: this.$store.state.ordering.tags.orderBy,
@@ -169,9 +195,26 @@ export default {
             selectedItems: []
         };
     },
+    watch: {
+        editorVisible (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.formAnimation = true;
+
+                setTimeout(() => {
+                    this.formAnimation = false;
+                }, 500);
+            }
+        }
+    },
     computed: {
         items: function() {
-            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order);
+            return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
+                if (item.additionalData) {
+                    item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                }
+
+                return item;
+            });
         },
         hasTags: function() {
             return this.$store.state.currentSite.tags && !!this.$store.state.currentSite.tags.length;
@@ -181,6 +224,26 @@ export default {
         },
         emptySearchResults: function() {
             return this.filterValue !== '' && !this.items.length;
+        },
+        selectedTagsAreNotHidden () {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let notHiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":false') > -1 || item.additionalData.indexOf('"isHidden"') === -1);
+            return !!notHiddenTags.length;
+        },
+        selectedTagsAreHidden () {
+            let selectedTags = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
+
+            if (!selectedTags.length) {
+                return false;
+            }
+
+            let hiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
+            return !!hiddenTags.length;
         }
     },
     beforeMount () {
@@ -226,6 +289,7 @@ export default {
                 slug: '',
                 description: '',
                 additionalData: {
+                    isHidden: false,
                     metaTitle: '',
                     metaDescription: '',
                     template: ''
@@ -245,6 +309,39 @@ export default {
             this.$bus.$emit('confirm-display', {
                 message: 'Do you really want to remove selected tags?',
                 okClick: this.deleteSelected
+            });
+        },
+        bulkHide () {
+            this.changeStateForSelected('hidden');
+        },
+        bulkUnhide () {
+            this.changeStateForSelected('hidden', true);
+        },
+        changeStateForSelected (status, inverse = false) {
+            let itemsToChange = this.getSelectedItems();
+
+            this.$store.commit('changeTagsVisibility', {
+                tagsIDs: itemsToChange,
+                status: status,
+                inverse: inverse
+            });
+
+            ipcRenderer.send('app-tags-status-change', {
+                "site": this.$store.state.currentSite.config.name,
+                "ids": itemsToChange,
+                "status": status,
+                "inverse": inverse
+            });
+
+            ipcRenderer.once('app-tags-status-changed', () => {
+                this.selectedItems = [];
+                this.$forceUpdate();
+            });
+
+            this.$bus.$emit('message-display', {
+                message: 'Status of the selected tags has been changed',
+                type: 'success',
+                lifeTime: 3
             });
         },
         deleteSelected () {
@@ -355,5 +452,11 @@ export default {
             border-bottom: solid 5px var(--icon-secondary-color);                      
         }
     }
+}
+
+.col > a > .icon {
+    margin-left: 10px;
+    position: relative;
+    top: 2px;
 }
 </style>

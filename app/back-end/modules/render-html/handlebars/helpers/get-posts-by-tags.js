@@ -31,8 +31,9 @@
  * * orderby - order field
  * * ordering - order direction
  * * tag_as - specify if we select by tag id or slug
+ * * operator - (OR or AND as value) - defines how the tags should be selected (post must have all tags at once time - AND, or one of them - OR)
  * 
- * {{#getPostsByTags "count=5&allowed=hidden,featured&tag_as=id&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=asc"}}
+ * {{#getPostsByTags "count=5&allowed=hidden,featured&tag_as=id&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=asc&operator=AND"}}
  *    <h2>{{ title }}</h2>
  *    <div>{{{ excerpt }}}</div>
  * {{/getPostsByTags}}
@@ -51,6 +52,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         let orderby = false;
         let ordering = 'desc';
         let tagAs = 'slug';
+        let operator = 'OR';
 
         if (typeof queryString === 'string' && queryString.indexOf('=') > -1) {
             options = selectedTags; // have to override option with second argument as query string syntax uses only one argument
@@ -98,6 +100,14 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
             if (queryStringData['tag_as']) {
                 tagAs = queryStringData['tag_as'];
             }
+
+            if (queryStringData['operator']) {
+                operator = queryStringData['operator'];
+
+                if (operator !== 'AND' && operator !== 'OR') {
+                    operator = 'OR';
+                }
+            }
         } else {
             if (queryString === -1 || queryString === '-1') {
                 count = 999;
@@ -138,14 +148,24 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
         if (typeof selectedTags === 'number') {
             let tagID = selectedTags;
-            postsData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length);            
+            postsData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length || post.hiddenTags.filter(tag => tag.id === tagID).length);    
         } else if (typeof selectedTags === 'string') {
             if (tagAs === 'slug') {
-                let tagsSlugs = selectedTags.split(',');
-                postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
+                let tagsSlugs = [...new Set(selectedTags.split(','))];
+
+                if (operator === 'OR') {
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length || post.hiddenTags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
+                } else if (operator === 'AND') {
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length + post.hiddenTags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length === tagsSlugs.length);
+                }
             } else {
-                let tagsIDs = selectedTags.split(',').map(id => parseInt(id, 10));
-                postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length);
+                let tagsIDs = [...new Set(selectedTags.split(',').map(id => parseInt(id, 10)))];
+
+                if (operator === 'OR') {
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length || post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length);
+                } else if (operator === 'AND') {
+                    postsData = filteredPosts.filter(post => post.tags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length + post.hiddenTags.filter(tag => tagsIDs.indexOf(tag.id) > -1).length === tagsIDs.length);
+                }
             }
         } else {
             postsData = filteredPosts;

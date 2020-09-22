@@ -30,7 +30,7 @@ class Posts extends Model {
                 ON
                 pad.post_id = p.id
             WHERE
-                pad.key = "_core" OR
+                pad.key = '_core' OR
                 pad.key IS NULL
             ORDER BY 
                 id DESC`;

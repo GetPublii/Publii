@@ -23,6 +23,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             metaDescription: '',
             template: '',
             email: '',
+            website: '',
             avatar: '',
             useGravatar: false
         };
@@ -54,6 +55,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             name: author.name,
             username: author.username,
             email: config.email,
+            website: config.website,
             avatar: config.avatar,
             useGravatar: config.useGravatar,
             description: config.description,
@@ -62,6 +64,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             metaDescription: config.metaDescription,
             template: config.template,
             authorTemplates: authorTemplates,
+            additionalData: author.additionalData,
             visibleIndexingOptions: indexingOptionsEnabled
         };
     });

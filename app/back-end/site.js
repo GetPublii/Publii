@@ -17,6 +17,7 @@ class Site {
     constructor(appInstance, config, maintenanceMode = false) {
         this.application = appInstance;
         this.name = config.name;
+        this.uuid = config.uuid;
         this.displayName = config.displayName;
         // In maintenance mode we need only the website name
         if (!maintenanceMode) {
@@ -67,6 +68,8 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'website'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'posts'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'authors'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'themes'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'languages'));
         fs.mkdirSync(path.join(this.siteDir, 'output'));
@@ -89,6 +92,7 @@ class Site {
     createConfigFiles() {
         let configDir = path.join(this.siteDir, 'input', 'config');
         let siteConfig = {
+            'uuid': 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000),
             'name': this.name,
             'displayName': this.displayName,
             'author': this.author,
@@ -96,6 +100,7 @@ class Site {
             'theme': 'simple'
         };
 
+        this.uuid = siteConfig.uuid;
         fs.writeFileSync(path.join(configDir, 'site.config.json'), JSON.stringify(siteConfig, null, 4));
         fs.writeFileSync(path.join(configDir, 'menu.config.json'), '[]');
         fs.writeFileSync(path.join(configDir, 'theme.config.json'), '{}');
@@ -226,9 +231,15 @@ class Site {
         // Remove all old responsive directories
         let mediaPath = path.join(this.siteDir, 'input', 'media');
         let catalogs = fs.readdirSync(path.join(mediaPath, 'posts'));
+        let tagCatalogs = fs.readdirSync(path.join(mediaPath, 'tags'));
+        let authorsCatalogs = fs.readdirSync(path.join(mediaPath, 'authors'));
         let galleryCatalogs = [];
         catalogs = catalogs.map(catalog => 'posts/' + catalog);
+        tagCatalogs = tagCatalogs.map(catalog => 'tags/' + catalog);
+        authorsCatalogs = authorsCatalogs.map(catalog => 'authors/' + catalog);
         catalogs.push('website');
+        catalogs = catalogs.concat(tagCatalogs);
+        catalogs = catalogs.concat(authorsCatalogs);
         catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
 
         for(let catalog of catalogs) {
@@ -429,7 +440,7 @@ class Site {
         let newCatalogFreeName = Site.findFreeName(newCatalogName, appInstance.sitesDir);
         let newSitePath = path.join(appInstance.sitesDir, newCatalogFreeName);
         fs.copySync(sitePath, newSitePath);
-        Site.updateNameInSiteConfig(newSitePath, newCatalogFreeName, siteName);
+        Site.updateNameAndUUIDInSiteConfig(newSitePath, newCatalogFreeName, siteName);
         let configFilePath = path.join(newSitePath, 'input', 'config', 'site.config.json');
         let siteConfig = fs.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
@@ -469,11 +480,12 @@ class Site {
      * @param {string} sitePath 
      * @param {string} newNameSlug 
      */
-    static updateNameInSiteConfig (sitePath, newSiteSlug, newSiteName) {
+    static updateNameAndUUIDInSiteConfig (sitePath, newSiteSlug, newSiteName) {
         let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
         let siteConfig = fs.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
         siteConfig.name = newSiteSlug;
+        siteConfig.uuid = 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000);
         siteConfig.displayName = newSiteName;
         siteConfig = JSON.stringify(siteConfig, null, 4);
         fs.writeFileSync(configFilePath, siteConfig);
@@ -518,6 +530,8 @@ class Site {
      * Adds (if missing):
      * - input/root-files directory
      * - input/media/files directory
+     * - input/media/tags directory
+     * - input/media/authors directory
      *
      * Moves .htaccess, robots.txt and _redirects files to root-files directory
      *
@@ -526,16 +540,24 @@ class Site {
     static checkFilesConsistency(appInstance, siteName) {
         let siteBasePath = path.join(appInstance.sitesDir, siteName, 'input');
         let rootFilesPath = path.join(siteBasePath, 'root-files');
+        let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
+        let authorImagesPath = path.join(siteBasePath, 'media', 'authors');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
 
-        // Check if root-files exists
         if(!UtilsHelper.dirExists(rootFilesPath)) {
-            // When there is no root-files - create missing dirs
             fs.mkdirSync(rootFilesPath);
         }
 
         if(!UtilsHelper.dirExists(mediaFilesPath)) {
             fs.mkdirSync(mediaFilesPath);
+        }
+
+        if(!UtilsHelper.dirExists(tagImagesPath)) {
+            fs.mkdirSync(tagImagesPath);
+        }
+
+        if(!UtilsHelper.dirExists(authorImagesPath)) {
+            fs.mkdirSync(authorImagesPath);
         }
 
         // Move files - if exists to new root-files directory
@@ -544,6 +566,7 @@ class Site {
             '.htaccess':  path.join(siteBasePath, 'config', '.htaccess'),
             '_redirects': path.join(siteBasePath, 'config', '_redirects')
         };
+
         let fileNames = Object.keys(filesToMove);
 
         for(let i = 0; i < fileNames.length; i++) {

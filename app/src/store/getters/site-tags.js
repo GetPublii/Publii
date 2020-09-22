@@ -22,7 +22,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
         return false;
     });
 
-    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status.indexOf('trashed') > -1).map(post => post.id);
+    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status && post.status.indexOf('trashed') > -1).map(post => post.id);
 
     tags = tags.map(tag => {
         let postsCounter = 0;

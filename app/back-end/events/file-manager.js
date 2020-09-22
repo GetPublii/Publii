@@ -74,17 +74,15 @@ class FileManagerEvents {
 
             let fullPath = path.join(basePath, file);
             let fileStats = fs.statSync(fullPath);
-
-            if(!fileStats.isFile()) {
-                continue;
-            }
+            let isDirectory = fileStats.isDirectory();
 
             output.push({
                 name: file,
                 fullPath: fullPath,
-                icon: this.getIcon(path.parse(file).ext),
+                icon: this.getIcon(path.parse(file).ext, isDirectory),
                 size: fileStats.size,
                 isBinary: false,
+                isCatalog: isDirectory,
                 createdAt: fileStats.ctime,
                 modifiedAt: fileStats.mtime
             });
@@ -126,7 +124,11 @@ class FileManagerEvents {
      * @param extension
      * @return icon string
      */
-    getIcon(extension) {
+    getIcon(extension, isDirectory = false) {
+        if (isDirectory) {
+            return 'catalog';
+        }
+
         extension = extension.replace('.', '');
 
         switch(extension) {

@@ -40,11 +40,17 @@ class AuthorItem {
             avatar: '',
             avatarImage: '',
             email: '',
+            website: '',
             description: '',
             postsNumber: 0,
             url: '',
+            featuredImage: {},
             config: this.author.config ? JSON.parse(this.author.config) : {},
         };
+
+        if (this.renderer.cachedItems.featuredImages.authors[this.authorData.id]) {
+            this.authorData.featuredImage = this.renderer.cachedItems.featuredImages.authors[this.authorData.id];
+        }
 
         try {
             UtilsHelper.mergeObjects(this.authorData, JSON.parse(this.author.config));

@@ -1,5 +1,6 @@
 // Necessary packages
 const RendererContext = require('../renderer-context.js');
+const RendererHelpers = require('./../helpers/helpers.js');
 const sqlString = require('sqlstring');
 const stripTags = require('striptags');
 
@@ -10,9 +11,9 @@ const stripTags = require('striptags');
 class RendererContextPost extends RendererContext {
     loadData() {
         // Retrieve meta data
-        let metaDataQuery = this.db.prepare('SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = "_core"');
+        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = '_core'`);
         this.metaData = metaDataQuery.get({ postID: this.postID});
-        this.allTags = this.renderer.commonData.tags;
+        this.allTags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -22,6 +23,7 @@ class RendererContextPost extends RendererContext {
 
     prepareData() {
         this.post = this.renderer.cachedItems.posts[this.postID];
+        this.post.tags = this.post.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.featuredPosts = this.featuredPosts || [];
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
@@ -76,7 +78,9 @@ class RendererContextPost extends RendererContext {
         this.loadRelatedPosts();
 
         // load previous and next posts (only on the visible posts)
-        if((this.themeConfig.renderer && !this.themeConfig.renderer.renderPrevNextPosts) || this.post.status.indexOf('hidden') > -1) {
+        let renderPrevNextPosts = RendererHelpers.getRendererOptionValue('renderPrevNextPosts', this.themeConfig);
+        
+        if(!renderPrevNextPosts || this.post.status.indexOf('hidden') > -1) {
             this.nextPost = false;
             this.previousPost = false;
         } else {
@@ -85,7 +89,9 @@ class RendererContextPost extends RendererContext {
         }
 
         // load previous and next similar posts (only on the visible posts)
-        if((this.themeConfig.renderer && !this.themeConfig.renderer.renderSimilarPosts) || this.post.status.indexOf('hidden') > -1) {
+        let renderSimilarPosts = RendererHelpers.getRendererOptionValue('renderSimilarPosts', this.themeConfig);
+
+        if(!renderSimilarPosts || this.post.status.indexOf('hidden') > -1) {
             this.nextSimilarPost = false;
             this.previousSimilarPost = false;
         } else {
@@ -162,9 +168,9 @@ class RendererContextPost extends RendererContext {
                 WHERE
                     ${sortCondition} AND
                     p.id != @postID AND
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%trashed%" AND
-                    p.status NOT LIKE "%hidden%"
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%trashed%'AND
+                    p.status NOT LIKE '%hidden%'
                     ${tagsCondition}
                 GROUP BY
                     p.id
@@ -191,9 +197,9 @@ class RendererContextPost extends RendererContext {
                     WHERE
                         ${sortCondition} AND
                         id != @postID AND
-                        status LIKE "%published%" AND
-                        status NOT LIKE "%trashed%" AND
-                        status NOT LIKE "%hidden%"
+                        status LIKE '%published%' AND
+                        status NOT LIKE '%trashed%' AND
+                        status NOT LIKE '%hidden%'
                     ORDER BY
                         ${temporaryPostsOrdering}
                     LIMIT 1
@@ -213,7 +219,10 @@ class RendererContextPost extends RendererContext {
     }
 
     loadRelatedPosts() {
-        if(this.themeConfig.renderer && (!this.themeConfig.renderer.renderRelatedPosts || this.themeConfig.renderer.relatedPostsNumber === 0)) {
+        let renderRelatedPosts = RendererHelpers.getRendererOptionValue('renderRelatedPosts', this.themeConfig);
+        let relatedPostsNumberFromConfig = RendererHelpers.getRendererOptionValue('relatedPostsNumber', this.themeConfig);
+
+        if (!renderRelatedPosts || relatedPostsNumberFromConfig === 0) {
             this.relatedPosts = [];
             return;
         }
@@ -225,8 +234,8 @@ class RendererContextPost extends RendererContext {
         let conditions = [];
         let conditionsLowerPriority = [];
 
-        if(this.themeConfig.renderer && this.themeConfig.renderer.relatedPostsNumber) {
-            relatedPostsNumber = this.themeConfig.renderer.relatedPostsNumber;
+        if (relatedPostsNumberFromConfig) {
+            relatedPostsNumber = relatedPostsNumberFromConfig;
         }
 
         // Get tags
@@ -242,7 +251,7 @@ class RendererContextPost extends RendererContext {
 
             if(stringsToCompare.length) {
                 for (let toCompare of stringsToCompare) {
-                    postTitleConditions.push(' LOWER(p.title) LIKE LOWER("%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%") ')
+                    postTitleConditions.push(' LOWER(p.title) LIKE LOWER(\'%' + sqlString.escape(toCompare).replace(/'/g, '').replace(/"/g, '') + '%\') ')
                 }
 
                 postTitleConditions = '(' + postTitleConditions.join('OR') + ')';
@@ -295,9 +304,9 @@ class RendererContextPost extends RendererContext {
                     p.id = pt.post_id
                 WHERE
                     p.id != @postID AND
-                    p.status LIKE "%published%" AND
-                    p.status NOT LIKE "%trashed%" AND
-                    p.status NOT LIKE "%hidden%"
+                    p.status LIKE '%published%' AND
+                    p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%hidden%'
                     ${conditionsLowerPriority}
             `;
         }
@@ -319,9 +328,9 @@ class RendererContextPost extends RendererContext {
                         p.id = pt.post_id
                     WHERE
                         p.id != @postID AND
-                        p.status LIKE "%published%" AND
-                        p.status NOT LIKE "%trashed%" AND
-                        p.status NOT LIKE "%hidden%"
+                        p.status LIKE '%published%' AND
+                        p.status NOT LIKE '%trashed%' AND
+                        p.status NOT LIKE '%hidden%'
                         ${conditions}
                     ${secondQuery}
                     GROUP BY

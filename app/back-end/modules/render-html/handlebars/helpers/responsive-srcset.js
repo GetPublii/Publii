@@ -43,6 +43,12 @@ function returnSrcSetAttribute (url, group) {
     if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'optionImages')) {
         dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'optionImages', group);
         dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'optionImages', group);
+    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'tagImages')) {
+        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'tagImages', group);
+        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'tagImages', group);
+    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'authorImages')) {
+        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'authorImages', group);
+        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'authorImages', group);
     } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'contentImages')) {
         dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'contentImages');
         dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'contentImages');

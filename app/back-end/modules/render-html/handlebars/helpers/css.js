@@ -5,14 +5,22 @@ const memoize = require('fast-memoize');
 
 /**
  *
- * Helper function for getting MD5 sum based on the specific file contents
+ * Helper function used to calculate MD5 sum of the given file contents
  *
  * @param {string} localPath - path to the file
+ * @param {string} overridedLocalPath - path to the overrided version of the file
  *
- * @returns {string} MD5 sum based on the file contents under specified path
+ * @returns {string} - MD5 sum based on the given file contents
  */
-function getMD5(localPath) {
-    let fileContent = fs.readFileSync(localPath);
+function getMD5(localPath, overridedLocalPath) {
+    let fileContent = '';
+    
+    if (fs.existsSync(overridedLocalPath)) {
+        fileContent = fs.readFileSync(overridedLocalPath);
+    } else {
+        fileContent = fs.readFileSync(localPath);
+    }
+
     return md5(fileContent);
 }
 
@@ -30,27 +38,21 @@ const memoizedMD5 = memoize(getMD5);
 function CSSHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('css', function (filename) {
         let md5Sum = '';
-        let localPath = path.join(
-            rendererInstance.inputDir,
-            'themes',
-            rendererInstance.themeConfig.name.toLowerCase(),
-            rendererInstance.themeConfig.files.assetsPath,
-            'css',
-            filename
-        );
+        let localPath = path.join(rendererInstance.inputDir, 'themes', rendererInstance.themeConfig.name.toLowerCase(), rendererInstance.themeConfig.files.assetsPath, 'css', filename);
+        let overridedLocalPath = path.join(rendererInstance.inputDir, 'themes', rendererInstance.themeConfig.name.toLowerCase() + '-override', rendererInstance.themeConfig.files.assetsPath, 'css', filename);
         let versionSuffix = '';
 
-        if(rendererInstance.siteConfig.advanced.versionSuffix) {
-            md5Sum = memoizedMD5(localPath);
+        if (rendererInstance.siteConfig.advanced.versionSuffix) {
+            md5Sum = memoizedMD5(localPath, overridedLocalPath);
             versionSuffix = '?v=' + md5Sum;
         }
 
         let url = [
-                    rendererInstance.siteConfig.domain,
-                    rendererInstance.themeConfig.files.assetsPath,
-                    'css',
-                    filename + versionSuffix
-                ].join('/');
+            rendererInstance.siteConfig.domain,
+            rendererInstance.themeConfig.files.assetsPath,
+            'css',
+            filename + versionSuffix
+        ].join('/');
 
         return new Handlebars.SafeString(url);
     });

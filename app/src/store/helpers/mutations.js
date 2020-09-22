@@ -228,6 +228,23 @@ export default {
             return post;
         });
     },
+    changeTagsVisibility (state, config) {
+        state.currentSite.tags = state.currentSite.tags.map(function(tag) {
+            if (config.tagsIDs.indexOf(tag.id) !== -1) {
+                tag.additionalData = JSON.parse(tag.additionalData);
+
+                if (!config.inverse) {
+                    tag.additionalData.isHidden = true;
+                } else {
+                    tag.additionalData.isHidden = false;
+                }
+
+                tag.additionalData = JSON.stringify(tag.additionalData);
+            }
+
+            return tag;
+        });
+    },
     refreshSiteConfig (state, newData) {
         let currentSiteConfigCopy = Object.assign({}, state.currentSite.config);
         state.currentSite.config = Utils.deepMerge(currentSiteConfigCopy, newData.newSettings);

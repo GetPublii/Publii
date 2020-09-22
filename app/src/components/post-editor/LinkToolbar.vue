@@ -95,10 +95,19 @@ export default {
         },
 
         showLinkPopup () {
-            this.$bus.$emit('init-link-popup', {
-                postID: this.postID,
-                selection: tinymce.activeEditor.selection.getContent()
-            });
+            let selectedNode = tinymce.activeEditor.selection.getNode();
+
+            if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
+                this.$bus.$emit('init-link-popup', {
+                    postID: this.postID,
+                    selection: selectedNode.parentNode.outerHTML
+                });
+            } else {
+                this.$bus.$emit('init-link-popup', {
+                    postID: this.postID,
+                    selection: tinymce.activeEditor.selection.getContent()
+                });
+            }
         },
 
         showPreview () {

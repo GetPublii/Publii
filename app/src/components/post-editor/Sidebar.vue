@@ -8,6 +8,7 @@
             <div class="post-editor-settings-wrapper">
                 <div
                     :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'status' }"
+                    class="is-first" 
                     @click="openItem('status')">
                     <icon
                         class="post-editor-settings-icon"
@@ -128,7 +129,7 @@
                                 <switcher 
                                     title="Post will not appear in any generated post lists such as tag or author pages"
                                     v-model="$parent.postData.isHidden" />
-                                <span title="Post will not appear in any generated post lists such as tag or author pages">
+                                <span title="Post will not appear in any generated post list such as tag or author pages">
                                     Hide post
                                 </span>
 
@@ -180,7 +181,7 @@
                         ref="image-content">
                         <image-upload
                             ref="featured-image"
-                            :post-id="$parent.postID"
+                            :item-id="$parent.postID"
                             v-model="$parent.postData.featuredImage.path" />
 
                         <div
@@ -747,13 +748,16 @@ export default {
         }
 
         & > div {
-            padding: 9rem 0 0 0;
+            padding: 10rem 0 0 0;
         }
 
         &-header {
-            font-size: 1.8rem;
+            color: var(--gray-3);
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-top: 0;
             padding: 0 3.6rem 1.5rem;
+            text-transform: uppercase;
         }
 
         .post-info {            
@@ -844,7 +848,7 @@ export default {
             
             .post-action {            
                label {
-                  font-weight: 400;
+                  font-weight: var(--font-weight-normal);
                   line-height: 1.8;
                }
             }
@@ -923,6 +927,10 @@ export default {
                             opacity: 0;
                         }
                     }
+                }
+
+                &.is-first {
+                   border: none;
                 }
             }
 

@@ -45,10 +45,10 @@ function getPostByTagsHelper (rendererInstance, Handlebars) {
 
         if (typeof selectedTags === 'number') {
             let tagID = selectedTags;
-            postData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length);            
+            postData = filteredPosts.filter(post => post.tags.filter(tag => tag.id === tagID).length || post.hiddenTags.filter(tag => tag.id === tagID).length);            
         } else {
             let tagsSlugs = selectedTags.split(',');
-            postData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
+            postData = filteredPosts.filter(post => post.tags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length || post.hiddenTags.filter(tag => tagsSlugs.indexOf(tag.slug) > -1).length);
         }
 
         if(!postData.length) {

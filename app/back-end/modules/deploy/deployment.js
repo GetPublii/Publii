@@ -54,7 +54,7 @@ class Deployment {
      * @param deploymentConfig
      * @param siteName
      */
-    testConnection(app, deploymentConfig, siteName) {
+    testConnection(app, deploymentConfig, siteName, uuid) {
         let connection = false;
 
         switch(deploymentConfig.protocol) {
@@ -68,8 +68,8 @@ class Deployment {
             default:                connection = new FTP();                         break;
         }
 
-        if(connection) {
-            connection.testConnection(app, deploymentConfig, siteName).then(() => true);
+        if (connection) {
+            connection.testConnection(app, deploymentConfig, siteName, uuid).then(() => true);
         }
     }
 

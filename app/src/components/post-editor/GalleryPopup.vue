@@ -434,7 +434,7 @@ h1 {
         list-style-type: none;
         min-height: 400px;
         margin: 0;
-        max-height: 600px;
+        max-height: 60vh;
         overflow: scroll;
         padding: 0 3rem 20px;
 

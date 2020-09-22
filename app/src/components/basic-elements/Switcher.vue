@@ -102,7 +102,7 @@ export default {
 
     &:after {
         position: absolute;
-        left: -2px;
+        left: 0;
         top: -2px;
         display: block;
         width: 20px;

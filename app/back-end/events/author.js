@@ -29,6 +29,13 @@ class AuthorEvents {
 
             event.sender.send('app-author-deleted', result);
         });
+
+        // Cancelled edition
+        ipcMain.on('app-author-cancel', function(event, authorData) {
+            let author = new Author(appInstance, authorData);
+            let result = author.checkAndCleanImages(true);
+            event.sender.send('app-author-cancelled', result);
+        });
     }
 }
 

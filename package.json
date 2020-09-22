@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.36.1",
+  "version": "0.37.0",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -12,7 +12,6 @@
   "main": "app/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode=development --progress --colors --watch",
-    "dashboard": "node_modules/webpack-dashboard/bin/webpack-dashboard.js -- cross-env NODE_ENV=development webpack --progress --colors --watch",
     "prod": "cross-env NODE_ENV=production webpack --mode=production --progress --colors --hide-modules",
     "build": "cross-env NODE_ENV=development gulp build",
     "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
@@ -24,10 +23,9 @@
     "prepare-vendor-dist-dir": "if [ ! -d \"app/dist/vendor\" ]; then mkdir app/dist/vendor; fi && gulp prepare-editor-css",
     "copy-vendor-files": "cp -r app/src/helpers/vendor/tinymce app/dist/vendor/tinymce && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
     "packager:win": "electron-builder build --win --x64",
+    "packager:win32": "electron-builder build --win --ia32",
     "packager:osx": "electron-builder build --mac",
-    "packager:linux": "electron-builder build --linux",
-    "postinstall": "opencollective postinstall",
-    "osx-sign": "electron-osx-sign Publii-darwin-x64/Publii.app"
+    "packager:linux": "electron-builder build --linux"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -37,47 +35,28 @@
   },
   "keywords": [],
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "cross-env": "^5.0.5",
+    "cross-env": "^7.0.2",
     "css-loader": "^0.28.7",
-    "electron": "^8.3.2",
-    "electron-builder": "^22.3.2",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-osx-sign": "^0.4.11",
-    "electron-packager": "^14.0.0",
-    "electron-rebuild": "^1.10.0",
-    "electron-updater": "^4.2.0",
-    "electron-windows-installer": "^1.4.4",
-    "file-loader": "^1.1.4",
-    "glob": "^7.1.4",
+    "electron": "^8.5.1",
+    "electron-builder": "^22.8.0",
+    "file-loader": "^4.2.0",
+    "glob": "^7.1.6",
     "gulp": "^3.9.0",
-    "gulp-electron": "^0.1.3",
-    "gulp-file-include": "^0.13.7",
-    "gulp-sass": "^4.0.1",
-    "mocha": "^3.2.0",
-    "node-loader": "^0.6.0",
-    "node-sass": "^4.13.1",
-    "sass-loader": "^8.0.0",
-    "slug": "^0.9.1",
-    "ssh2-sftp-client": "^5.0.2",
-    "vue": "^2.6.11",
-    "vue-loader": "^15.8.3",
+    "gulp-sass": "^4.1.0",
+    "mocha": "^8.1.0",
+    "node-loader": "^1.0.1",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^9.0.2",
+    "vue-loader": "^15.9.3",
+    "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.41.5",
-    "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dashboard": "^1.0.2"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
-  "dependencies": {
-    "opencollective": "^1.0.3"
-  },
+  "dependencies": {},
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "8.3.2",
+    "electronVersion": "8.5.1",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2020 TidyCustoms. All rights reserved.",
     "asar": true,
@@ -156,9 +135,5 @@
   },
   "appImage": {
     "license": "license.txt"
-  },
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/Publii"
   }
 }

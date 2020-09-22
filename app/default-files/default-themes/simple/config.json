@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.2.3.0",
+    "version": "2.3.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -11,11 +11,22 @@
         "renderSimilarPosts": false,
         "renderPrevNextPosts": true,
         "createContentStructure": true,
+        "createTagPages": true,
+        "createAuthorPages": true,
+        "createTagsList": true,
         "createSearchPage": true,
         "create404page": true,
         "customHTML": {
             "afterPost": "After every post"
         }
+    },
+    "supportedFeatures": {
+        "blockEditor": true,
+        "tagsList": true,
+        "tagImages": true,
+        "authorImages": true,
+        "searchPage": true,
+        "errorPage": true
     },
     "config": [
 
@@ -52,7 +63,6 @@
         }
     ],
     "customConfig": [
-
         {
             "name": "pageMargin",
             "label": "Page width",
@@ -184,6 +194,7 @@
                 "value": "default"
             }]
         },
+       
         {
             "name": "separator",
             "type": "separator",
@@ -195,7 +206,7 @@
             "name": "tagFeaturedImage",
             "group": "Layout",
             "label": "Featured image",
-            "value": true,
+            "value": false,
             "type": "checkbox"
         },
         {
@@ -223,6 +234,27 @@
             "name": "tagReadMore",
             "group": "Layout",
             "label": "Read more button",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Tags Page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "tagsPostCount",
+            "group": "Layout",
+            "label": "Post count",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagsDescription",
+            "group": "Layout",
+            "label": "Tag description",
             "value": true,
             "type": "checkbox"
         },
@@ -267,7 +299,22 @@
             "label": "Read more button",
             "value": true,
             "type": "checkbox"
-        },   
+        },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Post page",
+            "group": "Layout",
+            "size": "big"
+        }, 
+        {
+            "name": "relatedPostsNumber",
+            "label": "Related post",
+            "group": "Layout",
+            "note": "Specify number of related posts to show. Zero '0' means no posts.",
+            "value": "3",
+            "type": "text"
+        },
         {
             "name": "navbarHeight",
             "group": "Navbar",
@@ -1034,7 +1081,7 @@
             "name": "copyrightText",
             "label": "Copyright text",
             "group": "Footer",
-            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii Static CMS</a>",
+            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii</a>",
             "type": "wysiwyg"
         },
         {
@@ -1544,6 +1591,66 @@
                         "width": 1600,
                         "height": "auto",
                         "group": "post"
+                    }
+                }
+            },
+
+            "tagImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
+                    }
+                }
+            },
+
+            "authorImages": {
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "dimensions": {
+                    "xs": {
+                        "width": 300,
+                        "height": "auto"
+                    },
+                    "sm": {
+                        "width": 480,
+                        "height": "auto"
+                    },
+                    "md": {
+                        "width": 768,
+                        "height": "auto"
+                    },
+                    "lg": {
+                        "width": 1024,
+                        "height": "auto"
+                    },
+                    "xl": {
+                        "width": 1360,
+                        "height": "auto"
+                    },
+                    "2xl": {
+                        "width": 1600,
+                        "height": "auto"
                     }
                 }
             },

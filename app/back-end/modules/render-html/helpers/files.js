@@ -15,23 +15,20 @@ class Files {
     static copyRootFiles(inputDir, outputDir) {
         let inputPath = path.join(inputDir, 'root-files');
         let outputPath = path.join(outputDir);
-        let filesToCopy = fs.readdirSync(inputPath);
+        
+        fs.copySync(
+            path.join(inputPath),
+            path.join(outputPath),
+            {
+                filter: (src, dest) => {
+                    if (src.substr(-9) === '.DS_Store' || src.substr(-9) === 'Thumbs.db') {
+                        return false;
+                    }
 
-        // Copy each file from the list
-        for(let file of filesToCopy) {
-            if(!UtilsHelper.fileExists(path.join(inputPath, file))) {
-                continue;
+                    return true;
+                }
             }
-
-            if(file === '.DS_Store' || file === 'Thumbs.db') {
-                continue;
-            }
-
-            fs.copySync(
-                path.join(inputPath, file),
-                path.join(outputPath, file)
-            );
-        }
+        );
     }
 
     /**
@@ -47,7 +44,7 @@ class Files {
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath);
 
         // Create the assets directory
-        fs.mkdirSync(outputPath);
+        fs.ensureDirSync(outputPath);
 
         // Copy each directory and file from the assets catalog
         list([assetsPath], {
@@ -74,7 +71,7 @@ class Files {
         });
 
         // Check for overrided asset files
-        if(UtilsHelper.dirExists(overridesPath)) {
+        if (UtilsHelper.dirExists(overridesPath)) {
             list([overridesPath], {
                 recurse: true,
                 flatten: true
@@ -83,7 +80,7 @@ class Files {
                     let filename = path.parse(item.path).base;
                     return themeConfig.files.ignoreAssets.indexOf(filename) === -1
                 }).forEach(item => {
-                    if(item.mode.dir === false) {
+                    if (item.mode.dir === false) {
                         let filePath = normalizePath(item.path);
                         let destinationPath = filePath.replace(
                             normalizePath(overridesPath),
@@ -110,7 +107,7 @@ class Files {
     static async copyMediaFiles (inputDir, outputDir, postIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        let dirs = ['website', 'files'];
+        let dirs = ['website', 'files', 'tags', 'authors'];
 
         if (postIDs[0] === 0) {
             postIDs[0] = 'temp';
@@ -144,6 +141,14 @@ class Files {
                     path.join(basePathOutput, dirs[i])
                 );
             }
+        }
+
+        if (UtilsHelper.dirExists(path.join(basePathOutput, 'tags', 'temp'))) {
+            fs.removeSync(path.join(basePathOutput, 'tags', 'temp'));
+        }
+
+        if (UtilsHelper.dirExists(path.join(basePathOutput, 'authors', 'temp'))) {
+            fs.removeSync(path.join(basePathOutput, 'authors', 'temp'));
         }
 
         DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));
