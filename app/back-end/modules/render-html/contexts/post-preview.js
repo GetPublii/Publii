@@ -536,6 +536,10 @@ class RendererContextPostPreview extends RendererContext {
             });
         }
 
+        // Remove paragraphs around <iframe>'s
+        preparedText = preparedText.replace(/\<p\>\<iframe/gmi, '<iframe');
+        preparedText = preparedText.replace(/\<\/iframe\>\<\/p\>/gmi, '</iframe>');
+
         // Wrap iframes into <div class="post__iframe">
         preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
             if (matches.indexOf('data-responsive="false"') > -1) {
