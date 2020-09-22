@@ -163,10 +163,10 @@
                         The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
                     </small>
                     <small
-                        v-if="(httpProtocolSelected === 'dat' || httpProtocolSelected === 'ipfs')"
+                        v-if="(httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'ipfs')"
                         class="note"
                         slot="note">
-                        The "dat://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
+                        The "dat://", "hyper://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank">hyper://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
                     </small>
                     <small
                         v-if="httpProtocolSelected === '//'"
@@ -887,6 +887,7 @@ export default {
                 'http': 'http://',
                 'file': 'file://',
                 'dat': 'dat://',
+                'hyper': 'hyper://',
                 'ipfs': 'ipfs://',
                 '//': '//'
             },
