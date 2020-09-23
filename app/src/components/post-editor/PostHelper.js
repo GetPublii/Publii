@@ -19,11 +19,9 @@ class PostHelper {
             preparedText = $('#post-editor').val();
         }
         
-        // Remove directory path from images src attribute
+        // Remove directxory path from images src attribute
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
-        preparedText = preparedText.replace(/file:\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
-        preparedText = preparedText.replace(/file:\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
-        preparedText = preparedText.replace(/file:\/\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+        preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
 
         if(postData.isHidden) {
             finalStatus += ',hidden';
