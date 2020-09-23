@@ -289,6 +289,8 @@ class Image extends Model {
 
         let promises = [];
 
+        console.log(imageType, targetImagesDir, JSON.stringify(dimensionsConfig), )
+
         // create responsive images for each size
         for (let name of dimensions) {
             let finalHeight = dimensionsConfig[name].height;

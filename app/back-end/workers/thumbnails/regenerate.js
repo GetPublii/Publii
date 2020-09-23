@@ -176,10 +176,12 @@ function getImageType(context, image, catalog) {
     let imageType = 'contentImages';
     let featuredImage = false;
     let preparedCatalog = catalog.replace('posts/', '');
-
+    
     if (context.postImagesRef && context.postImagesRef[0]) {
         featuredImage = context.postImagesRef.filter(xref => xref.post_id == preparedCatalog);
-    } else if (featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
+    }
+    
+    if (featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
         console.log('(i) Featured image detected (' + image + ')', preparedCatalog);
         imageType = 'featuredImages';
     } else if(catalog === 'website') {
