@@ -231,6 +231,9 @@ class Post extends Model {
                 }
 
                 this.text = this.text.split(normalizePath(tempImagesDir)).join('#DOMAIN_NAME#');
+                this.text = this.text.replace(/file:\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+                this.text = this.text.replace(/file:\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+                this.text = this.text.replace(/file:\/\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
                 sqlQuery = this.db.prepare(`UPDATE posts
                         SET
                             text = @text

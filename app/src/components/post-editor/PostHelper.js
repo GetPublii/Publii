@@ -21,6 +21,9 @@ class PostHelper {
         
         // Remove directory path from images src attribute
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
+        preparedText = preparedText.replace(/file:\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+        preparedText = preparedText.replace(/file:\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+        preparedText = preparedText.replace(/file:\/\/\/\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
 
         if(postData.isHidden) {
             finalStatus += ',hidden';
