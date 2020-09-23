@@ -44,8 +44,8 @@
             <ul
                 class="list">
                 <li
-                    v-for="(file) in files"
-                    :key="file"
+                    v-for="(file, index) in files"
+                    :key="file + '-' + index"
                     class="item"
                     :title="file">
                     {{ removeSiteDir(file) }}
