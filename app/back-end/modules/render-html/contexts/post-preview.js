@@ -491,28 +491,30 @@ class RendererContextPostPreview extends RendererContext {
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
         // Find all images and add srcset and sizes attributes
-        preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
-            if(
-                ContentHelper.getContentImageSrcset(url, self.themeConfig) !== false &&
-                !(
-                    url.toLowerCase().indexOf('.jpg') === -1 &&
-                    url.toLowerCase().indexOf('.jpeg') === -1 &&
-                    url.toLowerCase().indexOf('.png') === -1
-                ) &&
-                url.toLowerCase().indexOf('/gallery/') === -1
-            ) {
-                if(ContentHelper.getContentImageSizes(self.themeConfig)) {
-                    return matches +
-                        ' sizes="' + ContentHelper.getContentImageSizes(self.themeConfig) + '"' +
-                        ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+        if (this.siteConfig.responsiveImages) {
+            preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
+                if(
+                    ContentHelper.getContentImageSrcset(url, self.themeConfig) !== false &&
+                    !(
+                        url.toLowerCase().indexOf('.jpg') === -1 &&
+                        url.toLowerCase().indexOf('.jpeg') === -1 &&
+                        url.toLowerCase().indexOf('.png') === -1
+                    ) &&
+                    url.toLowerCase().indexOf('/gallery/') === -1
+                ) {
+                    if(ContentHelper.getContentImageSizes(self.themeConfig)) {
+                        return matches +
+                            ' sizes="' + ContentHelper.getContentImageSizes(self.themeConfig) + '"' +
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+                    } else {
+                        return matches +
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+                    }
                 } else {
-                    return matches +
-                        ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+                    return matches;
                 }
-            } else {
-                return matches;
-            }
-        });
+            });
+        }
 
         // Add loading="lazy" attributes to img, video, audio, iframe tags
         if (self.siteConfig.advanced.mediaLazyLoad) {
