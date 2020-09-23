@@ -158,7 +158,7 @@ class PreviewEvents {
         }
 
         setTimeout(function() {
-            shell.openExternal('file://' + url);
+            shell.openExternal('file:///' + url);
         }, 1000);
     }
 }

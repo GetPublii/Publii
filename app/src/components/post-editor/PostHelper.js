@@ -217,7 +217,7 @@ class PostHelper {
 
     static getMediaPath ($store, postID) {
         let mediaPath = $store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
-        mediaPath = 'file://' + mediaPath.replace(/\\/g, '/');
+        mediaPath = 'file:///' + mediaPath.replace(/\\/g, '/');
         mediaPath += '/input/media/posts/';
         mediaPath += postID === 0 ? 'temp' : postID;
         mediaPath += '/';

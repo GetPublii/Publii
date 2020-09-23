@@ -959,7 +959,7 @@ export default {
                 return './';
             }
 
-            return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file://', '');
+            return this.$store.state.currentSite.config.domain.replace('http://', '').replace('https://', '').replace('file:///', '').replace('file://', '');
         },
         currentHttpProtocol () {
             if (this.$store.state.currentSite.config.domain.indexOf('file') === 0) {

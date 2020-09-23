@@ -474,7 +474,7 @@ class App {
         Menu.setApplicationMenu(null);
         this.mainWindow = new BrowserWindow(windowParams);
         this.mainWindow.setMenu(null);
-        this.mainWindow.loadURL('file://' + this.basedir + '/dist/index.html');
+        this.mainWindow.loadURL('file:///' + this.basedir + '/dist/index.html');
         this.mainWindow.removeMenu();
 
         // Register search shortcut listener

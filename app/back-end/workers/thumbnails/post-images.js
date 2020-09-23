@@ -76,7 +76,7 @@ process.on('message', function(msg){
                     type: 'finished',
                     result: {
                         baseImage: result,
-                        thumbnailPath: res.map(url => 'file://' + normalizePath(url)),
+                        thumbnailPath: res.map(url => 'file:///' + normalizePath(url)),
                         thumbnailDimensions: thumbnailDimensions
                     }
                 });

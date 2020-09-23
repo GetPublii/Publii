@@ -167,7 +167,7 @@ export default {
                     return 'background-image: url(\'' + this.filePath + '\');';
                 }
 
-                return 'background-image: url(\'file://' + this.filePath + '\');';
+                return 'background-image: url(\'file:///' + this.filePath + '\');';
             }
 
             return false;

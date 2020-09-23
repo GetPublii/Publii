@@ -15,7 +15,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
     let authors = state.currentSite.authors.map(author => {
         let indexingOptionsEnabled = true;
         let authorTemplates = [];
-        let avatarUrlPrefix = 'file://';
+        let avatarUrlPrefix = 'file:///';
         let postsCounter = 0;
         let config = {
             description: '',

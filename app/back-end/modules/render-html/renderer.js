@@ -505,7 +505,7 @@ class Renderer {
         this.siteConfig = UtilsHelper.mergeObjects(defaultSiteConfig, this.siteConfig);
 
         if(this.previewMode) {
-            this.siteConfig.domain = 'file://' + this.outputDir;
+            this.siteConfig.domain = 'file:///' + this.outputDir;
         } else if (this.siteConfig.domain === '/') {
             this.siteConfig.domain = '';
         }

@@ -181,7 +181,7 @@ class Image extends Model {
         // Return the image dimensions and new location
         return {
             size: [dimensions.width, dimensions.height],
-            url: 'file://' + normalizePath(newPath),
+            url: 'file:///' + normalizePath(newPath),
             filename: filename,
             newPath: newPath
         };
