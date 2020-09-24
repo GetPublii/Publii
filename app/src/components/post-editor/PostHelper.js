@@ -20,8 +20,11 @@ class PostHelper {
         }
         
         // Remove directxory path from images src attribute
+        preparedText = preparedText.replace(/file:(\/){1,}/gmi, 'file:///');
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
         preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
+
+        console.log(mediaPath, preparedText);
 
         if(postData.isHidden) {
             finalStatus += ',hidden';
@@ -74,7 +77,7 @@ class PostHelper {
             'creationDate': creationDate,
             'modificationDate': Date.now(),
             'template': postData.template,
-            'featuredImage': postData.featuredImage.path === null ? '' : PostHelper.getMediaPath($store, postID) + postData.featuredImage.path,
+            'featuredImage': postData.featuredImage.path === null ? '' : 'file:///' + PostHelper.getMediaPath($store, postID) + postData.featuredImage.path,
             'featuredImageFilename': postData.featuredImage.path,
             'featuredImageData': {
                 alt: postData.featuredImage.alt,
@@ -133,7 +136,7 @@ class PostHelper {
         postData.title = data.posts[0].title;
         let mediaPath = PostHelper.getMediaPath($store, data.posts[0].id);
         let preparedText = data.posts[0].text;
-        preparedText = preparedText.split('#DOMAIN_NAME#').join(mediaPath);
+        preparedText = preparedText.split('#DOMAIN_NAME#').join('file:///' + mediaPath);
         postData.text = preparedText;
 
         // Set tags
@@ -215,7 +218,7 @@ class PostHelper {
 
     static getMediaPath ($store, postID) {
         let mediaPath = $store.state.currentSite.siteDir.replace(/&/gmi, '&amp;');
-        mediaPath = 'file:///' + mediaPath.replace(/\\/g, '/');
+        mediaPath = mediaPath.replace(/\\/g, '/');
         mediaPath += '/input/media/posts/';
         mediaPath += postID === 0 ? 'temp' : postID;
         mediaPath += '/';
