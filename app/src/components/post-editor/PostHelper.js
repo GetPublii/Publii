@@ -24,8 +24,6 @@ class PostHelper {
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
         preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
 
-        console.log(mediaPath, preparedText);
-
         if(postData.isHidden) {
             finalStatus += ',hidden';
         }
