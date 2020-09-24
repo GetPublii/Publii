@@ -273,7 +273,7 @@
 <script>
 import { ipcRenderer, remote } from 'electron';
 const mainProcess = remote.require('./main.js');
-import Vue from 'Vue';
+import Vue from 'vue';
 
 export default {
     name: 'tag-form-sidebar',
