@@ -628,7 +628,7 @@
                                 slot="note"
                                 class="note">
                                 Prefixes entered here will be added before the tag slug in the URL e.g. <strong>https://example.com/TAG_PREFIX/tag-slug</strong>.<br>
-                                You can leave this field blank if the use of pretty URLs is disabled.
+                                This prefix is also used to generate tags list page (if supported in your theme) as <strong>https://example.com/TAG_PREFIX/index.html</strong>
                             </small>
                         </field>
 

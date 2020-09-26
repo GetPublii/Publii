@@ -78,7 +78,7 @@ const AstCurrentSiteConfig = {
         urls: {
             cleanUrls: false,
             addIndex: false,
-            tagsPrefix: '',
+            tagsPrefix: 'tags',
             authorsPrefix: 'authors',
             pageName: 'page',
             errorPage: '404.html',
