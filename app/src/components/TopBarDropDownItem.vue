@@ -16,7 +16,8 @@
         <a
             v-if="path && isExternal"
             :href="path"
-            target="_blank">
+            target="_blank" 
+            rel="noopener noreferrer">
             {{ label }}
         </a>
     </li>

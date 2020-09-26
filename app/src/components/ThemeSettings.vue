@@ -310,7 +310,7 @@
                                 <small
                                     slot="note"
                                     class="note">
-                                    If you need to translate theme phrases to languages other than english - please check our documentation regarding <a href="https://getpublii.com/dev/translations-api/" target="_blank" rel="noopener">Translations API</a><br><br>
+                                    If you need to translate theme phrases to languages other than english - please check our documentation regarding <a href="https://getpublii.com/dev/translations-api/" target="_blank" rel="noopener noreferrer">Translations API</a><br><br>
                                 </small>
                             </field>
                         </div>

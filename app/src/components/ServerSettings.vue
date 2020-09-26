@@ -114,23 +114,23 @@
                         </template>
 
                         <template v-if="deploymentMethodSelected === 'netlify'">
-                            For detailed information about how to configure a website using Netlify, see online<a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank">documentation</a>.
+                            For detailed information about how to configure a website using Netlify, see online<a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank" rel="noopener noreferrer">documentation</a>.
                         </template>
 
                         <template v-if="deploymentMethodSelected === 'github-pages'">
-                            For detailed information about how to configure a website using Github Page, see online <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank">documentation</a>.
+                            For detailed information about how to configure a website using Github Page, see online <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank" rel="noopener noreferrer">documentation</a>.
                         </template>
 
                         <template v-if="deploymentMethodSelected === 'gitlab-pages'">
-                            For detailed information about how to configure a website using GitLab Pages, see online <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank">documentation</a>.
+                            For detailed information about how to configure a website using GitLab Pages, see online <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank" rel="noopener noreferrer">documentation</a>.
                         </template>
 
                         <template v-if="deploymentMethodSelected === 's3'">
-                            For detailed information about how to configure a website using S3, see online <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank">documentation</a>.
+                            For detailed information about how to configure a website using S3, see online <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank" rel="noopener noreferrer">documentation</a>.
                         </template>
 
                         <template v-if="deploymentMethodSelected === 'google-cloud'">
-                            For detailed information about how to configure a website using Google Cloud, see online <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank">documentation</a>.
+                            For detailed information about how to configure a website using Google Cloud, see online <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank" rel="noopener noreferrer">documentation</a>.
                         </template>
                     </p>
                 </div>
@@ -171,7 +171,7 @@
                         v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'ipfs')"
                         class="note"
                         slot="note">
-                        The "dat://", "hyper://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank">hyper://</a> and <a href="https://ipfs.io/" target="_blank">IPFS</a>
+                        The "dat://", "hyper://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank" rel="noopener noreferrer">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank" rel="noopener noreferrer">hyper://</a> and <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>
                     </small>
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"

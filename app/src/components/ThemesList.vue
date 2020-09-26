@@ -10,7 +10,7 @@
         :class="{ 'themes': true, 'theme-is-over': themeIsOver }">
         <div
             class="add-more-theme">
-                <a href="https://marketplace.getpublii.com/" target="_blank">
+                <a href="https://marketplace.getpublii.com/" target="_blank" rel="noopener noreferrer">
                     <icon                   
                         customWidth="50"
                         customHeight="46"

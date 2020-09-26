@@ -16,7 +16,8 @@
                 <a
                     v-if="licenseData.homepage"
                     :href="licenseData.homepage"
-                    target="_blank">
+                    target="_blank" 
+                    rel="noopener noreferrer">
                     Homepage
                 </a>
             </dt>

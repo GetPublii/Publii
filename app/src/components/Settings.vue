@@ -106,7 +106,7 @@
                     v-if="!currentThemeHasSupportedFeaturesList"
                     class="msg msg-icon msg-alert">
                     <icon name="warning" customWidth="28" customHeight="28"/>
-                    <p>Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features">Read more about supported features</a>.</p>
+                    <p>Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features" target="_blank" rel="noopener noreferrer">Read more about supported features</a>.</p>
                 </div>
             </fields-group>
 
@@ -722,7 +722,7 @@
                                 v-if="sitemapLink"
                                 slot="note"
                                 class="note">
-                                You can find the XML sitemap here: <a :href="sitemapLink" class="sitemap-external-link" target="_blank">sitemap.xml</a>
+                                You can find the XML sitemap here: <a :href="sitemapLink" class="sitemap-external-link" target="_blank" rel="noopener noreferrer">sitemap.xml</a>
                             </small>
                         </field>
 
@@ -820,7 +820,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                Read how to obtain <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
+                                Read how to obtain <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener noreferrer">Facebook App ID</a>
                             </small>
                         </field>
                     </div>
@@ -968,7 +968,7 @@
                             <small
                                 class="note"
                                 slot="note">
-                                Please provide <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener">Facebook App ID</a>
+                                Please provide <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener noreferrer">Facebook App ID</a>
                             </small>
                         </field>
 
@@ -1052,7 +1052,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                Enabling the GDPR Cookie Popup requires some additional changes in your theme, especially if you are using third-party scripts. <a href="https://getpublii.com/dev/prepare-theme-gdpr-compliant/" target="_blank">Read how to prepare your theme for GDPR</a>
+                                Enabling the GDPR Cookie Popup requires some additional changes in your theme, especially if you are using third-party scripts. <a href="https://getpublii.com/dev/prepare-theme-gdpr-compliant/" target="_blank" rel="noopener noreferrer">Read how to prepare your theme for GDPR</a>
                             </small>
                         </field>
 

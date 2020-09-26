@@ -107,7 +107,7 @@
                                 @click.native="toggleGravatar"
                                 v-model="authorData.useGravatar" />
                             <small>
-                                Use <a href="https://gravatar.com/" target="_blank">Gravatar </a> to provide your author avatar
+                                Use <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatar </a> to provide your author avatar
                             </small>
                         </label>
 

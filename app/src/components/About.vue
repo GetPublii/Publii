@@ -18,8 +18,8 @@
         </p>
 
         <p class="about-copyright">
-            Copyright 2020 <a href="https://tidycustoms.net" target="_blank">TidyCustoms</a>. All rights reserved.<br>
-            Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank">Dev Zen</a> and is made possible by the <a href="http://electron.atom.io" target="_blank">Electron</a>
+            Copyright 2020 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
+            Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>
             Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
         </p>
 
@@ -28,7 +28,7 @@
         </p>
 
         <p>
-            <a href="https://getpublii.com/license.html" target="_blank">Licensing information</a>
+            <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">Licensing information</a>
         </p>
     </div>
 </template>
