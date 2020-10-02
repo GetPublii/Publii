@@ -1044,6 +1044,20 @@
             }]
         },
         {
+            "name": "separator",
+            "type": "separator",
+            "label": "Theme configuration",
+            "group": "Comments",
+            "size": "big",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
             "name": "commentGraphcommentwidth",
             "label": "Width",
             "group": "Comments",
