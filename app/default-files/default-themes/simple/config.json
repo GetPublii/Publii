@@ -1018,14 +1018,14 @@
             "name": "commentGraphcommentBackgroundColor",
             "label": "Background color",
             "group": "Comments",
-            "value": "#f35b5b",
+            "value": "#F35B5B",
             "type": "colorpicker"
         },  
         {
             "name": "commentGraphcommentTextColor",
             "label": "Text color",
             "group": "Comments",
-            "value": "#ffffff",
+            "value": "#FFFFFF",
             "type": "colorpicker"
         },
         
