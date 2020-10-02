@@ -1009,24 +1009,34 @@
             "name": "commentGraphcommentwidth",
             "label": "Width",
             "group": "Comments",
-            "note": "This setting only applies to the \"Sidebar\" theme.",
             "value": 480,
-            "type": "number"
-
+            "type": "number",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            }]
         },
         {
             "name": "commentGraphcommentBackgroundColor",
             "label": "Button background color",
             "group": "Comments",
             "value": "#F35B5B",
-            "type": "colorpicker"
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            }]
         },  
         {
             "name": "commentGraphcommentTextColor",
             "label": "Button text color",
             "group": "Comments",
             "value": "#FFFFFF",
-            "type": "colorpicker"
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            }]
         },
         
         {
