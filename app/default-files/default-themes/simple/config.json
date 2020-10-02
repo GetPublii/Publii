@@ -956,8 +956,15 @@
         },
 
         {
+            "name": "separator",
+            "type": "separator",
+            "label": "Disqus comments",
+            "group": "Comments",
+            "size": "big"
+        },
+        {
             "name": "commentDisqusShortname",
-            "label": "Disqus shortname",
+            "label": "Shortname",
             "group": "Comments",
             "placeholder": "Please enter your Disqus shortname",
             "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
@@ -965,8 +972,15 @@
             "type": "text"
         },
         {
+            "name": "separator",
+            "type": "separator",
+            "label": "Graphcomment comments",
+            "group": "Comments",
+            "size": "big"
+        },
+        {
             "name": "commentGraphcommentShortname",
-            "label": "Graphcomment shortname",
+            "label": "Shortname",
             "group": "Comments",
             "placeholder": "Please enter your Graphcomment shortname",
             "note": "A shortname is the unique identifier assigned to a Graphcomment site. Please visit https://support.graphcomment.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
@@ -975,7 +989,7 @@
         },
         {       
             "name": "commentGraphcommentTheme",
-            "label": "Graphcomment theme",
+            "label": "Theme",
             "group": "Comments",           
             "note": "Select a theme for Graphcomment", 
             "value": "universal",
@@ -990,6 +1004,29 @@
                     "value": "sidebar"
                 }
             ]
+        },
+        {
+            "name": "commentGraphcommentwidth",
+            "label": "Width label",
+            "group": "Comments",
+            "note": "This setting only applies to the \"Sidebar\" theme.",
+            "value": 480,
+            "type": "number"
+
+        },
+        {
+            "name": "commentGraphcommentBackgroundColor",
+            "label": "Background color",
+            "group": "Comments",
+            "value": "#f35b5b",
+            "type": "colorpicker"
+        },  
+        {
+            "name": "commentGraphcommentTextColor",
+            "label": "Text color",
+            "group": "Comments",
+            "value": "#ffffff",
+            "type": "colorpicker"
         },
         
         {
