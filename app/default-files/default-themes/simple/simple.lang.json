@@ -6,6 +6,10 @@
             "noscript2": "comments powered by Disqus."
         },
         
+        "graphcomment": {
+            "noscript1": "Please enable JavaScript to view the comments powered by Graphcomment."
+        },
+        
         "menu": {
             "label": "Menu"
         },
