@@ -215,10 +215,10 @@
                <h2 class="h5">
                   {{ translate 'post.comments' }}
                </h2>
-                {{#checkIf @config.custom.commentDisqusShortname '!==' ""}}
+                {{#checkIf @config.custom.commentSelectServer '===' "disqus"}}
                     {{> disqus}}
                 {{/checkIf}}
-                {{#checkIf @config.custom.commentGraphcommentShortname '!==' ""}}
+                {{#checkIf @config.custom.commentSelectServer '===' "graphcomment"}}
                     {{> graphcomment}}
                 {{/checkIf}}
             </div>
