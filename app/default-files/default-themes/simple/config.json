@@ -959,7 +959,7 @@
             "name": "commentSelectServer",
             "label": "Server for comments",
             "group": "Comments",           
-            "note": "Select a server for your website comments, the use of graphcomment is recommended because it has more privacy.", 
+            "note": "Select a server for your website comments, the use of \"Graphcomment\" is recommended because it has more privacy.", 
             "value": "graphcomment",
             "type": "select",
             "options": [
