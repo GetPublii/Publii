@@ -19,7 +19,8 @@
 
             (function () {
                 var d = document, s = d.createElement('script');
-                s.src = 'https://{{@config.custom.commentDisqusShortname}}.disqus.com/embed.js';
+                var ui='{{@config.custom.commentDisqusShortname}}'.trim();
+                s.src = 'https://'+ui+'.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
