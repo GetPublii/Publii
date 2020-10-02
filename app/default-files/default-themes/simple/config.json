@@ -1016,14 +1016,14 @@
         },
         {
             "name": "commentGraphcommentBackgroundColor",
-            "label": "Background color",
+            "label": "Button background color",
             "group": "Comments",
             "value": "#F35B5B",
             "type": "colorpicker"
         },  
         {
             "name": "commentGraphcommentTextColor",
-            "label": "Text color",
+            "label": "Button text color",
             "group": "Comments",
             "value": "#FFFFFF",
             "type": "colorpicker"
