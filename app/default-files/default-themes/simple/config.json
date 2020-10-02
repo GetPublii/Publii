@@ -955,12 +955,34 @@
             "type": "checkbox"
         },
 
+        {       
+            "name": "commentSelectServer",
+            "label": "Server for comments",
+            "group": "Comments",           
+            "note": "Select a server for your website comments, the use of graphcomment is recommended because it has more privacy.", 
+            "value": "graphcomment",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Graphcomment",
+                    "value": "graphcomment"
+                },
+                {
+                    "label": "Disqus",
+                    "value": "disqus"
+                }                
+            ]
+        },
         {
             "name": "separator",
             "type": "separator",
-            "label": "Disqus comments",
+            "label": "Disqus configuration",
             "group": "Comments",
-            "size": "big"
+            "size": "big",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "disqus"
+            }]
         },
         {
             "name": "commentDisqusShortname",
@@ -969,14 +991,22 @@
             "placeholder": "Please enter your Disqus shortname",
             "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
             "value": "",
-            "type": "text"
+            "type": "text",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "disqus"
+            }]
         },
         {
             "name": "separator",
             "type": "separator",
-            "label": "Graphcomment comments",
+            "label": "Graphcomment configuration",
             "group": "Comments",
-            "size": "big"
+            "size": "big",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
         },
         {
             "name": "commentGraphcommentShortname",
@@ -985,7 +1015,11 @@
             "placeholder": "Please enter your Graphcomment shortname",
             "note": "A shortname is the unique identifier assigned to a Graphcomment site. Please visit https://support.graphcomment.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
             "value": "",
-            "type": "text"
+            "type": "text",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
         },
         {       
             "name": "commentGraphcommentTheme",
@@ -1003,7 +1037,11 @@
                     "label": "Sidebar",
                     "value": "sidebar"
                 }
-            ]
+            ],
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
         },
         {
             "name": "commentGraphcommentwidth",
@@ -1014,6 +1052,10 @@
             "dependencies": [{
                 "field": "commentGraphcommentTheme",
                 "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
             }]
         },
         {
@@ -1025,6 +1067,10 @@
             "dependencies": [{
                 "field": "commentGraphcommentTheme",
                 "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
             }]
         },  
         {
@@ -1036,6 +1082,10 @@
             "dependencies": [{
                 "field": "commentGraphcommentTheme",
                 "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
             }]
         },
         
