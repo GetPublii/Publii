@@ -965,6 +965,34 @@
             "type": "text"
         },
         {
+            "name": "commentGraphcommentShortname",
+            "label": "Graphcomment shortname",
+            "group": "Comments",
+            "placeholder": "Please enter your Graphcomment shortname",
+            "note": "A shortname is the unique identifier assigned to a Graphcomment site. Please visit https://support.graphcomment.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
+            "value": "",
+            "type": "text"
+        },
+        {       
+            "name": "commentGraphcommentTheme",
+            "label": "Graphcomment theme",
+            "group": "Comments",           
+            "note": "Select a theme for Graphcomment", 
+            "value": "universal",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Universal",
+                    "value": "universal"
+                },
+                {
+                    "label": "Sidebar",
+                    "value": "sidebar"
+                }
+            ]
+        },
+        
+        {
             "name": "backToTopButton",
             "group": "Footer",
             "label": "\"Back to top\" button",
