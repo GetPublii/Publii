@@ -1007,7 +1007,7 @@
         },
         {
             "name": "commentGraphcommentwidth",
-            "label": "Width label",
+            "label": "Width",
             "group": "Comments",
             "note": "This setting only applies to the \"Sidebar\" theme.",
             "value": 480,
