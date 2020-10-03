@@ -5,8 +5,7 @@ window.gc_params = {
 graphcomment_id: '{{@config.custom.commentGraphcommentShortname}}'.trim(),
 {{#checkIf @config.custom.commentGraphcommentTheme '===' "universal"}}
     fixed_header_height: 0
-{{/checkIf}}
-{{#checkIf @config.custom.commentGraphcommentTheme '===' "sidebar"}}
+{{else}}
     overlay: {"width":{{@config.custom.commentGraphcommentwidth}},"button":{"background":"{{@config.custom.commentGraphcommentBackgroundColor}}","color":"{{@config.custom.commentGraphcommentTextColor}}"}}
 {{/checkIf}}
 };
