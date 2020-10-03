@@ -871,9 +871,9 @@
         },
         {       
             "name": "searchMode",
-            "label": "Select the search mode",
+            "label": "Mode",
             "group": "Search",           
-            "note": "Select the search mode you want.<br/>The <strong>external mode</strong> allows you to search from any external search engine in an advanced way.<br/>The <strong>internal mode</strong> will integrate the search results on your website.", 
+            "note": "The <strong>external</strong> mode allows you to search from any external search engine.<br/>The <strong>integrated</strong> mode will integrate the search results on your website.", 
             "value": "external",
             "type": "select",
             "dependencies": [{
@@ -882,12 +882,12 @@
             }],
             "options": [
                 {
-                    "label": "External mode",
+                    "label": "External",
                     "value": "external"
                 },
                 {
-                    "label": "Internal mode",
-                    "value": "internal"
+                    "label": "Integrated",
+                    "value": "integrated"
                 }                
             ]
         },
@@ -905,10 +905,10 @@
         {
             "name": "searchServer",
             "group": "Search",
-            "label": "Search engine",
+            "label": "Engine",
             "note": "Enter the URL of the search engine you want to use on your website.",
             "value": "https://duckduckgo.com",
-            "type": "text",
+            "type": "url",
             "dependencies": [{
                 "field": "search",
                 "value": "true"
@@ -921,7 +921,7 @@
         {
             "name": "searchParam",
             "group": "Search",
-            "label": "Search parameter",
+            "label": "Parameter",
             "note": "You can change the default \"q\" search parameter if desired; this is recommended only for advanced users.",
             "value": "q",
             "type": "text",
@@ -957,6 +957,17 @@
             ]
         },
         {
+            "name": "searchTab",
+            "label": "Open results in new tab",
+            "group": "Search",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+        {
             "name": "searchForceWebsiteResults",
             "label": "Only show results from your website",
             "group": "Search",
@@ -972,17 +983,6 @@
             }]
         },
         {
-            "name": "searchTab",
-            "label": "Open results in new tab",
-            "group": "Search",
-            "value": false,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "search",
-                "value": "true"
-            }]
-        },
-        {
             "name": "separator",
             "type": "separator",
             "label": "Google search configuration",
@@ -994,14 +994,14 @@
             },
             {
                 "field": "searchMode",
-                "value": "internal"
+                "value": "integrated"
             }]
         },
         {
             "name": "searchId",
             "group": "Search",
-            "label": "Google Custom Search Id",
-            "note": "A search ID is required for internal mode functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
+            "label": "Custom Search Id",
+            "note": "A search ID is required for integrated mode functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
             "value": "",
             "type": "text",
             "dependencies": [{
@@ -1010,7 +1010,7 @@
             },
             {
                 "field": "searchMode",
-                "value": "internal"
+                "value": "integrated"
             }]
         },
 
