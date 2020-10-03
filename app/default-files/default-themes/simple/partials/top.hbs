@@ -50,7 +50,7 @@
                             </script>
                         {{/if}}
                     {{/checkIf}}
-                    {{#checkIf @config.custom.searchMode '===' "internal"}}
+                    {{#checkIf @config.custom.searchMode '===' "integrated"}}
                         <form action="{{@website.searchUrl}}" class="search__form" {{#if @config.custom.searchTab}}target="_blank"{{/if}}>
                              <input
                                 class="search__input js-search-input"
