@@ -869,16 +869,53 @@
             "value": false,
             "type": "checkbox"
         },
+        {       
+            "name": "searchMode",
+            "label": "Select the search mode",
+            "group": "Search",           
+            "note": "Select the search mode you want.<br/>The <strong>external mode</strong> allows you to search from any external search engine in an advanced way.<br/>The <strong>internal mode</strong> will integrate the search results on your website.", 
+            "value": "external",
+            "type": "select",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }],
+            "options": [
+                {
+                    "label": "External mode",
+                    "value": "external"
+                },
+                {
+                    "label": "Internal mode",
+                    "value": "internal"
+                }                
+            ]
+        },
         {
-            "name": "searchId",
+            "name": "separator",
+            "type": "separator",
+            "label": "Search configuration",
             "group": "Search",
-            "label": "Google Custom Search Id",
-            "note": "A search ID is required for search functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
-            "value": "",
+            "size": "big",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "searchServer",
+            "group": "Search",
+            "label": "Search engine",
+            "note": "Enter the URL of the search engine you want to use on your website.",
+            "value": "https://duckduckgo.com",
             "type": "text",
             "dependencies": [{
                 "field": "search",
                 "value": "true"
+            },
+            {
+                "field": "searchMode",
+                "value": "external"
             }]
         },
         {
@@ -891,6 +928,89 @@
             "dependencies": [{
                 "field": "search",
                 "value": "true"
+            }]
+        },
+        {       
+            "name": "searchMethod",
+            "label": "Form Method",
+            "group": "Search",           
+            "note": "Select the method you want to use for your search engine.", 
+            "value": "get",
+            "type": "select",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            },
+            {
+                "field": "searchMode",
+                "value": "external"
+            }],
+            "options": [
+                {
+                    "label": "Post",
+                    "value": "post"
+                },
+                {
+                    "label": "Get",
+                    "value": "get"
+                }                
+            ]
+        },
+        {
+            "name": "searchForceWebsiteResults",
+            "label": "Only show results from your website",
+            "group": "Search",
+            "value": true,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            },
+            {
+                "field": "searchMode",
+                "value": "external"
+            }]
+        },
+        {
+            "name": "searchTab",
+            "label": "Open results in new tab",
+            "group": "Search",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Google search configuration",
+            "group": "Search",
+            "size": "big",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            },
+            {
+                "field": "searchMode",
+                "value": "internal"
+            }]
+        },
+        {
+            "name": "searchId",
+            "group": "Search",
+            "label": "Google Custom Search Id",
+            "note": "A search ID is required for internal mode, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "search",
+                "value": "true"
+            },
+            {
+                "field": "searchMode",
+                "value": "internal"
             }]
         },
 
