@@ -15,7 +15,7 @@
             <div class="search__overlay js-search-overlay">
                <div class="search__overlay-inner">
                   {{#checkIf @config.custom.searchMode '===' "external"}}
-                        <form action="{{@config.custom.searchServer}}" class="search__form" method="{{@config.custom.searchMethod}}" {{#if @config.custom.searchTab}}target="_blank"{{/if}} {{#if @config.custom.searchForceWebsiteResults}}onsubmit="changeInputSubmit();"{{/if}}>
+                        <form action="{{@config.custom.searchServer}}" class="search__form" method="{{@config.custom.searchMethod}}" {{#if @config.custom.searchTab}}target="_blank"{{/if}} {{#if @config.custom.searchForceWebsiteResults}}onsubmit="configInputSubmit();"{{/if}}>
                             {{#if @config.custom.searchForceWebsiteResults}}
                                 <input
                                     id="search_input"
