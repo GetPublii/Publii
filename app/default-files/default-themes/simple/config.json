@@ -1001,7 +1001,7 @@
             "name": "searchId",
             "group": "Search",
             "label": "Google Custom Search Id",
-            "note": "A search ID is required for internal mode, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
+            "note": "A search ID is required for internal mode functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
             "value": "",
             "type": "text",
             "dependencies": [{
