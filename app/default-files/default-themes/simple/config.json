@@ -875,7 +875,7 @@
             "group": "Search",           
             "note": "The <strong>external</strong> mode allows you to search from any external search engine.<br/>The <strong>integrated</strong> mode will integrate the search results on your website.", 
             "value": "external",
-            "type": "select",
+            "type": "radio",
             "dependencies": [{
                 "field": "search",
                 "value": "true"
