@@ -936,7 +936,7 @@
             "group": "Search",           
             "note": "Select the method you want to use for your search engine.", 
             "value": "get",
-            "type": "select",
+            "type": "radio",
             "dependencies": [{
                 "field": "search",
                 "value": "true"
