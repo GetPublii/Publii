@@ -961,7 +961,7 @@
             "group": "Comments",           
             "note": "Select a server for your website comments, the use of \"Graphcomment\" is recommended because it has more privacy.", 
             "value": "graphcomment",
-            "type": "select",
+            "type": "radio",
             "options": [
                 {
                     "label": "Graphcomment",
@@ -1027,7 +1027,7 @@
             "group": "Comments",           
             "note": "Select a theme for Graphcomment", 
             "value": "universal",
-            "type": "select",
+            "type": "radio",
             "options": [
                 {
                     "label": "Universal",
