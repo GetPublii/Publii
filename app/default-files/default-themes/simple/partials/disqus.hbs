@@ -19,8 +19,7 @@
 
             (function () {
                 var d = document, s = d.createElement('script');
-                var ui='{{@config.custom.commentDisqusShortname}}'.trim();
-                s.src = 'https://'+ui+'.disqus.com/embed.js';
+                s.src = 'https://'+'{{@config.custom.commentDisqusShortname}}'.trim()+'.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
