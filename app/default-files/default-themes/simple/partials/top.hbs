@@ -23,34 +23,25 @@
                                     type="search"
                                     placeholder="{{ translate 'search.placeholder' }}" 
                                     aria-label="{{ translate 'search.placeholder' }}"
-                                    autofocus="autofocus"
-                                />
+                                    autofocus="autofocus"/>
                                 <input
                                     id="search_go"
                                     type="hidden"
-                                    name="{{@config.custom.searchParam}}"
-                                />
+                                    name="{{@config.custom.searchParam}}"/>
                             {{else}}
                                 <input
                                     class="search__input js-search-input"
                                     type="search"
+                                    name="{{@config.custom.searchParam}}"
                                     placeholder="{{ translate 'search.placeholder' }}" 
                                     aria-label="{{ translate 'search.placeholder' }}"
-                                    autofocus="autofocus"
-                                    name="{{@config.custom.searchParam}}"
-                                />
+                                    autofocus="autofocus"/>
                             {{/if}}
                       </form>
                         {{#if @config.custom.searchForceWebsiteResults}}
-                            <script>
-                            function configInputSubmit(){
-                                document.getElementById('search_go').value='site:'+window.location.hostname+' '+document.getElementById('search_input').value;
-                                return true;
-                            }
-                            </script>
+                            <script>function configInputSubmit(){document.getElementById('search_go').value='site:'+window.location.hostname+' '+document.getElementById('search_input').value;return true;}</script>
                         {{/if}}
-                    {{/checkIf}}
-                    {{#checkIf @config.custom.searchMode '===' "integrated"}}
+                    {{else}}
                         <form action="{{@website.searchUrl}}" class="search__form" {{#if @config.custom.searchTab}}target="_blank"{{/if}}>
                              <input
                                 class="search__input js-search-input"
