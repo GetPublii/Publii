@@ -1013,7 +1013,7 @@
             "label": "Shortname",
             "group": "Comments",
             "placeholder": "Please enter your Graphcomment shortname",
-            "note": "A shortname is the unique identifier assigned to a Graphcomment site.<br/>Please visit <a href=\"https://support.graphcomment.com/\" target=\"_blank\" rel=\"nofollow noopener\"> to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
+            "note": "A shortname is the unique identifier assigned to a Graphcomment site.<br/>Please visit <a href=\"https://support.graphcomment.com/\" target=\"_blank\" rel=\"nofollow noopener\">support.graphcomment.com</a> to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
             "value": "",
             "type": "text",
             "dependencies": [{
