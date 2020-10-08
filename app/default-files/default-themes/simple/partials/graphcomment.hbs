@@ -3,7 +3,7 @@
 <script type="text/javascript">
 window.gc_params = {
     graphcomment_id: '{{@config.custom.commentGraphcommentShortname}}'.trim(),
-    identifier: '{{id}}',
+    identifier: {{id}},
 {{#checkIf @config.custom.commentGraphcommentTheme '===' "universal"}}
     fixed_header_height: 0
 {{else}} 
