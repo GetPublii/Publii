@@ -2,25 +2,6 @@
 
 <script type="text/javascript">
 window.gc_params = {
-graphcomment_id: '{{@config.custom.commentGraphcommentShortname}}'.trim(),
-{{#checkIf @config.custom.commentGraphcommentTheme '===' "universal"}}
-    fixed_header_height: 0
-{{else}}
-    overlay: {"width":{{@config.custom.commentGraphcommentwidth}},"button":{"background":"{{@config.custom.commentGraphcommentBackgroundColor}}","color":"{{@config.custom.commentGraphcommentTextColor}}"}}
-{{/checkIf}}
-};
-  (function() {
-    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
-    gc.src = 'https://graphcomment.com/js/integration.js?' + Math.round(Math.random() * 1e8);
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
-  })();
-</script>
-
-<noscript>{{ translate 'partials.graphcomment.noscript1' }}</noscript>
-<div id="graphcomment"></div>
-
-<script type="text/javascript">
-window.gc_params = {
     graphcomment_id: '{{@config.custom.commentGraphcommentShortname}}'.trim(),
     identifier: '{{id}}',
 {{#checkIf @config.custom.commentGraphcommentTheme '===' "universal"}}
