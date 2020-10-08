@@ -1058,11 +1058,26 @@
             }]
         },
         {
-            "name": "commentGraphcommentwidth",
-            "label": "Width",
+            "name": "commentGraphcommentWidth",
+            "label": "Panel Width",
             "group": "Comments",
             "value": 480,
             "type": "number",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentText",
+            "label": "Button label",
+            "group": "Comments",
+            "value": "",
+            "type": "text",
             "dependencies": [{
                 "field": "commentGraphcommentTheme",
                 "value": "sidebar"
@@ -1086,13 +1101,45 @@
                 "field": "commentSelectServer",
                 "value": "graphcomment"
             }]
-        },  
+        },
         {
             "name": "commentGraphcommentTextColor",
             "label": "Button text color",
             "group": "Comments",
             "value": "#FFFFFF",
             "type": "colorpicker",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentVisible",
+            "group": "Comments",
+            "label": "Open with page load",
+            "note": "If this option is activated, the panel will open automatically.",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentBubble",
+            "group": "Comments",
+            "label": "Show Icon",
+            "note": "Display an icon for opening the panel at the bottom right of the page.",
+            "value": false,
+            "type": "checkbox",
             "dependencies": [{
                 "field": "commentGraphcommentTheme",
                 "value": "sidebar"
