@@ -578,7 +578,10 @@ class WxrParser {
 
             download.image({
                 url: image.replace(imageFileName, encodeURIComponent(imageFileName)),
-                dest: path.join(dirPath, imageFileName)
+                dest: path.join(dirPath, imageFileName),
+                headers: {
+                    'User-Agent': 'Publii'
+                }
             }).then(({filename, image}) => {
                 this.downloadImagesProgress++;
 
