@@ -1944,7 +1944,7 @@ class Renderer {
     relativizeUrlsInFile (file, outputDir) {
         let filePath = path.join(outputDir, file);
         let content = fs.readFileSync(filePath, 'utf8');
-        let depth = file.split('/').length - 2;
+        let depth = file.replace(/\\/gmi, '/').split('/').length - 2;
         let relativeDomain = './' + '../'.repeat(depth);
 
         if (relativeDomain.length) {
