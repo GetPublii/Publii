@@ -36,6 +36,14 @@ class Author extends Model {
             this.additionalData = authorData.additionalData;
             this.prepareAuthorName();
         }
+
+        if (typeof this.additionalData === 'string') {
+            try {
+                this.additionalData = JSON.parse(this.additionalData);
+            } catch (e) {
+                console.log('(!) An issue occurred during initial parsing author additional data', this.id);
+            }
+        }
     }
 
     /**
@@ -96,7 +104,7 @@ class Author extends Model {
             name: this.name,
             slug: slug(this.username),
             config: this.config,
-            additionalData: this.additionalData
+            additionalData: JSON.stringify(this.additionalData)
         });
 
         // Get the newly added item ID if necessary
@@ -148,7 +156,7 @@ class Author extends Model {
             name: this.name,
             slug: slug(this.username),
             config: this.config,
-            additionalData: this.additionalData,
+            additionalData: JSON.stringify(this.additionalData),
             id: this.id
         });
 
@@ -281,7 +289,11 @@ class Author extends Model {
      */
     cleanImages(images, imagesDir, cancelEvent) {
         let authorDir = this.id;
-        let featuredImage = path.parse(this.additionalData.featuredImage).base;
+        let featuredImage = false;
+
+        if (this.additionalData && this.additionalData.featuredImage) {
+            featuredImage = path.parse(this.additionalData.featuredImage).base;
+        }
 
         // If post is cancelled - get the previous featured image
         if (cancelEvent && this.id !== 0) {
@@ -291,10 +303,9 @@ class Author extends Model {
                 id: this.id 
             });
 
-            if (featuredImageResult) {
+            if (featuredImageResult && featuredImageResult[0]) {
                 try {
-                    featuredImageResult = JSON.parse(featuredImageResult);
-                    featuredImage = featuredImageResult.featuredImage;
+                    featuredImage = JSON.parse(featuredImageResult[0].additional_data).featuredImage;
                 } catch (e) {
                     console.log('(!) An issue occurred during parsing author additional data', this.id);
                 }
