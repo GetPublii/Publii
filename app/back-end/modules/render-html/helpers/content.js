@@ -95,6 +95,9 @@ class ContentHelper {
             });
         }
 
+        // Remove double slashes from the gallery URLs (if they appears)
+        preparedText = preparedText.replace(/\/\/gallery\/$/gmi, '/gallery/');
+
         // Remove paragraphs around <iframe>'s
         preparedText = preparedText.replace(/\<p\>\<iframe/gmi, '<iframe');
         preparedText = preparedText.replace(/\<\/iframe\>\<\/p\>/gmi, '</iframe>');
