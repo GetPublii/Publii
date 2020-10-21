@@ -8,8 +8,39 @@ module.exports = [
         code: 'custom'
     },
     {
+        name: 'Bambara',
+        code: 'bm'
+    },
+    {
+        name: 'Bashkir',
+        code: 'ba'
+    },
+    {
+        name: 'Basque',
+        code: 'eu'
+    },
+    {
         name: 'Belarusian',
         code: 'be'
+    },
+    {
+        name: 'Bengali (Bangla)',
+        code: 'bn'
+    },
+        name: 'Bihari',
+        code: 'bh'
+    },
+    {
+        name: 'Bislama',
+        code: 'bi'
+    },
+    {
+        name: 'Bosnian',
+        code: 'bs'
+    },
+    {
+        name: 'Breton',
+        code: 'br'
     },
     {
         name: 'Bulgarian',
