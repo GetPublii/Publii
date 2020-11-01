@@ -42,3 +42,4 @@ release/PubliiSetup.exe
 release/Setup.wixobj
 *.wixpdb
 release/Setup.wxs
+.vscode
