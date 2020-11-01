@@ -28,6 +28,9 @@ export default {
         token: ''
     },
     s3: {
+        customProvider: false, 
+        provider: 'aws',
+        endpoint: '',
         bucket: '',
         id: '',
         key: '',

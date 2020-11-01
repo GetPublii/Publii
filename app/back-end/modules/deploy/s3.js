@@ -21,6 +21,8 @@ class S3 {
 
     async initConnection() {
         let self = this;
+        let s3Provider = this.deployment.siteConfig.deployment.s3.provider;    
+        let s3Endpoint = this.deployment.siteConfig.deployment.s3.endpoint;
         let s3Id = this.deployment.siteConfig.deployment.s3.id;
         let s3Key = this.deployment.siteConfig.deployment.s3.key;
         let region = this.deployment.siteConfig.deployment.s3.region;
@@ -41,13 +43,27 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        this.connection = new AWS.S3({
-            accessKeyId: s3Id,
-            secretAccessKey: s3Key,
-            region: region,
-            sslEnabled: true,
-            signatureVersion: 'v4'
-        });
+        let connectionParams
+        
+        if (s3Provider === 'aws') {
+            connectionParams = {            
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                region: region,
+                sslEnabled: true,
+                signatureVersion: 'v4'
+            }
+        } else {
+            connectionParams = {
+                endpoint: s3Endpoint,                
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                sslEnabled: true,
+                signatureVersion: 'v4'
+            }
+        }
+
+        this.connection = new AWS.S3(connectionParams);
 
         process.send({
             type: 'web-contents',
@@ -409,6 +425,8 @@ class S3 {
     }
 
     async testConnection(app, deploymentConfig, siteName, uuid) {
+        let s3Provider = deploymentConfig.s3.provider;     
+        let s3Endpoint = deploymentConfig.s3.endpoint;
         let s3Id = deploymentConfig.s3.id;
         let s3Key = deploymentConfig.s3.key;
         let bucket = deploymentConfig.s3.bucket;
@@ -429,13 +447,27 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connection = new AWS.S3({
-            accessKeyId: s3Id,
-            secretAccessKey: s3Key,
-            region: region,
-            sslEnabled: true,
-            signatureVersion: 'v4'
-        });
+        let connectionParams
+        
+        if (s3Provider === 'aws') {
+            connectionParams = {            
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                region: region,
+                sslEnabled: true,
+                signatureVersion: 'v4'
+            }
+        } else {
+            connectionParams = {
+                endpoint: s3Endpoint,                
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                sslEnabled: true,
+                signatureVersion: 'v4'
+            }
+        }
+
+        let connection = new AWS.S3(connectionParams);
 
         let testParams = {
             Bucket: bucket,

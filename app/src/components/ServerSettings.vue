@@ -56,11 +56,11 @@
                       iconset="svg-map-server"/>
                 </div>               
 
-                <div @click="deploymentMethodSelected = 's3'" title="AWS S3">
+                <div @click="deploymentMethodSelected = 's3'" title="S3 compatible storage">
                    <icon
                       customWidth="48"
                       customHeight="48"                    
-                      name="aws" 
+                      name="s3storage" 
                       iconset="svg-map-server"/>
                 </div>
                 
@@ -674,6 +674,46 @@
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
+                    id="s3-provider"	
+                    label=" ">	
+                    <switcher	
+                        slot="field"	
+                        id="s3-provider"
+                        key="s3-provider"
+                        v-model="deploymentSettings.s3.customProvider"	
+                        @click.native="toggleS3Provider" />	
+                    <template slot="second-label">	
+                        Use a custom S3 provider
+                    </template>	
+                    <small	
+                        class="note"	
+                        slot="note">	
+                        Note: AWS is the default S3 provider. While using an alternative provider, you need to fill the "S3 provider endpoint" field.	
+                    </small>	
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 's3' && deploymentSettings.s3.customProvider"
+                    id="s3-endpoint"
+                    label="S3 Provider endpoint">
+                    <text-input
+                        slot="field"
+                        id="s3-endpoint"
+                        key="s3-endpoint"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('s3-endpoint') > -1 }"
+                        @keyup.native="cleanError('s3-endpoint')"
+                        v-model="deploymentSettings.s3.endpoint" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('s3-endpoint') > -1"
+                        class="note">
+                        The custom endpoint cannot be empty when "Use a custom S3 provider" is set to true
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 's3'"
                     id="s3-id"
                     label="Access ID">
                     <text-input
@@ -735,7 +775,7 @@
                 </field>
 
                 <field
-                    v-if="deploymentMethodSelected === 's3'"
+                    v-if="deploymentMethodSelected === 's3' && !deploymentSettings.s3.customProvider"
                     id="s3-region"
                     label="Region">
                     <dropdown
@@ -937,7 +977,7 @@ export default {
                 'github-pages': 'Github Pages',
                 'gitlab-pages': 'GitLab Pages',
                 'netlify': 'Netlify',
-                's3': 'Amazon S3',
+                's3': 'S3 compatible storage',
                 'google-cloud': 'Google Cloud',
                 'ftp': 'FTP',
                 'sftp': 'SFTP (with password)',
@@ -1282,7 +1322,7 @@ export default {
             }
         },
         validateS3 () {
-            let fields = ['s3_id', 's3_key', 's3_bucket', 's3_region'];
+            let fields = ['s3_provider', 's3_endpoint', 's3_id', 's3_key', 's3_bucket', 's3_region'];
             return this.validateFields(fields);
         },
         validateGithubPages () {
@@ -1337,7 +1377,7 @@ export default {
                 case 'github-pages': return 'Github Pages';
                 case 'gitlab-pages': return 'GitLab Pages';
                 case 'netlify': return 'Netlify';
-                case 's3': return 'Amazon S3';
+                case 's3': return 'S3 compatible storage';
                 case 'google-cloud': return 'Google Cloud';
                 case 'ftp': return 'FTP';
                 case 'sftp':
@@ -1407,6 +1447,13 @@ export default {
                 this.deploymentMethodSelected = 'ftp';
             } else {
                 this.deploymentMethodSelected = 'ftp+tls';
+            }
+        },
+        toggleS3Provider () {
+            if (this.deploymentSettings.s3.provider === 'aws') {
+                this.deploymentSettings.s3.provider = 'custom'
+            } else {
+                this.deploymentSettings.s3.provider = 'aws'
             }
         }
     }
