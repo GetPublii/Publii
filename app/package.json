@@ -25,10 +25,10 @@
   ],
   "homepage": "https://getpublii.com",
   "dependencies": {
-    "@google-cloud/storage": "^1.1.1",
+    "@google-cloud/storage": "^5.4.0",
     "archiver": "^5.0.1",
     "aws-sdk": "^2.632.0",
-    "better-sqlite3": "^7.1.0",
+    "better-sqlite3": "^7.1.1",
     "clean-css": "^4.1.9",
     "codemirror": "^5.33.0",
     "codemirror-revisedsearch": "^1.0.12",
