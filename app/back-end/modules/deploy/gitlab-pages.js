@@ -153,7 +153,7 @@ class GitlabPages {
         });
 
         this.setUploadProgress(6);
-        console.log(`[${ new Date().toGMTString() }] (!) CLIENT CREATED`);
+        console.log(`[${ new Date().toUTCString() }] (!) CLIENT CREATED`);
 
         process.send({
             type: 'web-contents',
@@ -179,7 +179,7 @@ class GitlabPages {
             this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
                 fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), JSON.stringify(response), err => {
                     if (err) {
-                        console.log(`[${ new Date().toGMTString() }] (!) An error occurred during writing files-remote.json file: ${err}`);
+                        console.log(`[${ new Date().toUTCString() }] (!) An error occurred during writing files-remote.json file: ${err}`);
                     }
 
                     this.deployment.compareFilesList(true);
@@ -203,15 +203,15 @@ class GitlabPages {
                     this.remoteFilesList = [];
                 }
 
-                console.log(`[${ new Date().toGMTString() }] (!) REMOTE FILE DOWNLOADED`);
+                console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE DOWNLOADED`);
             }).catch(err => {
-                console.log(`[${ new Date().toGMTString() }] (!) REMOTE FILE NOT DOWNLOADED`);
-                console.log(`[${ new Date().toGMTString() }] (!) ERROR WHILE DOWNLOADING publii-files.json: ${err.error}`);
+                console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE NOT DOWNLOADED`);
+                console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING publii-files.json: ${err.error}`);
                 this.deployment.compareFilesList(false);
             });
         }).catch(err => {
-            console.log(`[${ new Date().toGMTString() }] downloadFilesList: ${err.error}`);
-            console.warn(`[${ new Date().toGMTString() }] ${err}`);
+            console.log(`[${ new Date().toUTCString() }] downloadFilesList: ${err.error}`);
+            console.warn(`[${ new Date().toUTCString() }] ${err}`);
 
             process.send({
                 type: 'web-contents',
@@ -228,10 +228,10 @@ class GitlabPages {
         this.setUploadProgress(8);
 
         this.client.Branches.create(this.projectID, this.temporaryBranch, this.branch).then(res => {
-            console.log(`[${ new Date().toGMTString() }] (!) BRANCH CREATED`);
+            console.log(`[${ new Date().toUTCString() }] (!) BRANCH CREATED`);
             return this.removeFiles();
         }).catch(err => {
-            console.log(`[${ new Date().toGMTString() }] (!) BRANCH NOT CREATED`);
+            console.log(`[${ new Date().toUTCString() }] (!) BRANCH NOT CREATED`);
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
@@ -246,7 +246,7 @@ class GitlabPages {
         // Create a commit to remove all unnecessary files
         if (this.deployment.filesToRemove.length) {
             this.filesToRemove = [];
-            console.log(`[${ new Date().toGMTString() }] (!) FILES TO REMOVE DETECTED`);
+            console.log(`[${ new Date().toUTCString() }] (!) FILES TO REMOVE DETECTED`);
 
             for (let i = 0; i < this.deployment.filesToRemove.length; i++) {
                 let filePath = this.deployment.filesToRemove[i].path;
@@ -260,7 +260,7 @@ class GitlabPages {
             return this.makeCommit(this.filesToRemove, this.updateTextFiles.bind(this), '[skip ci] Publii - remove files');
         }
 
-        console.log(`[${ new Date().toGMTString() }] (!) NO FILES TO REMOVE DETECTED`);
+        console.log(`[${ new Date().toUTCString() }] (!) NO FILES TO REMOVE DETECTED`);
         return this.updateTextFiles();
     }
 
@@ -296,12 +296,12 @@ class GitlabPages {
             }
 
             if (this.filesToUpdate.length) {
-                console.log(`[${ new Date().toGMTString() }] (!) TEXT FILES TO UPDATE DETECTED`);
+                console.log(`[${ new Date().toUTCString() }] (!) TEXT FILES TO UPDATE DETECTED`);
                 return this.makeCommit(this.filesToUpdate, this.uploadTextFiles.bind(this), '[skip ci] Publii - update non-binary files');
             }
         }
 
-        console.log(`[${ new Date().toGMTString() }] (!) NO TEXT FILES TO UPDATE DETECTED`);
+        console.log(`[${ new Date().toUTCString() }] (!) NO TEXT FILES TO UPDATE DETECTED`);
         this.uploadTextFiles();
     }
 
@@ -337,12 +337,12 @@ class GitlabPages {
             }
 
             if (this.filesToUpdate.length) {
-                console.log(`[${ new Date().toGMTString() }] (!) TEXT FILES TO UPLOAD DETECTED`);
+                console.log(`[${ new Date().toUTCString() }] (!) TEXT FILES TO UPLOAD DETECTED`);
                 return this.makeCommit(this.filesToUpdate, this.createBinaryFilesList.bind(this), '[skip ci] Publii - upload non-binary files');
             }
         }
 
-        console.log(`[${ new Date().toGMTString() }] (!) NO TEXT FILES TO UPLOAD DETECTED`);
+        console.log(`[${ new Date().toUTCString() }] (!) NO TEXT FILES TO UPLOAD DETECTED`);
         this.createBinaryFilesList();
     }
 
@@ -357,7 +357,7 @@ class GitlabPages {
             for (let i = 0; i < this.deployment.filesToUpload.length; i++) {
                 if (existingFilesList.indexOf(this.deployment.filesToUpload[i].path) > -1) {
                     if (this.isBinaryFile(this.deployment.filesToUpload[i].path)) {
-                        console.log(`[${ new Date().toGMTString() }] (!) BINARY FILE TO UPDATE DETECTED`);
+                        console.log(`[${ new Date().toUTCString() }] (!) BINARY FILE TO UPDATE DETECTED`);
                         let filePath = this.deployment.filesToUpload[i].path;
 
                         this.binaryFilesToUpdate.push({
@@ -368,7 +368,7 @@ class GitlabPages {
                     }
                 } else {
                     if (this.isBinaryFile(this.deployment.filesToUpload[i].path)) {
-                        console.log(`[${ new Date().toGMTString() }] (!) BINARY FILE TO UPLOAD DETECTED`);
+                        console.log(`[${ new Date().toUTCString() }] (!) BINARY FILE TO UPLOAD DETECTED`);
                         let filePath = this.deployment.filesToUpload[i].path;
 
                         this.binaryFilesToUpload.push({
@@ -403,7 +403,7 @@ class GitlabPages {
 
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
             this.setUploadProgress(progress, operations);
-            console.log(`[${ new Date().toGMTString() }] (!) BINARY FILES UPDATED`);
+            console.log(`[${ new Date().toUTCString() }] (!) BINARY FILES UPDATED`);
             this.makeCommit(commits, this.updateBinaryFiles.bind(this), '[skip ci] Publii - update ' + commits.length + ' files');
             return;
         }
@@ -428,7 +428,7 @@ class GitlabPages {
 
             let operations = [this.binaryFilesUploadedCount, this.binaryFilesToUploadCount];
             this.setUploadProgress(progress, operations);
-            console.log(`[${ new Date().toGMTString() }] (!) BINARY FILES UPLOADED`);
+            console.log(`[${ new Date().toUTCString() }] (!) BINARY FILES UPLOADED`);
             this.makeCommit(commits, this.uploadBinaryFiles.bind(this), '[skip ci] Publii - upload ' + commits.length + ' files');
             return;
         }
@@ -445,7 +445,7 @@ class GitlabPages {
         let commit = [];
 
         if (this.remoteFilesList.length) {
-            console.log(`[${ new Date().toGMTString() }] (!) REMOTE FILES SHOULD BE UPDATED`);
+            console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILES SHOULD BE UPDATED`);
             actionType = 'update';
         }
 
@@ -464,11 +464,11 @@ class GitlabPages {
                 'content': Buffer.from(localFilesContent).toString('base64')
             });
         } catch (err) {
-            console.log(`[${ new Date().toGMTString() }] (!) AN ERROR OCCURRED DURING REMOTE FILES LIST CREATION`);
-            console.log(`[${ new Date().toGMTString() }] ${err}`);
+            console.log(`[${ new Date().toUTCString() }] (!) AN ERROR OCCURRED DURING REMOTE FILES LIST CREATION`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
         }
 
-        console.log(`[${ new Date().toGMTString() }] (!) REMOTE FILES LIST UPDATED`);
+        console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILES LIST UPDATED`);
         return this.makeCommit(commit, this.mergeTemporaryBranch.bind(this), '[skip ci] Publii - upload remote files list');
     }
 
@@ -522,7 +522,7 @@ class GitlabPages {
         this.client.Commits.create(this.projectID, this.temporaryBranch, commitMessage, operations).then(res => {
             return nextOperationCallback();
         }).catch(err => {
-            console.log(`[${ new Date().toGMTString() }] (!) COMMIT ERROR: ${err.message}`);
+            console.log(`[${ new Date().toUTCString() }] (!) COMMIT ERROR: ${err.message}`);
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',

@@ -98,7 +98,7 @@ class FTP {
         });
 
         this.connection.on('error', function(err) {
-            console.log(`[${ new Date().toGMTString() }] FTP ERROR: ${err}`);
+            console.log(`[${ new Date().toUTCString() }] FTP ERROR: ${err}`);
 
             if(typeof err === "string" && err.indexOf('ECONNRESET') > -1) {
                 self.econnresetCounter++;
@@ -127,7 +127,7 @@ class FTP {
         });
 
         this.connection.on('close', function(err) {
-            console.log(`[${ new Date().toGMTString() }] FTP CONNECTION CLOSED: ${err}`);
+            console.log(`[${ new Date().toUTCString() }] FTP CONNECTION CLOSED: ${err}`);
 
             setTimeout(function () {
                 process.exit();
@@ -137,7 +137,7 @@ class FTP {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 self.connection.destroy();
-                console.log(`[${ new Date().toGMTString() }] Request timeout...`);
+                console.log(`[${ new Date().toUTCString() }] Request timeout...`);
 
                 process.send({
                     type: 'web-contents',
@@ -159,7 +159,7 @@ class FTP {
             function(err, stream) {
                 let fileStream;
 
-                console.log(`[${ new Date().toGMTString() }] <- files.publii.json`);
+                console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
 
                 process.send({
                     type: 'web-contents',
@@ -178,8 +178,8 @@ class FTP {
                         self.deployment.compareFilesList(true);
                     });
                 } else {
-                    console.log(`[${ new Date().toGMTString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
                     self.deployment.compareFilesList(false);
                 }
             }
@@ -202,15 +202,15 @@ class FTP {
             normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
             function(err) {
-                console.log(`[${ new Date().toGMTString() }] -> files.publii.json`);
+                console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
 
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
                 }
 
                 self.connection.logout(function(err) {
                     if (err) {
-                        console.log(`[${ new Date().toGMTString() }] ${err}`);
+                        console.log(`[${ new Date().toUTCString() }] ${err}`);
                     }
 
                     self.connection.end();
@@ -250,8 +250,8 @@ class FTP {
             output,
             function (err) {
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] ERROR UPLOAD FILE: ${output}`);
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
 
                     setTimeout(() => {
                         if(!self.softUploadErrors[input]) {
@@ -266,7 +266,7 @@ class FTP {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toGMTString() }] UPL HARD ERR ${input} -> ${output}`);
+                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -283,7 +283,7 @@ class FTP {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toGMTString() }] UPL ${input} -> ${output}`);
+                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -309,8 +309,8 @@ class FTP {
             true,
             function (err) {
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] ERROR UPLOAD DIR: ${output}`);
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
 
                     setTimeout(() => {
                         if(!self.softUploadErrors[input]) {
@@ -325,7 +325,7 @@ class FTP {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toGMTString() }] UPL HARD ERR ${input} -> ${output}`);
+                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -342,7 +342,7 @@ class FTP {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toGMTString() }] UPL ${input} -> ${output}`);
+                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -367,11 +367,11 @@ class FTP {
             input,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toGMTString() }] DEL ${input}`);
+                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
 
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] ERROR REMOVE FILE: ${input}`);
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
                 }
 
                 self.deployment.progressOfDeleting += self.deployment.progressPerFile;
@@ -398,11 +398,11 @@ class FTP {
             true,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toGMTString() }] DEL ${input}`);
+                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
 
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] ERROR REMOVE DIR: ${input}`);
-                    console.log(`[${ new Date().toGMTString() }] ${err}`);
+                    console.log(`[${ new Date().toUTCString() }] ERROR REMOVE DIR: ${input}`);
+                    console.log(`[${ new Date().toUTCString() }] ${err}`);
                 }
                 
                 self.deployment.progressOfDeleting += self.deployment.progressPerFile;
@@ -531,7 +531,7 @@ class FTP {
             message = '[connection] > PASS ******************************';
         }
 
-        message = `[${ new Date().toGMTString() }] ${message}`;
+        message = `[${ new Date().toUTCString() }] ${message}`;
         console.log(message);
     }
 }

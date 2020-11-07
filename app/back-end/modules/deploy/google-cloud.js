@@ -119,10 +119,10 @@ class GoogleCloud {
         this.connection.upload(fileToUpload, {
             destination: fileDestination
         }, function(err) {
-            console.log(`[${ new Date().toGMTString() }] -> files.publii.json`);
+            console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
 
             if (err) {
-                console.log(`[${ new Date().toGMTString() }] ${err}`);
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
             }
 
             process.send({
@@ -160,8 +160,8 @@ class GoogleCloud {
             public: true
         }, function(err) {
             if (err) {
-                console.log(`[${ new Date().toGMTString() }] ERROR UPLOAD FILE: ${output}`);
-                console.log(`[${ new Date().toGMTString() }] ${err}`);
+                console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
 
                 setTimeout(() => {
                     if(!self.softUploadErrors[input]) {
@@ -176,7 +176,7 @@ class GoogleCloud {
                         self.hardUploadErrors.push(input);
 
                         self.deployment.currentOperationNumber++;
-                        console.log(`[${ new Date().toGMTString() }] UPL HARD ERR ${input} -> ${output}`);
+                        console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
                         self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                         process.send({
@@ -193,7 +193,7 @@ class GoogleCloud {
                 }, 500);
             } else {
                 self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toGMTString() }] UPL ${input} -> ${output}`);
+                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
                 self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                 process.send({
@@ -227,11 +227,11 @@ class GoogleCloud {
 
         this.connection.file(input).delete(function (err) {
             self.deployment.currentOperationNumber++;
-            console.log(`[${ new Date().toGMTString() }] DEL ${input}`);
+            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
 
             if (err) {
-                console.log(`[${ new Date().toGMTString() }] ERROR REMOVE FILE: ${input}`);
-                console.log(`[${ new Date().toGMTString() }] ${err}`);
+                console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
             }
 
             self.deployment.progressOfDeleting += self.deployment.progressPerFile;

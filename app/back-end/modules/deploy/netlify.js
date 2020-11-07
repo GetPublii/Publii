@@ -85,7 +85,7 @@ class Netlify {
                 process.exit();
             }, 1000);
         }).catch(err => {
-            console.log(`[${ new Date().toGMTString() }] Netlify ERROR: ${err}`);
+            console.log(`[${ new Date().toUTCString() }] Netlify ERROR: ${err}`);
             this.onError(err);
 
             setTimeout(function () {

@@ -141,7 +141,7 @@ class GithubPages {
 
                 await self.deploy();
             } catch (err) {
-                console.log(`[${ new Date().toGMTString() }] ERROR: ${JSON.stringify(err)}`);
+                console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
 
                 process.send({
                     type: 'web-contents',
@@ -283,7 +283,7 @@ class GithubPages {
                 process.exit();
             }, 1000);
         } catch (err) {
-            console.log(`[${ new Date().toGMTString() }] ERROR: ${JSON.stringify(err)}`);
+            console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
 
             process.send({
                 type: 'web-contents',
@@ -303,11 +303,11 @@ class GithubPages {
         return new Promise((resolve, reject) => {
             method(this.client)(requestData, (err, data) => {
                 if (err) {
-                    console.log(`[${ new Date().toGMTString() }] (i) TRIED AGAIN: ${method.toString()} - ${requestData.filePath}`);
+                    console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN: ${method.toString()} - ${requestData.filePath}`);
 
                     method(this.client)(requestData, (err, data) => {
                         if (err) {
-                            console.log(`[${ new Date().toGMTString() }] (i) TRIED AGAIN FAIL: ${method.toString()} - ${requestData.filePath}`);
+                            console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN FAIL: ${method.toString()} - ${requestData.filePath}`);
                             reject(err);
                             return;
                         }
@@ -497,7 +497,7 @@ class GithubPages {
 
     createBlob(filePath) {
         let fileContent = fs.readFileSync(filePath, { encoding: 'base64' });
-        console.log(`[${ new Date().toGMTString() }] CREATE BLOB: ${filePath}`);
+        console.log(`[${ new Date().toUTCString() }] CREATE BLOB: ${filePath}`);
 
         return this.apiRequest(
             {
@@ -510,7 +510,7 @@ class GithubPages {
             (api) => api.gitdata.createBlob,
             (result) => {
                 this.uploadedBlobs[filePath] = result.data.sha;
-                console.log(`[${ new Date().toGMTString() }] CREATED BLOB: ${filePath} - ${result.data.sha}`);
+                console.log(`[${ new Date().toUTCString() }] CREATED BLOB: ${filePath} - ${result.data.sha}`);
 
                 process.send({
                     type: 'web-contents',

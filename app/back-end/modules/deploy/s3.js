@@ -142,7 +142,7 @@ class S3 {
         };
 
         this.connection.getObject(params, function(err, data) {
-            console.log(`[${ new Date().toGMTString() }] <- files.publii.json`);
+            console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
 
             if (err && err.code !== 'NoSuchKey') {
                 self.onError(err);
@@ -201,7 +201,7 @@ class S3 {
             };
 
             this.connection.putObject(params, function(err) {
-                console.log(`[${ new Date().toGMTString() }] -> files.publii.json`);
+                console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
 
                 if (err) {
                     self.onError(err, true);
@@ -303,7 +303,7 @@ class S3 {
                             self.hardUploadErrors.push(input);
 
                             self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toGMTString() }] UPL HARD ERR ${input} -> ${fileName}`);
+                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${fileName}`);
                             self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                             process.send({
@@ -320,7 +320,7 @@ class S3 {
                     }, 500);
                 } else {
                     self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toGMTString() }] UPL ${input} -> ${fileName}`);
+                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
                     self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                     process.send({
@@ -375,7 +375,7 @@ class S3 {
             params,
             function (err) {
                 self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toGMTString() }] DEL ${input}`);
+                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
 
                 if (err) {
                     self.onError(err, true);
@@ -398,7 +398,7 @@ class S3 {
     }
 
     onError(err, silentMode = false) {
-        console.log(`[${ new Date().toGMTString() }] S3 ERROR: ${err.message}`);
+        console.log(`[${ new Date().toUTCString() }] S3 ERROR: ${err.message}`);
 
         if(this.waitForTimeout && !silentMode) {
             this.waitForTimeout = false;
