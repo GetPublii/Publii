@@ -139,6 +139,9 @@ const AstCurrentSiteConfig = {
         passphrase: '',
         sftpkey: '',
         s3: {
+            customProvider: false,
+            provider: '',
+            endpoint: '',
             id: '',
             key: '',
             bucket: '',

@@ -27,6 +27,7 @@ module.exports = [
         name: 'Bengali (Bangla)',
         code: 'bn'
     },
+    {
         name: 'Bihari',
         code: 'bh'
     },

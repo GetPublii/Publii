@@ -590,6 +590,7 @@ export default {
         checkS3Config: function(deploymentConfig) {
             if(
                 deploymentConfig.s3 &&
+                ( !deploymentConfig.s3.customProvider || deploymentConfig.s3.endpoint !== '' ) &&
                 deploymentConfig.s3.id !== '' &&
                 deploymentConfig.s3.key !== '' &&
                 deploymentConfig.s3.bucket !== '' &&
