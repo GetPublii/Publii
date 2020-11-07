@@ -119,10 +119,10 @@ class GoogleCloud {
         this.connection.upload(fileToUpload, {
             destination: fileDestination
         }, function(err) {
-            console.log('-> files.publii.json');
+            console.log(`[${ new Date().toGMTString() }] -> files.publii.json`);
 
             if (err) {
-                console.log(err);
+                console.log(`[${ new Date().toGMTString() }] ${err}`);
             }
 
             process.send({
@@ -160,11 +160,8 @@ class GoogleCloud {
             public: true
         }, function(err) {
             if (err) {
-                console.log(err);
-                console.log('- - -ERROR UPLOAD FILE - - -');
-                console.log(output);
-                console.log(err);
-                console.log('- - - - - - - - - - - - - - ');
+                console.log(`[${ new Date().toGMTString() }] ERROR UPLOAD FILE: ${output}`);
+                console.log(`[${ new Date().toGMTString() }] ${err}`);
 
                 setTimeout(() => {
                     if(!self.softUploadErrors[input]) {
@@ -179,7 +176,7 @@ class GoogleCloud {
                         self.hardUploadErrors.push(input);
 
                         self.deployment.currentOperationNumber++;
-                        console.log('UPL HARD ERR ' + input + ' -> ' + output);
+                        console.log(`[${ new Date().toGMTString() }] UPL HARD ERR ${input} -> ${output}`);
                         self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                         process.send({
@@ -196,7 +193,7 @@ class GoogleCloud {
                 }, 500);
             } else {
                 self.deployment.currentOperationNumber++;
-                console.log('UPL ' + input + ' -> ' + output);
+                console.log(`[${ new Date().toGMTString() }] UPL ${input} -> ${output}`);
                 self.deployment.progressOfUploading += self.deployment.progressPerFile;
 
                 process.send({
@@ -230,14 +227,11 @@ class GoogleCloud {
 
         this.connection.file(input).delete(function (err) {
             self.deployment.currentOperationNumber++;
-            console.log('DEL ' + input);
+            console.log(`[${ new Date().toGMTString() }] DEL ${input}`);
 
             if (err) {
-                console.log(err);
-                console.log('- - -ERROR REMOVE FILE - - -');
-                console.log(input);
-                console.log(err);
-                console.log('- - - - - - - - - - - - - - ');
+                console.log(`[${ new Date().toGMTString() }] ERROR REMOVE FILE: ${input}`);
+                console.log(`[${ new Date().toGMTString() }] ${err}`);
             }
 
             self.deployment.progressOfDeleting += self.deployment.progressPerFile;

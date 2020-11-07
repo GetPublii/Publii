@@ -85,9 +85,7 @@ class Netlify {
                 process.exit();
             }, 1000);
         }).catch(err => {
-            console.log('- - Netlify ERROR - -');
-            console.log(err);
-            console.log('- - - - - - - - - - -');
+            console.log(`[${ new Date().toGMTString() }] Netlify ERROR: ${err}`);
             this.onError(err);
 
             setTimeout(function () {
