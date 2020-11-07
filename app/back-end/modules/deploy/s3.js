@@ -439,15 +439,15 @@ class S3 {
             account = uuid;
         }
 
-        if(s3Id === 'publii-s3-id ' + account) {
+        if (s3Id === 'publii-s3-id ' + account) {
             s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);
         }
 
-        if(s3Key === 'publii-s3-key ' + account) {
+        if (s3Key === 'publii-s3-key ' + account) {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connectionParams
+        let connectionParams;
         
         if (s3Provider === 'aws') {
             connectionParams = {            

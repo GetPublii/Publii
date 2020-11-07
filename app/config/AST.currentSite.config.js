@@ -140,7 +140,7 @@ const AstCurrentSiteConfig = {
         sftpkey: '',
         s3: {
             customProvider: false,
-            provider: '',
+            provider: 'aws',
             endpoint: '',
             id: '',
             key: '',

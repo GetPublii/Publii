@@ -588,15 +588,16 @@ export default {
             });
         }, 
         checkS3Config: function(deploymentConfig) {
-            if(
-                deploymentConfig.s3 &&
-                ( !deploymentConfig.s3.customProvider || deploymentConfig.s3.endpoint !== '' ) &&
-                deploymentConfig.s3.id !== '' &&
-                deploymentConfig.s3.key !== '' &&
-                deploymentConfig.s3.bucket !== '' &&
-                deploymentConfig.s3.region !== ''
-            ) {
-                return true;
+            if (deploymentConfig.s3 && deploymentConfig.s3.customProvider) {
+                return  deploymentConfig.s3.endpoint !== '' && 
+                        deploymentConfig.s3.id !== '' &&
+                        deploymentConfig.s3.key !== '' &&
+                        deploymentConfig.s3.bucket !== '';
+            } else if (deploymentConfig.s3) {
+                return  deploymentConfig.s3.region !== '' &&
+                        deploymentConfig.s3.id !== '' &&
+                        deploymentConfig.s3.key !== '' &&
+                        deploymentConfig.s3.bucket !== '';
             }
 
             return false;

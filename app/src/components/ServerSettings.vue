@@ -1322,7 +1322,12 @@ export default {
             }
         },
         validateS3 () {
-            let fields = ['s3_provider', 's3_endpoint', 's3_id', 's3_key', 's3_bucket', 's3_region'];
+            let fields = ['s3_id', 's3_key', 's3_bucket', 's3_region'];
+
+            if (this.deploymentSettings.s3.customProvider) {
+                fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket'];
+            }
+            
             return this.validateFields(fields);
         },
         validateGithubPages () {
@@ -1450,10 +1455,10 @@ export default {
             }
         },
         toggleS3Provider () {
-            if (this.deploymentSettings.s3.provider === 'aws') {
-                this.deploymentSettings.s3.provider = 'custom'
+            if (this.deploymentSettings.s3.customProvider) {
+                this.deploymentSettings.s3.provider = 'custom';
             } else {
-                this.deploymentSettings.s3.provider = 'aws'
+                this.deploymentSettings.s3.provider = 'aws';
             }
         }
     }
