@@ -247,7 +247,7 @@ class Renderer {
         this.sendProgress(80, 'Copying files');
         await this.copyFiles();
 
-        if (!this.siteConfig.deployment.relativeUrls) {
+        if (!this.siteConfig.deployment.relativeUrls && !this.siteConfig.advanced.noIndexThisPage) {
             await this.generateSitemap();
         }
 
@@ -1764,7 +1764,7 @@ class Renderer {
     }
 
     async generateSitemap() {
-        if(!this.siteConfig.advanced.sitemapEnabled) {
+        if (!this.siteConfig.advanced.sitemapEnabled) {
             return;
         }
 
