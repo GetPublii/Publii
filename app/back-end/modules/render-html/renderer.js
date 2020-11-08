@@ -33,6 +33,7 @@ const Gdpr = require('./helpers/gdpr.js');
 
 // Default config
 const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.config');
+const { advanced } = require('./../../../config/AST.currentSite.config');
 
 /*
  * Class used to generate HTML output
@@ -250,6 +251,7 @@ class Renderer {
             await this.generateSitemap();
         }
 
+        this.createRobotsTxt();
         this.sendProgress(90, 'Finishing the render process');
     }
 
@@ -1920,6 +1922,33 @@ class Renderer {
         }
 
         return output;
+    }
+
+    /**
+     * Create robots.txt file if it is not created by user
+     */
+    createRobotsTxt () {
+        let robotsTxtPath = path.join(this.outputDir, 'robots.txt');
+
+        // Check if robots.txt exists - if yes, do nothing
+        if (UtilsHelper.fileExists(robotsTxtPath)) {
+            return;
+        }
+
+        // Create robots.txt 
+        let robotsTxtContent = '';
+
+        if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexThisPage) {
+            robotsTxtContent = `User-agent: *\nDisallow: /`;
+        } else {
+            robotsTxtContent = `User-agent: *\nDisallow:`;
+
+            if (this.siteConfig.advanced.sitemapEnabled) {
+                robotsTxtContent += `\nSitemap: ${this.siteConfig.originalDomain}/sitemap.xml`;
+            }
+        }
+
+        fs.writeFileSync(robotsTxtPath, robotsTxtContent, 'utf8');
     }
 
     /**
