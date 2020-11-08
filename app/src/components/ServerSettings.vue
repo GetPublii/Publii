@@ -1421,28 +1421,34 @@ export default {
             return deploymentSettings;
         },
         setHiddenPasswords (deploymentSettings) {
-            deploymentSettings.password = 'publii ' + this.$store.state.currentSite.config.name;
+            let passwordKey = this.$store.state.currentSite.config.name;
+            
+            if (this.$store.state.currentSite.config.uuid) {
+                passwordKey = this.$store.state.currentSite.config.uuid;
+            }
+
+            deploymentSettings.password = 'publii ' + passwordKey;
 
             if (deploymentSettings.passphrase) {
-                deploymentSettings.passphrase = 'publii-passphrase ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.passphrase = 'publii-passphrase ' + passwordKey;
             }
 
             if (deploymentSettings.s3) {
-                deploymentSettings.s3.id = 'publii-s3-id ' + this.$store.state.currentSite.config.name;
-                deploymentSettings.s3.key = 'publii-s3-key ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.s3.id = 'publii-s3-id ' + passwordKey;
+                deploymentSettings.s3.key = 'publii-s3-key ' + passwordKey;
             }
 
             if (deploymentSettings.netlify) {
-                deploymentSettings.netlify.id = 'publii-netlify-id ' + this.$store.state.currentSite.config.name;
-                deploymentSettings.netlify.token = 'publii-netlify-token ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.netlify.id = 'publii-netlify-id ' + passwordKey;
+                deploymentSettings.netlify.token = 'publii-netlify-token ' + passwordKey;
             }
 
             if (deploymentSettings.github) {
-                deploymentSettings.github.token = 'publii-gh-token ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.github.token = 'publii-gh-token ' + passwordKey;
             }
 
             if (deploymentSettings.gitlab) {
-                deploymentSettings.gitlab.token = 'publii-gl-token ' + this.$store.state.currentSite.config.name;
+                deploymentSettings.gitlab.token = 'publii-gl-token ' + passwordKey;
             }
 
             return deploymentSettings;
