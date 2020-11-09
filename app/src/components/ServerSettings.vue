@@ -487,7 +487,7 @@
                     <small
                         slot="note"
                         class="note">
-                        Examples: <strong>gh-pages</strong>, <strong>docs</strong> or <strong>master</strong>
+                        Examples: <strong>gh-pages</strong>, <strong>docs</strong> or <strong>main</strong>
                     </small>
                 </field>
 
