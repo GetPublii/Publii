@@ -245,8 +245,20 @@ class SFTP {
 
             self.deployment.uploadFile();
         }).catch(err => {
+            self.deployment.currentOperationNumber++;
             console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
+
+            self.deployment.progressOfUploading += self.deployment.progressPerFile;
+            process.send({
+                type: 'web-contents',
+                message: 'app-uploading-progress',
+                value: {
+                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
+                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
+                }
+            });
+
             self.deployment.uploadFile();
         });
     }
