@@ -1943,7 +1943,7 @@ class Renderer {
         } else {
             robotsTxtContent = `User-agent: *\nDisallow:`;
 
-            if (this.siteConfig.advanced.sitemapEnabled) {
+            if (this.siteConfig.advanced.sitemapEnabled && !this.siteConfig.deployment.relativeUrls) {
                 robotsTxtContent += `\nSitemap: ${this.siteConfig.originalDomain}/sitemap.xml`;
             }
         }
