@@ -1955,12 +1955,19 @@ class Renderer {
      * Make URLs in the HTML files relative
      */
     async relativizeUrls () {
-        let files = await listAll([this.outputDir], { recurse: true, flatten: true });
+        let catalog = this.outputDir;
+
+        if (catalog.substr(-4) === '/amp') {
+            catalog = catalog.slice(0, -4);
+        }
+
+        let files = await listAll([catalog], { recurse: true, flatten: true });
         files = files.filter(file => file.path.substr(-5) === '.html' && file.mode.dir === false);
-        files = files.map(file => file.path.replace(this.outputDir, ''));
-        
+        files = files.map(file => file.path);
+        files = files.map(file => file.replace(catalog, ''));
+
         for (let file of files) {
-            this.relativizeUrlsInFile(file, this.outputDir);
+            this.relativizeUrlsInFile(file, catalog);
         }
     }
 
