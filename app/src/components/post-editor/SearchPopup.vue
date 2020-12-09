@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 
 export default {
     name: 'search-popup',
@@ -56,7 +56,7 @@ export default {
     },
     mounted () {
         document.querySelector('webview').addEventListener('dom-ready', () => {
-            this.webviewContents = document.querySelector('webview').getWebContents();
+            this.webviewContents = remote.webContents.fromId(document.querySelector('webview').getWebContentsId());
 
             document.querySelector('webview').addEventListener('found-in-page', e => {
                 this.currentResultIndex = e.result.activeMatchOrdinal;

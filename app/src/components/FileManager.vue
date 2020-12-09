@@ -284,7 +284,7 @@ export default {
             e.preventDefault();
             // Uncomment this when file editor will be ready
             // if(item.attr('data-is-binary') === 'true') {
-                shell.openItem(filePath);
+                shell.openPath(filePath);
             // } else {
             //    console.log('OPENING: ' + item.attr('href'));
             // }
