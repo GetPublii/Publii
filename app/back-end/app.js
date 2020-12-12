@@ -109,14 +109,14 @@ class App {
         // Merge themes directory
         let appThemeDirs = fs.readdirSync(appThemesPath);
 
-        for(let file of appThemeDirs) {
+        for (let file of appThemeDirs) {
             // Skip files and hidden files
             if (file.indexOf('.') > -1) {
                 continue;
             }
 
             // Detect missing themes
-            if(!fs.existsSync(path.join(userThemesPath, file))) {
+            if (!fs.existsSync(path.join(userThemesPath, file))) {
                 fs.mkdirSync(path.join(userThemesPath, file));
 
                 try {
@@ -137,7 +137,7 @@ class App {
                 let userThemeConfig = path.join(userThemesPath, file, 'config.json');
 
                 // Check if both config.json files exists
-                if(fs.existsSync(appThemeConfig) && fs.existsSync(userThemeConfig)) {
+                if (fs.existsSync(appThemeConfig) && fs.existsSync(userThemeConfig)) {
                     let appThemeData = JSON.parse(fs.readFileSync(appThemeConfig, 'utf8'));
                     let userThemeData = JSON.parse(fs.readFileSync(userThemeConfig, 'utf8'));
 
@@ -161,14 +161,8 @@ class App {
         }
     }
 
-    /**
-     * Reload website data
-     *
-     * @param siteName
-     *
-     * @returns {object}
-     */
-    reloadSite(siteName) {
+    // Reload website data
+    reloadSite (siteName) {
         let siteData = this.switchSite(siteName);
         let siteConfig = this.loadSite(siteName);
 
@@ -178,18 +172,10 @@ class App {
         };
     }
 
-    /**
-     * Load website and their config and database
-     *
-     * @param site
-     *
-     * @returns {object}
-     */
-    switchSite(site) {
+    // Load website and their config and database
+    switchSite (site) {
         if (!site) {
-            return {
-                status: false
-            };
+            return { status: false };
         }
 
         const siteDir = path.join(this.sitesDir, site);
@@ -198,9 +184,7 @@ class App {
         const dbPath = path.join(siteDir, 'input', 'db.sqlite');
 
         if(!Utils.fileExists(dbPath)) {
-            return {
-                status: false
-            };
+            return { status: false };
         }
 
         if (this.db) {
@@ -219,10 +203,8 @@ class App {
 
         try {
             parsedMenuStructure = JSON.parse(menuStructure);
-        } catch(e) {
-            return {
-                status: false
-            };
+        } catch (e) {
+            return { status: false };
         }
 
         return {
@@ -242,14 +224,8 @@ class App {
         };
     }
 
-    /**
-     * Load specific website
-     *
-     * @param siteName
-     * @param storeInConfig
-     * @returns {object}
-     */
-    loadSite(siteName) {
+    // Load specific website
+    loadSite (siteName) {
         let dirPath = path.join(this.sitesDir, siteName);
         let fileStat = fs.statSync(dirPath);
 
@@ -298,9 +274,7 @@ class App {
         return siteConfig;
     }
 
-    /**
-     * Load websites
-     */
+    // Load websites
     loadSites() {
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
@@ -310,9 +284,7 @@ class App {
         }
     }
 
-    /**
-     * Load themes
-     */
+    // Load themes
     loadThemes() {
         let themesLoader = new Themes(this);
 
@@ -325,13 +297,9 @@ class App {
         };
     }
 
-    /**
-     * Read or create the application config
-     */
-    loadConfig() {
-        /*
-         * Try to get window bounds
-         */
+    // Read or create the application config
+    loadConfig () {
+        // Try to get window bounds
         try {
             this.windowBounds = JSON.parse(fs.readFileSync(this.initPath, 'utf8'));
         } catch (e) {
@@ -359,9 +327,7 @@ class App {
             };
         }
 
-        /*
-         * Try to get application config
-         */
+        // Try to get application config
         try {
             this.appConfig = JSON.parse(fs.readFileSync(this.appConfigPath, 'utf8'));
             this.appConfig = Utils.mergeObjects(JSON.parse(JSON.stringify(defaultAstAppConfig)), this.appConfig);
@@ -387,13 +353,9 @@ class App {
         return true;
     }
 
-    /**
-     * Load additional config data
-     */
+    // Load additional config data
     loadAdditionalConfig () {
-        /*
-         * Try to get TinyMCE overrided config
-         */
+        // Try to get TinyMCE overrided config
         try {
             this.tinymceOverridedConfig = JSON.parse(fs.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
         } catch (e) {}
@@ -408,9 +370,7 @@ class App {
         }
     }
 
-    /**
-     * Check permissions errors
-     */
+    // Check permissions errors
     hasPermissionsErrors (error) {
         if (error.code === 'EACCES') {
             dialog.showErrorBox('Publii has no read/write access to the config folder', 'Please check the permissions of the Publii config folder and try to reopen the application.');
@@ -425,9 +385,7 @@ class App {
         return false;
     }
 
-    /**
-     * Create the window
-     */
+    // Create the window
     initWindow() {
         let self = this;
         let windowParams = this.windowBounds;
@@ -562,67 +520,46 @@ class App {
         });
 
         // Open Dev Tools
-        if(this.appConfig.openDevToolsInMain) {
+        if (this.appConfig.openDevToolsInMain) {
             this.mainWindow.webContents.openDevTools();
         }
     }
 
-    /**
-     * Add events to the window
-     */
+    // Add events to the window
     initWindowEvents() {
-        let self = this;
-
-        /*
-         * Closing the app windows
-         */
-        this.mainWindow.on('close', function() {
-            let windowBounds = self.mainWindow.getBounds();
-            fs.writeFileSync(self.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
+        this.mainWindow.on('close', () => {
+            let windowBounds = this.mainWindow.getBounds();
+            fs.writeFileSync(this.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
         });
 
-        /*
-         * Remove window instance after closing
-         */
-        this.mainWindow.on('closed', function() {
-            self.mainWindow = null;
+        this.mainWindow.on('closed', () => {
+            this.mainWindow = null;
         });
 
-        // Get class names
+        this.initializeCustomIpcMainEvents();
+    }
+
+    // Initializes all custom events for IPC Main thread
+    initializeCustomIpcMainEvents () {
+        // Create instances for all custom event classes
         let classNames = Object.keys(EventClasses);
 
-        // Create instances for all Classes
-        for(let className of classNames) {
+        for (let className of classNames) {
             new EventClasses[className](this);
         }
     }
 
-    /**
-     * Getter for the main window object
-     *
-     * @returns {Electron.BrowserWindow}
-     */
+    // Getter for the main window object
     getMainWindow() {
         return this.mainWindow;
     }
 
-    /**
-     * Function used to filter unnecessary files
-     */
+    // Function used to filter unnecessary files
     skipSystemFiles (src, dest) {
-        if (src.indexOf('.DS_Store') > -1) {
-            return false;
-        }
-
-        return true;
+        return src.indexOf('.DS_Store') > -1 ? false : true;
     }
 
-    /**
-     * Function used to add sites to the back-end sites list
-     * 
-     * @param {string} siteCatalog 
-     * @param {onkject} siteData 
-     */
+    // Function used to add sites to the back-end sites list
     addSite (siteCatalog, siteData) {
         this.sites[siteCatalog] = siteData;
     }
