@@ -29,9 +29,11 @@ electronApp.on('ready', function () {
         'basedir': __dirname
     };
 
-    if (process.env.NODE_ENV !== 'production') {
-        loadDevtool(loadDevtool.VUEJS_DEVTOOLS);
-    }
+    setTimeout(() => {
+        if (process.env.NODE_ENV !== 'production') {
+            loadDevtool(loadDevtool.VUEJS_DEVTOOLS);
+        }
+    }, 100);
 
     appInstance = new App(startupSettings);
 
