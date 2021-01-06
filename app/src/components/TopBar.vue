@@ -27,7 +27,7 @@ export default {
 .topbar {
     background: var(--gray-1);
     font-size: 1.6rem;
-    height: 2.2rem;
+    height: var(--topbar-height);
     position: absolute;
     top: 0;
     -webkit-app-region: no-drag;
@@ -40,7 +40,7 @@ export default {
         padding: 0;
         position: absolute;
         right: 0;
-        top: 2.2rem;
+        top: var(--topbar-height);
         width: 40px;
         z-index: 102;
     }

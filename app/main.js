@@ -6,6 +6,7 @@ const electronApp = electron.app;
 const dialog = electron.dialog;
 const ipcMain = electron.ipcMain;
 const fs = require('fs');
+const os = require('os');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
@@ -43,8 +44,19 @@ electronApp.on('ready', function () {
 });
 
 // Export function to quit the app from the application menu on macOS
-exports.quitApp = function() {
+exports.quitApp = function () {
     electronApp.quit();
+};
+
+// Export OS version
+exports.isOSX11orHigher = function () {
+    let version = parseInt(os.release().split('.')[0], 10);
+    
+    if (process.platform === 'darwin' && version >= 20) {
+        return true;
+    }
+
+    return false;
 };
 
 // Use Electron API to display directory selection dialog

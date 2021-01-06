@@ -107,6 +107,7 @@ export default {
             document.body.setAttribute('data-chrome-version', process.versions.chrome);
             document.body.setAttribute('data-electron-version', process.versions.electron);
             document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
+            document.documentElement.setAttribute('data-is-osx-11-or-higher', mainProcess.isOSX11orHigher());
             document.body.setAttribute('data-env', process.env.NODE_ENV);
         },
 
@@ -256,7 +257,7 @@ export default {
         font-size: 1.6rem;
         left: 0;
         position: absolute;
-        top: 2.2rem;
+        top: var(--topbar-height);
         width: 35rem;
         z-index: 1;
     }
@@ -264,10 +265,10 @@ export default {
 
 #app {
     & > .topbar + section {
-        height: calc(100vh - 2.2rem);
+        height: calc(100vh - var(--topbar-height));
         overflow: auto;
         position: absolute;
-        top: 2.2rem;
+        top: var(--topbar-height);
         width: 100%;
     }
 

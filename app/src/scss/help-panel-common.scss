@@ -2,11 +2,11 @@
     background: var(--option-sidebar-bg);
     border-left: 1px solid var(--input-border-color);
     display: none;
-    height: calc(100vh - 2.2rem);
+    height: calc(100vh - var(--topbar-height));
     overflow: auto;
     position: absolute;
     right: 0;
-    top: 2.2rem;    
+    top: var(--topbar-height);    
     width: 44.2rem;
     
      &::before {
@@ -14,7 +14,7 @@
             content: "";
             height: 10rem;
             position: fixed;
-            top: 2.2rem;
+            top: var(--topbar-height);
             right: 0;
             width: 44.1rem;
             z-index: 1;

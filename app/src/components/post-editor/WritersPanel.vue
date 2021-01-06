@@ -88,12 +88,12 @@ export default {
         border-right: 1px solid var(--input-border-color);
         bottom: 0;
         color: var(--label-color);
-        height: calc(100vh - 2.2rem);
+        height: calc(100vh - var(--topbar-height));
         left: 0;
         opacity: 1;
         position: absolute;
         text-align: center;
-        top: 2.2rem;
+        top: var(--topbar-height);
         transition: var(--transition);
         width: 185px;
         z-index: 100;

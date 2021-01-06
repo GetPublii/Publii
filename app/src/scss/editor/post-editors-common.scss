@@ -10,7 +10,7 @@
     }
 
     .appbar {
-        height: 2.2rem!important;
+        height: var(--topbar-height)!important;
         position: absolute!important;
         width: 100%;
     }
@@ -75,7 +75,6 @@ body[data-os="win"] {
     }
 
     .post-editor-form {       
-
         &-content {
             height: calc( 100vh - 27.6rem );
         }
