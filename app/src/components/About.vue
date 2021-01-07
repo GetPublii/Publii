@@ -14,7 +14,7 @@
         </div>
 
         <p class="about-version">
-            v.{{ appVersion.version }} (build {{ appVersion.build }}) {{ appVersion.status }}
+            v.{{ appVersion.version }} (build {{ appVersion.build }})
         </p>
 
         <p class="about-copyright">

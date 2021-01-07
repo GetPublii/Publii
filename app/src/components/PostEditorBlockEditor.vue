@@ -36,7 +36,7 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -199,7 +199,7 @@ export default {
                 });
             }, 0);
 
-            this.webview.getWebContents().on('before-input-event', (event, input) => {
+            remote.webContents.fromId(this.webview.getWebContentsId()).on('before-input-event', (event, input) => {
                 if (input.key === 'f' && (input.meta || input.control)) {
                     this.$bus.$emit('app-show-search-form');  
                 } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
@@ -366,11 +366,11 @@ export default {
 
     &-wrapper {
         overflow: auto;
-        padding-top: 2.2rem;
+        padding-top: var(--topbar-height);
     }
 
     &-form {
-        height: calc(100vh - 2.2rem);
+        height: calc(100vh - var(--topbar-height));
         overflow: scroll;
 
         & > div {

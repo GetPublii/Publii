@@ -26,14 +26,14 @@
   "homepage": "https://getpublii.com",
   "dependencies": {
     "@google-cloud/storage": "^5.4.0",
-    "archiver": "^5.0.1",
+    "archiver": "^5.1.0",
     "aws-sdk": "^2.632.0",
     "better-sqlite3": "^7.1.1",
     "clean-css": "^4.1.9",
     "codemirror": "^5.33.0",
     "codemirror-revisedsearch": "^1.0.12",
     "count-files": "^2.6.2",
-    "electron-load-devtool": "^1.0.0",
+    "electron-load-devtool": "^1.2.0",
     "fast-memoize": "^2.2.7",
     "file-exists": "^1.0.0",
     "fs-extra": "^8.0.1",
@@ -44,10 +44,10 @@
     "handlebars": "^4.7.6",
     "html-minifier": "^3.0.2",
     "image-downloader": "^3.3.0",
-    "image-size": "^0.8.3",
+    "image-size": "^0.9.3",
     "isbinaryfile": "^3.0.2",
     "jimp": "^0.16.0",
-    "keytar": "^4.10.0",
+    "keytar": "^7.2.0",
     "ls-all": "^1.1.0",
     "marked": "^0.7.0",
     "md5": "^2.1.0",
@@ -57,7 +57,7 @@
     "normalize-path": "^2.0.1",
     "publii-block-editor": "github:dziudek/publii-block-editor#master",
     "request": "^2.88.0",
-    "sharp": "^0.25.4",
+    "sharp": "^0.26.3",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^2.5.2",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^8.5.3",
+    "electron": "^11.0.4",
     "node-abi": "^2.15.0"
   }
 }

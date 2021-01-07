@@ -396,6 +396,7 @@ class App {
             nodeIntegration: true,
             webviewTag: true,
             spellcheck: true,
+            enableRemoteModule: true,
             preload: path.join(__dirname, 'app-preload.js'),
             icon: path.join(__dirname, 'assets', 'icon.png')
         };

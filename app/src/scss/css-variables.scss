@@ -1,3 +1,12 @@
+// common
+html {
+    --topbar-height: 2.2rem;
+}
+
+html[data-is-osx-11-or-higher="true"] {
+    --topbar-height: 2.6rem;
+}
+
 // default
 html[data-theme="default"] {
     --primary-color: #42a5f5;

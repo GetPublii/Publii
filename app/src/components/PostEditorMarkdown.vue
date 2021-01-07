@@ -342,11 +342,11 @@ export default {
    .post-editor {
         &-wrapper {
             overflow: auto;
-            padding-top: 2.2rem;
+            padding-top: var(--topbar-height);
         }
 
         &-form {
-            height: calc(100vh - 2.2rem);
+            height: calc(100vh - var(--topbar-height));
             overflow: scroll;
 
             & > div {

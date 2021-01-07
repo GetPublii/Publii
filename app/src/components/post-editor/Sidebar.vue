@@ -721,13 +721,13 @@ export default {
     &-sidebar {
         background: var(--option-sidebar-bg);
         border-left: 1px solid var(--input-border-color);
-        height: calc(100vh - 2.2rem);
+        height: calc(100vh - var(--topbar-height));
         overflow: auto;
         opacity: 0;
         pointer-events: none;
         position: absolute;
         right: 0;
-        top: 2.2rem;       
+        top: var(--topbar-height);       
         width: 44.2rem;
         z-index: 99999;
 
@@ -741,7 +741,7 @@ export default {
             content: "";
             height: 10rem;
             position: fixed;
-            top: 2.2rem;
+            top: var(--topbar-height);
             right: 0;
             width: 44.1rem;
             z-index: 1;
