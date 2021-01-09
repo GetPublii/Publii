@@ -1506,6 +1506,23 @@
                             </small>
                         </field>
                     </div>
+
+                    <div slot="tab-10">
+                        <field
+                            label="Excluded Files">
+                            <input
+                                slot="field"
+                                type="text"
+                                spellcheck="false"
+                                v-model="advanced.storeExcludesArray"/>
+                            <small
+                                slot="note"
+                                class="note">
+                                Type a comma-separated list of HTML files or catalogs to exclude from the list of files that will be re-generated on Syncing the output.<br>
+                                For example: <strong>ignoreme.html,ignoreme</strong>
+                            </small>
+                        </field>
+                    </div>
                 </tabs>
             </fields-group>
 
@@ -1602,7 +1619,8 @@ export default {
                 'GDPR',
                 'Website Speed',
                 'RSS/JSON Feed',
-                'Posts Listing'
+                'Posts Listing',
+                'Sync Excludes'
             ];
         },
         seoOptions () {

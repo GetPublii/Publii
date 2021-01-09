@@ -405,9 +405,21 @@ class Renderer {
         if (UtilsHelper.dirExists(this.outputDir)) {
             let files = fs.readdirSync(this.outputDir);
             
+            let storeExcludes = this.siteConfig.advanced.storeExcludesArray;
+            // console.log(storeExcludes)
+
+            let storeExcludesArray = storeExcludes.split(",");
+            
+            filesIteration:
             for (let file of files) {
                 if (file === '.' || file === '..' || file === 'media') {
                     continue;
+                }
+                
+                for (let excludeName of storeExcludesArray) {
+                    if (file === excludeName.trim()) {
+                        continue filesIteration
+                    }
                 }
 
                 fs.rmdirSync(path.join(this.outputDir, file), { recursive: true });
