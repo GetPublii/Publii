@@ -126,7 +126,10 @@ const AstCurrentSiteConfig = {
         },
         relatedPostsOrder: 'default',
         relatedPostsCriteria: 'titles-and-tags',
-        relatedPostsIncludeAllPosts: true
+        relatedPostsIncludeAllPosts: true,
+        editors: {
+            wysiwygAdditionalValidElements: ''
+        }
     },
     deployment: {
         protocol: '',

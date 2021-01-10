@@ -31,6 +31,11 @@ class EditorBridge {
             browser_spellcheck: window.app.$store.state.currentSite.config.spellchecking
         });
 
+        if (window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements !== '') {
+            let additionalValidElements = window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements;
+            editorConfig.extended_valid_elements = editorConfig.extended_valid_elements + ',' + additionalValidElements;
+        }
+
         // Remove style selector when there is no custom styles from the theme
         if(customFormats.length === 0) {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');

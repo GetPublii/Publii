@@ -1527,6 +1527,22 @@
                             </small>
                         </field>
                     </div>
+
+                    <div slot="tab-10">
+                        <field
+                            label="Additional valid elements in the WYSIWYG editor">
+                            <text-area
+                                slot="field"
+                                :spellcheck="false"
+                                :rows="8"
+                                v-model="advanced.editors.wysiwygAdditionalValidElements" />
+                            <small
+                                slot="note"
+                                class="note">
+                                If the WYSIWYG editor strips out some tags from your HTML code, here you can add additional allowed elements.<br> For example: <strong>v-select[*],v-dropdown[*]</strong> will allow custom v-select and v-dropdown tags with any attributes.
+                            </small>
+                        </field>
+                    </div>
                 </tabs>
             </fields-group>
 
@@ -1623,7 +1639,8 @@ export default {
                 'GDPR',
                 'Website Speed',
                 'RSS/JSON Feed',
-                'Posts Listing'
+                'Posts Listing',
+                'Editors'
             ];
         },
         seoOptions () {
