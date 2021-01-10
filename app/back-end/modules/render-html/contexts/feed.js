@@ -14,6 +14,15 @@ class RendererContextFeed extends RendererContext {
         // prepare query variables
         this.postsNumber = parseInt(this.postsNumber, 10);
         this.offset = parseInt(this.offset, 10);
+        // Handle "only featured posts" mode
+        let featuredPostsCondition = '';
+
+        if (this.siteConfig.advanced.feed.showOnlyFeatured) {
+            featuredPostsCondition = 'status LIKE \'%featured%\' AND';
+        } else if (this.siteConfig.advanced.feed.excludeFeatured) {
+            featuredPostsCondition = 'status NOT LIKE \'%featured%\' AND';
+        }
+
         // Retrieve post
         this.posts = this.db.prepare(`
             SELECT
@@ -22,6 +31,7 @@ class RendererContextFeed extends RendererContext {
                 posts
             WHERE
                 status LIKE '%published%' AND
+                ${featuredPostsCondition}
                 status NOT LIKE '%hidden%' AND
                 status NOT LIKE '%trashed%'
             ORDER BY

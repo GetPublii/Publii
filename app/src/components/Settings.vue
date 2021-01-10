@@ -1364,6 +1364,27 @@
                         </field>
 
                         <field
+                            id="feed-show-only-featured"
+                            label="Show only featured posts">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-show-only-featured"
+                                    v-model="advanced.feed.showOnlyFeatured" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="!advanced.feed.showOnlyFeatured"
+                            id="feed-exclude-featured"
+                            label="Exclude featured posts">
+                            <label slot="field">
+                                <switcher
+                                    id="feed-exclude-featured"
+                                    v-model="advanced.feed.excludeFeatured" />
+                            </label>
+                        </field>
+
+                        <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
                             label="Number of posts in feed">
