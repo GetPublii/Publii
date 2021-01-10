@@ -30,7 +30,7 @@
     "aws-sdk": "^2.632.0",
     "better-sqlite3": "^7.1.1",
     "clean-css": "^4.1.9",
-    "codemirror": "^5.33.0",
+    "codemirror": "^5.59.1",
     "codemirror-revisedsearch": "^1.0.12",
     "count-files": "^2.6.2",
     "electron-load-devtool": "^1.2.0",
