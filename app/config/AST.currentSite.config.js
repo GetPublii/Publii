@@ -128,7 +128,9 @@ const AstCurrentSiteConfig = {
         relatedPostsCriteria: 'titles-and-tags',
         relatedPostsIncludeAllPosts: true,
         editors: {
-            wysiwygAdditionalValidElements: ''
+            wysiwygAdditionalValidElements: '',
+            codemirrorTabSize: 4,
+            codemirrorAutoIndent: true
         }
     },
     deployment: {

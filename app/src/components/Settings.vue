@@ -1529,6 +1529,10 @@
                     </div>
 
                     <div slot="tab-10">
+                        <separator
+                            type="medium"
+                            label="WYSIWYG editor" />
+                    
                         <field
                             label="Additional valid elements in the WYSIWYG editor">
                             <text-area
@@ -1541,6 +1545,33 @@
                                 class="note">
                                 If the WYSIWYG editor strips out some tags from your HTML code, here you can add additional allowed elements.<br> For example: <strong>v-select[*],v-dropdown[*]</strong> will allow custom v-select and v-dropdown tags with any attributes.
                             </small>
+                        </field>
+
+                        <separator
+                            type="medium"
+                            label="Code editor (CodeMirror)" />
+
+                        <field
+                            id="codemirror-indent-size"
+                            label="Indent size (spaces)">
+                            <label slot="field">
+                                <text-input
+                                    id="codemirror-indent-size"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    step="1"
+                                    v-model="advanced.editors.codemirrorTabSize" />
+                            </label>
+                        </field>
+
+                        <field
+                            id="codemirror-auto-indent"
+                            label="Enable auto-indent">
+                            <switcher
+                                slot="field"
+                                id="codemirror-auto-indent"
+                                v-model="advanced.editors.codemirrorAutoIndent" />
                         </field>
                     </div>
                 </tabs>

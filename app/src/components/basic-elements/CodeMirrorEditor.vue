@@ -10,14 +10,14 @@ import CodeMirror from 'codemirror';
 import cssMode from '../../assets/vendor/js/codemirror/css.js';
 import xmlMode from '../../assets/vendor/js/codemirror/xml.js';
 
-import CodeMirrorJumpToLine from '../../../node_modules//codemirror/addon/search/jump-to-line.js';
-import CodeMirrorSearch from '../../../node_modules//codemirror/addon/search/search.js';
-import CodeMirrorMatchHighlighter from '../../../node_modules//codemirror/addon/search/match-highlighter.js';
-import CodeMirrorMatchesOnScrollbar from '../../../node_modules//codemirror/addon/search/matchesonscrollbar.js';
-import CodeMirrorSearchCursor from '../../../node_modules//codemirror/addon/search/searchcursor.js';
-import CodeMirrorAnnotateScrollbar from '../../../node_modules//codemirror/addon/scroll/annotatescrollbar.js';
-import CodeMirrorScrollPastend from '../../../node_modules//codemirror/addon/scroll/scrollpastend.js';
-import CodeMirrorSimpleScrollbars from '../../../node_modules//codemirror/addon/scroll/simplescrollbars.js';
+import CodeMirrorJumpToLine from '../../../node_modules/codemirror/addon/search/jump-to-line.js';
+import CodeMirrorSearch from '../../../node_modules/codemirror/addon/search/search.js';
+import CodeMirrorMatchHighlighter from '../../../node_modules/codemirror/addon/search/match-highlighter.js';
+import CodeMirrorMatchesOnScrollbar from '../../../node_modules/codemirror/addon/search/matchesonscrollbar.js';
+import CodeMirrorSearchCursor from '../../../node_modules/codemirror/addon/search/searchcursor.js';
+import CodeMirrorAnnotateScrollbar from '../../../node_modules/codemirror/addon/scroll/annotatescrollbar.js';
+import CodeMirrorScrollPastend from '../../../node_modules/codemirror/addon/scroll/scrollpastend.js';
+import CodeMirrorSimpleScrollbars from '../../../node_modules/codemirror/addon/scroll/simplescrollbars.js';
 import CodeMirrorPanel from '../../../node_modules//codemirror/addon/display/panel.js';
 import CodeMirrorAdvancedDialog from '../../../node_modules/codemirror-advanceddialog/dist/advanced-dialog.js';
 import CodeMirrorRevisedSearch from '../../../node_modules/codemirror-revisedsearch/dist/revised-search.js';
@@ -64,7 +64,11 @@ export default {
                     autoRefresh: true,
                     mode: this.mode,
                     htmlMode: this.mode === 'xml',
-                    readOnly: this.readonly
+                    readOnly: this.readonly,
+                    smartIndent: !!this.$store.state.currentSite.config.advanced.editors.codemirrorAutoIndent,
+                    autoIndent: !!this.$store.state.currentSite.config.advanced.editors.codemirrorAutoIndent,
+                    indentUnit: +this.$store.state.currentSite.config.advanced.editors.codemirrorTabSize,
+                    tabSize: +this.$store.state.currentSite.config.advanced.editors.codemirrorTabSize
                 }
             );
 
