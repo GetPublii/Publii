@@ -18,7 +18,7 @@
         </p>
 
         <p class="about-copyright">
-            Copyright 2020 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
+            Copyright 2021 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
             Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>
             Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
         </p>
