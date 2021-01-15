@@ -9,7 +9,7 @@ const AstCurrentSiteConfig = {
     },
     domain: '',
     language: 'en',
-    spellchecking: true,
+    spellchecking: false,
     advanced: {
         cssCompression: 1,
         htmlCompression: 1,
