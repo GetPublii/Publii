@@ -28,7 +28,7 @@ class Gdpr {
             </label>`;
         }
 
-        if (Gdpr.getPrivacyPolicyUrl(configuration, renderer) !== 'none') {
+        if (Gdpr.getPrivacyPolicyUrl(configuration, renderer)) {
             privacyPolicyLink = `<a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">${configuration.readMoreLinkLabel}</a>`;
         }
 
