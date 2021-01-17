@@ -654,7 +654,7 @@ export default {
             return !(!this.$store.state.currentSite.config.theme || this.$store.state.currentSite.config.theme === '');
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && this.isVisible && !this.syncInProgress) {
+            if (e.code === 'Enter' && !event.isComposing && this.isVisible && !this.syncInProgress) {
                 this.onEnterKey();
             }
         },

@@ -178,7 +178,7 @@ export default {
     },
     methods: {
         detectEnterInTitle (event) {
-            if (event.code === 'Enter') {
+            if (event.code === 'Enter' && !event.isComposing) {
                 event.preventDefault();
                 this.simplemde.codemirror.focus();
             }

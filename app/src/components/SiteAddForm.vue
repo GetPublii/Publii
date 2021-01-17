@@ -233,7 +233,7 @@ export default {
             }];
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter') {
+            if (e.code === 'Enter' && !event.isComposing) {
                 this.addWebsite();
             }
         },

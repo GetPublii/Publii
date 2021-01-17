@@ -138,7 +138,7 @@ export default {
             }, 350);
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && this.isVisible && !this.regeneratingThumbnails) {
+            if (e.code === 'Enter' && !event.isComposing && this.isVisible && !this.regeneratingThumbnails) {
                 this.onEnterKey();
             }
         },

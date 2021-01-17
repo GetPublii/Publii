@@ -179,7 +179,7 @@ export default {
             this.updateSlug();
         },
         detectEnterInTitle (event) {
-            if (event.code === 'Enter') {
+            if (event.code === 'Enter' && !event.isComposing) {
                 event.preventDefault();
                 this.$refs['tinymceEditor'].focus();
             }

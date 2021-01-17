@@ -93,7 +93,7 @@ export default {
             this.isVisible = false;
         },
         doKeyboardNavigation (e) {
-            if (e.code === 'Enter') {
+            if (e.code === 'Enter' && !event.isComposing) {
                 this.getNextResult();
             }
         }

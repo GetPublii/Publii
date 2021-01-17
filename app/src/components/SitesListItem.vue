@@ -70,7 +70,7 @@ export default {
             this.$router.push({ path: `/site/${siteToDisplay}` });
         },
         showWebsiteOnEnter (event, siteToDisplay) {
-            if (event.key === 'Enter' && !document.body.classList.contains('has-popup-visible')) {
+            if (event.key === 'Enter' && !event.isComposing && !document.body.classList.contains('has-popup-visible')) {
                 this.showWebsite(siteToDisplay);
             }
         },

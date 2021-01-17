@@ -114,7 +114,7 @@ export default {
             this.cancelClick();
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && this.isVisible) {
+            if (e.code === 'Enter' && !event.isComposing && this.isVisible) {
                 this.onEnterKey();
             }
         },
