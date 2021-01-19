@@ -2,8 +2,8 @@ export default {
     'current-color': 'currentColor',
     
     'color-0': '#71c0ff',
-    'color-1': '42a5f5',
-    'color-2': '40b771',
+    'color-1': '#42a5f5',
+    'color-2': '#40b771',
     'color-3': '#ef5350',
     'color-4': '#2a2e30',
     'color-5': '#4e5360',
