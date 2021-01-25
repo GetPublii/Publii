@@ -1815,6 +1815,7 @@ class Renderer {
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.removeEmptyDirectories(this.outputDir);
         console.timeEnd("FILES");
     }
 

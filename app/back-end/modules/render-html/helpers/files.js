@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const list = require('ls-all');
 const path = require('path');
+const deleteEmpty = require('delete-empty');
 const UtilsHelper = require('./../../../helpers/utils');
 const normalizePath = require('normalize-path');
 const DiffCopy = require('./diffCopy.js');
@@ -152,6 +153,11 @@ class Files {
         }
 
         DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));
+    }
+
+    static async removeEmptyDirectories (outputDir) {
+        let basePathOutput = path.join(outputDir, 'media');
+        await deleteEmpty(basePathOutput);
     }
 }
 
