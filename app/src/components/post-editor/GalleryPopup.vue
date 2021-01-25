@@ -260,7 +260,7 @@ export default {
                     thumbnailHeight: image.find('img').attr('height') ? image.find('img').attr('height') : '',
                     thumbnailWidth: image.find('img').attr('width') ? image.find('img').attr('width') : '',
                     alt: image.find('img').attr('alt'),
-                    caption: image.find('figcaption').text(),
+                    caption: image.find('figcaption').length ? image.find('figcaption').html() : '',
                     dimensions: image.find('a').attr('data-size')
                 });
             }
