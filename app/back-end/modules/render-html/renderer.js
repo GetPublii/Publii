@@ -1641,7 +1641,7 @@ class Renderer {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
                 let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                return generateOverride(visualParams) + styleCSS;
+                return generateOverride(visualParams);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS theme variables.',
