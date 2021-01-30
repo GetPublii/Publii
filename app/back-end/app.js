@@ -67,7 +67,14 @@ class App {
 
         this.loadAdditionalConfig();
         this.checkThemes();
-        this.loadSites();
+        
+        let loadingSitesResult = this.loadSites();
+        
+        if (!loadingSitesResult) {
+            this.app.quit();
+            return;
+        }
+        
         this.loadThemes();
         this.initWindow();
         this.initWindowEvents();
@@ -276,12 +283,19 @@ class App {
 
     // Load websites
     loadSites() {
+        if (fs.ensureDirSync(this.sitesDir)) {
+            dialog.showErrorBox('Publii cannot find your sites folder', 'Please check if catalog ' + this.sitesDir + ' exists or create it manually and then please try to reopen the application.');
+            return false; 
+        }
+
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
 
         for (let siteName of files) {
             this.loadSite(siteName);
         }
+
+        return true;
     }
 
     // Load themes
