@@ -224,6 +224,7 @@ import fs from 'fs';
 import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import Vue from 'vue';
 
 export default {
     name: 'appsettings',
@@ -256,7 +257,9 @@ export default {
                 sites: '',
                 backups: '',
                 preview: ''
-            }
+            },
+            unwatchLocationPreview: null,
+            unwatchBackupsLocation: null
         };
     },
     computed: {
@@ -359,6 +362,11 @@ export default {
         if (process.platform === 'linux') {
             this.imageResizeEnginesSelected = 'jimp';
         }
+
+        Vue.nextTick(() => {
+            this.unwatchLocationPreview = this.$watch('locations.preview', this.detectPreviewLocationChange);
+            this.unwatchBackupsLocation = this.$watch('locations.backups', this.detectBackupLocationChange);
+        });
     },
     methods: {
         goBack () {
@@ -379,7 +387,7 @@ export default {
             if (this.originalSitesLocation !== this.locations.sites) {
                 this.$bus.$emit('confirm-display', {
                     hasInput: false,
-                    message: 'The sites location has been changed. The new desitination folder will be cleared up before moving there your sites files. Do you want to continue?',
+                    message: 'The sites location has been changed. The new destination folder will be cleared up before moving there your sites files. Do you want to continue?',
                     okClick: this.save,
                     okLabel: 'OK',
                     cancelLabel: 'Cancel'
@@ -428,6 +436,7 @@ export default {
         saved (newSettings, data) {
             this.$store.commit('setSiteDir', newSettings.sitesLocation);
             this.$store.commit('setAppConfig', newSettings);
+            ipcRenderer.send('app-backup-set-location', newSettings.backupsLocation);
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {
@@ -454,6 +463,26 @@ export default {
             }
 
             return 'system';
+        },
+        detectPreviewLocationChange (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.$bus.$emit('alert-display', {
+                    message: 'The preview location has been changed. The new destination folder will be cleared up during creating a preview of your website.',
+                    okLabel: 'OK, I understand',
+                });
+
+                this.unwatchLocationPreview();
+            }
+        },
+        detectBackupLocationChange (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.$bus.$emit('alert-display', {
+                    message: 'The backups location has been changed. All new backups will be created under the new directory. If you need - please move old backups to the new directory.',
+                    okLabel: 'OK, I understand',
+                });
+
+                this.unwatchBackupsLocation();
+            }
         }
     }
 }

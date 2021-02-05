@@ -63,6 +63,14 @@ class BackupEvents {
                 });
             }
         });
+
+        ipcMain.on('app-backup-set-location', (event, newLocation) => {
+            this.backupsLocation = newLocation;
+
+            if (this.backupsLocation === '') {
+                this.backupsLocation = path.join(this.app.appDir, 'backups');
+            }
+        }); 
     }
 
     loadBackupsList(siteName, event) {
