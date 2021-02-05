@@ -44,13 +44,18 @@ class Site {
             this.createDirectories();
             this.copyDefaultTheme();
             this.createConfigFiles();
-            this.createDB();
+            let dbResult = this.createDB();
+
+            if (!dbResult) {
+                return 'db-error';
+            }
+
             this.createAuthor(authorName);
             return true;
         }
         // If site exists
         console.log('Site called: ' + this.name + ' exists!');
-        return false;
+        return 'duplicate';
     }
 
     /*
@@ -111,9 +116,17 @@ class Site {
      */
     createDB() {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
-        let db = new sqlite(dbPath);
-        db.exec(fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
-        db.close();
+
+        try {
+            let db = new sqlite(dbPath);
+            db.exec(fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
+            db.close();
+        } catch (error) {
+            console.log('DB error', error);
+            return false;
+        }
+
+        return true;
     }
 
     /*

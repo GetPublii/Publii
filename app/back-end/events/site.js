@@ -373,7 +373,12 @@ class SiteEvents {
             let site = new Site(appInstance, config);
             let result = site.create(authorName);
 
-            if (result === false) {
+            if (result === 'db-error') {
+                event.sender.send('app-site-creation-db-error');
+                return;
+            }
+
+            if (result === 'duplicate') {
                 event.sender.send('app-site-creation-duplicate');
                 return;
             }

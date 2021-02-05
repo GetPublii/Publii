@@ -182,6 +182,7 @@ export default {
 
                     ipcRenderer.removeAllListeners('app-site-created');
                     ipcRenderer.removeAllListeners('app-site-creation-duplicate');
+                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
                 });
 
                 ipcRenderer.once('app-site-creation-duplicate', (event, data) => {
@@ -197,6 +198,19 @@ export default {
                     ipcRenderer.removeAllListeners('app-site-creation-error');
                 });
 
+                ipcRenderer.once('app-site-creation-db-error', (event, data) => {
+                    this.overlayIsVisible = false;
+                    this.siteNameError = true;
+
+                    this.$bus.$emit('alert-display', {
+                        message: 'An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.',
+                        textCentered: true
+                    });
+
+                    ipcRenderer.removeAllListeners('app-site-created');
+                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                })
+
                 ipcRenderer.once('app-site-created', (event, data) => {
                     this.overlayIsVisible = false;
                     data.authors = self.setAuthor(data.authorName);
@@ -206,6 +220,7 @@ export default {
                     
                     ipcRenderer.removeAllListeners('app-site-creation-error');
                     ipcRenderer.removeAllListeners('app-site-creation-duplicate');
+                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
                 });
             }, 250);
         },
