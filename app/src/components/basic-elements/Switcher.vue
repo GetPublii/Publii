@@ -35,6 +35,10 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        disabled: {
+            default: false,
+            type: Boolean
         }
     },
     data: function() {
@@ -48,7 +52,8 @@ export default {
                 'switcher': true,
                 'is-checked': this.isChecked,
                 'lower-zindex': this.lowerZindex,
-                'has-label': this.label
+                'has-label': this.label,
+                'is-disabled': this.disabled
             };
         }
     },
@@ -124,6 +129,11 @@ export default {
             left: 14px;
             background: var(--input-border-focus);
         }
+    }
+
+    &.is-disabled {
+        opacity: .5;
+        pointer-events: none;
     }
 }
 </style>

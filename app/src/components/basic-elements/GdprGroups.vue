@@ -5,6 +5,7 @@
             class="gdpr-groups-header">
             <div class="gdpr-groups-header-cell">Group name</div>
             <div class="gdpr-groups-header-cell">Group ID</div>
+            <div class="gdpr-groups-header-cell">State</div>
         </div>
 
         <div
@@ -18,12 +19,15 @@
             <text-input
                 :spellcheck="false"
                 v-model="group.id" />
+            
+            <switcher
+                :disabled="group.id === '-'"
+                v-model="group.state" />
 
             <icon
                 size="m"
                 name="sidebar-close"                
                 @click.native="removeGroup(index)" />
-            
         </div>
 
         <p-button
@@ -54,13 +58,24 @@ export default {
     mounted: function() {
         setTimeout(() => {
             this.content = this.value;
+
+            for (let i = 0; i < this.content.length; i++) {
+                if (typeof this.content[i].state === 'undefined') {
+                    this.content[i].state = false;
+
+                    if (this.content[i].id === '-') {
+                        this.content[i].state = true;
+                    }
+                }
+            }
         }, 0);
     },
     methods: {
         addGroup () {
             this.content.push({
                 name: "",
-                id: ""
+                id: "",
+                state: false
             });
         },
         removeGroup (index) {
@@ -84,7 +99,11 @@ export default {
             font-size: 1.4rem;
             font-weight: bold;
             margin: 0 0 1rem 0;
-            width: calc((100% - 40px) / 2);
+            width: calc(50% - 40px);
+
+            &:last-child {
+                width: 80px;
+            }
         }
     }
 
@@ -94,9 +113,9 @@ export default {
         padding: .25rem 0;
 
         .input-wrapper {
-            padding-right: .5rem;
+            padding-right: 1.5rem;
             text-align: left;
-            width: calc((100% - 40px) / 2);
+            width: calc(50% - 40px);
         }
 
         .icon {
