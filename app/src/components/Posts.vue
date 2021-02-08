@@ -577,8 +577,9 @@ export default {
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The currently selected theme does not support block editor used in this post. This post can be not properly rendered on the output files.',
+                    message: 'The current theme does not support the block editor you want to use. This post can be not properly rendered on the output files.',
                     okLabel: 'Open editor anyway',
+                    isDanger: true,
                     okClick: () => {
                         this.openEditor(false, editorType);
                     }
@@ -596,8 +597,9 @@ export default {
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The currently selected theme does not support block editor used in this post. This post can be not properly rendered on the output files.',
+                    message: 'The current theme does not support the block editor used in this post. This post can be not properly rendered on the output files.',
                     okLabel: 'Edit post anyway',
+                    isDanger: true,
                     okClick: () => {
                         this.openEditor(id, editorType);
                     }
