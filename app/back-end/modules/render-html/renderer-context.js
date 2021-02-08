@@ -76,10 +76,10 @@ class RendererContext {
     }
 
     prepareMenuItems(items, tagsData, postsData, level = 2) {
-        for(let i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             items[i].level = level;
 
-            if(items[i].type === 'post') {
+            if (items[i].type === 'post') {
                 let foundedPost = postsData.filter(post => post.id == items[i].link);
 
                 if(foundedPost.length && foundedPost[0].status.indexOf('trashed') === -1) {
@@ -89,7 +89,7 @@ class RendererContext {
                 }
             }
 
-            if(items[i].type === 'tag') {
+            if (items[i].type === 'tag') {
                 let foundedTag = tagsData.filter(tag => tag.id == items[i].link);
 
                 if(foundedTag.length) {
@@ -99,7 +99,11 @@ class RendererContext {
                 }
             }
 
-            if(items[i] && items[i].items.length > 0) {
+            if (items[i].isHidden) {
+                items[i] = false;
+            }
+
+            if (items[i] && !items[i].isHidden && items[i].items.length > 0) {
                 items[i].items = this.prepareMenuItems(items[i].items, tagsData, postsData, level + 1);
             }
         }
