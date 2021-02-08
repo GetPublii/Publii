@@ -191,6 +191,7 @@ export default {
             target: '_self',
             rel: '',
             cssClass: '',
+            isHidden: false,
             internalLink: '',
             externalLink: '',
             tagPage: '',
@@ -252,6 +253,7 @@ export default {
             this.cssClass = params.cssClass || '';
             this.target = params.target || '_self';
             this.rel = params.rel || '';
+            this.isHidden = params.isHidden || false;
 
             setTimeout(() => {
                 this.type = params.type || '';
@@ -300,6 +302,7 @@ export default {
             this.target = '_self';
             this.rel = '';
             this.cssClass = '';
+            this.isHidden = false;
             this.internalLink = '';
             this.externalLink = '';
             this.tagPage = '';
@@ -373,10 +376,9 @@ export default {
                 rel: this.rel,
                 link: this.getLinkValue(),
                 cssClass: this.cssClass,
+                isHidden: this.isHidden,
                 items: []
             };
-
-            console.log('MITEM:', menuItem);
 
             if(this.parentID === '') {
                 this.$store.commit('addNewMenuItem', {
@@ -407,7 +409,8 @@ export default {
                 target: this.target,
                 rel: this.rel,
                 link: this.getLinkValue(),
-                cssClass: this.cssClass
+                cssClass: this.cssClass,
+                isHidden: this.isHidden
             };
 
             this.$store.commit('editMenuItem', {

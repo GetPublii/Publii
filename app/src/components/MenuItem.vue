@@ -3,7 +3,7 @@
         :class="cssClasses"
         :data-id="id"
         :title="titleTooltip">
-        <div class="menu-item-wrapper">
+        <div class="menu-item-wrapper">            
             <span class="menu-item-label">
                 {{ label }}
 
@@ -22,6 +22,14 @@
                     class="draft-icon"
                     primary-color="color-7"
                     title="This post is a draft" />
+
+                <icon
+                    v-if="isHidden"
+                    size="xs"
+                    name="hidden-post"
+                    class="hidden-icon"
+                    primaryColor="color-7"
+                    title="This menu item is hidden" />
             </span>
 
             <a
@@ -39,6 +47,20 @@
                 class="menu-item-edit"
                 title="Edit this menu item"
                 @click.prevent="editMenuItem">Edit</a>
+
+            <a
+                v-if="!isHidden"
+                href="#"
+                class="menu-item-hide"
+                title="Hide this menu item"
+                @click.prevent="hideMenuItem">Hide</a>
+
+            <a
+                v-if="isHidden"
+                href="#"
+                class="menu-item-show"
+                title="Show this menu item"
+                @click.prevent="showMenuItem">Show</a>
 
             <a
                 href="#"
@@ -101,6 +123,7 @@ export default {
             target: '_self',
             cssClass: '',
             rel: '',
+            isHidden: false,
             items: []
         };
     },
@@ -155,6 +178,7 @@ export default {
         this.rel = this.itemData.rel;
         this.items = this.itemData.items;
         this.cssClass = this.itemData.cssClass;
+        this.isHidden = this.itemData.isHidden || false;
     },
     methods: {
         elementExists () {
@@ -247,6 +271,7 @@ export default {
                     type: this.type,
                     target: this.target,
                     rel: this.rel,
+                    isHidden: this.isHidden,
                     link: this.link
                 });
             }, 50);
@@ -285,6 +310,26 @@ export default {
                     }
                 }
             }
+        },
+        hideMenuItem () {
+            this.isHidden = true;
+            
+            this.$store.commit('hideMenuItem', {
+                itemID: this.id,
+                menuID: this.menuID
+            });
+
+            this.$bus.$emit('save-new-menu-structure');
+        },
+        showMenuItem () {
+            this.isHidden = false;
+
+            this.$store.commit('showMenuItem', {
+                itemID: this.id,
+                menuID: this.menuID
+            });
+
+            this.$bus.$emit('save-new-menu-structure');
         }
     }
 }
@@ -328,6 +373,11 @@ li {
                 top: 2px;
             }
         }
+    }
+
+    .hidden-icon {
+        position: relative;
+        top: 2px;
     }
 
     & > div {
@@ -388,6 +438,8 @@ li {
         }
         
         .menu-item-edit,
+        .menu-item-hide,
+        .menu-item-show,
         .menu-item-submenu {
             color: var(--link-secondary-color);
             font-size: 1.4rem;
@@ -400,7 +452,9 @@ li {
             }
         }
         
-        .menu-item-edit {            
+        .menu-item-edit,
+        .menu-item-hide,
+        .menu-item-show {            
             padding-right: 1rem;
             position: relative;
             
