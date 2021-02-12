@@ -23,6 +23,14 @@
             <template v-if="!hasManualDeploy">Last sync: <span>{{ syncDate }}</span></template>
             <template v-if="hasManualDeploy">Last rendered: <span>{{ syncDate }}</span></template>
         </sub>
+
+        <a 
+            v-if="hasSyncDate && websiteUrl"
+            :href="websiteUrl"
+            target="_blank"
+            class="sidebar-preview-website">
+            Preview your website
+        </a>
     </div>
 </template>
 
@@ -108,6 +116,9 @@ export default {
         },
         hasManualDeploy () {
             return this.$store.state.currentSite.config.deployment.protocol === 'manual';
+        },
+        websiteUrl () { 
+            return this.$store.state.currentSite.config.domain;
         }
     },
     methods: {
@@ -344,6 +355,16 @@ export default {
             opacity: .75;
             pointer-events: none;
         }
+    }
+
+    &-preview-website {
+        bottom: -22px;
+        color: var(--white);
+        display: block;
+        font-size: 1.2rem;
+        position: absolute;
+        text-align: center;
+        width: 100%;
     }
 }
 

@@ -1,34 +1,23 @@
 <template>
-    <div class="overlay as-page" v-if="isVisible">
+    <div 
+        v-if="isVisible"
+        @click="maximizePopup"
+        :class="{
+            'overlay': true,
+            'as-page': true,
+            'is-minimized': isMinimized
+        }">
         <div class="popup sync">
             <div
-                v-if="isInSync && noIssues"
+                v-if="isInSync && noIssues && isManual"
                 class="sync-success">                
 
                 <h1>Your website is now in sync</h1>
 
                 <p
-                    v-if="isGithubPages"
-                    class="description">
-                    <strong>Note:</strong> Changes on Github Pages can be visible in a few minutes from the deployment, <br>so be patient and wait for a while.
-                </p>
-
-                <p
-                    v-if="isGitlabPages"
-                    class="description">
-                    <strong>Note:</strong> Changes on Gitlab Pages can be visible in a few minutes from the deployment,  <br>so be patient and wait for a while.
-                </p>
-
-                <p
                     v-if="isManual"
                     class="description">
                     Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
-                </p>
-
-                <p 
-                    v-if="!(isGithubPages || isGitlabPages || isManual)"
-                    class="description">
-                    All files have been successfully uploaded to your server. <br>Visit your website by clicking the button below.
                 </p>
 
                 <div class="progress-bars-wrapper">
@@ -41,13 +30,6 @@
                 </div>
 
                 <div class="buttons">
-                    <p-button
-                        v-if="!isManual"
-                        type="primary medium quarter-width"
-                        :onClick="openWebsite">
-                        Visit your website
-                    </p-button>
-
                     <p-button
                         v-if="isManual"
                         type="primary medium quarter-width"
@@ -64,9 +46,8 @@
             </div>
 
             <div
-                v-if="isInSync && !noIssues"
+                v-if="isInSync && !noIssues && !isMinimized"
                 class="sync-success">
-               
                 <h1>Some files were not synced properly.</h1>
 
                 <p class="description">
@@ -89,7 +70,7 @@
             </div>
 
             <div
-                v-if="properConfig && !isInSync"
+                v-if="properConfig && !isInSync && !isMinimized"
                 class="sync-todo">
                 <div class="heading">
                     <h1>Website synchronization</h1>                    
@@ -179,7 +160,39 @@
                     </p-button>
                 </div>
             </div>
+
+            <!-- Minimized states -->
+            <div
+                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress && !uploadError"
+                class="minimized-sync-in-progress">
+                <progress-bar
+                    v-if="(uploadInProgress || syncInProgress || isInSync || uploadError)"
+                    :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
+                    :color="uploadingProgressColor"
+                    :progress="uploadingProgress"
+                    :stopped="uploadingProgressIsStopped"
+                    :message="messageFromUploader" />
+            </div>
+
+            <div
+                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress && uploadError"
+                class="minimized-sync-error">
+                Error during sync
+            </div>
+
+            <div
+                v-if="isInSync && !noIssues && isMinimized"
+                class="minimized-sync-issues">
+                Issues during sync
+            </div>
         </div>
+
+        <a 
+            v-if="!isMinimized && uploadInProgress && !isManual"
+            href="#"
+            @click.prevent="minimizePopup">
+            Minimize
+        </a>
     </div>
 </template>
 
@@ -189,9 +202,17 @@ import Utils from './../helpers/utils.js';
 
 export default {
     name: 'sync-popup',
-    data: function() {
+    watch: {
+        'isVisible': function (newValue) {
+            if (newValue === false) {
+                this.$bus.$emit('website-sync-in-progress', false);
+            }
+        }
+    },
+    data () {
         return {
             isVisible: false,
+            isMinimized: false,
             renderingInProgress: false,
             uploadInProgress: false,
             messageFromRenderer: 'true',
@@ -283,6 +304,7 @@ export default {
             }
 
             this.isVisible = true;
+            this.isMinimized = false;
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
             this.renderingProgressColor = 'blue';
@@ -374,7 +396,7 @@ export default {
         close: function() {
             this.isVisible = false;
         },
-        startSync: function() {
+        startSync () {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
                     message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
@@ -392,7 +414,7 @@ export default {
             this.uploadInProgress = false;
             this.renderingInProgress = false;
 
-            if(!this.uploadError) {
+            if (!this.uploadError) {
                 this.messageFromRenderer = '';
                 this.renderingProgress = 0;
                 this.renderingProgressColor = 'blue';
@@ -502,7 +524,13 @@ export default {
         }, 
         startUpload: function() {
             this.renderingInProgress = false;
+
+            if (!this.isManual) {
+                this.isMinimized = true;
+            }
+
             this.uploadInProgress = true;
+            this.$bus.$emit('website-sync-in-progress', true);
             this.$store.commit('setSidebarStatus', 'syncing');
 
             if(
@@ -585,6 +613,10 @@ export default {
             ipcRenderer.once('app-sync-is-done-saved', () => {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
+
+                if (this.isInSync && this.noIssues && !this.isManual) {
+                    this.isVisible = false;
+                }
             });
         }, 
         checkS3Config: function(deploymentConfig) {
@@ -659,14 +691,22 @@ export default {
             }
         },
         onEnterKey () {
-            if (this.isInSync && !this.isManual) {
-                this.openWebsite();
-            } else if (this.isInSync && this.noIssues && this.isManual) {
+            if (this.isInSync && this.noIssues && this.isManual) {
                 this.showFolder();
             } else if (this.properConfig && !this.isInSync) {
                 this.startSync();
             } else if (this.noDomainConfig || (!this.noDomainConfig && this.noServerConfig)) {
                 this.goToServerSettings();
+            }
+        },
+        maximizePopup () {
+            if (this.isMinimized) {
+                this.isMinimized = false;
+            }
+        },
+        minimizePopup () {
+            if (!this.isMinimized) {
+                this.isMinimized = true;
             }
         }
     },
@@ -757,4 +797,16 @@ export default {
         z-index: 10;
     }
 }
+
+.overlay.is-minimized {
+    bottom: 56px;
+    border-radius: 3px;
+    height: 50px;
+    left: 40px;
+    overflow: hidden;
+    padding: 0;
+    top: auto;
+    width: 240px;
+}
+
 </style>

@@ -14,15 +14,32 @@ export default {
     components: {
         'site-logo': SiteLogo
     },
-    data: function() {
+    data () {
         return {
+            syncInProgress: false,
             submenuIsOpen: false
         };
     },
+    mounted () {
+        this.$bus.$on('website-sync-in-progress', this.setSyncState);
+    },
     methods: {
         toggle (e) {
+            if (this.syncInProgress) {
+                this.$bus.$emit('alert-display', {
+                    message: 'Please finish the sync process before switching a website.'
+                });
+                return;
+            }
+
             this.$bus.$emit('sites-popup-show');
+        },
+        setSyncState (state) {
+            this.syncInProgress = state;
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('website-sync-in-progress', this.setSyncState);
     }
 }
 </script>
