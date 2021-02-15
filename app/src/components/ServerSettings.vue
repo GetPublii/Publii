@@ -1148,6 +1148,20 @@ export default {
                         lifeTime: 3
                     });
                 }
+
+                if(data.message === 'no-keyring') {
+                    if (document.body.getAttribute('data-os') === 'linux') {
+                        this.$bus.$emit('alert-display', {
+                            message: 'Publii is unable to save settings due lack of the safe password storage software. Please install it as described on https://github.com/atom/node-keytar/ and then please try again.',
+                            okLabel: 'OK, I understand',
+                        });
+                    } else {
+                        this.$bus.$emit('alert-display', {
+                            message: 'Publii is unable to save settings due problem with the safe password storage software. Please restart the app and then try again. If the problem still occurs - please report the problem details on our support forum.',
+                            okLabel: 'OK, I understand',
+                        });
+                    }
+                }
             });
         },
         saved (newSettings) {
