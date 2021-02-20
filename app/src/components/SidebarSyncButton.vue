@@ -1,5 +1,9 @@
 <template>
-    <div class="sidebar-sync">
+    <div 
+        :class="{ 
+            'sidebar-sync': true,
+            'sidebar-sync-in-progress': syncInProgress
+        }">
         <a
             href="#"
             class="sidebar-preview-link"
@@ -43,7 +47,8 @@ export default {
     data: function() {
         return {
             icon: SidebarIcons.DEFAULT,
-            redirectTo: 'sync'
+            redirectTo: 'sync',
+            syncInProgress: false
         };
     },
     computed: {
@@ -121,6 +126,9 @@ export default {
             return this.$store.state.currentSite.config.domain;
         }
     },
+    mounted () {
+        this.$bus.$on('website-sync-in-progress', this.setSyncState);
+    },
     methods: {
         renderPreview: function() {
             if (!this.$store.state.currentSite.config.theme) {
@@ -189,7 +197,13 @@ export default {
             }
 
             return true;
+        },
+        setSyncState (state) {
+            this.syncInProgress = state;
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('website-sync-in-progress', this.setSyncState);
     }
 }
 </script>
