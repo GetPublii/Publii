@@ -4,7 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const GoogleCloudStorage = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 const normalizePath = require('normalize-path');
 
 class GoogleCloud {
@@ -32,7 +32,7 @@ class GoogleCloud {
             return;
         }
 
-        let gcs = GoogleCloudStorage({
+        let gcs = new Storage({
             credentials: require(keyFilePath)
         });
 
@@ -264,7 +264,7 @@ class GoogleCloud {
             return;
         }
 
-        let gcs = GoogleCloudStorage({
+        let gcs = new Storage({
             credentials: require(keyFilePath)
         });
 

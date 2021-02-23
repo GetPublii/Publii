@@ -25,7 +25,7 @@
   ],
   "homepage": "https://getpublii.com",
   "dependencies": {
-    "@google-cloud/storage": "^5.4.0",
+    "@google-cloud/storage": "^5.8.0",
     "archiver": "^5.1.0",
     "aws-sdk": "^2.632.0",
     "better-sqlite3": "^7.1.1",
