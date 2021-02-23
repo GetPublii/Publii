@@ -467,7 +467,7 @@ export default {
         detectPreviewLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The preview location has been changed. The new destination folder will be cleared up during creating a preview of your website.',
+                    message: 'The preview storage location has been changed. Note that existing files in this folder will be deleted when a preview of your website is created',
                     okLabel: 'OK, I understand',
                 });
 
@@ -477,7 +477,7 @@ export default {
         detectBackupLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The backups location has been changed. All new backups will be created under the new directory. If you need - please move old backups to the new directory.',
+                    message: 'The backups storage location has been changed. All new backups will be stored in this directory. If you require access to earlier backups, they may be moved manually to the new directory.',
                     okLabel: 'OK, I understand',
                 });
 
