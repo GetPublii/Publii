@@ -26,7 +26,7 @@ process.on('message', function(msg){
         }
 
         setTimeout(function() {
-            process.exit();
+            process.kill(process.pid, 'SIGTERM');
         }, 1000);
     }
 });
