@@ -163,7 +163,7 @@
 
             <!-- Minimized states -->
             <div
-                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress && !uploadError"
+                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress"
                 class="minimized-sync-in-progress">
                 <progress-bar
                     v-if="(uploadInProgress || syncInProgress || isInSync || uploadError)"
@@ -190,7 +190,7 @@
         <a 
             v-if="!isMinimized && uploadInProgress && !isManual"
             href="#"
-            @click.prevent="minimizePopup">
+            @click.prevent.stop="minimizePopup">
             Minimize
         </a>
     </div>
@@ -205,7 +205,7 @@ export default {
     watch: {
         'isVisible': function (newValue) {
             if (newValue === false) {
-                this.$bus.$emit('website-sync-in-progress', false);
+                this.$store.commit('setSyncStatus', false);
             }
         }
     },
@@ -319,6 +319,8 @@ export default {
             this.uploadError = false;
             this.noIssues = true;
         });
+
+        this.$bus.$on('sync-popup-maximize', this.maximizePopup);
 
         ipcRenderer.on('app-rendering-progress', this.renderingProgressUpdate);
 
@@ -530,7 +532,7 @@ export default {
             }
 
             this.uploadInProgress = true;
-            this.$bus.$emit('website-sync-in-progress', true);
+            this.$store.commit('setSyncStatus', true);
             this.$store.commit('setSidebarStatus', 'syncing');
 
             if(
@@ -712,6 +714,7 @@ export default {
     },
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
+        this.$bus.$off('sync-popup-maximize', this.maximizePopup);
         ipcRenderer.off('app-preview-render-error');
         ipcRenderer.off('app-rendering-progress');
         ipcRenderer.off('app-connection-error', this.showError);

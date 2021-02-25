@@ -18,6 +18,7 @@ export default {
     components: {
         sidebar: {
             status: false,
+            syncInProgress: false
         }
     },
     // Data about installed themes and their location

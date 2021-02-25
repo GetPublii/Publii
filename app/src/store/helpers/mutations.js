@@ -258,6 +258,9 @@ export default {
     setSidebarStatus (state, newStatus) {
         state.components.sidebar.status = newStatus;
     },
+    setSyncStatus (state, newStatus) {
+        state.components.sidebar.syncInProgress = newStatus;
+    },
     setMenuPosition (state, newPositionData) {
         state.currentSite.menuStructure[newPositionData.index].position = newPositionData.position;
     },

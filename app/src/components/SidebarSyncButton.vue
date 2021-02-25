@@ -42,8 +42,7 @@ export default {
     data: function() {
         return {
             icon: SidebarIcons.DEFAULT,
-            redirectTo: 'sync',
-            syncInProgress: false
+            redirectTo: 'sync'
         };
     },
     computed: {
@@ -119,10 +118,10 @@ export default {
         },
         websiteUrl () { 
             return this.$store.state.currentSite.config.domain;
+        },
+        syncInProgress () {
+            return this.$store.state.components.sidebar.syncInProgress;
         }
-    },
-    mounted () {
-        this.$bus.$on('website-sync-in-progress', this.setSyncState);
     },
     methods: {
         renderPreview: function() {
@@ -192,13 +191,7 @@ export default {
             }
 
             return true;
-        },
-        setSyncState (state) {
-            this.syncInProgress = state;
         }
-    },
-    beforeDestroy () {
-        this.$bus.$off('website-sync-in-progress', this.setSyncState);
     }
 }
 </script>
