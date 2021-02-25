@@ -20,20 +20,15 @@
             <span v-html="icon" class="sidebar-sync-link-icon"></span>
             <span>{{ status }}</span>
         </a>
-
-        <sub
-            v-if="hasSyncDate"
-            class="sidebar-sync-date">
-            <template v-if="!hasManualDeploy">Last sync: <span>{{ syncDate }}</span></template>
-            <template v-if="hasManualDeploy">Last rendered: <span>{{ syncDate }}</span></template>
-        </sub>
-
         <a 
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
             target="_blank"
-            class="sidebar-preview-website">
-            Preview your website
+            class="sidebar-sync-date">
+            <span>
+                <template v-if="!hasManualDeploy">Last sync: <span>{{ syncDate }}</span></template>
+                <template v-if="hasManualDeploy">Last rendered: <span>{{ syncDate }}</span></template>
+            </span>
         </a>
     </div>
 </template>
@@ -114,9 +109,9 @@ export default {
             let syncDate = this.$store.state.currentSite.config.syncDate;
 
             if(this.$store.state.app.config.timeFormat && this.$store.state.app.config.timeFormat == 24) {
-                return this.$moment(syncDate).format('MMM DD, YYYY HH:mm:ss');
+                return this.$moment(syncDate).format('MMM DD, YYYY HH:mm');
             } else {
-                return this.$moment(syncDate).format('MMM DD, YYYY hh:mm:ss a');
+                return this.$moment(syncDate).format('MMM DD, YYYY hh:mm a');
             }
         },
         hasManualDeploy () {
@@ -222,16 +217,22 @@ export default {
             fill: var(--white);           
         }
 
-        & > sub {
+        &-date {
             color: var(--sidebar-link-color);
             display: block;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             letter-spacing: .5px;
-            margin: 0 -2.5rem;
+            margin: 1.5rem -2.5rem 0;
             opacity: var(--sidebar-link-opacity);
-            padding: 1.5rem 0 1rem 0;
             text-align: center;
             width: calc(100% + 4rem);
+
+            &:active,
+            &:focus,
+            &:hover {
+                color: var(--sidebar-link-color);
+                opacity: 1;
+            }
         }
 
         &-link {
@@ -275,13 +276,13 @@ export default {
                 }
             }
 
-            .sidebar-sync-icon {
-                &.is-animated {
-                    polygon {
-                        animation: pulse 1s infinite;
-                    }
-                }
-            }
+            // .sidebar-sync-icon {
+            //     &.is-animated {
+            //         polygon {
+            //             animation: pulse 1s infinite;
+            //         }
+            //     }
+            // }
             
             // interjection mark icon
             .sidebar-interjection-icon {
@@ -344,6 +345,14 @@ export default {
                 }
             }
         }
+
+        &-in-progress {
+            .sidebar-sync-link, .sidebar-sync-date, .sidebar-preview-website {
+               opacity: 0;
+               transition: .35s cubic-bezier(.17,.67,.13,1.05) .35s all;     
+               visibility: hidden; 
+            }
+        }
     }
 
     &-preview-link {
@@ -370,16 +379,35 @@ export default {
             pointer-events: none;
         }
     }
+}
 
-    &-preview-website {
-        bottom: -22px;
-        color: var(--white);
-        display: block;
-        font-size: 1.2rem;
-        position: absolute;
-        text-align: center;
-        width: 100%;
+.minimized-sync {
+    &-in-progress {
+        .progress-message {
+            color: white;
+            position: initial;
+        }
+
+        .progress-wrapper {
+            min-height: 50px;
+            padding: 0;           
+        }
+
+        .progress {
+            background-color: var(--sidebar-preview-btn-border-color);
+            height: 4px;
+
+            &-bar {
+                height: 4px;
+            }
+        }
+    }   
+
+    &-error {
+         font-size: 1.3rem;
     }
+
+    
 }
 
 @keyframes pulse {

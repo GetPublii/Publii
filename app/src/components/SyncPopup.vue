@@ -798,15 +798,43 @@ export default {
     }
 }
 
-.overlay.is-minimized {
-    bottom: 56px;
-    border-radius: 3px;
-    height: 50px;
-    left: 40px;
-    overflow: hidden;
-    padding: 0;
-    top: auto;
-    width: 240px;
+.overlay {
+    transition: 0.7s cubic-bezier(.17,.67,.13,1.05) all;
+
+    &.is-minimized {
+        animation: minimized-popup .35s cubic-bezier(.17,.67,.13,1.05) .35s forwards;
+        box-shadow: 0 0 160px rgba(0, 0, 0, .2);
+        bottom: 56px;
+        height: 50px;
+        left: 0;
+        overflow: visible;
+        padding: 0;
+        top: auto;
+        width: 240px;border-radius: 10px; 
+        transform: translate(calc(50vw - 120px), 0);  
+        z-index: 1;    
+  
+        & .progress-message, .minimized-sync-error {
+            color: white !important;
+        }
+    
+        .popup {
+            animation: minimized-content .35s cubic-bezier(.17,.67,.13,1.05) .35s forwards;
+            margin-top: 1.6rem;
+            position: initial;
+            transform: none;
+            visibility: hidden;
+        }
+
+        @keyframes minimized-popup {
+            100% {transform: translate(40px, 0); height: 50px;width: 240px; box-shadow: none; border-radius: 3px; background: none;}
+        }
+
+        @keyframes minimized-content {
+            99% {visibility: hidden;}
+            100% {visibility: visible;}
+        }
+    }
 }
 
 </style>

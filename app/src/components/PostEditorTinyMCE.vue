@@ -336,6 +336,7 @@ export default {
     overflow-x: hidden;
     position: relative;
     width: 100%;
+    z-index: 2;
 
     &-form {
         #post-title {
