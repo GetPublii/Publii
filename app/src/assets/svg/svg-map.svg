@@ -154,9 +154,13 @@
      M6.5,11C4.02,11,2,8.98,2,6.5S4.02,2,6.5,2S11,4.02,11,6.5S8.98,11,6.5,11z"/>
     </symbol>
 
+    <symbol id="switcher" viewBox="0 0 34 20">
+       <rect fill="currentColor" y="2" width="30" height="16" rx="8" ry="8"/><circle cx="24" cy="10" r="10"/>
+    </symbol>
 
-    <symbol id="switcher" viewBox="0 0 34 20"><rect fill="currentColor" y="2" width="30" height="16" rx="8" ry="8"/><circle cx="24" cy="10" r="10"/></symbol>
-
+    <symbol id="minimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minimize">
+       <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+    </symbol>
 
     <!-- Window icons  -->
 

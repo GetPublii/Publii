@@ -174,7 +174,7 @@
                     :message="messageFromUploader" />
             </div>
 
-            <div
+            <!-- <div
                 v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress && uploadError"
                 class="minimized-sync-error">
                 Error during sync
@@ -184,14 +184,17 @@
                 v-if="isInSync && !noIssues && isMinimized"
                 class="minimized-sync-issues">
                 Issues during sync
-            </div>
+            </div> -->
         </div>
 
         <a 
             v-if="!isMinimized && uploadInProgress && !isManual"
-            href="#"
+            href="#" 
+            class="minimize-popup"
             @click.prevent.stop="minimizePopup">
-            Minimize
+            <icon
+                size="s"
+                name="minimize"/>
         </a>
     </div>
 </template>
@@ -799,6 +802,19 @@ export default {
         width: 100%;
         z-index: 10;
     }
+}
+
+.minimize-popup {
+   color: var(--icon-secondary-color);
+   position: absolute;
+   right: 3.2rem;
+   transition: none;
+
+   &:active,
+   &:focus,
+   &:hover {
+      color: var(--icon-tertiary-color);
+   }
 }
 
 .overlay {
