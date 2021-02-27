@@ -5,7 +5,7 @@
         <message />
         <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
         <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
-        <section>
+        <section :class="$route.path.replace(/^\//mi, '').replace(/\/$/mi, '').replace(/\//gmi, '-')">
             <router-view />
         </section>
 
@@ -264,12 +264,13 @@ export default {
 }
 
 #app {
-    & > .topbar + section {
+    & > .topbar + .site-settings-app {
         height: calc(100vh - var(--topbar-height));
         overflow: auto;
         position: absolute;
         top: var(--topbar-height);
         width: 100%;
+        z-index: 1;
     }
 
     a {
@@ -277,6 +278,10 @@ export default {
         -webkit-user-drag: none;
         -webkit-app-region: no-drag;
     }
+}
+
+#app > .app-settings ~ .overlay.is-minimized {
+    display: none;
 }
 
 body[data-os="win"] {    

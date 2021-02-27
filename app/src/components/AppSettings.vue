@@ -135,7 +135,14 @@
                     id="sites-location"
                     placeholder="Leave blank to use default sites directory"
                     v-model="locations.sites"
+                    :readonly="syncInProgress"
                     slot="field" />
+                <small
+                    v-if="syncInProgress"
+                    slot="note"
+                    class="note">
+                    During sync process you cannot change files location.
+                </small>
                 <small
                     v-if="locations.sites !== '' && !checkSitesCatalog"
                     slot="note"
@@ -151,7 +158,14 @@
                     id="backups-location"
                     placeholder="Leave blank to use default backups directory"
                     v-model="locations.backups"
+                    :readonly="syncInProgress"
                     slot="field" />
+                <small
+                    v-if="syncInProgress"
+                    slot="note"
+                    class="note">
+                    During sync process you cannot change files location.
+                </small>
                 <small
                     v-if="locations.backups !== '' && !checkBackupsCatalog"
                     slot="note"
@@ -167,7 +181,14 @@
                     id="preview-location"
                     placeholder="Leave blank to use default preview directory"
                     v-model="locations.preview"
+                    :readonly="syncInProgress"
                     slot="field" />
+                <small
+                    v-if="syncInProgress"
+                    slot="note"
+                    class="note">
+                    During sync process you cannot change files location.
+                </small>
                 <small
                     v-if="locations.preview !== '' && !checkPreviewCatalog"
                     slot="note"
@@ -338,6 +359,9 @@ export default {
         },
         checkPreviewCatalog () {
             return fs.existsSync(this.locations.preview);
+        },
+        syncInProgress () {
+            return this.$store.state.components.sidebar.syncInProgress;
         }
     },
     mounted () {

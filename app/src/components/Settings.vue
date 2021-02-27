@@ -35,8 +35,15 @@
                         ref="name"
                         id="name"
                         key="name"
+                        :readonly="syncInProgress"
                         :spellcheck="false"
                         v-model="name" />
+                    <small
+                        v-if="syncInProgress"
+                        slot="note"
+                        class="note">
+                        During sync process you cannot change site name.
+                    </small>
                 </field>
 
                 <field
@@ -1813,6 +1820,9 @@ export default {
             }
 
             return true;
+        },
+        syncInProgress () {
+            return this.$store.state.components.sidebar.syncInProgress;
         }
     },
     beforeMount () {

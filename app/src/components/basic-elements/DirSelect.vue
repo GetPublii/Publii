@@ -8,6 +8,7 @@
             :id="id"
             :placeholder="placeholder"
             :value="value"
+            :readonly="readonly"
             :spellcheck="false"
             properties="keyboard-blocked" />
 
@@ -42,6 +43,10 @@ export default {
             default: '',
             required: true,
             type: String
+        },
+        readonly: {
+            default: false,
+            type: Boolean
         },
         onChange: {
             default: () => false,
