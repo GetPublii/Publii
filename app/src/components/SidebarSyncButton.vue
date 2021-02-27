@@ -32,7 +32,12 @@
                         size="xs"
                         name="external-link"/>
                 </template>
-                <template v-if="hasManualDeploy">Last rendered: <span>{{ syncDate }}</span></template>
+                <template v-if="hasManualDeploy">
+                    Last rendered: <span>{{ syncDate }}</span>
+                    <icon
+                        size="xs"
+                        name="external-link"/>
+                </template>
            
         </a>
     </div>
@@ -221,7 +226,7 @@ export default {
             font-size: 1.2rem;
             height: 16px; // svg icon height
             letter-spacing: -.025em;
-            margin-top: 1.5rem;
+            margin-top: 1.2rem;
             opacity: var(--sidebar-link-opacity);
             text-align: center;
 

@@ -823,6 +823,7 @@ export default {
     &.is-minimized {
         animation: minimized-popup .35s cubic-bezier(.17,.67,.13,1.05) .35s forwards;
         box-shadow: 0 0 160px rgba(0, 0, 0, .2);
+        cursor: pointer;
         bottom: 56px;
         height: 50px;
         left: 0;
