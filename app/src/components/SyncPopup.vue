@@ -808,12 +808,12 @@ export default {
    color: var(--icon-secondary-color);
    position: absolute;
    right: 3.2rem;
-   transition: none;
 
    &:active,
    &:focus,
    &:hover {
       color: var(--icon-tertiary-color);
+      transform: scale(.9);
    }
 }
 

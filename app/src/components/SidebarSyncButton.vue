@@ -25,10 +25,15 @@
             :href="websiteUrl"
             target="_blank"
             class="sidebar-sync-date">
-            <span>
-                <template v-if="!hasManualDeploy">Last sync: <span>{{ syncDate }}</span></template>
+            
+                <template v-if="!hasManualDeploy">
+                    Last sync: <span>{{ syncDate }}</span>
+                    <icon
+                        size="xs"
+                        name="external-link"/>
+                </template>
                 <template v-if="hasManualDeploy">Last rendered: <span>{{ syncDate }}</span></template>
-            </span>
+           
         </a>
     </div>
 </template>
@@ -110,7 +115,7 @@ export default {
             if(this.$store.state.app.config.timeFormat && this.$store.state.app.config.timeFormat == 24) {
                 return this.$moment(syncDate).format('MMM DD, YYYY HH:mm');
             } else {
-                return this.$moment(syncDate).format('MMM DD, YYYY hh:mm a');
+                return this.$moment(syncDate).format('MMM DD, YYYY hh:mm A');
             }
         },
         hasManualDeploy () {
@@ -213,18 +218,24 @@ export default {
         &-date {
             color: var(--sidebar-link-color);
             display: block;
-            font-size: 1.15rem;
-            letter-spacing: .5px;
-            margin: 1.5rem -2.5rem 0;
+            font-size: 1.2rem;
+            height: 16px; // svg icon height
+            letter-spacing: -.025em;
+            margin-top: 1.5rem;
             opacity: var(--sidebar-link-opacity);
             text-align: center;
-            width: calc(100% + 4rem);
 
             &:active,
             &:focus,
             &:hover {
-                color: var(--sidebar-link-color);
+                color: var(--sidebar-link-hover-color);
                 opacity: 1;
+            }
+
+            & > svg {
+                left: 3px;
+                position: relative;
+                top: 2px;
             }
         }
 
