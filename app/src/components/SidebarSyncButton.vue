@@ -225,11 +225,13 @@ export default {
             opacity: var(--sidebar-link-opacity);
             text-align: center;
 
-            &:active,
-            &:focus,
             &:hover {
                 color: var(--sidebar-link-hover-color);
                 opacity: 1;
+            }
+
+            &:focus {
+                color: var(--sidebar-link-color);
             }
 
             & > svg {
