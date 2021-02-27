@@ -313,6 +313,7 @@ export default {
             this.renderingProgressColor = 'blue';
             this.renderingProgressIsStopped = false;
             this.messageFromUploader = '';
+            this.uploadInProgress = false;
             this.uploadingProgress = 0;
             this.uploadingProgressColor = 'blue';
             this.uploadingProgressIsStopped = false;
