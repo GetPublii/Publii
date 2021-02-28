@@ -24,7 +24,7 @@ class ManualDeployment {
             case 'tar-archive': this.returnTarArchive(); break;
             default:
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000);
                 break;
         }
@@ -75,7 +75,7 @@ class ManualDeployment {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
 
@@ -113,7 +113,7 @@ class ManualDeployment {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
 
@@ -134,7 +134,7 @@ class ManualDeployment {
         });
 
         setTimeout(function () {
-            process.exit();
+            process.kill(process.pid, 'SIGTERM');
         }, 1000);
     }
 }

@@ -82,14 +82,14 @@ class Netlify {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] Netlify ERROR: ${err}`);
             this.onError(err);
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
     }
@@ -118,7 +118,7 @@ class Netlify {
         }
 
         setTimeout(function () {
-            process.exit();
+            process.kill(process.pid, 'SIGTERM');
         }, 1000); 
     }
 

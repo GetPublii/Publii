@@ -122,7 +122,7 @@ class S3 {
                 });
 
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }
         }, 20000);
@@ -226,7 +226,7 @@ class S3 {
                 });
 
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             });
         });
@@ -409,7 +409,7 @@ class S3 {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         }
     }

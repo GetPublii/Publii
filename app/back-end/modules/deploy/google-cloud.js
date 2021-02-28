@@ -143,7 +143,7 @@ class GoogleCloud {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
     }

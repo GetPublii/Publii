@@ -152,7 +152,7 @@ class GithubPages {
                 });
 
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000); 
             }
         });
@@ -255,7 +255,7 @@ class GithubPages {
             
             if(result === false) {
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000);
 
                 return;
@@ -280,7 +280,7 @@ class GithubPages {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         } catch (err) {
             console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
@@ -294,7 +294,7 @@ class GithubPages {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         }
     }

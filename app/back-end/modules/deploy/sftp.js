@@ -98,7 +98,7 @@ class SFTP {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
 
@@ -112,7 +112,7 @@ class SFTP {
                 });
 
                 setTimeout(function () {
-                    process.exit();
+                    process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }
         }, 20000);
@@ -189,14 +189,14 @@ class SFTP {
             });
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         }).catch(err => {
             this.connection.end();
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
             setTimeout(function () {
-                process.exit();
+                process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
     }
