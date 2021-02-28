@@ -163,10 +163,11 @@ class Backup {
 
             try {
                 if (
-                    os.platform() !== 'darwin' || 
-                    (
-                        os.platform() === 'darwin' &&
-                        parseInt(os.release().split('.')[0], 10) >= 16
+                    os.platform() !== 'linux' && (
+                        os.platform() !== 'darwin' || (
+                            os.platform() === 'darwin' &&
+                            parseInt(os.release().split('.')[0], 10) >= 16
+                        )
                     )
                 ) {
                     await (async () => {
