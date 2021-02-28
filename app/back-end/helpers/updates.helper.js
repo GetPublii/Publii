@@ -67,6 +67,11 @@ class UpdatesHelper {
         }
 
         if (response && response.timestamp && response[this.contentField]) {
+            if (response.validTo && parseInt(response.validTo, 10) < new Date().getTime()) {
+                this.sendError(); 
+                return;
+            }
+
             this.event.sender.send('app-' + this.namespace + '-retrieved', {
                 status: true,
                 notification: {
