@@ -368,6 +368,20 @@ class Image extends Model {
 
                                     resolve(destinationPath);
                                 }).catch(err => reject(err))
+                        } else if (extension.toLowerCase() === '.webp') {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
+                                .webp({
+                                    quality: imagesQuality
+                                })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err))
                         } else {
                             sharp(originalPath)
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
@@ -409,6 +423,19 @@ class Image extends Model {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
+                                .toBuffer()
+                                .then(function (outputBuffer) {
+                                    let wstream = fs.createWriteStream(destinationPath);
+                                    wstream.write(outputBuffer);
+                                    wstream.end();
+                                    resolve(destinationPath);
+                                }).catch(err => reject(err));
+                        } else if (extension.toLowerCase() === '.webp') {
+                            sharp(originalPath)
+                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
+                                .webp({
+                                    quality: imagesQuality
+                                })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
@@ -475,7 +502,7 @@ class Image extends Model {
      * Check if the image has supported image extension
      */
     allowedImageExtension(extension) {
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
 
         return allowedExtensions.indexOf(extension) > -1;
     }

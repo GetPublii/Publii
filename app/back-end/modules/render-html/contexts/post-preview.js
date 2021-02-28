@@ -498,7 +498,8 @@ class RendererContextPostPreview extends RendererContext {
                     !(
                         url.toLowerCase().indexOf('.jpg') === -1 &&
                         url.toLowerCase().indexOf('.jpeg') === -1 &&
-                        url.toLowerCase().indexOf('.png') === -1
+                        url.toLowerCase().indexOf('.png') === -1 && 
+                        url.toLowerCase().indexOf('.webp') === -1
                     ) &&
                     url.toLowerCase().indexOf('/gallery/') === -1
                 ) {
