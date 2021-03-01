@@ -57,7 +57,7 @@
                 <small
                     slot="note"
                     class="note">
-                    Sharp resize engine is much faster than Jimp, but is also less stable. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine.
+                    Sharp resize engine is much faster than Jimp, but is also less stable. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine. If you want to use WebP images - only sharp supports them.
                 </small>
             </field>
 
@@ -255,10 +255,6 @@ export default {
     data () {
         let imageResizeEngine = 'sharp';
 
-        if (process.platform === 'linux') {
-            imageResizeEngine = 'jimp';
-        }
-
         return {
             alwaysSaveSearchState: false,
             screensSelected: '',
@@ -306,12 +302,6 @@ export default {
             };
         },
         imageResizeEngines () {
-            if (process.platform === 'linux') {
-                return {
-                    'jimp': 'Jimp'
-                };
-            }
-
             return {
                 'sharp': 'Sharp',
                 'jimp': 'Jimp'
