@@ -326,6 +326,7 @@ export default {
 
         &-input {
             clear: both;
+            color: transparent; // hack to remove the phrase "no file selected" from the file input
             display: block;
             line-height: 1.6!important;
             margin: 2rem auto 0 auto!important;
