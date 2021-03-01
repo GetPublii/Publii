@@ -264,7 +264,7 @@ export default {
 }
 
 #app {
-    & > .topbar + .site-settings-app {
+    & > .topbar + section {
         height: calc(100vh - var(--topbar-height));
         overflow: auto;
         position: absolute;
