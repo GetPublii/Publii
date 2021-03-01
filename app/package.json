@@ -58,7 +58,7 @@
     "normalize-path": "^2.0.1",
     "publii-block-editor": "github:dziudek/publii-block-editor#master",
     "request": "^2.88.0",
-    "sharp": "^0.26.3",
+    "sharp": "^0.27.2",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^6.0.1",
