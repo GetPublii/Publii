@@ -80,6 +80,6 @@
   "devDependencies": {
     "devtron": "^1.4.0",
     "electron": "^11.2.1",
-    "node-abi": "^2.15.0"
+    "node-abi": "^2.19.3"
   }
 }
