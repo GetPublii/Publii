@@ -830,7 +830,7 @@ export default {
         left: 0;
         overflow: visible;
         padding: 0;
-        top: auto;
+        top: auto!important;
         width: 240px;border-radius: 10px; 
         transform: translate(calc(50vw - 120px), 0);  
         z-index: 1;    
