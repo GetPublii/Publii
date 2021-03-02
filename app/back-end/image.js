@@ -505,6 +505,10 @@ class Image extends Model {
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
+        if (process.platform === 'linux') {
+            return true;
+        }
+
         return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
     }
 }

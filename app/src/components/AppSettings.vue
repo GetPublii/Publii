@@ -373,6 +373,10 @@ export default {
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.theme = this.getAppTheme();
 
+        if (process.platform === 'linux') {
+            this.imageResizeEnginesSelected = 'jimp';
+        }
+
         Vue.nextTick(() => {
             this.unwatchLocationPreview = this.$watch('locations.preview', this.detectPreviewLocationChange);
             this.unwatchBackupsLocation = this.$watch('locations.backups', this.detectBackupLocationChange);
