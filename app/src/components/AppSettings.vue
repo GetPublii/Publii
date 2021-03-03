@@ -57,7 +57,7 @@
                 <small
                     slot="note"
                     class="note">
-                    Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you have problems with creating or regenerating thumbnails - please try to use Jimp resize engine. If you want to use WebP images - use Sharp resize engine. Sharp resize engine is not available on Linux.
+                    The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.
                 </small>
             </field>
 
