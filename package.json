@@ -125,12 +125,14 @@
   },
   "deb": {
     "depends": [
-      "libsecret-1-dev"
+      "libsecret-1-dev",
+      "gnome-keyring"
     ]
   },
   "rpm": {
     "depends": [
-      "libsecret-devel"
+      "libsecret-devel",
+      "gnome-keyring"
     ]
   },
   "appImage": {

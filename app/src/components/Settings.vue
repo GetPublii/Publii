@@ -2020,7 +2020,7 @@ export default {
                 if(data.message === 'no-keyring') {
                     if (document.body.getAttribute('data-os') === 'linux') {
                         this.$bus.$emit('alert-display', {
-                            message: 'Publii cannot save settings as no safe password storage software is installed. Please follow the installation instructions for Node Keytar via https://github.com/atom/node-keytar/ and try again.',
+                            message: 'Publii cannot save settings as no safe password storage software is installed. Please follow the installation instructions for Node Keytar via https://github.com/atom/node-keytar/ and try again. Most probably your OS is missing libsecret-1-dev and gnome-keyring packages.',
                             okLabel: 'OK, I understand',
                         });
                     } else {
