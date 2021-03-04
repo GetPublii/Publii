@@ -64,7 +64,7 @@
 
                 <field
                     v-if="type === 'external'"
-                    label="External link:">
+                    label="Custom link:">
                     <input
                         slot="field"
                         type="text"
@@ -243,7 +243,7 @@ export default {
                 case 'tags': return 'Tags list link';
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
-                case 'external': return 'External link';
+                case 'external': return 'Custom link';
                 case 'file': return 'File from File Manager';
             }
         },
