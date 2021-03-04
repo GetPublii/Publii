@@ -475,7 +475,7 @@ class GitlabPages {
     mergeTemporaryBranch () {
         this.setUploadProgress(99);
 
-        this.client.MergeRequests.create(this.projectID, this.temporaryBranch, 'master', 'Publii deployment - merge').then(res => {
+        this.client.MergeRequests.create(this.projectID, this.temporaryBranch, this.branch, 'Publii deployment - merge').then(res => {
             let mergeRequestIID = res.iid;
 
             this.client.MergeRequests.accept(this.projectID, mergeRequestIID).then(res => {

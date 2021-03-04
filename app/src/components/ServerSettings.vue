@@ -606,7 +606,7 @@
                     <small
                         slot="note"
                         class="note">
-                        Examples: <strong>docs</strong> or <strong>master</strong>
+                        Examples: <strong>docs</strong> <strong>main</strong> or <strong>master</strong>
                     </small>
                 </field>
 
