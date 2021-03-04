@@ -270,7 +270,7 @@ export default {
                 case 'author': return 'Author link';
                 case 'frontpage': return 'Frontpage link';
                 case 'internal': return 'Internal link';               
-                case 'external': return 'Custom link';
+                case 'external': return 'External link';
                 case 'separator': return 'Text separator';
             }
         },
