@@ -25,6 +25,7 @@
   ],
   "homepage": "https://getpublii.com",
   "dependencies": {
+    "@gitbeaker/node": "^28.0.4",
     "@google-cloud/storage": "^5.8.0",
     "archiver": "^5.1.0",
     "aws-sdk": "^2.632.0",
@@ -40,7 +41,6 @@
     "fs-extra": "^8.0.1",
     "ftp": "^0.3.10",
     "github": "^9.2.0",
-    "gitlab": "^3.11.4",
     "glob-move": "^1.0.1",
     "handlebars": "^4.7.6",
     "html-minifier": "^3.0.2",
@@ -80,6 +80,6 @@
   "devDependencies": {
     "devtron": "^1.4.0",
     "electron": "^11.2.1",
-    "node-abi": "^2.19.3"
+    "node-abi": "^2.20.0"
   }
 }

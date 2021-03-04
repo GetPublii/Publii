@@ -583,6 +583,11 @@
                         class="note">
                         The repository field cannot be empty
                     </small>
+                    <small
+                        slot="note"
+                        class="note">
+                        This field is case-sensitive
+                    </small>
                 </field>
 
                 <field
@@ -606,7 +611,7 @@
                     <small
                         slot="note"
                         class="note">
-                        Examples: <strong>docs</strong> <strong>main</strong> or <strong>master</strong>
+                        Examples: <strong>docs</strong>, <strong>main</strong> or <strong>master</strong>
                     </small>
                 </field>
 

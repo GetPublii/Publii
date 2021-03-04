@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
-const Gitlab = require('gitlab/dist/es5').default
+const { Gitlab } = require('@gitbeaker/node');
 
 class GitlabPages {
     constructor (deploymentInstance = false) {
@@ -49,7 +49,7 @@ class GitlabPages {
         }
 
         this.client = new Gitlab({
-            url: deploymentConfig.gitlab.server,
+            host: deploymentConfig.gitlab.server,
             token: token
         });
 
@@ -477,7 +477,7 @@ class GitlabPages {
 
         this.client.MergeRequests.create(this.projectID, this.temporaryBranch, this.branch, 'Publii deployment - merge').then(res => {
             let mergeRequestIID = res.iid;
-
+            
             this.client.MergeRequests.accept(this.projectID, mergeRequestIID).then(res => {
                 this.client.Branches.remove(this.projectID, this.temporaryBranch).then(res => {
                     this.setUploadProgress(100);
@@ -490,6 +490,7 @@ class GitlabPages {
                         }
                     });
                 }).catch(err => {
+                    console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST BRANCH REMOVE ERROR: ${JSON.stringify(err)}`);
                     process.send({
                         type: 'web-contents',
                         message: 'app-connection-error',
@@ -499,6 +500,7 @@ class GitlabPages {
                     });
                 });
             }).catch(err => {
+                console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST ACCEPT ERROR: ${JSON.stringify(err)}`);
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
@@ -508,6 +510,7 @@ class GitlabPages {
                 });
             });
         }).catch(err => {
+            console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST CREATE ERROR: ${JSON.stringify(err)}`);
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
@@ -521,8 +524,8 @@ class GitlabPages {
     makeCommit (operations, nextOperationCallback, commitMessage = 'Publii - deployment') {
         this.client.Commits.create(this.projectID, this.temporaryBranch, commitMessage, operations).then(res => {
             return nextOperationCallback();
-        }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] (!) COMMIT ERROR: ${err.message}`);
+        }).catch(err => {          
+            console.log(`[${ new Date().toUTCString() }] (!) COMMIT ERROR: ${JSON.stringify(err)}`);
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
