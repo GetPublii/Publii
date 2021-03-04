@@ -383,7 +383,7 @@ class Deployment {
         }
 
         if(this.siteConfig.deployment.protocol === 'gitlab-pages') {
-            this.client.createBranch();
+            this.client.startSync();
             return;
         }
 

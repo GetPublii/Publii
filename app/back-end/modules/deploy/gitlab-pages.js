@@ -15,7 +15,6 @@ class GitlabPages {
         this.repository = '';
         this.user = '';
         this.branch = '';
-        this.temporaryBranch = '';
         this.projectID = '';
         this.filesToUpdate = 0;
         this.filesUpdated = 0;
@@ -177,7 +176,7 @@ class GitlabPages {
             this.projectID = projects[0].id;
 
             this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
-                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), JSON.stringify(response), err => {
+                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), response, err => {
                     if (err) {
                         console.log(`[${ new Date().toUTCString() }] (!) An error occurred during writing files-remote.json file: ${err}`);
                     }
@@ -187,6 +186,7 @@ class GitlabPages {
 
                 try {
                     if (response.length) {
+                        response = JSON.parse(response);
                         this.remoteFilesList = response.map(file => {
                             file.path = file.path.substr(7);
 
@@ -223,23 +223,9 @@ class GitlabPages {
         });
     }
 
-    createBranch () {
-        this.temporaryBranch = 'publii-deploy-' + new Date().getTime();
+    startSync () {
         this.setUploadProgress(8);
-
-        this.client.Branches.create(this.projectID, this.temporaryBranch, this.branch).then(res => {
-            console.log(`[${ new Date().toUTCString() }] (!) BRANCH CREATED`);
-            return this.removeFiles();
-        }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] (!) BRANCH NOT CREATED`);
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: err.message
-                }
-            });
-        });
+        this.removeFiles();
     }
 
     removeFiles () {
@@ -469,60 +455,23 @@ class GitlabPages {
         }
 
         console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILES LIST UPDATED`);
-        return this.makeCommit(commit, this.mergeTemporaryBranch.bind(this), '[skip ci] Publii - upload remote files list');
+        return this.makeCommit(commit, this.finishSync.bind(this), 'Publii - upload remote files list');
     }
 
-    mergeTemporaryBranch () {
-        this.setUploadProgress(99);
+    finishSync () {
+        this.setUploadProgress(100);
 
-        this.client.MergeRequests.create(this.projectID, this.temporaryBranch, this.branch, 'Publii deployment - merge').then(res => {
-            let mergeRequestIID = res.iid;
-            
-            this.client.MergeRequests.accept(this.projectID, mergeRequestIID).then(res => {
-                this.client.Branches.remove(this.projectID, this.temporaryBranch).then(res => {
-                    this.setUploadProgress(100);
-
-                    process.send({
-                        type: 'sender',
-                        message: 'app-deploy-uploaded',
-                        value: {
-                            status: true
-                        }
-                    });
-                }).catch(err => {
-                    console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST BRANCH REMOVE ERROR: ${JSON.stringify(err)}`);
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-connection-error',
-                        value: {
-                            additionalMessage: err.message
-                        }
-                    });
-                });
-            }).catch(err => {
-                console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST ACCEPT ERROR: ${JSON.stringify(err)}`);
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: err.message
-                    }
-                });
-            });
-        }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] (!) MERGE REQUEST CREATE ERROR: ${JSON.stringify(err)}`);
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: err.message
-                }
-            });
+        process.send({
+            type: 'sender',
+            message: 'app-deploy-uploaded',
+            value: {
+                status: true
+            }
         });
     }
 
     makeCommit (operations, nextOperationCallback, commitMessage = 'Publii - deployment') {
-        this.client.Commits.create(this.projectID, this.temporaryBranch, commitMessage, operations).then(res => {
+        this.client.Commits.create(this.projectID, this.branch, commitMessage, operations).then(res => {
             return nextOperationCallback();
         }).catch(err => {          
             console.log(`[${ new Date().toUTCString() }] (!) COMMIT ERROR: ${JSON.stringify(err)}`);
