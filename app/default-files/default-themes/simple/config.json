@@ -65,7 +65,7 @@
     "customConfig": [
         {
             "name": "pageMargin",
-            "label": "Page width",
+            "label": "Page margin",
             "group": "Layout",
             "value": "6vw",
             "type": "text"
@@ -1081,7 +1081,7 @@
             "name": "copyrightText",
             "label": "Copyright text",
             "group": "Footer",
-            "value": "Powered by Publii",
+            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii</a>",
             "type": "wysiwyg"
         },
         {
