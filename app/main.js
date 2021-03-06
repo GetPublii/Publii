@@ -1,7 +1,6 @@
 'use strict';
 
 const electron = require('electron');
-const loadDevtool = (process.env.NODE_ENV !== 'production') ? require('electron-load-devtool') : false;
 const electronApp = electron.app;
 const dialog = electron.dialog;
 const ipcMain = electron.ipcMain;
@@ -29,12 +28,6 @@ electronApp.on('ready', function () {
         'app': electronApp,
         'basedir': __dirname
     };
-
-    setTimeout(() => {
-        if (process.env.NODE_ENV !== 'production') {
-            loadDevtool(loadDevtool.VUEJS_DEVTOOLS);
-        }
-    }, 100);
 
     appInstance = new App(startupSettings);
 

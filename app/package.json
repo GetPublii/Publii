@@ -35,7 +35,6 @@
     "codemirror-revisedsearch": "^1.0.12",
     "count-files": "^2.6.2",
     "delete-empty": "^3.0.0",
-    "electron-load-devtool": "^1.2.0",
     "fast-memoize": "^2.2.7",
     "file-exists": "^1.0.0",
     "fs-extra": "^8.0.1",
