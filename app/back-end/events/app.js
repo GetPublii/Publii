@@ -59,9 +59,9 @@ class AppEvents {
                             sites: appInstance.sites
                         });
                     }, 500);
-                }
 
-                return;
+                    return;
+                }
             }
 
             event.sender.send('app-config-saved', {
