@@ -32,7 +32,12 @@ export default {
         },
         closeEditor () {
             let siteName = this.$route.params.name;
-            this.$router.push('/site/' + siteName + '/posts/');
+
+            if (this.postData.isTrashed) {
+                this.$router.push('/site/' + siteName + '/posts/trashed');
+            } else {
+                this.$router.push('/site/' + siteName + '/posts/');
+            }
         }
     }
 }

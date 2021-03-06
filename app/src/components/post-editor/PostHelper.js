@@ -24,15 +24,19 @@ class PostHelper {
         preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
         preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
 
-        if(postData.isHidden) {
+        if (postData.isHidden) {
             finalStatus += ',hidden';
         }
 
-        if(postData.isFeatured) {
+        if (postData.isTrashed) {
+            finalStatus += ',trashed';
+        }
+
+        if (postData.isFeatured) {
             finalStatus += ',featured';
         }
 
-        if(postData.isExcludedOnHomepage) {
+        if (postData.isExcludedOnHomepage) {
             finalStatus += ',excluded_homepage';
         }
 
@@ -115,6 +119,7 @@ class PostHelper {
             },
             isFeatured: false,
             isHidden: false,
+            isTrashed: false,
             isExcludedOnHomepage: false,
             status: '',
             metaTitle: '',
@@ -166,6 +171,7 @@ class PostHelper {
         postData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
         postData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
         postData.isExcludedOnHomepage = data.posts[0].status.indexOf('excluded_homepage') > -1;
+        postData.isTrashed = data.posts[0].status.indexOf('trashed') > -1;
 
         // Set image
         if (data.featuredImage) {

@@ -567,6 +567,10 @@ export default {
         if (this.$store.state.currentSite.posts) {
             this.dataLoaded = true;
         }
+
+        if (this.$route.params.filter === 'trashed') {
+            this.setFilter('is:trashed');
+        }
     },
     methods: {
         addNewPost (editorType) {
