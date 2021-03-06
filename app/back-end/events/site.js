@@ -325,7 +325,7 @@ class SiteEvents {
          */
         ipcMain.on('app-site-switch', (event, config) => {
             let result = appInstance.switchSite(config.site);
-            let language = this.getSiteLanguage(appInstance, config.siteName);
+            let language = this.getSiteLanguage(appInstance, config.site);
             this.setSpellcheckerLanguage (appInstance, language);
             event.sender.send('app-site-switched', result);
         });
@@ -553,9 +553,17 @@ class SiteEvents {
 
         let availableLanguages = appInstance.mainWindow.webContents.session.availableSpellCheckerLanguages;
         language = language.toLocaleLowerCase();
+        language = language.split('-');
+
+        if (language[1]) {
+            language = language[0] + '-' + language[1].toLocaleUpperCase();
+        } else {
+            language = language[0];
+        }
 
         if (availableLanguages.indexOf(language) > -1) {
             appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            console.log('Set spellchecker to:', language);
             return;
         }
 
@@ -564,6 +572,7 @@ class SiteEvents {
 
         if (availableLanguages.indexOf(language) > -1) {
             appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            console.log('Set spellchecker to:', language);
             return;
         }
 
