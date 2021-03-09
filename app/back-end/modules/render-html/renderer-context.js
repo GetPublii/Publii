@@ -6,6 +6,7 @@ const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
 const RendererCache = require('./renderer-cache');
 const RendererHelpers = require('./helpers/helpers.js');
+const sizeOf = require('image-size');
 const UtilsHelper = require('./../../helpers/utils');
 
 /*
@@ -189,6 +190,7 @@ class RendererContext {
         let searchUrl = fullURL + '/' + this.siteConfig.advanced.urls.searchPage;
         let errorUrl = fullURL + '/' + this.siteConfig.advanced.urls.errorPage;
         let logoUrl = normalizePath(this.themeConfig.config.logo);
+        let logoSize = false;
         let assetsUrl = normalizePath(this.siteConfig.domain) + '/' +
                         normalizePath(this.themeConfig.files.assetsPath);
         let postsOrdering = 'desc';
@@ -207,7 +209,16 @@ class RendererContext {
         searchUrl = URLHelper.fixProtocols(searchUrl);
         errorUrl = URLHelper.fixProtocols(errorUrl);
 
-        if(logoUrl !== '') {
+        if (logoUrl !== '') {
+            try {
+                logoSize = sizeOf(path.join(this.inputDir, logoUrl));
+            } catch(e) {
+                logoSize = {
+                    width: '',
+                    height: ''
+                };
+            }
+
             logoUrl = normalizePath(this.siteConfig.domain) + '/' +
                       normalizePath(this.themeConfig.config.logo);
             logoUrl = URLHelper.fixProtocols(logoUrl);
@@ -235,6 +246,7 @@ class RendererContext {
                 ampUrl: '',
                 name: siteNameValue,
                 logo: logoUrl,
+                logoSize: logoSize,
                 assetsUrl: assetsUrl,
                 postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
