@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'about-credits-list',
@@ -52,7 +52,7 @@ export default {
         };
     },
     computed: {
-        licensesData: function() {
+        licensesData: function () {
             let licensesData = [];
             let licensePackages = Object.keys(this.licenses).sort();
             let licenseID = 1;
@@ -65,6 +65,11 @@ export default {
 
             return licensesData;
         }
+    },
+    mounted () {
+        (async () => {
+            this.appDirPath = await ipcRenderer.invoke('app-credits-list:get-app-path');
+        });
     },
     methods: {
         itemClicked: function(e, id, licenseUrl) {
@@ -104,8 +109,7 @@ export default {
             }
 
             if(this.licenses[licenseKey]['helper-text']) {
-                let appDirPath = remote.app.getAppPath();
-                licenseUrl = 'file://' + appDirPath + '/' + this.licenses[licenseKey].url;
+                licenseUrl = 'file:///' + this.appDirPath + '/' + this.licenses[licenseKey].url;
                 licenseHomepage = false;
                 licenseExternal = true;
                 licenseHref = licenseUrl;
