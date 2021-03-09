@@ -4,6 +4,7 @@ const electron = require('electron');
 const electronApp = electron.app;
 const dialog = electron.dialog;
 const ipcMain = electron.ipcMain;
+const nativeTheme = electron.nativeTheme;
 const fs = require('fs');
 const os = require('os');
 const App = require('./back-end/app.js');
@@ -33,6 +34,26 @@ electronApp.on('ready', function () {
 
     ipcMain.on('publii-set-spellchecker-language', (event, language) => {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
+    });
+
+    ipcMain.handle('app-theme-mode:set-light', () => {
+        nativeTheme.themeSource = 'light';
+    });
+
+    ipcMain.handle('app-theme-mode:set-dark', () => {
+        nativeTheme.themeSource = 'dark';
+    });
+
+    ipcMain.handle('app-theme-mode:get-theme', () => {
+        return nativeTheme.shouldUseDarkColors ? 'dark' : 'default';
+    });
+
+    ipcMain.handle('app-theme-mode:set-system', () => {
+        nativeTheme.themeSource = 'system';
+    });
+
+    nativeTheme.on('updated', () => {
+        appInstance.getMainWindow().webContents.send('app-theme-mode:changed');
     });
 });
 

@@ -1,4 +1,4 @@
-import { ipcRenderer, remote, nativeTheme } from 'electron';
+import { ipcRenderer } from 'electron';
 import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
@@ -169,29 +169,25 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                 skipThemeChangeEvents: false
             };
         },
-        mounted () {
-            this.setupAppTheme();
+        async mounted () {
+            await this.setupAppTheme();
         },
         methods: {
-            setupAppTheme () {
+            async setupAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'default') {
-                    remote.nativeTheme.themeSource = 'light';
+                    ipcRenderer.invoke('app-theme-mode:set-light');
                 } else if (currentTheme === 'dark') {
-                    remote.nativeTheme.themeSource = 'dark';
+                    ipcRenderer.invoke('app-theme-mode:set-dark');
                 } else {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        currentTheme = 'dark';
-                    } else {
-                        currentTheme = 'default';
-                    }
+                    currentTheme = await ipcRenderer.invoke('app-theme-mode:get-theme');
                 }
 
                 document.querySelector('html').setAttribute('data-theme', currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
-                remote.nativeTheme.on('updated', () => {
+                ipcRenderer.on('app-theme-mode:changed', () => {
                     if (this.skipThemeChangeEvents) {
                         return;
                     }
@@ -199,20 +195,16 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                     this.$bus.$emit('app-theme-change');
                 });
             },
-            getCurrentAppTheme () {
+            async getCurrentAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'system') {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        return 'dark';
-                    } else {
-                        return 'default';
-                    }
-                } 
+                    return await ipcRenderer.invoke('app-theme-mode:get-theme');
+                }
 
                 return currentTheme;
             },
-            toggleTheme () {
+            async toggleTheme () {
                 this.skipThemeChangeEvents = true;
                 let currentTheme = this.$store.state.app.theme;
                 let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
@@ -220,22 +212,17 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
 
                 if (currentTheme === 'dark') {
                     theme = 'dark';
-                    remote.nativeTheme.themeSource = 'dark';
+                    ipcRenderer.invoke('app-theme-mode:set-dark');
                     currentTheme = 'dark';
                 } else if (currentTheme === 'default') {
                     theme = 'default';
-                    remote.nativeTheme.themeSource = 'light';
+                    ipcRenderer.invoke('app-theme-mode:set-light');
                     currentTheme = 'default';
                 } else {
                     theme = 'system';
-                    remote.nativeTheme.themeSource = 'system';
+                    ipcRenderer.invoke('app-theme-mode:set-system');
                     currentTheme = 'system';
-
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        theme = 'dark';
-                    } else {
-                        theme = 'default';
-                    }
+                    theme = await ipcRenderer.invoke('app-theme-mode:get-theme')
                 }
 
                 this.$store.commit('setAppTheme', currentTheme);
