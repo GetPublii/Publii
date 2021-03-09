@@ -36,6 +36,7 @@ electronApp.on('ready', function () {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
     });
 
+    // App theme mode
     ipcMain.handle('app-theme-mode:set-light', () => {
         nativeTheme.themeSource = 'light';
     });
@@ -54,6 +55,23 @@ electronApp.on('ready', function () {
 
     nativeTheme.on('updated', () => {
         appInstance.getMainWindow().webContents.send('app-theme-mode:changed');
+    });
+
+    // App window
+    ipcMain.handle('app-window:minimize', () => {
+        appInstance.getMainWindow().minimize();
+    });
+
+    ipcMain.handle('app-window:maximize', () => {
+        appInstance.getMainWindow().maximize();
+    });
+
+    ipcMain.handle('app-window:unmaximize', () => {
+        appInstance.getMainWindow().unmaximize();
+    });
+
+    ipcMain.handle('app-window:close', () => {
+        appInstance.getMainWindow().close();
     });
 });
 
