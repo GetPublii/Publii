@@ -38,9 +38,9 @@
 
             <div 
                 v-if="deploymentMethodSelected === ''"
-                class="server-settings-intro">   
+                class="server-settings-grid">   
                 
-                 <div @click="deploymentMethodSelected = 'ftp'" title="FTP">
+                 <div @click="deploymentMethodSelected = 'ftp'" title="FTP" class="server-settings-grid-item">
                    <icon
                       customWidth="69"
                       customHeight="42"                   
@@ -48,7 +48,7 @@
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'sftp'" title="SFTP">
+                <div @click="deploymentMethodSelected = 'sftp'" title="SFTP" class="server-settings-grid-item">
                    <icon
                       customWidth="69"
                       customHeight="42"                   
@@ -56,7 +56,7 @@
                       iconset="svg-map-server"/>
                 </div>               
 
-                <div @click="deploymentMethodSelected = 's3'" title="S3 compatible storage">
+                <div @click="deploymentMethodSelected = 's3'" title="S3 compatible storage" class="server-settings-grid-item">
                    <icon
                       customWidth="48"
                       customHeight="48"                    
@@ -64,7 +64,7 @@
                       iconset="svg-map-server"/>
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages">
+                <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages" class="server-settings-grid-item">
                     <icon
                       customWidth="129"
                       customHeight="42"                     
@@ -72,7 +72,7 @@
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages">
+                <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages" class="server-settings-grid-item">
                     <icon
                       customWidth="113"
                       customHeight="40"                     
@@ -80,7 +80,7 @@
                       iconset="svg-map-server"/>
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'netlify'" title="Netlify">
+                <div @click="deploymentMethodSelected = 'netlify'" title="Netlify" class="server-settings-grid-item">
                    <icon
                       customWidth="102"
                       customHeight="48"                     
@@ -88,7 +88,7 @@
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud">
+                <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud" class="server-settings-grid-item">
                     <icon
                       customWidth="167"
                       customHeight="40"                     
@@ -96,13 +96,22 @@
                       iconset="svg-map-server"/>
                 </div>
                 
-                <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment">
+                <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment" class="server-settings-grid-item">
                    <icon
                       customWidth="50"
                       customHeight="50"                   
                       name="zip" 
                       iconset="svg-map-server"/>
                 </div>
+           
+                <a href="https://getpublii.com/docs/deployment/" target="_blank" rel="noopener noreferrer" class="server-settings-grid-item">
+                    <icon
+                        customWidth="120"
+                        customHeight="44"                   
+                        name="deployment-more" 
+                        iconset="svg-map-server"/>
+                </a>
+            
             </div>
 
             <fields-group v-if="deploymentMethodSelected !== ''">
@@ -1513,12 +1522,12 @@ export default {
         color: var(--warning);
     }
     
-    &-intro {       
+    &-grid {       
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 2rem;       
         
-        & > div {
+        &-item {
             align-items: center;
             background: var(--gray-1);
             border: 1px solid transparent;
