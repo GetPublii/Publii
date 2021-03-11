@@ -104,12 +104,13 @@
                       iconset="svg-map-server"/>
                 </div>
            
-                <a href="https://getpublii.com/docs/deployment/" target="_blank" rel="noopener noreferrer" class="server-settings-grid-item">
+                <a href="https://getpublii.com/docs/deployment/" target="_blank" rel="noopener noreferrer" class="server-settings-grid-item deployment-others">
                     <icon
-                        customWidth="120"
-                        customHeight="44"                   
-                        name="deployment-more" 
+                        customWidth="29"
+                        customHeight="29"                   
+                        name="deployment-others" 
                         iconset="svg-map-server"/>
+                        <h3>Others...</h3>
                 </a>
             
             </div>
@@ -1532,6 +1533,7 @@ export default {
             background: var(--gray-1);
             border: 1px solid transparent;
             border-radius: 3px;
+            color:  var(--gray-5);
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
@@ -1541,6 +1543,7 @@ export default {
                 background: var(--bg-primary);
                 border-color: var(--primary-color);
                 box-shadow: 0 0 26px rgba(black, .07);
+                color: var(--primary-color);
                 cursor: pointer;
                 
                 & > svg {
@@ -1551,6 +1554,15 @@ export default {
             & > svg {
                 fill: var(--gray-5);
                 transition: inherit;
+            }
+
+            &.deployment-others {
+                h3 {
+                    font-size: 2rem;
+                    font-weight: 600;
+                    letter-spacing: -.01em;
+                    margin-left: 1rem;
+                }
             }
         }
     }
