@@ -110,7 +110,7 @@
                         customHeight="29"                   
                         name="deployment-others" 
                         iconset="svg-map-server"/>
-                        <h3>Others...</h3>
+                        <h3>More...</h3>
                 </a>
             
             </div>
@@ -1558,9 +1558,8 @@ export default {
 
             &.deployment-others {
                 h3 {
-                    font-size: 2rem;
-                    font-weight: 600;
-                    letter-spacing: -.01em;
+                    font-size: 1.9rem;
+                    font-weight: var(--font-weight-semibold);
                     margin-left: 1rem;
                 }
             }

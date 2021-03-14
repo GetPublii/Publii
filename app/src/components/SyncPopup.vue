@@ -195,6 +195,7 @@
             <icon
                 size="s"
                 name="minimize"/>
+            <span>Minimize</span>
         </a>
     </div>
 </template>
@@ -806,41 +807,55 @@ export default {
 }
 
 .minimize-popup {
+   align-items: center;
    color: var(--icon-secondary-color);
+   display: flex;
    position: absolute;
    right: 3.2rem;
+   will-change: transform;
 
    &:active,
    &:focus,
    &:hover {
       color: var(--icon-tertiary-color);
-      transform: scale(.9);
+
+      svg {
+           transform: scale(.9);
+      }
+   }
+
+   & > svg {
+      transition: var(--transition);
+   }
+
+   & > span {
+      margin-left: .6rem;
    }
 }
 
 .overlay {
-    transition: 0.7s cubic-bezier(.17,.67,.13,1.05) all;
+    transition: 0.5s cubic-bezier(.17,.67,.13,1.05) all;
 
     &.is-minimized {
-        animation: minimized-popup .35s cubic-bezier(.17,.67,.13,1.05) .35s forwards;
+        animation: minimized-popup .25s linear .25s forwards;
+        border-radius: 10px;
         box-shadow: 0 0 160px rgba(0, 0, 0, .2);
         cursor: pointer;
-        bottom: 56px;
-        height: 50px;
+        bottom: 56px;     
         left: 0;
+        opacity: 0;
         overflow: visible;
         padding: 0;
         top: auto!important;
-        width: 240px;border-radius: 10px; 
-        transform: translate(calc(50vw - 120px), 0);  
-        z-index: 1;    
+        transform: translateY(10%) scale(.8);  
+        z-index: 1;   
   
         & .progress-message, .minimized-sync-error {
             color: white !important;
         }
     
         .popup {
-            animation: minimized-content .35s cubic-bezier(.17,.67,.13,1.05) .35s forwards;
+            animation: minimized-content .25s cubic-bezier(.17,.67,.13,1.05) .25s forwards;
             margin-top: 1.6rem;
             position: initial;
             transform: none;
@@ -848,7 +863,23 @@ export default {
         }
 
         @keyframes minimized-popup {
-            100% {transform: translate(40px, 0); height: 50px;width: 240px; box-shadow: none; border-radius: 3px; background: none;}
+           
+            50% {opacity: 0;
+                transform: translateY(10%); 
+            }
+            99% {
+                transform: translateY(10%); 
+            }
+           
+            100% {           
+                box-shadow: none; 
+                border-radius: 3px; 
+                background: none;
+                height: 50px;
+                width: 240px; 
+                opacity: 1;
+                transform: translate(40px, 0); 
+            }
         }
 
         @keyframes minimized-content {
