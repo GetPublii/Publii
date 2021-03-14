@@ -351,7 +351,7 @@ class App {
             }
 
             console.log('The app-config.json file will be created');
-            this.appConfig = {};
+            this.appConfig = JSON.parse(JSON.stringify(defaultAstAppConfig));
 
             try {
                 fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
