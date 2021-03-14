@@ -73,7 +73,6 @@
     "vue-simplemde": "^1.0.0",
     "vuedraggable": "^2.20.0",
     "vuex": "^3.1.1",
-    "wpautop": "^1.0.0",
     "xml2json": "^0.11.0"
   },
   "devDependencies": {

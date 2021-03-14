@@ -4,7 +4,7 @@ const path = require('path');
 const moment = require('moment');
 const xmlParser = require('xml2json');
 const download = require('image-downloader');
-const wpautop = require('wpautop');
+const automaticParagraphs = require('./automatic-paragraphs.js');
 const slug = require('./../../helpers/slug');
 const Author = require('./../../author.js');
 const Tag = require('./../../tag.js');
@@ -664,8 +664,8 @@ class WxrParser {
         text = text.replace(/<!--more-->/g, '<hr id="read-more" />');
 
         if(this.autop) {
-            console.log('(i) Used autop for the post content');
-            text = wpautop(text, true);
+            console.log('(i) Used automatic paragraphs for the post content');
+            text = automaticParagraphs(text);
         }
 
         return text;
