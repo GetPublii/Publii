@@ -531,11 +531,6 @@ export default {
         }, 
         startUpload: function() {
             this.renderingInProgress = false;
-
-            if (!this.isManual) {
-                this.isMinimized = true;
-            }
-
             this.uploadInProgress = true;
             this.$store.commit('setSyncStatus', true);
             this.$store.commit('setSidebarStatus', 'syncing');
