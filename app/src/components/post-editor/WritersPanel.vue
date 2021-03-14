@@ -11,7 +11,7 @@
             <dd>Sentences</dd>
             <dt id="counter-paragraphs">{{ paragraphs }}</dt>
             <dd>Paragraphs</dd>
-            <dt id="counter-reading-time"><span v-html="readingTime"></span><small>min</small></dt>
+            <dt id="counter-reading-time"><span v-pure-html="readingTime"></span><small>min</small></dt>
             <dd>Reading Time</dd>
         </dl>
     </div>

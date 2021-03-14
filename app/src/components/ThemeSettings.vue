@@ -232,7 +232,7 @@
                                     v-if="field.note && field.type !== 'separator'"
                                     slot="note"
                                     class="note"
-                                    v-html="field.note">
+                                    v-pure-html="field.note">
                                 </small>
                             </field>
                         </div>

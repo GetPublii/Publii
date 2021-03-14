@@ -7,7 +7,7 @@
         <small
             v-if="note"
             class="note"
-            v-html="note">        
+            v-pure-html="note">        
         </small>
     </div>
 </template>

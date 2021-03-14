@@ -11,7 +11,7 @@
                     name="info" />
         <p
             ref="content"
-            v-html="notification.text">
+            v-pure-html="notification.text">
         </p>
 
         <span

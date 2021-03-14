@@ -10,7 +10,7 @@
 
             <div
                 class="error-log"
-                v-html="errors"></div>
+                v-pure-html="errors"></div>
 
             <textarea spellcheck="false" ref="error-log">{{ text }}</textarea>
 

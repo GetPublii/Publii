@@ -17,7 +17,7 @@
             :class="cssClasses"
             @click.prevent.stop="syncWebsite"
         >
-            <span v-html="icon" class="sidebar-sync-link-icon"></span>
+            <span v-pure-html="icon" class="sidebar-sync-link-icon"></span>
             <span>{{ status }}</span>
         </a>
         <a 

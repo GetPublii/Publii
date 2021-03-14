@@ -4,6 +4,7 @@ import Vue from 'vue';
 import store from './store/index';
 import router from './router';
 import App from './components/App';
+import DOMPurify from 'dompurify';
 
 // Basic elements
 import Alert from './components/basic-elements/Alert';
@@ -43,6 +44,36 @@ import TextInput from './components/basic-elements/TextInput';
 import vSelect from '../node_modules/vue-multiselect/dist/vue-multiselect.min.js';
 
 window.app = null;
+
+// DOMPurify configuration
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+    // set all elements owning target to target=_blank
+    if ('target' in node) {
+        node.setAttribute('target', '_blank');
+        node.setAttribute('rel', 'noopener noreferrer');
+    }
+  
+    // set non-HTML/MathML links to xlink:show=new
+    if (!node.hasAttribute('target') && (node.hasAttribute('xlink:href') || node.hasAttribute('href'))) {
+        node.setAttribute('xlink:show', 'new');
+    }
+});
+  
+// Register v-pure-html directive
+Vue.directive('pure-html', {
+    inserted: (el, binding) => {
+        if (binding.oldValue === binding.value) {
+            return;
+        }
+        el.innerHTML = DOMPurify.sanitize(binding.value);
+    },
+    update: (el, binding) => {
+        if (binding.oldValue === binding.value) {
+            return;
+        }
+        el.innerHTML = DOMPurify.sanitize(binding.value);
+    }
+});
 
 ipcRenderer.on('app-data-loaded', function (event, initialData) {
     // Add global Vue properties for commonly used libraries

@@ -5,7 +5,7 @@
         <div class="popup">
             <p
                 :class="cssClasses"
-                v-html="message">
+                v-pure-html="message">
             </p>
 
             <text-input
