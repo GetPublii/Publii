@@ -66,8 +66,7 @@
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",
-      "node_modules/integer/**/*",
-      "licenses/LICENSES.chromium.html"
+      "node_modules/integer/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
