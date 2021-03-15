@@ -5,12 +5,21 @@
         <template v-for="(licenseData, index) in licensesData">
             <dt class="credits-item">
                 {{ licenseData.name }}
+                
                 <a
+                    v-if="licenseData.target !== '_blank'"
                     class="credits-toggle"
                     @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
+                    :href="licenseData.href">
+                    License 
+                </a>
+
+                <a
+                    v-if="licenseData.target === '_blank'"
+                    class="credits-toggle"
                     :href="licenseData.href"
-                    :target="licenseData.target">
-                    License
+                    target="_blank">
+                    License 
                 </a>
 
                 <a
@@ -75,7 +84,7 @@ export default {
             });
 
             ipcRenderer.once('app-license-loaded', function(event, licenseText) {
-                link.parentNode.nextElementSibling.querySelector('pre').innerHTML = licenseText;
+                link.parentNode.nextElementSibling.querySelector('pre').innerText = licenseText;
             });
         },
         parseLicense: function(licenseKey, licenseID) {
@@ -96,7 +105,7 @@ export default {
 
             if(this.licenses[licenseKey]['helper-text']) {
                 let appDirPath = remote.app.getAppPath();
-                licenseUrl = 'file:///' + appDirPath + '/' + this.licenses[licenseKey].url;
+                licenseUrl = 'file://' + appDirPath + '/' + this.licenses[licenseKey].url;
                 licenseHomepage = false;
                 licenseExternal = true;
                 licenseHref = licenseUrl;
