@@ -2,7 +2,7 @@
    <header class="top" id="js-header">
       <a class="logo" href="{{@website.url}}">
          {{#if @website.logo}}
-            <img src="{{@website.logo}}" alt="{{@website.name}}">
+            <img src="{{@website.logo}}" alt="{{@website.name}}" width="{{@website.logoSize.width}}" height="{{@website.logoSize.height}}">
          {{else}}
             {{@website.name}}
          {{/if}}
