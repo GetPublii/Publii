@@ -213,6 +213,28 @@
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160"></text-area>
                         </label>
+
+                        <label>
+                            Meta robots index:
+                            <dropdown
+                                v-if="!tagData.additionalData.canonicalUrl"
+                                id="tag-meta-robots"
+                                v-model="tagData.additionalData.metaRobots"
+                                :items="metaRobotsOptions">
+                            </dropdown>
+                            <div v-else>
+                                <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                            </div>
+                        </label>
+
+                        <label>
+                            Canonical URL:
+                            <input
+                                type="text"
+                                v-model="tagData.additionalData.canonicalUrl"
+                                spellcheck="false"
+                                placeholder="Leave blank to use a default tag page URL" />
+                        </label>
                     </div>
                 </div>
             </div>
@@ -326,7 +348,9 @@ export default {
                     featuredImage: '',
                     featuredImageAlt: '',
                     featuredImageCaption: '',
-                    featuredImageCredits: ''
+                    featuredImageCredits: '',
+                    metaRobots: '',
+                    canonicalUrl: ''
                 }
             }
         };
@@ -362,6 +386,15 @@ export default {
         },
         currentThemeHasAuthorTemplates: function() {
             return Object.keys(this.authorTemplates).length > 1;
+        },
+        metaRobotsOptions () {
+            return {
+                '': 'Use site global settings',
+                'index, follow': 'index, follow',
+                'index, nofollow': 'index, nofollow',
+                'noindex, follow': 'noindex, follow',
+                'noindex, nofollow': 'noindex, nofollow'
+            };
         }
     },
     mounted () {
@@ -395,6 +428,8 @@ export default {
             this.authorData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
             this.authorData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
             this.authorData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
+            this.authorData.additionalData.metaRobots = params.additionalData.metaRobots || '';
+            this.authorData.additionalData.canonicalUrl = params.additionalData.canonicalUrl || '';
 
             if (this.authorData.additionalData && this.authorData.additionalData.featuredImage) {
                 this.hasFeaturedImage = true;

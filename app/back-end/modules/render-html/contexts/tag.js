@@ -96,10 +96,13 @@ class RendererContextTag extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.tagMetaTitle.replace(/%tagname/g, this.tag.name)
                                                               .replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.tagMetaDescription;
+        this.metaRobots = false;
+        this.hasCustomCanonicalUrl = false;
+        this.canonicalUrl = '';
 
         let metaData = this.tag.additionalData;
 
-        if(metaData && metaData.metaTitle) {
+        if (metaData && metaData.metaTitle) {
             this.metaTitle = metaData.metaTitle.replace(/%tagname/g, this.tag.name)
                                                .replace(/%sitename/g, siteName);
         }
@@ -115,6 +118,16 @@ class RendererContextTag extends RendererContext {
         if (this.metaDescription === '') {
             this.metaDescription = this.siteConfig.advanced.metaDescription;
         }
+
+        if (metaData && metaData.metaRobots) {
+            this.metaRobots = metaData.metaRobots;
+        }
+
+        if (metaData && metaData.canonicalUrl) {
+            this.canonicalUrl = metaData.canonicalUrl;
+            this.hasCustomCanonicalUrl = true;
+            this.metaRobots = '';
+        }
     }
 
     setContext() {
@@ -123,7 +136,11 @@ class RendererContextTag extends RendererContext {
 
         let metaRobotsValue = this.siteConfig.advanced.metaRobotsTags;
 
-        if(this.siteConfig.advanced.noIndexThisPage) {
+        if (this.metaRobots !== false) {
+            metaRobotsValue = this.metaRobots;
+        }
+
+        if (this.siteConfig.advanced.noIndexThisPage) {
             metaRobotsValue = 'noindex,nofollow';
         }
 
@@ -138,6 +155,8 @@ class RendererContextTag extends RendererContext {
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,
+            hasCustomCanonicalUrl: this.hasCustomCanonicalUrl,
+            canonicalUrl: this.canonicalUrl,
             siteOwner: this.renderer.cachedItems.authors[1],
             menus: this.menus,
             unassignedMenus: this.unassignedMenus

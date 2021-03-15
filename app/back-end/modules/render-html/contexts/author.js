@@ -93,15 +93,18 @@ class RendererContextAuthor extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.authorMetaTitle.replace(/%authorname/g, this.author.name)
                                                                  .replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.authorMetaDescription;
+        this.metaRobots = false;
+        this.hasCustomCanonicalUrl = false;
+        this.canonicalUrl = '';
 
         let metaData = this.author.config;
 
-        if(metaData && metaData.metaTitle) {
+        if (metaData && metaData.metaTitle) {
             this.metaTitle = metaData.metaTitle.replace(/%authorname/g, this.author.name)
                                                .replace(/%sitename/g, siteName);
         }
 
-        if(metaData && metaData.metaDescription) {
+        if (metaData && metaData.metaDescription) {
             this.metaDescription = metaData.metaDescription;
         }
 
@@ -112,6 +115,16 @@ class RendererContextAuthor extends RendererContext {
         if (this.metaDescription === '') {
             this.metaDescription = this.siteConfig.advanced.metaDescription;
         }
+
+        if (metaData && metaData.metaRobots) {
+            this.metaRobots = metaData.metaRobots;
+        }
+
+        if (metaData && metaData.canonicalUrl) {
+            this.canonicalUrl = metaData.canonicalUrl;
+            this.hasCustomCanonicalUrl = true;
+            this.metaRobots = '';
+        }
     }
 
     setContext() {
@@ -119,6 +132,10 @@ class RendererContextAuthor extends RendererContext {
         this.prepareData();
 
         let metaRobotsValue = this.siteConfig.advanced.metaRobotsAuthors;
+
+        if (this.metaRobots !== false) {
+            metaRobotsValue = this.metaRobots;
+        }
 
         if (this.siteConfig.advanced.noIndexThisPage) {
             metaRobotsValue = 'noindex,nofollow';
@@ -135,6 +152,8 @@ class RendererContextAuthor extends RendererContext {
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,
+            hasCustomCanonicalUrl: this.hasCustomCanonicalUrl,
+            canonicalUrl: this.canonicalUrl,
             siteOwner: this.renderer.cachedItems.authors[1],
             menus: this.menus,
             unassignedMenus: this.unassignedMenus
