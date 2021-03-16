@@ -217,9 +217,9 @@
                         <label>
                             Meta robots index:
                             <dropdown
-                                v-if="!tagData.additionalData.canonicalUrl"
+                                v-if="!authorData.additionalData.canonicalUrl"
                                 id="tag-meta-robots"
-                                v-model="tagData.additionalData.metaRobots"
+                                v-model="authorData.additionalData.metaRobots"
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
@@ -231,7 +231,7 @@
                             Canonical URL:
                             <input
                                 type="text"
-                                v-model="tagData.additionalData.canonicalUrl"
+                                v-model="authorData.additionalData.canonicalUrl"
                                 spellcheck="false"
                                 placeholder="Leave blank to use a default tag page URL" />
                         </label>
