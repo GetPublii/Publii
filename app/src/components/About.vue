@@ -1,35 +1,37 @@
 <template>
     <div class="about" ref="content">
-        <div class="heading">
-            <h1 class="title">
-                About Publii
-            </h1>
+        <div class="about-wrapper">
+            <div class="heading">
+                <h1 class="title">
+                    About Publii
+                </h1>
 
-            <p-button
-                :onClick="goBack"
-                type="outline"
-                slot="buttons">
-                Go back
-            </p-button>
+                <p-button
+                    :onClick="goBack"
+                    type="outline"
+                    slot="buttons">
+                    Go back
+                </p-button>
+            </div>
+
+            <p class="about-version">
+                v.{{ appVersion.version }} (build {{ appVersion.build }})
+            </p>
+
+            <p class="about-copyright">
+                Copyright 2021 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
+                Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>
+                Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
+            </p>
+
+            <p>
+                <strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track,  we do not allow third parties to collect personally identifiable information about you. 
+            </p>
+
+            <p>
+                <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">Licensing information</a>
+            </p>
         </div>
-
-        <p class="about-version">
-            v.{{ appVersion.version }} (build {{ appVersion.build }})
-        </p>
-
-        <p class="about-copyright">
-            Copyright 2021 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
-            Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>
-            Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
-        </p>
-
-        <p>
-            <strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track,  we do not allow third parties to collect personally identifiable information about you. 
-        </p>
-
-        <p>
-            <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">Licensing information</a>
-        </p>
     </div>
 </template>
 
@@ -60,11 +62,15 @@ export default {
 
 .about {
     color: var(--text-light-color);
-    margin: 0 auto;
-    max-width: $wrapper;
     padding: 4.4rem 0;
+    width: 100%;
 
-    & > .heading {
+    &-wrapper {
+        margin: 0 auto;
+        max-width: $wrapper;
+    }
+
+    .heading {
         margin-bottom: 10 * $spacing;
         width: 100%;
 

@@ -266,11 +266,15 @@ export default {
 #app {
     & > .topbar + section {
         height: calc(100vh - var(--topbar-height));
-        overflow: auto;
-        position: absolute;
-        top: var(--topbar-height);
+        margin-top: var(--topbar-height);
         width: 100%;
-        z-index: 1;
+
+        & > * {
+            height: calc(100vh - var(--topbar-height));
+            overflow: auto;
+            position: absolute;
+            width: 100%;
+        }
     }
 
     a {
@@ -298,6 +302,10 @@ body[data-os="linux"] {
         & > .topbar + section {
             height: 100vh;
             top: 0;
+
+            & > * {
+                height: 100vh;
+            }
         }
     }
 

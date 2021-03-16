@@ -1,242 +1,244 @@
 <template>
     <section class="settings site-settings-app">
-        <p-header title="App Settings">
-            <p-button
-                :onClick="goBack"
-                type="outline"
-                slot="buttons">
-                Go back
-            </p-button>
+        <div class="settings-wrapper">
+            <p-header title="App Settings">
+                <p-button
+                    :onClick="goBack"
+                    type="outline"
+                    slot="buttons">
+                    Go back
+                </p-button>
 
-            <p-button
-                :onClick="checkBeforeSave"
-                slot="buttons">
-                Save Settings
-            </p-button>
-        </p-header>
+                <p-button
+                    :onClick="checkBeforeSave"
+                    slot="buttons">
+                    Save Settings
+                </p-button>
+            </p-header>
 
-        <fields-group title="Basic Settings">
-            <field
-                id="theme"
-                label="Color theme">
-                <dropdown
-                    slot="field"
+            <fields-group title="Basic Settings">
+                <field
+                    id="theme"
+                    label="Color theme">
+                    <dropdown
+                        slot="field"
+                        id="start"
+                        v-model="theme"
+                        :items="availableColorSchemes"></dropdown>
+                </field>
+                
+                <field
                     id="start"
-                    v-model="theme"
-                    :items="availableColorSchemes"></dropdown>
-            </field>
-            
-            <field
-                id="start"
-                label="Load at start:">
-                <dropdown
-                    slot="field"
-                    id="start"
-                    v-model="screensSelected"
-                    :items="screens"></dropdown>
-            </field>
+                    label="Load at start:">
+                    <dropdown
+                        slot="field"
+                        id="start"
+                        v-model="screensSelected"
+                        :items="screens"></dropdown>
+                </field>
 
-            <field
-                id="time-format"
-                label="Time format:">
-                <dropdown
-                    slot="field"
+                <field
                     id="time-format"
-                    :items="timeFormats"
-                    v-model="timeFormatsSelected"></dropdown>
-            </field>
+                    label="Time format:">
+                    <dropdown
+                        slot="field"
+                        id="time-format"
+                        :items="timeFormats"
+                        v-model="timeFormatsSelected"></dropdown>
+                </field>
 
-            <field
-                id="images-resize-engine"
-                label="Images resize engine:">
-                <dropdown
-                    slot="field"
+                <field
                     id="images-resize-engine"
-                    :items="imageResizeEngines"
-                    v-model="imageResizeEnginesSelected"></dropdown>
-                <small
-                    slot="note"
-                    class="note">
-                    The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.
-                </small>
-            </field>
+                    label="Images resize engine:">
+                    <dropdown
+                        slot="field"
+                        id="images-resize-engine"
+                        :items="imageResizeEngines"
+                        v-model="imageResizeEnginesSelected"></dropdown>
+                    <small
+                        slot="note"
+                        class="note">
+                        The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.
+                    </small>
+                </field>
 
-            <field
-                id="close-editor-on-save"
-                label="Close post editor on save"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="close-editor-on-save"
-                    v-model="closeEditorOnSave" />
-            </field>
+                    label="Close post editor on save"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="close-editor-on-save"
+                        v-model="closeEditorOnSave" />
+                </field>
 
-            <field
-                id="always-save-search-state"
-                label="Always save search state"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="always-save-search-state"
-                    v-model="alwaysSaveSearchState" />
-                <span
-                    slot="note"
-                    class="note">
-                    When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
-                </span>
-            </field>
+                    label="Always save search state"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="always-save-search-state"
+                        v-model="alwaysSaveSearchState" />
+                    <span
+                        slot="note"
+                        class="note">
+                        When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
+                    </span>
+                </field>
 
-            <field
-                id="show-modification-date-as-column"
-                label="Show modification date as column"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="show-modification-date-as-column"
-                    v-model="showModificationDateAsColumn" />
-            </field>
+                    label="Show modification date as column"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-modification-date-as-column"
+                        v-model="showModificationDateAsColumn" />
+                </field>
 
-            <field
-                id="show-post-slugs"
-                label="Show post slugs on the listing"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="show-post-slugs"
-                    v-model="showPostSlugs" />
-            </field>
+                    label="Show post slugs on the listing"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-post-slugs"
+                        v-model="showPostSlugs" />
+                </field>
 
-            <field
-                id="open-devtools-in-main"
-                label="Open DevTools automatically in the Main Window"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="open-devtools-in-main"
-                    v-model="openDevToolsInMainWindow" />
-            </field>
+                    label="Open DevTools automatically in the Main Window"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="open-devtools-in-main"
+                        v-model="openDevToolsInMainWindow" />
+                </field>
 
-            <field
-                id="wide-scrollbars"
-                label="Use wider scrollbars"
-                :labelSeparated="false">
-                <switcher
-                    slot="field"
+                <field
                     id="wide-scrollbars"
-                    v-model="wideScrollbars" />
-            </field>
-        </fields-group>
+                    label="Use wider scrollbars"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="wide-scrollbars"
+                        v-model="wideScrollbars" />
+                </field>
+            </fields-group>
 
-        <fields-group title="Files location">
-            <field
-                id="sites-location"
-                label="Sites location">
-                <dir-select
+            <fields-group title="Files location">
+                <field
                     id="sites-location"
-                    placeholder="Leave blank to use default sites directory"
-                    v-model="locations.sites"
-                    :readonly="syncInProgress"
-                    slot="field" />
-                <small
-                    v-if="syncInProgress"
-                    slot="note"
-                    class="note">
-                    During sync process you cannot change files location.
-                </small>
-                <small
-                    v-if="locations.sites !== '' && !checkSitesCatalog"
-                    slot="note"
-                    class="note is-invalid">
-                    Selected directory does not exist.
-                </small>
-            </field>
+                    label="Sites location">
+                    <dir-select
+                        id="sites-location"
+                        placeholder="Leave blank to use default sites directory"
+                        v-model="locations.sites"
+                        :readonly="syncInProgress"
+                        slot="field" />
+                    <small
+                        v-if="syncInProgress"
+                        slot="note"
+                        class="note">
+                        During sync process you cannot change files location.
+                    </small>
+                    <small
+                        v-if="locations.sites !== '' && !checkSitesCatalog"
+                        slot="note"
+                        class="note is-invalid">
+                        Selected directory does not exist.
+                    </small>
+                </field>
 
-            <field
-                id="backups-location"
-                label="Backup location">
-                <dir-select
+                <field
                     id="backups-location"
-                    placeholder="Leave blank to use default backups directory"
-                    v-model="locations.backups"
-                    :readonly="syncInProgress"
-                    slot="field" />
-                <small
-                    v-if="syncInProgress"
-                    slot="note"
-                    class="note">
-                    During sync process you cannot change files location.
-                </small>
-                <small
-                    v-if="locations.backups !== '' && !checkBackupsCatalog"
-                    slot="note"
-                    class="note is-invalid">
-                    Selected directory does not exist.
-                </small>
-            </field>
+                    label="Backup location">
+                    <dir-select
+                        id="backups-location"
+                        placeholder="Leave blank to use default backups directory"
+                        v-model="locations.backups"
+                        :readonly="syncInProgress"
+                        slot="field" />
+                    <small
+                        v-if="syncInProgress"
+                        slot="note"
+                        class="note">
+                        During sync process you cannot change files location.
+                    </small>
+                    <small
+                        v-if="locations.backups !== '' && !checkBackupsCatalog"
+                        slot="note"
+                        class="note is-invalid">
+                        Selected directory does not exist.
+                    </small>
+                </field>
 
-            <field
-                id="preview-location"
-                label="Preview location">
-                <dir-select
+                <field
                     id="preview-location"
-                    placeholder="Leave blank to use default preview directory"
-                    v-model="locations.preview"
-                    :readonly="syncInProgress"
-                    slot="field" />
-                <small
-                    v-if="syncInProgress"
-                    slot="note"
-                    class="note">
-                    During sync process you cannot change files location.
-                </small>
-                <small
-                    v-if="locations.preview !== '' && !checkPreviewCatalog"
-                    slot="note"
-                    class="note is-invalid">
-                    Selected directory does not exist.
-                </small>
-            </field>
-        </fields-group>
+                    label="Preview location">
+                    <dir-select
+                        id="preview-location"
+                        placeholder="Leave blank to use default preview directory"
+                        v-model="locations.preview"
+                        :readonly="syncInProgress"
+                        slot="field" />
+                    <small
+                        v-if="syncInProgress"
+                        slot="note"
+                        class="note">
+                        During sync process you cannot change files location.
+                    </small>
+                    <small
+                        v-if="locations.preview !== '' && !checkPreviewCatalog"
+                        slot="note"
+                        class="note is-invalid">
+                        Selected directory does not exist.
+                    </small>
+                </field>
+            </fields-group>
 
-        <fields-group title="Default ordering on lists">
-            <field
-                id="posts-ordering"
-                label="Default posts ordering:">
-                <dropdown
-                    slot="field"
+            <fields-group title="Default ordering on lists">
+                <field
                     id="posts-ordering"
-                    :items="orderingPostItems"
-                    v-model="postsOrdering"></dropdown>
-            </field>
+                    label="Default posts ordering:">
+                    <dropdown
+                        slot="field"
+                        id="posts-ordering"
+                        :items="orderingPostItems"
+                        v-model="postsOrdering"></dropdown>
+                </field>
 
-            <field
-                id="tags-ordering"
-                label="Default tags ordering:">
-                <dropdown
-                    slot="field"
+                <field
                     id="tags-ordering"
-                    :items="orderingTagItems"
-                    v-model="tagsOrdering"></dropdown>
-            </field>
+                    label="Default tags ordering:">
+                    <dropdown
+                        slot="field"
+                        id="tags-ordering"
+                        :items="orderingTagItems"
+                        v-model="tagsOrdering"></dropdown>
+                </field>
 
-            <field
-                id="authors-ordering"
-                label="Default authors ordering:">
-                <dropdown
-                    slot="field"
+                <field
                     id="authors-ordering"
-                    :items="orderingAuthorItems"
-                    v-model="authorsOrdering"></dropdown>
-            </field>
-        </fields-group>
+                    label="Default authors ordering:">
+                    <dropdown
+                        slot="field"
+                        id="authors-ordering"
+                        :items="orderingAuthorItems"
+                        v-model="authorsOrdering"></dropdown>
+                </field>
+            </fields-group>
 
-        <p-footer>
-            <p-button
-                :onClick="checkBeforeSave"
-                slot="buttons">
-                Save Settings
-            </p-button>
-        </p-footer>
+            <p-footer>
+                <p-button
+                    :onClick="checkBeforeSave"
+                    slot="buttons">
+                    Save Settings
+                </p-button>
+            </p-footer>
+        </div>
     </section>
 </template>
 
@@ -517,8 +519,13 @@ export default {
 
 .settings {
     margin: 0 auto;
-    max-width: $wrapper;
     padding: 4.4rem 0;
     user-select: none;
+    width: 100%;
+
+    &-wrapper {
+        margin: 0 auto;
+        max-width: $wrapper;
+    }
 }
 </style>

@@ -1,22 +1,24 @@
 <template>
     <div class="credits">
-        <div class="heading">
-            <h1 class="title">
-                Credits
-            </h1>
+        <div class="credits-wrapper">
+            <div class="heading">
+                <h1 class="title">
+                    Credits
+                </h1>
 
-            <p-button
-                :onClick="goBack"
-                type="outline"
-                slot="buttons">
-                Go back
-            </p-button>
+                <p-button
+                    :onClick="goBack"
+                    type="outline"
+                    slot="buttons">
+                    Go back
+                </p-button>
+            </div>
+
+            <p class="credits-intro">Publii uses the following third-party Open Source Software:</p>
+
+            <credits-list
+                :licenses="licenses" />
         </div>
-
-        <p class="credits-intro">Publii uses the following third-party Open Source Software:</p>
-
-        <credits-list
-            :licenses="licenses" />
     </div>
 </template>
 
@@ -54,11 +56,15 @@ export default {
 @import '../scss/mixins.scss';
 
 .credits {
-    margin: 0 auto;
-    max-width: $wrapper;
     padding: 4.4rem 0;
+    width: 100%;
 
-    & > .heading {
+    &-wrapper {
+        margin: 0 auto;
+        max-width: $wrapper;
+    }
+
+    .heading {
         margin-bottom: 10 * $spacing;
         width: 100%;
 

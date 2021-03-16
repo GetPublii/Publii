@@ -1,22 +1,24 @@
 <template>
     <section class="settings site-settings-app">
-        <p-header title="Themes">
-            <p-button
-                :onClick="goBack"
-                type="outline"
-                slot="buttons">
-                Go back
-            </p-button>
+        <div class="settings-wrapper">
+            <p-header title="Themes">
+                <p-button
+                    :onClick="goBack"
+                    type="outline"
+                    slot="buttons">
+                    Go back
+                </p-button>
 
-            <p-button
-                :onClick="installTheme"
-                slot="buttons">
-                Install theme
-            </p-button>
-        </p-header>
+                <p-button
+                    :onClick="installTheme"
+                    slot="buttons">
+                    Install theme
+                </p-button>
+            </p-header>
 
-        <div ref="content">
-            <themes-list />
+            <div ref="content">
+                <themes-list />
+            </div>
         </div>
     </section>
 </template>
@@ -100,8 +102,12 @@ export default {
 @import '../scss/variables.scss';
 
 .settings {
-    margin: 0 auto;
-    max-width: $wrapper;
     padding: 4.4rem 0;
+    width: 100%;
+
+    &-wrapper {
+        margin: 0 auto;
+        max-width: $wrapper;
+    }
 }
 </style>
