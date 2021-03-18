@@ -125,7 +125,11 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                 };
             }
 
-            jsonLDObject['description'] = context.data.root.post.excerpt;
+            if (context.data.root.metaDescriptionRaw) {
+                jsonLDObject['description'] = context.data.root.metaDescriptionRaw.replace(/"/g, "'");
+            } else {
+                jsonLDObject['description'] = context.data.root.post.excerpt;
+            }
 
             if (context.data.root.post.author && context.data.root.post.author.name) {
                 jsonLDObject['author'] = {
