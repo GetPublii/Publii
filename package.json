@@ -125,12 +125,14 @@
   },
   "deb": {
     "depends": [
+      "libnode64",
       "libsecret-1-dev",
       "gnome-keyring"
     ]
   },
   "rpm": {
     "depends": [
+      "libnode64",
       "libsecret-devel",
       "gnome-keyring"
     ]

@@ -301,6 +301,7 @@ body[data-os="linux"] {
     #app {
         & > .topbar + section {
             height: 100vh;
+            margin-top: 0;
             top: 0;
 
             & > * {
