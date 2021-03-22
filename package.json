@@ -66,7 +66,8 @@
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",
-      "node_modules/integer/**/*"
+      "node_modules/integer/**/*",
+      "node_modules/node-expat/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
@@ -125,14 +126,12 @@
   },
   "deb": {
     "depends": [
-      "libnode64",
       "libsecret-1-dev",
       "gnome-keyring"
     ]
   },
   "rpm": {
     "depends": [
-      "libnode64",
       "libsecret-devel",
       "gnome-keyring"
     ]
