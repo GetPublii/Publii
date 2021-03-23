@@ -21,6 +21,10 @@ function automaticParagraphs (inputText) {
     inputText = inputText + "\n\n";
 
     for (let i = 0; i < rules.length; i++) {
+        if (!rules[i]) {
+            continue;
+        }
+        
         inputText = inputText.replace(rules[i][0], rules[i][1]);
     }
   

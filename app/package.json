@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.38.0",
+  "version": "0.38.1",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "delete-empty": "^3.0.0",
     "dompurify": "^2.2.7",
     "fast-memoize": "^2.2.7",
+    "fast-xml-parser": "^3.19.0",
     "file-exists": "^1.0.0",
     "fs-extra": "^8.0.1",
     "ftp": "^0.3.10",
@@ -73,8 +74,7 @@
     "vue-router": "^3.0.6",
     "vue-simplemde": "^1.0.0",
     "vuedraggable": "^2.20.0",
-    "vuex": "^3.1.1",
-    "xml2json": "^0.11.0"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "devtron": "^1.4.0",
