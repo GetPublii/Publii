@@ -502,7 +502,11 @@ class Image extends Model {
      * Check if the image has supported image extension
      */
     allowedImageExtension(extension) {
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
+        let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
+
+        if (process.platform === 'linux' || this.shouldUseJimp()) {
+            allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
+        }
 
         return allowedExtensions.indexOf(extension) > -1;
     }

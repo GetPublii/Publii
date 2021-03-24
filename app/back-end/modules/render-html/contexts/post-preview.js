@@ -496,10 +496,18 @@ class RendererContextPostPreview extends RendererContext {
                 if(
                     ContentHelper.getContentImageSrcset(url, self.themeConfig) !== false &&
                     !(
-                        url.toLowerCase().indexOf('.jpg') === -1 &&
-                        url.toLowerCase().indexOf('.jpeg') === -1 &&
-                        url.toLowerCase().indexOf('.png') === -1 && 
-                        url.toLowerCase().indexOf('.webp') === -1
+                        (
+                            process.platform !== 'linux' &&
+                            url.toLowerCase().indexOf('.jpg') === -1 &&
+                            url.toLowerCase().indexOf('.jpeg') === -1 &&
+                            url.toLowerCase().indexOf('.png') === -1 && 
+                            url.toLowerCase().indexOf('.webp') === -1
+                        ) || (
+                            process.platform === 'linux' &&
+                            url.toLowerCase().indexOf('.jpg') === -1 &&
+                            url.toLowerCase().indexOf('.jpeg') === -1 &&
+                            url.toLowerCase().indexOf('.png') === -1
+                        )
                     ) &&
                     url.toLowerCase().indexOf('/gallery/') === -1
                 ) {
