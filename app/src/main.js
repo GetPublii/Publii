@@ -3,8 +3,12 @@ import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
 import router from './router';
+import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
+
+// Languages
+import Translations from './langs/loader.js';
 
 // Basic elements
 import Alert from './components/basic-elements/Alert';
@@ -44,6 +48,33 @@ import TextInput from './components/basic-elements/TextInput';
 import vSelect from '../node_modules/vue-multiselect/dist/vue-multiselect.min.js';
 
 window.app = null;
+
+// i18n
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+    locale: 'pl',
+    messages: Translations,
+    pluralizationRules: {
+      'pl': function (choice, choicesLength) {
+        if (choice === 0) {
+          return 0;
+        }
+        const teen = choice > 10 && choice < 20;
+        const endsWithOne = choice % 10 === 1;
+        if (choicesLength < 4) {
+          return (!teen && endsWithOne) ? 1 : 2;
+        }
+        if (!teen && endsWithOne) {
+          return 1;
+        }
+        if (!teen && choice % 10 >= 2 && choice % 10 <= 4) {
+          return 2;
+        }
+        return (choicesLength < 4) ? 2 : 3;
+      }
+    }
+  });
 
 // DOMPurify configuration
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
@@ -123,6 +154,7 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
     window.app = new Vue({
         el: '#app',
         store,
+        i18n,
         router,
         render: h => h(App, {
             attrs: {

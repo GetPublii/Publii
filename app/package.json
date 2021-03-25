@@ -70,6 +70,7 @@
     "unzipper": "^0.9.10",
     "vue": "^2.6.11",
     "vue-color": "^2.4.5",
+    "vue-i18n": "^8.24.2",
     "vue-multiselect": "^2.0.8",
     "vue-router": "^3.0.6",
     "vue-simplemde": "^1.0.0",
