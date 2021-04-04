@@ -29,35 +29,35 @@ export default {
 
             return [{
                 icon: 'posts',
-                label: 'Posts',
+                label: this.$t('ui.posts'),
                 url: '/site/' + siteName + '/posts/'
             }, {
                 icon: 'tags',
-                label: 'Tags',
+                label: this.$t('ui.tags'),
                 url: '/site/' + siteName + '/tags/'
             }, {
                 icon: 'menus',
-                label: 'Menus',
+                label: this.$t('ui.menus'),
                 url: '/site/' + siteName + '/menus/'
             }, {
                 icon: 'authors',
-                label: 'Authors',
+                label: this.$t('ui.authors'),
                 url: '/site/' + siteName + '/authors/'
             }, {
                 icon: 'themes',
-                label: 'Theme',
+                label: this.$t('ui.theme'),
                 url: '/site/' + siteName + '/settings/themes/'
             }, {
                 icon: 'settings',
-                label: 'Site settings',
+                label: this.$t('ui.siteSettings'),
                 url: '/site/' + siteName + '/settings/'
             }, {
                 icon: 'server',
-                label: 'Server',
+                label: this.$t('ui.server'),
                 url: '/site/' + siteName + '/settings/server/'
             }, {
                 icon: 'tools',
-                label: 'Tools',
+                label: this.$t('ui.tools'),
                 url: '/site/' + siteName + '/tools/'
             }];
         }
@@ -102,7 +102,7 @@ export default {
         margin: 0 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: 0.85rem 0.8rem;   
+        padding: 0.85rem 0.8rem;
         transition: var(--transition);
 
         &:active,
@@ -111,9 +111,9 @@ export default {
             background: var(--sidebar-link-hover-bg);
             color: var(--sidebar-link-hover-color);
             opacity: 1;
-            
+
             svg {
-               fill: var(--sidebar-link-icon-hover);       
+               fill: var(--sidebar-link-icon-hover);
             }
         }
     }
