@@ -13,7 +13,6 @@ npm-debug.log
 /app/dist/*.png
 /app/dist/*.svg
 /app/dist/*.node
-/app/npm.txt
 !/app/dist/index.html
 !/app/dist/editor-webview-preload.js
 /dist
