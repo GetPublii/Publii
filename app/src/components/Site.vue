@@ -11,10 +11,9 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import SiteAddForm from './SiteAddForm';
 import Sidebar from './Sidebar';
-const mainProcess = remote.require('./main.js');
 
 export default {
     name: 'site',

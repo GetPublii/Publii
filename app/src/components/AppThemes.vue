@@ -24,8 +24,7 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
+import { ipcRenderer } from 'electron';
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -58,8 +57,8 @@ export default {
                 }
             }
         },
-        installTheme () {
-            mainProcess.selectFile('file-select');
+        async installTheme () {
+            await ipcRenderer.invoke('app-main-process-select-file', 'file-select');
 
             ipcRenderer.once('app-file-selected', (event, data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {

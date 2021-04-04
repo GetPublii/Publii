@@ -317,10 +317,9 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils';
 import crypto from 'crypto';
-const mainProcess = remote.require('./main.js');
 
 export default {
     name: 'author-form-sidebar',
@@ -437,11 +436,11 @@ export default {
         });
     },
     methods: {
-        save (showPreview = false) {
+        async save (showPreview = false) {
             if (this.authorData.username === '') {
-                this.authorData.username = mainProcess.slug(this.authorData.name);
+                this.authorData.username = await ipcRenderer.invoke('app-main-process-create-slug', this.authorData.name);
             } else {
-                this.authorData.username = mainProcess.slug(this.authorData.username);
+                this.authorData.username = await ipcRenderer.invoke('app-main-process-create-slug', this.authorData.username);
             }
 
             let authorData = {
@@ -464,8 +463,8 @@ export default {
 
             this.saveData(authorData, showPreview);
         },
-        saveAndPreview () {
-            this.save(true);
+        async saveAndPreview () {
+            await this.save(true);
         },
         saveData(authorData, showPreview = false) {
             // Send form data to the back-end

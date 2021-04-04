@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'search-popup',
@@ -55,14 +55,14 @@ export default {
         }
     },
     mounted () {
-        document.querySelector('webview').addEventListener('dom-ready', () => {
+        /*document.querySelector('webview').addEventListener('dom-ready', () => {
             this.webviewContents = remote.webContents.fromId(document.querySelector('webview').getWebContentsId());
 
             document.querySelector('webview').addEventListener('found-in-page', e => {
                 this.currentResultIndex = e.result.activeMatchOrdinal;
                 this.resultsCount = e.result.matches;
             });
-        });
+        });*/
 
         ipcRenderer.on('app-show-search-form', this.showSearch);
         this.$bus.$on('app-show-search-form', this.showSearch);

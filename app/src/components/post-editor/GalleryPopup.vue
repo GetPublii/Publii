@@ -135,9 +135,8 @@
 
 <script>
 import Vue from 'vue';
-import { remote, ipcRenderer} from 'electron';
+import { ipcRenderer} from 'electron';
 import Draggable from 'vuedraggable';
-const mainProcess = remote.require('./main');
 
 export default {
     name: 'gallery-popup',
@@ -164,7 +163,7 @@ export default {
         }
     },
     mounted () {
-        this.$bus.$on('update-gallery-popup', config => {
+        this.$bus.$on('update-gallery-popup', async (config) => {
             this.postID = config.postID;
             this.galleryElement = config.galleryElement;
             this.isVisible = true;
@@ -175,13 +174,13 @@ export default {
             this.parseInputElement();
 
             if (!this.images.length) {
-                this.addImages();
+                await this.addImages();
             }
         });
     },
     methods: {
-        addImages () {
-            mainProcess.selectFiles(false, [
+        async addImages () {
+            await ipcRenderer.invoke('app-main-process-select-files', false, [
                 {
                     name: 'Images',
                     extensions: ['jpg', 'jpeg', 'png']

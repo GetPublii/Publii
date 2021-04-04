@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { remote } from 'electron';
 import { mapGetters } from 'vuex';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
@@ -33,8 +32,7 @@ import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SubscriptionPopup from './SubscriptionPopup';
-const mainProcess = remote.require('./main');
-const Menu = remote.Menu;
+// const Menu = remote.Menu;
 
 export default {
     name: 'app',
@@ -75,10 +73,10 @@ export default {
             return this.$store.state.app.config.wideScrollbars;
         }
     },
-    mounted: function() {
+    async mounted () {
         // Setup app
         this.disableDragNDrop();
-        this.setEnvironmentInfo();
+        await this.setEnvironmentInfo();
         this.setState();
         this.setupMenu();
         this.integrateTopBar();
@@ -90,40 +88,40 @@ export default {
 
         this.$bus.$on('license-accepted', this.showInitialScreen);
     },
-    beforeDestroy: function() {
+    beforeDestroy () {
         this.$bus.$off('license-accepted');
         ipcRenderer.removeAllListeners('app-license-accepted');
     },
     methods: {
         // Block drag'n'drop redirects
-        disableDragNDrop: function() {
+        disableDragNDrop () {
             document.addEventListener('dragover', event => event.preventDefault());
             document.addEventListener('drop', event => event.preventDefault());
         },
 
         // Add to <body> additional informations
-        setEnvironmentInfo: function() {
+        async setEnvironmentInfo () {
             document.body.setAttribute('data-node-version', process.versions.node);
             document.body.setAttribute('data-chrome-version', process.versions.chrome);
             document.body.setAttribute('data-electron-version', process.versions.electron);
             document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
-            document.documentElement.setAttribute('data-is-osx-11-or-higher', mainProcess.isOSX11orHigher());
+            document.documentElement.setAttribute('data-is-osx-11-or-higher', await ipcRenderer.invoke('app-main-process-is-osx11-or-higher'));
             document.body.setAttribute('data-env', process.env.NODE_ENV);
         },
 
         // Set initial application state tree
-        setState: function() {
+        setState () {
             this.$store.commit('init', this.initialData);
         },
 
         // Disable refresh shortcuts and Dev Tools shortcuts
-        setupMenu: function() {
+        setupMenu () {
             if (process.env.NODE_ENV === 'development') {
                 return;
             }
 
             if (process.platform === 'linux') {
-                Menu.setApplicationMenu(null);
+                // Menu.setApplicationMenu(null);
                 return;
             }
 
@@ -137,7 +135,9 @@ export default {
                 }, {
                     label: "Quit",
                     accelerator: "CmdOrCtrl+Q",
-                    click: () => { mainProcess.quitApp() }
+                    click: async () => { 
+                        await ipcRenderer.invoke('app-main-process-quit-app') 
+                    }
                 }]
             }, {
                 label: "Edit",
@@ -178,8 +178,8 @@ export default {
                 ]
             }];
 
-            const menu = Menu.buildFromTemplate(template);
-            Menu.setApplicationMenu(menu);
+            // const menu = Menu.buildFromTemplate(template);
+            // Menu.setApplicationMenu(menu);
         },
 
         // Show site screen when there is only one website

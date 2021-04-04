@@ -78,94 +78,94 @@ electronApp.on('ready', function () {
     ipcMain.handle('app-credits-list:get-app-path', () => {
         return electronApp.getAppPath();
     });
-});
 
-// Export function to quit the app from the application menu on macOS
-exports.quitApp = function () {
-    electronApp.quit();
-};
-
-// Export OS version
-exports.isOSX11orHigher = function () {
-    let version = parseInt(os.release().split('.')[0], 10);
-    
-    if (process.platform === 'darwin' && version >= 20) {
-        return true;
-    }
-
-    return false;
-};
-
-// Use Electron API to display directory selection dialog
-exports.selectDirectory = function(fieldName = false) {
-    let mainWindowHandler = appInstance.getMainWindow();
-
-    dialog.showOpenDialog(mainWindowHandler, {
-        properties: ['openDirectory']
-    }).then(selectedPath => {
-        mainWindowHandler.webContents.send('app-directory-selected', {
-            path: selectedPath,
-            fieldName: fieldName
-        });
+    // Use Electron API to create slugs
+    ipcMain.handle('app-main-process-create-slug', (event, input) => {
+        return createSlug(input);
     });
-};
 
-// Use Electron API to display file selection dialog
-exports.selectFile = function(fieldName = false) {
-    let mainWindowHandler = appInstance.getMainWindow();
+    // Load password from Keytar
+    ipcMain.handle('app-main-process-load-password', async (event, type, passwordKey) => {
+        if (passwordKey.indexOf(type) === 0) {
+            let passwordData = passwordKey.split(' ');
+            let service = passwordData[0];
+            let account = passwordData[1];
+            let retrievedPassword = '';
 
-    dialog.showOpenDialog(mainWindowHandler, {
-        properties: ['openFile', 'showHiddenFiles']
-    }).then(selectedPath => {
-        mainWindowHandler.webContents.send('app-file-selected', {
-            path: selectedPath,
-            fieldName: fieldName
-        });
-    });
-};
-
-// Use Electron API to display files selection dialog
-exports.selectFiles = function (fieldName = false, filters = []) {
-    let mainWindowHandler = appInstance.getMainWindow();
-
-    dialog.showOpenDialog(mainWindowHandler, {
-        properties: ['openFile', 'multiSelections'],
-        filters: filters
-    }).then(selectedPaths => {
-        mainWindowHandler.webContents.send('app-files-selected', {
-            paths: selectedPaths,
-            fieldName: fieldName
-        });
-    });
-};
-
-// Use Electron API to create slugs
-exports.slug = function (input) {
-    return createSlug(input);
-};
-
-// Load password from Keytar
-exports.loadPassword = async function (type, passwordKey) {
-    if (passwordKey.indexOf(type) === 0) {
-        let passwordData = passwordKey.split(' ');
-        let service = passwordData[0];
-        let account = passwordData[1];
-        let retrievedPassword = '';
-
-        if (passwordSafeStorage) {
-            try {
-                retrievedPassword = await passwordSafeStorage.getPassword(service, account);
-            } catch (e) {
-                console.log('(!) Cannot retrieve password via keytar');
+            if (passwordSafeStorage) {
+                try {
+                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
+                } catch (e) {
+                    console.log('(!) Cannot retrieve password via keytar');
+                }
             }
+
+            if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
+                retrievedPassword = '';
+            }
+
+            return retrievedPassword;
         }
 
-        if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
-            retrievedPassword = '';
+        return '';
+    });
+
+    // Export function to quit the app from the application menu on macOS
+    ipcMain.handle('app-main-process-quit-app', () => {
+        electronApp.quit();
+    });
+
+    // Export OS version
+    ipcMain.handle('app-main-process-is-osx11-or-higher', () => {
+        let version = parseInt(os.release().split('.')[0], 10);
+        
+        if (process.platform === 'darwin' && version >= 20) {
+            return true;
         }
 
-        return retrievedPassword;
-    }
+        return false;
+    });
 
-    return '';
-}
+    // Use Electron API to display directory selection dialog
+    ipcMain.handle('app-main-process-select-directory', (event, fieldName = false) => {
+        let mainWindowHandler = appInstance.getMainWindow();
+
+        dialog.showOpenDialog(mainWindowHandler, {
+            properties: ['openDirectory']
+        }).then(selectedPath => {
+            mainWindowHandler.webContents.send('app-directory-selected', {
+                path: selectedPath,
+                fieldName: fieldName
+            });
+        });
+    });
+
+    // Use Electron API to display file selection dialog
+    ipcMain.handle('app-main-process-select-file', (event, fieldName = false) => {
+        let mainWindowHandler = appInstance.getMainWindow();
+
+        dialog.showOpenDialog(mainWindowHandler, {
+            properties: ['openFile', 'showHiddenFiles']
+        }).then(selectedPath => {
+            mainWindowHandler.webContents.send('app-file-selected', {
+                path: selectedPath,
+                fieldName: fieldName
+            });
+        });
+    });
+
+    // Use Electron API to display files selection dialog
+    ipcMain.handle('app-main-process-select-files', (event, fieldName = false, filters = []) => {
+        let mainWindowHandler = appInstance.getMainWindow();
+
+        dialog.showOpenDialog(mainWindowHandler, {
+            properties: ['openFile', 'multiSelections'],
+            filters: filters
+        }).then(selectedPaths => {
+            mainWindowHandler.webContents.send('app-files-selected', {
+                paths: selectedPaths,
+                fieldName: fieldName
+            });
+        });
+    });
+});

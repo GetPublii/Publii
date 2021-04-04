@@ -293,8 +293,7 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main.js');
+import { ipcRenderer } from 'electron';
 import Vue from 'vue';
 
 export default {
@@ -408,11 +407,11 @@ export default {
         });
     },
     methods: {
-        save (showPreview = false) {
+        async save (showPreview = false) {
             if (this.tagData.slug.trim() === '' && this.tagData.name.trim() !== '') {
-                this.tagData.slug = mainProcess.slug(this.tagData.name);
+                this.tagData.slug = await ipcRenderer.invoke('app-main-process-create-slug', this.tagData.name);
             } else {
-                this.tagData.slug = mainProcess.slug(this.tagData.slug);
+                this.tagData.slug = await ipcRenderer.invoke('app-main-process-create-slug', this.tagData.slug);
             }
 
             if (!this.validate()) {
@@ -424,8 +423,8 @@ export default {
 
             this.saveData(tagData, showPreview);
         },
-        saveAndPreview () {
-            this.save(true);
+        async saveAndPreview () {
+            await this.save(true);
         },
         validate () {
             this.errors = [];

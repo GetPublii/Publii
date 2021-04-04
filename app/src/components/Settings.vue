@@ -1609,7 +1609,7 @@
 
 <script>
 import fs from 'fs';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import GdprGroups from './basic-elements/GdprGroups';
@@ -1852,7 +1852,7 @@ export default {
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
-        this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
+        // this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
         
         if (this.spellcheckerLanguages.length) {
             this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());

@@ -22,8 +22,7 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'fileselect',
@@ -64,13 +63,13 @@ export default {
         }
     },
     methods: {
-        clear: function() {
+        clear () {
             this.$refs.input.content = '';
             this.fieldValue = '';
             this.onChange('');
         },
-        selectFile: function() {
-            mainProcess.selectFile('file-select');
+        async selectFile () {
+            await ipcRenderer.invoke('app-main-process-select-file', 'file-select');
 
             ipcRenderer.once('app-file-selected', (event, data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
@@ -83,7 +82,7 @@ export default {
                 this.onChange(this.fieldValue);
             });
         },
-        getValue: function() {
+        getValue () {
             return this.fieldValue;
         }
     }

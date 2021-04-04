@@ -1,6 +1,5 @@
 <script>
-import { remote } from 'electron';
-const mainProcess = remote.require('./main.js');
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'post-editors-common',
@@ -11,12 +10,12 @@ export default {
         slugUpdated () {
             this.postSlugEdited = true;
         },
-        updateSlug () {
+        async updateSlug () {
             if(this.isEdit || this.postSlugEdited) {
                 return;
             }
 
-            let slugValue = mainProcess.slug(this.postData.title);
+            let slugValue = await ipcRenderer.invoke('app-main-process-create-slug', this.postData.title);
             this.postData.slug = slugValue;
         },
         toggleSidebar () {

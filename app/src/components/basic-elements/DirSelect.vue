@@ -23,8 +23,7 @@
 
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
+import { ipcRenderer } from 'electron';
 
 export default {
     name: 'dirselect',
@@ -65,13 +64,13 @@ export default {
         }
     },
     methods: {
-        clear: function() {
+        clear () {
             this.$refs.input.content = '';
             this.fieldValue = '';
             this.$emit('input', '');
         },
-        selectDir: function() {
-            mainProcess.selectDirectory('dir-select');
+        async selectDir () {
+            await ipcRenderer.invoke('app-main-process-select-directory', 'dir-select');
 
             ipcRenderer.once('app-directory-selected', (event, data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
@@ -84,7 +83,7 @@ export default {
                 this.$emit('input', this.fieldValue);
             });
         },
-        getValue: function() {
+        getValue () {
             return this.fieldValue;
         }
     }

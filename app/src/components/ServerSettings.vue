@@ -965,12 +965,11 @@
 
 <script>
 import Vue from 'vue';
-import { shell, ipcRenderer, remote } from 'electron';
+import { shell, ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
 import s3ACLs from './configs/s3ACLs.js';
-const mainProcess = remote.require('./main');
 
 export default {
     name: 'server-settings',
@@ -1423,28 +1422,28 @@ export default {
             return '';
         },
         async loadPasswords (deploymentSettings) {
-            deploymentSettings.password = await mainProcess.loadPassword('publii', deploymentSettings.password);
+            deploymentSettings.password = await ipcRenderer.handle('app-main-process-load-password', 'publii', deploymentSettings.password);
 
             if (deploymentSettings.passphrase) {
-                deploymentSettings.passphrase = await mainProcess.loadPassword('publii-passphrase', deploymentSettings.passphrase);
+                deploymentSettings.passphrase = await ipcRenderer.handle('app-main-process-load-password', 'publii-passphrase', deploymentSettings.passphrase);
             }
 
             if (deploymentSettings.s3) {
-                deploymentSettings.s3.id = await mainProcess.loadPassword('publii-s3-id', deploymentSettings.s3.id);
-                deploymentSettings.s3.key = await mainProcess.loadPassword('publii-s3-key', deploymentSettings.s3.key);
+                deploymentSettings.s3.id = await ipcRenderer.handle('app-main-process-load-password', 'publii-s3-id', deploymentSettings.s3.id);
+                deploymentSettings.s3.key = await ipcRenderer.handle('app-main-process-load-password', 'publii-s3-key', deploymentSettings.s3.key);
             }
 
             if (deploymentSettings.netlify) {
-                deploymentSettings.netlify.id = await mainProcess.loadPassword('publii-netlify-id', deploymentSettings.netlify.id);
-                deploymentSettings.netlify.token = await mainProcess.loadPassword('publii-netlify-token', deploymentSettings.netlify.token);
+                deploymentSettings.netlify.id = await ipcRenderer.handle('app-main-process-load-password', 'publii-netlify-id', deploymentSettings.netlify.id);
+                deploymentSettings.netlify.token = await ipcRenderer.handle('app-main-process-load-password', 'publii-netlify-token', deploymentSettings.netlify.token);
             }
 
             if (deploymentSettings.github) {
-                deploymentSettings.github.token = await mainProcess.loadPassword('publii-gh-token', deploymentSettings.github.token);
+                deploymentSettings.github.token = await ipcRenderer.handle('app-main-process-load-password', 'publii-gh-token', deploymentSettings.github.token);
             }
 
             if (deploymentSettings.gitlab) {
-                deploymentSettings.gitlab.token = await mainProcess.loadPassword('publii-gl-token', deploymentSettings.gitlab.token);
+                deploymentSettings.gitlab.token = await ipcRenderer.handle('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
             }
 
             return deploymentSettings;

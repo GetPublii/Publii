@@ -36,7 +36,7 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -199,6 +199,7 @@ export default {
                 });
             }, 0);
 
+            /*
             remote.webContents.fromId(this.webview.getWebContentsId()).on('before-input-event', (event, input) => {
                 if (input.key === 'f' && (input.meta || input.control)) {
                     this.$bus.$emit('app-show-search-form');  
@@ -211,6 +212,7 @@ export default {
                     this.webview.send('block-editor-redo');
                 }
             });
+            */
         });
     },
     methods: {

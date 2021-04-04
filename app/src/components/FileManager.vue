@@ -155,10 +155,9 @@
 </template>
 
 <script>
-import { ipcRenderer, shell, remote } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
-const mainProcess = remote.require('./main');
 
 export default {
     name: 'file-manager',
@@ -166,7 +165,7 @@ export default {
         BackToTools,
         CollectionCheckboxes
     ],
-    data: function() {
+    data () {
         return {
             filterValue: '',
             items: [],
@@ -177,19 +176,19 @@ export default {
         };
     },
     computed: {
-        hasFiles: function() {
+        hasFiles () {
             return !!this.items.length;
         },
-        emptySearchResults: function() {
+        emptySearchResults () {
             return this.filterValue !== '' && !this.items.length;
         },
-        isRoot: function() {
+        isRoot () {
             return this.dirPath === 'root-files';
         },
-        isMedia: function() {
+        isMedia () {
             return this.dirPath !== 'root-files';
         },
-        filteredFiles: function() {
+        filteredFiles () {
             return this.items.filter(file => {
                 if(this.filterValue.trim() === '') {
                     return true;
@@ -199,7 +198,7 @@ export default {
             });
         }
     },
-    mounted: function() {
+    mounted () {
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
@@ -212,11 +211,11 @@ export default {
 
         this.loadFiles();
     },
-    beforeDestroy: function() {
+    beforeDestroy () {
         ipcRenderer.removeAllListeners('app-files-selected');
     },
     methods: {
-        loadFiles: function() {
+        loadFiles () {
             this.isLoading = true;
 
             ipcRenderer.send('app-file-manager-list', {
@@ -236,20 +235,20 @@ export default {
                 this.isLoading = false;
             });
         },
-        getFormatedDate: function(timestamp) {
+        getFormatedDate (timestamp) {
             if(this.$store.state.app.config.timeFormat == 12) {
                 return this.$moment(timestamp).format('MMM DD, YYYY  hh:mm a');
             } else {
                 return this.$moment(timestamp).format('MMM DD, YYYY  HH:mm');
             }
         },
-        bulkDelete: function() {
+        bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: 'Do you really want to remove selected files? It cannot be undone.',
                 okClick: this.deleteSelected
             });
         },
-        deleteSelected: function() {
+        deleteSelected () {
             ipcRenderer.send('app-file-manager-delete', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
@@ -268,7 +267,7 @@ export default {
                 this.selectedItems = [];
             });
         },
-        formatBytes: function(bytes, decimals) {
+        formatBytes (bytes, decimals) {
             if(bytes == 0) {
                 return '0 bytes';
             }
@@ -280,7 +279,7 @@ export default {
 
             return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         },
-        openFile: function(e, filePath) {
+        openFile (e, filePath) {
             e.preventDefault();
             // Uncomment this when file editor will be ready
             // if(item.attr('data-is-binary') === 'true') {
@@ -290,7 +289,7 @@ export default {
             // }
 
         },
-        changeDirectory: function(dirPath) {
+        changeDirectory (dirPath) {
             if(this.dirPath === dirPath) {
                 return;
             }
@@ -301,14 +300,14 @@ export default {
             this.$refs.search.value = '';
             this.$refs.search.updateValue();
         },
-        addNewFile: function() {
+        addNewFile () {
             this.$bus.$emit('confirm-display', {
                 message: 'Please provide name for a new file',
                 hasInput: true,
                 okClick: this.addFile
             });
         },
-        addFile: function(fileName) {
+        addFile (fileName) {
             if(fileName === false) {
                 return;
             }
@@ -331,10 +330,10 @@ export default {
                 this.loadFiles();
             });
         },
-        uploadFiles: function() {
-            mainProcess.selectFiles(false);
+        async uploadFiles () {
+            await ipcRenderer.invoke('app-main-process-select-files', false);
         },
-        uploadFile: function(queue) {
+        uploadFile (queue) {
             if(!queue.length) {
                 if(this.existingItems.length) {
                     this.$bus.$emit('alert-display', {
@@ -366,7 +365,7 @@ export default {
                 this.uploadFile(queue);
             });
         },
-        filenameIsInUse(filename) {
+        filenameIsInUse (filename) {
             for(let file of this.items) {
                 if(filename === file.name) {
                     return true;

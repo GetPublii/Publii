@@ -1,8 +1,6 @@
-import { remote } from 'electron';
-const mainProcess = remote.require('./main.js');
-
+import { ipcRenderer } from 'electron';
 class PostHelper {
-    static preparePostData (newPostStatus, postID, $store, postData) {
+    static async preparePostData (newPostStatus, postID, $store, postData) {
         let finalStatus = newPostStatus;
         let mediaPath = PostHelper.getMediaPath($store, postID);
         let preparedText = '';
@@ -56,7 +54,7 @@ class PostHelper {
         });
 
         if (postData.slug === '') {
-            postData.slug = mainProcess.slug(postData.title);
+            postData.slug = await ipcRenderer.invoke('app-main-process-create-slug', postData.title);
         }
 
         let creationDate = postData.creationDate.timestamp;
