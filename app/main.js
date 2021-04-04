@@ -73,11 +73,6 @@ electronApp.on('ready', function () {
     ipcMain.handle('app-window:close', () => {
         appInstance.getMainWindow().close();
     });
-
-    // App credits list
-    ipcMain.handle('app-credits-list:get-app-path', () => {
-        return electronApp.getAppPath();
-    });
 });
 
 // Export function to quit the app from the application menu on macOS
