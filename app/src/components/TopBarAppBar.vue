@@ -41,24 +41,36 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { remote } from 'electron';
 
 export default {
     name: 'topbar-appbar',
     methods: {
         appMinimize: function() {
-            ipcRenderer.invoke('app-window:minimize');
+            if(remote.BrowserWindow.getFocusedWindow()) {
+                remote.BrowserWindow.getFocusedWindow().minimize();
+            }
         },
         appMaximize: function() {
-            ipcRenderer.invoke('app-window:maximize');
+            if(remote.BrowserWindow.getFocusedWindow()) {
+                remote.BrowserWindow.getFocusedWindow().maximize();
+            }
+
             this.$store.commit('setWindowState', true);
         },
         appUnmaximize: function() {
-            ipcRenderer.invoke('app-window:unmaximize');
+            if(remote.BrowserWindow.getFocusedWindow()) {
+                remote.BrowserWindow.getFocusedWindow().unmaximize();
+            }
+
             this.$store.commit('setWindowState', false);
         },
         appClose: function() {
-            ipcRenderer.invoke('app-window:close');
+            let allWindows = remote.BrowserWindow.getAllWindows();
+
+            for(let i = 0; i < allWindows.length; i++) {
+                allWindows[i].close();
+            }
         }
     }
 }
@@ -84,6 +96,7 @@ export default {
 
 body[data-os="win"] {
     .appbar {        
+
         &-button {
             -webkit-app-region: no-drag; // Make the buttons clickable again
             display: inline-block;
