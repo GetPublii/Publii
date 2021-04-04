@@ -129,9 +129,9 @@ export default {
                 contextmenu: false,
                 browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
                 setup: function (editor) {
-                    editor.on('init', async function () {
+                    editor.on('init', function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await self.$root.getCurrentAppTheme());
+                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$root.getCurrentAppTheme());
                     });
                 }
             });

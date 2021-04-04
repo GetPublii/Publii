@@ -168,8 +168,8 @@ export default {
                 this.setDataLossWatcher();
             }
 
-            setTimeout(async () => {
-                this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
+            setTimeout(() => {
+                this.webview.send('set-app-theme', this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
                 

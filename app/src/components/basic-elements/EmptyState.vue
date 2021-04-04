@@ -47,8 +47,8 @@ export default {
         }
     },
     computed: {
-        imagePath: async function() {
-            let theme = await this.$root.getCurrentAppTheme();
+        imagePath: function() {
+            let theme = this.$root.getCurrentAppTheme();
             return '../src/assets/svg/' + theme + '/' + this.imageName;
         },
         hasButtonSlot: function() {

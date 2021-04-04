@@ -59,7 +59,7 @@ class EditorBridge {
         this.tinymceEditor = editor;
         this.addEditorButtons();
 
-        editor.on('init', async () => {
+        editor.on('init', () => {
             $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
             $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
@@ -85,7 +85,7 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.$root.getCurrentAppTheme());
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$root.getCurrentAppTheme());
 
             // Add inline editors
             this.addInlineEditor(customFormats);
