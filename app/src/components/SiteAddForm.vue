@@ -10,11 +10,11 @@
 
                 <div class="site-create-field">
                     <label for="site-name">
-                        {{ $t('site.websiteName') }}:
+                        Website name:
                         <span
                             v-if="siteNameError"
                             class="site-create-field-error">
-                            {{ $t('site.websiteNameRequired') }}
+                            website name is required
                         </span>
                     </label>
 
@@ -28,11 +28,11 @@
 
                 <div class="site-create-field">
                     <label for="author-name">
-                        {{ $t('site.websiteAuthor') }}:
+                        Author name:
                         <span
                             v-if="authorNameError"
                             class="site-create-field-error">
-                            {{ $t('site.websiteAuthorRequired') }}
+                            author name is required and should contains letters
                         </span>
                     </label>
 
@@ -49,14 +49,14 @@
                 <p-button
                     type="primary bottom"
                     :onClick="addWebsite">
-                    {{ $t('site.createWebsite') }}
+                    Create website
                 </p-button>
 
                 <p-button
                     v-if="this.$store.getters.siteNames.length"
                     type="outline bottom"
                     :onClick="goBack">
-                    {{ $t('ui.cancel') }}
+                    Cancel
                 </p-button>
             </div>
         </div>
@@ -64,7 +64,7 @@
         <overlay v-if="overlayIsVisible">
             <div>
                 <div class="loader"><span></span></div>
-                {{ $t('site.creationInProgress') }}
+                Creation in progress...
             </div>
         </overlay>
     </div>
@@ -100,10 +100,10 @@ export default {
         },
         header () {
             if(this.status === 'new-website') {
-                return this.$t('site.createNewWebsite');
+                return 'Create new website';
             }
 
-            return this.$t('site.createYourFirstWebsite');
+            return 'Create your first website';
         },
         siteNameCssClasses () {
             if(this.siteNameError) {
@@ -190,7 +190,7 @@ export default {
                     this.siteNameError = true;
 
                     this.$bus.$emit('alert-display', {
-                        message: this.$t('site.siteWithThisNameExists'),
+                        message: 'Site using this name exists!',
                         textCentered: true
                     });
 
@@ -203,7 +203,7 @@ export default {
                     this.siteNameError = true;
 
                     this.$bus.$emit('alert-display', {
-                        message: this.$t('site.erroOcurredDuringSiteDatabaseCreationInfo'),
+                        message: 'An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.',
                         textCentered: true
                     });
 
@@ -217,7 +217,7 @@ export default {
                     this.$store.commit('addNewSite', data);
                     window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
                     this.$router.push(`/site/${data.siteConfig.name}`);
-
+                    
                     ipcRenderer.removeAllListeners('app-site-creation-error');
                     ipcRenderer.removeAllListeners('app-site-creation-duplicate');
                     ipcRenderer.removeAllListeners('app-site-creation-db-error');
@@ -287,7 +287,7 @@ export default {
 
     &-form {
         overflow: hidden;
-
+        
         /deep/ .logo-creator-preview {
             min-width: 10rem !important;
         }
@@ -340,7 +340,7 @@ export default {
                 border-radius: 0 0 3px 0;
                 color: var(--popup-btn-cancel-color);
                 margin-left: 0;
-
+                
                 &:hover {
                    background: var(--popup-btn-cancel-hover-bg);
                    color: var(--popup-btn-cancel-hover-color);
@@ -348,14 +348,14 @@ export default {
             }
         }
     }
-
+    
     &-wrapper {
         .loader {
-            display: block;
+            display: block;               
             height: 2.8rem;
             margin: -5.6rem auto 2rem;
             width: 2.8rem;
-
+            
             & > span {
                 animation: spin .9s infinite linear;
                 border-top: 2px solid var(--border-light-color);
@@ -363,24 +363,24 @@ export default {
                 border-bottom: 2px solid var(--border-light-color);
                 border-left: 2px solid var(--gray-4);
                 border-radius: 50%;
-                display: block;
+                display: block;   
                 height: 3.5rem;
-                width: 3.5rem;
-
+                width: 3.5rem;                 
+                
                 &::after {
                     border-radius: 50%;
                     content: "";
-                    display: block;
+                    display: block;                                      
                 }
-
+            
                 @at-root {
                     @keyframes spin {
-                       100% {
+                       100% { 
                           transform: rotate(360deg);
-                       }
+                       }                  
                     }
                 }
-          }
+          }                
        }
     }
 }
