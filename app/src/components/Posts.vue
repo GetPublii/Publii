@@ -2,11 +2,11 @@
     <section class="content">
         <p-header
             v-if="hasPosts"
-            title="Posts">
+            :title="$t('ui.posts')">
             <header-search
                 slot="search"
                 ref="search"
-                placeholder="Filter or search posts..."
+                :placeholder="$t('posts.filterOrSearchPosts')"
                 onChangeEventName="posts-filter-value-changed" />
 
             <btn-dropdown
@@ -24,48 +24,48 @@
             <li
                 :class="filterCssClasses('all')"
                 @click="setFilter('')">
-                All <span class="filter-count">({{ counters.all }})</span>
+                {{ $t('posts.all') }} <span class="filter-count">({{ counters.all }})</span>
             </li>
 
             <li
                 :class="filterCssClasses('published')"
                 @click="setFilter('is:published')">
-                Published <span class="filter-count">({{ counters.published }})</span>
+                {{ $t('posts.published') }} <span class="filter-count">({{ counters.published }})</span>
             </li>
 
             <li
                 v-if="counters.featured"
                 :class="filterCssClasses('featured')"
                 @click="setFilter('is:featured')">
-                Featured <span class="filter-count">({{ counters.featured }})</span>
+                {{ $t('posts.featured') }} <span class="filter-count">({{ counters.featured }})</span>
             </li>
 
             <li
                 v-if="counters.hidden"
                 :class="filterCssClasses('hidden')"
                 @click="setFilter('is:hidden')">
-                Hidden <span class="filter-count">({{ counters.hidden }})</span>
+                {{ $t('posts.hidden') }} <span class="filter-count">({{ counters.hidden }})</span>
             </li>
 
             <li
                 v-if="counters.excluded"
                 :class="filterCssClasses('excluded')"
                 @click="setFilter('is:excluded')">
-                Excluded <span class="filter-count">({{ counters.excluded }})</span>
+                {{ $t('posts.excluded') }} <span class="filter-count">({{ counters.excluded }})</span>
             </li>
 
             <li
                 v-if="counters.drafts"
                 :class="filterCssClasses('draft')"
                 @click="setFilter('is:draft')">
-                Drafts <span class="filter-count">({{ counters.drafts }})</span>
+                {{ $t('posts.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
             </li>
 
             <li
                 v-if="counters.trashed"
                 :class="filterCssClasses('trashed')"
                 @click="setFilter('is:trashed')">
-                Trashed <span class="filter-count">({{counters.trashed }})</span>
+                {{ $t('posts.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
             </li>
         </ul>
 
@@ -80,13 +80,13 @@
                 </collection-cell>
 
                 <collection-cell :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('title')">
                         <template v-if="orderBy === 'title'">
-                            <strong>Title</strong>
+                            <strong>{{ $t('posts.title') }}</strong>
                         </template>
-                        <template v-else>Title</template>
+                        <template v-else>{{ $t('posts.title') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
@@ -94,29 +94,29 @@
                 </collection-cell>
 
                 <collection-cell width="200px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('created')">
                         <template v-if="orderBy === 'created'">
-                            <strong>Publication date</strong>
+                            <strong>{{ $t('posts.publicationDate') }}</strong>
                         </template>
-                        <template v-else>Publication date</template>
+                        <template v-else>{{ $t('posts.publicationDate') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     v-if="showModificationDateAsColumn"
                     width="200px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('modified')">
                         <template v-if="orderBy === 'modified'">
-                            <strong>Modification date</strong>
+                            <strong>{{ $t('posts.modificationDate') }}</strong>
                         </template>
-                        <template v-else>Modification date</template>
+                        <template v-else>{{ $t('posts.modificationDate') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
@@ -124,13 +124,13 @@
                 </collection-cell>
 
                 <collection-cell width="200px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('author')">
                         <template v-if="orderBy === 'author'">
-                            <strong>Author</strong>
+                            <strong>{{ $t('posts.author') }}</strong>
                         </template>
-                        <template v-else>Author</template>
+                        <template v-else>{{ $t('posts.author') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
@@ -138,13 +138,13 @@
                 </collection-cell>
 
                 <collection-cell width="40px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('id')">
                         <template v-if="orderBy === 'id'">
-                            <strong>ID</strong>
+                            <strong>{{ $t('ui.id') }}</strong>
                         </template>
-                        <template v-else>ID</template>
+                        <template v-else>{{ $t('ui.id') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
@@ -155,11 +155,11 @@
                     v-if="anyCheckboxIsSelected"
                     class="tools">
                     <p-button
-                        v-if="trashVisible"                        
+                        v-if="trashVisible"
                         icon="delete"
                         type="small light icon delete"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
 
                     <p-button
@@ -167,7 +167,7 @@
                         icon="restore"
                         type="small light icon"
                         :onClick="bulkRestore">
-                        Restore
+                        {{ $t('ui.restore') }}
                     </p-button>
 
                     <p-button
@@ -175,7 +175,7 @@
                         icon="trash"
                         type="small light icon delete"
                         :onClick="bulkTrash">
-                        Move to trash
+                        {{ $t('posts.moveToTrash') }}
                     </p-button>
 
                     <p-button
@@ -183,93 +183,93 @@
                         icon="duplicate"
                         type="small light icon"
                         :onClick="bulkDuplicate">
-                        Duplicate
+                        {{ $t('posts.duplicate') }}
                     </p-button>
 
-                    <div 
+                    <div
                         v-if="!trashVisible"
                         class="dropdown-wrapper">
                         <p-button
                             icon="more"
                             :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
                             @click.native.stop="toggleBulkDropdown">
-                            More
+                            {{ $t('ui.more') }}
                         </p-button>
 
-                        <ul 
+                        <ul
                             v-if="bulkDropdownVisible"
                             class="dropdown">
-                            <li 
+                            <li
                                 v-if="selectedPostsNeedsStatus('published')"
-                                @click="bulkPublish"> 
-                                <icon                                
+                                @click="bulkPublish">
+                                <icon
                                    size="xs"
                                    name="draft-post"
                                    primaryColor="color-8" />
-                                Publish
+                                {{ $t('posts.publish') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsNeedsStatus('draft')"
                                 @click="bulkUnpublish">
-                                <icon                                
+                                <icon
                                    size="xs"
                                    name="draft-post"
                                    primaryColor="color-7" />
-                                Mark as draft
+                                {{ $t('posts.markAsDraft') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsNeedsStatus('featured')"
                                 @click="bulkFeatured">
-                                 <icon                                
+                                 <icon
                                    size="xs"
                                    name="featured-post"
                                    primaryColor="color-helper-6" />
-                                Mark as featured
+                                {{ $t('posts.markAsFeatured') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsHaveStatus('featured')"
                                 @click="bulkUnfeatured">
-                                 <icon                                
+                                 <icon
                                    size="xs"
                                    name="featured-post"
                                    primaryColor="color-8" />
-                                Mark as unfeatured
+                                {{ $t('posts.markAsUnfeatured') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
                                 @click="bulkExclude">
-                                <icon                                
+                                <icon
                                    size="xs"
                                    name="excluded-post"
                                    primaryColor="color-3" />
-                                Exclude from homepage
+                                {{ $t('posts.excludeFromHomepage') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
                                 @click="bulkInclude">
-                                <icon                                
+                                <icon
                                    size="xs"
                                    name="excluded-post"
                                    primaryColor="color-8" />
-                                Include in homepage
+                                {{ $t('posts.includeInHomepage') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsNeedsStatus('hidden')"
                                 @click="bulkHide">
-                                <icon                                
+                                <icon
                                    size="xs"
                                    name="hidden-post"
                                    primaryColor="color-7" />
-                                Hide
+                                {{ $t('ui.hide') }}
                             </li>
-                            <li 
+                            <li
                                 v-if="selectedPostsHaveStatus('hidden')"
                                 @click="bulkUnhide">
-                                <icon                                
+                                <icon
                                    size="xs"
                                    name="hidden-post"
                                    primaryColor="color-8" />
-                                Unhide
+                                {{ $t('ui.unhide') }}
                             </li>
                         </ul>
                     </div>
@@ -294,7 +294,7 @@
                     <h2 class="title">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id, item.editor)">                           
+                            @click.prevent.stop="editPost(item.id, item.editor)">
 
                             {{ item.title }}
 
@@ -303,35 +303,35 @@
                                 size="xs"
                                 name="featured-post"
                                 primaryColor="color-helper-6"
-                                title="This post is featured" />
+                                :title="$t('posts.thisPostIsFeatured')" />
                             <icon
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
                                 primaryColor="color-7"
-                                title="This post is hidden" />
+                                :title="$t('posts.thisPostIsHidden')" />
                             <icon
-                                v-if="item.isExcludedOnHomepage"                               
+                                v-if="item.isExcludedOnHomepage"
                                 name="excluded-post"
                                 size="xs"
                                 primaryColor="color-3"
-                                title="This post is excluded from homepage" />
+                                :title="$t('posts.thisPostIsExcludedFromHomepage')" />
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
                                 primaryColor="color-7"
-                                title="This post is a draft" />
+                                :title="$t('posts.thisPostIsADraft')" />
                         </a>
                     </h2>
 
-                    <div 
+                    <div
                         v-if="showPostSlugs"
                         class="post-slug">
-                        URL: /{{ item.slug }}
+                        {{ $t('posts.url') }}: /{{ item.slug }}
                     </div>
 
-                    <div 
+                    <div
                         v-if="item.tags"
                         class="post-tags">
                         <a
@@ -349,10 +349,10 @@
                     type="publish-dates"
                     width="200px">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
-                    <span 
+                    <span
                         v-if="!showModificationDateAsColumn"
                         class="modify-date">
-                        Last modified: {{ getModificationDate(item.modified) }}
+                        {{ $t('ui.lastModified') }}: {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
@@ -384,49 +384,49 @@
 
         <empty-state
             v-if="emptySearchResults"
-            description="There are no posts matching your criteria."></empty-state>
+            :description="$t('posts.noPostsMatchingYourCriteria')"></empty-state>
 
         <div
             v-if="dataLoaded && !hasPosts"
             class="empty-state post">
-            
-           <div>               
+
+           <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/wysiwyg-editor.svg'" height="286" width="331" />
-                <h3>WYSIWYG editor</h3>
-                <p>This editor provides a familiar word-processing experience, with additional tools for users that want to control every aspect of their page content.</p>
+                <h3>{{ $t('posts.editorWYSIWYG') }}</h3>
+                <p>{{ $t('posts.editorWYSIWYGInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'tinymce')">
-                    Add new post
-                </p-button>    
+                    {{ $t('posts.addNewPost') }}
+                </p-button>
            </div>
-           
+
            <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/block-editor.svg'" height="286" width="331" />
-                <h3>Block editor</h3>
-                <p>A modern and intuitive editor with shortkey and markdown support to make blogging easy, with no need to worry about HTML or other code elements.</p>
+                <h3>{{ $t('posts.editorBlock') }}</h3>
+                <p>{{ $t('posts.editorBlockInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'blockeditor')">
-                    Add new post 
-                </p-button>    
+                    {{ $t('posts.addNewPost') }}
+                </p-button>
            </div>
-            
-           <div>                
+
+           <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/markdown-editor.svg'" height="286" width="331" />
-                <h3>Markdown editor</h3>
-                <p>This editor supports Markdown syntax as shorthand for producing content quickly; great for extensive, no-frills projects such as documentation. </p>
+                <h3>{{ $t('posts.editorMarkdown') }}</h3>
+                <p>{{ $t('posts.editorMarkdownInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'markdown')">
-                    Add new post
-                </p-button>    
+                    {{ $t('posts.addNewPost') }}
+                </p-button>
            </div>
         </div>
     </section>
@@ -501,24 +501,24 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Use WYSIWYG editor',
-                    activeLabel: 'Add new post',
+                    label: this.$t('posts.editorWYSIWYGUse'),
+                    activeLabel: this.$t('posts.addNewPost'),
                     value: 'tinymce',
                     icon: 'wysiwyg',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
                 },
                 {
-                    label: 'Use Block editor',
-                    activeLabel: 'Add new post',
+                    label: this.$t('posts.editorBlockUse'),
+                    activeLabel: this.$t('posts.addNewPost'),
                     value: 'blockeditor',
                     icon: 'block',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'blockeditor')
                 },
                 {
-                    label: 'Use Markdown editor',
-                    activeLabel: 'Add new post',
+                    label: this.$t('posts.editorMarkdownUse'),
+                    activeLabel: this.$t('posts.addNewPost'),
                     value: 'markdown',
                     icon: 'markdown',
                     isVisible: () => true,
@@ -575,14 +575,14 @@ export default {
     methods: {
         addNewPost (editorType) {
             if (
-                editorType === 'blockeditor' && 
-                this.$store.state.currentSite.themeSettings && 
+                editorType === 'blockeditor' &&
+                this.$store.state.currentSite.themeSettings &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The current theme does not support the block editor you want to use. This post can be not properly rendered on the output files.',
-                    okLabel: 'Open editor anyway',
+                    message: this.$t('posts.editorBlockNotSupportedNewPostInfo'),
+                    okLabel: this.$t('posts.openEditorAnyway'),
                     isDanger: true,
                     okClick: () => {
                         this.openEditor(false, editorType);
@@ -595,14 +595,14 @@ export default {
         },
         editPost (id, editorType) {
             if (
-                editorType === 'blockeditor' && 
-                this.$store.state.currentSite.themeSettings && 
+                editorType === 'blockeditor' &&
+                this.$store.state.currentSite.themeSettings &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The current theme does not support the block editor used in this post. This post can be not properly rendered on the output files.',
-                    okLabel: 'Edit post anyway',
+                    message: this.$t('posts.editorBlockNotSupportedEditPostInfo'),
+                    okLabel: this.$t('posts.editPostAnyway'),
                     isDanger: true,
                     okClick: () => {
                         this.openEditor(id, editorType);
@@ -656,7 +656,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected posts? It cannot be undone.',
+                message: this.$t('posts.removePostMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -673,7 +673,7 @@ export default {
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected posts have been removed',
+                    message: this.$t('posts.removePostSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -723,7 +723,7 @@ export default {
             ipcRenderer.once('app-post-duplicated', (data) => {
                 if(!data) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occured during duplicating of selected posts. Please try again.',
+                        message: this.$t('posts.duplicatePostErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -731,7 +731,7 @@ export default {
                     return;
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'Selected posts have been duplicated',
+                        message: this.$t('posts.duplicatePostSuccessMessage'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -773,7 +773,7 @@ export default {
             });
 
             this.$bus.$emit('message-display', {
-                message: 'Status of the selected posts has been changed',
+                message: this.$t('posts.postStatusChangeSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -881,14 +881,14 @@ export default {
         text-align: center;
         top: 50%;
         transform: translateY(-50%);
-        width: 8px;        
+        width: 8px;
     }
 }
 
 .order-descending {
     &:after {
-        border-top-color: transparent; 
-        border-bottom: solid 5px var(--icon-secondary-color);                 
+        border-top-color: transparent;
+        border-bottom: solid 5px var(--icon-secondary-color);
     }
 }
 
@@ -958,12 +958,12 @@ export default {
 .tools {
    background: var(--bg-primary);
     display: flex;
-    
+
     .button {
         padding-left: 4rem;
         position: relative;
         z-index: 0;
-        
+
          &::before {
              content: "";
              background: var(--gray-1);  border-radius: 3px;
@@ -971,30 +971,30 @@ export default {
              left: -2px;
              opacity: 0;
              position: absolute;
-             right: 0;           
+             right: 0;
              height: 100%;
-             top: 0; 
+             top: 0;
              transition: all .15s cubic-bezier(0.4,0.0,0.2,1);
              transform: scale(.5);
              width: calc(100% + 2px);
              z-index: -1;
         }
-        
+
         & + .button {
-            margin: 0; 
+            margin: 0;
             position: relative;
         }
-        
-        &:hover { 
+
+        &:hover {
             background: none;
-            
+
             &::before {
-                opacity: 1; 
+                opacity: 1;
                 transform: scale(1);
             }
         }
     }
-    
+
     .dropdown-wrapper {
         position: relative;
 
@@ -1020,11 +1020,11 @@ export default {
                 padding: .8rem 2.4rem;
                 white-space: nowrap;
 
-                &:hover { 
+                &:hover {
                     background: var(--gray-1);
                     color: var(--text-primary-color);
                 }
-                
+
                 & > svg {
                     margin-right: 4px;
                     vertical-align: text-bottom;
