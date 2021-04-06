@@ -184,7 +184,7 @@ export default {
             mainProcess.selectFiles(false, [
                 {
                     name: 'Images',
-                    extensions: ['jpg', 'jpeg', 'png']
+                    extensions: ['jpg', 'jpeg', 'png', 'webp']
                 }
             ]);
 
