@@ -9,7 +9,7 @@
         }">
         <div class="popup sync">
             <div
-                v-if="isInSync && noIssues && isManual"
+                v-if="isInSync && noIssues && (isManual || !isMinimized)"
                 class="sync-success">                
 
                 <h1>Your website is now in sync</h1>
@@ -35,6 +35,13 @@
                         type="primary medium quarter-width"
                         :onClick="showFolder">
                         Get website files
+                    </p-button>
+
+                    <p-button
+                        v-if="!isManual"
+                        type="primary medium  quarter-width"
+                        :onClick="openWebsite">
+                        Visit your website
                     </p-button>
 
                     <p-button
@@ -616,7 +623,7 @@ export default {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
 
-                if (this.isInSync && this.noIssues && !this.isManual) {
+                if (this.isMinimized && this.isInSync && this.noIssues && !this.isManual) {
                     this.isVisible = false;
                 }
             });
