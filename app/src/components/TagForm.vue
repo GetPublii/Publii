@@ -1,14 +1,14 @@
 <template>
-    <div 
+    <div
         :key="'tag-view-' + tagData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
-                <template v-if="tagData.id">Edit tag</template>
-                <template v-if="!tagData.id">Add new tag</template>
+                <template v-if="tagData.id">{{ $t('tags.addNewTag') }}Edit tag</template>
+                <template v-if="!tagData.id">{{ $t('tags.editTag') }}Add new tag</template>
             </h2>
-            
+
             <span
                 class="options-sidebar-close"
                 name="sidebar-close"
@@ -25,18 +25,18 @@
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="tag-settings-label">Basic information</span>
+                    <span class="tag-settings-label">{{ $t('ui.basicInformation') }}ABasic information</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     style="max-height: none;"
                     ref="basic-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="basic-content">
                         <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>Name:</span>
+                            <span>{{ $t('ui.name') }}Name:</span>
                             <input
                                 v-model="tagData.name"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -45,24 +45,24 @@
                         </label>
 
                         <label>
-                            <span>Description:</span>
+                            <span>{{ $t('ui.description') }}Description:</span>
                             <text-area
                                 v-model="tagData.description"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :rows="4"></text-area>
                         </label>
 
-                        <label class="tag-settings-hidden">                          
+                        <label class="tag-settings-hidden">
                             <switcher
                                 :key="'is-hidden-tag-' + tagData.id"
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span title="Tag will not appear in any generated tag list such as post or tag/s pages.">
-                                Hide tag
+                            <span :title="$t('tags.tagWillNotAppearInGgeneratedTagLists')">
+                                {{ $t('tags.hideTag') }}Hide tag
                             </span>
                             <icon
-                                    title="Hide Post"
+                                    :title="$t('posts.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
@@ -81,22 +81,22 @@
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="tag-settings-label">Featured image</span>
+                    <span class="tag-settings-label">{{ $t('ui.featuredImage') }}Featured image</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="image-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="image-content">
-                        <div 
+                        <div
                             v-if="!currentThemeHasSupportForTagImages"
                             slot="note"
-                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />       
-                            <p>Your theme does not support featured images for tags.</p>
+                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
+                            <p>{{ $t('tags.noSupportFoFeaturedImagesForTags') }}Your theme does not support featured images for tags.</p>
                         </div>
-                        <label>                          
+                        <label>
                             <image-upload
                                 slot="field"
                                 type="small"
@@ -112,21 +112,21 @@
                             <div
                                 v-if="hasFeaturedImage"
                                 class="image-uploader-settings-form">
-                                <label>Alternative text
+                                <label>{{ $t('ui.alternativeText') }}Alternative text
                                     <text-input
                                         ref="featured-image-alt"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageAlt" />
                                 </label>
 
-                                <label>Caption
+                                <label>{{ $t('ui.caption') }}Caption
                                     <text-input
                                         ref="featured-image-caption"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageCaption" />
                                 </label>
 
-                                <label>Credits
+                                <label>{{ $t('ui.credits') }}Credits
                                     <text-input
                                         ref="featured-image-credits"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -147,17 +147,17 @@
                         size="s"
                         name="sidebar-seo"/>
 
-                    <span class="tag-settings-label">SEO</span>
+                    <span class="tag-settings-label">{{ $t('ui.seo') }}SEO</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="seo-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="seo-content">
                         <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>Slug:</span>
+                            <span>{{ $t('ui.slug') }}Slug:</span>
                             <input
                                 v-model="tagData.slug"
                                 @keyup="cleanError('slug')"
@@ -166,7 +166,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Page Title:</span>
+                            <span>{{ $t('ui.pageTitle') }}Page Title:</span>
                             <text-input
                                 v-model="tagData.additionalData.metaTitle"
                                 type="text"
@@ -179,7 +179,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Meta Description</span>
+                            <span>{{ $t('ui.metaDescription') }}Meta Description</span>
                             <text-area
                                 v-model="tagData.additionalData.metaDescription"
                                 :placeholder="metaFieldAttrs"
@@ -191,7 +191,7 @@
                         </label>
 
                         <label>
-                            Meta robots index:
+                            {{ $t('ui.metaRobotsIndex') }}Meta robots index:
                             <dropdown
                                 v-if="!tagData.additionalData.canonicalUrl"
                                 id="tag-meta-robots"
@@ -199,17 +199,17 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}If canonical URL is set, the meta robots tag is ignored.</small>
                             </div>
                         </label>
 
                         <label>
-                            Canonical URL:
+                            {{ $t('ui.canonicalURL') }}Canonical URL:
                             <input
                                 type="text"
                                 v-model="tagData.additionalData.canonicalUrl"
                                 spellcheck="false"
-                                placeholder="Leave blank to use a default tag page URL" />
+                                :placeholder="$t('tags.leaveBlankToUseDefaultTagPageURL')" />
                         </label>
                     </div>
                 </div>
@@ -224,17 +224,17 @@
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="tag-settings-label">Other options</span>
+                    <span class="tag-settings-label">{{ $t('ui.otherOptions') }}Other options</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="other-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="other-content">
                         <label>
-                            <span>Custom template:</span>
+                            <span>{{ $t('ui.customTemplate') }}Custom template:</span>
                             <dropdown
                                 v-if="currentThemeHasTagTemplates"
                                 ref="template"
@@ -247,7 +247,7 @@
                                 slot="field"
                                 id="template"
                                 :spellcheck="false"
-                                placeholder="Not available in your theme"
+                                :placeholder="$t('ui.notAvailableInYourTheme')"
                                 :disabled="true"
                                 :readonly="true" />
                         </label>
@@ -259,16 +259,16 @@
                 <p-button
                     type="secondary"
                     @click.native="save(false)">
-                    <template v-if="tagData.id">Save Changes</template>
-                    <template v-if="!tagData.id">Add new tag</template>
+                    <template v-if="tagData.id">{{ $t('ui.saveChanges') }}Save Changes</template>
+                    <template v-if="!tagData.id">{{ $t('tags.addNewTag') }}Add new tag</template>
                 </p-button>
 
                 <p-button
                     :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
-                    type="primary" 
+                    type="primary"
                     class="tag-settings-preview-button"
                     @click.native="saveAndPreview">
-                    Save &amp; Preview
+                    {{ $t('ui.saveAndPreview') }}Save &amp; Preview
                     <span>
                         <icon
                             size="s"
@@ -279,13 +279,14 @@
                 <p-button
                     @click.native="close"
                     type="outline">
-                    Cancel
+                    {{ $t('ui.cancel') }}Cancel
                 </p-button>
             </div>
 
-            <small 
+            <small
                 v-if="!currentThemeHasSupportForTagPages"
                 class="note">
+                {{ $t('tags.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
                 The "Save &amp; Preview" option is not available due to lack of support for tag pages in your theme.
             </small>
         </div>
@@ -465,7 +466,7 @@ export default {
                         this.showMessage(data.message);
 
                         Vue.nextTick(() => {
-                            this.$bus.$emit('show-tag-item-editor', newlyAddedTag, this.openedItem);    
+                            this.$bus.$emit('show-tag-item-editor', newlyAddedTag, this.openedItem);
                         });
                     } else {
                         if (!showPreview) {
@@ -607,8 +608,8 @@ export default {
     }
 
     &-header {
-        align-items: center;               
-        border-top: 1px solid var(--input-border-color);     
+        align-items: center;
+        border-top: 1px solid var(--input-border-color);
         color: var(--link-tertiary-color);
         cursor: pointer;
         display: flex;
@@ -622,7 +623,7 @@ export default {
         width: 100%;
 
         &:hover {
-            color: var(--link-tertiary-hover-color);                    
+            color: var(--link-tertiary-hover-color);
         }
 
         &.is-open {
@@ -640,7 +641,7 @@ export default {
         }
     }
 
-    &-label {                
+    &-label {
         font-weight: 600;
         left: 0;
         position: relative;
@@ -655,7 +656,7 @@ export default {
     }
 
     &-icon {
-        fill: var(--primary-color); 
+        fill: var(--primary-color);
         left: 0;
         height: 2.4rem;
         margin-right: 1.6rem;
@@ -666,11 +667,11 @@ export default {
     }
 
     &-preview-button {
-        display: inline-flex; 
+        display: inline-flex;
 
         & > span {
             align-self: center;
-            display: flex; 
+            display: flex;
             margin-left: 1rem;
         }
     }
@@ -701,7 +702,7 @@ export default {
                 width: 70%;
             }
         }
-    } 
+    }
 
     &-hidden {
         font-weight: var(--font-weight-normal) !important;
@@ -713,7 +714,7 @@ export default {
             position: relative;
             top: .1rem;
         }
-    }           
+    }
 }
 
 .note {

@@ -2,10 +2,10 @@
     <section :class="{ 'content': true, 'no-scroll': editorVisible }">
         <p-header
             v-if="!showEmptyState"
-            title="Tags">
+            :title="$t('ui.tags')">
             <header-search
                 slot="search"
-                placeholder="Filter or search tags..."
+                :placeholder="$t('tags.filterOrSearchTags')"
                 onChangeEventName="tags-filter-value-changed" />
 
             <p-button
@@ -13,7 +13,7 @@
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                Add new tag
+                {{ $t('tags.addNewTag') }}
             </p-button>
         </p-header>
 
@@ -28,30 +28,30 @@
                 </collection-cell>
 
                 <collection-cell width="calc(100% - 180px)">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('name')">
                         <template v-if="orderBy === 'name'">
-                            <strong>Name</strong>
+                            <strong>{{ $t('ui.name') }}</strong>
                         </template>
-                        <template v-else>Name</template>
+                        <template v-else>{{ $t('ui.name') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'name' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     justifyContent="center"
                     textAlign="center"
                     width="100px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('postsCounter')">
                         <template v-if="orderBy === 'postsCounter'">
-                            <strong>Posts</strong>
+                            <strong>{{ $t('ui.posts') }}</strong>
                         </template>
-                        <template v-else>Posts</template>
+                        <template v-else>{{ $t('ui.posts') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
@@ -63,9 +63,9 @@
                         class="col-sortable-title"
                         @click="ordering('id')">
                         <template v-if="orderBy === 'id'">
-                            <strong>ID</strong>
+                            <strong>{{ $t('ui.id') }}</strong>
                         </template>
-                        <template v-else>ID</template>
+                        <template v-else>{{ $t('ui.id') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
@@ -79,7 +79,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
 
                     <p-button
@@ -87,7 +87,7 @@
                         icon="hidden-post"
                         type="small light icon"
                         :onClick="bulkHide">
-                        Hide
+                        {{ $t('ui.hide') }}
                     </p-button>
 
                     <p-button
@@ -95,7 +95,7 @@
                         icon="hidden-post"
                         type="small light icon"
                         :onClick="bulkUnhide">
-                        Unhide
+                        {{ $t('ui.unhide') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -115,18 +115,18 @@
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
-                        {{ item.name }} 
+                        {{ item.name }}
 
                         <icon
                             v-if="item.isHidden"
                             size="xs"
                             name="hidden-post"
                             primaryColor="color-7"
-                            title="This tag is hidden" />
+                            :title="$t('tags.thisTagIsHidden')" />
                     </a>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     justifyContent="center"
                     textAlign="center"
                     width="100px">
@@ -137,7 +137,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell                    
+                <collection-cell
                     width="40px">
                     {{ item.id }}
                 </collection-cell>
@@ -153,19 +153,19 @@
             imageName="tags.svg"
             imageWidth="344"
             imageHeight="286"
-            title="No tags available"
+            :title="$t('tags.noTagsAvailable')"
             description="You don't have any tag, yet. Let's create the first one!">
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
                 :onClick="addTag">
-                Add new tag
+                {{ $t('tags.addNewTag') }}
             </p-button>
         </empty-state>
 
         <transition>
-            <tag-form 
+            <tag-form
                 v-if="editorVisible"
                 :form-animation="formAnimation" />
         </transition>
@@ -307,7 +307,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected tags?',
+                message: this.$t('tags.removeTagMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -339,7 +339,7 @@ export default {
             });
 
             this.$bus.$emit('message-display', {
-                message: 'Status of the selected tags has been changed',
+                message: this.$t('tags.tagStatusChangeSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -357,7 +357,7 @@ export default {
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected tags have been removed',
+                    message: this.$t('tags.removeTagSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -421,7 +421,7 @@ export default {
              }
         }
     }
-    
+
     .order-ascending,
     .order-descending {
         margin-left: 3px;
@@ -442,14 +442,14 @@ export default {
              text-align: center;
              top: 50%;
              transform: translateY(-50%);
-             width: 8px;              
+             width: 8px;
         }
     }
 
     .order-descending {
         &:after {
-            border-top-color: transparent; 
-            border-bottom: solid 5px var(--icon-secondary-color);                      
+            border-top-color: transparent;
+            border-bottom: solid 5px var(--icon-secondary-color);
         }
     }
 }
