@@ -38,6 +38,10 @@ electronApp.on('ready', function () {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
     });
 
+    ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
+
+    ipcMain.handle('app-main-set-spellchecker-language-for-webview', (event, webContentsID, languages) => webContents.fromId(webContentsID).session.setSpellCheckerLanguages(languages));
+
     // Init context menu for webviews
     ipcMain.handle('app-main-initialize-context-menu-for-webview', (event, webContentsID) => {
         let webView = webContents.fromId(webContentsID);

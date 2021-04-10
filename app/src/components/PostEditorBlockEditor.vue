@@ -170,6 +170,7 @@ export default {
 
             setTimeout(async () => {
                 await ipcRenderer.invoke('app-main-initialize-context-menu-for-webview', document.querySelector('webview').getWebContentsId());
+                await this.setWebViewSpellcheckerLanguage(document.querySelector('webview').getWebContentsId());
                 this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
@@ -343,6 +344,30 @@ export default {
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;
+        },
+        async setWebViewSpellcheckerLanguage (webContentsID) {
+            if (process.platform === 'darwin') {
+                return;
+            }
+
+            let language = await ipcRenderer.invoke('publii-get-spellchecker-language');
+            language = language.toLocaleLowerCase();
+            let availableLanguages = await ipcRenderer.invoke('app-main-get-spellchecker-languages');
+            
+            if (availableLanguages.indexOf(language) > -1) {
+                await ipcRenderer.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
+                return;
+            }
+
+            language = language.split('-');
+            language = language[0];
+
+            if (availableLanguages.indexOf(language) > -1) {
+                await ipcRenderer.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
+                return;
+            }
+
+            console.log('(!) Unable to set spellchecker to use selected language - ' + language);
         }
     },
     beforeDestroy () {
