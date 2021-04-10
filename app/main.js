@@ -26,6 +26,7 @@ electronApp.on('window-all-closed', function () {
 });
 
 electronApp.on('ready', function () {
+    // Start the app
     let startupSettings = {
         'mainWindow': mainWindow,
         'app': electronApp,
@@ -33,7 +34,7 @@ electronApp.on('ready', function () {
     };
 
     appInstance = new App(startupSettings);
-
+    
     ipcMain.on('publii-set-spellchecker-language', (event, language) => {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
     });
@@ -41,6 +42,40 @@ electronApp.on('ready', function () {
     ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
 
     ipcMain.handle('app-main-set-spellchecker-language-for-webview', (event, webContentsID, languages) => webContents.fromId(webContentsID).session.setSpellCheckerLanguages(languages));
+
+    // In-page search related functions
+    ipcMain.handle('app-main-webview-search-init', (event, webContentsID) => {
+        console.log('Webview search init', webContentsID);
+        let webView = webContents.fromId(webContentsID);
+        
+        webView.on('before-input-event', (event, input) => {
+            if (input.key === 'f' && (input.meta || input.control)) {
+                appInstance.getMainWindow().webContents.send('app-main-webview-input-response', { webContentsID, action: 'show-search' });
+            } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
+                appInstance.getMainWindow().webContents.send('app-main-webview-input-response', { webContentsID, action: 'undo' });
+            } else if (
+                (input.key === 'z' && (input.meta || input.control) && input.shift) || 
+                (input.key === 'y' && (input.meta || input.control) && !input.shift)
+            ) {
+                appInstance.getMainWindow().webContents.send('app-main-webview-input-response', { webContentsID, action: 'redo' });
+            }
+        }); 
+    });
+    
+    ipcMain.handle('app-main-webview-search-find-in-page', (event, webContentsID, searchPhrase, searchConfig = null) => {
+        let webView = webContents.fromId(webContentsID);
+
+        if (searchConfig) {
+            webView.findInPage(searchPhrase, searchConfig);
+        } else {
+            webView.findInPage(searchPhrase)
+        }
+    });
+
+    ipcMain.handle('app-main-webview-search-stop-find-in-page', (event, webContentsID) => {
+        let webView = webContents.fromId(webContentsID);
+        webView.stopFindInPage('clearSelection');
+    });
 
     // Init context menu for webviews
     ipcMain.handle('app-main-initialize-context-menu-for-webview', (event, webContentsID) => {

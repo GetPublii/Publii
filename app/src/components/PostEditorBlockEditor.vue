@@ -67,6 +67,7 @@ export default {
     },
     data () {
         return {
+            webContentsID: null,
             postID: this.$route.params.post_id || 0,
             newPost: true,
             helpPanelOpen: false,
@@ -169,8 +170,11 @@ export default {
             }
 
             setTimeout(async () => {
-                await ipcRenderer.invoke('app-main-initialize-context-menu-for-webview', document.querySelector('webview').getWebContentsId());
-                await this.setWebViewSpellcheckerLanguage(document.querySelector('webview').getWebContentsId());
+                this.webContentsID = document.querySelector('webview').getWebContentsId();
+                await ipcRenderer.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
+                await ipcRenderer.invoke('app-main-webview-search-init', this.webContentsID);
+                ipcRenderer.on('app-main-webview-input-response', this.handleMainThreadResponse);
+                await this.setWebViewSpellcheckerLanguage(this.webContentsID);
                 this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
@@ -200,21 +204,6 @@ export default {
                     });
                 });
             }, 0);
-
-            /*
-            remote.webContents.fromId(this.webview.getWebContentsId()).on('before-input-event', (event, input) => {
-                if (input.key === 'f' && (input.meta || input.control)) {
-                    this.$bus.$emit('app-show-search-form');  
-                } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
-                    this.webview.send('block-editor-undo');
-                } else if (
-                    (input.key === 'z' && (input.meta || input.control) && input.shift) || 
-                    (input.key === 'y' && (input.meta || input.control) && !input.shift)
-                ) {
-                    this.webview.send('block-editor-redo');
-                }
-            });
-            */
         });
     },
     methods: {
@@ -368,6 +357,19 @@ export default {
             }
 
             console.log('(!) Unable to set spellchecker to use selected language - ' + language);
+        },
+        handleMainThreadResponse (sender, response) {
+            if (response.webContentsID !== this.webContentsID) {
+                return;
+            }
+
+            if (response.action === 'show-search') {
+                this.$bus.$emit('app-show-search-form');
+            } else if (response.action === 'undo') {
+                this.webview.send('block-editor-undo');
+            } else if (response.action === 'redo') {
+                this.webview.send('block-editor-redo');
+            }
         }
     },
     beforeDestroy () {
@@ -378,6 +380,7 @@ export default {
         this.webview.removeEventListener('ipc-message', this.editorOnIpcMessage);
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
+        ipcRenderer.off('app-main-webview-input-response', this.handleMainThreadResponse);
     }
 };
 </script>
