@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^12.0.2",
+    "electron": "^11.3.0",
     "node-abi": "^2.21.0"
   }
 }
