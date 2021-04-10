@@ -45,7 +45,6 @@ electronApp.on('ready', function () {
 
     // In-page search related functions
     ipcMain.handle('app-main-webview-search-init', (event, webContentsID) => {
-        console.log('Webview search init', webContentsID);
         let webView = webContents.fromId(webContentsID);
         
         webView.on('before-input-event', (event, input) => {
