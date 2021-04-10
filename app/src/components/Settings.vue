@@ -1845,15 +1845,15 @@ export default {
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
     },
-    mounted () {
+    async mounted () {
         setTimeout(() => {
             this.$refs['logo-creator'].changeIcon(this.logo.icon);
             this.$refs['logo-creator'].changeColor(this.logo.color);
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
-        // this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
-        
+        this.spellcheckerLanguages = await ipcRenderer.invoke('app-main-get-spellchecker-languages');
+
         if (this.spellcheckerLanguages.length) {
             this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());
         }

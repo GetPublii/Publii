@@ -9,6 +9,7 @@ const fileExists = require('file-exists');
 const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
+const url = require('url');
 // Electron classes
 const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow } = require('electron');
 // Collection classes
@@ -410,7 +411,7 @@ class App {
             nodeIntegration: true,
             webviewTag: true,
             spellcheck: true,
-            // preload: path.join(__dirname, 'app-preload.js'),
+            preload: path.join(__dirname, 'app-preload.js'),
             icon: path.join(__dirname, 'assets', 'icon.png')
         };
 
@@ -532,6 +533,15 @@ class App {
                 e.preventDefault();
             }
         });
+
+        // Create context menu
+        const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
+        let contextMenuBuilder = new ContextMenuBuilder(this.mainWindow.webContents);
+            
+        this.mainWindow.webContents.on('context-menu', (event, params) => {
+            event.preventDefault();
+            contextMenuBuilder.showPopupMenu(params);
+        });        
 
         // Open Dev Tools
         if (this.appConfig.openDevToolsInMain) {

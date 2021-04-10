@@ -169,6 +169,7 @@ export default {
             }
 
             setTimeout(async () => {
+                await ipcRenderer.invoke('app-main-initialize-context-menu-for-webview', document.querySelector('webview').getWebContentsId());
                 this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);

@@ -1,15 +1,17 @@
 'use strict';
 
 const electron = require('electron');
+const webContents = electron.webContents;
+const Menu = electron.Menu;
 const electronApp = electron.app;
 const dialog = electron.dialog;
 const ipcMain = electron.ipcMain;
 const nativeTheme = electron.nativeTheme;
-const fs = require('fs');
 const os = require('os');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
+const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
@@ -34,6 +36,17 @@ electronApp.on('ready', function () {
 
     ipcMain.on('publii-set-spellchecker-language', (event, language) => {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
+    });
+
+    // Init context menu for webviews
+    ipcMain.handle('app-main-initialize-context-menu-for-webview', (event, webContentsID) => {
+        let webView = webContents.fromId(webContentsID);
+        let contextMenuBuilder = new ContextMenuBuilder(webView);
+            
+        webView.on('context-menu', (event, params) => {
+            event.preventDefault();
+            contextMenuBuilder.showPopupMenu(params);
+        }); 
     });
 
     // App theme mode
@@ -110,11 +123,6 @@ electronApp.on('ready', function () {
         return '';
     });
 
-    // Export function to quit the app from the application menu on macOS
-    ipcMain.handle('app-main-process-quit-app', () => {
-        electronApp.quit();
-    });
-
     // Export OS version
     ipcMain.handle('app-main-process-is-osx11-or-higher', () => {
         let version = parseInt(os.release().split('.')[0], 10);
@@ -168,4 +176,70 @@ electronApp.on('ready', function () {
             });
         });
     });
+
+    // Get available spellchecker languages
+    ipcMain.handle('app-main-get-spellchecker-languages', (event) => appInstance.getMainWindow().webContents.session.availableSpellCheckerLanguages);
+
+    // Remove application menu on Linux
+    if (process.platform === 'linux') {
+        Menu.setApplicationMenu(null);
+    }
+
+    if (process.env.NODE_ENV !== 'development') {
+        const template = [{
+            label: "Publii",
+            submenu: [{
+                label: "About Application",
+                selector: "orderFrontStandardAboutPanel:"
+            }, {
+                type: "separator"
+            }, {
+                label: "Quit",
+                accelerator: "CmdOrCtrl+Q",
+                click: () => { 
+                    electronApp.quit();
+                }
+            }]
+        }, {
+            label: "Edit",
+            submenu: [
+                {
+                    label: "Undo",
+                    accelerator: "CmdOrCtrl+Z",
+                    selector: "undo:"
+                },
+                {
+                    label: "Redo",
+                    accelerator: "Shift+CmdOrCtrl+Z",
+                    selector: "redo:"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    label: "Cut",
+                    accelerator: "CmdOrCtrl+X",
+                    selector: "cut:"
+                },
+                {
+                    label: "Copy",
+                    accelerator: "CmdOrCtrl+C",
+                    selector: "copy:"
+                },
+                {
+                    label: "Paste",
+                    accelerator: "CmdOrCtrl+V",
+                    selector: "paste:"
+                },
+                {
+                    label: "Select All",
+                    accelerator: "CmdOrCtrl+A",
+                    selector: "selectAll:"
+                }
+            ]
+        }];
+
+        const menu = Menu.buildFromTemplate(template);
+        Menu.setApplicationMenu(menu);
+    }
 });

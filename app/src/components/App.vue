@@ -22,6 +22,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { ipcRenderer } from 'electron';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
 import TopBarNotification from './TopBarNotification';
@@ -32,7 +33,6 @@ import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SubscriptionPopup from './SubscriptionPopup';
-// const Menu = remote.Menu;
 
 export default {
     name: 'app',
@@ -78,7 +78,6 @@ export default {
         this.disableDragNDrop();
         await this.setEnvironmentInfo();
         this.setState();
-        this.setupMenu();
         this.integrateTopBar();
 
         // Display initial screen after 2sec
@@ -112,74 +111,6 @@ export default {
         // Set initial application state tree
         setState () {
             this.$store.commit('init', this.initialData);
-        },
-
-        // Disable refresh shortcuts and Dev Tools shortcuts
-        setupMenu () {
-            if (process.env.NODE_ENV === 'development') {
-                return;
-            }
-
-            if (process.platform === 'linux') {
-                // Menu.setApplicationMenu(null);
-                return;
-            }
-
-            const template = [{
-                label: "Publii",
-                submenu: [{
-                    label: "About Application",
-                    selector: "orderFrontStandardAboutPanel:"
-                }, {
-                    type: "separator"
-                }, {
-                    label: "Quit",
-                    accelerator: "CmdOrCtrl+Q",
-                    click: async () => { 
-                        await ipcRenderer.invoke('app-main-process-quit-app') 
-                    }
-                }]
-            }, {
-                label: "Edit",
-                submenu: [
-                    {
-                        label: "Undo",
-                        accelerator: "CmdOrCtrl+Z",
-                        selector: "undo:"
-                    },
-                    {
-                        label: "Redo",
-                        accelerator: "Shift+CmdOrCtrl+Z",
-                        selector: "redo:"
-                    },
-                    {
-                        type: "separator"
-                    },
-                    {
-                        label: "Cut",
-                        accelerator: "CmdOrCtrl+X",
-                        selector: "cut:"
-                    },
-                    {
-                        label: "Copy",
-                        accelerator: "CmdOrCtrl+C",
-                        selector: "copy:"
-                    },
-                    {
-                        label: "Paste",
-                        accelerator: "CmdOrCtrl+V",
-                        selector: "paste:"
-                    },
-                    {
-                        label: "Select All",
-                        accelerator: "CmdOrCtrl+A",
-                        selector: "selectAll:"
-                    }
-                ]
-            }];
-
-            // const menu = Menu.buildFromTemplate(template);
-            // Menu.setApplicationMenu(menu);
         },
 
         // Show site screen when there is only one website
