@@ -51,7 +51,7 @@
     "jimp": "^0.16.0",
     "keytar": "^7.2.0",
     "ls-all": "^1.1.0",
-    "marked": "^0.7.0",
+    "marked": "^2.0.1",
     "md5": "^2.1.0",
     "mime": "^2.0.2",
     "moment": "^2.24.0",
@@ -72,7 +72,7 @@
     "vue-color": "^2.4.5",
     "vue-multiselect": "^2.0.8",
     "vue-router": "^3.0.6",
-    "vue-simplemde": "^1.0.0",
+    "vue-simplemde": "^2.0.0",
     "vuedraggable": "^2.20.0",
     "vuex": "^3.1.1"
   },
