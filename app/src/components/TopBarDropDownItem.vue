@@ -42,7 +42,7 @@ export default {
     methods: {
         openExternalLink (e) {
             e.preventDefault();
-            shell.openExternal(this.path);
+            mainProcessAPI.shellOpenExternal(this.path);
         }
     }
 }

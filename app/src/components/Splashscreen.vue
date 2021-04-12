@@ -53,7 +53,7 @@ export default {
     methods: {
         showLicense: function(e) {
             e.preventDefault();
-            shell.openExternal('https://getpublii.com/license.html');
+            mainProcessAPI.shellOpenExternal('https://getpublii.com/license.html');
         },
         acceptLicense: function() {
             let self = this;

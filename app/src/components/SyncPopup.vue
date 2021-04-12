@@ -388,7 +388,7 @@ export default {
             let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
 
             if (urlToOpen) {
-                shell.openExternal(urlToOpen);
+                mainProcessAPI.shellOpenExternal(urlToOpen);
             } else {
                 alert('Sorry! The website link seems to be invalid.');
             }
@@ -397,7 +397,7 @@ export default {
         },
         showFolder: function() {
             let folderPath = this.manualFilePath;
-            shell.showItemInFolder(folderPath);
+            mainProcessAPI.shellShowItemInFolder(folderPath);
             this.close();
         },
         close: function() {

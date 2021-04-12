@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
+import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -221,7 +221,7 @@ export default {
             });
         },
         showFileInFolder: function(url) {
-            shell.showItemInFolder(url);
+            mainProcessAPI.shellShowItemInFolder(url);
         },
         renameFile: function(originalName) {
             let oldFilename = originalName.substr(0, originalName.length - 4);

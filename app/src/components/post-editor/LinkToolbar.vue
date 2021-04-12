@@ -118,7 +118,7 @@ export default {
                 let urlToOpen = Utils.getValidUrl(link[1]);
 
                 if (urlToOpen) {
-                    shell.openExternal(urlToOpen);
+                    mainProcessAPI.shellOpenExternal(urlToOpen);
                 } else {
                     alert('Sorry! This link seems to be invalid.');
                 }
