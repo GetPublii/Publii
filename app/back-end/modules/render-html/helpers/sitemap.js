@@ -327,6 +327,10 @@ class Sitemap {
             // Add main file to the list
             this.fileList.push(tagName + '/index.html');
 
+            if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
+                return;
+            }
+
             let paginationPath = path.join(this.baseDirectory, tagName, this.siteConfig.advanced.urls.pageName);
 
             if (fs.existsSync(paginationPath)) {
@@ -339,7 +343,8 @@ class Sitemap {
                     }
 
                     // Add all pages of pagination
-                    this.fileList.push(tagName + '/' + file + '/index.html');
+                    let pageName = this.siteConfig.advanced.urls.pageName;
+                    this.fileList.push(tagName + '/' + pageName + '/' + file + '/index.html');
                 }
             }
 
