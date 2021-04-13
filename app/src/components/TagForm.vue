@@ -5,8 +5,8 @@
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
-                <template v-if="tagData.id">{{ $t('tags.addNewTag') }}Edit tag</template>
-                <template v-if="!tagData.id">{{ $t('tags.editTag') }}Add new tag</template>
+                <template v-if="tagData.id">{{ $t('tags.addNewTag') }}</template>
+                <template v-if="!tagData.id">{{ $t('tags.editTag') }}</template>
             </h2>
 
             <span
@@ -25,7 +25,7 @@
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.basicInformation') }}ABasic information</span>
+                    <span class="tag-settings-label">{{ $t('ui.basicInformation') }}</span>
                 </div>
 
                 <div
@@ -36,7 +36,7 @@
                         class="tag-settings-content"
                         ref="basic-content">
                         <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>{{ $t('ui.name') }}Name:</span>
+                            <span>{{ $t('ui.name') }}:</span>
                             <input
                                 v-model="tagData.name"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -45,7 +45,7 @@
                         </label>
 
                         <label>
-                            <span>{{ $t('ui.description') }}Description:</span>
+                            <span>{{ $t('ui.description') }}:</span>
                             <text-area
                                 v-model="tagData.description"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -59,7 +59,7 @@
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
                             <span :title="$t('tags.tagWillNotAppearInGgeneratedTagLists')">
-                                {{ $t('tags.hideTag') }}Hide tag
+                                {{ $t('tags.hideTag') }}
                             </span>
                             <icon
                                     :title="$t('posts.hidePost')"
@@ -81,7 +81,7 @@
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.featuredImage') }}Featured image</span>
+                    <span class="tag-settings-label">{{ $t('ui.featuredImage') }}</span>
                 </div>
 
                 <div
@@ -94,7 +94,7 @@
                             v-if="!currentThemeHasSupportForTagImages"
                             slot="note"
                             class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
-                            <p>{{ $t('tags.noSupportFoFeaturedImagesForTags') }}Your theme does not support featured images for tags.</p>
+                            <p>{{ $t('tags.noSupportFoFeaturedImagesForTags') }}</p>
                         </div>
                         <label>
                             <image-upload
@@ -112,21 +112,21 @@
                             <div
                                 v-if="hasFeaturedImage"
                                 class="image-uploader-settings-form">
-                                <label>{{ $t('ui.alternativeText') }}Alternative text
+                                <label>{{ $t('ui.alternativeText') }}
                                     <text-input
                                         ref="featured-image-alt"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageAlt" />
                                 </label>
 
-                                <label>{{ $t('ui.caption') }}Caption
+                                <label>{{ $t('ui.caption') }}
                                     <text-input
                                         ref="featured-image-caption"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageCaption" />
                                 </label>
 
-                                <label>{{ $t('ui.credits') }}Credits
+                                <label>{{ $t('ui.credits') }}
                                     <text-input
                                         ref="featured-image-credits"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -147,7 +147,7 @@
                         size="s"
                         name="sidebar-seo"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.seo') }}SEO</span>
+                    <span class="tag-settings-label">{{ $t('ui.seo') }}</span>
                 </div>
 
                 <div
@@ -157,7 +157,7 @@
                         class="tag-settings-content"
                         ref="seo-content">
                         <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>{{ $t('ui.slug') }}Slug:</span>
+                            <span>{{ $t('ui.slug') }}:</span>
                             <input
                                 v-model="tagData.slug"
                                 @keyup="cleanError('slug')"
@@ -166,7 +166,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>{{ $t('ui.pageTitle') }}Page Title:</span>
+                            <span>{{ $t('ui.pageTitle') }}:</span>
                             <text-input
                                 v-model="tagData.additionalData.metaTitle"
                                 type="text"
@@ -179,7 +179,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>{{ $t('ui.metaDescription') }}Meta Description</span>
+                            <span>{{ $t('ui.metaDescription') }}</span>
                             <text-area
                                 v-model="tagData.additionalData.metaDescription"
                                 :placeholder="metaFieldAttrs"
@@ -191,7 +191,7 @@
                         </label>
 
                         <label>
-                            {{ $t('ui.metaRobotsIndex') }}Meta robots index:
+                            {{ $t('ui.metaRobotsIndex') }}:
                             <dropdown
                                 v-if="!tagData.additionalData.canonicalUrl"
                                 id="tag-meta-robots"
@@ -199,12 +199,12 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}If canonical URL is set, the meta robots tag is ignored.</small>
+                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
                             </div>
                         </label>
 
                         <label>
-                            {{ $t('ui.canonicalURL') }}Canonical URL:
+                            {{ $t('ui.canonicalURL') }}:
                             <input
                                 type="text"
                                 v-model="tagData.additionalData.canonicalUrl"
@@ -224,7 +224,7 @@
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.otherOptions') }}Other options</span>
+                    <span class="tag-settings-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
@@ -234,7 +234,7 @@
                         class="tag-settings-content"
                         ref="other-content">
                         <label>
-                            <span>{{ $t('ui.customTemplate') }}Custom template:</span>
+                            <span>{{ $t('ui.customTemplate') }}:</span>
                             <dropdown
                                 v-if="currentThemeHasTagTemplates"
                                 ref="template"
@@ -259,8 +259,8 @@
                 <p-button
                     type="secondary"
                     @click.native="save(false)">
-                    <template v-if="tagData.id">{{ $t('ui.saveChanges') }}Save Changes</template>
-                    <template v-if="!tagData.id">{{ $t('tags.addNewTag') }}Add new tag</template>
+                    <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
+                    <template v-if="!tagData.id">{{ $t('tags.addNewTag') }}</template>
                 </p-button>
 
                 <p-button
@@ -268,7 +268,7 @@
                     type="primary"
                     class="tag-settings-preview-button"
                     @click.native="saveAndPreview">
-                    {{ $t('ui.saveAndPreview') }}Save &amp; Preview
+                    {{ $t('ui.saveAndPreview') }}
                     <span>
                         <icon
                             size="s"
@@ -279,7 +279,7 @@
                 <p-button
                     @click.native="close"
                     type="outline">
-                    {{ $t('ui.cancel') }}Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
 
@@ -287,7 +287,6 @@
                 v-if="!currentThemeHasSupportForTagPages"
                 class="note">
                 {{ $t('tags.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
-                The "Save &amp; Preview" option is not available due to lack of support for tag pages in your theme.
             </small>
         </div>
     </div>
@@ -337,10 +336,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
         },
         metaFieldAttrs: function() {
-            let text = 'Leave it blank to use a default page title';
+            let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
 
             if(!this.metaOptionsActive) {
-                text = 'To use this option, first enable indexing of tag pages in SEO settings.';
+                text = this.$t('tags.toUseThisOptionEnableIndexingTagPages');
             }
 
             return text;
@@ -363,11 +362,11 @@ export default {
         },
         metaRobotsOptions () {
             return {
-                '': 'Use site global settings',
-                'index, follow': 'index, follow',
-                'index, nofollow': 'index, nofollow',
-                'noindex, follow': 'noindex, follow',
-                'noindex, nofollow': 'noindex, nofollow'
+                '': this.$t('ui.useSiteGlobalSettings'),
+                'index, follow': this.$t('ui.indexFollow'),
+                'index, nofollow': this.$t('ui.indexNofollow'),
+                'noindex, follow': this.$t('ui.noindexFollow'),
+                'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
         }
     },
@@ -380,7 +379,7 @@ export default {
                     params.additionalData = {};
                 }
             } catch (e) {
-                console.warn('An error occurred during parsing tag data for ID: ' + params.id);
+                console.warn(this.$t('tags.tagDataParsingErrorMessage') + params.id);
                 params.additionalData = {};
             }
 
@@ -441,7 +440,7 @@ export default {
 
             if (this.errors.length) {
                 this.$bus.$emit('message-display', {
-                    message: 'Please fill all required fields',
+                    message: this.$t('ui.pleaseFillAllRequiredFields'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -503,13 +502,13 @@ export default {
         },
         showMessage(message) {
             let messageConfig = {
-                message: 'New tag has been created',
+                message: this.$t('tags.newTagHasBeenCeated'),
                 type: 'success',
                 lifeTime: 3
             };
 
             if (this.tagData.id > 0) {
-                messageConfig.message = 'Tag has been edited';
+                messageConfig.message = this.$t('tags.tagHasBeenEdited');
             }
 
             if(message !== 'success' && message !== 'tag-added') {
@@ -518,16 +517,16 @@ export default {
 
             if(message === 'tag-duplicate-name') {
                 this.errors.push('name');
-                messageConfig.message = 'Provided tag name is in use. Please try other tag name.';
+                messageConfig.message = this.$t('tags.tagNameInUseErrorMessage');
             } else if(message === 'tag-duplicate-slug') {
                 this.errors.push('slug');
-                messageConfig.message = 'Provided tag name in a similar form (case insensitive) is in use. Please try other tag name.';
+                messageConfig.message = this.$t('tags.tagNameSimilarInUseErrorMessage');
             } else if(message === 'tag-empty-name') {
                 this.errors.push('name');
-                messageConfig.message = 'Tag name cannot be empty. Please try other name.';
+                messageConfig.message = this.$t('tags.tagNameCannotBeEmptyErrorMessage');
             } else if(message === 'tag-restricted-slug') {
                 this.errors.push('slug');
-                messageConfig.message = 'Selected tag name/slug is not allowed.';
+                messageConfig.message = this.$t('tags.tagNameNotAllowedErrorMessage');
             }
 
             this.$bus.$emit('message-display', messageConfig);
