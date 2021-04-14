@@ -1,9 +1,9 @@
 <template>
     <section :class="{ 'content': true, 'authors': true, 'no-scroll': editorVisible }">
-        <p-header title="Authors">
+        <p-header :title="$t('ui.authors')">
             <header-search
                 slot="search"
-                placeholder="Filter or search authors..."
+                :placeholder="$t('author.filterOrSearchAuthors')"
                 onChangeEventName="authors-filter-value-changed" />
 
             <p-button
@@ -11,7 +11,7 @@
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                Add new author
+                {{ $t('author.addNewAuthor') }}
             </p-button>
         </p-header>
 
@@ -25,20 +25,20 @@
                 </collection-cell>
 
                 <collection-cell width="calc(100% - 180px)">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('name')">
                         <template v-if="orderBy === 'name'">
-                            <strong>Name</strong>
+                            <strong>{{ $t('ui.name') }}</strong>
                         </template>
-                        <template v-else>Name</template>
+                        <template v-else>{{ $t('ui.name') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'name' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     justifyContent="center"
                     textAlign="center"
                     width="100px">
@@ -46,9 +46,9 @@
                         class="col-sortable-title"
                         @click="ordering('postsCounter')">
                         <template v-if="orderBy === 'postsCounter'">
-                            <strong>Posts</strong>
+                            <strong>{{ $t('ui.posts') }}</strong>
                         </template>
-                        <template v-else>Posts</template>
+                        <template v-else>{{ $t('ui.posts') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
@@ -56,13 +56,13 @@
                 </collection-cell>
 
                 <collection-cell width="40px">
-                    <span 
+                    <span
                         class="col-sortable-title"
                         @click="ordering('id')">
                         <template v-if="orderBy === 'id'">
-                            <strong>ID</strong>
+                            <strong>{{ $t('ui.id') }}</strong>
                         </template>
-                        <template v-else>ID</template>
+                        <template v-else>{{ $t('ui.id') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
@@ -76,7 +76,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -95,7 +95,7 @@
                     <span
                         v-if="item.id === 1"
                         class="main-author-icon"
-                        title="This is a main author of this website. It cannot be removed.">
+                        :title="$t('author.mainAuthorCannotBeRemoved')">
                         <icon
                             size="xs"
                             name="padlock"
@@ -112,7 +112,7 @@
                         <em
                             v-if="item.id === 1"
                             class="is-main-author">
-                            (Main author)
+                            ({{ $t('author.mainAuthor') }})
                         </em>
                     </a>
                 </collection-cell>
@@ -128,7 +128,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     width="40px">
                     {{ item.id }}
                 </collection-cell>
@@ -136,14 +136,14 @@
         </collection>
 
         <transition>
-            <author-form 
+            <author-form
                 v-if="editorVisible"
                 :form-animation="formAnimation" />
         </transition>
 
         <empty-state
             v-if="emptySearchResults"
-            description="There are no authors matching your criteria."></empty-state>
+            :description="$t('author.noAuthorsMatchingYourCriteria')"></empty-state>
     </section>
 </template>
 
@@ -255,7 +255,7 @@ export default {
         },
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected authors?',
+                message: this.$t('author.removeAuthorsMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -265,7 +265,7 @@ export default {
 
             if(itemsToRemove.length === 0) {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot remove the main author.'
+                    message: this.$t('author.cannotRemoveMainAuthor')
                 });
 
                 return;
@@ -281,7 +281,7 @@ export default {
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected authors have been removed',
+                    message: this.$t('author.removeAuthorsSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -375,14 +375,14 @@ export default {
              text-align: center;
              top: 50%;
              transform: translateY(-50%);
-             width: 8px;       
+             width: 8px;
         }
     }
 
     .order-descending {
         &:after {
-            border-top-color: transparent; 
-            border-bottom: solid 5px var(--icon-secondary-color);                     
+            border-top-color: transparent;
+            border-bottom: solid 5px var(--icon-secondary-color);
         }
     }
 }

@@ -146,7 +146,7 @@
 
         <empty-state
             v-if="emptySearchResults"
-            description="There are no tags matching your criteria."></empty-state>
+            :description="$t('tags.noTagsMatchingYourCriteria')"></empty-state>
 
         <empty-state
             v-if="showEmptyState"
@@ -154,7 +154,7 @@
             imageWidth="344"
             imageHeight="286"
             :title="$t('tags.noTagsAvailable')"
-            description="You don't have any tag, yet. Let's create the first one!">
+            :description="$t('tags.createFirstTag')">
             <p-button
                 slot="button"
                 icon="add-site-mono"
