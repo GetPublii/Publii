@@ -27,7 +27,7 @@ export default {
         useGravatarServiceMessage: 'Aby skorzystać z usługi Gravatar podaj adres e-mail autora.',
         website: 'Strona internetowa'
     },
-    posts: {
+    post: {
         addNewPost: 'Dodaj nowy wpis',
         all: 'Wszystkie',
         author: 'Autor',
@@ -104,7 +104,7 @@ export default {
         syncYourWebsite: 'Zsynchronizuj stronę',
         youHaventSelectedAnyThemeInfo: 'Nie wybrano żadnego motywu. Najpierw wybierz motyw w ustawieniach.'
     },
-    tags: {
+    tag: {
         addNewTag: 'Dodaj nowy tag',
         createFirstTag: 'Nie masz jeszcze żadnych tagów. Utwórzmy pierwszy!',
         editTag: 'Edit tag',

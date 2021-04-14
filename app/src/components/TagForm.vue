@@ -5,8 +5,8 @@
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
-                <template v-if="tagData.id">{{ $t('tags.addNewTag') }}</template>
-                <template v-if="!tagData.id">{{ $t('tags.editTag') }}</template>
+                <template v-if="tagData.id">{{ $t('tag.addNewTag') }}</template>
+                <template v-if="!tagData.id">{{ $t('tag.editTag') }}</template>
             </h2>
 
             <span
@@ -58,11 +58,11 @@
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span :title="$t('tags.tagWillNotAppearInGgeneratedTagLists')">
-                                {{ $t('tags.hideTag') }}
+                            <span :title="$t('tag.tagWillNotAppearInGgeneratedTagLists')">
+                                {{ $t('tag.hideTag') }}
                             </span>
                             <icon
-                                    :title="$t('posts.hidePost')"
+                                    :title="$t('post.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
@@ -94,7 +94,7 @@
                             v-if="!currentThemeHasSupportForTagImages"
                             slot="note"
                             class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
-                            <p>{{ $t('tags.noSupportFoFeaturedImagesForTags') }}</p>
+                            <p>{{ $t('tag.noSupportFoFeaturedImagesForTags') }}</p>
                         </div>
                         <label>
                             <image-upload
@@ -209,7 +209,7 @@
                                 type="text"
                                 v-model="tagData.additionalData.canonicalUrl"
                                 spellcheck="false"
-                                :placeholder="$t('tags.leaveBlankToUseDefaultTagPageURL')" />
+                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
                         </label>
                     </div>
                 </div>
@@ -260,7 +260,7 @@
                     type="secondary"
                     @click.native="save(false)">
                     <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
-                    <template v-if="!tagData.id">{{ $t('tags.addNewTag') }}</template>
+                    <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
                 </p-button>
 
                 <p-button
@@ -286,7 +286,7 @@
             <small
                 v-if="!currentThemeHasSupportForTagPages"
                 class="note">
-                {{ $t('tags.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
+                {{ $t('tag.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
             </small>
         </div>
     </div>
@@ -339,7 +339,7 @@ export default {
             let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
 
             if(!this.metaOptionsActive) {
-                text = this.$t('tags.toUseThisOptionEnableIndexingTagPages');
+                text = this.$t('tag.toUseThisOptionEnableIndexingTagPages');
             }
 
             return text;
@@ -379,7 +379,7 @@ export default {
                     params.additionalData = {};
                 }
             } catch (e) {
-                console.warn(this.$t('tags.tagDataParsingErrorMessage') + params.id);
+                console.warn(this.$t('tag.tagDataParsingErrorMessage') + params.id);
                 params.additionalData = {};
             }
 
@@ -502,13 +502,13 @@ export default {
         },
         showMessage(message) {
             let messageConfig = {
-                message: this.$t('tags.newTagHasBeenCeated'),
+                message: this.$t('tag.newTagHasBeenCeated'),
                 type: 'success',
                 lifeTime: 3
             };
 
             if (this.tagData.id > 0) {
-                messageConfig.message = this.$t('tags.tagHasBeenEdited');
+                messageConfig.message = this.$t('tag.tagHasBeenEdited');
             }
 
             if(message !== 'success' && message !== 'tag-added') {
@@ -517,16 +517,16 @@ export default {
 
             if(message === 'tag-duplicate-name') {
                 this.errors.push('name');
-                messageConfig.message = this.$t('tags.tagNameInUseErrorMessage');
+                messageConfig.message = this.$t('tag.tagNameInUseErrorMessage');
             } else if(message === 'tag-duplicate-slug') {
                 this.errors.push('slug');
-                messageConfig.message = this.$t('tags.tagNameSimilarInUseErrorMessage');
+                messageConfig.message = this.$t('tag.tagNameSimilarInUseErrorMessage');
             } else if(message === 'tag-empty-name') {
                 this.errors.push('name');
-                messageConfig.message = this.$t('tags.tagNameCannotBeEmptyErrorMessage');
+                messageConfig.message = this.$t('tag.tagNameCannotBeEmptyErrorMessage');
             } else if(message === 'tag-restricted-slug') {
                 this.errors.push('slug');
-                messageConfig.message = this.$t('tags.tagNameNotAllowedErrorMessage');
+                messageConfig.message = this.$t('tag.tagNameNotAllowedErrorMessage');
             }
 
             this.$bus.$emit('message-display', messageConfig);

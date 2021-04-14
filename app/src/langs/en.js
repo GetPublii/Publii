@@ -27,7 +27,7 @@ export default {
         useGravatarServiceMessage: 'In order to use Gravatar service provide the author e-mail at first.',
         website: 'Website'
     },
-    posts: {
+    post: {
         addNewPost: 'Add new post',
         all: 'All',
         author: 'Author',
@@ -104,7 +104,7 @@ export default {
         syncYourWebsite: 'Sync your website',
         youHaventSelectedAnyThemeInfo: 'You haven\'t selected any theme. Please go to the Settings and select the theme first.'
     },
-    tags: {
+    tag: {
         addNewTag: 'Add new tag',
         createFirstTag: 'You don\'t have any tag, yet. Let\'s create the first one!',
         editTag: 'Edit tag',

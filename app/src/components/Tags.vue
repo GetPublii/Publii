@@ -5,7 +5,7 @@
             :title="$t('ui.tags')">
             <header-search
                 slot="search"
-                :placeholder="$t('tags.filterOrSearchTags')"
+                :placeholder="$t('tag.filterOrSearchTags')"
                 onChangeEventName="tags-filter-value-changed" />
 
             <p-button
@@ -13,7 +13,7 @@
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                {{ $t('tags.addNewTag') }}
+                {{ $t('tag.addNewTag') }}
             </p-button>
         </p-header>
 
@@ -122,7 +122,7 @@
                             size="xs"
                             name="hidden-post"
                             primaryColor="color-7"
-                            :title="$t('tags.thisTagIsHidden')" />
+                            :title="$t('tag.thisTagIsHidden')" />
                     </a>
                 </collection-cell>
 
@@ -146,21 +146,21 @@
 
         <empty-state
             v-if="emptySearchResults"
-            :description="$t('tags.noTagsMatchingYourCriteria')"></empty-state>
+            :description="$t('tag.noTagsMatchingYourCriteria')"></empty-state>
 
         <empty-state
             v-if="showEmptyState"
             imageName="tags.svg"
             imageWidth="344"
             imageHeight="286"
-            :title="$t('tags.noTagsAvailable')"
-            :description="$t('tags.createFirstTag')">
+            :title="$t('tag.noTagsAvailable')"
+            :description="$t('tag.createFirstTag')">
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
                 :onClick="addTag">
-                {{ $t('tags.addNewTag') }}
+                {{ $t('tag.addNewTag') }}
             </p-button>
         </empty-state>
 
@@ -307,7 +307,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('tags.removeTagMessage'),
+                message: this.$t('tag.removeTagMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -339,7 +339,7 @@ export default {
             });
 
             this.$bus.$emit('message-display', {
-                message: this.$t('tags.tagStatusChangeSuccessMessage'),
+                message: this.$t('tag.tagStatusChangeSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -357,7 +357,7 @@ export default {
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: this.$t('tags.removeTagSuccessMessage'),
+                    message: this.$t('tag.removeTagSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });

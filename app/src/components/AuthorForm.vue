@@ -233,7 +233,7 @@
                                 type="text"
                                 v-model="authorData.additionalData.canonicalUrl"
                                 spellcheck="false"
-                                :placeholder="$t('tags.leaveBlankToUseDefaultTagPageURL')" />
+                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
                         </label>
                     </div>
                 </div>

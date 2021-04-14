@@ -6,7 +6,7 @@
             <header-search
                 slot="search"
                 ref="search"
-                :placeholder="$t('posts.filterOrSearchPosts')"
+                :placeholder="$t('post.filterOrSearchPosts')"
                 onChangeEventName="posts-filter-value-changed" />
 
             <btn-dropdown
@@ -24,48 +24,48 @@
             <li
                 :class="filterCssClasses('all')"
                 @click="setFilter('')">
-                {{ $t('posts.all') }} <span class="filter-count">({{ counters.all }})</span>
+                {{ $t('post.all') }} <span class="filter-count">({{ counters.all }})</span>
             </li>
 
             <li
                 :class="filterCssClasses('published')"
                 @click="setFilter('is:published')">
-                {{ $t('posts.published') }} <span class="filter-count">({{ counters.published }})</span>
+                {{ $t('post.published') }} <span class="filter-count">({{ counters.published }})</span>
             </li>
 
             <li
                 v-if="counters.featured"
                 :class="filterCssClasses('featured')"
                 @click="setFilter('is:featured')">
-                {{ $t('posts.featured') }} <span class="filter-count">({{ counters.featured }})</span>
+                {{ $t('post.featured') }} <span class="filter-count">({{ counters.featured }})</span>
             </li>
 
             <li
                 v-if="counters.hidden"
                 :class="filterCssClasses('hidden')"
                 @click="setFilter('is:hidden')">
-                {{ $t('posts.hidden') }} <span class="filter-count">({{ counters.hidden }})</span>
+                {{ $t('post.hidden') }} <span class="filter-count">({{ counters.hidden }})</span>
             </li>
 
             <li
                 v-if="counters.excluded"
                 :class="filterCssClasses('excluded')"
                 @click="setFilter('is:excluded')">
-                {{ $t('posts.excluded') }} <span class="filter-count">({{ counters.excluded }})</span>
+                {{ $t('post.excluded') }} <span class="filter-count">({{ counters.excluded }})</span>
             </li>
 
             <li
                 v-if="counters.drafts"
                 :class="filterCssClasses('draft')"
                 @click="setFilter('is:draft')">
-                {{ $t('posts.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
+                {{ $t('post.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
             </li>
 
             <li
                 v-if="counters.trashed"
                 :class="filterCssClasses('trashed')"
                 @click="setFilter('is:trashed')">
-                {{ $t('posts.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
+                {{ $t('post.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
             </li>
         </ul>
 
@@ -84,9 +84,9 @@
                         class="col-sortable-title"
                         @click="ordering('title')">
                         <template v-if="orderBy === 'title'">
-                            <strong>{{ $t('posts.title') }}</strong>
+                            <strong>{{ $t('post.title') }}</strong>
                         </template>
-                        <template v-else>{{ $t('posts.title') }}</template>
+                        <template v-else>{{ $t('post.title') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
@@ -98,9 +98,9 @@
                         class="col-sortable-title"
                         @click="ordering('created')">
                         <template v-if="orderBy === 'created'">
-                            <strong>{{ $t('posts.publicationDate') }}</strong>
+                            <strong>{{ $t('post.publicationDate') }}</strong>
                         </template>
-                        <template v-else>{{ $t('posts.publicationDate') }}</template>
+                        <template v-else>{{ $t('post.publicationDate') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
@@ -114,9 +114,9 @@
                         class="col-sortable-title"
                         @click="ordering('modified')">
                         <template v-if="orderBy === 'modified'">
-                            <strong>{{ $t('posts.modificationDate') }}</strong>
+                            <strong>{{ $t('post.modificationDate') }}</strong>
                         </template>
-                        <template v-else>{{ $t('posts.modificationDate') }}</template>
+                        <template v-else>{{ $t('post.modificationDate') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
@@ -128,9 +128,9 @@
                         class="col-sortable-title"
                         @click="ordering('author')">
                         <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('posts.author') }}</strong>
+                            <strong>{{ $t('post.author') }}</strong>
                         </template>
-                        <template v-else>{{ $t('posts.author') }}</template>
+                        <template v-else>{{ $t('post.author') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
@@ -175,7 +175,7 @@
                         icon="trash"
                         type="small light icon delete"
                         :onClick="bulkTrash">
-                        {{ $t('posts.moveToTrash') }}
+                        {{ $t('post.moveToTrash') }}
                     </p-button>
 
                     <p-button
@@ -183,7 +183,7 @@
                         icon="duplicate"
                         type="small light icon"
                         :onClick="bulkDuplicate">
-                        {{ $t('posts.duplicate') }}
+                        {{ $t('post.duplicate') }}
                     </p-button>
 
                     <div
@@ -206,7 +206,7 @@
                                    size="xs"
                                    name="draft-post"
                                    primaryColor="color-8" />
-                                {{ $t('posts.publish') }}
+                                {{ $t('post.publish') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('draft')"
@@ -215,7 +215,7 @@
                                    size="xs"
                                    name="draft-post"
                                    primaryColor="color-7" />
-                                {{ $t('posts.markAsDraft') }}
+                                {{ $t('post.markAsDraft') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('featured')"
@@ -224,7 +224,7 @@
                                    size="xs"
                                    name="featured-post"
                                    primaryColor="color-helper-6" />
-                                {{ $t('posts.markAsFeatured') }}
+                                {{ $t('post.markAsFeatured') }}
                             </li>
                             <li
                                 v-if="selectedPostsHaveStatus('featured')"
@@ -233,7 +233,7 @@
                                    size="xs"
                                    name="featured-post"
                                    primaryColor="color-8" />
-                                {{ $t('posts.markAsUnfeatured') }}
+                                {{ $t('post.markAsUnfeatured') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
@@ -242,7 +242,7 @@
                                    size="xs"
                                    name="excluded-post"
                                    primaryColor="color-3" />
-                                {{ $t('posts.excludeFromHomepage') }}
+                                {{ $t('post.excludeFromHomepage') }}
                             </li>
                             <li
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
@@ -251,7 +251,7 @@
                                    size="xs"
                                    name="excluded-post"
                                    primaryColor="color-8" />
-                                {{ $t('posts.includeInHomepage') }}
+                                {{ $t('post.includeInHomepage') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('hidden')"
@@ -303,32 +303,32 @@
                                 size="xs"
                                 name="featured-post"
                                 primaryColor="color-helper-6"
-                                :title="$t('posts.thisPostIsFeatured')" />
+                                :title="$t('post.thisPostIsFeatured')" />
                             <icon
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
                                 primaryColor="color-7"
-                                :title="$t('posts.thisPostIsHidden')" />
+                                :title="$t('post.thisPostIsHidden')" />
                             <icon
                                 v-if="item.isExcludedOnHomepage"
                                 name="excluded-post"
                                 size="xs"
                                 primaryColor="color-3"
-                                :title="$t('posts.thisPostIsExcludedFromHomepage')" />
+                                :title="$t('post.thisPostIsExcludedFromHomepage')" />
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
                                 primaryColor="color-7"
-                                :title="$t('posts.thisPostIsADraft')" />
+                                :title="$t('post.thisPostIsADraft')" />
                         </a>
                     </h2>
 
                     <div
                         v-if="showPostSlugs"
                         class="post-slug">
-                        {{ $t('posts.url') }}: /{{ item.slug }}
+                        {{ $t('post.url') }}: /{{ item.slug }}
                     </div>
 
                     <div
@@ -384,7 +384,7 @@
 
         <empty-state
             v-if="emptySearchResults"
-            :description="$t('posts.noPostsMatchingYourCriteria')"></empty-state>
+            :description="$t('post.noPostsMatchingYourCriteria')"></empty-state>
 
         <div
             v-if="dataLoaded && !hasPosts"
@@ -392,40 +392,40 @@
 
            <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/wysiwyg-editor.svg'" height="286" width="331" />
-                <h3>{{ $t('posts.editorWYSIWYG') }}</h3>
-                <p>{{ $t('posts.editorWYSIWYGInfo') }}</p>
+                <h3>{{ $t('post.editorWYSIWYG') }}</h3>
+                <p>{{ $t('post.editorWYSIWYGInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'tinymce')">
-                    {{ $t('posts.addNewPost') }}
+                    {{ $t('post.addNewPost') }}
                 </p-button>
            </div>
 
            <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/block-editor.svg'" height="286" width="331" />
-                <h3>{{ $t('posts.editorBlock') }}</h3>
-                <p>{{ $t('posts.editorBlockInfo') }}</p>
+                <h3>{{ $t('post.editorBlock') }}</h3>
+                <p>{{ $t('post.editorBlockInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'blockeditor')">
-                    {{ $t('posts.addNewPost') }}
+                    {{ $t('post.addNewPost') }}
                 </p-button>
            </div>
 
            <div>
                 <img :src="'../src/assets/svg/' + $root.getCurrentAppTheme() + '/markdown-editor.svg'" height="286" width="331" />
-                <h3>{{ $t('posts.editorMarkdown') }}</h3>
-                <p>{{ $t('posts.editorMarkdownInfo') }}</p>
+                <h3>{{ $t('post.editorMarkdown') }}</h3>
+                <p>{{ $t('post.editorMarkdownInfo') }}</p>
                 <p-button
                     slot="button"
                     icon="add-site-mono"
                     type="icon"
                     :onClick="addNewPost.bind(this, 'markdown')">
-                    {{ $t('posts.addNewPost') }}
+                    {{ $t('post.addNewPost') }}
                 </p-button>
            </div>
         </div>
@@ -501,24 +501,24 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: this.$t('posts.editorWYSIWYGUse'),
-                    activeLabel: this.$t('posts.addNewPost'),
+                    label: this.$t('post.editorWYSIWYGUse'),
+                    activeLabel: this.$t('post.addNewPost'),
                     value: 'tinymce',
                     icon: 'wysiwyg',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'tinymce')
                 },
                 {
-                    label: this.$t('posts.editorBlockUse'),
-                    activeLabel: this.$t('posts.addNewPost'),
+                    label: this.$t('post.editorBlockUse'),
+                    activeLabel: this.$t('post.addNewPost'),
                     value: 'blockeditor',
                     icon: 'block',
                     isVisible: () => true,
                     onClick: this.addNewPost.bind(this, 'blockeditor')
                 },
                 {
-                    label: this.$t('posts.editorMarkdownUse'),
-                    activeLabel: this.$t('posts.addNewPost'),
+                    label: this.$t('post.editorMarkdownUse'),
+                    activeLabel: this.$t('post.addNewPost'),
                     value: 'markdown',
                     icon: 'markdown',
                     isVisible: () => true,
@@ -581,8 +581,8 @@ export default {
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: this.$t('posts.editorBlockNotSupportedNewPostInfo'),
-                    okLabel: this.$t('posts.openEditorAnyway'),
+                    message: this.$t('post.editorBlockNotSupportedNewPostInfo'),
+                    okLabel: this.$t('post.openEditorAnyway'),
                     isDanger: true,
                     okClick: () => {
                         this.openEditor(false, editorType);
@@ -601,8 +601,8 @@ export default {
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
             ) {
                 this.$bus.$emit('confirm-display', {
-                    message: this.$t('posts.editorBlockNotSupportedEditPostInfo'),
-                    okLabel: this.$t('posts.editPostAnyway'),
+                    message: this.$t('post.editorBlockNotSupportedEditPostInfo'),
+                    okLabel: this.$t('post.editPostAnyway'),
                     isDanger: true,
                     okClick: () => {
                         this.openEditor(id, editorType);
@@ -656,7 +656,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('posts.removePostMessage'),
+                message: this.$t('post.removePostMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -673,7 +673,7 @@ export default {
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: this.$t('posts.removePostSuccessMessage'),
+                    message: this.$t('post.removePostSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -723,7 +723,7 @@ export default {
             ipcRenderer.once('app-post-duplicated', (data) => {
                 if(!data) {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('posts.duplicatePostErrorMessage'),
+                        message: this.$t('post.duplicatePostErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -731,7 +731,7 @@ export default {
                     return;
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('posts.duplicatePostSuccessMessage'),
+                        message: this.$t('post.duplicatePostSuccessMessage'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -773,7 +773,7 @@ export default {
             });
 
             this.$bus.$emit('message-display', {
-                message: this.$t('posts.postStatusChangeSuccessMessage'),
+                message: this.$t('post.postStatusChangeSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
