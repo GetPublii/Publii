@@ -1,11 +1,11 @@
 <template>
-    <div 
+    <div
         :key="'menu-item-view-' + id"
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
-                <template v-if="menuItemID !== ''">Edit menu item</template>
-                <template v-if="menuItemID === ''">Add new menu item</template>
+                <template v-if="menuItemID !== ''">{{ $t('menu.editMenuItem') }}</template>
+                <template v-if="menuItemID === ''">{{ $t('menu.addNewMenuItem') }}</template>
             </h2>
 
             <span
@@ -18,7 +18,7 @@
             <label
                 :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
                 key="menu-item-editor-field-label">
-                <span>Label</span>
+                <span>{{ $t('menu.label') }}</span>
                 <input
                     v-model="label"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -29,7 +29,7 @@
             <label
                 :class="{ 'is-invalid': errors.indexOf('type') > -1 }"
                 key="menu-item-editor-field-type">
-                <span>Type</span>
+                <span>{{ $t('menu.type') }}</span>
                 <v-select
                     v-model="type"
                     @click.native="cleanError('type')"
@@ -37,14 +37,14 @@
                     :searchable="false"
                     :custom-label="customTypeLabels"
                     :show-labels="false"
-                    placeholder="Select item type"></v-select>
+                    :placeholder="$t('menu.selectItemType')"></v-select>
             </label>
 
             <label
                 v-if="type === 'internal'"
                 :class="{ 'is-invalid': errors.indexOf('internalLink') > -1 }"
                 key="menu-item-editor-field-internal">
-                <span>Internal link</span>
+                <span>{{ $t('menu.internalLink') }}</span>
                 <input
                     v-model="internalLink"
                     @keyup="cleanError('internalLink')"
@@ -56,7 +56,7 @@
                 v-if="type === 'external'"
                 :class="{ 'is-invalid': errors.indexOf('externalLink') > -1 }"
                 key="menu-item-editor-field-external">
-                <span>External URL</span>
+                <span>{{ $t('menu.externalURL') }}</span>
                 <input
                     v-model="externalLink"
                     @keyup="cleanError('externalLink')"
@@ -68,7 +68,7 @@
                 v-if="type === 'tag'"
                 :class="{ 'is-invalid': errors.indexOf('tagPage') > -1 }"
                 key="menu-item-editor-field-tag">
-                <span>Tag page</span>
+                <span>{{ $t('tag.tagPage') }}</span>
                 <v-select
                     ref="tagPagesSelect"
                     :options="tagPages"
@@ -78,14 +78,14 @@
                     :close-on-select="true"
                     :show-labels="false"
                     @select="closeDropdown('tagPagesSelect')"
-                    placeholder="Select tag page"></v-select>
+                    :placeholder="$t('tag.selectTagPage')"></v-select>
             </label>
 
             <label
                 v-if="type === 'author'"
                 :class="{ 'is-invalid': errors.indexOf('authorPage') > -1 }"
                 key="menu-item-editor-field-author">
-                <span>Author page</span>
+                <span>{{ $t('author.authorPage') }}</span>
                 <v-select
                     ref="authorPagesSelect"
                     :options="authorPages"
@@ -95,14 +95,14 @@
                     :close-on-select="true"
                     :show-labels="false"
                     @select="closeDropdown('authorPagesSelect')"
-                    placeholder="Select author page"></v-select>
+                    :placeholder="$t('author.selectAuthorPage')"></v-select>
             </label>
 
             <label
                 v-if="type === 'post'"
                 :class="{ 'is-invalid': errors.indexOf('postPage') > -1 }"
                 key="menu-item-editor-field-post">
-                <span>Post page</span>
+                <span>{{ $t('post.postPage') }}</span>
                 <v-select
                     ref="postPagesSelect"
                     :options="postPages"
@@ -112,11 +112,11 @@
                     :close-on-select="true"
                     :show-labels="false"
                     @select="closeDropdown('postPagesSelect')"
-                    placeholder="Select post page"></v-select>
+                    :placeholder="$t('post.selectPostPage')"></v-select>
             </label>
 
             <label key="menu-item-editor-field-title">
-                <span>Link Title attribute</span>
+                <span>{{ $t('menu.linkTitleAttribute') }}</span>
                 <input
                     v-model="title"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -124,7 +124,7 @@
             </label>
 
             <label key="menu-item-editor-field-cssclass">
-                <span>CSS class</span>
+                <span>{{ $t('menu.classCSS') }}</span>
                 <input
                     v-model="cssClass"
                     spellcheck="false"
@@ -132,18 +132,18 @@
             </label>
 
             <label key="menu-item-editor-field-target">
-                <span>Link target:</span>
+                <span>{{ $t('ui.linkTarget') }}:</span>
                 <v-select
                     v-model="target"
                     :options="linkTargets"
                     :searchable="false"
                     :custom-label="customTargetLabels"
                     :show-labels="false"
-                    placeholder="Select link target"></v-select>
+                    :placeholder="$t('menu.selectLinkTarget')"></v-select>
             </label>
 
             <label key="menu-item-editor-field-rel">
-                <span>Link rel attribute:</span>
+                <span>{{ $t('menu.linkRelAttribute') }}:</span>
                 <input
                     v-model="rel"
                     spellcheck="false"
@@ -155,20 +155,20 @@
                     v-if="menuItemID !== ''"
                     type="primary"
                     @click.native="editMenuItem">
-                    Save Changes
+                    {{ $t('ui.saveChanges') }}
                 </p-button>
 
                 <p-button
                     v-if="menuItemID === ''"
                     type="primary"
                     @click.native="addMenuItem">
-                    Add menu item
+                    {{ $t('menu.addMenuItem') }}
                 </p-button>
 
                 <p-button
                     @click.native="hide()"
                     type="outline">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -202,15 +202,15 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 
-                'post', 
+            return [
+                'post',
                 'tag',
                 'tags',
-                'author', 
-                'frontpage', 
-                'internal',                 
-                'external', 
-                'separator' 
+                'author',
+                'frontpage',
+                'internal',
+                'external',
+                'separator'
             ];
         },
         tagPages () {
@@ -264,14 +264,14 @@ export default {
     methods: {
         customTypeLabels (value) {
             switch (value) {
-                case 'post': return 'Post link';
-                case 'tag': return 'Tag link';
-                case 'tags': return 'Tags list link';
-                case 'author': return 'Author link';
-                case 'frontpage': return 'Frontpage link';
-                case 'internal': return 'Internal link';               
-                case 'external': return 'External link';
-                case 'separator': return 'Text separator';
+                case 'post': return this.$t('post.postLink');
+                case 'tag': return this.$t('tag.tagLink');
+                case 'tags': return this.$t('tag.tagsListLink');
+                case 'author': return this.$t('author.authorLink');
+                case 'frontpage': return this.$t('ui.frontpageLink');
+                case 'internal': return this.$t('menu.internalLink');
+                case 'external': return this.$t('menu.externalLink');
+                case 'separator': return this.$t('menu.textSeparator');
             }
         },
         customTagLabels (value) {
@@ -285,8 +285,8 @@ export default {
         },
         customTargetLabels (value) {
             switch (value) {
-                case '_self': return 'The same window';
-                case '_blank': return 'New window';
+                case '_self': return this.$t('ui.sameWindow');
+                case '_blank': return this.$t('ui.newWindow');
             }
         },
         closeDropdown (refID) {
@@ -347,7 +347,7 @@ export default {
 
             if(this.errors.length) {
                 this.$bus.$emit('message-display', {
-                    message: 'Please fill all required fields',
+                    message: this.$t('ui.pleaseFillAllRequiredFields'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -454,8 +454,8 @@ export default {
 @import '../scss/options-sidebar.scss';
 
 .options-sidebar {
-    
-    h2 {              
+
+    h2 {
         margin-bottom: 1.2rem;
     }
 

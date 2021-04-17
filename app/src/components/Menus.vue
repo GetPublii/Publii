@@ -2,13 +2,13 @@
     <section :class="{ 'content': true, 'menu': true, 'no-scroll': editorVisible }">
         <p-header
             v-if="!showEmptyState"
-            title="Menu">
+            :title="$t('menu.menu')">
             <p-button
                 :onClick="showAddMenuForm"
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                Add new menu
+                {{ $t('menu.addNewMenu') }}
             </p-button>
         </p-header>
 
@@ -23,15 +23,15 @@
                 </collection-cell>
 
                 <collection-cell width="calc(100% - 270px)">
-                    Name
+                    {{ $t('ui.name') }}
                 </collection-cell>
 
                 <collection-cell width="180px">
-                    Assigned menu
+                    {{ $t('menu.assignedMenu') }}
                 </collection-cell>
 
                 <collection-cell width="50px">
-                    Items
+                    {{ $t('menu.items') }}
                 </collection-cell>
 
                 <div
@@ -41,7 +41,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -94,20 +94,20 @@
                     <p-button
                         type="primary small"
                         @click.native="addMenuItem(index)">
-                        Add menu item
+                        {{ $t('menu.addMenuItem') }}
                     </p-button>
                     <p-button
                         type="clean small"
                         class="menu-edit-btn"
                         @click.native="editMenuName(item.name, index)">
-                        Edit menu name
+                        {{ $t('menu.editMenuName') }}
                     </p-button>
 
                     <div class="menu-content">
                         <em
                             v-if="!item.items.length"
                             class="menu-empty-list">
-                            There are no menu items; create new ones via the "Add menu item" button above.
+                            {{ $t('menu.noMenusMessage') }}
                         </em>
 
                         <draggable
@@ -138,14 +138,14 @@
             imageName="menus.svg"
             imageWidth="344"
             imageHeight="286"
-            title="No menus available"
-            description="You don't have any menu, yet. Let's create the first one!">
+            :title="$t('menu.noMenusAvailable')"
+            :description="$t('menu.noMenusCreateNewOne')">
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
                 :onClick="showAddMenuForm">
-                Add new menu
+                {{ $t('menu.addNewMenu') }}
             </p-button>
         </empty-state>
 
@@ -190,7 +190,7 @@ export default {
         },
         availableMenus () {
             let menus = JSON.parse(JSON.stringify(this.$store.state.currentSite.themeSettings.menus));
-            menus[''] = 'Unassigned';
+            menus[''] = this.$t('menu.unassigned');
             return menus;
         },
         usedMenus () {
@@ -222,9 +222,9 @@ export default {
         showAddMenuForm () {
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Provide a name for your new menu:',
+                message: this.$t('menu.provideNameForNewMenu'),
                 okClick: (result) => this.addNewMenu(result),
-                okLabel: 'Create new menu'
+                okLabel: this.$t('menu.createNewMenu')
             });
         },
         addNewMenu (newMenuName) {
@@ -234,20 +234,20 @@ export default {
                     this.saveNewMenuStructure();
 
                     this.$bus.$emit('message-display', {
-                        message: 'New menu has been created',
+                        message: this.$t('menu.newMenuCreated'),
                         type: 'success',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The menu name supplied already exists. Please use a different name.',
+                        message: this.$t('menu.menuNameExistsErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 }
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'The menu name field must be non-empty. Please create a new menu again.',
+                    message: this.$t('menu.menuNameCannotBeEmptyCreateNewMenuErrorMessage'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -291,9 +291,9 @@ export default {
         editMenuName (oldName, index) {
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Provide a new name for the selected menu:',
+                message: this.$t('menu.provideNewNameForMenu'),
                 okClick: (result) => this.changeMenuName(result, index),
-                okLabel: 'Edit menu name',
+                okLabel: this.$t('menu.editMenuName'),
                 defaultText: oldName
             });
         },
@@ -307,20 +307,20 @@ export default {
                     this.saveNewMenuStructure();
 
                     this.$bus.$emit('message-display', {
-                        message: 'Menu name has been edited',
+                        message: this.$t('menu.menuNameHasBeenEdited'),
                         type: 'success',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The menu name is in use. Please try to change a menu name again.',
+                        message: this.$t('menu.menuNameInUseErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 }
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'The field menu name should not be left empty. Please edit a menu name again.',
+                    message: this.$t('menu.menuNameCannotBeEmptyErrorMessage'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -328,7 +328,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected menus?',
+                message: this.$t('menu.menusRemoveMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -339,7 +339,7 @@ export default {
             this.saveNewMenuStructure();
 
             this.$bus.$emit('message-display', {
-                message: 'Selected menus have been removed',
+                message: this.$t('menu.menusRemoveSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -413,12 +413,12 @@ export default {
     .menu-item-list {
         list-style-type: none;
         margin: .25 * $spacing 0;
-        padding: 0;       
+        padding: 0;
     }
-    
+
     &-edit-btn {
          color: var(--link-secondary-color) !important;
-        
+
          &:active,
          &:focus,
          &:hover {
