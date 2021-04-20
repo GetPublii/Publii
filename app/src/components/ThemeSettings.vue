@@ -2,16 +2,16 @@
     <section
         class="content"
         ref="content">
-        <div 
+        <div
             class="theme-settings"
             v-if="siteHasTheme">
-            <p-header title="Theme Settings">
+            <p-header :title="$t('theme.themeSettings')">
                 <p-button
                     @click.native="save"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    Save Settings
+                    {{ $t('ui.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
@@ -24,10 +24,10 @@
                     defaultValue="full-site" />
             </p-header>
 
-            <fields-group title="Basic settings">
+            <fields-group :title="$t('ui.basicSettings')">
                 <field
                     id="name"
-                    label="Posts per page:">
+                    :label="$t('theme.postsPerPage')">
                     <text-input
                         slot="field"
                         ref="name"
@@ -35,16 +35,16 @@
                         min="-1"
                         step="1"
                         v-model="basic.postsPerPage" />
-                    <small 
+                    <small
                         slot="note"
                         class="note">
-                        Use -1 as value if you need to display all posts on page.
+                        {{ $t('theme.postsPerPageInfo') }}
                     </small>
                 </field>
 
                 <field
                     id="name"
-                    label="Tags posts per page:">
+                    :label="$t('theme.tagsPostsPerPage')">
                     <text-input
                         slot="field"
                         ref="name"
@@ -52,16 +52,16 @@
                         min="-1"
                         step="1"
                         v-model="basic.tagsPostsPerPage" />
-                    <small 
+                    <small
                         slot="note"
                         class="note">
-                        Use -1 as value if you need to display all tag posts on page.
+                        {{ $t('theme.tagsPostsPerPageInfo') }}
                     </small>
                 </field>
 
                 <field
                     id="name"
-                    label="Authors posts per page:">
+                    :label="$t('theme.authorsPostsPerPage')">
                     <text-input
                         slot="field"
                         ref="name"
@@ -69,16 +69,16 @@
                         min="-1"
                         step="1"
                         v-model="basic.authorsPostsPerPage" />
-                    <small 
+                    <small
                         slot="note"
                         class="note">
-                        Use -1 as value if you need to display all authors posts on page.
+                        {{ $t('theme.authorsPostsPerPageInfo') }}
                     </small>
                 </field>
 
                 <field
                     id="name"
-                    label="Excerpt length:">
+                    :label="$t('theme.excerptLength')">
                     <text-input
                         slot="field"
                         ref="name"
@@ -90,7 +90,7 @@
 
                 <field
                     id="name"
-                    label="Website logo:">
+                    :label="$t('theme.websiteLogo')">
                     <image-upload
                         slot="field"
                         v-model="basic.logo"
@@ -98,7 +98,7 @@
                 </field>
             </fields-group>
 
-            <fields-group title="Custom settings">
+            <fields-group :title="$t('theme.customSettings')">
                 <tabs
                     ref="custom-settings-tabs"
                     id="custom-settings-tabs"
@@ -107,7 +107,7 @@
                         v-for="(groupName, index) of customSettingsTabs"
                         :slot="'tab-' + index"
                         :key="'tab-' + index">
-                        <div v-if="groupName !== 'Post options' && groupName !== 'Translations'">
+                        <div v-if="groupName !== $t('theme.postOptions') && groupName !== $t('theme.translations')">
                             <field
                                 v-for="(field, subindex) of getFieldsByGroupName(groupName)"
                                 v-if="checkDependencies(field.dependencies)"
@@ -237,18 +237,18 @@
                             </field>
                         </div>
 
-                        <div v-if="groupName === 'Post options'">
+                        <div v-if="groupName === $t('theme.postOptions')">
                             <field>
                                 <small
                                     slot="note"
                                     class="note">
-                                    The Post options section allows you to set global options for what extra information should be included in your posts. Changes made in this section will affect all posts on your site, but you can also override the App Settings on the Post Edit screen for each individual post if necessary.<br><br>
+                                    {{ $t('theme.postOptionsInfo') }}<br><br>
                                 </small>
                             </field>
 
-                            <field 
+                            <field
                                 v-if="hasPostTemplates"
-                                label="Default post template"
+                                :label="$t('theme.defaultPostTemplate')"
                                 key="tab-last-field-0">
                                 <dropdown
                                     :items="postTemplates"
@@ -258,7 +258,7 @@
                                     <option
                                         value=""
                                         slot="first-choice">
-                                        Default template
+                                        {{ $t('theme.defaultTemplate') }}
                                     </option>
                                 </dropdown>
                             </field>
@@ -280,13 +280,13 @@
                                     :type="field.type"
                                     slot="field"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
                                     v-model="postView[field.name]" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
-                                    :placeholder="field.placeholder ? field.placeholder : 'Leave it blank to use default value'"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="postView[field.name]" />
 
@@ -305,12 +305,12 @@
                             </field>
                         </div>
 
-                        <div v-if="groupName === 'Translations'">
+                        <div v-if="groupName === $t('theme.translations')">
                             <field>
                                 <small
                                     slot="note"
-                                    class="note">
-                                    If you need to translate theme phrases to languages other than english - please check our documentation regarding <a href="https://getpublii.com/dev/translations-api/" target="_blank" rel="noopener noreferrer">Translations API</a><br><br>
+                                    class="note"
+                                    v-pure-html="$t('theme.translationsInfo')">
                                 </small>
                             </field>
                         </div>
@@ -334,7 +334,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    Save Settings
+                    {{ $t('ui.saveSettings') }}
                 </p-button>
 
                 <p-button
@@ -342,7 +342,7 @@
                     slot="buttons"
                     type="outline"
                     :disabled="buttonsLocked">
-                    Reset theme settings
+                    {{ $t('theme.resetThemeSettings') }}
                 </p-button>
             </p-footer>
         </div>
@@ -360,7 +360,7 @@ import Utils from './../helpers/utils.js';
 
 export default {
     name: 'site-settings',
-    components: { 
+    components: {
         'authors-dropdown': AuthorsDropDown,
         'posts-dropdown': PostsDropDown,
         'tags-dropdown': TagsDropDown
@@ -395,8 +395,8 @@ export default {
                 }
             });
 
-            tabs.push('Post options');
-            tabs.push('Translations');
+            tabs.push(this.$t('theme.postOptions'));
+            tabs.push(this.$t('theme.translations'));
 
             return tabs;
         },
@@ -412,16 +412,16 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Render full website',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'full-site',
                     isVisible: () => true,
                     icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render front page only',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'homepage',
                     icon: 'quick-preview',
                     isVisible: () => true,
@@ -616,7 +616,7 @@ export default {
                     this.savedSettings(showPreview, renderingType);
                     this.$store.commit('setThemeConfig', data);
                     this.$bus.$emit('message-display', {
-                        message: 'Theme settings has been successfully saved.',
+                        message: this.$t('theme.saveSettingsSuccessMessage'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -629,8 +629,8 @@ export default {
             if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                        okLabel: 'Go to app settings',
+                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                        okLabel: this.$t('sync.goToAppSettings'),
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -649,7 +649,7 @@ export default {
         },
         reset () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to reset the theme settings?',
+                message: this.this.$t('theme.settingsResetMessage'),
                 okClick: this.resetSettings
             });
         },
@@ -671,7 +671,7 @@ export default {
                 this.loadSettings();
 
                 this.$bus.$emit('message-display', {
-                    message: 'Theme settings has been reset.',
+                    message: this.$t('theme.settingsResetSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
