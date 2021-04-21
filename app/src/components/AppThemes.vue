@@ -1,18 +1,18 @@
 <template>
     <section class="settings site-settings-app">
         <div class="settings-wrapper">
-            <p-header title="Themes">
+            <p-header :title="$t('theme.themes')">
                 <p-button
                     :onClick="goBack"
                     type="outline"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
 
                 <p-button
                     :onClick="installTheme"
                     slot="buttons">
-                    Install theme
+                    {{ $t('theme.installTheme') }}
                 </p-button>
             </p-header>
 
@@ -84,11 +84,11 @@ export default {
             };
 
             if(data.status === 'added') {
-                messageConfig.message = 'Theme has been successfully added.';
+                messageConfig.message = this.$t('theme.addThemeSuccessMessage');
             } else if(data.status === 'updated') {
-                messageConfig.message = 'Theme has been successfully updated.';
+                messageConfig.message = this.$t('theme.updateThemeSuccessMessage');
             } else if(data.status === 'wrong-format') {
-                messageConfig.message = 'The uploaded files are incorrect. Please upload theme directory or theme ZIP file.';
+                messageConfig.message = this.$t('theme.uploadThemeErrorMessage');
                 messageConfig.type = 'warning';
             }
 

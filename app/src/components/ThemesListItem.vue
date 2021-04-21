@@ -4,9 +4,9 @@
             :src="thumbnail"
             class="theme-thumbnail"
             alt="">
-        
+
         <figcaption class="theme-name">
-            <h3> 
+            <h3>
                 {{ name }}
                 <span class="theme-version">
                     {{ version }}
@@ -15,9 +15,9 @@
             <a
                 href="#"
                 class="theme-delete"
-                title="Delete theme"
+                :title="$t('theme.deleteTheme')"
                 @click.stop.prevent="deleteTheme(name, directory)">
-                    <icon                   
+                    <icon
                         size="xs"
                         properties="not-clickable"
                         name="trash" />
@@ -51,7 +51,7 @@ export default {
     methods: {
         deleteTheme: function(themeName, themeDirectory) {
             let confirmConfig = {
-                message: 'Do you really want to remove the ' + themeName + ' theme?',
+                message: this.$t('theme.removeThemeMessagePT1') + themeName + this.$t('theme.removeThemeMessagePT2'),
                 okClick: function() {
                     ipcRenderer.send('app-theme-delete', {
                         name: themeName,
@@ -60,7 +60,7 @@ export default {
 
                     ipcRenderer.once('app-theme-deleted', (event, data) => {
                         this.$bus.$emit('message-display', {
-                            message: 'Theme has been successfully removed.',
+                            message: this.$t('theme.removeThemeSuccessMessage'),
                             type: 'success',
                             lifeTime: 3
                         });
@@ -80,36 +80,36 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 
-.theme {    
+.theme {
     margin: 0;
-    position: relative;        
-    
+    position: relative;
+
     &-thumbnail {
         border: 1px solid var(--gray-1);
         border-radius: 4px;
         display: block;
-        height: auto;       
-        max-width: 100%;        
-        transition: var(--transition);        
+        height: auto;
+        max-width: 100%;
+        transition: var(--transition);
     }
 
-    &-delete {      
+    &-delete {
         background: var(--bg-primary);
         border-radius: 50%;
         height: 3rem;
-        display: inline-block;      
+        display: inline-block;
         position: absolute;
         right: 1.4rem;
-        text-align: center;        
-        width: 3rem;        
-        
+        text-align: center;
+        width: 3rem;
+
         & > svg {
              fill: var(--icon-secondary-color);
              transform: scale(.9);
              transition: var(--transition);
              vertical-align: middle;
         }
-        
+
         &:hover {
              & > svg {
                 fill: var(--warning);
@@ -118,19 +118,19 @@ export default {
         }
     }
 
-    &-name { 
+    &-name {
         align-items: center;
         background: var(--gray-1);
         border-radius: 0 0 4px 4px;
-        display: flex;        
+        display: flex;
         justify-content: space-between;
-        padding: 0 2rem; 
+        padding: 0 2rem;
         position: relative;
-        text-align: left;   
-        
+        text-align: left;
+
         & > h3 {
-             font-size: 1.5rem; 
-             font-weight: 500; 
+             font-size: 1.5rem;
+             font-weight: 500;
              line-height: 1.4;
              margin: 1.2rem 0;
         }
