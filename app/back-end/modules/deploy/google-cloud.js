@@ -151,8 +151,12 @@ class GoogleCloud {
     uploadFile(input, output) {
         let self = this;
 
-        if(typeof this.prefix === 'string' && this.prefix !== '') {
+        if (typeof this.prefix === 'string' && this.prefix !== '') {
             output = normalizePath(path.join(this.prefix, output));
+        }
+
+        if (output[0] === '/') {
+            output = output.substr(1);
         }
 
         this.connection.upload(input, {
