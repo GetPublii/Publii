@@ -31,7 +31,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             activeParentClass = 'active-parent';
         }
 
-        if(typeof hasSubmenuClassClass !== 'string') {
+        if(typeof hasSubmenuClass !== 'string') {
             hasSubmenuClass = 'has-submenu';
         }
 
@@ -78,7 +78,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             activeParentClass = 'active-parent';
         }
 
-        if(typeof hasSubmenuClassClass !== 'string') {
+        if(typeof hasSubmenuClass !== 'string') {
             hasSubmenuClass = 'has-submenu';
         }
 
