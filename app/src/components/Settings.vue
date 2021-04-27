@@ -3,13 +3,13 @@
         class="content"
         ref="content">
         <div class="site-settings">
-            <p-header title="Site Settings">
+            <p-header :title="$t('ui.siteSettings')">
                 <p-button
                     @click.prevent.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    Save Settings
+                    {{ $t('ui.saveSettings') }}Save Settings
                 </p-button>
 
                 <btn-dropdown
@@ -22,14 +22,14 @@
                     defaultValue="full-site" />
             </p-header>
 
-            <fields-group title="Basic settings">
+            <fields-group :title="$t('ui.basicSettings')">
                 <logo-creator
                     ref="logo-creator"
                     slot="" />
 
                 <field
                     id="name"
-                    label="Site name:">
+                    :label="$t('site.siteName')">
                     <text-input
                         slot="field"
                         ref="name"
@@ -42,13 +42,13 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change site name.
+                        {{ $t('sync.syncInProgressMessage') }}During sync process you cannot change site name.
                     </small>
                 </field>
 
                 <field
                     id="language"
-                    label="Language:">
+                    :label="$t('settings.language')">
                     <dropdown
                         slot="field"
                         id="language"
@@ -61,7 +61,7 @@
                 <field
                     v-if="language === 'custom'"
                     id="customLanguage"
-                    label="Custom language code:">
+                    :label="$t('settings.customLanguageCode')">
                     <text-input
                         slot="field"
                         id="customLanguage"
@@ -73,7 +73,7 @@
 
                 <field
                     id="spellchecking"
-                    label="Enable spellchecker">
+                    :label="$t('settings.enableSpellchecker')">
                     <switcher
                         slot="field"
                         id="spellchecking"
@@ -82,13 +82,14 @@
                         v-if="hasNonAutomaticSpellchecker && spellcheckIsNotSupported"
                         slot="note"
                         class="note is-invalid">
+                        {{ $t('settings.spellcheckerDoesNotSupportLanguage') }}
                         The spellchecker does not support your selected website language. We recommend to disable this feature.
                     </small>
                 </field>
 
                 <field
                     id="theme"
-                    label="Current theme:">
+                    :label="$t('settings.currentTheme')">
                     <strong
                         v-if="currentTheme"
                         slot="field">
@@ -98,6 +99,7 @@
                     <strong
                         v-if="!currentTheme"
                         slot="field">
+                        {{ $t('settings.notSelected') }}
                         Not selected
                     </strong>
 
@@ -109,15 +111,18 @@
                         v-model="theme"></themes-dropdown>
                 </field>
 
-                <div 
+                <div
                     v-if="!currentThemeHasSupportedFeaturesList"
                     class="msg msg-icon msg-alert">
-                    <icon name="warning" customWidth="28" customHeight="28"/>
-                    <p>Your theme <strong>config.json</strong> file does not contain <strong>supportedFeatures</strong> section. Please update or modify your theme to get accurate message about features which are not supported by your currently used theme. <a href="https://getpublii.com/dev/theme-supported-features" target="_blank" rel="noopener noreferrer">Read more about supported features</a>.</p>
+                    <icon
+                        name="warning"
+                        customWidth="28"
+                        customHeight="28"
+                        v-pure-html="$t('settings.themeDoesNotHaveSupportedFeaturesList')"/>
                 </div>
             </fields-group>
 
-            <fields-group title="Advanced options">
+            <fields-group :title="$t('settings.advancedOptions')">
                 <tabs
                     ref="advanced-tabs"
                     id="advanced-basic-settings-tabs"
@@ -125,24 +130,27 @@
                     <div slot="tab-0">
                         <field
                             id="no-index-this-page"
-                            label="Noindex website">
+                            :label="$t('settings.noIndexWebsite')">
                             <switcher
                                 slot="field"
                                 v-model="advanced.noIndexThisPage" />
                             <small
                                 slot="note"
-                                class="note">Ask the search engine not to crawl the whole website.</small>
+                                class="note">
+                                {{ $t('settings.dontIndexThisPage') }}
+                                Ask the search engine not to crawl the whole website.
+                            </small>
                         </field>
 
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
-                            label="Frontpage" />
+                            :label="$t('settings.frontpage')" />
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-title"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="meta-title"
                                 v-model="advanced.metaTitle"
@@ -155,7 +163,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="meta-description"
                                 v-model="advanced.metaDescription"
@@ -168,7 +176,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-robots-index"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-index"
                                 slot="field"
@@ -180,27 +188,27 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="homepage-no-index-pagination"
-                            label="Disable homepage pagination indexing">
+                            :label="$t('settings.disableHomepagePaginationIndexing')">
                             <switcher
                                 slot="field"
                                 id="homepage-no-index-pagination"
                                 v-model="advanced.homepageNoIndexPagination" />
                             <small
                                 slot="note"
-                                class="note">
-                                If this option is enabled your homepage pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
+                                class="note"
+                                v-pure-html="$t('settings.homepageNoIndexPagination')">
                             </small>
                         </field>
 
                         <separator
                             type="medium"
-                            label="Post page" />
+                            :label="$t('post.postPage')" />
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="post-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="post-meta-title"
                                 slot="field"
@@ -211,6 +219,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.postPageTitleVariables') }}
                                 The following variables can be used in the Post Page Title: %posttitle, %sitename, %authorname
                             </small>
                         </field>
@@ -218,7 +227,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="post-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="post-meta-description"
                                 v-model="advanced.postMetaDescription"
@@ -230,7 +239,7 @@
 
                         <field
                             id="post-use-text-without-custom-excerpt"
-                            label="Hide custom excerpts on post pages">
+                            :label="$t('settings.hideCustomExcerptsOnPostPages')">
                             <switcher
                                 slot="field"
                                 id="post-use-text-without-custom-excerpt"
@@ -238,6 +247,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.hideCustomExcerptsOnPostPagesInfo') }}
                                 If this option is enabled your post pages won't display text which is placed above "Read more" element in the post editor.
                             </small>
                         </field>
@@ -245,20 +255,20 @@
                         <separator
                             v-if="advanced.urls.tagsPrefix !== '' && !advanced.noIndexThisPage"
                             type="medium"
-                            label="Tags list page" />
+                            :label="$t('settings.tagsListPage')" />
 
-                        <div 
-                            v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList" 
+                        <div
+                            v-if="advanced.urls.tagsPrefix !== '' && !currentThemeSupportsTagsList"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>Your theme does not support Tags list page. </p>
+                            <p>{{ $t('settings.themeDoesNotSupportTagsListPage') }} </p>
                         </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
                             id="tags-list-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="tags-list-meta-title"
                                 v-model="advanced.tagsMetaTitle"
@@ -269,6 +279,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.tagsListPageTitleVariables') }}
                                 The following variables can be used in the Tags List Page Title: %sitename
                             </small>
                         </field>
@@ -276,7 +287,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
                             id="tags-list-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="tags-list-meta-description"
                                 v-model="advanced.tagsMetaDescription"
@@ -289,7 +300,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
                             id="meta-robots-tags-list"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-tags-list"
                                 slot="field"
@@ -300,13 +311,13 @@
 
                         <separator
                             type="medium"
-                            label="Tag page" />
+                            :label="$t('tag.tagPage')" />
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="tag-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="tag-meta-title"
                                 v-model="advanced.tagMetaTitle"
@@ -317,6 +328,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.tagPageTitleVariables') }}
                                 The following variables can be used in the Tag Page Title: %tagname, %sitename
                             </small>
                         </field>
@@ -324,7 +336,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="tag-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="tag-meta-description"
                                 v-model="advanced.tagMetaDescription"
@@ -337,7 +349,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-robots-tags"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-tags"
                                 slot="field"
@@ -349,7 +361,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="display-empty-tags"
-                            label="Display tags w/o posts">
+                            :label="$t('settings.displayEmptyTags')">
                             <switcher
                                 slot="field"
                                 id="display-empty-tags"
@@ -357,6 +369,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.displayEmptyTagsInfo') }}
                                 If this option is enabled tags without posts assigned to them will still have their subpages created and appear on the tags list.
                             </small>
                         </field>
@@ -364,21 +377,21 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="tag-no-index-pagination"
-                            label="Disable tags pagination indexing">
+                            :label="$t('settings.disableTagsPaginationIndexing')">
                             <switcher
                                 slot="field"
                                 id="tag-no-index-pagination"
                                 v-model="advanced.tagNoIndexPagination" />
                             <small
                                 slot="note"
-                                class="note">
-                                If this option is enabled your tags pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
+                                class="note"
+                                v-pure-html="$t('settings.disableTagsPaginationIndexingInfo')">
                             </small>
                         </field>
 
                         <field
                             id="tag-no-pagination"
-                            label="Disable tags pagination">
+                            :label="$t('settings.disableTagsPagination')">
                             <switcher
                                 slot="field"
                                 id="tag-no-pagination"
@@ -386,19 +399,20 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.disableTagsPaginationInfo') }}
                                 If this option is enabled your tags pagination won't be generated.
                             </small>
                         </field>
 
                         <separator
                             type="medium"
-                            label="Author page" />
+                            :label="$t('settings.authorPage')" />
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="author-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="author-meta-title"
                                 v-model="advanced.authorMetaTitle"
@@ -409,6 +423,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.authorPageTitleVariables') }}
                                 The following variables can be used in the Author Page Title: %authorname, %sitename
                             </small>
                         </field>
@@ -416,7 +431,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="author-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="author-meta-description"
                                 v-model="advanced.authorMetaDescription"
@@ -429,7 +444,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-robots-authors"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-tags"
                                 slot="field"
@@ -441,13 +456,14 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="display-empty-authors"
-                            label="Display authors w/o posts">
+                            :label="$t('settings.displayEmptyAuthors')">
                             <switcher
                                 slot="field"
                                 v-model="advanced.displayEmptyAuthors" />
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.displayEmptyAuthorsInfo') }}
                                 If this option is enabled authors without posts assigned to them will still have their subpages created and appear on the authors list.
                             </small>
                         </field>
@@ -455,21 +471,21 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="author-no-index-pagination"
-                            label="Disable authors pagination indexing">
+                            :label="$t('settings.disableAuthorsPaginationIndexing')">
                             <switcher
                                 slot="field"
                                 id="author-no-index-pagination"
                                 v-model="advanced.authorNoIndexPagination" />
                             <small
                                 slot="note"
-                                class="note">
-                                If this option is enabled your authors pagination files will be excluded from the sitemap and will get <strong>noindex, follow</strong> robots metatag.
+                                class="note"
+                                v-pure-html="$t('settings.displayEmptyAuthorsInfo')">
                             </small>
                         </field>
 
                         <field
                             id="author-no-pagination"
-                            label="Disable authors pagination">
+                            :label="$t('settings.disableAuthorsPagination')">
                             <switcher
                                 slot="field"
                                 id="author-no-pagination"
@@ -477,6 +493,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.disableAuthorsPaginationInfo') }}
                                 If this option is enabled your authors pagination won't be generated.
                             </small>
                         </field>
@@ -484,20 +501,20 @@
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
-                            label="Error page" />
+                            :label="$t('settings.errorPage')" />
 
-                        <div 
-                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsErrorPage" 
+                        <div
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsErrorPage"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>Your theme does not support 404 Error page.</p>
+                            <p>{{ $t('settings.themeDoesNotSupport404ErrorPage') }}Your theme does not support 404 Error page.</p>
                         </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="error-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="author-meta-title"
                                 v-model="advanced.errorMetaTitle"
@@ -508,6 +525,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.errorPageTitleVariables') }}
                                 The following variables can be used in the Error Page Title: %sitename
                             </small>
                         </field>
@@ -515,7 +533,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="error-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="error-meta-description"
                                 v-model="advanced.errorMetaDescription"
@@ -528,7 +546,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-robots-error"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-error"
                                 slot="field"
@@ -540,20 +558,20 @@
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
-                            label="Search page" />
+                            :label="$t('settings.searchPage')" />
 
-                        <div 
-                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage" 
+                        <div
+                            v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>Your theme does not support Search page.</p>
+                            <p>{{ $t('settings.themeDoesNotSupportSearchPage') }}Your theme does not support Search page.</p>
                             </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="error-meta-title"
                             :withCharCounter="true"
-                            label="Page Title:">
+                            :label="$t('settings.pageTitle')">
                             <text-input
                                 id="search-meta-title"
                                 v-model="advanced.searchMetaTitle"
@@ -564,6 +582,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.searchPageTitleVariables') }}
                                 The following variables can be used in the Search Page Title: %sitename
                             </small>
                         </field>
@@ -571,7 +590,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="search-meta-description"
-                            label="Meta Description:">
+                            :label="$t('settings.metaDescription')">
                             <text-area
                                 id="search-meta-description"
                                 v-model="advanced.searchMetaDescription"
@@ -584,7 +603,7 @@
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="meta-robots-search"
-                            label="Meta Robots:">
+                            :label="$t('settings.metaRobots')">
                             <dropdown
                                 id="meta-robots-search"
                                 slot="field"
@@ -597,33 +616,34 @@
                     <div slot="tab-1">
                         <field
                             id="clean-urls"
-                            label="Use pretty URLs">
+                            :label="$t('settings.usePrettyURLs')">
                             <switcher
                                 slot="field"
                                 v-model="advanced.urls.cleanUrls" />
                             <small
                                 slot="note"
-                                class="note">
-                                If this option is enabled your post URLs won't contain the .html suffix e.g. it will change URLs from <strong>https://example.com/post.html</strong> to <strong>https://example.com/post/</strong>.
+                                class="note"
+                                v-pure-html="$t('settings.usePrettyURLsInfo')">
                             </small>
                         </field>
 
                         <field
                             id="add-index"
-                            label="Always add index.html in URLs">
+                            :label="$t('settings.alwaysAddIndexHTMLInURLs')">
                             <switcher
                                 slot="field"
                                 v-model="advanced.urls.addIndex" />
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.cannotAddIndexHTMLInURLsInfo') }}
                                 Enable this option if you cannot enable loading index.html files by default when catalog on your server is opened.
                             </small>
                         </field>
 
                         <field
                             id="url-tags-prefix"
-                            label="Tag prefix:">
+                            :label="$t('settings.tagPrefix')">
                             <text-input
                                 id="url-tags-prefix"
                                 :class="{ 'is-invalid': errors.indexOf('tags-prefix') > -1 }"
@@ -633,15 +653,14 @@
                                 slot="field" />
                             <small
                                 slot="note"
-                                class="note">
-                                Prefixes entered here will be added before the tag slug in the URL e.g. <strong>https://example.com/TAG_PREFIX/tag-slug</strong>.<br>
-                                This prefix is also used to generate tags list page (if supported in your theme) as <strong>https://example.com/TAG_PREFIX/index.html</strong>
+                                class="note"
+                                v-pure-html="$t('settings.tagPrefixInfo')">
                             </small>
                         </field>
 
                         <field
                             id="url-authors-prefix"
-                            label="Author prefix:">
+                            :label="$t('settings.authorPrefix')">
                             <text-input
                                 id="url-authors-prefix"
                                 :class="{ 'is-invalid': errors.indexOf('authors-prefix') > -1 }"
@@ -651,14 +670,14 @@
                                 slot="field" />
                             <small
                                 slot="note"
-                                class="note">
-                                Defines the prefix that appears before the author slug in a URL e.g. <strong>https://example.com/AUTHOR_PREFIX/author-slug</strong><br>
+                                class="note"
+                                v-pure-html="$t('settings.authorPrefixInfo')">
                             </small>
                         </field>
 
                         <field
                             id="url-pagination-phrase"
-                            label="Pagination phrase:">
+                            :label="$t('settings.paginationPhrase')">
                             <text-input
                                 id="url-pagination-phrase"
                                 :class="{ 'is-invalid': errors.indexOf('pagination-phrase') > -1 }"
@@ -668,14 +687,14 @@
                                 slot="field" />
                             <small
                                 slot="note"
-                                class="note">
-                                Defines the phrase used before the page number in a URL e.g. <strong>https://example.com/tags/tag-slug/page/2</strong>.<br>
+                                class="note"
+                                v-pure-html="$t('settings.paginationPhraseInfo')">
                             </small>
                         </field>
 
                         <field
                             id="error-page-file"
-                            label="Error page:">
+                            :label="$t('settings.errorPage')">
                             <text-input
                                 id="error-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('error-page') > -1 }"
@@ -688,13 +707,14 @@
                                 v-if="!themeHasSupportForErrorPage"
                                 class="note"
                                 slot="note">
+                                {{ $t('settings.themeDoesNotSupportErrorPages') }}
                                 Your theme does not support error pages
                             </small>
                         </field>
 
                         <field
                             id="search-page-file"
-                            label="Search page:">
+                            :label="$t('settings.searchPage')">
                             <text-input
                                 id="search-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('search-page') > -1 }"
@@ -707,6 +727,7 @@
                                 v-if="!themeHasSupportForSearchPage"
                                 class="note"
                                 slot="note">
+                                {{ $t('settings.themeDoesNotSupportSearchPages') }}
                                 Your theme does not support search pages
                             </small>
                         </field>
@@ -715,32 +736,33 @@
                     <div slot="tab-2">
                         <field
                             v-if="advanced.noIndexThisPage"
-                            label="To view sitemap settings please disable the 'Ask search engines to not index this website' option in the SEO Settings tab; the sitemap won't be generated for your website otherwise."
+                            :label="$t('settings.toViewSitemapEnableIndexingInfo')"
                             :labelFullWidth="true" />
 
                         <field
                             v-if="!advanced.noIndexThisPage"
                             id="sitemap-enabled"
-                            label="Create XML Sitemap">
+                            :label="$t('settings.createXMLSitemap')">
                             <switcher
                                 slot="field"
                                 v-model="advanced.sitemapEnabled" />
                             <small
                                 v-if="sitemapLink"
                                 slot="note"
-                                class="note">
-                                You can find the XML sitemap here: <a :href="sitemapLink" class="sitemap-external-link" target="_blank" rel="noopener noreferrer">sitemap.xml</a>
+                                class="note"
+                                v-pure-html="$t('settings.sitemapLinkInfo')">
                             </small>
                         </field>
 
                         <field
                             class="multiple-checkboxes"
                             v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
-                            label="Content">
+                            :label="$t('settings.content')">
                             <label
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddTags" />
+                                {{ $t('settings.tagPages') }}
                                 Tag pages
                             </label>
 
@@ -748,6 +770,7 @@
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddAuthors" />
+                                {{ $t('settings.authorPages') }}
                                 Author pages
                             </label>
 
@@ -755,6 +778,7 @@
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddHomepage" />
+                                {{ $t('settings.homepagePagination') }}
                                 Homepage pagination
                             </label>
 
@@ -762,22 +786,22 @@
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddExternalImages" />
+                                {{ $t('settings.externalImages') }}
                                 External images
                             </label>
                         </field>
 
                         <field
                             v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
-                            label="Excluded files">
+                            :label="$t('settings.excludedFiles')">
                             <text-area
                                 slot="field"
                                 :spellcheck="false"
                                 v-model="advanced.sitemapExcludedFiles" />
                             <small
                                 slot="note"
-                                class="note">
-                                Type a comma-separated list of HTML files or catalogs to exclude from the sitemap.<br>
-                                For example: <strong>avoid-this-file.html,avoid-this-catalog-too</strong>
+                                class="note"
+                                v-pure-html="$t('settings.excludeFilesFromSitemapInfo')">
                             </small>
                         </field>
                     </div>
@@ -785,7 +809,7 @@
                     <div slot="tab-3">
                         <field
                             id="open-graph-enabled"
-                            label="Generate Open Graph tags">
+                            :label="$t('settings.generateOpenGraphTags')">
                             <switcher
                                 slot="field"
                                 id="open-graph-enabled"
@@ -794,7 +818,7 @@
 
                         <field
                             v-if="advanced.openGraphEnabled"
-                            label="Fallback image">
+                            :label="$t('settings.fallbackImage')">
                             <image-upload
                                 slot="field"
                                 v-model="advanced.openGraphImage" />
@@ -803,7 +827,7 @@
                         <field
                             v-if="advanced.openGraphEnabled"
                             id="use-page-title-instead-item-name"
-                            label="Use as a title page title">
+                            :label="$t('settings.useAsTitlePageTitle')">
                             <switcher
                                 slot="field"
                                 id="use-page-title-instead-item-name"
@@ -811,14 +835,15 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.useAsTitlePageTitleInfo') }}
                                 When this option is enabled, og:title and twitter:title metatags will contain the page title instead of the post title, tag name or author name.
-                                
+
                             </small>
                         </field>
 
                         <field
                             v-if="advanced.openGraphEnabled"
-                            label="Facebook App ID">
+                            :label="$t('settings.facebookAppID')">
                             <input
                                 slot="field"
                                 type="text"
@@ -826,8 +851,8 @@
                                 v-model="advanced.openGraphAppId" />
                             <small
                                 slot="note"
-                                class="note">
-                                Read how to obtain <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener noreferrer">Facebook App ID</a>
+                                class="note"
+                                v-pure-html="$t('settings.facebookAppIDInfo')">
                             </small>
                         </field>
                     </div>
@@ -835,7 +860,7 @@
                     <div slot="tab-4">
                         <field
                             id="twitter-cards-enabled"
-                            label="Generate Twitter cards">
+                            :label="$t('settings.generateTwitterCards')">
                             <switcher
                                 slot="field"
                                 id="twitter-cards-enabled"
@@ -845,7 +870,7 @@
                         <field
                             v-if="advanced.twitterCardsEnabled"
                             id="twitter-username"
-                            label="Twitter username">
+                            :label="$t('settings.twitterUsername')">
                             <text-input
                                 id="twitter-username"
                                 v-model="advanced.twitterUsername"
@@ -856,7 +881,7 @@
                         <field
                             v-if="advanced.twitterCardsEnabled"
                             id="twitter-cards-type"
-                            label="Card types:">
+                            :label="$t('settings.cardTypes')">
                             <dropdown
                                 slot="field"
                                 id="twitter-cards-type"
@@ -867,19 +892,18 @@
                     </div>
 
                     <div slot="tab-5">
-                        
+
                         <field
                             id="amp-is-enabled"
-                            label="Enable AMP">
+                            :label="$t('settings.enableAMP')">
                             <switcher
                                 slot="field"
                                 id="amp-is-enabled"
                                 v-model="advanced.ampIsEnabled" />
                             <small
                                 slot="note"
-                                class="note">
-                                AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>  when this option is enabled your website will load third-party scripts provided by Google's AMP CDN. 
-
+                                class="note"
+                                v-pure-html="$t('settings.enableAMPInfo')">
                             </small>
                         </field>
 
@@ -891,7 +915,7 @@
                         <field
                             v-if="advanced.ampIsEnabled"
                             id="amp-primary-color"
-                            label="Theme primary color">
+                            :label="$t('settings.themePrimaryColor')">
                             <color-picker
                                 slot="field"
                                 id="amp-primary-color"
@@ -901,13 +925,14 @@
                         <field
                             v-if="advanced.ampIsEnabled"
                             id="amp-image"
-                            label="Fallback logo image">
+                            :label="$t('settings.fallbackLogoImage')">
                             <image-upload
                                 slot="field"
                                 v-model="advanced.ampImage" />
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.fallbackLogoImageInfo') }}
                                 The logo must fit in a 60 &times; 600 pixel box.
                             </small>
                         </field>
@@ -920,7 +945,7 @@
                         <field
                             v-if="advanced.ampIsEnabled"
                             id="amp-ga-id"
-                            label="Google Analytics Tracking ID">
+                            :label="$t('settings.googleAnalyticsTrackingID')">
                             <text-input
                                 id="amp-ga-id"
                                 v-model="advanced.ampGaId"
@@ -936,7 +961,7 @@
                         <field
                             v-if="advanced.ampIsEnabled"
                             id="amp-share"
-                            label="Enable sharing buttons">
+                            :label="$t('settings.enableSharingButtons')">
                             <switcher
                                 slot="field"
                                 id="amp-share"
@@ -946,7 +971,7 @@
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-system"
-                            label="System">
+                            :label="$t('settings.system')">
                             <switcher
                                 slot="field"
                                 id="amp-share-system"
@@ -956,7 +981,7 @@
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-facebook"
-                            label="Facebook">
+                            :label="$t('settings.facebook')">
                             <switcher
                                 slot="field"
                                 id="amp-share-facebook"
@@ -974,25 +999,25 @@
                                 slot="field" />
                             <small
                                 class="note"
-                                slot="note">
-                                Please provide <a href="https://developers.facebook.com/docs/apps/" target="_blank" rel="noopener noreferrer">Facebook App ID</a>
+                                slot="note"
+                                v-pure-html="$t('settings.provideFacebookAppID')">
                             </small>
                         </field>
 
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-twitter"
-                            label="Twitter">
+                            :label="$t('settings.twitter')">
                             <switcher
                                 slot="field"
                                 id="amp-share-twitter"
                                 v-model="advanced.ampShareTwitter" />
-                        </field>                       
+                        </field>
 
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-pinterest"
-                            label="Pinterest">
+                            :label="$t('settings.pinterest')">
                             <switcher
                                 slot="field"
                                 id="amp-share-pinterest"
@@ -1002,7 +1027,7 @@
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-linkedin"
-                            label="LinkedIn">
+                            :label="$t('settings.linkedIn')">
                             <switcher
                                 slot="field"
                                 id="amp-share-linkedin"
@@ -1012,7 +1037,7 @@
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-tumblr"
-                            label="Tumblr">
+                            :label="$t('settings.tumblr')">
                             <switcher
                                 slot="field"
                                 id="amp-share-tumblr"
@@ -1022,7 +1047,7 @@
                         <field
                             v-if="advanced.ampIsEnabled && advanced.ampShare"
                             id="amp-share-system"
-                            label="WhatsApp">
+                            :label="$t('settings.whatsApp')">
                             <switcher
                                 slot="field"
                                 id="amp-share-whatsapp"
@@ -1037,7 +1062,7 @@
                         <field
                             v-if="advanced.ampIsEnabled"
                             id="amp-footer-text"
-                            label="Footer text">
+                            :label="$t('settings.footerText')">
                             <text-input
                                 id="amp-footer-text"
                                 v-model="advanced.ampFooterText"
@@ -1049,7 +1074,7 @@
                     <div slot="tab-6">
                         <field
                             id="gdpr-enabled"
-                            label="Add GDPR Cookie banner">
+                            :label="$t('settings.addGDPRCookieBanner')">
                             <label slot="field">
                                 <switcher
                                     id="html-compression"
@@ -1058,8 +1083,8 @@
 
                             <small
                                 slot="note"
-                                class="note">
-                                Enabling the GDPR Cookie Popup requires some additional changes in your theme, especially if you are using third-party scripts. <a href="https://getpublii.com/dev/prepare-theme-gdpr-compliant/" target="_blank" rel="noopener noreferrer">Read how to prepare your theme for GDPR</a>
+                                class="note"
+                                v-pure-html="$t('settings.howToPrepareYourThemeForGDPRInfo')">
                             </small>
                         </field>
 
@@ -1067,12 +1092,12 @@
                             v-if="advanced.gdpr.enabled"
                             type="small"
                             :is-line="true"
-                            label="Cookie Popup" />
+                            :label="$t('settings.cookiePopup')" />
 
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-title-primary"
-                            label="Title">
+                            :label="$t('settings.gdprTitle')">
                             <text-input
                                 id="gdpr-popup-title-primary"
                                 v-model="advanced.gdpr.popupTitlePrimary"
@@ -1083,7 +1108,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-desc"
-                            label="Description">
+                            :label="$t('ui.description')">
                             <text-area
                                 id="gdpr-popup-desc"
                                 v-model="advanced.gdpr.popupDesc"
@@ -1095,7 +1120,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-readmore-link-label"
-                            label="Link label">
+                            :label="$t('settings.linkLabel')">
                             <text-input
                                 id="gdpr-readmore-link-label"
                                 v-model="advanced.gdpr.readMoreLinkLabel"
@@ -1106,19 +1131,19 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-page-type"
-                            label="Privacy policy URL">
+                            :label="$t('settings.privacyPolicyURL')">
                             <dropdown
                                 slot="field"
                                 id="gdpr-page-type"
                                 key="gdpr-page-type"
                                 v-model="advanced.gdpr.articleLinkType"
-                                :items="{ 'internal': 'Internal page', 'external': 'External page', 'none': 'None' }"></dropdown>
+                                :items="{ 'internal': $t('settings.internalPage'), 'external': $t('settings.externalPage'), 'none': $t('ui.none') }"></dropdown>
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'internal'"
                             id="gdpr-page"
-                            label="Privacy policy page">
+                            :label="$t('settings.privacyPolicyPage')">
                             <v-select
                                 ref="gdprPagesSelect"
                                 slot="field"
@@ -1128,13 +1153,13 @@
                                 :close-on-select="true"
                                 :show-labels="false"
                                 @select="closeDropdown('gdprPagesSelect')"
-                                placeholder="Select page"></v-select>
+                                :placeholder="$t('settings.selectPage')"></v-select>
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'external'"
                             id="gdpr-page-url"
-                            label="Privacy policy page URL">
+                            :label="$t('settings.privacyPolicyPageURL')">
                             <text-input
                                 id="gdpr-page-url"
                                 v-model="advanced.gdpr.articleExternalUrl"
@@ -1145,7 +1170,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-save-button-label"
-                            label="Save button label">
+                            :label="$t('settings.saveButtonLabel')">
                             <text-input
                                 id="gdpr-save-button-label"
                                 v-model="advanced.gdpr.saveButtonLabel"
@@ -1156,19 +1181,19 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-behaviour"
-                            label="Open Popup window by">
+                            :label="$t('settings.openPopupWindowBy')">
                             <dropdown
                                 slot="field"
                                 id="posts-listing-order-by"
                                 key="posts-listing-order-by"
                                 v-model="advanced.gdpr.behaviour"
-                                :items="{ 'badge': 'Badge', 'link': 'Custom link', 'badge-link': 'Badge + custom link' }"></dropdown>
+                                :items="{ 'badge': $t('ui.badge'), 'link': $t('ui.customLink'), 'badge-link': $t('settings.badgeAndCustomLink') }"></dropdown>
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.behaviour !== 'link'"
                             id="gdpr-popup-label"
-                            label="Badge label">
+                            :label="$t('settings.badgeLabel')">
                             <text-input
                                 id="gdpr-popup-label"
                                 v-model="advanced.gdpr.badgeLabel"
@@ -1179,7 +1204,7 @@
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.behaviour !== 'badge'"
                             id="gdpr-behaviour-link"
-                            label="Anchor link">
+                            :label="$t('settings.anchorLink')">
                             <text-input
                                 id="gdpr-behaviour-link"
                                 v-model="advanced.gdpr.behaviourLink"
@@ -1188,6 +1213,7 @@
                             <small
                                 class="note"
                                 slot="note">
+                                {{ $t('settings.gdprBehaviourInfo') }}
                                 Remember to place a link with the above anchor in your website navigation or the website content (e.g. &lt;a href="#cookie-settings"&gt;Cookie preferences&lt;/a&gt;). Otherwise, your website's users might not be able to change their individual cookie preferences.
                             </small>
                         </field>
@@ -1196,7 +1222,7 @@
                             v-if="advanced.gdpr.enabled"
                             type="big"
                             :is-line="true"
-                            label="Cookie Groups" />
+                            :label="$t('settings.cookieGroups')" />
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1213,7 +1239,7 @@
                     <div slot="tab-7">
                         <field
                             id="html-compression"
-                            label="Enable HTML compression">
+                            :label="$t('settings.enableHTMLCompression')">
                             <label slot="field">
                                 <switcher
                                     id="html-compression"
@@ -1223,7 +1249,7 @@
 
                         <field
                             id="css-compression"
-                            label="Enable CSS compression">
+                            :label="$t('settings.enableCSSCompression')">
                             <label slot="field">
                                 <switcher
                                     id="css-compression"
@@ -1233,7 +1259,7 @@
 
                         <field
                             id="html-compression-remove-comments"
-                            label="Remove HTML comments">
+                            :label="$t('settings.removeHTMLComments')">
                             <label slot="field">
                                 <switcher
                                     id="html-compression-remove-comments"
@@ -1243,39 +1269,41 @@
 
                         <field
                             id="media-lazyload"
-                            label="Enable media lazy load">
+                            :label="$t('settings.enableMediaLazyLoad')">
                             <label slot="field">
                                 <switcher
                                     id="media-lazyload"
                                     v-model="advanced.mediaLazyLoad" />
                             </label>
-                            
+
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.enableMediaLazyLoadInfo') }}
                                 Enable this option if you want to use native lazy loading that lazy loads images, videos and iframes.
                             </small>
                         </field>
-                        
+
                         <field
                             id="responsive-images"
-                            label="Enable responsive images">
+                            :label="$t('settings.enableResponsiveImages')">
                             <label slot="field">
                                 <switcher
                                     id="responsive-images"
                                     v-model="advanced.responsiveImages" />
                             </label>
-                            
+
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.enableResponsiveImagesInfo') }}
                                 Enable this option if you want to deliver different sized images at different screen resolutions depending on breakpoints defined through config.json file in a theme's folder.
                             </small>
                         </field>
 
                         <field
                             id="version-suffix"
-                            label="Version parameter">
+                            :label="$t('settings.versionParameter')">
                             <label slot="field">
                                 <switcher
                                     id="version-suffix"
@@ -1286,6 +1314,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.versionParameterInfo') }}
                                 Add version parameter in CSS/JS URLs to skip browser cache.
                                 This option can cause that more files than usual will be required to sync during deployment
                             </small>
@@ -1293,7 +1322,7 @@
 
                         <field
                             id="images-quality"
-                            label="Responsive Images quality">
+                            :label="$t('settings.responsiveImagesQuality')">
                             <label slot="field">
                                 <text-input
                                     id="images-quality"
@@ -1310,7 +1339,7 @@
                     <div slot="tab-8">
                         <field
                             id="feed-enable-rss"
-                            label="Enable RSS feed">
+                            :label="$t('settings.enableRSSFeed')">
                             <label slot="field">
                                 <switcher
                                     id="feed-enable-rss"
@@ -1320,30 +1349,30 @@
 
                         <field
                             id="feed-enable-json"
-                            label="Enable JSON feed">
+                            :label="$t('settings.enableJSONFeed')">
                             <label slot="field">
                                 <switcher
                                     id="feed-enable-json"
                                     v-model="advanced.feed.enableJson" />
                             </label>
                         </field>
-                        
+
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-title"
-                            label="Feed title:">
+                            :label="$t('settings.feedTitle')">
                             <dropdown
                                 slot="field"
                                 id="feed-title"
                                 key="feed-title"
                                 v-model="advanced.feed.title"
-                                :items="{ 'displayName': 'Page name', 'customTitle': 'Custom feed title' }"></dropdown>
+                                :items="{ 'displayName': $t('settings.pageName'), 'customTitle': $t('settings.customFeedTitle') }"></dropdown>
                         </field>
 
                         <field
                             v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
-                            label="Custom feed title">
+                            :label="$t('settings.customFeedTitle')">
                             <label slot="field">
                                 <text-input
                                     id="feed-title-value"
@@ -1356,7 +1385,7 @@
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-full-text"
-                            label="Show full text">
+                            :label="$t('settings.showFullText')">
                             <label slot="field">
                                 <switcher
                                     id="feed-show-full-text"
@@ -1366,13 +1395,14 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.showFullTextInFeedInfo') }}
                                 Display full text of the post in the feed
                             </small>
                         </field>
 
                         <field
                             id="feed-show-only-featured"
-                            label="Show only featured posts">
+                            :label="$t('settings.showOnlyFeaturedPosts')">
                             <label slot="field">
                                 <switcher
                                     id="feed-show-only-featured"
@@ -1383,7 +1413,7 @@
                         <field
                             v-if="!advanced.feed.showOnlyFeatured"
                             id="feed-exclude-featured"
-                            label="Exclude featured posts">
+                            :label="$t('settings.excludeFeaturedPosts')">
                             <label slot="field">
                                 <switcher
                                     id="feed-exclude-featured"
@@ -1394,7 +1424,7 @@
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
-                            label="Number of posts in feed">
+                            :label="$t('settings.numberOfPostsInFeed')">
                             <label slot="field">
                                 <text-input
                                     id="feed-number-of-posts"
@@ -1409,7 +1439,7 @@
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-featured-image"
-                            label="Show Featured image">
+                            :label="$t('settings.showFeaturedImage')">
                             <label slot="field">
                                 <switcher
                                     id="feed-show-featured-image"
@@ -1419,6 +1449,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.showFeaturedImageInfo') }}
                                  Display a post's featured image in the feed
                             </small>
                         </field>
@@ -1427,7 +1458,7 @@
                     <div slot="tab-9">
                         <field
                             id="posts-listing-order-by"
-                            label="Posts order by:">
+                            :label="$t('settings.postsOrderBy')">
                             <dropdown
                                 slot="field"
                                 id="posts-listing-order-by"
@@ -1438,7 +1469,7 @@
 
                         <field
                             id="posts-listing-order"
-                            label="Posts ordering:">
+                            :label="$t('settings.postsOrdering')">
                             <dropdown
                                 slot="field"
                                 id="posts-listing-order"
@@ -1449,7 +1480,7 @@
 
                         <field
                             id="featured-posts-listing-order-by"
-                            label="Featured posts order by:">
+                            :label="$t('settings.featuredPostsOrderBy')">
                             <dropdown
                                 slot="field"
                                 id="featured-posts-listing-order-by"
@@ -1460,7 +1491,7 @@
 
                         <field
                             id="featured-posts-listing-order"
-                            label="Featured posts ordering:">
+                            :label="$t('settings.featuredPostsOrdering')">
                             <dropdown
                                 slot="field"
                                 id="featured-posts-listing-order"
@@ -1471,7 +1502,7 @@
 
                         <field
                             id="hidden-posts-listing-order-by"
-                            label="Hidden posts order by:">
+                            :label="$t('settings.hiddenPostsOrderBy')">
                             <dropdown
                                 slot="field"
                                 id="hidden-posts-listing-order-by"
@@ -1482,7 +1513,7 @@
 
                         <field
                             id="hidden-posts-listing-order"
-                            label="Hidden posts ordering:">
+                            :label="$t('settings.hiddenPostsOrdering')">
                             <dropdown
                                 slot="field"
                                 id="hidden-posts-listing-order"
@@ -1490,15 +1521,15 @@
                                 v-model="advanced.hiddenPostsListingOrder"
                                 :items="orderOptions"></dropdown>
                         </field>
-                        
-                        <separator                            
+
+                        <separator
                             type="small"
                             :is-line="true"
                             label="" />
 
                         <field
                             id="related-posts-criteria"
-                            label="Related posts selection mechanism:">
+                            :label="$t('settings.relatedPostsSelectionMechanism')">
                             <dropdown
                                 slot="field"
                                 id="related-posts-order-by"
@@ -1509,7 +1540,7 @@
 
                         <field
                             id="related-posts-order-by"
-                            label="Related posts ordering:">
+                            :label="$t('settings.relatedPostsOrdering')">
                             <dropdown
                                 slot="field"
                                 id="related-posts-order-by"
@@ -1520,7 +1551,7 @@
 
                          <field
                             id="related-posts-use-all-posts"
-                            label="Related posts options">
+                            :label="$t('settings.relatedPostsOptions')">
                             <label slot="field">
                                 <switcher
                                     id="related-posts-use-all-posts"
@@ -1530,6 +1561,7 @@
                             <small
                                 slot="note"
                                 class="note">
+                                {{ $t('settings.relatedPostsOptionsInfo') }}
                                 When enabled, related posts will be taken from all tags. When disabled, related posts will only be generated from the same tags as the current post.
                             </small>
                         </field>
@@ -1538,8 +1570,8 @@
                     <div slot="tab-10">
                         <separator
                             type="medium"
-                            label="WYSIWYG editor" />
-                    
+                            :label="$t('post.editorWYSIWYG')" />
+
                         <field
                             label="Additional valid elements in the WYSIWYG editor">
                             <text-area
@@ -1549,18 +1581,18 @@
                                 v-model="advanced.editors.wysiwygAdditionalValidElements" />
                             <small
                                 slot="note"
-                                class="note">
-                                If the WYSIWYG editor strips out some tags from your HTML code, here you can add additional allowed elements.<br> For example: <strong>v-select[*],v-dropdown[*]</strong> will allow custom v-select and v-dropdown tags with any attributes.
+                                class="note"
+                                v-pure-html="$t('settings.editorWYSIWYGInfo')">
                             </small>
                         </field>
 
                         <separator
                             type="medium"
-                            label="Code editor (CodeMirror)" />
+                            :label="$t('settings.codeEditor')" />
 
                         <field
                             id="codemirror-indent-size"
-                            label="Indent size (spaces)">
+                            :label="$t('settings.indentSize')">
                             <label slot="field">
                                 <text-input
                                     id="codemirror-indent-size"
@@ -1574,7 +1606,7 @@
 
                         <field
                             id="codemirror-auto-indent"
-                            label="Enable auto-indent">
+                            :label="$t('settings.enableAutoIndent')">
                             <switcher
                                 slot="field"
                                 id="codemirror-auto-indent"
@@ -1600,6 +1632,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
+                    {{ $t('ui.saveSettings') }}
                     Save Settings
                 </p-button>
             </p-footer>
@@ -1650,7 +1683,7 @@ export default {
         },
         currentThemeSupportsSearchPage () {
             return (
-                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage
             ) || (
                 this.$store.state.currentSite.themeSettings.renderer &&
@@ -1659,7 +1692,7 @@ export default {
         },
         currentThemeSupportsErrorPage () {
             return (
-                this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage
             ) || (
                 this.$store.state.currentSite.themeSettings.renderer &&
@@ -1668,59 +1701,59 @@ export default {
         },
         advancedTabs () {
             return [
-                'SEO',
-                'URLs',
-                'Sitemap',
-                'Open Graph',
-                'Twitter Cards',
-                'AMP',
-                'GDPR',
-                'Website Speed',
-                'RSS/JSON Feed',
-                'Posts Listing',
-                'Editors'
+                this.$t('ui.seo'),
+                this.$t('settings.urls'),
+                this.$t('settings.sitemap'),
+                this.$t('settings.openGraph'),
+                this.$t('settings.twitterCards'),
+                this.$t('ui.AMP'),
+                this.$t('settings.GDPR'),
+                this.$t('settings.websiteSpeed'),
+                this.$t('settings.RSSJSONFeed'),
+                this.$t('settings.postsListing'),
+                this.$t('settings.editors')
             ];
         },
         seoOptions () {
             return {
-                'index, follow': 'index, follow',
-                'index, nofollow': 'index, nofollow',
-                'noindex, follow': 'noindex, follow',
-                'noindex, nofollow': 'noindex, nofollow'
+                'index, follow': this.$t('ui.indexFollow'),
+                'index, nofollow': this.$t('ui.indexNofollow'),
+                'noindex, follow': this.$t('ui.noindexFollow'),
+                'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
         },
         orderByOptions () {
             return {
-                'created_at': 'Post creation date',
-                'title': 'Post title',
-                'modified_at': 'Post modification date',
-                'id': 'Post ID'
+                'created_at': this.$t('settings.postCreationDate'),
+                'title': this.$t('settings.postTile'),
+                'modified_at': this.$t('settings.postModificationDate'),
+                'id': this.$t('settings.postID')
             };
         },
         orderOptions () {
             return {
-                'DESC': 'Descending',
-                'ASC': 'Ascending'
+                'DESC': this.$t('settings.descending'),
+                'ASC': this.$t('settings.ascending')
             };
         },
         relatedPostsOrderingOptions () {
             return {
-                'default': 'By ID descending',
-                'id-asc': 'By ID ascending',
-                'random': 'Random'
+                'default': this.$t('settings.byIDDescending'),
+                'id-asc': this.$t('settings.byIDAscending'),
+                'random': this.$t('settings.random')
             };
         },
         relatedPostsCriteriaOptions () {
             return {
-                'titles': 'Use only titles',
-                'tags': 'Use only tags',
-                'titles-and-tags': 'Use titles and tags'
+                'titles': this.$t('settings.useOnlyTitles'),
+                'tags': this.$t('settings.useOnlyTags'),
+                'titles-and-tags': this.$t('settings.useTitlesAndTags')
             };
         },
         siteHasTheme () {
             if (
-                !this.$store.state.currentSite.config.theme && 
-                this.theme.indexOf('use-') !== 0 && 
+                !this.$store.state.currentSite.config.theme &&
+                this.theme.indexOf('use-') !== 0 &&
                 this.theme.indexOf('install-use-') !== 0
             ) {
                 return false;
@@ -1749,8 +1782,8 @@ export default {
         },
         twitterCardsTypes () {
             return {
-                'summary': 'Summary card',
-                'summary_large_image': 'Summary card with large image'
+                'summary': this.$t('settings.twitteSummaryCard'),
+                'summary_large_image': this.$t('settings.twitteSummaryCardLargeImage')
             };
         },
         themeHasSupportForErrorPage () {
@@ -1853,7 +1886,7 @@ export default {
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
         this.spellcheckerLanguages = remote.getCurrentWebContents().session.availableSpellCheckerLanguages;
-        
+
         if (this.spellcheckerLanguages.length) {
             this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());
         }
@@ -1942,8 +1975,8 @@ export default {
 
                 if(data.status === true) {
                     if (
-                        data.thumbnailsRegenerateRequired && 
-                        this.$store.state.currentSite.posts && 
+                        data.thumbnailsRegenerateRequired &&
+                        this.$store.state.currentSite.posts &&
                         this.$store.state.currentSite.posts.length > 0
                     ) {
                         ipcRenderer.send('app-site-regenerate-thumbnails-required', {
@@ -1952,12 +1985,12 @@ export default {
 
                         ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
                             if (data.message) {
-                                this.$bus.$emit('regenerate-thumbnails-display', { 
+                                this.$bus.$emit('regenerate-thumbnails-display', {
                                     qualityChanged: false,
                                     savedSettingsCallback: {
-                                        newSettings, 
-                                        siteName, 
-                                        showPreview, 
+                                        newSettings,
+                                        siteName,
+                                        showPreview,
                                         renderingType
                                     }
                                 });
