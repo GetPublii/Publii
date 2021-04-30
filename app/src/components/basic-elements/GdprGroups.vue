@@ -3,9 +3,9 @@
         <div
             v-if="content.length"
             class="gdpr-groups-header">
-            <div class="gdpr-groups-header-cell">Group name</div>
-            <div class="gdpr-groups-header-cell">Group ID</div>
-            <div class="gdpr-groups-header-cell">State</div>
+            <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupName') }}</div>
+            <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupID') }}</div>
+            <div class="gdpr-groups-header-cell">{{ $t('gdpr.state') }}</div>
         </div>
 
         <div
@@ -19,21 +19,21 @@
             <text-input
                 :spellcheck="false"
                 v-model="group.id" />
-            
+
             <switcher
                 :disabled="group.id === '-'"
                 v-model="group.state" />
 
             <icon
                 size="m"
-                name="sidebar-close"                
+                name="sidebar-close"
                 @click.native="removeGroup(index)" />
         </div>
 
         <p-button
             type="small"
             @click.native="addGroup">
-            Add group
+            {{ $t('gdpr.addGroup') }}
         </p-button>
     </div>
 </template>
@@ -120,9 +120,9 @@ export default {
 
         .icon {
             cursor: pointer;
-            fill: var(--warning);          
-            transition: all .3s ease-out;           
-            
+            fill: var(--warning);
+            transition: all .3s ease-out;
+
             &:hover {
                 fill: var(--icon-tertiary-color);
             }

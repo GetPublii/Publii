@@ -23,12 +23,25 @@ export default {
         removeAuthorsMessage: 'Na pewno chcesz usunąć wybranych autorów?',
         removeAuthorsSuccessMessage: 'Wybrani autorzy zostali usunięci',
         saveAndPreviewNotAvailableDueToNoSupportForAuthorPagesInTheme: 'Opcja "Zapis i Podgląd" nie jest dostępna z powodu braku wspracia dla stron autorów w Twoim motywie.',
+        selectAuthor: 'Wybierz autora',
         selectAuthorPage: 'Wybierz stronę autora',
         themeDoesNotSupportFeaturedImagesForAuthors: 'Twój motyw nie wspiera wyróżnionych obrazków dla autorów.',
         toUseThisOptionEnableIndexingAuthorPages: 'Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron autorów.',
         useGravatarMessage: 'Użyj <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatara </a> aby dodać avatar do autora.',
         useGravatarServiceMessage: 'Aby skorzystać z usługi Gravatar podaj adres e-mail autora.',
         website: 'Strona internetowa'
+    },
+    gdpr: {
+        addGroup: 'Dodaj grupe',
+        groupID: 'ID grupy',
+        groupName: 'Nazwa grupy',
+        state: 'Stan'
+    },
+    image: {
+        dropFeaturedImageOr: 'Upuść tutaj obrazek wyróżnony lub',
+        dropToUploadPhotoOr: 'Upuść, aby przesłać swoje zdjęcie lub',
+        loadingImage: 'Wczytywanie obrazu...',
+        removeImage: 'Usuń obraz'
     },
     menu: {
         addMenuItem: 'Dodaj element menu',
@@ -173,7 +186,7 @@ export default {
         editors: 'Edytory',
         editorWYSIWYGInfo: 'Jeśli edytor WYSIWYG usunie jakieś tagi z Twojego kodu HTML tutaj możesz podać dodatkowe elementy dozwolone.<br> Na przykład: <strong>v-select[*],v-dropdown[*]</strong> zezwoli na niestandardowe tagi v-select i v-dropdown z dowolnymi atrybutami',
         enableAMP: 'Włącz AMP',
-        enableAMPInfo: 'AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong>    kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google\'s AMP CDN',
+        enableAMPInfo: 'AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong>        kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google\'s AMP CDN',
         enableAutoIndent: 'Włącz automatyczne wcięcia',
         enableCSSCompression: 'Włącz kompresję CSS',
         enableHTMLCompression: 'Włącz kompresję HTML',
@@ -211,7 +224,7 @@ export default {
         generateOpenGraphTags: 'Generuj tagi Open Graph',
         generateTwitterCards: 'Generuj karty Twitter\'a',
         googleAnalyticsTrackingID: 'ID Google Analytics Tracking',
-        hiddenPostsOrderBy: 'Sortuj ukryte wpisy po::',
+        hiddenPostsOrderBy: 'Sortuj ukryte wpisy po:',
         hiddenPostsOrdering: 'Sortowanie ukrytych wpisów:',
         hideCustomExcerptsOnPostPages: 'Ukryj własne krótkie opisy na stronach wpisów',
         hideCustomExcerptsOnPostPagesInfo: 'Jeśli ta opcja jest włączona strony wpisów nie będą pokazywać tekstu umieszczonego nad elementem "Czytaj więcej" w edytorze wpisu.',
@@ -235,6 +248,10 @@ export default {
         paginationPhrase: 'Fraza paginacji:',
         paginationPhraseCannotBeEmpty: 'Fraza paginacji nie może być pusta.',
         paginationPhraseInfo: 'Definiuje frazę używaną przed numerem strony w adresie URL np. <strong>https://example.com/tags/tag-slug/page/2</strong>.<br>',
+        password: {
+            hidePassword: 'Ukryj hasło',
+            showPassword: 'Pokaż hasło'
+        },
         pinterest: 'Pinterest',
         postCreationDate: 'Data utworzenia wpisu',
         postID: 'ID wpisu',
@@ -355,6 +372,7 @@ export default {
         removeTagMessage: 'Na pewno chcesz usunąć wybrane tagi?',
         removeTagSuccessMessage: 'Wybrane tagi zostały usunięte',
         saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme: 'Opcja "Zapis i Podgląd" nie jest dostępna z powodu braku wspracia dla stron tagów w Twoim motywie.',
+        selectTag: 'Wybierz tag',
         selectTagPage: 'Wybierz stronę taga',
         tagDataParsingErrorMessage: 'Wystąpił błąd podczas parsowania danych taga dla ID: ',
         tagHasBeenEdited: 'Tag został przeedytowany',
@@ -394,6 +412,7 @@ export default {
         removeThemeSuccessMessage: 'Motyw został usunięty.',
         resetThemeSettings: 'Resetuj ustawienia motywu',
         saveSettingsSuccessMessage: 'Ustawienia motywu zosały zapisane.',
+        selectTheme: 'Wybierz motyw',
         settingsResetMessage: 'Na pewno chcesz zresetować ustawienia motywu?',
         settingsResetSuccessMessage: 'Ustawienia motywu zostały zresetowane',
         tagsPostsPerPage: 'Tagi na stronie:',
@@ -476,6 +495,7 @@ export default {
         theme: 'Motywy',
         tools: 'Narzędzia',
         unhide: 'Odkryj',
+        uploadInProgress: 'Trwa przesyłanie...',
         useSiteGlobalSettings: 'Użyj globalnych ustawień strony'
     }
 };

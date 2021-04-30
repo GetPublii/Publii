@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="wrapperCssClasses">
         <div
@@ -32,7 +32,7 @@
                     class="upload-uploading-overlay">
                     <div>
                         <div class="loader"><span></span></div>
-                        Upload in progress...
+                        {{ $t('ui.uploadInProgress') }}
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             href="#"
             class="upload-remove"
             @click="remove">
-            Remove image
+            {{ $t('image.removeImage') }}
         </a>
     </div>
 </template>
@@ -88,7 +88,7 @@ export default {
         }
     },
     data () {
-        return {          
+        return {
             isEmpty: true,
             filePath: '',
             isUploading: false,
@@ -138,10 +138,10 @@ export default {
     },
     computed: {
         labelText () {
-            let label = 'Drop to upload your photo or';
+            let label = this.$t('image.dropToUploadPhotoOr');
 
             if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages' && this.imageType !== 'authorImages') {
-                label = 'Drop featured image here or';
+                label = this.$t('image.dropFeaturedImageOr');
             }
 
             return label;
@@ -391,10 +391,10 @@ export default {
         display: none;
 
         svg {
-            display: block; 
+            display: block;
             fill: var(--icon-secondary-color);
             margin: 0 auto 1.5rem;
-           
+
         }
     }
 
@@ -412,15 +412,15 @@ export default {
             position: absolute;
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
-            width: 100%;               
+            width: 100%;
         }
-        
+
         .loader {
-            display: block;               
+            display: block;
             height: 2.8rem;
             margin: 0 auto 1rem;
             width: 2.8rem;
-            
+
             & > span {
                 animation: spin .9s infinite linear;
                 border-top: 2px solid rgba(var(--primary-color-rgb), .2);
@@ -428,24 +428,24 @@ export default {
                 border-bottom: 2px solid rgba(var(--primary-color-rgb), .2);
                 border-left: 2px solid var(--primary-color);
                 border-radius: 50%;
-                display: block;   
+                display: block;
                 height: 2.5rem;
-                width: 2.5rem;                 
-                
+                width: 2.5rem;
+
                 &::after {
                     border-radius: 50%;
                     content: "";
-                    display: block;                                      
+                    display: block;
                 }
-            
+
                 @at-root {
                     @keyframes spin {
-                       100% { 
+                       100% {
                           transform: rotate(360deg);
-                       }                  
+                       }
                     }
                 }
-          }                
+          }
        }
     }
 }

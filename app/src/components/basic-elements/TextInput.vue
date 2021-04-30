@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="cssClasses">
         <icon
@@ -29,14 +29,14 @@
             v-if="type === 'password' && fieldType === 'password'"
             class="password-show"
             @click="showPassword">
-            Show password
+            {{ $t('settings.password.showPassword') }}
         </span>
 
         <span
             v-if="type === 'password' && fieldType === 'text'"
             class="password-hide"
             @click="hidePassword">
-            Hide password
+            {{ $t('settings.password.hidePassword') }}
         </span>
 
         <char-counter

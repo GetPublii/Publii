@@ -2,8 +2,8 @@
     <select
         :id="id"
         @change="onChangeEvent">
-        <option value="">Select theme</option>
-        <optgroup 
+        <option value="">{{ $t('theme.selectTheme') }}</option>
+        <optgroup
             v-for="key in themesGroups()"
             :label="themesGroupName(key)"
             :key="'themes-group-' + key">

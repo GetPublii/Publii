@@ -18,7 +18,7 @@ export default {
     props: {
         placeholder: {
             type: String,
-            default: 'Select post page'
+            default: this.$t('post.selectPostPage')
         },
         multiple: {
             type: Boolean,
@@ -45,7 +45,7 @@ export default {
                     return true;
                 }
 
-                return this.allowedPostStatus.indexOf(post.status) > -1;                
+                return this.allowedPostStatus.indexOf(post.status) > -1;
             }).map(post => post.id));
         }
     },
@@ -82,7 +82,7 @@ export default {
 .multiselect__tags {
     min-height: 49px;
 }
-    
+
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }

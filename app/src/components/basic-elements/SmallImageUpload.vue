@@ -1,10 +1,10 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
         <span class="upload-path">
             <template v-if="!isUploading">{{ fileName }}</template>
-            <template v-if="isUploading">Loading image...</template>
+            <template v-if="isUploading">{{ $t('image.loadingImage') }}</template>
         </span>
 
         <input
@@ -136,26 +136,26 @@ export default {
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 3rem;                   
-        line-height: 1.1; 
+        height: 3rem;
+        line-height: 1.1;
         padding: 0;
         position: absolute;
         right: 1.5rem;
-        text-align: center; 
-        top: 50%;  
-        transition: var(--transition);   
-        transform: translateY(-50%);             
+        text-align: center;
+        top: 50%;
+        transition: var(--transition);
+        transform: translateY(-50%);
         width: 3rem;
-                                
+
         &:active,
         &:focus,
         &:hover {
             color: var(--icon-tertiary-color);
         }
-        
+
         &:hover {
             background: var(--input-border-color);
-        }  
+        }
     }
 
     .upload-input {

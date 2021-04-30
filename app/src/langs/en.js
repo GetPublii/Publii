@@ -23,12 +23,25 @@ export default {
         removeAuthorsMessage: 'Do you really want to remove selected authors?',
         removeAuthorsSuccessMessage: 'Selected authors have been removed',
         saveAndPreviewNotAvailableDueToNoSupportForAuthorPagesInTheme: 'The "Save &amp; Preview" option is not available due to lack of support for author pages in your theme.',
+        selectAuthor: 'Select author',
         selectAuthorPage: 'Select author page',
         themeDoesNotSupportFeaturedImagesForAuthors: 'Your theme does not support featured images for authors',
         toUseThisOptionEnableIndexingAuthorPages: 'To use this option, first enable indexing of author pages in SEO settings.',
         useGravatarMessage: 'Use <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatar </a> to provide your author avatar',
         useGravatarServiceMessage: 'In order to use Gravatar service provide the author e-mail at first.',
         website: 'Website'
+    },
+    gdpr: {
+        addGroup: 'Add group',
+        groupID: 'Group ID',
+        groupName: 'Group name',
+        state: 'State'
+    },
+    image: {
+        dropFeaturedImageOr: 'Drop featured image here or',
+        dropToUploadPhotoOr: 'Drop to upload your photo or',
+        loadingImage: 'Loading image...',
+        removeImage: 'Remove image'
     },
     menu: {
         addMenuItem: 'Add menu item',
@@ -173,7 +186,7 @@ export default {
         editors: 'Editors',
         editorWYSIWYGInfo: 'If the WYSIWYG editor strips out some tags from your HTML code, here you can add additional allowed elements.<br> For example: <strong>v-select[*],v-dropdown[*]</strong> will allow custom v-select and v-dropdown tags with any attributes.',
         enableAMP: 'Enable AMP',
-        enableAMPInfo: 'AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>    when this option is enabled your website will load third-party scripts provided by Google\'s AMP CDN.',
+        enableAMPInfo: 'AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>        when this option is enabled your website will load third-party scripts provided by Google\'s AMP CDN.',
         enableAutoIndent: 'Enable auto-indent',
         enableCSSCompression: 'Enable CSS compression',
         enableHTMLCompression: 'Enable HTML compression',
@@ -235,6 +248,10 @@ export default {
         paginationPhrase: 'Pagination phrase:',
         paginationPhraseCannotBeEmpty: 'Pagination phrase cannot be empty.',
         paginationPhraseInfo: 'Defines the phrase used before the page number in a URL e.g. <strong>https://example.com/tags/tag-slug/page/2</strong>.<br>',
+        password: {
+            hidePassword: 'Hide password',
+            showPassword: 'Show password'
+        },
         pinterest: 'Pinterest',
         postCreationDate: 'Post creation date',
         postID: 'Post ID',
@@ -355,6 +372,7 @@ export default {
         removeTagMessage: 'Do you really want to remove selected tags?',
         removeTagSuccessMessage: 'Selected tags have been removed',
         saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme: 'The "Save &amp; Preview" option is not available due to lack of support for tag pages in your theme.',
+        selectTag: 'Select tag',
         selectTagPage: 'Select tag page',
         tagDataParsingErrorMessage: 'An error occurred during parsing tag data for ID: ',
         tagHasBeenEdited: 'Tag has been edited',
@@ -394,6 +412,7 @@ export default {
         removeThemeSuccessMessage: 'Theme has been successfully removed.',
         resetThemeSettings: 'Reset theme settings',
         saveSettingsSuccessMessage: 'Theme settings has been successfully saved.',
+        selectTheme: 'Select theme',
         settingsResetMessage: 'Do you really want to reset the theme settings?',
         settingsResetSuccessMessage: 'Theme settings has been reset.',
         tagsPostsPerPage: 'Tags posts per page:',
@@ -476,6 +495,7 @@ export default {
         theme: 'Theme',
         tools: 'Tools',
         unhide: 'Unhide',
+        uploadInProgress: 'Upload in progress...',
         useSiteGlobalSettings: 'Use site global settings'
     }
 };

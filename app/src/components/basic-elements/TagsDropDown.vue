@@ -22,7 +22,7 @@ export default {
         },
         placeholder: {
             type: String,
-            default: 'Select tag'
+            default: this.$t('tag.selectTag')
         },
         value: {},
         anchor: {
@@ -73,7 +73,7 @@ export default {
 .multiselect__tags {
     min-height: 49px;
 }
-    
+
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }
