@@ -9,7 +9,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    {{ $t('ui.saveSettings') }}Save Settings
+                    {{ $t('ui.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
@@ -42,7 +42,7 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        {{ $t('sync.syncInProgressMessage') }}During sync process you cannot change site name.
+                        {{ $t('sync.syncInProgressMessage') }}
                     </small>
                 </field>
 
@@ -83,7 +83,6 @@
                         slot="note"
                         class="note is-invalid">
                         {{ $t('settings.spellcheckerDoesNotSupportLanguage') }}
-                        The spellchecker does not support your selected website language. We recommend to disable this feature.
                     </small>
                 </field>
 
@@ -100,7 +99,6 @@
                         v-if="!currentTheme"
                         slot="field">
                         {{ $t('settings.notSelected') }}
-                        Not selected
                     </strong>
 
                     <themes-dropdown
@@ -138,7 +136,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.dontIndexThisPage') }}
-                                Ask the search engine not to crawl the whole website.
                             </small>
                         </field>
 
@@ -220,7 +217,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.postPageTitleVariables') }}
-                                The following variables can be used in the Post Page Title: %posttitle, %sitename, %authorname
                             </small>
                         </field>
 
@@ -280,7 +276,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.tagsListPageTitleVariables') }}
-                                The following variables can be used in the Tags List Page Title: %sitename
                             </small>
                         </field>
 
@@ -329,7 +324,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.tagPageTitleVariables') }}
-                                The following variables can be used in the Tag Page Title: %tagname, %sitename
                             </small>
                         </field>
 
@@ -370,7 +364,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.displayEmptyTagsInfo') }}
-                                If this option is enabled tags without posts assigned to them will still have their subpages created and appear on the tags list.
                             </small>
                         </field>
 
@@ -400,7 +393,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.disableTagsPaginationInfo') }}
-                                If this option is enabled your tags pagination won't be generated.
                             </small>
                         </field>
 
@@ -424,7 +416,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.authorPageTitleVariables') }}
-                                The following variables can be used in the Author Page Title: %authorname, %sitename
                             </small>
                         </field>
 
@@ -464,7 +455,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.displayEmptyAuthorsInfo') }}
-                                If this option is enabled authors without posts assigned to them will still have their subpages created and appear on the authors list.
                             </small>
                         </field>
 
@@ -494,7 +484,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.disableAuthorsPaginationInfo') }}
-                                If this option is enabled your authors pagination won't be generated.
                             </small>
                         </field>
 
@@ -507,7 +496,7 @@
                             v-if="!advanced.noIndexThisPage && !currentThemeSupportsErrorPage"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>{{ $t('settings.themeDoesNotSupport404ErrorPage') }}Your theme does not support 404 Error page.</p>
+                            <p>{{ $t('settings.themeDoesNotSupport404ErrorPage') }}</p>
                         </div>
 
                         <field
@@ -526,7 +515,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.errorPageTitleVariables') }}
-                                The following variables can be used in the Error Page Title: %sitename
                             </small>
                         </field>
 
@@ -564,7 +552,7 @@
                             v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>{{ $t('settings.themeDoesNotSupportSearchPage') }}Your theme does not support Search page.</p>
+                            <p>{{ $t('settings.themeDoesNotSupportSearchPage') }}</p>
                             </div>
 
                         <field
@@ -583,7 +571,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.searchPageTitleVariables') }}
-                                The following variables can be used in the Search Page Title: %sitename
                             </small>
                         </field>
 
@@ -637,7 +624,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.cannotAddIndexHTMLInURLsInfo') }}
-                                Enable this option if you cannot enable loading index.html files by default when catalog on your server is opened.
                             </small>
                         </field>
 
@@ -708,7 +694,6 @@
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportErrorPages') }}
-                                Your theme does not support error pages
                             </small>
                         </field>
 
@@ -728,7 +713,6 @@
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportSearchPages') }}
-                                Your theme does not support search pages
                             </small>
                         </field>
                     </div>
@@ -763,7 +747,6 @@
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddTags" />
                                 {{ $t('settings.tagPages') }}
-                                Tag pages
                             </label>
 
                             <label
@@ -771,7 +754,6 @@
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddAuthors" />
                                 {{ $t('settings.authorPages') }}
-                                Author pages
                             </label>
 
                             <label
@@ -779,7 +761,6 @@
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddHomepage" />
                                 {{ $t('settings.homepagePagination') }}
-                                Homepage pagination
                             </label>
 
                             <label
@@ -787,7 +768,6 @@
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddExternalImages" />
                                 {{ $t('settings.externalImages') }}
-                                External images
                             </label>
                         </field>
 
@@ -836,8 +816,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.useAsTitlePageTitleInfo') }}
-                                When this option is enabled, og:title and twitter:title metatags will contain the page title instead of the post title, tag name or author name.
-
                             </small>
                         </field>
 
@@ -933,7 +911,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.fallbackLogoImageInfo') }}
-                                The logo must fit in a 60 &times; 600 pixel box.
                             </small>
                         </field>
 
@@ -1214,7 +1191,6 @@
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.gdprBehaviourInfo') }}
-                                Remember to place a link with the above anchor in your website navigation or the website content (e.g. &lt;a href="#cookie-settings"&gt;Cookie preferences&lt;/a&gt;). Otherwise, your website's users might not be able to change their individual cookie preferences.
                             </small>
                         </field>
 
@@ -1280,7 +1256,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.enableMediaLazyLoadInfo') }}
-                                Enable this option if you want to use native lazy loading that lazy loads images, videos and iframes.
                             </small>
                         </field>
 
@@ -1297,7 +1272,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.enableResponsiveImagesInfo') }}
-                                Enable this option if you want to deliver different sized images at different screen resolutions depending on breakpoints defined through config.json file in a theme's folder.
                             </small>
                         </field>
 
@@ -1315,8 +1289,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.versionParameterInfo') }}
-                                Add version parameter in CSS/JS URLs to skip browser cache.
-                                This option can cause that more files than usual will be required to sync during deployment
                             </small>
                         </field>
 
@@ -1396,7 +1368,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.showFullTextInFeedInfo') }}
-                                Display full text of the post in the feed
                             </small>
                         </field>
 
@@ -1450,7 +1421,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.showFeaturedImageInfo') }}
-                                 Display a post's featured image in the feed
                             </small>
                         </field>
                     </div>
@@ -1562,7 +1532,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.relatedPostsOptionsInfo') }}
-                                When enabled, related posts will be taken from all tags. When disabled, related posts will only be generated from the same tags as the current post.
                             </small>
                         </field>
                     </div>
@@ -1633,7 +1602,6 @@
                     type="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('ui.saveSettings') }}
-                    Save Settings
                 </p-button>
             </p-footer>
         </div>
@@ -1810,16 +1778,16 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Render full website',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'full-site',
                     isVisible: () => true,
                     icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render front page only',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'homepage',
                     icon: 'quick-preview',
                     isVisible: () => true,
@@ -2012,7 +1980,7 @@ export default {
 
                 if(data.message === 'success-save') {
                     this.$bus.$emit('message-display', {
-                        message: 'Site settings has been successfully saved.',
+                        message: this.$t('settings.siteSettingsSaveSuccessMessage'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -2022,7 +1990,7 @@ export default {
 
                 if(data.message === 'empty-name') {
                     this.$bus.$emit('message-display', {
-                        message: 'Site name cannot be empty. Please try other name.',
+                        message: this.$t('settings.siteSettingsSaveEmptyNameErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -2032,7 +2000,7 @@ export default {
 
                 if(data.message === 'duplicated-name') {
                     this.$bus.$emit('message-display', {
-                        message: 'Provided site name is in use. Please try other site name.',
+                        message: this.$t('settings.siteSettingsSaveDuplicateNameErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -2042,7 +2010,7 @@ export default {
 
                 if(data.message === 'site-not-exists') {
                     this.$bus.$emit('message-display', {
-                        message: 'Site not exists. Please restart the application.',
+                        message: this.$t('settings.siteSettingsSaveSiteNotExistsErrorMessage'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -2053,13 +2021,13 @@ export default {
                 if(data.message === 'no-keyring') {
                     if (document.body.getAttribute('data-os') === 'linux') {
                         this.$bus.$emit('alert-display', {
-                            message: 'Publii cannot save settings as no safe password storage software is installed. Follow the installation instructions for Node Keytar via https://github.com/atom/node-keytar/ and try again. Most likely the libsecret-1-dev and gnome-keyring packages are missing from your system.',
-                            okLabel: 'OK, I understand',
+                            message: this.$t('settings.siteSettingsSaveNoKeyringErrorMessageLinux'),
+                            okLabel: this.$t('ui.iUnderstand'),
                         });
                     } else {
                         this.$bus.$emit('alert-display', {
-                            message: 'Publii cannot save settings due to a problem with the safe password storage software. Restart the application and try again. If the problem persists, please report it to our team via the community forum.',
-                            okLabel: 'OK, I understand',
+                            message: this.$t('settings.siteSettingsSaveNoKeyringErrorMessage'),
+                            okLabel: this.$t('ui.iUnderstand'),
                         });
                     }
 
@@ -2112,8 +2080,8 @@ export default {
                 if (showPreview) {
                     if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
                         this.$bus.$emit('confirm-display', {
-                            message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                            okLabel: 'Go to app settings',
+                            message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                            okLabel: this.$t('sync.goToAppSettings'),
                             okClick: () => {
                                 this.$router.push(`/app-settings/`);
                             }
@@ -2134,7 +2102,7 @@ export default {
         validate () {
             if (this.advanced.urls.tagsPrefix.trim() === '' && !!this.advanced.urls.cleanUrls) {
                 this.$bus.$emit('message-display', {
-                    message: 'Tags prefix cannot be empty if pretty URLs are enabled.',
+                    message: this.$t('settings.tagsPrefixCannotBeEmpty'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2147,7 +2115,7 @@ export default {
 
             if (this.advanced.urls.authorsPrefix.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Authors prefix cannot be empty.',
+                    message: this.$t('settings.authorsPrefixCannotBeEmpty'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2160,7 +2128,7 @@ export default {
 
             if (this.advanced.urls.authorsPrefix.trim() === this.advanced.urls.tagsPrefix.trim()) {
                 this.$bus.$emit('message-display', {
-                    message: 'Authors prefix cannot be the same as tags prefix.',
+                    message: this.$t('settings.authorsPrefixCannotEqualTagsPrefix'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2174,7 +2142,7 @@ export default {
 
             if (this.advanced.urls.pageName.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Pagination phrase cannot be empty.',
+                    message: this.$t('settings.paginationPhraseCannotBeEmpty'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2187,7 +2155,7 @@ export default {
 
             if (this.advanced.urls.errorPage.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Error page filename cannot be empty.',
+                    message: this.$t('settings.errorPageFilenameCannotBeEmpty'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2200,7 +2168,7 @@ export default {
 
             if (this.advanced.urls.searchPage.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Search page filename cannot be empty.',
+                    message: this.$t('settings.searchPageFilenameCannotBeEmpty'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -2213,7 +2181,7 @@ export default {
 
             if (this.advanced.urls.errorPage.trim() === this.advanced.urls.searchPage.trim()) {
                 this.$bus.$emit('message-display', {
-                    message: 'Error page filename cannot be the same as search page filename.',
+                    message: this.$t('settings.errorPageFilenameCannotEqualSearchPageFilename'),
                     type: 'warning',
                     lifeTime: 3
                 });
