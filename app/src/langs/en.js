@@ -12,6 +12,7 @@ export default {
         avatar: 'Avatar',
         avatarAndFeaturedImage: 'Avatar and Featured image',
         cannotRemoveMainAuthor: 'You cannot remove the main author.',
+        changePostAuthor: 'Change post author',
         editAuthor: 'Edit author',
         eMail: 'E-mail',
         filterOrSearchAuthors: 'Filter or search authors...',
@@ -30,6 +31,21 @@ export default {
         useGravatarMessage: 'Use <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatar </a> to provide your author avatar',
         useGravatarServiceMessage: 'In order to use Gravatar service provide the author e-mail at first.',
         website: 'Website'
+    },
+    date: {
+        apr: 'Apr',
+        aug: 'Aug',
+        changePostPublicationDate: 'Change post publication date',
+        dec: 'Dec',
+        feb: 'Feb',
+        jan: 'Jan',
+        jul: 'Jul',
+        jun: 'Jun',
+        mar: 'Mar',
+        may: 'May',
+        nov: 'Nov',
+        oct: 'Oct',
+        sep: 'Sep'
     },
     gdpr: {
         addGroup: 'Add group',
@@ -186,7 +202,7 @@ export default {
         editors: 'Editors',
         editorWYSIWYGInfo: 'If the WYSIWYG editor strips out some tags from your HTML code, here you can add additional allowed elements.<br> For example: <strong>v-select[*],v-dropdown[*]</strong> will allow custom v-select and v-dropdown tags with any attributes.',
         enableAMP: 'Enable AMP',
-        enableAMPInfo: 'AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>        when this option is enabled your website will load third-party scripts provided by Google\'s AMP CDN.',
+        enableAMPInfo: 'AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong>                when this option is enabled your website will load third-party scripts provided by Google\'s AMP CDN.',
         enableAutoIndent: 'Enable auto-indent',
         enableCSSCompression: 'Enable CSS compression',
         enableHTMLCompression: 'Enable HTML compression',

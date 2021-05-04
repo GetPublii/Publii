@@ -12,6 +12,7 @@ export default {
         avatar: 'Avatar',
         avatarAndFeaturedImage: 'Avatar i obraz wyróżniony',
         cannotRemoveMainAuthor: 'Nie możesz usunąć głównego autora.',
+        changePostAuthor: 'Zmień autora wpisu',
         editAuthor: 'Edytuj autora',
         eMail: 'E-mail',
         filterOrSearchAuthors: 'Ftruj lub wyszukaj autorów...',
@@ -30,6 +31,21 @@ export default {
         useGravatarMessage: 'Użyj <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatara </a> aby dodać avatar do autora.',
         useGravatarServiceMessage: 'Aby skorzystać z usługi Gravatar podaj adres e-mail autora.',
         website: 'Strona internetowa'
+    },
+    date: {
+        apr: 'Kwi',
+        aug: 'Sier',
+        changePostPublicationDate: 'Zmień datę publikacji wpisu',
+        dec: 'Gru',
+        feb: 'Lut',
+        jan: 'sty',
+        jul: 'Lip',
+        jun: 'Czer',
+        mar: 'Marz',
+        may: 'Maj',
+        nov: 'List',
+        oct: 'Paź',
+        sep: 'Wrz'
     },
     gdpr: {
         addGroup: 'Dodaj grupe',
@@ -186,7 +202,7 @@ export default {
         editors: 'Edytory',
         editorWYSIWYGInfo: 'Jeśli edytor WYSIWYG usunie jakieś tagi z Twojego kodu HTML tutaj możesz podać dodatkowe elementy dozwolone.<br> Na przykład: <strong>v-select[*],v-dropdown[*]</strong> zezwoli na niestandardowe tagi v-select i v-dropdown z dowolnymi atrybutami',
         enableAMP: 'Włącz AMP',
-        enableAMPInfo: 'AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong>        kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google\'s AMP CDN',
+        enableAMPInfo: 'AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong>                kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google\'s AMP CDN',
         enableAutoIndent: 'Włącz automatyczne wcięcia',
         enableCSSCompression: 'Włącz kompresję CSS',
         enableHTMLCompression: 'Włącz kompresję HTML',

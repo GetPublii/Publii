@@ -4,25 +4,25 @@
         class="overlay">
         <div class="popup">
             <p class="message">
-                Change post publication date:
+                {{ $t('date.changePostPublicationDate') }}:
             </p>
 
             <div class="post-date-picker">
                 <select
                     v-model="time.month"
                     class="post-date-editor-month">
-                    <option value="1">Jan</option>
-                    <option value="2">Feb</option>
-                    <option value="3">Mar</option>
-                    <option value="4">Apr</option>
-                    <option value="5">May</option>
-                    <option value="6">Jun</option>
-                    <option value="7">Jul</option>
-                    <option value="8">Aug</option>
-                    <option value="9">Sep</option>
-                    <option value="10">Oct</option>
-                    <option value="11">Nov</option>
-                    <option value="12">Dec</option>
+                    <option value="1">{{ $t('date.jan') }}</option>
+                    <option value="2">{{ $t('date.feb') }}</option>
+                    <option value="3">{{ $t('date.mar') }}</option>
+                    <option value="4">{{ $t('date.apr') }}</option>
+                    <option value="5">{{ $t('date.may') }}</option>
+                    <option value="6">{{ $t('date.jun') }}</option>
+                    <option value="7">{{ $t('date.jul') }}</option>
+                    <option value="8">{{ $t('date.aug') }}</option>
+                    <option value="9">{{ $t('date.sep') }}</option>
+                    <option value="10">{{ $t('date.oct') }}</option>
+                    <option value="11">{{ $t('date.nov') }}</option>
+                    <option value="12">{{ $t('date.dec') }}</option>
                 </select>/
 
                 <select
@@ -180,7 +180,7 @@
                 <p-button
                     type="medium no-border-radius half-width cancel-popup"
                     @click.native="cancel">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -265,13 +265,13 @@ export default {
                 if (parseInt(this.time.hours, 10) === 12) {
                     return 12;
                 }
-                
+
                 return parseInt(this.time.hours, 10) + 12;
             }
-            
+
             if (parseInt(this.time.hours, 10) === 12) {
                 return 0;
-            } 
+            }
 
             return this.time.hours;
         }
@@ -290,16 +290,16 @@ export default {
     z-index: 100005;
 }
 
-.popup {   
+.popup {
     max-width: 60rem;
-    min-width: 60rem;   
-    padding: 4rem;   
+    min-width: 60rem;
+    padding: 4rem;
 }
 
 .message {
     color: var(--gray-4);
-    font-size: 1.8rem;   
-    padding: 0 0 4rem 0;   
+    font-size: 1.8rem;
+    padding: 0 0 4rem 0;
 }
 
 .buttons {
