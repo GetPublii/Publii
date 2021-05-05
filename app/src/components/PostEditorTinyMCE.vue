@@ -341,16 +341,23 @@ export default {
     &-form {
         #post-title {
             border: none;
+            -webkit-box-orient: vertical;
             box-shadow: none;
-            display: block;
+            display: -webkit-box;
             font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             font-size: 3.5rem;
             font-weight: 600;
+            -webkit-line-clamp: 1;
             line-height: 1.2;
             margin: 0 10% 2.6rem;
+            overflow: hidden;
             padding: 0;
             text-align: center;
             width: 80%;
+
+            &:focus {
+                -webkit-line-clamp: 25;
+            }
 
             &:empty {
                 color: var(--gray-3); 
