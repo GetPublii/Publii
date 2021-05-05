@@ -625,6 +625,11 @@ body {
             }
             
             &--list {
+                .tox-collection__item--enabled {
+                    background-color: var(--bg-secondary);
+                    color: var(--text-primary-color);
+                }
+                
                 .tox-collection__item--active {
                     background-color: var(--gray-1);
                     color: var(--text-primary-color);
@@ -634,10 +639,6 @@ body {
                     }
                 }
                 
-                .tox-collection__item--enabled {
-                    color: var(--text-primary-color);
-                }
-
                 .tox-collection__group {
                     border-color: var(--border-light-color);
                 }
