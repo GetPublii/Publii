@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'about-credits-list',
     props: [
@@ -68,7 +66,7 @@ export default {
     },
     mounted () {
         (async () => {
-            this.appDirPath = await ipcRenderer.invoke('app-credits-list:get-app-path');
+            this.appDirPath = await mainProcessAPI.invoke('app-credits-list:get-app-path');
         });
     },
     methods: {
@@ -84,11 +82,11 @@ export default {
             }
         },
         loadLicense: function(link, licenseUrl) {
-            ipcRenderer.send('app-license-load', {
+            mainProcessAPI.send('app-license-load', {
                 url: licenseUrl
             });
 
-            ipcRenderer.once('app-license-loaded', function(event, licenseText) {
+            mainProcessAPI.receiveOnce('app-license-loaded', function(licenseText) {
                 link.parentNode.nextElementSibling.querySelector('pre').innerText = licenseText;
             });
         },

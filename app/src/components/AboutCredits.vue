@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 import { mapGetters } from 'vuex';
 import licenses from '../../licenses/all-licenses.json';
 import AboutCreditsList from './AboutCreditsList';

@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 class PostHelper {
     static async preparePostData (newPostStatus, postID, $store, postData) {
         let finalStatus = newPostStatus;
@@ -54,7 +53,7 @@ class PostHelper {
         });
 
         if (postData.slug === '') {
-            postData.slug = await ipcRenderer.invoke('app-main-process-create-slug', postData.title);
+            postData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', postData.title);
         }
 
         let creationDate = postData.creationDate.timestamp;

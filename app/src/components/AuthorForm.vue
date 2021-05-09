@@ -317,9 +317,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils';
-import crypto from 'crypto';
 
 export default {
     name: 'author-form-sidebar',
@@ -438,9 +436,9 @@ export default {
     methods: {
         async save (showPreview = false) {
             if (this.authorData.username === '') {
-                this.authorData.username = await ipcRenderer.invoke('app-main-process-create-slug', this.authorData.name);
+                this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.name);
             } else {
-                this.authorData.username = await ipcRenderer.invoke('app-main-process-create-slug', this.authorData.username);
+                this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.username);
             }
 
             let authorData = {
@@ -468,9 +466,9 @@ export default {
         },
         saveData(authorData, showPreview = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-author-save', authorData);
+            mainProcessAPI.send('app-author-save', authorData);
 
-            ipcRenderer.once('app-author-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-author-saved', (data) => {
                 if(data.status !== false) {
                     if(authorData.id === 0) {
                         let newlyAddedAuthor = JSON.parse(JSON.stringify(data.authors.filter(author => author.id === data.authorID)[0]));
@@ -503,7 +501,7 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-author-item-editor');
-            ipcRenderer.send('app-author-cancel', {
+            mainProcessAPI.send('app-author-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.authorData.id,
                 additionalData: {
@@ -592,7 +590,7 @@ export default {
             this.authorData.avatar = avatarPath;
         }, 1000),
         md5 (value) {
-            return crypto.createHash('md5').update(value).digest("hex");
+            return mainProcessAPI.createMD5(value);
         },
         avatarRemoved () {
             this.authorData.useGravatar = false;

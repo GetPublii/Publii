@@ -75,8 +75,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 
 export default {
@@ -142,11 +140,11 @@ export default {
     },
     methods: {
         initEditor: function() {
-            ipcRenderer.send('app-site-css-load', {
+            mainProcessAPI.send('app-site-css-load', {
                 site: this.$store.state.currentSite.config.name
             });
 
-            ipcRenderer.once('app-site-css-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-css-loaded', (data) => {
                 if (data.normal !== false) {
                     this.editorValueNormal = data.normal;
                 }
@@ -165,7 +163,7 @@ export default {
             this.$refs.codemirrorNormal.editor.save();
             this.$refs.codemirrorAmp.editor.save();
 
-            ipcRenderer.send('app-site-css-save', {
+            mainProcessAPI.send('app-site-css-save', {
                 site: this.$store.state.currentSite.config.name,
                 code: {
                     normal: document.getElementById('custom-css-editor-normal').value,
@@ -173,8 +171,8 @@ export default {
                 }
             });
 
-            ipcRenderer.once('app-site-css-saved', (event, data) => {
-                this.saved (showPreview, renderingType);
+            mainProcessAPI.receiveOnce('app-site-css-saved', (data) => {
+                this.saved(showPreview, renderingType);
             });
         },
         saveAndPreview () {
@@ -197,7 +195,7 @@ export default {
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
                         message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
                         okLabel: 'Go to app settings',

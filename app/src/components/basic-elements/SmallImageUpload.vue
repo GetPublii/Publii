@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import normalizePath from 'normalize-path';
-import { ipcRenderer } from 'electron';
 import PreloaderImages from './../configs/preloaderImages';
 
 export default {
@@ -102,11 +100,11 @@ export default {
                 imageType: 'optionImages'
             };
 
-            ipcRenderer.send('app-image-upload', uploadData);
+            mainProcessAPI.send('app-image-upload', uploadData);
 
-            ipcRenderer.once('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (event, data) => {
                 this.isEmpty = false;
-                this.fileName = 'media/website/' + normalizePath(data.baseImage.newPath).split('/').pop();
+                this.fileName = 'media/website/' + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
                 this.isUploading = false;
             });
         },

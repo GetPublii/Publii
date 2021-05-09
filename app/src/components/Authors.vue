@@ -148,7 +148,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import AuthorForm from './AuthorForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -190,11 +189,11 @@ export default {
         }
     },
     beforeMount () {
-        ipcRenderer.send('app-authors-load', {
+        mainProcessAPI.send('app-authors-load', {
             "site": this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-authors-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-authors-loaded', (data) => {
             this.$store.commit('setAuthors', data.authors);
             this.$store.commit('setPostsAuthors', data.postsAuthors);
         });
@@ -271,12 +270,12 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-author-delete', {
+            mainProcessAPI.send('app-author-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
             });
 
-            ipcRenderer.once('app-author-deleted', () => {
+            mainProcessAPI.receiveOnce('app-author-deleted', () => {
                 this.$store.commit('removeAuthors', itemsToRemove);
                 this.selectedItems = [];
 

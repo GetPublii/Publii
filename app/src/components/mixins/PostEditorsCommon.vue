@@ -1,6 +1,4 @@
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'post-editors-common',
     mounted () {
@@ -15,7 +13,7 @@ export default {
                 return;
             }
 
-            let slugValue = await ipcRenderer.invoke('app-main-process-create-slug', this.postData.title);
+            let slugValue = await mainProcessAPI.invoke('app-main-process-create-slug', this.postData.title);
             this.postData.slug = slugValue;
         },
         toggleSidebar () {

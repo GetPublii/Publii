@@ -965,7 +965,6 @@
 
 <script>
 import Vue from 'vue';
-import { shell, ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
@@ -1145,12 +1144,12 @@ export default {
 
             let newSettings = this.getDeploymentSettings();
 
-            ipcRenderer.send('app-site-config-save', {
+            mainProcessAPI.send('app-site-config-save', {
                 "site": this.$store.state.currentSite.config.name,
                 "settings": newSettings
             });
 
-            ipcRenderer.once('app-site-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
                     this.saved(newSettings);
                 }
@@ -1235,13 +1234,13 @@ export default {
 
             this.testInProgress = true;
 
-            ipcRenderer.send('app-deploy-test', {
+            mainProcessAPI.send('app-deploy-test', {
                 siteName: this.$store.state.currentSite.config.name,
                 deploymentConfig: deploymentSettings,
                 uuid: this.$store.state.currentSite.config.uuid
             });
 
-            ipcRenderer.once('app-deploy-test-success', (event, data) => {
+            mainProcessAPI.receiveOnce('app-deploy-test-success', (data) => {
                 this.$bus.$emit('alert-display', {
                     message: 'Success! Application was able to connect with your server.',
                     buttonStyle: 'success'
@@ -1251,7 +1250,7 @@ export default {
                 this.save();
             });
 
-            ipcRenderer.once('app-deploy-test-write-error', (event, data) => {
+            mainProcessAPI.receiveOnce('app-deploy-test-write-error', (data) => {
                 this.$bus.$emit('alert-display', {
                     message: 'Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server.',
                     buttonStyle: 'danger'
@@ -1260,7 +1259,7 @@ export default {
                 this.testInProgress = false;
             });
 
-            ipcRenderer.once('app-deploy-test-error', (event, data) => {
+            mainProcessAPI.receiveOnce('app-deploy-test-error', (data) => {
                 if(data && data.message) {
                     this.$bus.$emit('alert-display', {
                         message: 'Error! Application was unable to connect with your server: ' + data.message,
@@ -1422,28 +1421,28 @@ export default {
             return '';
         },
         async loadPasswords (deploymentSettings) {
-            deploymentSettings.password = await ipcRenderer.invoke('app-main-process-load-password', 'publii', deploymentSettings.password);
+            deploymentSettings.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii', deploymentSettings.password);
 
             if (deploymentSettings.passphrase) {
-                deploymentSettings.passphrase = await ipcRenderer.invoke('app-main-process-load-password', 'publii-passphrase', deploymentSettings.passphrase);
+                deploymentSettings.passphrase = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-passphrase', deploymentSettings.passphrase);
             }
 
             if (deploymentSettings.s3) {
-                deploymentSettings.s3.id = await ipcRenderer.invoke('app-main-process-load-password', 'publii-s3-id', deploymentSettings.s3.id);
-                deploymentSettings.s3.key = await ipcRenderer.invoke('app-main-process-load-password', 'publii-s3-key', deploymentSettings.s3.key);
+                deploymentSettings.s3.id = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-s3-id', deploymentSettings.s3.id);
+                deploymentSettings.s3.key = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-s3-key', deploymentSettings.s3.key);
             }
 
             if (deploymentSettings.netlify) {
-                deploymentSettings.netlify.id = await ipcRenderer.invoke('app-main-process-load-password', 'publii-netlify-id', deploymentSettings.netlify.id);
-                deploymentSettings.netlify.token = await ipcRenderer.invoke('app-main-process-load-password', 'publii-netlify-token', deploymentSettings.netlify.token);
+                deploymentSettings.netlify.id = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-netlify-id', deploymentSettings.netlify.id);
+                deploymentSettings.netlify.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-netlify-token', deploymentSettings.netlify.token);
             }
 
             if (deploymentSettings.github) {
-                deploymentSettings.github.token = await ipcRenderer.invoke('app-main-process-load-password', 'publii-gh-token', deploymentSettings.github.token);
+                deploymentSettings.github.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gh-token', deploymentSettings.github.token);
             }
 
             if (deploymentSettings.gitlab) {
-                deploymentSettings.gitlab.token = await ipcRenderer.invoke('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
+                deploymentSettings.gitlab.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
             }
 
             return deploymentSettings;

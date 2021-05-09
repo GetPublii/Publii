@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 
 export default {
@@ -45,9 +44,9 @@ export default {
     },
     methods: {
         loadFilesList: function() {
-            ipcRenderer.send('app-log-files-load');
+            mainProcessAPI.send('app-log-files-load');
 
-            ipcRenderer.once('app-log-files-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-log-files-loaded', (data) => {
                 let items = {};
                 items[""] = 'Select file to load';
 
@@ -66,9 +65,9 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-log-file-load', filename);
+            mainProcessAPI.send('app-log-file-load', filename);
 
-            ipcRenderer.once('app-log-file-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-log-file-loaded', (data) => {
                 if(typeof data.fileContent === 'string') {
                     if(data.fileContent.trim() !== '') {
                         this.$refs.codemirror.editor.setValue(data.fileContent);

@@ -123,7 +123,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -170,11 +169,11 @@ export default {
         }
     },
     mounted: function() {
-        ipcRenderer.send('app-backups-list-load', {
-            "site": this.$store.state.currentSite.config.name
+        mainProcessAPI.send('app-backups-list-load', {
+            site: this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-backups-list-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-backups-list-loaded', (data) => {
             if (data.status) {
                 this.isLoading = false;
                 this.items = data.backups;
@@ -196,12 +195,12 @@ export default {
                 return document.querySelector('input[value="' + id + '"]').getAttribute('id');
             });
 
-            ipcRenderer.send('app-backup-remove', {
+            mainProcessAPI.send('app-backup-remove', {
                 site: this.$store.state.currentSite.config.name,
                 backupsNames: backupsToRemove
             });
 
-            ipcRenderer.once('app-backup-removed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-removed', (data) => {
                 this.items = data.backups;
                 this.selectedItems = [];
 
@@ -273,13 +272,13 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-backup-rename', {
+            mainProcessAPI.send('app-backup-rename', {
                 site: this.$store.state.currentSite.config.name,
                 oldBackupName: this.fileToRename,
                 newBackupName: newFilename
             });
 
-            ipcRenderer.once('app-backup-renamed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-renamed', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
                         message: 'An error occurred while renaming the selected backup file. Please try again.',
@@ -349,12 +348,12 @@ export default {
 
             this.operationInProgress = true;
 
-            ipcRenderer.send('app-backup-create', {
+            mainProcessAPI.send('app-backup-create', {
                 site: this.$store.state.currentSite.config.name,
                 filename: filename
             });
 
-            ipcRenderer.once('app-backup-created', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-created', (data) => {
                 if (data.status) {
                     this.items = data.backups;
 
@@ -387,12 +386,12 @@ export default {
         restore: function() {
             this.operationInProgress = true;
 
-            ipcRenderer.send('app-backup-restore', {
+            mainProcessAPI.send('app-backup-restore', {
                 site: this.$store.state.currentSite.config.name,
                 backupName: this.fileToRestore
             });
 
-            ipcRenderer.once('app-backup-restored', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-restored', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
                         message: 'An error occurred while restoring the selected backup file: ' + data.error,
@@ -406,11 +405,11 @@ export default {
                         lifeTime: 3
                     });
 
-                    ipcRenderer.send('app-site-reload', {
+                    mainProcessAPI.send('app-site-reload', {
                         siteName: this.$store.state.currentSite.config.name
                     });
 
-                    ipcRenderer.once('app-site-reloaded', (event, result) => {
+                    mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                         this.$store.commit('setSiteConfig', result);
                         this.$store.commit('switchSite', result.data);
                     });

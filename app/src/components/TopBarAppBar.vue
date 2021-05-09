@@ -41,24 +41,22 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'topbar-appbar',
     methods: {
         appMinimize: function() {
-            ipcRenderer.invoke('app-window:minimize');
+            mainProcessAPI.invoke('app-window:minimize');
         },
         appMaximize: function() {
-            ipcRenderer.invoke('app-window:maximize');
+            mainProcessAPI.invoke('app-window:maximize');
             this.$store.commit('setWindowState', true);
         },
         appUnmaximize: function() {
-            ipcRenderer.invoke('app-window:unmaximize');
+            mainProcessAPI.invoke('app-window:unmaximize');
             this.$store.commit('setWindowState', false);
         },
         appClose: function() {
-            ipcRenderer.invoke('app-window:close');
+            mainProcessAPI.invoke('app-window:close');
         }
     }
 }

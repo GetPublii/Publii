@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -64,7 +63,7 @@ export default {
             }
         });
 
-        ipcRenderer.on('app-rendering-progress', this.renderingProgress);
+        mainProcessAPI.receive('app-rendering-progress', this.renderingProgress);
     },
     methods: {
         runRenderingPreview (itemConfig = false, mode = false) {
@@ -102,11 +101,11 @@ export default {
                 renderConfig.itemID = itemConfig.itemID;
             }
 
-            ipcRenderer.send('app-preview-render', renderConfig);
+            mainProcessAPI.send('app-preview-render', renderConfig);
 
-            ipcRenderer.once('app-preview-rendered', (event, data) => {
+            mainProcessAPI.receiveOnce('app-preview-rendered', (data) => {
                 if(data.status === true) {
-                    ipcRenderer.send('app-preview-show', {
+                    mainProcessAPI.send('app-preview-show', {
                         "site": this.$store.state.currentSite.config.name,
                         "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
                     });
@@ -123,8 +122,8 @@ export default {
                 }
             });
 
-            ipcRenderer.removeListener('app-preview-render-error', this.renderError);
-            ipcRenderer.once('app-preview-render-error', this.renderError);
+            mainProcessAPI.stopReceive('app-preview-render-error', this.renderError);
+            mainProcessAPI.receiveOnce('app-preview-render-error', this.renderError);
         },
         renderingProgress: function(event, data) {
             this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
@@ -157,8 +156,8 @@ export default {
     },
     beforeDestroy: function() {
         this.$bus.$off('rendering-popup-display');
-        ipcRenderer.removeAllListeners('app-preview-render-error');
-        ipcRenderer.removeAllListeners('app-rendering-progress');
+        mainProcessAPI.stopReceiveAll('app-preview-render-error');
+        mainProcessAPI.stopReceiveAll('app-rendering-progress');
     }
 }
 </script>

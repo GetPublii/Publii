@@ -23,8 +23,6 @@
 
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'dirselect',
     props: {
@@ -70,9 +68,9 @@ export default {
             this.$emit('input', '');
         },
         async selectDir () {
-            await ipcRenderer.invoke('app-main-process-select-directory', 'dir-select');
+            await mainProcessAPI.invoke('app-main-process-select-directory', 'dir-select');
 
-            ipcRenderer.once('app-directory-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-directory-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }

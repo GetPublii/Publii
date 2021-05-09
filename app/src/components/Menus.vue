@@ -156,7 +156,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import Draggable from 'vuedraggable';
 import MenuItem from './MenuItem.vue';
 import MenuItemEditor from './MenuItemEditor.vue';
@@ -345,7 +344,7 @@ export default {
             });
         },
         saveNewMenuStructure () {
-            ipcRenderer.send('app-menu-update', {
+            mainProcessAPI.send('app-menu-update', {
                 siteName: this.$store.state.currentSite.config.name,
                 menuStructure: this.$store.state.currentSite.menuStructure
             });

@@ -243,8 +243,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import Vue from 'vue';
@@ -354,13 +352,13 @@ export default {
             };
         },
         checkSitesCatalog () {
-            return fs.existsSync(this.locations.sites);
+            return mainProcessAPI.existsSync(this.locations.sites);
         },
         checkBackupsCatalog () {
-            return fs.existsSync(this.locations.backups);
+            return mainProcessAPI.existsSync(this.locations.backups);
         },
         checkPreviewCatalog () {
-            return fs.existsSync(this.locations.preview);
+            return mainProcessAPI.existsSync(this.locations.preview);
         },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
@@ -447,9 +445,9 @@ export default {
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
             newSettings = Utils.deepMerge(appConfigCopy, newSettings);
 
-            ipcRenderer.send('app-config-save', newSettings);
+            mainProcessAPI.send('app-config-save', newSettings);
 
-            ipcRenderer.once('app-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-config-saved', (data) => {
                 if(data.status === true && data.sites) {
                     this.$store.commit('setSites', data.sites);
                 }
@@ -462,7 +460,7 @@ export default {
         saved (newSettings, data) {
             this.$store.commit('setSiteDir', newSettings.sitesLocation);
             this.$store.commit('setAppConfig', newSettings);
-            ipcRenderer.send('app-backup-set-location', newSettings.backupsLocation);
+            mainProcessAPI.send('app-backup-set-location', newSettings.backupsLocation);
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {

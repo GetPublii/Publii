@@ -56,7 +56,6 @@
 <script>
 import Vue from 'vue';
 import VueSimplemde from 'vue-simplemde'
-import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -189,13 +188,13 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            ipcRenderer.send('app-post-load', {
+            mainProcessAPI.send('app-post-load', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            ipcRenderer.once('app-post-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
@@ -237,10 +236,10 @@ export default {
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-post-save', postData);
+            mainProcessAPI.send('app-post-save', postData);
 
             // Post save
-            ipcRenderer.once('app-post-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }

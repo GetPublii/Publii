@@ -1,5 +1,4 @@
 import EditorConfig from './../configs/postEditor.config.js';
-import { ipcRenderer } from 'electron';
 import Utils from './../../helpers/utils';
 
 class EditorBridge {
@@ -263,14 +262,14 @@ class EditorBridge {
                             return;
                         }
 
-                        ipcRenderer.send('app-image-upload', {
+                        mainProcessAPI.send('app-image-upload', {
                             id: this.postID,
                             site: window.app.$store.state.currentSite.config.name,
                             path: filePath,
                             imageType: 'contentImages'
                         });
 
-                        ipcRenderer.once('app-image-uploaded', (event, data) => {
+                        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                             let imagePath = data.baseImage.url;
                             imagePath = imagePath.replace('file://', 'file:///');
 
@@ -615,7 +614,7 @@ class EditorBridge {
         $('.tox-tinymce').addClass('is-loading-image');
         $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
-        ipcRenderer.send('app-image-upload', {
+        mainProcessAPI.send('app-image-upload', {
             "id": this.postID,
             "site": siteName,
             "path": files[0].path
@@ -623,7 +622,7 @@ class EditorBridge {
 
         this.contentImageUploading = true;
 
-        ipcRenderer.once('app-image-uploaded', (event, data) => {            
+        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {            
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {

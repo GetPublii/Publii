@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'search-popup',
     data () {
@@ -46,11 +44,11 @@ export default {
     watch: {
         searchPhrase (newValue) {
             if (this.isVisible && newValue.trim() !== '') {
-                ipcRenderer.invoke('app-main-webview-search-find-in-page', this.webContentsID, newValue);
+                mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, newValue);
             } else {
                 this.resultsCount = 0;
                 this.currentResultIndex = 0;
-                ipcRenderer.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
+                mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
             }
         }
     },
@@ -64,7 +62,7 @@ export default {
             });
         });
 
-        ipcRenderer.on('app-show-search-form', this.showSearch);
+        mainProcessAPI.receive('app-show-search-form', this.showSearch);
         this.$bus.$on('app-show-search-form', this.showSearch);
     },
     methods: {
@@ -73,14 +71,14 @@ export default {
                 return;
             }
 
-            ipcRenderer.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase);
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase);
         },
         getPrevResult () {
             if (this.resultsCount === 0) {
                 return;
             }
 
-            ipcRenderer.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase, {
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase, {
                 forward: false
             });
         },
@@ -89,7 +87,7 @@ export default {
             this.$refs['search-phrase-input'].focus();
         },
         finishSearch () {
-            ipcRenderer.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
+            mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
             this.isVisible = false;
         },
         doKeyboardNavigation (e) {
@@ -99,7 +97,7 @@ export default {
         }
     },
     beforeDestroy () {
-        ipcRenderer.removeAllListeners('app-show-search-form');
+        mainProcessAPI.stopReceiveAll('app-show-search-form');
         this.$bus.$off('app-show-search-form', this.showSearch);
     }
 };

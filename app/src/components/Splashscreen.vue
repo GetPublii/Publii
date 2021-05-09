@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
-
 export default {
     name: 'splashscreen',
     computed: {
@@ -48,7 +46,7 @@ export default {
         }
     },
     beforeDestroy: function() {
-        ipcRenderer.removeAllListeners('app-license-accepted');
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
         showLicense: function(e) {
@@ -58,8 +56,8 @@ export default {
         acceptLicense: function() {
             let self = this;
 
-            ipcRenderer.send('app-license-accept', true);
-            ipcRenderer.once('app-license-accepted', function(event, data) {
+            mainProcessAPI.send('app-license-accept', true);
+            mainProcessAPI.receiveOnce('app-license-accepted', function(event, data) {
                 self.$bus.$emit('license-accepted');
             });
         }

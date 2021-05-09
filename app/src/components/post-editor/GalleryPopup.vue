@@ -135,7 +135,6 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer} from 'electron';
 import Draggable from 'vuedraggable';
 
 export default {
@@ -180,15 +179,15 @@ export default {
     },
     methods: {
         async addImages () {
-            await ipcRenderer.invoke('app-main-process-select-files', false, [
+            await mainProcessAPI.invoke('app-main-process-select-files', false, [
                 {
                     name: 'Images',
                     extensions: ['jpg', 'jpeg', 'png']
                 }
             ]);
 
-            ipcRenderer.removeAllListeners('app-files-selected');
-            ipcRenderer.once('app-files-selected', (event, data) => {
+            mainProcessAPI.stopReceiveAll('app-files-selected');
+            mainProcessAPI.receiveOnce('app-files-selected', (data) => {
                 if (data.paths !== undefined && data.paths.filePaths.length) {
                     this.isUploading = true;
                     this.imagesToUpload = data.paths.filePaths.length;
@@ -201,14 +200,14 @@ export default {
         loadImages(imagesPaths) {
             let nextImagePath = imagesPaths.shift();
 
-            ipcRenderer.send('app-image-upload', {
+            mainProcessAPI.send('app-image-upload', {
                 id: this.postID,
                 site: this.$store.state.currentSite.config.name,
                 path: nextImagePath,
                 imageType: 'galleryImages'
             });
 
-            ipcRenderer.once('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.uploadProgress = this.uploadProgress + 1;
                 this.uploadMessage = `Uploading ${this.uploadProgress} of ${this.imagesToUpload} pictures`;
 

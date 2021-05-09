@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
@@ -106,7 +105,7 @@ Vue.directive('pure-html', {
     }
 });
 
-ipcRenderer.on('app-data-loaded', function (event, initialData) {
+mainProcessAPI.receive('app-data-loaded', function (initialData) {
     // Add global Vue properties for commonly used libraries
     Vue.prototype.$moment = moment;
 
@@ -177,17 +176,17 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'default') {
-                    ipcRenderer.invoke('app-theme-mode:set-light');
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                 } else if (currentTheme === 'dark') {
-                    ipcRenderer.invoke('app-theme-mode:set-dark');
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                 } else {
-                    currentTheme = await ipcRenderer.invoke('app-theme-mode:get-theme');
+                    currentTheme = await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
                 document.querySelector('html').setAttribute('data-theme', currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
-                ipcRenderer.on('app-theme-mode:changed', () => {
+                mainProcessAPI.receive('app-theme-mode:changed', () => {
                     if (this.skipThemeChangeEvents) {
                         return;
                     }
@@ -199,7 +198,7 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'system') {
-                    return await ipcRenderer.invoke('app-theme-mode:get-theme');
+                    return await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
                 return currentTheme;
@@ -212,22 +211,22 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
 
                 if (currentTheme === 'dark') {
                     theme = 'dark';
-                    ipcRenderer.invoke('app-theme-mode:set-dark');
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                     currentTheme = 'dark';
                 } else if (currentTheme === 'default') {
                     theme = 'default';
-                    ipcRenderer.invoke('app-theme-mode:set-light');
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                     currentTheme = 'default';
                 } else {
                     theme = 'system';
-                    ipcRenderer.invoke('app-theme-mode:set-system');
+                    mainProcessAPI.invoke('app-theme-mode:set-system');
                     currentTheme = 'system';
-                    theme = await ipcRenderer.invoke('app-theme-mode:get-theme')
+                    theme = await mainProcessAPI.invoke('app-theme-mode:get-theme')
                 }
 
                 this.$store.commit('setAppTheme', currentTheme);
                 localStorage.setItem('publii-theme', currentTheme);
-                ipcRenderer.send('app-save-color-theme', currentTheme);
+                mainProcessAPI.send('app-save-color-theme', currentTheme);
 
                 for (let i = 0; i < iframes.length; i++) {
                     iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);

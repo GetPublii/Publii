@@ -1608,8 +1608,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import GdprGroups from './basic-elements/GdprGroups';
@@ -1852,7 +1850,7 @@ export default {
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
-        this.spellcheckerLanguages = await ipcRenderer.invoke('app-main-get-spellchecker-languages');
+        this.spellcheckerLanguages = await mainProcessAPI.invoke('app-main-get-spellchecker-languages');
 
         if (this.spellcheckerLanguages.length) {
             this.spellcheckerLanguages = this.spellcheckerLanguages.map(lang => lang.toLocaleLowerCase());
@@ -1913,13 +1911,13 @@ export default {
             newSettings = Utils.deepMerge(currentSiteConfigCopy, newSettings);
 
             // Send request to the back-end
-            ipcRenderer.send('app-site-config-save', {
+            mainProcessAPI.send('app-site-config-save', {
                 "site": siteName,
                 "settings": newSettings
             });
 
             // Settings saved
-            ipcRenderer.once('app-site-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if (data.status === true) {
                     newSettings.name = data.siteName;
                 }
@@ -1946,11 +1944,11 @@ export default {
                         this.$store.state.currentSite.posts && 
                         this.$store.state.currentSite.posts.length > 0
                     ) {
-                        ipcRenderer.send('app-site-regenerate-thumbnails-required', {
+                        mainProcessAPI.send('app-site-regenerate-thumbnails-required', {
                             name: this.$store.state.currentSite.config.name
                         });
 
-                        ipcRenderer.once('app-site-regenerate-thumbnails-required-status', (event, data) => {
+                        mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-required-status', (data) => {
                             if (data.message) {
                                 this.$bus.$emit('regenerate-thumbnails-display', { 
                                     qualityChanged: false,
@@ -2033,11 +2031,11 @@ export default {
                     this.buttonsLocked = false;
                 }
 
-                ipcRenderer.send('app-site-reload', {
+                mainProcessAPI.send('app-site-reload', {
                     siteName: siteName
                 });
 
-                ipcRenderer.once('app-site-reloaded', (event, result) => {
+                mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
                 });
@@ -2077,7 +2075,7 @@ export default {
                 this.buttonsLocked = false;
 
                 if (showPreview) {
-                    if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                    if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                         this.$bus.$emit('confirm-display', {
                             message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
                             okLabel: 'Go to app settings',

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
 import appBuildData from './../../back-end/builddata.json';
 
 export default {
@@ -54,9 +53,9 @@ export default {
 
             let self = this;
 
-            ipcRenderer.send('app-notifications-retrieve', this.shouldRetrieveNotifications());
+            mainProcessAPI.send('app-notifications-retrieve', this.shouldRetrieveNotifications());
 
-            ipcRenderer.once('app-notifications-retrieved', function(event, data) {
+            mainProcessAPI.receiveOnce('app-notifications-retrieved', function(data) {
                 if(data.status === true) {
                     self.setNotification(data);
                 }

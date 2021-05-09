@@ -166,8 +166,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'link-popup',
     props: {
@@ -474,20 +472,20 @@ export default {
             this.simplemdeInstance = instance;
         },
         loadFiles () {
-            ipcRenderer.send('app-file-manager-list', {
+            mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: 'root-files'
             });
 
-            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                 this.filesList = data.map(file => file.name);
 
-                ipcRenderer.send('app-file-manager-list', {
+                mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
                     dirPath: 'media/files'
                 }); 
 
-                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                     this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
                 });
             });

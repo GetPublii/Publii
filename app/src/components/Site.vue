@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import SiteAddForm from './SiteAddForm';
 import Sidebar from './Sidebar';
 
@@ -66,11 +65,11 @@ export default {
             this.currentSite = siteName;
             this.siteIsLoaded = false;
 
-            ipcRenderer.send('app-site-switch', {
+            mainProcessAPI.send('app-site-switch', {
                 'site': siteName
             });
 
-            ipcRenderer.once('app-site-switched', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-switched', (data) => {
                 if (data.status !== false) {
                     this.loadSite(siteName, data);
                     this.siteIsLoaded = true;

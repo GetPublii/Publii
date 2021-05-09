@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 import { mapGetters } from 'vuex';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 

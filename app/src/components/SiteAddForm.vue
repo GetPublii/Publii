@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
@@ -168,9 +167,9 @@ export default {
             this.overlayIsVisible = true;
 
             setTimeout(() => {
-                ipcRenderer.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
+                mainProcessAPI.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
 
-                ipcRenderer.once('app-site-creation-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-error', (data) => {
                     this.overlayIsVisible = false;
                     if (data.name) {
                         this.siteNameError = true;
@@ -180,12 +179,12 @@ export default {
                         this.authorNameError = true;
                     }
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
-                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
                 });
 
-                ipcRenderer.once('app-site-creation-duplicate', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-duplicate', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
 
@@ -194,11 +193,11 @@ export default {
                         textCentered: true
                     });
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
                 });
 
-                ipcRenderer.once('app-site-creation-db-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-db-error', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
 
@@ -207,20 +206,20 @@ export default {
                         textCentered: true
                     });
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
-                })
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                });
 
-                ipcRenderer.once('app-site-created', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-created', (event, data) => {
                     this.overlayIsVisible = false;
                     data.authors = self.setAuthor(data.authorName);
                     this.$store.commit('addNewSite', data);
                     window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
                     this.$router.push(`/site/${data.siteConfig.name}`);
 
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
-                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
-                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
                 });
             }, 250);
         },

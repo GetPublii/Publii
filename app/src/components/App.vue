@@ -22,7 +22,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { ipcRenderer } from 'electron';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
 import TopBarNotification from './TopBarNotification';
@@ -89,7 +88,7 @@ export default {
     },
     beforeDestroy () {
         this.$bus.$off('license-accepted');
-        ipcRenderer.removeAllListeners('app-license-accepted');
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
         // Block drag'n'drop redirects
@@ -104,7 +103,7 @@ export default {
             document.body.setAttribute('data-chrome-version', process.versions.chrome);
             document.body.setAttribute('data-electron-version', process.versions.electron);
             document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
-            document.documentElement.setAttribute('data-is-osx-11-or-higher', await ipcRenderer.invoke('app-main-process-is-osx11-or-higher'));
+            document.documentElement.setAttribute('data-is-osx-11-or-higher', await mainProcessAPI.invoke('app-main-process-is-osx11-or-higher'));
             document.body.setAttribute('data-env', process.env.NODE_ENV);
         },
 

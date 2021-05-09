@@ -155,7 +155,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -203,7 +202,7 @@ export default {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
-        ipcRenderer.on('app-files-selected', (event, data) => {
+        mainProcessAPI.receive('app-files-selected', (data) => {
             if (data.paths !== undefined && data.paths.filePaths.length) {
                 this.uploadFile(data.paths.filePaths);
             }
@@ -212,18 +211,18 @@ export default {
         this.loadFiles();
     },
     beforeDestroy () {
-        ipcRenderer.removeAllListeners('app-files-selected');
+        mainProcessAPI.stopReceiveAll('app-files-selected');
     },
     methods: {
         loadFiles () {
             this.isLoading = true;
 
-            ipcRenderer.send('app-file-manager-list', {
+            mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath
             });
 
-            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                 this.items = data.map(file => {
                     file.size = this.formatBytes(file.size, 2);
                     file.createdAt = this.getFormatedDate(file.createdAt);
@@ -249,13 +248,13 @@ export default {
             });
         },
         deleteSelected () {
-            ipcRenderer.send('app-file-manager-delete', {
+            mainProcessAPI.send('app-file-manager-delete', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 filesToDelete: this.getSelectedFiles()
             });
 
-            ipcRenderer.once('app-file-manager-deleted', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-deleted', (data) => {
                 this.loadFiles();
 
                 this.$bus.$emit('message-display', {
@@ -312,13 +311,13 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-file-manager-create', {
+            mainProcessAPI.send('app-file-manager-create', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 fileToSave: fileName
             });
 
-            ipcRenderer.once('app-file-manager-created', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-created', (data) => {
                 if(data === false) {
                     this.$bus.$emit('alert-display', {
                         message: 'The selected filename is in use. Please try to use a different filename.'
@@ -331,7 +330,7 @@ export default {
             });
         },
         async uploadFiles () {
-            await ipcRenderer.invoke('app-main-process-select-files', false);
+            await mainProcessAPI.invoke('app-main-process-select-files', false);
         },
         uploadFile (queue) {
             if(!queue.length) {
@@ -350,13 +349,13 @@ export default {
 
             let fileToMove = queue.pop();
 
-            ipcRenderer.send('app-file-manager-upload', {
+            mainProcessAPI.send('app-file-manager-upload', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 fileToMove: fileToMove
             });
 
-            ipcRenderer.once('app-file-manager-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-uploaded', (data) => {
                 if(data === false) {
                     let fileName = fileToMove.split('/').pop();
                     this.existingItems.push(fileName);

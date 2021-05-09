@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron'
-
 export default {
     name: 'topbar-dropdown-item',
     props: [

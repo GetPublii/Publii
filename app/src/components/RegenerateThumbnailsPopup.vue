@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'regenerate-thumbnails-popup',
     data () {
@@ -106,11 +104,11 @@ export default {
             this.message = 'Regenerating thumbnails...';
 
             setTimeout(() => {
-                ipcRenderer.send('app-site-regenerate-thumbnails', {
+                mainProcessAPI.send('app-site-regenerate-thumbnails', {
                     name: this.$store.state.currentSite.config.name
                 });
 
-                ipcRenderer.once('app-site-regenerate-thumbnails-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
                     this.progressColor = 'red';
                     this.progressIsStopped = true;
                     this.message = data.message;
@@ -118,12 +116,12 @@ export default {
                     this.regenerateIsDone = true;
                 });
 
-                ipcRenderer.on('app-site-regenerate-thumbnails-progress', (event, data) => {
+                mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
                     this.progress = data.value;
                     this.message = 'Progress: ' + data.value + '%';
                 });
 
-                ipcRenderer.once('app-site-regenerate-thumbnails-success', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
                     this.progress = 100;
                     this.progressColor = 'green';
                     this.progressIsStopped = true;
@@ -152,9 +150,9 @@ export default {
     },
     beforeDestroy: function() {
         this.$bus.$off('regenerate-thumbnails-display');
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

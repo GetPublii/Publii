@@ -293,7 +293,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import Vue from 'vue';
 
 export default {
@@ -409,9 +408,9 @@ export default {
     methods: {
         async save (showPreview = false) {
             if (this.tagData.slug.trim() === '' && this.tagData.name.trim() !== '') {
-                this.tagData.slug = await ipcRenderer.invoke('app-main-process-create-slug', this.tagData.name);
+                this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.name);
             } else {
-                this.tagData.slug = await ipcRenderer.invoke('app-main-process-create-slug', this.tagData.slug);
+                this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.slug);
             }
 
             if (!this.validate()) {
@@ -455,9 +454,9 @@ export default {
             }
         },
         saveData(tagData, showPreview = false) {
-            ipcRenderer.send('app-tag-save', tagData);
+            mainProcessAPI.send('app-tag-save', tagData);
 
-            ipcRenderer.once('app-tag-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-tag-saved', (data) => {
                 if (data.status !== false) {
                     if(this.tagData.id === 0) {
                         let newlyAddedTag = JSON.parse(JSON.stringify(data.tags.filter(tag => tag.id === data.tagID)[0]));
@@ -491,7 +490,7 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-tag-item-editor');
-            ipcRenderer.send('app-tag-cancel', {
+            mainProcessAPI.send('app-tag-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.tagData.id,
                 additionalData: {

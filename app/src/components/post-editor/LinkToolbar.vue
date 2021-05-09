@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 import Utils from './../../helpers/utils.js';
 
 export default {

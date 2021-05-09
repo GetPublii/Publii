@@ -350,9 +350,7 @@
 </template>
 
 <script>
-import fs from 'fs';
 import Vue from 'vue';
-import { ipcRenderer } from 'electron';
 import PostsDropDown from './basic-elements/PostsDropDown';
 import TagsDropDown from './basic-elements/TagsDropDown';
 import AuthorsDropDown from './basic-elements/AuthorsDropDown';
@@ -604,14 +602,14 @@ export default {
             };
 
             // Send request to the back-end
-            ipcRenderer.send('app-site-theme-config-save', {
+            mainProcessAPI.send('app-site-theme-config-save', {
                 "site": this.$store.state.currentSite.config.name,
                 "theme": this.$store.state.currentSite.config.theme,
                 "config": newConfig
             });
 
             // Settings saved
-            ipcRenderer.once('app-site-theme-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-theme-config-saved', (data) => {
                 if (data.status === true) {
                     this.savedSettings(showPreview, renderingType);
                     this.$store.commit('setThemeConfig', data);
@@ -627,7 +625,7 @@ export default {
         },
         savedSettings(showPreview = false, renderingType = false) {
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
                         message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
                         okLabel: 'Go to app settings',
@@ -655,14 +653,14 @@ export default {
         },
         resetSettings () {
             // Send request to the back-end
-            ipcRenderer.send('app-site-theme-config-save', {
+            mainProcessAPI.send('app-site-theme-config-save', {
                 "site": this.$store.state.currentSite.config.name,
                 "theme": this.$store.state.currentSite.config.theme,
                 "config": {}
             });
 
             // Settings saved
-            ipcRenderer.once('app-site-theme-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-theme-config-saved', (data) => {
                 if (data.status === true) {
                     this.savedSettings(false);
                     this.$store.commit('setThemeConfig', data);

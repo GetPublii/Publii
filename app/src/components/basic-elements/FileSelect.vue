@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'fileselect',
     props: {
@@ -69,9 +67,9 @@ export default {
             this.onChange('');
         },
         async selectFile () {
-            await ipcRenderer.invoke('app-main-process-select-file', 'file-select');
+            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
 
-            ipcRenderer.once('app-file-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }

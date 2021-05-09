@@ -63,8 +63,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import Utils from '../helpers/utils.js';
 import BackToTools from './mixins/BackToTools.js';
 
@@ -223,13 +221,13 @@ export default {
             newSettings = Utils.deepMerge(currentSiteConfigCopy, newSettings);
 
             // Send request to the back-end
-            ipcRenderer.send('app-site-config-save', {
+            mainProcessAPI.send('app-site-config-save', {
                 site: this.$store.state.currentSite.config.name,
                 settings: newSettings
             });
 
             // Settings saved
-            ipcRenderer.once('app-site-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
                     this.saved (newSettings, showPreview, renderingType);
 
@@ -246,11 +244,11 @@ export default {
                     });
                 }
 
-                ipcRenderer.send('app-site-reload', {
+                mainProcessAPI.send('app-site-reload', {
                     siteName: this.$store.state.currentSite.config.name
                 });
 
-                ipcRenderer.once('app-site-reloaded', (event, result) => {
+                mainProcessAPI.receiveOnce('app-site-reloaded', (event, result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
                 });
@@ -268,7 +266,7 @@ export default {
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
                         message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
                         okLabel: 'Go to app settings',
