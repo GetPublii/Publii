@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
+const { contextBridge, shell } = require('electron');
 
 contextBridge.exposeInMainWorld('mainProcessAPI', {
     shellShowItemInFolder: (url) => shell.showItemInFolder(url),
