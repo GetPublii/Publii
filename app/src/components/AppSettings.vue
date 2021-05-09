@@ -255,7 +255,7 @@ export default {
     data () {
         let imageResizeEngine = 'sharp';
 
-        if (process.platform === 'linux') {
+        if (mainProcessAPI.getEnv().platformName === 'linux') {
             imageResizeEngine = 'jimp';
         }
 
@@ -306,7 +306,7 @@ export default {
             };
         },
         imageResizeEngines () {
-            if (process.platform === 'linux') {
+            if (mainProcessAPI.getEnv().platformName === 'linux') {
                 return {
                     'jimp': 'Jimp'
                 };
@@ -383,7 +383,7 @@ export default {
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.theme = this.getAppTheme();
 
-        if (process.platform === 'linux') {
+        if (mainProcessAPI.getEnv().platformName === 'linux') {
             this.imageResizeEnginesSelected = 'jimp';
         }
 

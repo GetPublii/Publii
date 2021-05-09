@@ -99,12 +99,12 @@ export default {
 
         // Add to <body> additional informations
         async setEnvironmentInfo () {
-            document.body.setAttribute('data-node-version', process.versions.node);
-            document.body.setAttribute('data-chrome-version', process.versions.chrome);
-            document.body.setAttribute('data-electron-version', process.versions.electron);
-            document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
+            document.body.setAttribute('data-node-version', mainProcessAPI.getEnv().nodeVersion);
+            document.body.setAttribute('data-chrome-version', mainProcessAPI.getEnv().chromeVersion);
+            document.body.setAttribute('data-electron-version', mainProcessAPI.getEnv().electronVersion);
+            document.body.setAttribute('data-os', mainProcessAPI.getEnv().platformName === 'darwin' ? 'osx' : mainProcessAPI.getEnv().platformName === 'linux' ? 'linux' : 'win');
             document.documentElement.setAttribute('data-is-osx-11-or-higher', await mainProcessAPI.invoke('app-main-process-is-osx11-or-higher'));
-            document.body.setAttribute('data-env', process.env.NODE_ENV);
+            document.body.setAttribute('data-env', mainProcessAPI.getEnv().name);
         },
 
         // Set initial application state tree

@@ -90,7 +90,7 @@ export default {
             return !!this.$store.state.currentSite.config.theme;
         },
         isMac: function () {
-            return window.process.platform === 'darwin';
+            return mainProcessAPI.getEnv().platformName === 'darwin';
         },
         dropdownItems () {
             return [

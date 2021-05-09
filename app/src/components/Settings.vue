@@ -1793,7 +1793,7 @@ export default {
             ]
         },
         hasNonAutomaticSpellchecker () {
-            return process.platform !== 'darwin';
+            return mainProcessAPI.getEnv().platformName !== 'darwin';
         },
         spellcheckIsNotSupported () {
             if (this.spellcheckerLanguages === false) {

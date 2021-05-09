@@ -409,6 +409,7 @@ class App {
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
             nodeIntegration: true,
+            contextIsolation: true,
             webviewTag: true,
             spellcheck: true,
             preload: path.join(__dirname, 'app-preload.js'),

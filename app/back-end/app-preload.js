@@ -1,16 +1,22 @@
 const fs = require('fs');
-const { /*contextBridge,*/ shell, ipcRenderer } = require('electron');
+const { contextBridge, shell, ipcRenderer } = require('electron');
 const normalizePath = require('normalize-path');
 const crypto = require('crypto');
 
-//contextBridge.exposeInMainWorld('mainProcessAPI', {
-window.mainProcessAPI = {
+contextBridge.exposeInMainWorld('mainProcessAPI', {
     shellShowItemInFolder: (url) => shell.showItemInFolder(url),
     shellOpenPath: (filePath) => shell.openPath(filePath),
     shellOpenExternal: (url) => shell.openExternal(url),
     existsSync: (pathToCheck) => fs.existsSync(pathToCheck),
     normalizePath: (pathToNormalize) => normalizePath(pathToNormalize),
     createMD5: (value) => crypto.createHash('md5').update(value).digest('hex'),
+    getEnv: () => ({
+        name: process.env.NODE_ENV,
+        nodeVersion: process.versions.node,
+        chromeVersion: process.versions.chrome,
+        electronVersion: process.versions.electron,
+        platformName: process.platform
+    }),
     send: (channel, data) => {
         const validChannels = [
             
@@ -69,5 +75,4 @@ window.mainProcessAPI = {
             ipcRenderer.removeAllListeners(channel);
         //}
     }
-};
-//})
+});

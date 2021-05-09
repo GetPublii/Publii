@@ -334,7 +334,7 @@ export default {
             this.helpPanelOpen = !this.helpPanelOpen;
         },
         async setWebViewSpellcheckerLanguage (webContentsID) {
-            if (process.platform === 'darwin') {
+            if (mainProcessAPI.getEnv().platformName === 'darwin') {
                 return;
             }
 
