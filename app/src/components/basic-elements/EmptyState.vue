@@ -1,7 +1,9 @@
 <template>
-    <div class="empty-state">
+    <div 
+        v-if="theme"
+        class="empty-state">
         <img
-            v-if="imageName && theme"
+            v-if="imageName"
             :src="imagePath"
             :height="imageHeight"
             :width="imageWidth"
