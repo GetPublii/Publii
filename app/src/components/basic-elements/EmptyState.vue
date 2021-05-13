@@ -1,7 +1,7 @@
 <template>
     <div class="empty-state">
         <img
-            v-if="imageName"
+            v-if="imageName && theme"
             :src="imagePath"
             :height="imageHeight"
             :width="imageWidth"
@@ -47,13 +47,20 @@ export default {
         }
     },
     computed: {
-        imagePath: async function() {
-            let theme = await this.$root.getCurrentAppTheme();
-            return '../src/assets/svg/' + theme + '/' + this.imageName;
-        },
-        hasButtonSlot: function() {
+        hasButtonSlot () {
             return !!this.$slots['button'];
+        },
+        imagePath () {
+            return '../src/assets/svg/' + this.theme + '/' + this.imageName;
         }
+    },
+    data () {
+        return {
+            theme: ''
+        };
+    },
+    async mounted () {
+        this.theme = await this.$root.getCurrentAppTheme();
     }
 }
 </script>

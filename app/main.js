@@ -137,7 +137,7 @@ electronApp.on('ready', function () {
 
     // Load password from Keytar
     ipcMain.handle('app-main-process-load-password', async (event, type, passwordKey) => {
-        if (passwordKey.indexOf(type) === 0) {
+        if (passwordKey && passwordKey.indexOf(type) === 0) {
             let passwordData = passwordKey.split(' ');
             let service = passwordData[0];
             let account = passwordData[1];

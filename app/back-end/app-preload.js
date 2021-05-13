@@ -17,13 +17,13 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
         electronVersion: process.versions.electron,
         platformName: process.platform
     }),
-    send: (channel, data) => {
+    send: (channel, ...data) => {
         const validChannels = [
             
         ];
 
         //if (validChannels.includes(channel)) {
-            ipcRenderer.send(channel, data);
+            ipcRenderer.send(channel, ...data);
         //}
     },
     receive: (channel, func) => {
@@ -46,13 +46,13 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             ipcRenderer.once(channel, (event, ...args) => func(...args));
         //}
     },
-    invoke: (command, data) => {
+    invoke: (command, ...data) => {
         const validCommands = [
             
         ];
 
         //if (validCommands.includes(command)) {
-            return ipcRenderer.invoke(command, data);
+            return ipcRenderer.invoke(command, ...data);
         //}
 
         return false;
