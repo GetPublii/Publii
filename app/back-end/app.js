@@ -408,7 +408,7 @@ class App {
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
-            nodeIntegration: true,
+            nodeIntegration: false,
             contextIsolation: true,
             webviewTag: true,
             spellcheck: true,
