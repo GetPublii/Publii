@@ -27,11 +27,11 @@ class EditorBridge {
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
             statusbar: true,
-            browser_spellcheck: window.app.$store.state.currentSite.config.spellchecking
+            browser_spellcheck: window.app.spellcheckerIsEnabled()
         });
 
-        if (window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements !== '') {
-            let additionalValidElements = window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements;
+        if (window.app.wysiwygAdditionalValidElements() !== '') {
+            let additionalValidElements = window.app.wysiwygAdditionalValidElements();
             editorConfig.extended_valid_elements = editorConfig.extended_valid_elements + ',' + additionalValidElements;
         }
 
@@ -40,7 +40,7 @@ class EditorBridge {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');
         }
 
-        editorConfig = Utils.deepMerge(editorConfig, window.app.$store.state.app.customConfig.tinymce);
+        editorConfig = Utils.deepMerge(editorConfig, window.app.tinymceCustomConfig());
 
         if(this.customThemeEditorConfig) {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
@@ -84,14 +84,14 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.$root.getCurrentAppTheme());
+            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.getCurrentAppTheme());
 
             // Add inline editors
             this.addInlineEditor(customFormats);
             this.addLinkEditor(iframe);
 
             this.tinymceEditor.once('keyup', e => {
-                window.app.$bus.$emit('post-editor-possible-data-loss');
+                window.app.reportPossibleDataLoss();
             });
 
             this.tinymceEditor.on('keyup', e => {
@@ -154,7 +154,7 @@ class EditorBridge {
 
                 if(localStorage.getItem('publii-writers-panel') === null) {
                     localStorage.setItem('publii-writers-panel', 'opened');
-                    window.app.$bus.$emit('writers-panel-open');
+                    window.app.writersPanelOpen();
                 }
 
                 if(clickedElement.tagName === 'FIGCAPTION') {
@@ -166,7 +166,7 @@ class EditorBridge {
                         source_view: true
                     });
 
-                    window.app.$bus.$emit('source-code-editor-show', content, this.tinymceEditor);
+                    window.app.sourceCodeEditorShow(content, this.tinymceEditor);
                     return;
                 }
 
@@ -191,13 +191,13 @@ class EditorBridge {
                     selection.addRange(range);
 
                     if (this.checkInlineLinkTrigger(clickedElement)) {
-                        window.app.$bus.$emit('update-link-editor', {
+                        window.app.updateLinkEditor({
                             sel: selection,
                             text: clickedElement
                         });
                     }
                 } else {
-                    window.app.$bus.$emit('update-link-editor', {
+                    window.app.updateLinkEditor({
                         sel: false,
                         text: false
                     });
@@ -208,19 +208,12 @@ class EditorBridge {
                     clickedElement.getAttribute('class') &&
                     clickedElement.getAttribute('class').indexOf('gallery') !== -1
                 ) {
-                    window.app.$bus.$emit('update-gallery-popup', {
+                    window.app.updateGalleryPopup({
                         postID: this.postID,
                         galleryElement: clickedElement
                     });
 
-                    window.app.$bus.$on('gallery-popup-updated', response => {
-                        this.hideToolbarsOnCopy();
-
-                        if(response) {
-                            response.gallery.innerHTML = response.html;
-                            response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
-                        }
-                    });
+                    window.app.galleryPopupUpdatedEvent(this.galleryPopupUpdated);
                 }
             });
 
@@ -264,7 +257,7 @@ class EditorBridge {
 
                         mainProcessAPI.send('app-image-upload', {
                             id: this.postID,
-                            site: window.app.$store.state.currentSite.config.name,
+                            site: window.app.getSiteName(),
                             path: filePath,
                             imageType: 'contentImages'
                         });
@@ -289,7 +282,7 @@ class EditorBridge {
 
             // Writers Panel
             let updateWritersPanel = function () {
-                 window.app.$bus.$emit('writers-panel-refresh');
+                 window.app.writersPanelRefresh();
             };
             let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
@@ -311,11 +304,20 @@ class EditorBridge {
     extensionsPath () {
         return [
             'file:///',
-            window.app.$store.state.currentSite.siteDir,
+            window.app.getSiteDir(),
             '/input/themes/',
-            window.app.$store.state.currentSite.config.theme,
+            window.app.getSiteTheme(),
             '/'
         ].join('');
+    }
+
+    galleryPopupUpdated (response) {
+        this.hideToolbarsOnCopy();
+
+        if(response) {
+            response.gallery.innerHTML = response.html;
+            response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
+        }
     }
 
     getTinyMCECSSFiles () {
@@ -332,11 +334,7 @@ class EditorBridge {
         // Add custom editor config
         let customEditorConfig = false;
 
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.extensions &&
-            window.app.$store.state.currentSite.themeSettings.extensions.postEditorConfigOverride
-        ) {
+        if (window.app.hasPostEditorConfigOverride()) {
             let configOverridePath = this.extensionsPath() + 'tinymce.override.json';
 
             jQuery.ajax({
@@ -364,21 +362,14 @@ class EditorBridge {
         ];
 
         // Detect mode
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.customElementsMode &&
-            window.app.$store.state.currentSite.themeSettings.customElementsMode === 'advanced'
-        ) {
-            output = JSON.parse(JSON.stringify(window.app.$store.state.currentSite.themeSettings.customElements));
+        if (window.app.getThemeCustomElementsMode() === 'advanced') {
+            output = JSON.parse(JSON.stringify(window.app.getThemeCustomElements()));
             return output;
         }
 
         // Load custom elements
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.customElements
-        ) {
-            customElements = window.app.$store.state.currentSite.themeSettings.customElements;
+        if (window.app.getThemeCustomElements()) {
+            customElements = window.app.getThemeCustomElements();
         }
 
         if(customElements && customElements.length) {
@@ -435,12 +426,12 @@ class EditorBridge {
                 let selectedNode = tinymce.activeEditor.selection.getNode();
 
                 if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
-                    window.app.$bus.$emit('init-link-popup', {
+                    window.app.initLinkPopup({
                         postID: this.postID,
                         selection: selectedNode.parentNode.outerHTML
                     });
                 } else {
-                    window.app.$bus.$emit('init-link-popup', {
+                    window.app.initLinkPopup({
                         postID: this.postID,
                         selection: tinymce.activeEditor.selection.getContent()
                     });
@@ -457,7 +448,7 @@ class EditorBridge {
                     source_view: true
                 });
 
-                window.app.$bus.$emit('source-code-editor-show', content, this.tinymceEditor);
+                window.app.sourceCodeEditorShow(content, this.tinymceEditor);
             }
         });
 
@@ -475,14 +466,14 @@ class EditorBridge {
         let doc = win.document;
         let body = doc.body;
 
-        window.app.$bus.$emit('init-inline-editor', customFormats);
+        window.app.initInlineEditor('init-inline-editor', customFormats);
 
         $(doc.querySelector('html')).on('mouseup', (e) => {
             let sel = win.getSelection();
             let text = sel.toString();
             
             if (this.checkInlineTrigger(e.target)) {
-                window.app.$bus.$emit('update-inline-editor', {
+                window.app.updateInlineEditor({
                     sel,
                     text
                 });
@@ -521,7 +512,7 @@ class EditorBridge {
     }
 
     addLinkEditor(iframe) {
-        window.app.$bus.$emit('init-link-editor', iframe);
+        window.app.initLinkEditor(iframe);
     }
 
     hideToolbarsOnCopy() {
@@ -596,7 +587,7 @@ class EditorBridge {
         e.originalEvent.preventDefault();
 
         let files = e.originalEvent.dataTransfer.files;
-        let siteName = window.app.$store.state.currentSite.config.name;
+        let siteName = window.app.getSiteName();
 
         if(this.postEditorInnerDragging) {
             return;
@@ -639,7 +630,7 @@ class EditorBridge {
 
     reloadEditor () {
         this.tinymceEditor.once('keyup', e => {
-            window.app.$bus.$emit('post-editor-possible-data-loss');
+            window.app.reportPossibleDataLoss();
         });
     }
 }

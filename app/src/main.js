@@ -150,7 +150,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.component('v-select', vSelect);
 
     // Init Publii front-end
-    window.app = new Vue({
+    new Vue({
         el: '#app',
         store,
         i18n,
@@ -170,6 +170,30 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
         },
         async mounted () {
             await this.setupAppTheme();
+            
+            window.app = {
+                getSiteName: () => this.$store.state.currentSite.config.name,
+                getSiteDir: () => this.$store.state.currentSite.siteDir,
+                getSiteTheme: () => this.$store.state.currentSite.config.theme,
+                getThemeCustomElementsMode: () => this.$store.state.currentSite.themeSettings.customElementsMode,
+                getThemeCustomElements: () => this.$store.state.currentSite.themeSettings ? this.$store.state.currentSite.themeSettings.customElements : false,
+                spellcheckerIsEnabled: () => this.$store.state.currentSite.config.spellchecking,
+                wysiwygAdditionalValidElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements,
+                tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
+                getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
+                reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
+                writersPanelOpen: () => this.$bus.$emit('writers-panel-open'),
+                writersPanelRefresh: () => this.$bus.$emit('writers-panel-refresh'),
+                sourceCodeEditorShow: (content, editor) => this.$bus.$emit('source-code-editor-show', content, editor),
+                updateLinkEditor: (data) => this.$bus.$emit('update-link-editor', data),
+                updateGalleryPopup: (data) => this.$bus.$emit('update-gallery-popup', data),
+                hasPostEditorConfigOverride: () => this.$store.state.currentSite.themeSettings.extensions ? this.$store.state.currentSite.themeSettings.extensions.postEditorConfigOverride : false,
+                initLinkPopup: (data) => this.$bus.$emit('init-link-popup', data),
+                initLinkEditor: (iframe) => this.$bus.$emit('init-link-editor', iframe),
+                initInlineEditor: (customFormats) => this.$bus.$emit('init-inline-editor', customFormats),
+                updateInlineEditor: (data) => this.$bus.$emit('update-inline-editor', data),
+                galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback)
+            };
         },
         methods: {
             async setupAppTheme () {

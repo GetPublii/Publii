@@ -131,7 +131,7 @@ import { ipcRenderer } from 'electron';
 
     ipcRenderer.send('app-image-upload', {
         'id': postID,
-        'site': window.app.$store.state.currentSite.config.name,
+        'site': window.app.getSiteName(),
         'path': file.path
     });
 
