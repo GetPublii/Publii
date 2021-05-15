@@ -19,60 +19,237 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
     }),
     send: (channel, ...data) => {
         const validChannels = [
-            
+            'app-save-color-theme',
+            'app-license-load',
+            'app-config-save',
+            'app-backup-set-location',
+            'app-theme-upload',
+            'app-author-save',
+            'app-author-cancel',
+            'app-authors-load',
+            'app-author-delete',
+            'app-backups-list-load',
+            'app-backup-remove',
+            'app-backup-rename',
+            'app-backup-create',
+            'app-backup-restore',
+            'app-site-reload',
+            'app-site-css-load',
+            'app-site-css-save',
+            'app-site-config-save',
+            'app-file-manager-list',
+            'app-file-manager-delete',
+            'app-file-manager-create',
+            'app-file-manager-upload',
+            'app-log-files-load',
+            'app-log-file-load',
+            'app-menu-update',
+            'publii-set-spellchecker-language',
+            'app-post-load',
+            'app-post-save',
+            'app-post-cancel',
+            'app-image-upload',
+            'app-post-delete',
+            'app-post-duplicate',
+            'app-post-status-change',
+            'app-site-regenerate-thumbnails',
+            'app-site-abort-regenerate-thumbnails',
+            'app-preview-render',
+            'app-preview-show',
+            'app-deploy-test',
+            'app-site-regenerate-thumbnails-required',
+            'app-site-switch',
+            'app-site-create',
+            'app-site-clone',
+            'app-site-delete',
+            'app-license-accept',
+            'app-deploy-render-abort',
+            'app-deploy-abort',
+            'app-deploy-render',
+            'app-deploy-upload',
+            'app-sync-is-done',
+            'app-tag-save',
+            'app-tag-cancel',
+            'app-tags-load',
+            'app-tags-status-change',
+            'app-tag-delete',
+            'app-site-theme-config-save',
+            'app-theme-delete',
+            'app-notifications-retrieve',
+            'app-wxr-check',
+            'app-wxr-import'
         ];
 
-        //if (validChannels.includes(channel)) {
+        if (validChannels.includes(channel)) {
             ipcRenderer.send(channel, ...data);
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in send');
+        }
     },
     receive: (channel, func) => {
         const validChannels = [
-            
+            'app-data-loaded',
+            'app-deploy-render-error',
+            'app-theme-mode:changed',
+            'app-files-selected',
+            'app-main-webview-input-response',
+            'app-site-regenerate-thumbnails-progress',
+            'app-rendering-progress',
+            'app-deploy-rendered',
+            'app-connection-in-progress',
+            'app-connection-error',
+            'app-connection-success',
+            'app-uploading-progress',
+            'app-wxr-import-progress',
+            'app-show-search-form'
         ];
 
-        //if (validChannels.includes(channel)) {
-            // Deliberately strip event as it includes `sender` 
+        if (validChannels.includes(channel)) {
+            // Strip event as it includes `sender` 
             ipcRenderer.on(channel, (event, ...args) => func(...args));
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in receive');
+        }
     },
     receiveOnce: (channel, func) => {
         const validChannels = [
-            
+            'app-license-loaded',
+            'app-config-saved',
+            'app-file-selected',
+            'app-theme-uploaded',
+            'app-author-saved',
+            'app-authors-loaded',
+            'app-author-deleted',
+            'app-backups-list-loaded',
+            'app-backup-removed',
+            'app-backup-renamed',
+            'app-backup-created',
+            'app-backup-restored',
+            'app-site-reloaded',
+            'app-site-css-loaded',
+            'app-site-css-saved',
+            'app-site-config-saved',
+            'app-file-manager-listed',
+            'app-file-manager-deleted',
+            'app-file-manager-created',
+            'app-file-manager-uploaded',
+            'app-log-files-loaded',
+            'app-log-file-loaded',
+            'app-post-loaded',
+            'app-post-saved',
+            'app-post-deleted',
+            'app-post-duplicated',
+            'app-post-status-changed',
+            'app-site-regenerate-thumbnails-error',
+            'app-site-regenerate-thumbnails-success',
+            'app-preview-rendered',
+            'app-preview-render-error',
+            'app-deploy-test-success',
+            'app-deploy-test-write-error',
+            'app-deploy-test-error',
+            'app-site-regenerate-thumbnails-required-status',
+            'app-site-switched',
+            'app-site-creation-error',
+            'app-site-creation-duplicate',
+            'app-site-creation-db-error',
+            'app-site-created',
+            'app-site-cloned',
+            'app-site-deleted',
+            'app-license-accepted',
+            'app-deploy-aborted',
+            'app-deploy-uploaded',
+            'app-sync-is-done-saved',
+            'app-tag-saved',
+            'app-tags-loaded',
+            'app-tags-status-changed',
+            'app-tag-deleted',
+            'app-site-theme-config-saved',
+            'app-theme-deleted',
+            'app-notifications-retrieved',
+            'app-wxr-imported',
+            'app-wxr-checked',
+            'app-directory-selected',
+            'app-image-uploaded',
+            'app-files-selected'
         ];
 
-        //if (validChannels.includes(channel)) {
-            // Deliberately strip event as it includes `sender` 
+        if (validChannels.includes(channel)) {
+            // Strip event as it includes `sender` 
             ipcRenderer.once(channel, (event, ...args) => func(...args));
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in receiveOnce');
+        }
     },
     invoke: (command, ...data) => {
         const validCommands = [
-            
+            'app-theme-mode:set-light',
+            'app-theme-mode:set-dark',
+            'app-theme-mode:get-theme',
+            'app-theme-mode:set-system',
+            'app-credits-list:get-app-path',
+            'app-main-process-is-osx11-or-higher',
+            'app-main-process-select-file',
+            'app-main-process-create-slug',
+            'app-main-process-select-files',
+            'app-main-initialize-context-menu-for-webview',
+            'app-main-webview-search-init',
+            'publii-get-spellchecker-language',
+            'app-main-get-spellchecker-languages',
+            'app-main-set-spellchecker-language-for-webview',
+            'app-main-process-load-password',
+            'app-window:minimize',
+            'app-window:maximize',
+            'app-window:unmaximize',
+            'app-window:close',
+            'app-main-process-select-directory',
+            'app-main-webview-search-find-in-page',
+            'app-main-webview-search-stop-find-in-page'
         ];
 
-        //if (validCommands.includes(command)) {
+        if (validCommands.includes(command)) {
             return ipcRenderer.invoke(command, ...data);
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in invoke');
+        }
 
         return false;
     },
     stopReceive: (channel, func) => {
         const validChannels = [
-            
+            'app-preview-render-error',
+            'app-connection-error',
+            'app-wxr-imported',
+            'app-wxr-import-progress'
         ];
 
-        //if (validChannels.includes(channel)) {
+        if (validChannels.includes(channel)) {
             ipcRenderer.removeListener(channel, func);
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in stopReceive');
+        }
     },
     stopReceiveAll: (channel) => {
         const validChannels = [
-            
+            'app-license-accepted',
+            'app-files-selected',
+            'app-main-webview-input-response',
+            'app-site-regenerate-thumbnails-error',
+            'app-site-regenerate-thumbnails-progress',
+            'app-site-regenerate-thumbnails-success',
+            'app-preview-render-error',
+            'app-rendering-progress',
+            'app-site-created',
+            'app-site-creation-duplicate',
+            'app-site-creation-db-error',
+            'app-site-creation-error',
+            'app-connection-error',
+            'app-show-search-form'
         ];
 
-        //if (validChannels.includes(channel)) {
+        if (validChannels.includes(channel)) {
             ipcRenderer.removeAllListeners(channel);
-        //}
+        } else {
+            console.info('Event: ', channel, ' is not supported in stopReceiveAll');
+        }
     }
 });
