@@ -36,7 +36,6 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -67,6 +66,7 @@ export default {
     },
     data () {
         return {
+            webContentsID: null,
             postID: this.$route.params.post_id || 0,
             newPost: true,
             helpPanelOpen: false,
@@ -136,9 +136,9 @@ export default {
     },
     mounted () {
         if (this.$store.state.app.config.spellchecking) {
-            ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
+            mainProcessAPI.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
         } else {
-            ipcRenderer.send('publii-set-spellchecker-language', '');
+            mainProcessAPI.send('publii-set-spellchecker-language', '');
         }
 
         this.$bus.$on('date-changed', (timestamp) => {
@@ -168,25 +168,30 @@ export default {
                 this.setDataLossWatcher();
             }
 
-            setTimeout(() => {
-                this.webview.send('set-app-theme', this.$root.getCurrentAppTheme());
+            setTimeout(async () => {
+                this.webContentsID = document.querySelector('webview').getWebContentsId();
+                await mainProcessAPI.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
+                await mainProcessAPI.invoke('app-main-webview-search-init', this.webContentsID);
+                mainProcessAPI.receive('app-main-webview-input-response', this.handleMainThreadResponse);
+                await this.setWebViewSpellcheckerLanguage(this.webContentsID);
+                this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
                 
-                ipcRenderer.send('app-file-manager-list', {
+                mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
                     dirPath: 'root-files'
                 });
 
-                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                     this.filesList = data.map(file => file.name);
 
-                    ipcRenderer.send('app-file-manager-list', {
+                    mainProcessAPI.send('app-file-manager-list', {
                         siteName: this.$store.state.currentSite.config.name,
                         dirPath: 'media/files'
                     }); 
 
-                    ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                    mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                         this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
 
                         this.webview.send('set-current-site-data', {
@@ -198,19 +203,6 @@ export default {
                     });
                 });
             }, 0);
-
-            remote.webContents.fromId(this.webview.getWebContentsId()).on('before-input-event', (event, input) => {
-                if (input.key === 'f' && (input.meta || input.control)) {
-                    this.$bus.$emit('app-show-search-form');  
-                } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
-                    this.webview.send('block-editor-undo');
-                } else if (
-                    (input.key === 'z' && (input.meta || input.control) && input.shift) || 
-                    (input.key === 'y' && (input.meta || input.control) && !input.shift)
-                ) {
-                    this.webview.send('block-editor-redo');
-                }
-            });
         });
     },
     methods: {
@@ -249,13 +241,13 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            ipcRenderer.send('app-post-load', {
+            mainProcessAPI.send('app-post-load', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            ipcRenderer.once('app-post-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
@@ -291,10 +283,10 @@ export default {
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-post-save', postData);
+            mainProcessAPI.send('app-post-save', postData);
 
             // Post save
-            ipcRenderer.once('app-post-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
@@ -340,6 +332,43 @@ export default {
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;
+        },
+        async setWebViewSpellcheckerLanguage (webContentsID) {
+            if (mainProcessAPI.getEnv().platformName === 'darwin') {
+                return;
+            }
+
+            let language = await mainProcessAPI.invoke('publii-get-spellchecker-language');
+            language = language.toLocaleLowerCase();
+            let availableLanguages = await mainProcessAPI.invoke('app-main-get-spellchecker-languages');
+            
+            if (availableLanguages.indexOf(language) > -1) {
+                await mainProcessAPI.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
+                return;
+            }
+
+            language = language.split('-');
+            language = language[0];
+
+            if (availableLanguages.indexOf(language) > -1) {
+                await mainProcessAPI.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
+                return;
+            }
+
+            console.log('(!) Unable to set spellchecker to use selected language - ' + language);
+        },
+        handleMainThreadResponse (sender, response) {
+            if (response.webContentsID !== this.webContentsID) {
+                return;
+            }
+
+            if (response.action === 'show-search') {
+                this.$bus.$emit('app-show-search-form');
+            } else if (response.action === 'undo') {
+                this.webview.send('block-editor-undo');
+            } else if (response.action === 'redo') {
+                this.webview.send('block-editor-redo');
+            }
         }
     },
     beforeDestroy () {
@@ -350,6 +379,7 @@ export default {
         this.webview.removeEventListener('ipc-message', this.editorOnIpcMessage);
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
+        mainProcessAPI.stopReceiveAll('app-main-webview-input-response', this.handleMainThreadResponse);
     }
 };
 </script>

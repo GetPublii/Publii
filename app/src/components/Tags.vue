@@ -173,7 +173,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import TagForm from './TagForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -247,11 +246,11 @@ export default {
         }
     },
     beforeMount () {
-        ipcRenderer.send('app-tags-load', {
+        mainProcessAPI.send('app-tags-load', {
             "site": this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-tags-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-tags-loaded', (data) => {
             this.$store.commit('setTags', data.tags);
             this.$store.commit('setPostsTags', data.postsTags);
         });
@@ -326,14 +325,14 @@ export default {
                 inverse: inverse
             });
 
-            ipcRenderer.send('app-tags-status-change', {
+            mainProcessAPI.send('app-tags-status-change', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToChange,
                 "status": status,
                 "inverse": inverse
             });
 
-            ipcRenderer.once('app-tags-status-changed', () => {
+            mainProcessAPI.receiveOnce('app-tags-status-changed', () => {
                 this.selectedItems = [];
                 this.$forceUpdate();
             });
@@ -347,12 +346,12 @@ export default {
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
 
-            ipcRenderer.send('app-tag-delete', {
+            mainProcessAPI.send('app-tag-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
             });
 
-            ipcRenderer.once('app-tag-deleted', () => {
+            mainProcessAPI.receiveOnce('app-tag-deleted', () => {
                 this.$store.commit('removeTags', itemsToRemove);
                 this.selectedItems = [];
 

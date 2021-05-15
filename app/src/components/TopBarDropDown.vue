@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {

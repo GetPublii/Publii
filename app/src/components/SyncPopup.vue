@@ -201,7 +201,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -327,10 +326,10 @@ export default {
 
         this.$bus.$on('sync-popup-maximize', this.maximizePopup);
 
-        ipcRenderer.on('app-rendering-progress', this.renderingProgressUpdate);
+        mainProcessAPI.receive('app-rendering-progress', this.renderingProgressUpdate);
 
         // Load the rendering error results (if exists)
-        ipcRenderer.on('app-deploy-render-error', (event, data) => {
+        mainProcessAPI.receive('app-deploy-render-error', (data) => {
             this.$store.commit('setSidebarStatus', 'not-prepared');
 
             let errorsHTML = Utils.generateErrorLog(data);
@@ -351,7 +350,7 @@ export default {
         });
 
         // Load the rendering results
-        ipcRenderer.on('app-deploy-rendered', (event, data) => {
+        mainProcessAPI.receive('app-deploy-rendered', (data) => {
             if (data.status) {
                 this.$store.commit('setSidebarStatus', 'prepared');
                 this.startUpload();
@@ -360,18 +359,18 @@ export default {
             }
         });
 
-        ipcRenderer.on('app-connection-in-progress', () => {
+        mainProcessAPI.receive('app-connection-in-progress', () => {
             this.messageFromUploader = 'Connecting to the server...';
         });
 
-        ipcRenderer.off('app-connection-error', this.showError);
-        ipcRenderer.on('app-connection-error', this.showError);
+        mainProcessAPI.stopReceive('app-connection-error', this.showError);
+        mainProcessAPI.receive('app-connection-error', this.showError);
 
-        ipcRenderer.on('app-connection-success', () => {
+        mainProcessAPI.receive('app-connection-success', () => {
             this.messageFromUploader = 'Connected to the server';
         });
 
-        ipcRenderer.on('app-uploading-progress', this.uploadingProgressUpdate);
+        mainProcessAPI.receive('app-uploading-progress', this.uploadingProgressUpdate);
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
@@ -388,7 +387,7 @@ export default {
             let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
 
             if (urlToOpen) {
-                shell.openExternal(urlToOpen);
+                mainProcessAPI.shellOpenExternal(urlToOpen);
             } else {
                 alert('Sorry! The website link seems to be invalid.');
             }
@@ -397,7 +396,7 @@ export default {
         },
         showFolder: function() {
             let folderPath = this.manualFilePath;
-            shell.showItemInFolder(folderPath);
+            mainProcessAPI.shellShowItemInFolder(folderPath);
             this.close();
         },
         close: function() {
@@ -442,19 +441,19 @@ export default {
         },
         cancelSync: function() {
             if (this.renderingInProgress) {
-                ipcRenderer.send('app-deploy-render-abort', {
+                mainProcessAPI.send('app-deploy-render-abort', {
                     'site': this.$store.state.currentSite.config.name
                 });
             } 
             
             if (this.syncInProgress) {
-                ipcRenderer.send('app-deploy-abort', {
+                mainProcessAPI.send('app-deploy-abort', {
                     'site': this.$store.state.currentSite.config.name
                 });
             }
 
             if (this.syncInProgress || this.renderingInProgress) {
-                ipcRenderer.once('app-deploy-aborted', (event) => {
+                mainProcessAPI.receiveOnce('app-deploy-aborted', () => {
                     this.$store.commit('setSidebarStatus', 'not-synced');
                     this.close();
                 });
@@ -470,7 +469,7 @@ export default {
             this.renderingProgressColor = 'blue';
             this.renderingProgressIsStopped = false;
 
-            ipcRenderer.send('app-deploy-render', {
+            mainProcessAPI.send('app-deploy-render', {
                 'site': this.$store.state.currentSite.config.name,
                 'theme': this.$store.state.currentSite.config.theme
             });
@@ -577,13 +576,13 @@ export default {
         },
         handleUploadEvents(askedPassword) {
             // Send request for uploading the site
-            ipcRenderer.send('app-deploy-upload', {
+            mainProcessAPI.send('app-deploy-upload', {
                 'site': this.$store.state.currentSite.config.name,
                 'password': askedPassword
             });
 
             // Load the deployment results
-            ipcRenderer.once('app-deploy-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-deploy-uploaded', (data) => {
                 if(data.type && data.path && this.isManual) {
                     this.isInSync = true;
                     this.manualFilePath = data.path;
@@ -604,7 +603,7 @@ export default {
                 }
 
                 if (data.status) {
-                    ipcRenderer.send('app-sync-is-done', {
+                    mainProcessAPI.send('app-sync-is-done', {
                         'site': this.$store.state.currentSite.config.name
                     });
 
@@ -612,7 +611,7 @@ export default {
                 }
             });
 
-            ipcRenderer.once('app-sync-is-done-saved', () => {
+            mainProcessAPI.receiveOnce('app-sync-is-done-saved', () => {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
 
@@ -715,9 +714,9 @@ export default {
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
         this.$bus.$off('sync-popup-maximize', this.maximizePopup);
-        ipcRenderer.off('app-preview-render-error');
-        ipcRenderer.off('app-rendering-progress');
-        ipcRenderer.off('app-connection-error', this.showError);
+        mainProcessAPI.stopReceiveAll('app-preview-render-error');
+        mainProcessAPI.stopReceiveAll('app-rendering-progress');
+        mainProcessAPI.stopReceiveAll('app-connection-error', this.showError);
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

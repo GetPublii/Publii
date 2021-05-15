@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.38.1",
+  "version": "0.39.0",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -66,7 +66,6 @@
     "striptags": "^3.1.1",
     "tar": "^2.2.1",
     "transliteration": "^2.1.11",
-    "trash": "^7.1.0",
     "unzipper": "^0.9.10",
     "vue": "^2.6.11",
     "vue-color": "^2.4.5",
@@ -79,7 +78,7 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^11.3.0",
-    "node-abi": "^2.20.0"
+    "electron": "^12.0.7",
+    "node-abi": "^2.21.0"
   }
 }

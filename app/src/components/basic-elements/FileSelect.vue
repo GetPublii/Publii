@@ -22,9 +22,6 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
-
 export default {
     name: 'fileselect',
     props: {
@@ -64,15 +61,15 @@ export default {
         }
     },
     methods: {
-        clear: function() {
+        clear () {
             this.$refs.input.content = '';
             this.fieldValue = '';
             this.onChange('');
         },
-        selectFile: function() {
-            mainProcess.selectFile('file-select');
+        async selectFile () {
+            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
 
-            ipcRenderer.once('app-file-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
@@ -83,7 +80,7 @@ export default {
                 this.onChange(this.fieldValue);
             });
         },
-        getValue: function() {
+        getValue () {
             return this.fieldValue;
         }
     }

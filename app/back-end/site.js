@@ -11,7 +11,7 @@ const Image = require('./image.js');
 const UtilsHelper = require('./helpers/utils');
 const childProcess = require('child_process');
 const slug = require('./helpers/slug');
-const trash = require('trash');
+const { shell } = require('electron');
 
 class Site {
     constructor(appInstance, config, maintenanceMode = false) {
@@ -427,21 +427,8 @@ class Site {
             appInstance.db.close();
         }
 
-        setTimeout(() => {
-            if (
-                os.platform() !== 'linux' && (
-                    os.platform() !== 'darwin' || (
-                        os.platform() === 'darwin' &&
-                        parseInt(os.release().split('.')[0], 10) >= 16
-                    )
-                )
-            ) {
-                (async () => {
-                    await trash(sitePath);
-                })();
-            } else {
-                fs.removeSync(sitePath);
-            }
+        setTimeout(async () => {    
+            await shell.trashItem(sitePath);
         }, 500);
     }
 

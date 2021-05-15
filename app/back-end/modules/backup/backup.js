@@ -9,7 +9,7 @@ const Utils = require('./../../helpers/utils.js');
 const moment = require('moment');
 const archiver = require('archiver');
 const tar = require('tar');
-const trash = require('trash');
+const { shell } = require('electron');
 
 class Backup {
     /**
@@ -162,21 +162,9 @@ class Backup {
             }
 
             try {
-                if (
-                    os.platform() !== 'linux' && (
-                        os.platform() !== 'darwin' || (
-                            os.platform() === 'darwin' &&
-                            parseInt(os.release().split('.')[0], 10) >= 16
-                        )
-                    )
-                ) {
-                    await (async () => {
-                        await trash(backupFilePath);
-                    })();
-                } else {
-                    fs.unlinkSync(backupFilePath);
-                }
+                await shell.trashItem(backupFilePath);
             } catch (e) {
+                console.log('ERR:', e);
                 return Promise.resolve({
                     status: false,
                     backups: Backup.loadList(siteName, backupsDir)

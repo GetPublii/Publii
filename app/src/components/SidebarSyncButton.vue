@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import fs from 'fs';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
@@ -148,7 +147,7 @@ export default {
                 return;
             }
 
-            if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+            if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                 this.$bus.$emit('confirm-display', {
                     message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                     okLabel: this.$t('sync.goToAppSettings'),

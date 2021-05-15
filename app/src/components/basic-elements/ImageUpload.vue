@@ -49,9 +49,6 @@
 </template>
 
 <script>
-import normalizePath from 'normalize-path';
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'image-upload',
     props: {
@@ -248,12 +245,12 @@ export default {
                 uploadData.imageType = 'featuredImages';
             }
 
-            ipcRenderer.send('app-image-upload', uploadData);
+            mainProcessAPI.send('app-image-upload', uploadData);
 
-            ipcRenderer.once('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.isEmpty = false;
                 this.isHovered = false;
-                this.filePath = normalizePath(data.baseImage.newPath);
+                this.filePath = mainProcessAPI.normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
                 this.onAdd();
             });

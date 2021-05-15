@@ -54,7 +54,6 @@
 
 <script>
 import PostHelper from './PostHelper';
-import { ipcRenderer } from 'electron';
 
 export default {
     name: 'post-editor-top-bar',
@@ -172,7 +171,7 @@ export default {
             preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
             preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
             // Send an event which will remove unused images from the post editor
-            ipcRenderer.send('app-post-cancel', {
+            mainProcessAPI.send('app-post-cancel', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.$parent.postID,
                 'text': preparedText,

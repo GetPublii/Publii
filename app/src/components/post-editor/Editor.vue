@@ -7,7 +7,6 @@
 
 <script>
 import EditorBridge from './EditorBridge.js';
-import { webFrame } from 'electron';
 
 export default {
     name: 'editor',

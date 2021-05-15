@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import ThemesListItem from './ThemesListItem';
 
 export default {
@@ -66,11 +65,11 @@ export default {
         uploadTheme (e) {
             this.themeIsOver = false;
 
-            ipcRenderer.send('app-theme-upload', {
+            mainProcessAPI.send('app-theme-upload', {
                 sourcePath: e.dataTransfer.files[0].path
             });
 
-            ipcRenderer.once('app-theme-uploaded', this.$parent.uploadedTheme);
+            mainProcessAPI.receiveOnce('app-theme-uploaded', this.$parent.uploadedTheme);
         }
     }
 }

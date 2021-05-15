@@ -433,7 +433,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
 export default {
@@ -663,12 +662,12 @@ export default {
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
 
-            ipcRenderer.send('app-post-delete', {
+            mainProcessAPI.send('app-post-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
             });
 
-            ipcRenderer.once('app-post-deleted', () => {
+            mainProcessAPI.receiveOnce('app-post-deleted', () => {
                 this.$store.commit('removePosts', itemsToRemove);
                 this.selectedItems = [];
 
@@ -715,12 +714,12 @@ export default {
         bulkDuplicate () {
             let itemsToDuplicate = this.getSelectedItems();
 
-            ipcRenderer.send('app-post-duplicate', {
+            mainProcessAPI.send('app-post-duplicate', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToDuplicate
             });
 
-            ipcRenderer.once('app-post-duplicated', (data) => {
+            mainProcessAPI.receiveOnce('app-post-duplicated', (data) => {
                 if(!data) {
                     this.$bus.$emit('message-display', {
                         message: this.$t('post.duplicatePostErrorMessage'),
@@ -739,11 +738,11 @@ export default {
 
                 this.selectedItems = [];
 
-                ipcRenderer.send('app-site-reload', {
+                mainProcessAPI.send('app-site-reload', {
                     siteName: this.$store.state.currentSite.config.name
                 });
 
-                ipcRenderer.once('app-site-reloaded', (event, result) => {
+                mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
                 });
@@ -761,14 +760,14 @@ export default {
                 inverse: inverse
             });
 
-            ipcRenderer.send('app-post-status-change', {
+            mainProcessAPI.send('app-post-status-change', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToChange,
                 "status": status,
                 "inverse": inverse
             });
 
-            ipcRenderer.once('app-post-status-changed', () => {
+            mainProcessAPI.receiveOnce('app-post-status-changed', () => {
                 this.selectedItems = [];
             });
 

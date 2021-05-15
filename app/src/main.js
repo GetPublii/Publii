@@ -1,4 +1,3 @@
-import { ipcRenderer, remote, nativeTheme } from 'electron';
 import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
@@ -106,7 +105,7 @@ Vue.directive('pure-html', {
     }
 });
 
-ipcRenderer.on('app-data-loaded', function (event, initialData) {
+mainProcessAPI.receive('app-data-loaded', function (initialData) {
     // Add global Vue properties for commonly used libraries
     Vue.prototype.$moment = moment;
 
@@ -151,7 +150,7 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
     Vue.component('v-select', vSelect);
 
     // Init Publii front-end
-    window.app = new Vue({
+    new Vue({
         el: '#app',
         store,
         i18n,
@@ -169,29 +168,49 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                 skipThemeChangeEvents: false
             };
         },
-        mounted () {
-            this.setupAppTheme();
+        async mounted () {
+            await this.setupAppTheme();
+            
+            window.app = {
+                getSiteName: () => this.$store.state.currentSite.config.name,
+                getSiteDir: () => this.$store.state.currentSite.siteDir,
+                getSiteTheme: () => this.$store.state.currentSite.config.theme,
+                getThemeCustomElementsMode: () => this.$store.state.currentSite.themeSettings.customElementsMode,
+                getThemeCustomElements: () => this.$store.state.currentSite.themeSettings ? this.$store.state.currentSite.themeSettings.customElements : false,
+                spellcheckerIsEnabled: () => this.$store.state.currentSite.config.spellchecking,
+                wysiwygAdditionalValidElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements,
+                tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
+                getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
+                reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
+                writersPanelOpen: () => this.$bus.$emit('writers-panel-open'),
+                writersPanelRefresh: () => this.$bus.$emit('writers-panel-refresh'),
+                sourceCodeEditorShow: (content, editor) => this.$bus.$emit('source-code-editor-show', content, editor),
+                updateLinkEditor: (data) => this.$bus.$emit('update-link-editor', data),
+                updateGalleryPopup: (data) => this.$bus.$emit('update-gallery-popup', data),
+                hasPostEditorConfigOverride: () => this.$store.state.currentSite.themeSettings.extensions ? this.$store.state.currentSite.themeSettings.extensions.postEditorConfigOverride : false,
+                initLinkPopup: (data) => this.$bus.$emit('init-link-popup', data),
+                initLinkEditor: (iframe) => this.$bus.$emit('init-link-editor', iframe),
+                initInlineEditor: (customFormats) => this.$bus.$emit('init-inline-editor', customFormats),
+                updateInlineEditor: (data) => this.$bus.$emit('update-inline-editor', data),
+                galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback)
+            };
         },
         methods: {
-            setupAppTheme () {
+            async setupAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'default') {
-                    remote.nativeTheme.themeSource = 'light';
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                 } else if (currentTheme === 'dark') {
-                    remote.nativeTheme.themeSource = 'dark';
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                 } else {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        currentTheme = 'dark';
-                    } else {
-                        currentTheme = 'default';
-                    }
+                    currentTheme = await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
                 document.querySelector('html').setAttribute('data-theme', currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
-                remote.nativeTheme.on('updated', () => {
+                mainProcessAPI.receive('app-theme-mode:changed', () => {
                     if (this.skipThemeChangeEvents) {
                         return;
                     }
@@ -199,20 +218,16 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                     this.$bus.$emit('app-theme-change');
                 });
             },
-            getCurrentAppTheme () {
+            async getCurrentAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'system') {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        return 'dark';
-                    } else {
-                        return 'default';
-                    }
-                } 
+                    return await mainProcessAPI.invoke('app-theme-mode:get-theme');
+                }
 
                 return currentTheme;
             },
-            toggleTheme () {
+            async toggleTheme () {
                 this.skipThemeChangeEvents = true;
                 let currentTheme = this.$store.state.app.theme;
                 let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
@@ -220,27 +235,22 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
 
                 if (currentTheme === 'dark') {
                     theme = 'dark';
-                    remote.nativeTheme.themeSource = 'dark';
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                     currentTheme = 'dark';
                 } else if (currentTheme === 'default') {
                     theme = 'default';
-                    remote.nativeTheme.themeSource = 'light';
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                     currentTheme = 'default';
                 } else {
                     theme = 'system';
-                    remote.nativeTheme.themeSource = 'system';
+                    mainProcessAPI.invoke('app-theme-mode:set-system');
                     currentTheme = 'system';
-
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        theme = 'dark';
-                    } else {
-                        theme = 'default';
-                    }
+                    theme = await mainProcessAPI.invoke('app-theme-mode:get-theme')
                 }
 
                 this.$store.commit('setAppTheme', currentTheme);
                 localStorage.setItem('publii-theme', currentTheme);
-                ipcRenderer.send('app-save-color-theme', currentTheme);
+                mainProcessAPI.send('app-save-color-theme', currentTheme);
 
                 for (let i = 0; i < iframes.length; i++) {
                     iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);

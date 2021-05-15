@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'themes-list-item',
     props: [
@@ -53,12 +51,12 @@ export default {
             let confirmConfig = {
                 message: this.$t('theme.removeThemeMessagePT1') + themeName + this.$t('theme.removeThemeMessagePT2'),
                 okClick: function() {
-                    ipcRenderer.send('app-theme-delete', {
+                    mainProcessAPI.send('app-theme-delete', {
                         name: themeName,
                         directory: themeDirectory
                     });
 
-                    ipcRenderer.once('app-theme-deleted', (event, data) => {
+                    mainProcessAPI.receiveOnce('app-theme-deleted', (data) => {
                         this.$bus.$emit('message-display', {
                             message: this.$t('theme.removeThemeSuccessMessage'),
                             type: 'success',

@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 import Utils from './../../helpers/utils.js';
 
 export default {
@@ -118,7 +117,7 @@ export default {
                 let urlToOpen = Utils.getValidUrl(link[1]);
 
                 if (urlToOpen) {
-                    shell.openExternal(urlToOpen);
+                    mainProcessAPI.shellOpenExternal(urlToOpen);
                 } else {
                     alert('Sorry! This link seems to be invalid.');
                 }

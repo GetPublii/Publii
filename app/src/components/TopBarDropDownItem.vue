@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron'
-
 export default {
     name: 'topbar-dropdown-item',
     props: [
@@ -42,7 +40,7 @@ export default {
     methods: {
         openExternalLink (e) {
             e.preventDefault();
-            shell.openExternal(this.path);
+            mainProcessAPI.shellOpenExternal(this.path);
         }
     }
 }

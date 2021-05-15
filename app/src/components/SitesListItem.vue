@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
 
 export default {
@@ -105,12 +104,12 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-site-clone', {
+            mainProcessAPI.send('app-site-clone', {
                 catalogName: this.site,
                 siteName: newName
             });
 
-            ipcRenderer.once('app-site-cloned', (event, clonedWebsiteData) => {
+            mainProcessAPI.receiveOnce('app-site-cloned', (clonedWebsiteData) => {
                 this.$store.commit('cloneWebsite', {
                     clonedWebsiteCatalog: this.site, 
                     newSiteName: clonedWebsiteData.siteName, 
@@ -129,11 +128,11 @@ export default {
             });
         },
         removeWebsite (name) {
-            ipcRenderer.send('app-site-delete', {
+            mainProcessAPI.send('app-site-delete', {
                 site: name
             });
 
-            ipcRenderer.once('app-site-deleted', () => {
+            mainProcessAPI.receiveOnce('app-site-deleted', () => {
                 this.$store.commit('removeWebsite', name);
                 let sites = Object.keys(this.$store.state.sites);
 

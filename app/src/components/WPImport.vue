@@ -151,7 +151,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import WPImportStats from './WPImportStats';
 
@@ -215,18 +214,18 @@ export default {
             this.fileSelected();
         },
         fileSelected: function() {
-            ipcRenderer.send('app-wxr-check', {
+            mainProcessAPI.send('app-wxr-check', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath
             });
 
             this.uploadDisabled = true;
             this.checkingFile = true;
-            ipcRenderer.once('app-wxr-checked', (event, data) => {
-                this.checkFile(event, data);
+            mainProcessAPI.receiveOnce('app-wxr-checked', (data) => {
+                this.checkFile(data);
             });
         },
-        checkFile: function(event, data) {
+        checkFile: function(data) {
             this.uploadDisabled = false;
             this.checkingFile = false;
 
@@ -261,7 +260,7 @@ export default {
                 }
             }
 
-            ipcRenderer.send('app-wxr-import', {
+            mainProcessAPI.send('app-wxr-import', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath,
                 importAuthors: this.$refs['authors'].content,
@@ -271,10 +270,10 @@ export default {
             });
 
             this.bindedFileImported = this.fileImported.bind(this);
-            ipcRenderer.once('app-wxr-imported', this.bindedFileImported);
+            mainProcessAPI.receiveOnce('app-wxr-imported', this.bindedFileImported);
 
             this.bindedFileImportProgress = this.fileImportProgress.bind(this);
-            ipcRenderer.on('app-wxr-import-progress', this.bindedFileImportProgress);
+            mainProcessAPI.receive('app-wxr-import-progress', this.bindedFileImportProgress);
         },
         fileImportProgress(event, data) {
             this.progressInfo = data.message;
@@ -295,11 +294,11 @@ export default {
 
             this.resetState();
 
-            ipcRenderer.send('app-site-reload', {
+            mainProcessAPI.send('app-site-reload', {
                 siteName: siteName
             });
 
-            ipcRenderer.once('app-site-reloaded', (event, result) => {
+            mainProcessAPI.receiveOnce('app-site-reloaded', (event, result) => {
                 this.$store.commit('setSiteConfig', result);
                 this.$store.commit('switchSite', result.data);
             });
@@ -318,11 +317,11 @@ export default {
     },
     beforeDestroy: function() {
         if(this.bindedFileImported) {
-            ipcRenderer.removeListener('app-wxr-imported', this.bindedFileImported);
+            mainProcessAPI.stopReceive('app-wxr-imported', this.bindedFileImported);
         }
 
         if(this.bindedFileImportProgress) {
-            ipcRenderer.removeListener('app-wxr-import-progress', this.bindedFileImportProgress);
+            mainProcessAPI.stopReceive('app-wxr-import-progress', this.bindedFileImportProgress);
         }
     }
 }

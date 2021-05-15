@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 
 export default {
@@ -106,16 +105,16 @@ export default {
                 'success': false
             };
 
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
 
             setTimeout(() => {
-                ipcRenderer.send('app-site-regenerate-thumbnails', {
+                mainProcessAPI.send('app-site-regenerate-thumbnails', {
                     name: this.$store.state.currentSite.config.name
                 });
 
-                ipcRenderer.once('app-site-regenerate-thumbnails-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
                     this.resultCssClass = {
                         'result': true,
                         'error': true,
@@ -125,7 +124,7 @@ export default {
                     this.buttonStatus = '';
                 });
 
-                ipcRenderer.on('app-site-regenerate-thumbnails-progress', (event, data) => {
+                mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
                     this.resultLabel = 'Progress: ' + data.value + '%';
 
                     for(let file of data.files) {
@@ -135,7 +134,7 @@ export default {
                     }
                 });
 
-                ipcRenderer.once('app-site-regenerate-thumbnails-success', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
                     this.resultCssClass = {
                         'result': true,
                         'error': false,
@@ -148,10 +147,10 @@ export default {
             }, 350);
         },
         abortRegenerate () {
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
-            ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
-            ipcRenderer.send('app-site-abort-regenerate-thumbnails', true);
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
+            mainProcessAPI.send('app-site-abort-regenerate-thumbnails', true);
 
             this.resultCssClass = {
                 'result': true,
@@ -164,9 +163,9 @@ export default {
         }
     },
     beforeDestroy: function() {
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-error');
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-progress');
-        ipcRenderer.removeAllListeners('app-site-regenerate-thumbnails-success');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
+        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
     }
 }
 </script>

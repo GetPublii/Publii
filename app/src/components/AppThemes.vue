@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -58,19 +56,19 @@ export default {
                 }
             }
         },
-        installTheme () {
-            mainProcess.selectFile('file-select');
+        async installTheme () {
+            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
 
-            ipcRenderer.once('app-file-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
 
-                ipcRenderer.send('app-theme-upload', {
+                mainProcessAPI.send('app-theme-upload', {
                     sourcePath: data.path.filePaths[0]
                 });
 
-                ipcRenderer.once('app-theme-uploaded', this.uploadedTheme);
+                mainProcessAPI.receiveOnce('app-theme-uploaded', this.uploadedTheme);
             });
         },
         uploadedTheme (event, data) {
