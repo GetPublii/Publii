@@ -1,0 +1,172 @@
+@import './../vendors/modularscale';
+@import './functions.scss';
+@import './variables.scss';
+@import './mixins.scss';
+
+.editor > .editor-inner {
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
+}
+
+.editor > .editor-inner {
+    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
+
+    & > .wrapper > div {
+        color: var(--eb-text-primary-color);
+        -webkit-font-smoothing: antialiased;
+        font-family: var(--font-base);
+        font-weight: var(--font-weight-normal);
+        line-height: $line-height;
+        font-size: 1em;
+
+        a:not(.btn) {
+            @include links (var(--eb-link-primary-color), var(--eb-link-primary-color), var(--eb-link-primary-color), var(--eb-link-primary-color));
+        }
+
+        p,
+        ul,
+        ol,
+        dl,
+        table,
+        hr,
+        blockquote,
+        figure,
+        pre,
+        table,
+        script {
+            margin: 0;
+        }
+
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--eb-headings-color);
+            font-family: var(--font-base);
+            font-weight: var(--font-weight-bold);
+            letter-spacing: -0.03rem;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        h1 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+            margin: 0;
+        }
+
+        h2 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+        }
+
+        h3 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+        }
+
+        h4 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+        }
+
+        h5 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+        }
+
+        h6 {
+            @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+        }
+
+        b,
+        strong {
+            font-weight: var(--font-weight-bold);
+        }
+
+        blockquote {
+            font-family: var(--font-serif);
+            padding: baseline(14) 1rem baseline(3);
+            position: relative;
+            text-align: center;
+            @include fluid-type(font-size, $minScreen, $maxScreen, ms(1), ms(2));
+
+            &::before {
+                color: var(--eb-secondary-color);
+                content: "“";
+                font: normal 360%/0.9 var(--font-serif);
+                top: baseline(1);
+
+                @include centerXY(true, false);
+            }
+        }
+
+        ul,
+        ol {
+            margin-left: 2rem;
+            padding: 0;
+
+            & > li {
+                list-style: inherit;
+                padding-left: baseline(2);
+            }
+
+            ul,
+            ol {
+                margin-bottom: baseline(2);
+                margin-top: baseline(2);
+            }
+        }
+
+        code {
+            background-color: #ffeeee;
+            border-radius: 2px;
+            color: var(--eb-warning);
+            font-size: ms(-1);
+            font-family: var(--font-monospace);
+            padding: baseline(1) baseline(2);
+        }
+
+        pre {
+            font-size: ms(-1);
+            padding: baseline(6);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            width: 100%;
+
+            code {
+                color: inherit !important;
+            }
+        }
+
+        figcaption {
+            color: var(--eb-text-light-color);
+            font-size: ms(-1);
+            text-align: center;
+        }
+        
+        label {
+            color: var(--eb-label-color);
+            font-weight: var(--font-weight-normal);
+        }
+        
+        .msg {
+            border-left: 3px solid transparent;
+            border-radius: 3px;
+            padding: baseline(2) 0 baseline(2) baseline(6);
+
+            &--highlight {
+                border-color: var(--eb-yellow);        
+            }
+
+            &--info {
+                border-color: rgba(var(--eb-primary-color-rgb), 1);       
+            }
+
+            &--success {
+                 border-color: rgba(var(--eb-success-rgb), 1);       
+            }
+
+            &--warning {
+                 border-color: rgba(var(--eb-warning-rgb), 1);        
+            }
+        }
+    }
+}

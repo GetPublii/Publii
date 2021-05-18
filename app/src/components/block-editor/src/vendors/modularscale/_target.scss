@@ -1,0 +1,49 @@
+// Convert number string to number
+@function ms-to-num($n) {
+  $l: str-length($n);
+  $r: 0;
+  $m: str-index($n,'.');
+  @if $m == null {
+    $m: $l + 1;
+  }
+  // Loop through digits and convert to numbers
+  @for $i from 1 through $l {
+    $v: str-slice($n,$i,$i);
+    @if $v == '1' { $v: 1; }
+    @else if $v == '2' { $v: 2; }
+    @else if $v == '3' { $v: 3; }
+    @else if $v == '4' { $v: 4; }
+    @else if $v == '5' { $v: 5; }
+    @else if $v == '6' { $v: 6; }
+    @else if $v == '7' { $v: 7; }
+    @else if $v == '8' { $v: 8; }
+    @else if $v == '9' { $v: 9; }
+    @else if $v == '0' { $v: 0; }
+    @else { $v: null; }
+    @if $v != null {
+      $m: $m - 1;
+      $r: $r + ms-pow(10,$m - 1) * $v;
+    } @else {
+      $l: $l - 1;
+    }
+  }
+  @return $r;
+}
+
+// Find a ratio based on a target value
+@function ms-target($t,$b) {
+  // Convert to string
+  $t: $t + '';
+  // Remove base units to calulate ratio
+  $b: ms-unitless(nth($b,1));
+  // Find where 'at' is in the string
+  $at: str-index($t,'at');
+
+  // Slice the value and target out
+  // and convert strings to numbers
+  $v: ms-to-num(str-slice($t,0,$at - 1));
+  $t: ms-to-num(str-slice($t,$at + 2));
+
+  // Solve the modular scale function for the ratio.
+  @return ms-pow(($v/$b),(1/$t));
+}
