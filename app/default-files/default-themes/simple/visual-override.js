@@ -5,64 +5,6 @@
 var generateOverride = function (params) {
     let output = '';
     
-      if (
-        params.pageMargin !== '6vw' ||
-        params.pageWidth !== '42rem' || 
-        params.navbarHeight !== '4.4rem' || 
-        params.lineHeight !== '1.7' || 
-        params.fontNormalWeight !== '400' || 
-        params.fontBoldWeight !== '700' || 
-        params.fontHeadignsWeight !== '700' ||
-        params.fontHeadingsTransform !== 'none' ||
-        params.primaryColor !== '#D73A42' || 
-        params.textColor !== '#17181E' || 
-        params.headingColor !== '#17181E' ||      
-        params.heightHero !== '80vh' ||
-        params.heroBackground !== '#17181E' ||
-        params.heroHeadingColor !== '#FFFFFF' ||
-        params.heroTextColor !== 'rgba(255,255,255,0.75)' ||
-        params.heroLink !== '#FFFFFF' ||
-        params.heroLinkHover !== 'rgba(255,255,255,0.75)' ||
-        params.heroBorderColor !== 'rgba(255,255,255,0.3)') {
-        output += `
-        :root {
-           --page-margin:        ${params.pageMargin};
-           --entry-width:        ${params.pageWidth}; 
-           --navbar-height:      4.4rem; 
-           --line-height:        ${params.lineHeight}; 
-           --font-weight-normal: ${params.fontNormalWeight}; 
-           --font-weight-bold:   ${params.fontBoldWeight}; 
-           --headings-weight:    ${params.fontHeadignsWeight};
-           --headings-transform: ${params.fontHeadingsTransform};
-           --white:              #FFFFFF;
-           --white-rgb:          255,255,255;
-           --black:              #000000;
-           --dark:               #17181E;
-           --gray-1:             #61666C;
-           --gray-2:             #747577;
-           --light:              #E6E7EB;
-           --lighter:            #F3F3F3;
-           --color:              ${params.primaryColor};   
-           --color-rgb:          ${params.primaryColor.replace('#', '').match(/[a-f0-9]{2,2}/gmi).map(n => parseInt(n, 16)).join(', ')};
-           --text-color:         ${params.textColor}; 
-           --headings-color:     ${params.headingColor};      
-           --logo-color:         #FFFFFF;
-           --hero-height:        ${params.heightHero};
-           --hero-bg:            ${params.heroBackground};
-           --hero-heading-color: ${params.heroHeadingColor};
-           --hero-text-color:    ${params.heroTextColor};
-           --hero-link-color:    ${params.heroLink};
-           --hero-link-color-hover: ${params.heroLinkHover};
-           --hero-border-color:  ${params.heroBorderColor};
-        }
-       
-        @media all and (min-width: 56.25em) {
-                :root {
-                  --navbar-height: ${params.navbarHeight};
-                }
-        }`;
-    } 
-    
     if (params.minFontSize !== '1.1' || params.maxFontSize !== '1.2') {
         output += `
         html {
