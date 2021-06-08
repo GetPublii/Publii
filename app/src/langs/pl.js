@@ -59,6 +59,20 @@ export default {
         loadingImage: 'Wczytywanie obrazu...',
         removeImage: 'Usuń obraz'
     },
+    langs: {
+        addLanguageSuccessMessage: 'Język został dodany',
+        deleteLanguage: 'Usuń język',
+        dropYourLanguageHere: 'Upuść plik tutaj',
+        getMoreLanguages: 'Pobierz więcej języków',
+        goToLanguagesManager: 'Idź do menadżera języków',
+        installLanguage: 'Zainstaluj język',
+        languages: 'Języki',
+        removeLanguageMessagePT1: 'Czy na pewno chcesz usunąć język ',
+        removeLanguageMessagePT2: '?',
+        removeLanguageSuccessMessage: 'Usunięto wybrany język',
+        updatedLanguageSuccessMessage: 'Wybrany język został zaktualizowany',
+        uploadLanguageErrorMessage: 'Wystapił błąd podczas instalacji. Spróbuj ponownie.'
+    },
     menu: {
         addMenuItem: 'Dodaj element menu',
         addNewMenu: 'Dodaj nowe menu',

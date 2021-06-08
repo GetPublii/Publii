@@ -59,6 +59,20 @@ export default {
         loadingImage: 'Loading image...',
         removeImage: 'Remove image'
     },
+    langs: {
+        addLanguageSuccessMessage: 'Language has been added',
+        deleteLanguage: 'Delete language',
+        dropYourLanguageHere: 'Drop your file here',
+        getMoreLanguages: 'Get more languages',
+        goToLanguagesManager: 'Go to the languages manager',
+        installLanguage: 'Install language',
+        languages: 'Languages',
+        removeLanguageMessagePT1: 'Do you really want to remove the ',
+        removeLanguageMessagePT2: ' language?',
+        removeLanguageSuccessMessage: 'The selected language has been removed',
+        updatedLanguageSuccessMessage: 'Selected language has been updated',
+        uploadLanguageErrorMessage: 'An error occurred during installation. Please try again.'
+    },
     menu: {
         addMenuItem: 'Add menu item',
         addNewMenu: 'Add new menu',

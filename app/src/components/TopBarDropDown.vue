@@ -17,6 +17,10 @@
                 :title="$t('theme.goToThemesManager')"
                 path="/app-themes" />
             <topbar-dropdown-item
+                :label="$t('langs.languages')"
+                :title="$t('langs.goToLanguagesManager')"
+                path="/app-languages" />
+            <topbar-dropdown-item
                 class="topbar-app-submenu-separator"
                 path="/app-settings"
                 :label="$t('theme.changeAppTheme')" />
