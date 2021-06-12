@@ -474,7 +474,7 @@ export default {
                 'theme': this.$store.state.currentSite.config.theme
             });
         },
-        renderingProgressUpdate: function(event, data) {
+        renderingProgressUpdate: function(data) {
             if (this.renderingProgress > data.progress) {
                 return;
             }
@@ -493,7 +493,7 @@ export default {
                 }
             }
         },
-        uploadingProgressUpdate: function(event, data) {
+        uploadingProgressUpdate: function(data) {
             if(this.uploadingProgress > data.progress) {
                 return;
             }
@@ -509,7 +509,7 @@ export default {
                 this.messageFromUploader = data.message;
             }
         },
-        showError: function(event, data) {
+        showError: function(data) {
             this.messageFromUploader = 'An error occurred during connecting to server...';
             this.uploadError = true;
             this.uploadingProgressColor = 'red';

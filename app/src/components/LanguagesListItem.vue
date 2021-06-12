@@ -1,9 +1,11 @@
 <template>
     <figure class="language">
-        <img
-            :src="thumbnail"
-            class="language-thumbnail"
-            alt="">
+        <span class="language-thumbnail-wrapper">
+            <img
+                :src="thumbnail"
+                class="language-thumbnail"
+                alt="">
+        </span>
 
         <figcaption class="language-name">
             <h3>
@@ -49,10 +51,10 @@ export default {
     methods: {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
-                message: this.$t('langs.removeLanguageMessagePT1') + languageName + this.$t('theme.removeLanguageMessagePT2'),
+                message: this.$t('langs.removeLanguageMessagePT1') + languageName + this.$t('langs.removeLanguageMessagePT2'),
                 okClick: function() {
-                    mainProcessAPI.send('app-theme-delete', {
-                        name: langaugeName,
+                    mainProcessAPI.send('app-language-delete', {
+                        name: languageName,
                         directory: languageDirectory
                     });
 
@@ -64,7 +66,6 @@ export default {
                         });
 
                         this.$store.commit('replaceAppLanguages', data.languages);
-                        this.$store.commit('updateSiteLanguages');
                     });
                 }
             };
@@ -83,12 +84,25 @@ export default {
     position: relative;
 
     &-thumbnail {
-        border: 1px solid var(--gray-1);
-        border-radius: 4px;
+        border-radius: 50%;
         display: block;
-        height: auto;
-        max-width: 100%;
-        transition: var(--transition);
+        height: 128px;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 128px;
+
+        &-wrapper {
+            background: var(--gray-1);
+            border: 1px solid var(--gray-1);
+            border-radius: 4px;
+            display: block;
+            padding-bottom: 75%;
+            position: relative;
+            transition: var(--transition);
+            width: 100%;
+        }
     }
 
     &-delete {

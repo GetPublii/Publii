@@ -71,7 +71,7 @@ export default {
                 mainProcessAPI.receiveOnce('app-theme-uploaded', this.uploadedTheme);
             });
         },
-        uploadedTheme (event, data) {
+        uploadedTheme (data) {
             this.$store.commit('replaceAppThemes', data.themes);
             this.$store.commit('updateSiteThemes');
 

@@ -24,6 +24,8 @@ export default {
     // Data about installed themes and their location
     themes: [],
     themesPath: '',
+    languages: [],
+    languagesPath: '',
     dirs: {},
     // Data about available sites
     sites: [],

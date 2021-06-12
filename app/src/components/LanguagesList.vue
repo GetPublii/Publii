@@ -10,7 +10,7 @@
         :class="{ 'languages': true, 'language-is-over': languageIsOver }">
         <div
             class="add-more-languages">
-                <a href="https://marketplace.getpublii.com/" target="_blank" rel="noopener noreferrer">
+                <a href="https://languages.getpublii.com/" target="_blank" rel="noopener noreferrer">
                     <icon
                         customWidth="50"
                         customHeight="46"
@@ -30,7 +30,7 @@
             v-if="languageIsOver"
             :hasBorder="true"
             :isBlue="true">
-            <div>{{ $t('lans.dropYourLanguageHere') }}</div>
+            <div>{{ $t('langs.dropYourLanguageHere') }}</div>
         </overlay>
     </div>
 </template>
@@ -93,7 +93,7 @@ export default {
     }
 }
 
-.add-more-language {
+.add-more-languages {
     background: var(--gray-1);
     border: 1px solid transparent;
     border-radius: 4px;

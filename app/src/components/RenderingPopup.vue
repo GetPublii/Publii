@@ -125,7 +125,7 @@ export default {
             mainProcessAPI.stopReceive('app-preview-render-error', this.renderError);
             mainProcessAPI.receiveOnce('app-preview-render-error', this.renderError);
         },
-        renderingProgress: function(event, data) {
+        renderingProgress: function(data) {
             this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
             this.progress = data.progress;
 
@@ -139,7 +139,7 @@ export default {
                 }, 500);
             }
         },
-        renderError(event, data) {
+        renderError(data) {
             let errorsHTML = Utils.generateErrorLog(data.message);
             let errorsText = Utils.generateErrorLog(data.message, true);
 

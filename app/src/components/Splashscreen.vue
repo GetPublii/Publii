@@ -57,7 +57,7 @@ export default {
             let self = this;
 
             mainProcessAPI.send('app-license-accept', true);
-            mainProcessAPI.receiveOnce('app-license-accepted', function(event, data) {
+            mainProcessAPI.receiveOnce('app-license-accepted', function(data) {
                 self.$bus.$emit('license-accepted');
             });
         }

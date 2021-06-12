@@ -68,9 +68,8 @@ export default {
                 mainProcessAPI.receiveOnce('app-language-uploaded', this.uploadedLanguage);
             });
         },
-        uploadedLanguage (event, data) {
+        uploadedLanguage (data) {
             this.$store.commit('replaceAppLanguages', data.languages);
-            this.$store.commit('updateSiteLanguages');
 
             let messageConfig = {
                 message: '',

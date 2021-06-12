@@ -248,7 +248,7 @@ export default {
                     siteName: this.$store.state.currentSite.config.name
                 });
 
-                mainProcessAPI.receiveOnce('app-site-reloaded', (event, result) => {
+                mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
                 });

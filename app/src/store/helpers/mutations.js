@@ -8,6 +8,8 @@ export default {
         state.app.customConfig = initialData.customConfig;
         state.app.versionInfo = initialData.version;
         state.currentSite = {};
+        state.languages = initialData.languages;
+        state.languagesPath = initialData.languagesPath;
         state.sites = initialData.sites;
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
@@ -183,6 +185,9 @@ export default {
     updateSiteThemes (state) {
         state.currentSite.themes = state.currentSite.themes.filter(theme => theme.location !== 'app');
         state.currentSite.themes = [...state.currentSite.themes, ...state.themes].slice();
+    },
+    replaceAppLanguages (state, newLanguages) {
+        state.languages = newLanguages.slice();
     },
     setTags (state, tags) {
         Vue.set(state.currentSite, 'tags', tags.slice());

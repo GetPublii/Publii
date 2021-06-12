@@ -275,10 +275,10 @@ export default {
             this.bindedFileImportProgress = this.fileImportProgress.bind(this);
             mainProcessAPI.receive('app-wxr-import-progress', this.bindedFileImportProgress);
         },
-        fileImportProgress(event, data) {
+        fileImportProgress(data) {
             this.progressInfo = data.message;
         },
-        fileImported: function(event, data) {
+        fileImported: function(data) {
             let siteName = this.$store.state.currentSite.config.name;
             this.importInProgress = false;
 
@@ -298,7 +298,7 @@ export default {
                 siteName: siteName
             });
 
-            mainProcessAPI.receiveOnce('app-site-reloaded', (event, result) => {
+            mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                 this.$store.commit('setSiteConfig', result);
                 this.$store.commit('switchSite', result.data);
             });

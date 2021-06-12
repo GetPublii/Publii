@@ -17,6 +17,7 @@ const Posts = require('./posts.js');
 const Tags = require('./tags.js');
 const Authors = require('./authors.js');
 const Themes = require('./themes.js');
+const Languages = require('./languages.js');
 // Helper classes
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
@@ -77,6 +78,7 @@ class App {
         }
         
         this.loadThemes();
+        this.loadLanguages();
         this.initWindow();
         this.initWindowEvents();
     }
@@ -100,10 +102,15 @@ class App {
                     dereference: true
                 }
             );
+            fs.mkdirSync(path.join(this.appDir, 'languages'));
         }
 
         if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
             fs.mkdirSync(path.join(this.appDir, 'backups'));
+        }
+
+        if (!fs.existsSync(path.join(this.appDir, 'languages'))) {
+            fs.mkdirSync(path.join(this.appDir, 'languages'));
         }
     }
 
@@ -302,7 +309,6 @@ class App {
     // Load themes
     loadThemes() {
         let themesLoader = new Themes(this);
-
         this.themes = themesLoader.loadThemes();
         this.themesPath = normalizePath(path.join(this.appDir, 'themes'));
         this.dirPaths = {
@@ -310,6 +316,13 @@ class App {
             temp: normalizePath(path.join(this.appDir, 'temp')),
             logs: normalizePath(this.app.getPath('logs'))
         };
+    }
+
+    // Load languages
+    loadLanguages() {
+        let languagesLoader = new Languages(this);
+        this.languages = languagesLoader.loadLanguages();
+        this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
     }
 
     // Read or create the application config
@@ -495,6 +508,8 @@ class App {
                 customConfig: {
                     tinymce: self.tinymceOverridedConfig
                 },
+                languages: self.languages,
+                languagesPath: self.languagesPath,
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,

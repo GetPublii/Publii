@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Themes = require('../themes.js');
+const Languages = require('../languages.js');
 const AppFiles = require('../helpers/app-files.js');
 const unzip = require("unzipper");
 
@@ -109,6 +110,26 @@ class AppEvents {
         });
 
         /*
+         * Delete language
+         */
+        ipcMain.on('app-language-delete', function(event, config) {
+            let languagesLoader = new Languages(appInstance);
+
+            if(config.directory !== '') {
+                languagesLoader.removeLanguage(config.directory);
+
+                appInstance.languages = appInstance.languages.filter(function (language) {
+                    return language.name !== config.name;
+                });
+
+                event.sender.send('app-language-deleted', {
+                    status: true,
+                    languages: appInstance.languages
+                });
+            }
+        });
+
+        /*
          * Add new theme
          */
         ipcMain.on('app-theme-upload', function(event, config) {
@@ -191,6 +212,92 @@ class AppEvents {
             event.sender.send('app-theme-uploaded', {
                 status: status,
                 themes: appInstance.themes
+            });
+        });
+
+        /*
+         * Add new language
+         */
+        ipcMain.on('app-language-upload', function(event, config) {
+            let languagesLoader = new Languages(appInstance);
+            let newLanguageDir = path.parse(config.sourcePath).name;
+            let extension = path.parse(config.sourcePath).ext;
+            let status = '';
+
+            if(extension === '.zip' || extension === '') {
+                if(extension === '.zip') {
+                    let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
+                    fs.mkdirSync(zipPath);
+
+                    let stream = fs.createReadStream(config.sourcePath)
+                                 .pipe(unzip.Extract({
+                                    path: zipPath
+                                 }));
+
+                    stream.on('finish', function() {
+                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                                return false;
+                            }
+
+                            return fs.statSync(path.join(zipPath, file)).isDirectory();
+                        });
+
+                        if (dirs.length !== 1) {
+                            event.sender.send('app-language-uploaded', {
+                                status: 'wrong-format',
+                                languages: appInstance.languages
+                            });
+
+                            fs.removeSync(zipPath);
+
+                            return;
+                        }
+
+                        newLanguageDir = dirs[0];
+
+                        let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
+
+                        try {
+                            fs.statSync(directoryPath);
+                            status = 'updated';
+                            fs.removeSync(directoryPath);
+                        } catch (e) {
+                            status = 'added';
+                        }
+
+                        fs.copySync(path.join(zipPath, newLanguageDir), directoryPath);
+                        fs.removeSync(zipPath);
+                        appInstance.languages = languagesLoader.loadLanguages();
+
+                        event.sender.send('app-language-uploaded', {
+                            status: status,
+                            languages: appInstance.languages
+                        });
+                    });
+
+                    return;
+                } else {
+                    let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(config.sourcePath, directoryPath);
+                    appInstance.languages = languagesLoader.loadLanguages();
+                }
+            } else {
+                status = 'wrong-format';
+            }
+
+            event.sender.send('app-language-uploaded', {
+                status: status,
+                languages: appInstance.languages
             });
         });
 

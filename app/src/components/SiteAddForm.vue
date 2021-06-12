@@ -210,7 +210,7 @@ export default {
                     mainProcessAPI.stopReceiveAll('app-site-creation-error');
                 });
 
-                mainProcessAPI.receiveOnce('app-site-created', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-created', (data) => {
                     this.overlayIsVisible = false;
                     data.authors = self.setAuthor(data.authorName);
                     this.$store.commit('addNewSite', data);
