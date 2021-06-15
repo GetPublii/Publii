@@ -507,7 +507,7 @@ export default {
         caption: 'Podpis',
         checkDocumentation: 'Sprawdź dokumentację Publii',
         credits: 'Uznania',
-        customLink: 'Custom link',
+        customLink: 'Link własny',
         customTemplate: 'Własny szablon',
         delete: 'Usuń',
         description: 'Opis',
