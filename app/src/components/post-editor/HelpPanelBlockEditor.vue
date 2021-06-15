@@ -1,11 +1,13 @@
 <template>
     <div :class="{ 'help-panel': true, 'is-visible': isOpen }">
-        <div>           
-            <p class="help-panel-desc">You can insert a block either by clicking the  <span>+</span>  or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:</p>
+        <div>
+            <p
+                class="help-panel-desc"
+                v-pure-html="$t('editor.blockEditorHelpPanelDesc')"></p>
             <table class="help-panel-table">
                 <tr>
-                    <th>Shortcuts</th>
-                    <th>Markdown</th>
+                    <th>{{ $t('editor.shortcuts') }}</th>
+                    <th>{{ $t('editor.markdown') }}</th>
                 </tr>
                 <tr>
                     <td>/separator</td>

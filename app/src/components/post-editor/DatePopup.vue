@@ -174,7 +174,7 @@
                 <p-button
                     type="medium no-border-radius half-width"
                     @click.native="changeDate">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button

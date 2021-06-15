@@ -1,14 +1,14 @@
 <template>
     <div :class="{ 'help-panel': true, 'is-visible': isOpen }">
-        <div>           
+        <div>
             <p class="help-panel-desc">
-                You can easly manage headings, text styles or create other HTML elements by using the following keyboard shortcuts or typing markdown syntax:
+                {{ $t('editor.markdownHelpPanelDesc') }}
             </p>
             <table class="help-panel-table col-3">
                 <tr>
-                    <th>Element</th>
-                    <th>Markdown</th>
-                    <th>Shortcut</th>
+                    <th>{{ $t('editor.element') }}</th>
+                    <th>{{ $t('editor.markdown') }}</th>
+                    <th>{{ $t('editor.shortcuts') }}</th>
                 </tr>
                 <tr>
                     <td><b>Bold</b></td>
@@ -91,8 +91,10 @@
                     <td></td>
                 </tr>
                  <tr>
-                    <td>Image</td>
-                    <td colspan="2">Drag and drop an image onto the editor</td>                    
+                    <td>{{ $t('image.image') }}</td>
+                    <td colspan="2">
+                        {{ $t('editor.dragAndDropImgToEditor') }}
+                    </td>
                 </tr>
             </table>
         </div>

@@ -16,7 +16,7 @@
                 <p-button
                     type="medium no-border-radius half-width"
                     @click.native="changeAuthor">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button

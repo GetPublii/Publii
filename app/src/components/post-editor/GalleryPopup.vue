@@ -3,7 +3,7 @@
         v-if="isVisible"
         class="overlay">
         <div class="popup gallery-popup">
-            <h1>Insert/Edit Gallery</h1>
+            <h1>{{ $t('image.insertEditGallery') }}</h1>
 
             <div class="gallery-popup-images">
                 <draggable
@@ -25,19 +25,19 @@
                             :data-full-image="image.fullImagePath"
                             :data-size="image.dimensions" />
 
-                        <div>                            
+                        <div>
                             <input
                                 type="text"
                                 class="gallery-popup-images-list-item-alt"
                                 v-model="image.alt"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                                placeholder="Image alternative text" />
+                                :placeholder="$t('image.imageAlternativeText')" />
                             <input
                                 type="text"
                                 class="gallery-popup-images-list-item-caption"
                                 v-model="image.caption"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                                placeholder="Image caption" />
+                                :placeholder="$t('image.imageCaption')" />
                         </div>
 
                         <div class="gallery-popup-images-list-operations">
@@ -66,7 +66,7 @@
                     v-if="isUploading"
                     class="loading-state">
                     <icon
-                        name="gallery"                       
+                        name="gallery"
                         customHeight="50"
                         customWidth="66" />
 
@@ -80,29 +80,29 @@
 
             <div class="gallery-popup-config">
                 <label>
-                    Layout:
+                    {{ $t('image.layout') }}:
                     <select
                         v-model="columns"
                         class="gallery-popup-config-cols">
-                        <option :value="1">1 column</option>
-                        <option :value="2">2 columns</option>
-                        <option :value="3">3 columns</option>
-                        <option :value="4">4 columns</option>
-                        <option :value="5">5 columns</option>
-                        <option :value="6">6 columns</option>
-                        <option :value="7">7 columns</option>
-                        <option :value="8">8 columns</option>
+                        <option :value="1">{{ $t('image.oneColumn') }}</option>
+                        <option :value="2">{{ $t('image.twoColumns') }}</option>
+                        <option :value="3">{{ $t('image.threeColumns') }}</option>
+                        <option :value="4">{{ $t('image.fourColumns') }}</option>
+                        <option :value="5">{{ $t('image.fiveColumns') }}</option>
+                        <option :value="6">{{ $t('image.sixColumns') }}</option>
+                        <option :value="7">{{ $t('image.sevenColumns') }}</option>
+                        <option :value="8">{{ $t('image.eightColumns') }}</option>
                     </select>
                 </label>
 
                 <label>
-                    Align:
+                    {{ $t('image.align') }}:
                     <select
                         v-model="layout"
                         class="gallery-popup-config-cols">
-                        <option value="">Centered</option>
-                        <option value="gallery-wrapper--wide">Wide</option>
-                        <option value="gallery-wrapper--full">Full-width</option>
+                        <option value="">{{ $t('image.centered') }}</option>
+                        <option value="gallery-wrapper--wide">{{ $t('image.wide') }}</option>
+                        <option value="gallery-wrapper--full">{{ $t('image.fullWidth') }}</option>
                     </select>
                 </label>
 
@@ -111,8 +111,8 @@
                     slot="buttons"
                     type="primary icon"
                     icon="add-site-mono">
-                    <template v-if="!isUploading">Add images</template>
-                    <template v-if="isUploading">Loading...</template>
+                    <template v-if="!isUploading">{{ $t('image.addImages') }}</template>
+                    <template v-if="isUploading">{{ $t('ui.loading') }}</template>
                 </p-button>
             </div>
 
@@ -120,13 +120,13 @@
                 <p-button
                     type="medium no-border-radius half-width"
                     @click.native="save">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button
                     type="medium no-border-radius half-width cancel-popup"
                     @click.native="cancel">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -209,7 +209,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.uploadProgress = this.uploadProgress + 1;
-                this.uploadMessage = `Uploading ${this.uploadProgress} of ${this.imagesToUpload} pictures`;
+                this.uploadMessage = `${this.$t('image.uploading')} ${this.uploadProgress} ${this.$t('image.of')} ${this.imagesToUpload} ${this.$t('image.pictures')}`;
 
                 this.images.push({
                     fullImagePath: data.baseImage.url,
@@ -348,10 +348,10 @@ h1 {
     text-align: center;
 }
 
-.gallery-popup {    
+.gallery-popup {
     max-width: 70rem;
-    min-width: 70rem;   
-    padding: 0 0 4rem 0;  
+    min-width: 70rem;
+    padding: 0 0 4rem 0;
 
     h1 {
         margin: 4rem 0 2rem 0;
@@ -361,20 +361,20 @@ h1 {
         margin: 0;
     }
 
-    &-config {       
+    &-config {
         display: flex;
         padding: 1.5rem 3rem;
         position: relative;
-        
+
         &:after {
-            background: linear-gradient(transparent, var(--popup-bg)); 
+            background: linear-gradient(transparent, var(--popup-bg));
             bottom: 100%;
             content: "";
             height: 40px;
             left: 0;
             pointer-events: none;
             position: absolute;
-            right: 0;           
+            right: 0;
             z-index: 1;
         }
 
@@ -450,12 +450,12 @@ h1 {
         }
 
         &-item {
-            align-items: center;           
+            align-items: center;
             display: grid;
             grid-template-columns: auto 1fr 15px;
             padding: 1rem 0;
 
-            &:first-child {                
+            &:first-child {
 
                 .gallery-popup-images-list-operations {
                     & > a[href="#up"] {
@@ -481,7 +481,7 @@ h1 {
             & > div {
                 display: flex;
                 flex-wrap: wrap;
-                padding: 0 2rem;               
+                padding: 0 2rem;
 
                 & > * {
                     width: 100%;
@@ -495,8 +495,8 @@ h1 {
                     text-align: left;
                 }
 
-                & > input {                    
-                    margin: 5px 0;                    
+                & > input {
+                    margin: 5px 0;
                 }
             }
 
@@ -504,16 +504,16 @@ h1 {
                 align-self: normal;
                 margin: 5px 0;
                 padding: 0;
-                position: relative;                
+                position: relative;
 
                 & > a {
                     border-radius: 50%;
                     font-size: 2.4rem;
-                    height: 3rem; 
+                    height: 3rem;
                     left: 0;
-                    line-height: 1.1; 
-                    text-align: center;       
-                    transition: var(--transition);   
+                    line-height: 1.1;
+                    text-align: center;
+                    transition: var(--transition);
                     position: absolute;
                     width: 3rem;
 
@@ -526,7 +526,7 @@ h1 {
                     &[href="#up"],
                     &[href="#down"] {
                          color: var(--icon-secondary-color);
-                        
+
                          &:active,
                          &:focus,
                          &:hover {
@@ -534,16 +534,16 @@ h1 {
                          }
                     }
 
-                    &[href="#up"] {                      
+                    &[href="#up"] {
                         top: 0;
                         transform: rotate(90deg);
                     }
 
                     &[href="#down"] {
-                        bottom: 0;                       
+                        bottom: 0;
                         transform: rotate(-90deg);
-                    }                    
-        
+                    }
+
                     &:hover {
                         background: var(--input-border-color);
                     }
