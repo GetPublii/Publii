@@ -26,7 +26,7 @@ export default {
             textCentered: false,
             message: '',
             buttonStyle: 'normal',
-            buttonText: 'OK',
+            buttonText: this.$t('ui.ok'),
             okClick: () => false
         };
     },
@@ -50,7 +50,7 @@ export default {
     mounted: function() {
         this.$bus.$on('alert-display', (config) => {
             document.body.classList.add('has-popup-visible');
-            
+
             setTimeout(() => {
                 this.isVisible = true;
                 this.message = config.message;
@@ -60,7 +60,7 @@ export default {
                 if (config.okLabel) {
                     this.buttonText = config.okLabel;
                 } else {
-                    this.buttonText = 'OK';
+                    this.buttonText = this.$t('ui.ok');
                 }
 
                 if (config.okClick) {
@@ -103,9 +103,9 @@ export default {
     z-index: 100006;
 }
 
-.popup {  
+.popup {
     max-width: 60rem;
-    min-width: 40rem;   
+    min-width: 40rem;
 }
 
 .buttons {

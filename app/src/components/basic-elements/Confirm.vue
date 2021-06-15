@@ -45,9 +45,9 @@ export default {
             textCentered: false,
             okClick: () => false,
             cancelClick: () => false,
-            okLabel: 'OK',
+            okLabel: this.$t('ui.ok'),
             isDanger: false,
-            cancelLabel: 'Cancel',
+            cancelLabel: this.$t('ui.cancel'),
             defaultText: ''
         };
     },
@@ -69,7 +69,7 @@ export default {
                 this.textCentered = config.textCentered || false;
                 this.hasInput = config.hasInput || false;
                 this.inputIsPassword = config.inputIsPassword || false;
-                this.okLabel = config.okLabel || "OK";
+                this.okLabel = config.okLabel || this.$t('ui.ok');
                 this.cancelLabel = config.cancelLabel || this.$t('ui.cancel');
                 this.defaultText = config.defaultText || "";
                 this.isDanger = config.isDanger || false;

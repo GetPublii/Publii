@@ -16,10 +16,6 @@
 export default {
     name: 'posts-dropdown',
     props: {
-        placeholder: {
-            type: String,
-            default: this.$t('post.selectPostPage')
-        },
         multiple: {
             type: Boolean,
             default: false
@@ -47,6 +43,12 @@ export default {
 
                 return this.allowedPostStatus.indexOf(post.status) > -1;
             }).map(post => post.id));
+        },
+        placeholder () {
+            return {
+                type: String,
+                default: this.$t('post.selectPostPage')
+            }
         }
     },
     watch: {

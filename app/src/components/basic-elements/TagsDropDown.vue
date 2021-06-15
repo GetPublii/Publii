@@ -20,10 +20,6 @@ export default {
             type: Boolean,
             default: false
         },
-        placeholder: {
-            type: String,
-            default: this.$t('tag.selectTag')
-        },
         value: {},
         anchor: {
             default: '',
@@ -38,7 +34,13 @@ export default {
     computed: {
         tagPages () {
             return [''].concat(this.$store.state.currentSite.tags.map(tag => tag.id));
-        }
+        },
+        placeholder () {
+            return {
+                type: String,
+                default: this.$t('tag.selectTag')
+            }
+        },
     },
     watch: {
         value: function (newValue, oldValue) {
