@@ -28,7 +28,7 @@
 
                 <div class="site-create-field">
                     <label for="author-name">
-                        {{ $t('site.websiteAuthor') }}:
+                        {{ $t('author.authorName') }}:
                         <span
                             v-if="authorNameError"
                             class="site-create-field-error">
