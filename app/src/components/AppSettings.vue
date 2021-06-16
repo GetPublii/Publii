@@ -26,7 +26,7 @@
                         v-model="theme"
                         :items="availableColorSchemes"></dropdown>
                 </field>
-                
+
                 <field
                     id="start"
                     label="Load at start:">
@@ -413,13 +413,13 @@ export default {
                     hasInput: false,
                     message: 'The sites location has been changed. The new destination folder will be cleared up before moving there your sites files. Do you want to continue?',
                     okClick: this.save,
-                    okLabel: 'OK',
+                    okLabel: this.$t('ui.ok'),
                     cancelLabel: 'Cancel'
                 });
 
                 return;
             }
-            
+
             this.save();
         },
         save () {

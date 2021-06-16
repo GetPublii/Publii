@@ -44,7 +44,7 @@
                     @click.native="skip"
                     :disabled="regeneratingThumbnails"
                     type="medium no-border-radius full-width">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
             </div>
         </div>
@@ -166,8 +166,8 @@ export default {
     z-index: 100006;
 }
 
-.popup {  
-    padding: 4rem 4rem 6rem 4rem;   
+.popup {
+    padding: 4rem 4rem 6rem 4rem;
     width: 60rem;
 
     &-info {

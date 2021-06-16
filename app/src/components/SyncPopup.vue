@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         v-if="isVisible"
         @click="maximizePopup"
         :class="{
@@ -10,7 +10,7 @@
         <div class="popup sync">
             <div
                 v-if="isInSync && noIssues && isManual"
-                class="sync-success">                
+                class="sync-success">
 
                 <h1>Your website is now in sync</h1>
 
@@ -24,7 +24,7 @@
                     <progress-bar
                         :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
                         color="green"
-                        :progress="100" 
+                        :progress="100"
                         :stopped="false"
                         message="" />
                 </div>
@@ -40,7 +40,7 @@
                     <p-button
                         :onClick="close"
                         type="outline medium quarter-width">
-                        OK
+                        {{ $t('ui.ok') }}
                     </p-button>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     <p-button
                         :onClick="close"
                         type="outline medium quarter-width ">
-                        OK
+                        {{ $t('ui.ok') }}
                     </p-button>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                 v-if="properConfig && !isInSync && !isMinimized"
                 class="sync-todo">
                 <div class="heading">
-                    <h1>Website synchronization</h1>                    
+                    <h1>Website synchronization</h1>
 
                     <p class="description">
                         Any duplicate files or filenames already in the destination location <br>that match the Publii-generated files will be overwritten.
@@ -115,10 +115,10 @@
 
             <div
                 v-if="noDomainConfig"
-                class="sync-issues-to-resolve">                
+                class="sync-issues-to-resolve">
 
                 <h1>Make sure the domain name is set.</h1>
-                <p class="description">                   
+                <p class="description">
                     Your website cannot currently be synced as the settings appear to lack a domain name. <br>Check your server settings to ensure a domain name has been entered.
                 </p>
 
@@ -139,7 +139,7 @@
 
             <div
                 v-if="!noDomainConfig && noServerConfig"
-                class="sync-issues-to-resolve">                
+                class="sync-issues-to-resolve">
 
                 <h1>Make sure the destination server is properly configured.</h1>
                 <p class="description">
@@ -187,9 +187,9 @@
             </div> -->
         </div>
 
-        <a 
+        <a
             v-if="!isMinimized && uploadInProgress && !isManual"
-            href="#" 
+            href="#"
             class="minimize-popup"
             @click.prevent.stop="minimizePopup">
             <icon
@@ -444,8 +444,8 @@ export default {
                 mainProcessAPI.send('app-deploy-render-abort', {
                     'site': this.$store.state.currentSite.config.name
                 });
-            } 
-            
+            }
+
             if (this.syncInProgress) {
                 mainProcessAPI.send('app-deploy-abort', {
                     'site': this.$store.state.currentSite.config.name
@@ -527,7 +527,7 @@ export default {
                     message: 'An error occurred during connecting to the server. Please check your server settings or try again.'
                 });
             }
-        }, 
+        },
         startUpload: function() {
             this.renderingInProgress = false;
             this.uploadInProgress = true;
@@ -619,10 +619,10 @@ export default {
                     this.isVisible = false;
                 }
             });
-        }, 
+        },
         checkS3Config: function(deploymentConfig) {
             if (deploymentConfig.s3 && deploymentConfig.s3.customProvider) {
-                return  deploymentConfig.s3.endpoint !== '' && 
+                return  deploymentConfig.s3.endpoint !== '' &&
                         deploymentConfig.s3.id !== '' &&
                         deploymentConfig.s3.key !== '' &&
                         deploymentConfig.s3.bucket !== '';
@@ -726,7 +726,7 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {       
+.popup {
     background: none;
     max-width: $wrapper;
     overflow: visible;
@@ -738,7 +738,7 @@ export default {
         line-height: 1.4;
         margin: auto;
         padding: 0 1rem;
-        text-align: center;      
+        text-align: center;
 
         &.alert {
             background: var(--highlighted);
@@ -749,9 +749,9 @@ export default {
             padding: 1rem 2rem;
             text-align: left;
         }
-        
+
         strong {
-            color: var(--text-primary-color); 
+            color: var(--text-primary-color);
         }
     }
 }
@@ -835,19 +835,19 @@ export default {
         border-radius: 10px;
         box-shadow: 0 0 160px rgba(0, 0, 0, .2);
         cursor: pointer;
-        bottom: 56px;     
+        bottom: 56px;
         left: 0;
         opacity: 0;
         overflow: visible;
         padding: 0;
         top: auto!important;
-        transform: translateY(10%) scale(.8);  
-        z-index: 1;   
-  
+        transform: translateY(10%) scale(.8);
+        z-index: 1;
+
         & .progress-message, .minimized-sync-error {
             color: white !important;
         }
-    
+
         .popup {
             animation: minimized-content .25s cubic-bezier(.17,.67,.13,1.05) .25s forwards;
             margin-top: 1.6rem;
@@ -857,22 +857,22 @@ export default {
         }
 
         @keyframes minimized-popup {
-           
+
             50% {opacity: 0;
-                transform: translateY(10%); 
+                transform: translateY(10%);
             }
             99% {
-                transform: translateY(10%); 
+                transform: translateY(10%);
             }
-           
-            100% {           
-                box-shadow: none; 
-                border-radius: 3px; 
+
+            100% {
+                box-shadow: none;
+                border-radius: 3px;
                 background: none;
                 height: 50px;
-                width: 240px; 
+                width: 240px;
                 opacity: 1;
-                transform: translate(40px, 0); 
+                transform: translate(40px, 0);
             }
         }
 

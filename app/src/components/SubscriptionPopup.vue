@@ -9,7 +9,7 @@
                 <p-button
                     type="medium no-border-radius full-width"
                     :onClick="onOk">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
             </div>
         </div>
@@ -51,7 +51,7 @@ export default {
     z-index: 100006;
 }
 
-.popup {   
+.popup {
     max-width: 60rem;
     min-width: 40rem;
 }
