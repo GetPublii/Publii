@@ -1,12 +1,12 @@
 <template>
     <section class="content tools-custom-css">
-        <p-header title="Custom CSS">
+        <p-header :title="$t('tools.css.customCSS')">
             <p-button
                 @click.native="goBack"
                 slot="buttons"
                 type="outline"
                 :disabled="buttonsLocked">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
@@ -14,7 +14,7 @@
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
-                Save Changes
+                {{ $t('ui.saveChanges') }}
             </p-button>
 
             <btn-dropdown
@@ -31,13 +31,13 @@
             <li
                 :class="filterCssClasses('normal')"
                 @click="setFilter('normal')">
-                Normal
+                {{ $t('tools.css.normal') }}
             </li>
 
             <li
                 :class="filterCssClasses('amp')"
                 @click="setFilter('amp')">
-                AMP
+                {{ $t('ui.AMP') }}
             </li>
         </ul>
 
@@ -61,14 +61,14 @@
 
         <small class="editor-note">
             <span>
-                Find:
-                <template v-if="!isMac">Ctrl + F</template>
-                <template v-if="isMac">Cmd + F</template>
+                {{ $t('tools.find') }}
+                <template v-if="!isMac">{{ $t('tools.findShortcut') }}</template>
+                <template v-if="isMac">{{ $t('tools.findShortcutMac') }}</template>
             </span>
             <span>
-                Find and replace:
-                <template v-if="!isMac">Ctrl + Alt + F</template>
-                <template v-if="isMac">Cmd + Alt + F</template>
+                {{ $t('tools.findAndReplace') }}
+                <template v-if="!isMac">{{ $t('tools.findAndReplaceShortcut') }}</template>
+                <template v-if="isMac">{{ $t('tools.findAndReplaceShortcutMac') }}</template>
             </span>
         </small>
     </section>
@@ -98,11 +98,11 @@ export default {
             buttonsLocked: false,
             filterValue: 'normal',
             editorValueNormal: `/*
- * Put your custom CSS code here
+ * ${this.$t('tools.css.putCustomCSSComment')}
  */`,
             editorValueAmp: `/*
- * Put your custom CSS code here (it will be used only in the AMP mode)
- */`,       
+ * ${this.$t('tools.css.putCustomCSSAMPComment')}
+ */`,
         };
     },
     computed: {
@@ -115,16 +115,16 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Render full website',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'full-site',
                     icon: 'full-preview-monitor',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render front page only',
-                    activeLabel: 'Save & Preview',
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
                     value: 'homepage',
                     icon: 'quick-preview',
                     isVisible: () => true,
@@ -189,7 +189,7 @@ export default {
             console.log('SP', showPreview);
 
             this.$bus.$emit('message-display', {
-                message: 'Custom CSS has been successfully saved.',
+                message: this.$t('tools.css.customCSSSaveSuccessMsg'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -197,8 +197,8 @@ export default {
             if (showPreview) {
                 if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                        okLabel: 'Go to app settings',
+                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                        okLabel: this.$t('sync.goToAppSettings'),
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }

@@ -49,7 +49,7 @@ export default {
         sep: 'Sep'
     },
     editor: {
-        blockEditorHelpPanelDesc: 'You can insert a block either by clicking the                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <span>+</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:',
+        blockEditorHelpPanelDesc: 'You can insert a block either by clicking the <span>+</span> or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:',
         dragAndDropImgToEditor: 'Drag and drop an image onto the editor',
         element: 'Element',
         markdown: 'Markdown',
@@ -57,6 +57,7 @@ export default {
         shortcuts: 'Shortcuts'
     },
     file: {
+        addNewFile: 'Add new file',
         backups: 'Backups',
         createBackup: 'Create backup',
         createBackupConfirmMsg: 'Select a name for your backup - filename can contain only alphanumeric characters, dashes and underscores:',
@@ -72,9 +73,18 @@ export default {
         deletBackupsErrorMsg: 'An error occurred during selected backup file removal. Please try again.',
         deletBackupsSuccessMsg: 'Selected backups have been removed',
         filename: 'Filename',
+        files: 'Files',
         fileSize: 'File Size',
+        filterOrSearchFiles: 'Filter or search files...',
+        mediaFiles: 'media/files',
         noBackupsAvailable: 'No backups available',
+        noFileInMediaFilesDirInfo: 'There are no files in the media/files directory...',
+        noFileInRootDirInfo: 'There are no files in the root directory...',
+        noFileMatchingCriteriaInfo: 'There are no files matching your criteria.',
         operations: 'Operations',
+        provideNameForNewFile: 'Please provide name for a new file',
+        removeFilesConfirmMsg: 'Do you really want to remove selected files? It cannot be undone.',
+        removeFilesSuccessMsg: 'Selected files have been removed',
         rename: 'Rename',
         renameBackupConfrimLabel: 'Rename file',
         renameBackupConfrimMsg: 'Please specify a new backup filename:',
@@ -87,7 +97,11 @@ export default {
         restoreBackupConfrimLabel: 'Restore backup',
         restoreBackupConfrimMsg: 'Do you really want to restore the selected backup? Existing files will be overwritten.',
         restoreBackupErrorMsg: 'An error occurred while restoring the selected backup file: ',
-        restoreBackupSuccessMsg: 'The website has been successfully restored.'
+        restoreBackupSuccessMsg: 'The website has been successfully restored.',
+        rootDirectory: 'root directory',
+        selectedFileExsistsMsg: 'The following files exists in the selected directory so it cannot be copied: ',
+        selectedFilenameInUseMsg: 'The selected filename is in use. Please try to use a different filename.',
+        uploadFiles: 'Upload files'
     },
     gdpr: {
         addGroup: 'Add group',
@@ -528,6 +542,7 @@ export default {
         creationInProgress: 'Creation in progress...',
         erroOcurredDuringSiteDatabaseCreationInfo: 'An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.',
         siteName: 'Site name:',
+        siteSettingsSaveSuccessMsg: 'Site settings has been successfully saved.',
         siteWithThisNameExists: 'Site using this name exists!',
         websiteAuthorRequired: 'author name is required and should contains letters',
         websiteName: 'Website name',
@@ -624,6 +639,22 @@ export default {
         uploadThemeErrorMessage: 'The uploaded files are incorrect. Please upload theme directory or theme ZIP file.',
         websiteLogo: 'Website logo:'
     },
+    tools: {
+        css: {
+            customCSS: 'Custom CSS',
+            customCSSSaveSuccessMsg: 'Custom CSS has been successfully saved.',
+            normal: 'Normal',
+            putCustomCSSAMPComment: 'Put your custom CSS code here (it will be used only in the AMP mode)',
+            putCustomCSSComment: 'Put your custom CSS code here'
+        },
+        customHTML: 'Custom HTML',
+        find: 'Find:',
+        findAndReplace: 'Find and replace:',
+        findAndReplaceShortcut: 'Ctrl + Alt + F',
+        findAndReplaceShortcutMac: 'Cmd + Alt + F',
+        findShortcut: 'Ctrl + F',
+        findShortcutMac: 'Cmd + F'
+    },
     ui: {
         aboutPublii: 'About Publii',
         alternativeText: 'Alternative text',
@@ -638,6 +669,8 @@ export default {
         canonicalURL: 'Canonical URL',
         caption: 'Caption',
         checkDocumentation: 'Check Publii documentation',
+        close: 'Close',
+        copyToClipboard: 'Copy to clipboard',
         credits: 'Credits',
         customLink: 'Custom link',
         customTemplate: 'Custom template',

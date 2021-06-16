@@ -57,6 +57,7 @@ export default {
         shortcuts: 'Skróty'
     },
     file: {
+        addNewFile: 'Dodaj nowy plik',
         backups: 'Kopie zapasowe',
         createBackup: 'Utwórz kopię zapasową',
         createBackupConfirmMsg: 'Wybierz nazwę kopii zapasowej — nazwa pliku może zawierać tylko znaki alfanumeryczne, myślniki i podkreślenia:',
@@ -72,9 +73,18 @@ export default {
         deletBackupsErrorMsg: 'Wystąpił błąd podczas usuwania wybranego pliku kopii zapasowej. Proszę spóbować ponownie.',
         deletBackupsSuccessMsg: 'Wybrane kopie zapasowe zostały usunięte',
         filename: 'Nazwa pliku',
+        files: 'Pliki',
         fileSize: 'Rozmiar pliku',
+        filterOrSearchFiles: 'Filtruj lub wyszukaj pliki...',
+        mediaFiles: 'media/pliki',
         noBackupsAvailable: 'Brak dostępnych kopii zapasowych',
+        noFileInMediaFilesDirInfo: 'W katalogu media/pliki nie ma żadnych plików...',
+        noFileInRootDirInfo: 'W katalogu głównym nie ma żadnych plików...',
+        noFileMatchingCriteriaInfo: 'Nie ma plików spełniających Twoje kryteria.',
         operations: 'Operacje',
+        provideNameForNewFile: 'Proszę podać nazwę nowego pliku',
+        removeFilesConfirmMsg: 'Czy na pewno chcesz usunąć wybrane pliki? Nie można tego cofnąć.',
+        removeFilesSuccessMsg: 'Wybrane pliki zostały usunięte',
         rename: 'Zmień nazwę',
         renameBackupConfrimLabel: 'Zmień nazwę pliku',
         renameBackupConfrimMsg: 'Proszę podać nową nazwę pliku kopii zapasowej:',
@@ -87,7 +97,11 @@ export default {
         restoreBackupConfrimLabel: 'Przywróć kopię zapasową',
         restoreBackupConfrimMsg: 'Czy na pewno chcesz przywrócić wybraną kopię zapasową? Istniejące pliki zostaną nadpisane.',
         restoreBackupErrorMsg: 'Wystąpił błąd podczas przywracania wybranego pliku kopii zapasowej: ',
-        restoreBackupSuccessMsg: 'Strona została pomyślnie przywrócona.'
+        restoreBackupSuccessMsg: 'Strona została pomyślnie przywrócona.',
+        rootDirectory: 'katalog główny',
+        selectedFileExsistsMsg: 'Te pliki istnieją w wybranym katalogu, więc nie można ich skopiować: ',
+        selectedFilenameInUseMsg: 'Wybrana nazwa pliku jest w użyciu. Proszę spróbować użyć innej nazwy pliku.',
+        uploadFiles: 'Prześlij pliki'
     },
     gdpr: {
         addGroup: 'Dodaj grupe',
@@ -528,6 +542,7 @@ export default {
         creationInProgress: 'Trwa tworzenie...',
         erroOcurredDuringSiteDatabaseCreationInfo: 'Wystąpił błąd poczas tworzenia bazy danych dla strony. Sprawdź swój program antywirusowy i spróbuj ponownie. Możliwe, że musisz również usunąć niepoprawny katalog strony z katalogu stron Publii.',
         siteName: 'Nazwa strony:',
+        siteSettingsSaveSuccessMsg: 'Ustawienia witryny zostały pomyślnie zapisane.',
         siteWithThisNameExists: 'Strona o podanej nazwie już istnieje!',
         websiteAuthorRequired: 'nazwa autora strony jest wymagana i powinna zawierać litery',
         websiteName: 'Nazwa strony',
@@ -624,6 +639,22 @@ export default {
         uploadThemeErrorMessage: 'Przesłane pliki są niepoprawne. Proszę przesłać katalog motywu lub plik ZIP motywu.',
         websiteLogo: 'Logo strony:'
     },
+    tools: {
+        css: {
+            customCSS: 'Własny CSS',
+            customCSSSaveSuccessMsg: 'Niestandardowy kod CSS zpsatł zapisany.',
+            normal: 'Normalny',
+            putCustomCSSAMPComment: 'Tutaj umieść swój niestandardowy kod CSS (będzie użyty tylko w trybie AMP)',
+            putCustomCSSComment: 'Tutaj umieść swój niestandardowy kod CSS'
+        },
+        customHTML: 'Niestandardowy HTML',
+        find: 'Znajdź:',
+        findAndReplace: 'Znajdź i zastąp:',
+        findAndReplaceShortcut: 'Ctrl + Alt + F',
+        findAndReplaceShortcutMac: 'Cmd + Alt + F',
+        findShortcut: 'Ctrl + F',
+        findShortcutMac: 'Cmd + F'
+    },
     ui: {
         aboutPublii: 'O Publii',
         alternativeText: 'Tekst alternatywny',
@@ -638,6 +669,8 @@ export default {
         canonicalURL: 'Kanoniczny URL',
         caption: 'Podpis',
         checkDocumentation: 'Sprawdź dokumentację Publii',
+        close: 'Zamknij',
+        copyToClipboard: 'Skopiuj do schowka',
         credits: 'Uznania',
         customLink: 'Link własny',
         customTemplate: 'Własny szablon',

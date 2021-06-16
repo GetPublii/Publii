@@ -1,18 +1,18 @@
 <template>
     <section class="content file-manager">
         <p-header
-            title="Files">
+            :title="$t('file.files')">
             <header-search
                 slot="search"
                 ref="search"
-                placeholder="Filter or search files..."
+                :placeholder="$t('file.filterOrSearchFiles')"
                 onChangeEventName="files-filter-value-changed" />
 
             <p-button
                 :onClick="goBack"
                 slot="buttons"
                 type="outline">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
@@ -20,7 +20,7 @@
                 slot="buttons"
                 type="primary icon"
                 icon="plus">
-                Add new file
+                {{ $t('file.addNewFile') }}
             </p-button>
 
             <p-button
@@ -28,7 +28,7 @@
                 slot="buttons"
                 type="icon"
                 icon="upload-file">
-                Upload files
+                {{ $t('file.uploadFiles') }}
             </p-button>
         </p-header>
 
@@ -42,7 +42,7 @@
                     customHeight="16"
                     :primaryColor="isRoot ? 'color-1' : 'color-7'" />
 
-                root directory
+                {{ $t('file.rootDirectory') }}
             </a>
 
             <a
@@ -54,7 +54,7 @@
                     customHeight="16"
                     :primaryColor="isMedia ? 'color-1' : 'color-7'" />
 
-                media/files
+                {{ $t('file.mediaFiles') }}
             </a>
         </div>
 
@@ -68,19 +68,19 @@
                 </collection-cell>
 
                 <collection-cell width="calc(100% - 590px)">
-                    Filename
+                    {{ $t('file.filename') }}
                 </collection-cell>
 
                 <collection-cell width="150px">
-                    File size
+                    {{ $t('file.fileSize') }}
                 </collection-cell>
 
                 <collection-cell width="200px">
-                    Creation date
+                    {{ $t('file.creationDate') }}
                 </collection-cell>
 
                 <collection-cell width="200px">
-                    Last modified
+                    {{ $t('ui.lastModified') }}
                 </collection-cell>
 
                 <div
@@ -90,7 +90,7 @@
                         icon="trash"
                         type="small danger icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -142,15 +142,15 @@
 
         <empty-state
             v-if="hasFiles && emptySearchResults"
-            description="There are no files matching your criteria."></empty-state>
+            :description="$t('file.noFileMatchingCriteriaInfo')"></empty-state>
 
         <empty-state
             v-if="!hasFiles && isRoot"
-            description="There are no files in the root directory..."></empty-state>
+            :description="$t('file.noFileInRootDirInfo')"></empty-state>
 
         <empty-state
             v-if="!hasFiles && isMedia"
-            description="There are no files in the media/files directory..."></empty-state>
+            :description="$t('file.noFileInMediaFilesDirInfo')"></empty-state>
     </section>
 </template>
 
@@ -243,7 +243,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected files? It cannot be undone.',
+                message: this.$t('file.removeFilesConfirmMsg'),
                 okClick: this.deleteSelected
             });
         },
@@ -258,7 +258,7 @@ export default {
                 this.loadFiles();
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected files have been removed',
+                    message: this.$t('file.removeFilesSuccessMsg'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -301,7 +301,7 @@ export default {
         },
         addNewFile () {
             this.$bus.$emit('confirm-display', {
-                message: 'Please provide name for a new file',
+                message: this.$t('file.provideNameForNewFile'),
                 hasInput: true,
                 okClick: this.addFile
             });
@@ -320,7 +320,7 @@ export default {
             mainProcessAPI.receiveOnce('app-file-manager-created', (data) => {
                 if(data === false) {
                     this.$bus.$emit('alert-display', {
-                        message: 'The selected filename is in use. Please try to use a different filename.'
+                        message: this.$t('file.selectedFilenameInUseMsg'),
                     });
 
                     return;
@@ -336,7 +336,7 @@ export default {
             if(!queue.length) {
                 if(this.existingItems.length) {
                     this.$bus.$emit('alert-display', {
-                        'message': 'The following files exists in the selected directory so it cannot be copied: ' + this.existingItems.join(', ')
+                        'message': this.$t('file.selectedFileExsistsMsg') + this.existingItems.join(', ')
                     });
 
                     this.existingFiles = [];
@@ -404,7 +404,7 @@ export default {
             cursor: pointer;
             font-size: 1.4rem;
             transition: var(--transition);
-            
+
             &:hover {
                 color: var(--link-primary-color);
             }
