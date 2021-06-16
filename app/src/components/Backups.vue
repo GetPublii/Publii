@@ -2,13 +2,13 @@
     <section class="content backups">
         <p-header
             v-if="!noBackups"
-            title="Backups">
+            :title="$t('file.backups')">
 
             <p-button
                 :onClick="goBack"
                 slot="buttons"
                 type="outline">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
@@ -16,7 +16,7 @@
                 slot="buttons"
                 :type="addBackupButtonType"
                 icon="plus">
-                Create backup
+                {{ $t('file.createBackup') }}
             </p-button>
 
         </p-header>
@@ -26,16 +26,16 @@
             imageName="backups.svg"
             imageWidth="344"
             imageHeight="286"
-            title="No backups available"
-            description="You don't have any backups, yet. Let's create the first one!">
+            :title="$t('file.noBackupsAvailable')"
+            :description="$t('file.createFirstBackupMsg')">
             <p-button
                 slot="button"
                 icon="plus"
                 type="icon"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">Create backup</template>
-                <template v-if="operationInProgress">Creating backup&hellip;</template>
+                <template v-if="!operationInProgress">{{ $t('file.createBackup') }}</template>
+                <template v-if="operationInProgress">{{ $t('file.creatingBackup') }}&hellip;</template>
             </p-button>
         </empty-state>
 
@@ -49,19 +49,19 @@
                 </collection-cell>
 
                 <collection-cell width="calc(100% - 485px)">
-                    Filename
+                    {{ $t('file.filename') }}
                 </collection-cell>
 
                 <collection-cell width="100px">
-                    File Size
+                    {{ $t('file.fileSize') }}
                 </collection-cell>
 
                 <collection-cell width="175px">
-                    Creation date
+                    {{ $t('file.creationDate') }}
                 </collection-cell>
 
                 <collection-cell width="170px">
-                    Operations
+                    {{ $t('file.operations') }}
                 </collection-cell>
 
                 <div
@@ -71,7 +71,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -108,13 +108,13 @@
                     <p-button
                         :type="renameButtonType"
                         :onClick="renameFile.bind(this, item.name)">
-                        Rename
+                        {{ $t('file.rename') }}
                     </p-button>
 
                     <p-button
                         :type="restoreButtonType"
                         :onClick="restoreFile.bind(this, item.name)">
-                        Restore
+                        {{ $t('file.restore') }}
                     </p-button>
                 </collection-cell>
             </collection-row>
@@ -186,7 +186,7 @@ export default {
         },
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove the selected backups? This action cannot be undone.',
+                message: this.$t('file.deletBackupsConfirmMsg'),
                 okClick: this.deleteSelected
             });
         },
@@ -206,13 +206,13 @@ export default {
 
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred during selected backup file removal. Please try again.',
+                        message: this.$t('file.deletBackupsErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'Selected backups have been removed',
+                        message: this.$t('file.deletBackupsSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -228,10 +228,10 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Please specify a new backup filename:',
+                message: this.$t('file.renameBackupConfrimMsg'),
                 okClick: this.rename,
-                okLabel: 'Rename file',
-                cancelLabel: 'Cancel',
+                okLabel: this.$t('file.renameBackupConfrimLabel'),
+                cancelLabel: this.$t('ui.cancel'),
                 defaultText: oldFilename
             });
         },
@@ -244,7 +244,7 @@ export default {
 
             if(newFilename.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'The backup filename cannot be empty. Please try again.',
+                    message: this.$t('file.renameBackupNameEmptyMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -254,7 +254,7 @@ export default {
 
             if(this.fileToRename === newFilename) {
                 this.$bus.$emit('message-display', {
-                    message: 'The specified name is the same as the old name. Please try again.',
+                    message: this.$t('file.renameBackupSameNameMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -264,7 +264,7 @@ export default {
 
             if(this.filenameIsInUse(newFilename)) {
                 this.$bus.$emit('message-display', {
-                    message: 'The specified name is used by other backup file. Please try again.',
+                    message: this.$t('file.renameBackupNameInUseMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -281,13 +281,13 @@ export default {
             mainProcessAPI.receiveOnce('app-backup-renamed', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred while renaming the selected backup file. Please try again.',
+                        message: this.$t('file.renameBackupErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The backup has been sucessfully renamed.',
+                        message: this.$t('file.renameBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -312,10 +312,10 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Select a name for your backup - filename can contain only alphanumeric characters, dashes and underscores:',
+                message: this.$t('file.createBackupConfirmMsg'),
                 okClick: this.create,
-                okLabel: 'Create backup',
-                cancelLabel: 'Cancel',
+                okLabel: this.$t('file.createBackup'),
+                cancelLabel: this.$t('ui.cancel'),
                 defaultText: defaultFilename
             });
         },
@@ -328,7 +328,7 @@ export default {
 
             if (filename.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Provided filename cannot be empty. Please try again with a different name.',
+                    message: this.$t('file.createBackupNameEmptyMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -338,7 +338,7 @@ export default {
 
             if (this.filenameIsInUse(filename)) {
                 this.$bus.$emit('message-display', {
-                    message: 'Provided filename (<strong>' + filename + '</strong>) is used by an existing backup. Please try again with a different name.',
+                    message: this.$t('file.createBackupNameInUseMsgPt1') + ' (<strong>' + filename + '</strong>) ' + this.$t('file.createBackupNameInUseMsgPt2'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -358,13 +358,13 @@ export default {
                     this.items = data.backups;
 
                     this.$bus.$emit('message-display', {
-                        message: 'Backup has been created.',
+                        message: this.$t('file.createBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred during backup creation. Please try again.',
+                        message: this.$t('file.createBackupErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -377,10 +377,10 @@ export default {
             this.fileToRestore = fileName;
 
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to restore the selected backup? Existing files will be overwritten.',
+                message: this.$t('file.restoreBackupConfrimMsg'),
                 okClick: this.restore,
-                okLabel: 'Restore backup',
-                cancelLabel: 'Cancel'
+                okLabel: this.$t('file.restoreBackupConfrimLabel'),
+                cancelLabel: this.$t('ui.cancel'),
             });
         },
         restore: function() {
@@ -394,13 +394,13 @@ export default {
             mainProcessAPI.receiveOnce('app-backup-restored', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred while restoring the selected backup file: ' + data.error,
+                        message: this.$t('file.restoreBackupErrorMsg') + data.error,
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The website has been successfully restored.',
+                        message: this.$t('file.restoreBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });

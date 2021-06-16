@@ -135,21 +135,21 @@
                                 <div
                                     v-if="hasFeaturedImage"
                                     class="image-uploader-settings-form">
-                                    <label>Alternative text
+                                    <label>{{ $t('ui.alternativeText') }}
                                         <text-input
                                             ref="featured-image-alt"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"
                                             v-model="authorData.additionalData.featuredImageAlt" />
                                     </label>
 
-                                    <label>Caption
+                                    <label>{{ $t('ui.caption') }}
                                         <text-input
                                             ref="featured-image-caption"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"
                                             v-model="authorData.additionalData.featuredImageCaption" />
                                     </label>
 
-                                    <label>Credits
+                                    <label>{{ $t('ui.credits') }}
                                         <text-input
                                             ref="featured-image-credits"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"

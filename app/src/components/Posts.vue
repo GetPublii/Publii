@@ -167,7 +167,7 @@
                         icon="restore"
                         type="small light icon"
                         :onClick="bulkRestore">
-                        {{ $t('ui.restore') }}
+                        {{ $t('file.restore') }}
                     </p-button>
 
                     <p-button
