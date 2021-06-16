@@ -5,13 +5,13 @@
         <template v-for="(licenseData, index) in licensesData">
             <dt class="credits-item">
                 {{ licenseData.name }}
-                
+
                 <a
                     v-if="licenseData.target !== '_blank'"
                     class="credits-toggle"
                     @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
                     :href="licenseData.href">
-                    License 
+                    {{ $t('publii.license') }}
                 </a>
 
                 <a
@@ -19,15 +19,15 @@
                     class="credits-toggle"
                     :href="licenseData.href"
                     target="_blank">
-                    License 
+                    {{ $t('publii.license') }}
                 </a>
 
                 <a
                     v-if="licenseData.homepage"
                     :href="licenseData.homepage"
-                    target="_blank" 
+                    target="_blank"
                     rel="noopener noreferrer">
-                    Homepage
+                    {{ $t('publii.homepage') }}
                 </a>
             </dt>
 
@@ -150,7 +150,7 @@ export default {
             float: right;
             font-size: 1.4rem;
             margin-left: 5rem;
-            
+
             &:active,
             &:focus,
             &:hover {

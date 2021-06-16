@@ -386,7 +386,7 @@ export default {
         },
         metaRobotsOptions () {
             return {
-                '': this.$t('ui.useSiteGlobalSettings'),
+                '': this.$t('settings.useSiteGlobalSettings'),
                 'index, follow': this.$t('ui.indexFollow'),
                 'index, nofollow': this.$t('ui.indexNofollow'),
                 'noindex, follow': this.$t('ui.noindexFollow'),

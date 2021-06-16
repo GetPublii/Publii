@@ -11,7 +11,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    {{ $t('ui.saveSettings') }}
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
@@ -24,7 +24,7 @@
                     defaultValue="full-site" />
             </p-header>
 
-            <fields-group :title="$t('ui.basicSettings')">
+            <fields-group :title="$t('settings.basicSettings')">
                 <field
                     id="name"
                     :label="$t('theme.postsPerPage')">
@@ -334,7 +334,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    {{ $t('ui.saveSettings') }}
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <p-button

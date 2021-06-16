@@ -9,7 +9,7 @@
             ref="submenu"
             :class="cssClasses">
             <topbar-dropdown-item
-                :label="$t('ui.appSettings')"
+                :label="$t('settings.appSettings')"
                 :title="$t('ui.appConfiguration')"
                 path="/app-settings" />
             <topbar-dropdown-item

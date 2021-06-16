@@ -3,13 +3,13 @@
         class="content"
         ref="content">
         <div class="site-settings">
-            <p-header :title="$t('ui.siteSettings')">
+            <p-header :title="$t('settings.siteSettings')">
                 <p-button
                     @click.prevent.native="save(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    {{ $t('ui.saveSettings') }}
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
@@ -22,7 +22,7 @@
                     defaultValue="full-site" />
             </p-header>
 
-            <fields-group :title="$t('ui.basicSettings')">
+            <fields-group :title="$t('settings.basicSettings')">
                 <logo-creator
                     ref="logo-creator"
                     slot="" />
@@ -1601,7 +1601,7 @@
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
-                    {{ $t('ui.saveSettings') }}
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-footer>
         </div>

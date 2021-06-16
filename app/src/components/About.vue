@@ -3,14 +3,14 @@
         <div class="about-wrapper">
             <div class="heading">
                 <h1 class="title">
-                    About Publii
+                    {{ $t('publii.aboutPublii') }}
                 </h1>
 
                 <p-button
                     :onClick="goBack"
                     type="outline"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
             </div>
 
@@ -19,17 +19,15 @@
             </p>
 
             <p class="about-copyright">
-                Copyright 2021 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>
-                Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>
-                Open Source project and other <router-link to="/about/credits">Open Source Software</router-link>.
+                <span v-pure-html="$t('publii.copyright')"></span>
+                <router-link to="/about/credits">{{ $t('publii.openSourceSoftware') }}</router-link>.
+            </p>
+
+            <p v-pure-html="$t('publii.dataCollectionInfo')">
             </p>
 
             <p>
-                <strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track,  we do not allow third parties to collect personally identifiable information about you. 
-            </p>
-
-            <p>
-                <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">Licensing information</a>
+                <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">{{ $t('publii.licensingInformation') }}</a>
             </p>
         </div>
     </div>
@@ -89,6 +87,6 @@ export default {
     &-version {
         color: var(--text-primary-color);
         margin: -2rem 0 5rem;
-    }   
+    }
 }
 </style>

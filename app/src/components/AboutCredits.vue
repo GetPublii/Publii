@@ -3,18 +3,18 @@
         <div class="credits-wrapper">
             <div class="heading">
                 <h1 class="title">
-                    Credits
+                    {{ $t('ui.credits') }}
                 </h1>
 
                 <p-button
                     :onClick="goBack"
                     type="outline"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
             </div>
 
-            <p class="credits-intro">Publii uses the following third-party Open Source Software:</p>
+            <p class="credits-intro">{{ $t('publii.creditsIntro') }}</p>
 
             <credits-list
                 :licenses="licenses" />

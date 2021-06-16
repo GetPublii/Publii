@@ -49,7 +49,7 @@ export default {
                 url: '/site/' + siteName + '/settings/themes/'
             }, {
                 icon: 'settings',
-                label: this.$t('ui.siteSettings'),
+                label: this.$t('settings.siteSettings'),
                 url: '/site/' + siteName + '/settings/'
             }, {
                 icon: 'server',
