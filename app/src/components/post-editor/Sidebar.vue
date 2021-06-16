@@ -2,20 +2,20 @@
     <div :class="{ 'post-editor-sidebar': true, 'is-visible': isVisible }">
         <div>
             <div class="post-editor-sidebar-header">
-                Post settings
+                {{ $t('post.postSettings') }}
             </div>
 
             <div class="post-editor-settings-wrapper">
                 <div
                     :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'status' }"
-                    class="is-first" 
+                    class="is-first"
                     @click="openItem('status')">
                     <icon
                         class="post-editor-settings-icon"
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="post-editor-settings-label">Status</span>
+                    <span class="post-editor-settings-label">{{ $t('post.status') }}</span>
                 </div>
 
                 <div
@@ -29,14 +29,14 @@
                             v-if="isEdit"
                             class="post-info">
                             <dl>
-                                <dt>Post state</dt>
+                                <dt>{{ $t('post.postState') }}</dt>
                                 <dd id="post-status">
                                     {{ $parent.postData.status }}
                                 </dd>
                             </dl>
 
                             <dl>
-                                <dt>Author</dt>
+                                <dt>{{ $t('post.author') }}</dt>
                                 <dd>
                                     <a
                                         href="#"
@@ -47,7 +47,7 @@
                             </dl>
 
                             <dl>
-                                <dt>Published</dt>
+                                <dt>{{ $t('post.published') }}</dt>
                                 <dd>
                                     <a
                                         href="#"
@@ -58,19 +58,19 @@
                             </dl>
 
                             <dl>
-                                <dt>Updated on</dt>
+                                <dt>{{ $t('post.updatedOn') }}</dt>
                                 <dd id="post-date-modified">
                                     {{ $parent.postData.modificationDate.text }}
                                 </dd>
                             </dl>
                         </div>
-                        
+
                         <div
                             v-if="!isEdit"
                             class="post-info post-info--nogrid">
-                            
+
                             <dl>
-                                <dt>Post author</dt>
+                                <dt>{{ $t('post.postAuthor') }}</dt>
                                 <dd>
                                     <dropdown
                                         id="post-author-id"
@@ -78,35 +78,35 @@
                                         :items="authors"></dropdown>
                                 </dd>
                             </dl>
-                            
+
                             <dl class="post-date">
-                                <dt>Published</dt>
+                                <dt>{{ $t('post.published') }}</dt>
                                 <dd>
                                     <a
                                         href="#"
                                         @click.prevent="changeDate">
-                                        
+
                                         <template v-if="!$parent.postData.creationDate.text">
-                                            Set custom post date
+                                            {{ $t('post.setCustomPostDate') }}
                                         </template>
 
                                         <template v-if="$parent.postData.creationDate.text">
-                                            Change post date 
+                                            {{ $t('post.changePostDate') }}
 
                                             <small>
                                                 ({{ $parent.postData.creationDate.text }})
                                             </small>
-                                                
+
                                             <span
                                                 class="post-date-reset"
                                                 @click.stop.prevent="resetCreationDate()">
                                                 &times;
                                             </span>
-                                            
+
                                         </template>
                                     </a>
                                 </dd>
-                            </dl>                        
+                            </dl>
                         </div>
 
                         <div class="post-action">
@@ -114,11 +114,11 @@
                                 <switcher
                                     v-model="$parent.postData.isFeatured" />
                                 <span>
-                                    Mark as featured 
+                                    {{ $t('post.markAsFeatured') }}
                                 </span>
 
                                 <icon
-                                    title="Mark as featured"
+                                    :title="$t('post.markAsFeatured')"
                                     class="switcher-item-icon-helper"
                                     name="featured-post"
                                     size="xs"
@@ -126,15 +126,15 @@
                             </label>
 
                             <label id="post-hidden-wrapper">
-                                <switcher 
-                                    title="Post will not appear in any generated post lists such as tag or author pages"
+                                <switcher
+                                    :title="$t('post.postWillNotAppearOnListMsg')"
                                     v-model="$parent.postData.isHidden" />
-                                <span title="Post will not appear in any generated post list such as tag or author pages">
-                                    Hide post
+                                <span :title="$t('post.postWillNotAppearOnListMsg')">
+                                    {{ $t('post.hidePost') }}
                                 </span>
 
                                 <icon
-                                    title="Hide Post"
+                                    :title="$t('post.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
@@ -142,15 +142,15 @@
                             </label>
 
                             <label id="post-excluded-homepage-wrapper">
-                                <switcher 
-                                    title="Post will not appear on homepage listing"
+                                <switcher
+                                    :title="$t('post.postWillNotAppearOnHomepageListMsg')"
                                     v-model="$parent.postData.isExcludedOnHomepage" />
-                                <span title="Post will not appear on homepage listing">
-                                    Exclude from homepage
+                                <span :title="$t('post.postWillNotAppearOnHomepageListMsg')">
+                                    {{ $t('post.excludeFromHomepage') }}
                                 </span>
 
                                 <icon
-                                    title="Exclude from homepage"
+                                    :title="$t('post.excludeFromHomepage')"
                                     class="switcher-item-icon-helper"
                                     name="excluded-post"
                                     size="xs"
@@ -170,7 +170,7 @@
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="post-editor-settings-label">Featured image</span>
+                    <span class="post-editor-settings-label">{{ $t('ui.featuredImage') }}</span>
                 </div>
 
                 <div
@@ -187,21 +187,21 @@
                         <div
                             v-if="$parent.postData.featuredImage.path"
                             class="image-uploader-settings-form">
-                            <label>Alternative text
+                            <label>{{ $t('ui.alternativeText') }}
                                 <text-input
                                     ref="featured-image-alt"
                                     :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.alt" />
                             </label>
 
-                            <label>Caption
+                            <label>{{ $t('ui.caption') }}
                                 <text-input
                                     ref="featured-image-caption"
                                     :spellcheck="$store.state.currentSite.config.spellchecking"
                                     v-model="$parent.postData.featuredImage.caption" />
                             </label>
 
-                            <label>Credits
+                            <label>{{ $t('ui.credits') }}
                                 <text-input
                                     ref="featured-image-credits"
                                     :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -220,7 +220,7 @@
                             size="s"
                             name="sidebar-tags"/>
 
-                        <span class="post-editor-settings-label">Tags</span>
+                        <span class="post-editor-settings-label">{{ $t('ui.tags') }}</span>
                     </div>
 
                     <div
@@ -233,7 +233,7 @@
                                 <label id="post-tags-wrapper">
                                     <v-select
                                         v-model="$parent.postData.tags"
-                                        tag-placeholder="Add this as new tag"
+                                        :tag-placeholder="$t('tag.addThisAsNewTag')"
                                         :options="availableTags"
                                         :searchable="true"
                                         :show-labels="false"
@@ -246,24 +246,24 @@
                                     <small
                                         v-if="tagIsRestricted"
                                         class="post-tags-error">
-                                        This tag is not allowed
+                                        {{ $t('tag.tagIsNotAllowed') }}
                                     </small>
                                 </label>
                             </div>
 
-                            <div 
+                            <div
                                 v-if="$parent.postData.tags.length > 1"
                                 class="post-main-tag">
                                 <label>
-                                    Main tag:
+                                    {{ $t('tag.mainTag') }}:
                                     <dropdown
                                         id="post-main-tag"
                                         v-model="$parent.postData.mainTag"
                                         :items="tagsForDropdown">
                                     </dropdown>
 
-                                    <small class="note">                                        
-                                        If the post has tags but no main tag has been set, the first tag alphabetically will be used by default.
+                                    <small class="note">
+                                        {{ $t('tag.noMainTagForPostMsg') }}
                                     </small>
                                 </label>
                             </div>
@@ -281,12 +281,12 @@
                             name="sidebar-seo"/>
 
                         <span class="post-editor-settings-label">
-                            SEO
+                            {{ $t('ui.seo') }}
 
-                            <span 
+                            <span
                                 v-if="$parent.postData.slug.length > 250"
                                 class="post-editor-settings-label-warning">
-                                Post slug is too long
+                                {{ $t('post.postSlugTooLong') }}
                             </span>
                         </span>
                     </div>
@@ -298,33 +298,33 @@
                             class="post-editor-settings-content"
                             ref="seo-content">
                             <div class="post-seo">
-                                <label>Post slug:
+                                <label>{{ $t('post.postSlug') }}:
                                     <input
                                         type="text"
                                         v-model="$parent.postData.slug"
                                         spellcheck="false"
                                         @keyup="$parent.slugUpdated">
-                                    <small 
+                                    <small
                                         v-if="$parent.postData.slug.length > 250"
                                         class="note is-warning">
-                                        The post slug longer than 250 characters can lead to creation of broken files during the website rendering.
+                                        {{ $t('post.postSlugLengthWarning') }}
                                     </small>
                                 </label>
 
                                 <label class="with-char-counter">
-                                    Page title:
+                                    {{ $t('settings.pageTitle') }}:
                                     <text-input
                                         type="text"
                                         v-model="$parent.postData.metaTitle"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        placeholder="Leave blank to use a default Page title"
+                                        :placeholder="$t('settings.leaveBlankToUseDefaultPageTitle')"
                                         :charCounter="true"
                                         :preferredCount="70" />
-                                    <small class="note">The following variables can be used in the Page Title: %posttitle, %sitename, %authorname </small>
+                                    <small class="note">{{ $t('settings.pageTitleVariables') }}</small>
                                 </label>
 
                                 <label>
-                                    Meta description:
+                                    {{ $t('ui.metaDescription') }}:
                                     <text-area
                                         v-model="$parent.postData.metaDescription"
                                         :charCounter="true"
@@ -333,7 +333,7 @@
                                 </label>
 
                                 <label>
-                                    Meta robots index:
+                                    {{ $t('ui.metaRobotsIndex') }}:
                                     <dropdown
                                         v-if="!$parent.postData.canonicalUrl"
                                         id="post-meta-robots"
@@ -341,17 +341,17 @@
                                         :items="metaRobotsOptions">
                                     </dropdown>
                                     <div v-else>
-                                        <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                        <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
                                     </div>
                                 </label>
 
                                 <label>
-                                    Canonical URL:
+                                    {{ $t('ui.canonicalURL') }}:
                                     <input
                                         type="text"
                                         v-model="$parent.postData.canonicalUrl"
                                         spellcheck="false"
-                                        placeholder="Leave blank to use a default Page URL" />
+                                        :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
                                 </label>
                             </div>
                         </div>
@@ -368,7 +368,7 @@
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="post-editor-settings-label">Other options</span>
+                    <span class="post-editor-settings-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
@@ -379,7 +379,7 @@
                         ref="other-content">
                         <div class="post-other" id="post-view-settings">
                             <label id="post-template-wrapper">
-                                Post template:
+                                {{ $t('post.postTemplate') }}:
 
                                 <dropdown
                                     :items="postTemplates"
@@ -391,27 +391,27 @@
                                         value="*"
                                         :selected="$parent.postData.template === '*'"
                                         slot="first-choice">
-                                        Use global configuration
+                                        {{ $t('settings.useGlobalConfiguration') }}
                                     </option>
                                     <option
                                         v-if="hasPostTemplates"
                                         value=""
                                         :selected="$parent.postData.template === ''"
                                         slot="first-choice">
-                                        Default template
+                                        {{ $t('theme.defaultTemplate') }}
                                     </option>
                                     <option
                                         v-if="!hasPostTemplates"
                                         value=""
                                         slot="first-choice">
-                                        Not available in your theme
+                                        {{ $t('ui.notAvailableInYourTheme') }}
                                     </option>
                                 </dropdown>
 
                                 <small
                                     v-if="$parent.postData.template === '*'"
                                     slot="note">
-                                    Current default template: 
+                                    {{ $t('post.currentDefaultTemplate') }}:
                                     <strong>
                                         {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
                                     </strong>
@@ -424,7 +424,7 @@
                                     :label="field.label"
                                     :is-line="true"
                                     :note="field.note" />
-                                
+
                                 <label
                                     v-if="displayField(field) && field.type !== 'separator'"
                                     :key="'post-view-field-' + index">
@@ -436,7 +436,7 @@
                                         class="post-view-settings"
                                         v-model="$parent.postData.postViewOptions[field.name]"
                                         :items="generateItems(field.options)">
-                                        <option slot="first-choice" value="">Use global configuration</option>
+                                        <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
                                     </dropdown>
 
                                     <text-input
@@ -525,10 +525,10 @@ export default {
         },
         metaRobotsOptions () {
             return {
-                'index, follow': 'index, follow',
-                'index, nofollow': 'index, nofollow',
-                'noindex, follow': 'noindex, follow',
-                'noindex, nofollow': 'noindex, nofollow'
+                'index, follow': this.$t('ui.indexFollow'),
+                'index, nofollow': this.$t('ui.indexNofollow'),
+                'noindex, follow': this.$t('ui.noindexFollow'),
+                'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
         },
         defaultPostTemplate () {
@@ -552,7 +552,7 @@ export default {
         tagsForDropdown () {
             return [{
                 value: '',
-                label: 'Not set'
+                label: this.$t('ui.notSet')
             }].concat(this.$parent.postData.tags.map(tag => ({
                 value: this.getTagIdByName(tag),
                 label: tag
@@ -639,10 +639,10 @@ export default {
         removeTag (removedTagName) {
             let removedTagID = this.getTagIdByName(removedTagName);
             let mainTagName = this.getTagNameById(this.$parent.postData.mainTag);
-            
+
             if (typeof removedTagID === 'string') {
                 if (mainTagName === removedTagName) {
-                    this.$parent.postData.mainTag = '';    
+                    this.$parent.postData.mainTag = '';
                 }
             } else {
                 if (parseInt(removedTagID, 10) === parseInt(this.$parent.postData.mainTag, 10)) {
@@ -699,7 +699,7 @@ export default {
                 return field.placeholder;
             }
 
-			return 'Leave it blank to use default value';
+			return this.$t('theme.leaveBlankToUseDefault');
         },
         resetCreationDate () {
             this.$parent.postData.creationDate.timestamp = 0;
@@ -727,11 +727,11 @@ export default {
         pointer-events: none;
         position: absolute;
         right: 0;
-        top: var(--topbar-height);       
+        top: var(--topbar-height);
         width: 44.2rem;
         z-index: 99999;
 
-        &.is-visible {   
+        &.is-visible {
             opacity: 1;
             pointer-events: auto;
         }
@@ -760,12 +760,12 @@ export default {
             text-transform: uppercase;
         }
 
-        .post-info {            
+        .post-info {
             display: grid;
             grid-template-columns: repeat(2, 49%);
             grid-gap: 0 2%;
             margin-bottom: 1rem;
-            
+
             &--nogrid {
                  display: block;
             }
@@ -784,14 +784,14 @@ export default {
                 color: var(--gray-4);
                 font-size: 1.4rem;
                 margin: 0;
-                
+
                 a {
                     display: block;
                     position: relative;
                     white-space: nowrap;
                 }
-            }           
-        }            
+            }
+        }
 
         .post-editor-settings {
             .post-author-selector {
@@ -802,7 +802,7 @@ export default {
 
             .post-date {
                 margin-bottom: 2rem;
-                
+
                 dd {
                     font-size: 1.6rem;
                 }
@@ -816,37 +816,37 @@ export default {
 
                 &-reset {
                     border-radius: 50%;
-                    color: var(--icon-secondary-color);           
+                    color: var(--icon-secondary-color);
                     font-size: 2.4rem;
                     font-weight: 300;
-                    height: 3rem; 
+                    height: 3rem;
                     line-height: 1;
                     position: absolute;
                     right: 0;
-                    text-align: center;       
-                    transition: var(--transition);         
+                    text-align: center;
+                    transition: var(--transition);
                     top: 50%;
-                    transform: translate(0, -50%);         
+                    transform: translate(0, -50%);
                     width: 3rem;
-                    
+
                     .icon {
                         cursor: pointer;
-                        fill: currentColor;                        
-                    }                    
-                    
+                        fill: currentColor;
+                    }
+
                     &:active,
                     &:focus,
                     &:hover {
                         color: var(--headings-color);
                     }
-        
+
                     &:hover {
                         background: var(--input-border-color);
-                    }  
+                    }
                 }
             }
-            
-            .post-action {            
+
+            .post-action {
                label {
                   font-weight: var(--font-weight-normal);
                   line-height: 1.8;
@@ -873,7 +873,7 @@ export default {
             .multiselect__tags {
                 min-height: 52px;
             }
-            
+
             .multiselect__tags {
                 padding: 0 4rem 0 0.5rem;
             }
@@ -897,8 +897,8 @@ export default {
             }
 
             &-header {
-                align-items: center;               
-                border-top: 1px solid var(--input-border-color);     
+                align-items: center;
+                border-top: 1px solid var(--input-border-color);
                 color: var(--link-tertiary-color);
                 cursor: pointer;
                 display: flex;
@@ -910,9 +910,9 @@ export default {
                 transition: var(--transition);
                 user-select: none;
                 width: calc(100% - 7.2rem);
-    
+
                 &:hover {
-                    color: var(--link-tertiary-hover-color);                    
+                    color: var(--link-tertiary-hover-color);
                 }
 
                 &.is-open {
@@ -934,7 +934,7 @@ export default {
                 }
             }
 
-            &-label {                
+            &-label {
                 font-weight: 600;
                 left: 0;
                 position: relative;
@@ -949,7 +949,7 @@ export default {
             }
 
             &-icon {
-                fill: var(--primary-color); 
+                fill: var(--primary-color);
                 left: 0;
                 height: 2.4rem;
                 margin-right: 1.6rem;
@@ -985,7 +985,7 @@ export default {
                         width: 70%;
                     }
                 }
-            }            
+            }
 
             #post-featured-wrapper {
                 margin-top: 0;
@@ -998,7 +998,7 @@ export default {
             display: block;
             font-size: 1.4rem;
             font-style: italic;
-            line-height: 1.4;            
+            line-height: 1.4;
             padding-top: .5rem;
 
             &.is-warning {

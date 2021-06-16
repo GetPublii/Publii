@@ -6,15 +6,15 @@
             type="outline icon"
             icon="off-live-preview"
             :disabled="!themeConfigured"
-            :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
+            :title="themeConfigured ? $t('post.configureThemeBeforeGenaratingPreview') : ''"
             @click.native="generatePostPreview">
-            Preview
+            {{ $t('ui.preview') }}
         </p-button>
 
         <div
             v-if="!sourceCodeEditorVisible"
             class="post-editor-actions">
-            
+
             <btn-dropdown
                 ref="dropdown-button"
                 :items="dropdownItems"
@@ -24,12 +24,11 @@
             <p-button
                 type="outline"
                 @click.native="cancelPost">
-                Back to posts
+                {{ $t('post.backToPosts') }}
             </p-button>
 
-            <p-button 
+            <p-button
                 icon="settings"
-
                 :type="$parent.sidebarVisible ? 'outline icon only-icon-color' : 'outline icon only-icon'"
                 @click.native="$parent.toggleSidebar" />
         </div>
@@ -40,13 +39,13 @@
             <p-button
                 type="primary"
                 @click.native="sourceCodeApply">
-                Apply changes
+                {{ $t('ui.applyChanges') }}
             </p-button>
 
             <p-button
                 type="outline"
                 @click.native="sourceCodeCancel">
-                Cancel
+                {{ $t('ui.cancel') }}
             </p-button>
         </div>
     </div>
@@ -61,25 +60,25 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Save and close',
+                    label: this.$t('ui.saveAndClose'),
                     value: 'save-and-close',
                     isVisible: () => true,
                     onClick: this.dropdownSaveAndClose
                 },
                 {
-                    label: 'Save',
+                    label: this.$t('ui.save'),
                     value: 'save',
                     isVisible: () => true,
                     onClick: this.dropdownSave
                 },
                 {
-                    label: 'Save as draft',
+                    label: this.$t('ui.saveAsDraft'),
                     value: 'save-as-draft',
                     isVisible: () => !this.isDraft,
                     onClick: this.dropdownSaveAsDraft
                 },
                 {
-                    label: this.$store.state.app.config.closeEditorOnSave ? 'Publish and close' : 'Publish post',
+                    label: this.$store.state.app.config.closeEditorOnSave ? this.$t('ui.publishAndClose') : this.$t('ui.publishPost'),
                     value: 'publish-post',
                     isVisible: () => this.isDraft,
                     onClick: this.dropdownPublish
@@ -158,7 +157,7 @@ export default {
             }
 
             this.$bus.$emit('confirm-display', {
-                message: 'You will lose all unsaved changes - do you want to continue?',
+                message: this.$t('ui.cancelPostWarningMsg'),
                 okClick: this.cleanUpPost
             });
         },
@@ -241,7 +240,7 @@ export default {
     }
 
     &-source-code-actions {
-        margin-left: auto;        
+        margin-left: auto;
     }
 
     #post-preview-button {
