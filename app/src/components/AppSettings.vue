@@ -1,25 +1,25 @@
 <template>
     <section class="settings site-settings-app">
         <div class="settings-wrapper">
-            <p-header title="App Settings">
+            <p-header :title="$t('settings.appSettings')">
                 <p-button
                     :onClick="goBack"
                     type="outline"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
 
                 <p-button
                     :onClick="checkBeforeSave"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-header>
 
-            <fields-group title="Basic Settings">
+            <fields-group :title="$t('settings.basicSettings')">
                 <field
                     id="theme"
-                    label="Color theme">
+                    :label="$t('settings.colorTheme')">
                     <dropdown
                         slot="field"
                         id="start"
@@ -29,7 +29,7 @@
 
                 <field
                     id="start"
-                    label="Load at start:">
+                    :label="$t('settings.loadAtStart')">
                     <dropdown
                         slot="field"
                         id="start"
@@ -39,7 +39,7 @@
 
                 <field
                     id="time-format"
-                    label="Time format:">
+                    :label="$t('settings.timeFormat')">
                     <dropdown
                         slot="field"
                         id="time-format"
@@ -49,7 +49,7 @@
 
                 <field
                     id="images-resize-engine"
-                    label="Images resize engine:">
+                    :label="$t('settings.imagesResizeEngine')">
                     <dropdown
                         slot="field"
                         id="images-resize-engine"
@@ -58,13 +58,13 @@
                     <small
                         slot="note"
                         class="note">
-                        The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.
+                        {{ $t('settings.imageResizeEngineInfo') }}
                     </small>
                 </field>
 
                 <field
                     id="close-editor-on-save"
-                    label="Close post editor on save"
+                    :label="$t('settings.closePostEditorOnSave')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -74,7 +74,7 @@
 
                 <field
                     id="always-save-search-state"
-                    label="Always save search state"
+                    :label="$t('settings.alwaysSaveSearchState')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -83,13 +83,13 @@
                     <span
                         slot="note"
                         class="note">
-                        When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
+                        {{ $t('settings.saveSearchStateInfo') }}
                     </span>
                 </field>
 
                 <field
                     id="show-modification-date-as-column"
-                    label="Show modification date as column"
+                    :label="$t('settings.showModificationDateAsColumn')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -99,7 +99,7 @@
 
                 <field
                     id="show-post-slugs"
-                    label="Show post slugs on the listing"
+                    :label="$t('settings.showPostSlugsOnTheListing')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -109,7 +109,7 @@
 
                 <field
                     id="open-devtools-in-main"
-                    label="Open DevTools automatically in the Main Window"
+                    :label="$t('settings.openDevtoolsInMainW')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -119,7 +119,7 @@
 
                 <field
                     id="wide-scrollbars"
-                    label="Use wider scrollbars"
+                    :label="$t('settings.usewideScrollbars')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -128,13 +128,13 @@
                 </field>
             </fields-group>
 
-            <fields-group title="Files location">
+            <fields-group :title="$t('settings.filesLocation')">
                 <field
                     id="sites-location"
-                    label="Sites location">
+                    :label="$t('settings.sitesLocation')">
                     <dir-select
                         id="sites-location"
-                        placeholder="Leave blank to use default sites directory"
+                        :placeholder="$t('settings.leaveBlankToUseDefaultSitesDir')"
                         v-model="locations.sites"
                         :readonly="syncInProgress"
                         slot="field" />
@@ -142,22 +142,22 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.sites !== '' && !checkSitesCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
 
                 <field
                     id="backups-location"
-                    label="Backup location">
+                    :label="$t('settings.backupLocation')">
                     <dir-select
                         id="backups-location"
-                        placeholder="Leave blank to use default backups directory"
+                        :placeholder="$t('settings.leaveBlankForDefaultBackupsDir')"
                         v-model="locations.backups"
                         :readonly="syncInProgress"
                         slot="field" />
@@ -165,22 +165,22 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.backups !== '' && !checkBackupsCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
 
                 <field
                     id="preview-location"
-                    label="Preview location">
+                    :label="$t('settings.previewLocation')">
                     <dir-select
                         id="preview-location"
-                        placeholder="Leave blank to use default preview directory"
+                        :placeholder="$t('settings.leaveBlankForDefaultPreviewDirectory')"
                         v-model="locations.preview"
                         :readonly="syncInProgress"
                         slot="field" />
@@ -188,21 +188,21 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.preview !== '' && !checkPreviewCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
             </fields-group>
 
-            <fields-group title="Default ordering on lists">
+            <fields-group :title="$t('settings.fefaultOrderingOnLists')">
                 <field
                     id="posts-ordering"
-                    label="Default posts ordering:">
+                    :label="$t('settings.defaultPostsOrdering')">
                     <dropdown
                         slot="field"
                         id="posts-ordering"
@@ -212,7 +212,7 @@
 
                 <field
                     id="tags-ordering"
-                    label="Default tags ordering:">
+                    :label="$t('settings.defaultTagsOrdering')">
                     <dropdown
                         slot="field"
                         id="tags-ordering"
@@ -222,7 +222,7 @@
 
                 <field
                     id="authors-ordering"
-                    label="Default authors ordering:">
+                    :label="$t('settings.defaultAuthorsOrdering')">
                     <dropdown
                         slot="field"
                         id="authors-ordering"
@@ -235,7 +235,7 @@
                 <p-button
                     :onClick="checkBeforeSave"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-footer>
         </div>
@@ -288,15 +288,15 @@ export default {
             let websites = this.$store.getters.siteDisplayNames;
 
             return {
-                '': 'Open the last used website',
+                '': this.$t('settings.openLastUsedWebsite'),
                 ...websites
             };
         },
         availableColorSchemes () {
             return {
-                'system': 'Use system colors',
-                'default': 'Light mode',
-                'dark': 'Dark mode'
+                'system': this.$t('settings.systemColors'),
+                'default': this.$t('settings.lightMode'),
+                'dark': this.$t('settings.darkMode')
             };
         },
         timeFormats () {
@@ -319,36 +319,36 @@ export default {
         },
         orderingPostItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'title DESC': 'By title (descending)',
-                'title ASC': 'By title (ascending)',
-                'created DESC': 'By created date (descending)',
-                'created ASC': 'By created date (ascending)',
-                'modified DESC': 'By modified date (descending)',
-                'modified ASC': 'By modified date (ascending)',
-                'author DESC': 'By author (descending)',
-                'author ASC': 'By author (ascending)',
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'title DESC': this.$t('settings.ordering.titleDESC'),
+                'title ASC': this.$t('settings.ordering.titleASC'),
+                'created DESC': this.$t('settings.ordering.createdDESC'),
+                'created ASC': this.$t('settings.ordering.createdASC'),
+                'modified DESC': this.$t('settings.ordering.modifiedDESC'),
+                'modified ASC': this.$t('settings.ordering.modifiedASC'),
+                'author DESC': this.$t('settings.ordering.authorDESC'),
+                'author ASC': this.$t('settings.ordering.authorASC')
             };
         },
         orderingTagItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'name DESC': 'By name (descending)',
-                'name ASC': 'By name (ascending)',
-                'postsCounter DESC': 'By posts count (descending)',
-                'postsCounter ASC': 'By posts count (ascending)'
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'name DESC': this.$t('settings.ordering.nameDESC'),
+                'name ASC': this.$t('settings.ordering.nameASC'),
+                'postsCounter DESC': this.$t('settings.ordering.postsCounterDESC'),
+                'postsCounter ASC': this.$t('settings.ordering.postsCounterASC')
             };
         },
         orderingAuthorItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'name DESC': 'By name (descending)',
-                'name ASC': 'By name (ascending)',
-                'postsCounter DESC': 'By posts count (descending)',
-                'postsCounter ASC': 'By posts count (ascending)'
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'name DESC': this.$t('settings.ordering.nameDESC'),
+                'name ASC': this.$t('settings.ordering.nameASC'),
+                'postsCounter DESC': this.$t('settings.ordering.postsCounterDESC'),
+                'postsCounter ASC': this.$t('settings.ordering.postsCounterASC')
             };
         },
         checkSitesCatalog () {
@@ -411,10 +411,10 @@ export default {
             if (this.originalSitesLocation !== this.locations.sites) {
                 this.$bus.$emit('confirm-display', {
                     hasInput: false,
-                    message: 'The sites location has been changed. The new destination folder will be cleared up before moving there your sites files. Do you want to continue?',
+                    message: this.$t('settings.sitesLocationChangedConfirmMsg'),
                     okClick: this.save,
                     okLabel: this.$t('ui.ok'),
-                    cancelLabel: 'Cancel'
+                    cancelLabel: this.$t('ui.cancel')
                 });
 
                 return;
@@ -464,13 +464,13 @@ export default {
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {
-                    message: 'App settings has been successfully saved.',
+                    message: this.$t('settings.appSettingsSavedMsg'),
                     type: 'success',
                     lifeTime: 3
                 });
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'An error occurred during saving the App Settings. Please try again.',
+                    message: this.$t('settings.appSettingsSaveErrorMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -491,8 +491,8 @@ export default {
         detectPreviewLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The preview storage location has been changed. Note that existing files in this folder will be deleted when a preview of your website is created',
-                    okLabel: 'OK, I understand',
+                    message: this.$t('settings.previewLocationChangedConfirmMsg'),
+                    okLabel: this.$t('ui.iUnderstand'),
                 });
 
                 this.unwatchLocationPreview();
@@ -501,8 +501,8 @@ export default {
         detectBackupLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The backups storage location has been changed. All new backups will be stored in this directory. If you require access to earlier backups, they may be moved manually to the new directory.',
-                    okLabel: 'OK, I understand',
+                    message: this.$t('settings.backupLocationChangedConfirmMsg'),
+                    okLabel: this.$t('ui.iUnderstand'),
                 });
 
                 this.unwatchBackupsLocation();
