@@ -3,17 +3,17 @@
         class="content"
         ref="content">
         <div
-            v-if="isLoaded" 
+            v-if="isLoaded"
             class="server-settings">
-            <p-header 
-                v-if="deploymentMethodSelected !== ''" 
-                :title="getDeploymentMethodName(deploymentMethodSelected) + ' settings'">
+            <p-header
+                v-if="deploymentMethodSelected !== ''"
+                :title="getDeploymentMethodName(deploymentMethodSelected) + $t('sync.settings')">
                 <p-button
                     @click.native="deploymentMethodSelected = ''"
                     slot="buttons"
-                    title="Click to change currently used deployment method"
+                    :title="$t('sync.clickToChangeDeploymentMethod')"
                     type="outline">
-                    Change server type
+                    {{ $t('sync.changeServerType') }}
                 </p-button>
 
                 <p-button
@@ -21,98 +21,126 @@
                     slot="buttons"
                     :type="siteIsOnline ? 'outline' : 'outline disabled-with-events'"
                     :title="visitTitle">
-                    Visit website
+                    {{ $t('sync.visitWebsite') }}
                 </p-button>
 
                 <p-button
                     :onClick="save"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
-            </p-header>          
-
-            <p-header 
-                v-if="deploymentMethodSelected === ''" 
-                title="Select server type:">
             </p-header>
 
-            <div 
+            <p-header
                 v-if="deploymentMethodSelected === ''"
-                class="server-settings-grid">   
-                
-                 <div @click="deploymentMethodSelected = 'ftp'" title="FTP" class="server-settings-grid-item">
+                :title="$t('sync.selectServerType')">
+            </p-header>
+
+            <div
+                v-if="deploymentMethodSelected === ''"
+                class="server-settings-grid">
+
+                 <div
+                    @click="deploymentMethodSelected = 'ftp'"
+                    :title="$t('sync.ftp')"
+                    class="server-settings-grid-item">
                    <icon
                       customWidth="69"
-                      customHeight="42"                   
-                      name="ftp" 
+                      customHeight="42"
+                      name="ftp"
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'sftp'" title="SFTP" class="server-settings-grid-item">
+                <div
+                    @click="deploymentMethodSelected = 'sftp'"
+                    :title="$t('sync.sftp')"
+                    class="server-settings-grid-item">
                    <icon
                       customWidth="69"
-                      customHeight="42"                   
-                      name="sftp" 
+                      customHeight="42"
+                      name="sftp"
                       iconset="svg-map-server"/>
-                </div>               
+                </div>
 
-                <div @click="deploymentMethodSelected = 's3'" title="S3 compatible storage" class="server-settings-grid-item">
+                <div
+                    @click="deploymentMethodSelected = 's3'"
+                    :title="$t('sync.s3CompatibleStorage')"
+                    class="server-settings-grid-item">
                    <icon
                       customWidth="48"
-                      customHeight="48"                    
-                      name="s3storage" 
+                      customHeight="48"
+                      name="s3storage"
                       iconset="svg-map-server"/>
                 </div>
-                
-                <div @click="deploymentMethodSelected = 'github-pages'" title="Github Pages" class="server-settings-grid-item">
+
+                <div
+                    @click="deploymentMethodSelected = 'github-pages'"
+                    :title="$t('sync.githubPages')"
+                    class="server-settings-grid-item">
                     <icon
                       customWidth="129"
-                      customHeight="42"                     
-                      name="githubpages" 
+                      customHeight="42"
+                      name="githubpages"
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'gitlab-pages'" title="Gitlab Pages" class="server-settings-grid-item">
+                <div
+                    @click="deploymentMethodSelected = 'gitlab-pages'"
+                    :title="$t('sync.gitlabPages')"
+                    class="server-settings-grid-item">
                     <icon
                       customWidth="113"
-                      customHeight="40"                     
-                      name="gitlab" 
-                      iconset="svg-map-server"/>
-                </div>
-                
-                <div @click="deploymentMethodSelected = 'netlify'" title="Netlify" class="server-settings-grid-item">
-                   <icon
-                      customWidth="102"
-                      customHeight="48"                     
-                      name="netlify" 
+                      customHeight="40"
+                      name="gitlab"
                       iconset="svg-map-server"/>
                 </div>
 
-                <div @click="deploymentMethodSelected = 'google-cloud'" title="Google Cloud" class="server-settings-grid-item">
+                <div
+                    @click="deploymentMethodSelected = 'netlify'"
+                    :title="$t('sync.netlify')"
+                    class="server-settings-grid-item">
+                   <icon
+                      customWidth="102"
+                      customHeight="48"
+                      name="netlify"
+                      iconset="svg-map-server"/>
+                </div>
+
+                <div
+                    @click="deploymentMethodSelected = 'google-cloud'"
+                    :title="$t('sync.googleCloud')"
+                    class="server-settings-grid-item">
                     <icon
                       customWidth="167"
-                      customHeight="40"                     
-                      name="googlecloud" 
+                      customHeight="40"
+                      name="googlecloud"
                       iconset="svg-map-server"/>
                 </div>
-                
-                <div @click="deploymentMethodSelected = 'manual'" title="Manual deployment" class="server-settings-grid-item">
+
+                <div
+                    @click="deploymentMethodSelected = 'manual'"
+                    :title="$t('sync.manualDeployment')"
+                    class="server-settings-grid-item">
                    <icon
                       customWidth="50"
-                      customHeight="50"                   
-                      name="zip" 
+                      customHeight="50"
+                      name="zip"
                       iconset="svg-map-server"/>
                 </div>
-           
-                <a href="https://getpublii.com/docs/deployment/" target="_blank" rel="noopener noreferrer" class="server-settings-grid-item deployment-others">
+
+                <a
+                    href="https://getpublii.com/docs/deployment/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="server-settings-grid-item deployment-others">
                     <icon
                         customWidth="29"
-                        customHeight="29"                   
-                        name="deployment-others" 
+                        customHeight="29"
+                        name="deployment-others"
                         iconset="svg-map-server"/>
-                        <h3>More...</h3>
+                        <h3>{{ $t('ui.more') }}...</h3>
                 </a>
-            
+
             </div>
 
             <fields-group v-if="deploymentMethodSelected !== ''">
@@ -120,34 +148,39 @@
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
                         <template v-if="deploymentMethodSelected === 'ftp'">
-                            FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.
+                            {{ $t('sync.deploymentMethodFtpMsg') }}
                         </template>
 
-                        <template v-if="deploymentMethodSelected === 'netlify'">
-                            For detailed information about how to configure a website using Netlify, see online<a href="https://getpublii.com/docs/build-a-static-website-with-netlify.html" target="_blank" rel="noopener noreferrer">documentation</a>.
+                        <template
+                            v-if="deploymentMethodSelected === 'netlify'"
+                            v-pure-html="$t('sync.deploymentMethodNetlifyMsg')">
                         </template>
 
-                        <template v-if="deploymentMethodSelected === 'github-pages'">
-                            For detailed information about how to configure a website using Github Page, see online <a href="https://getpublii.com/docs/host-static-website-github-pages.html" target="_blank" rel="noopener noreferrer">documentation</a>.
+                        <template
+                            v-if="deploymentMethodSelected === 'github-pages'"
+                            v-pure-html="$t('sync.deploymentMethodGithubPagesMsg')">
                         </template>
 
-                        <template v-if="deploymentMethodSelected === 'gitlab-pages'">
-                            For detailed information about how to configure a website using GitLab Pages, see online <a href="https://getpublii.com/docs/host-static-website-gitlab-pages.html" target="_blank" rel="noopener noreferrer">documentation</a>.
+                        <template
+                            v-if="deploymentMethodSelected === 'gitlab-pages'"
+                            v-pure-html="$t('sync.deploymentMethodGitlabPagesMsg')">
                         </template>
 
-                        <template v-if="deploymentMethodSelected === 's3'">
-                            For detailed information about how to configure a website using S3, see online <a href="https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html" target="_blank" rel="noopener noreferrer">documentation</a>.
+                        <template
+                            v-if="deploymentMethodSelected === 's3'"
+                            v-pure-html="$t('sync.deploymentMethodS3Msg')">
                         </template>
 
-                        <template v-if="deploymentMethodSelected === 'google-cloud'">
-                            For detailed information about how to configure a website using Google Cloud, see online <a href="https://getpublii.com/docs/make-static-website-google-cloud.html" target="_blank" rel="noopener noreferrer">documentation</a>.
+                        <template
+                            v-if="deploymentMethodSelected === 'google-cloud'"
+                            v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
                         </template>
                     </p>
                 </div>
 
                 <field
                     id="domain"
-                    label="Website URL">
+                    :label="$t('sync.websiteURL')">
                     <dropdown
                         v-if="!deploymentSettings.relativeUrls"
                         slot="field"
@@ -163,57 +196,56 @@
                         :disabled="deploymentSettings.relativeUrls"
                         :spellcheck="false"
                         v-model="domain" />
-                    <small 
+                    <small
                         v-if="deploymentMethodSelected === 'github-pages'"
                         class="note"
-                        slot="note">
-                        This will be your Github repository path, which should use the following format: <strong>YOUR_USERNAME.github.io/YOUR_REPOSITORY_NAME</strong>.<br> 
-                        If you are using a custom domain name, set this field to just the custom domain name.
+                        slot="note"
+                        v-pure-html="$t('sync.deploymentMethodGithubPagesNote')">
                     </small>
-                    
+
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
                         class="note"
                         slot="note">
-                        The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
+                        {{ $t('sync.deploymentSettingFileProtocolNote') }}
                     </small>
                     <small
                         v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'ipfs')"
                         class="note"
-                        slot="note">
-                        The "dat://", "hyper://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank" rel="noopener noreferrer">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank" rel="noopener noreferrer">hyper://</a> and <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>
+                        slot="note"
+                        v-pure-html="$t('sync.deploymentSettingDatHyperIpfsProtocolNote')">
                     </small>
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
                         class="note"
                         slot="note">
-                        Note: while using "//" as protocol, some features like Open Graph tags, sharing buttons etc. cannot work properly.
+                        {{ $t('sync.deploymentSettingDoubleSlashProtocolNote') }}
                     </small>
                 </field>
 
-                <field	
-                    id="relative-urls"	
-                    label=" ">	
-                    <switcher	
-                        slot="field"	
-                        id="relative-urls"	
-                        key="relative-urls"	
-                        v-model="deploymentSettings.relativeUrls"	
-                        @click.native="toggleDomainName" />	
-                    <template slot="second-label">	
-                        Use relative URLs	
-                    </template>	
-                    <small	
-                        class="note"	
-                        slot="note">	
-                        Note: while using relative URLs, some features like Open Graph tags, sitemaps, RSS feeds, JSON feeds etc. will be disabled.	
-                    </small>	
+                <field
+                    id="relative-urls"
+                    label=" ">
+                    <switcher
+                        slot="field"
+                        id="relative-urls"
+                        key="relative-urls"
+                        v-model="deploymentSettings.relativeUrls"
+                        @click.native="toggleDomainName" />
+                    <template slot="second-label">
+                        {{ $t('sync.useRelativeURLs') }}
+                    </template>
+                    <small
+                        class="note"
+                        slot="note">
+                        {{ $t('sync.deploymentSettingRelativeUrlsNote') }}
+                    </small>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="port"
-                    label="Port">
+                    :label="$t('sync.port')">
                     <text-input
                         slot="field"
                         id="port"
@@ -229,14 +261,14 @@
                         slot="note"
                         v-if="errors.indexOf('port') > -1"
                         class="note">
-                        The port field cannot be empty and must be a positive integer between 1 and 65535.
+                        {{ $t('sync.portFormatNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls'].indexOf(deploymentMethodSelected) > -1"
                     id="secure-connection"
-                    label="FTPS"
+                    :label="$t('sync.ftps')"
                     :labelSeparated="true">
                     <switcher
                         slot="field"
@@ -245,14 +277,14 @@
                         :value="deploymentMethodSelected === 'ftp+tls'"
                         @click.native="toggleFtpDeploymentMethod" />
                     <template slot="second-label">
-                        Use FTP with SSL/TLS
+                        {{ $t('sync.useFtps') }}
                     </template>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="server"
-                    label="Server">
+                    :label="$t('ui.server')">
                     <text-input
                         slot="field"
                         id="server"
@@ -265,14 +297,14 @@
                         slot="note"
                         v-if="errors.indexOf('server') > -1"
                         class="note">
-                        The server field cannot be empty.
+                        {{ $t('sync.serverFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="username"
-                    label="Username">
+                    :label="$t('ui.username')">
                     <text-input
                         slot="field"
                         id="username"
@@ -285,14 +317,14 @@
                         slot="note"
                         v-if="errors.indexOf('username') > -1"
                         class="note">
-                        The username field cannot be empty.
+                        {{ $t('sync.usernameFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="['sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="sftp-auth-method"
-                    label="Authentication method">
+                    :label="$t('sync.authenticationMethod')">
                     <radio-buttons
                         slot="field"
                         id="sftp-auth-method"
@@ -305,7 +337,7 @@
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp'].indexOf(deploymentMethodSelected) > -1 && !deploymentSettings.askforpassword"
                     id="password"
-                    label="Password">
+                    :label="$t('settings.password.password')">
                     <text-input
                         slot="field"
                         id="password"
@@ -319,14 +351,14 @@
                         slot="note"
                         v-if="errors.indexOf('username') > -1"
                         class="note">
-                        The password field cannot be empty.
+                        {{ $t('settings.password.passwordFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp'].indexOf(deploymentMethodSelected) > -1"
                     id="askforpassword"
-                    label="Always ask for password"
+                    :label="$t('settings.password.alwaysAskForPassword')"
                     :labelSeparated="true">
                     <switcher
                         slot="field"
@@ -334,14 +366,14 @@
                         key="askforpassword"
                         v-model="deploymentSettings.askforpassword" />
                     <template slot="second-label">
-                        Require the FTP password on every time you sync your site
+                        {{ $t('sync.requireFTPPassAlwaysOnSync') }}
                     </template>
                 </field>
 
                 <field
                     v-if="['ftp+tls'].indexOf(deploymentMethodSelected) > -1"
                     id="rejectunauthorized"
-                    label="Certificates"
+                    :label="$t('sync.certificates')"
                     :labelSeparated="true">
                     <switcher
                         slot="field"
@@ -349,14 +381,14 @@
                         key="rejectunauthorized"
                         v-model="deploymentSettings.rejectUnauthorized" />
                     <template slot="second-label">
-                        Require the valid certificate for connection
+                        {{ $t('sync.requireCertificateForConnection') }}
                     </template>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="sftpkey"
-                    label="Your private key">
+                    :label="$t('sync.yourPrivateKey')">
                     <file-select
                         id="sftpkey"
                         :class="{ 'is-invalid': errors.indexOf('key') > -1 }"
@@ -368,14 +400,14 @@
                         slot="note"
                         v-if="errors.indexOf('key') > -1"
                         class="note">
-                        Please select the key file
+                        {{ $t('sync.sftpkeyNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="passphrase"
-                    label="Passphrase for a key">
+                    :label="$t('sync.passphraseForKey')">
                     <text-input
                         slot="field"
                         id="passphrase"
@@ -387,14 +419,14 @@
                     <small
                         slot="note"
                         class="note">
-                        Use this field only if your key needs a passphrase
+                        {{ $t('sync.passphraseForKeyNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="path"
-                    label="Remote path">
+                    :label="$t('sync.remotePath')">
                     <text-input
                         slot="field"
                         id="path"
@@ -406,21 +438,21 @@
                         v-if="['ftp', 'ftp+tls'].indexOf(deploymentMethodSelected) > -1"
                         slot="note"
                         class="note">
-                        Path should match your server root path e.g. /public_html/, /public_html/blog/
+                        {{ $t('sync.remotePathMatchServerRootPathNote') }}
                     </small>
 
                     <small
                         v-if="['sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                         slot="note"
                         class="note">
-                        Path should match your server path e.g. public_html/, public_html/blog/ or the root path e.g. /home/username/public_html/
+                        {{ $t('sync.remotePathMatchServerOrRootPathNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-server"
-                    label="API Server">
+                    :label="$t('sync.apiServer')">
                     <text-input
                         slot="field"
                         id="gh-server"
@@ -432,14 +464,14 @@
                     <small
                         slot="note"
                         class="note">
-                        Change this value only if you are using your own GitHub instance (Enterprise edition).
+                        {{ $t('sync.apiServerNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-user"
-                    label="Username / Organization">
+                    :label="$t('sync.usernameOrganization')">
                     <text-input
                         slot="field"
                         id="gh-user"
@@ -452,14 +484,14 @@
                         slot="note"
                         v-if="errors.indexOf('github-user') > -1"
                         class="note">
-                        The username field cannot be empty
+                        {{ $t('sync.usernameFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-repo"
-                    label="Repository">
+                    :label="$t('sync.repository')">
                     <text-input
                         slot="field"
                         id="gh-repo"
@@ -472,14 +504,14 @@
                         slot="note"
                         v-if="errors.indexOf('github-repo') > -1"
                         class="note">
-                        The repository field cannot be empty
+                        {{ $t('sync.repositoryFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-branch"
-                    label="Branch">
+                    :label="$t('sync.branch')">
                     <text-input
                         slot="field"
                         id="gh-branch"
@@ -492,19 +524,19 @@
                         slot="note"
                         v-if="errors.indexOf('github-branch') > -1"
                         class="note">
-                        The branch field cannot be empty
+                        {{ $t('sync.branchFieldCantBeEmpty') }}
                     </small>
                     <small
                         slot="note"
-                        class="note">
-                        Examples: <strong>gh-pages</strong>, <strong>docs</strong> or <strong>main</strong>
+                        class="note"
+                        v-pure-html="$t('sync.branchExampleGitHubNote')">
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-token"
-                    label="Token">
+                    :label="$t('sync.token')">
                     <text-input
                         slot="field"
                         id="gh-token"
@@ -518,14 +550,14 @@
                         slot="note"
                         v-if="errors.indexOf('github-token') > -1"
                         class="note">
-                        The token field cannot be empty
+                        {{ $t('sync.tokenFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-parallel-operations"
-                    label="Parallel uploads">
+                    :label="$t('sync.parallelUploads')">
                     <dropdown
                         slot="field"
                         id="gh-parallel-operations"
@@ -535,23 +567,23 @@
                     <small
                         slot="note"
                         class="note">
-                        More parallel operations can lead to upload errors on slow internet connections or error 403 due API rate limits.
+                        {{ $t('sync.parallelUploadsNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-api-rate-limiting"
-                    label="API rate limiting">
-                    <switcher	
-                        slot="field"	
-                        id="gh-api-rate-limiting"	
-                        key="gh-api-rate-limiting"	
+                    :label="$t('sync.apiRateLimiting')">
+                    <switcher
+                        slot="field"
+                        id="gh-api-rate-limiting"
+                        key="gh-api-rate-limiting"
                         v-model="deploymentSettings.github.apiRateLimiting" />
                     <small
                         slot="note"
                         class="note">
-                        Disable this option only if you are using Github Enterprise with disabled API rate limiting. Otherwhise disabling this option can cause deployment errors.
+                        {{ $t('sync.apiRateLimitingNote') }}
                     </small>
                 </field>
 
@@ -559,7 +591,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-server"
-                    label="Server">
+                    :label="$t('ui.server')">
                     <text-input
                         slot="field"
                         id="gl-server"
@@ -571,14 +603,14 @@
                     <small
                         slot="note"
                         class="note">
-                        Change this value only if you are using your own GitLab instance.
+                        {{ $t('sync.serverGitLabNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-repo"
-                    label="Repository">
+                    :label="$t('sync.repository')">
                     <text-input
                         slot="field"
                         id="gl-repo"
@@ -591,19 +623,19 @@
                         slot="note"
                         v-if="errors.indexOf('gitlab-repo') > -1"
                         class="note">
-                        The repository field cannot be empty
+                        {{ $t('sync.repositoryFieldCantBeEmpty') }}
                     </small>
                     <small
                         slot="note"
                         class="note">
-                        This field is case-sensitive
+                        {{ $t('sync.fieldIsCaseSensitive') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-branch"
-                    label="Branch">
+                    :label="$t('sync.branch')">
                     <text-input
                         slot="field"
                         id="gl-branch"
@@ -616,19 +648,19 @@
                         slot="note"
                         v-if="errors.indexOf('gitlab-branch') > -1"
                         class="note">
-                        The branch field cannot be empty
+                        {{ $t('sync.branchFieldCantBeEmpty') }}
                     </small>
                     <small
                         slot="note"
-                        class="note">
-                        Examples: <strong>docs</strong>, <strong>main</strong> or <strong>master</strong>
+                        class="note"
+                        v-pure-html="$t('sync.branchExampleGitLabeNote')">
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-token"
-                    label="Token">
+                    :label="$t('sync.token')">
                     <text-input
                         slot="field"
                         id="gl-token"
@@ -642,14 +674,14 @@
                         slot="note"
                         v-if="errors.indexOf('gitlab-token') > -1"
                         class="note">
-                        The token field cannot be empty
+                        {{ $t('sync.tokenFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'netlify'"
                     id="netlify-id"
-                    label="Site ID">
+                    :label="$t('sync.siteID')">
                     <text-input
                         slot="field"
                         id="netlify-id"
@@ -662,14 +694,14 @@
                         slot="note"
                         v-if="errors.indexOf('netlify-id') > -1"
                         class="note">
-                        The Site ID field cannot be empty
+                        {{ $t('sync.siteFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'netlify'"
                     id="netlify-token"
-                    label="Netlify token">
+                    :label="$t('sync.netlifyToken')">
                     <text-input
                         slot="field"
                         id="netlify-token"
@@ -683,34 +715,34 @@
                         slot="note"
                         v-if="errors.indexOf('netlify-token') > -1"
                         class="note">
-                        The token field cannot be empty
+                        {{ $t('sync.tokenFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
-                    id="s3-provider"	
-                    label=" ">	
-                    <switcher	
-                        slot="field"	
+                    id="s3-provider"
+                    label=" ">
+                    <switcher
+                        slot="field"
                         id="s3-provider"
                         key="s3-provider"
-                        v-model="deploymentSettings.s3.customProvider"	
-                        @click.native="toggleS3Provider" />	
-                    <template slot="second-label">	
-                        Use a custom S3 provider
-                    </template>	
-                    <small	
-                        class="note"	
-                        slot="note">	
-                        Note: AWS is the default S3 provider. While using an alternative provider, you need to fill the "S3 provider endpoint" field.	
-                    </small>	
+                        v-model="deploymentSettings.s3.customProvider"
+                        @click.native="toggleS3Provider" />
+                    <template slot="second-label">
+                        {{ $t('sync.useCustomS3Provider') }}
+                    </template>
+                    <small
+                        class="note"
+                        slot="note">
+                        {{ $t('sync.useCustomS3ProviderNote') }}
+                    </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3' && deploymentSettings.s3.customProvider"
                     id="s3-endpoint"
-                    label="S3 Provider endpoint">
+                    :label="$t('sync.s3ProviderEndpoint')">
                     <text-input
                         slot="field"
                         id="s3-endpoint"
@@ -723,14 +755,14 @@
                         slot="note"
                         v-if="errors.indexOf('s3-endpoint') > -1"
                         class="note">
-                        The custom endpoint cannot be empty when "Use a custom S3 provider" is set to true
+                        {{ $t('sync.s3ProviderEndpointNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-id"
-                    label="Access ID">
+                    :label="$t('sync.accessID')">
                     <text-input
                         slot="field"
                         id="s3-id"
@@ -744,14 +776,14 @@
                         slot="note"
                         v-if="errors.indexOf('s3-id') > -1"
                         class="note">
-                        The access ID field cannot be empty
+                        {{ $t('sync.accessIDFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-key"
-                    label="Secret key">
+                    :label="$t('sync.secretKey')">
                     <text-input
                         slot="field"
                         id="s3-key"
@@ -765,14 +797,14 @@
                         slot="note"
                         v-if="errors.indexOf('s3-key') > -1"
                         class="note">
-                        The secret key field cannot be empty
+                        {{ $t('sync.secretKeyFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-bucket"
-                    label="Bucket">
+                    :label="$t('sync.bucket')">
                     <text-input
                         slot="field"
                         id="s3-bucket"
@@ -785,14 +817,14 @@
                         slot="note"
                         v-if="errors.indexOf('s3-bucket') > -1"
                         class="note">
-                        The bucket field cannot be empty
+                        {{ $t('sync.bucketFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3' && !deploymentSettings.s3.customProvider"
                     id="s3-region"
-                    label="Region">
+                    :label="$t('sync.region')">
                     <dropdown
                         slot="field"
                         id="s3-region"
@@ -805,14 +837,14 @@
                         slot="note"
                         v-if="errors.indexOf('s3-region') > -1"
                         class="note">
-                        The region selection cannot be empty
+                        {{ $t('sync.regionFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-prefix"
-                    label="Prefix">
+                    :label="$t('sync.prefix')">
                     <text-input
                         slot="field"
                         id="s3-prefix"
@@ -821,15 +853,15 @@
                         v-model="deploymentSettings.s3.prefix" />
                     <small
                         slot="note"
-                        class="note">
-                        You can put your website in the subdirectory. Please avoid slash at the beginning (i.e. <strong>/blog/</strong>) - as it will create additional directory with the empty name. Proper prefix example: <strong>blog/</strong>.
+                        class="note"
+                        v-pur-html="$t('sync.s3PrefixNote')">
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-acl"
-                    label="ACL">
+                    :label="$t('sync.acl')">
                     <dropdown
                         slot="field"
                         id="s3-acl"
@@ -841,7 +873,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-key"
-                    label="Your JSON key">
+                    :label="$t('sync.yourJSONKey')">
                     <file-select
                         id="google-key"
                         v-model="deploymentSettings.google.key"
@@ -853,14 +885,14 @@
                         slot="note"
                         v-if="errors.indexOf('google-key') > -1"
                         class="note">
-                        The JSON key file selection cannot be empty
+                        {{ $t('sync.yourJSONKeyFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-bucket"
-                    label="Bucket">
+                    :label="$t('sync.bucket')">
                     <text-input
                         slot="field"
                         id="google-bucket"
@@ -873,14 +905,14 @@
                         slot="note"
                         v-if="errors.indexOf('google-bucket') > -1"
                         class="note">
-                        The bucket field cannot be empty
+                        {{ $t('sync.bucketFieldCantBeEmpty') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-prefix"
-                    label="Prefix">
+                    :label="$t('sync.prefix')">
                     <text-input
                         slot="field"
                         id="google-prefix"
@@ -889,15 +921,15 @@
                         v-model="deploymentSettings.google.prefix" />
                     <small
                         slot="note"
-                        class="note">
-                        You can put your website in the subdirectory. Please avoid slash at the beginning (i.e. <strong>/blog/</strong>) - as it will create additional directory with the empty name. Proper prefix example: <strong>blog</strong>.
+                        class="note"
+                        v-pure-html="$t('sync.googleCloudPrefixNote')">
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'manual'"
                     id="manual-output"
-                    label="Output type">
+                    :label="$t('sync.outputType')">
                     <dropdown
                         slot="field"
                         id="manual-output"
@@ -911,24 +943,24 @@
                         slot="note"
                         v-if="errors.indexOf('manual-output') > -1"
                         class="note">
-                        The manual output selection cannot be empty
+                        {{ $t('sync.manualOutputFieldCantBeEmpty') }}
                     </small>
 
                     <small
                         slot="note"
                         class="note">
-                        Publii will generate a catalog or ZIP/TAR archive with your website. Then you can upload these files to any destination server manually.
+                        {{ $t('sync.outputTypeNote') }}
                     </small>
                 </field>
 
                 <field
                     v-if="deploymentMethodSelected === 'manual'"
                     id="manual-output-dir"
-                    label="Output directory">
+                    :label="$t('sync.outputDirectory')">
                     <dir-select
                         id="manual-output-dir"
                         v-model="deploymentSettings.manual.outputDirectory"
-                        placeholder="Leave blank to use default output directory"
+                        :placeholder="$t('sync.leaveBlankToUseDefaultOutputDirectory')"
                         slot="field"
                         key="manual-output-dir" />
 
@@ -937,7 +969,7 @@
                         slot="note"
                         class="note">
                         <icon name="alert" size="m" />
-                        Selected directory content will be removed during website generating
+                        {{ $t('sync.outputDirectoryNote') }}
                     </small>
                 </field>
             </fields-group>
@@ -946,7 +978,7 @@
                 <p-button
                     :onClick="save"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <p-button
@@ -955,8 +987,8 @@
                     :disabled="testInProgress"
                     slot="buttons"
                     type="outline">
-                    <template v-if="!testInProgress">Test connection</template>
-                    <template v-if="testInProgress">Checking connection...</template>
+                    <template v-if="!testInProgress">{{ $t('sync.testConnection') }}</template>
+                    <template v-if="testInProgress">{{ $t('sync.checkingConnection') }}</template>
                 </p-button>
             </p-footer>
         </div>
@@ -987,16 +1019,16 @@ export default {
             },
             httpProtocolSelected: '',
             deploymentMethods: {
-                'github-pages': 'Github Pages',
-                'gitlab-pages': 'GitLab Pages',
-                'netlify': 'Netlify',
-                's3': 'S3 compatible storage',
-                'google-cloud': 'Google Cloud',
-                'ftp': 'FTP',
-                'sftp': 'SFTP (with password)',
-                'sftp+key': 'SFTP (with key)',
-                'ftp+tls': 'FTP with SSL/TLS',
-                'manual': 'Manual upload'
+                'github-pages': this.$t('sync.githubPages'),
+                'gitlab-pages': this.$t('sync.gitlabPages'),
+                'netlify': this.$t('sync.netlify'),
+                's3': this.$t('sync.s3CompatibleStorage'),
+                'google-cloud': this.$t('sync.googleCloud'),
+                'ftp': this.$t('sync.ftp'),
+                'sftp': this.$t('sync.sftpWithPassword'),
+                'sftp+key': this.$t('sync.sftpWithKey'),
+                'ftp+tls': this.$t('sync.ftpWithSSLTLS'),
+                'manual': this.$t('sync.ManualUpload')
             },
             deploymentMethodSelected: '',
             deploymentSettings: defaultDeploymentSettings,
@@ -1035,15 +1067,15 @@ export default {
         },
         visitTitle () {
             if(this.siteIsOnline) {
-                return 'Visit your website';
+                return this.$t('sync.visitYourWebsite');
             } else {
-                return 'After the initial sync, your website will be available online';
+                return this.$t('sync.afterInitialSyncSiteWillBeAvailableOnline');
             }
         },
         sftpAuthMethodItems () {
             return [
-                { value: "sftp", label: "Password" }, 
-                { value: "sftp+key", label: "Key file" }
+                { value: "sftp", label: this.$t('settings.password.password') },
+                { value: "sftp+key", label: this.$t('sync.keyFile') }
             ];
         }
     },
@@ -1101,12 +1133,12 @@ export default {
         fullDomainName () {
             let domain = this.prepareDomain();
 
-            if ((domain === '' || domain === '.') && this.deploymentSettings.relativeUrls) {	
-                domain = '/';	
+            if ((domain === '' || domain === '.') && this.deploymentSettings.relativeUrls) {
+                domain = '/';
             }
 
-            if (this.deploymentSettings.relativeUrls) {	
-                return domain;	
+            if (this.deploymentSettings.relativeUrls) {
+                return domain;
             }
 
             if(this.deploymentMethodSelected === 'github-pages') {
@@ -1134,7 +1166,7 @@ export default {
         save () {
             if(!this.validate()) {
                 this.$bus.$emit('message-display', {
-                    message: 'Please fill all required fields',
+                    message: this.$t('ui.fillAllRequiredFields'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -1156,7 +1188,7 @@ export default {
 
                 if(data.message === 'success-save') {
                     this.$bus.$emit('message-display', {
-                        message: 'Server settings has been successfully saved.',
+                        message: this.$t('sync.serverSettingsSaveSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -1165,13 +1197,13 @@ export default {
                 if(data.message === 'no-keyring') {
                     if (document.body.getAttribute('data-os') === 'linux') {
                         this.$bus.$emit('alert-display', {
-                            message: 'Publii cannot save settings as no safe password storage software is installed. Follow the installation instructions for Node Keytar via https://github.com/atom/node-keytar/ and try again. Most likely the libsecret-1-dev and gnome-keyring packages are missing from your system.',
-                            okLabel: 'OK, I understand',
+                            message: this.$t('sync.serverSettingsSaveLinuxErrorMsg'),
+                            okLabel: this.$t('ui.iUnderstand'),
                         });
                     } else {
                         this.$bus.$emit('alert-display', {
-                            message: 'Publii cannot save settings due to a problem with the safe password storage software. Restart the application and try again. If the problem persists, please report it to our team via the community forum.',
-                            okLabel: 'OK, I understand',
+                            message: this.$t('sync.serverSettingsSaveErrorMsg'),
+                            okLabel: this.$t('ui.iUnderstand'),
                         });
                     }
                 }
@@ -1200,11 +1232,11 @@ export default {
                 this.$bus.$emit('confirm-display', {
                     hasInput: true,
                     inputIsPassword: true,
-                    message: 'Please provide FTP password for ' + this.$refs['server'].getValue(),
+                    message: this.$t('sync.provideFTPPasswordFor') + this.$refs['server'].getValue(),
                     okClick: (password) => {
                         if(!password) {
                             this.$bus.$emit('alert-display', {
-                                message: 'Without password you cannot test connection. Please try again'
+                                message: this.$t('sync.testConnectionNoPassowrdMsg')
                             });
                         } else {
                             this.test(password);
@@ -1218,7 +1250,7 @@ export default {
         test (password = false) {
             if(!this.validate()) {
                 this.$bus.$emit('message-display', {
-                    message: 'Please fill all required fields',
+                    message: this.$t('ui.fillAllRequiredFields'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -1242,7 +1274,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-deploy-test-success', (data) => {
                 this.$bus.$emit('alert-display', {
-                    message: 'Success! Application was able to connect with your server.',
+                    message: this.$t('sync.connectToServerSuccessMsg'),
                     buttonStyle: 'success'
                 });
 
@@ -1252,7 +1284,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-deploy-test-write-error', (data) => {
                 this.$bus.$emit('alert-display', {
-                    message: 'Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server.',
+                    message: this.$t('sync.connectToServerCantStoreFilesErrorMsg'),
                     buttonStyle: 'danger'
                 });
 
@@ -1262,12 +1294,12 @@ export default {
             mainProcessAPI.receiveOnce('app-deploy-test-error', (data) => {
                 if(data && data.message) {
                     this.$bus.$emit('alert-display', {
-                        message: 'Error! Application was unable to connect with your server: ' + data.message,
+                        message: this.$t('sync.connectToServerCantStoreFilesErrorMsg') + ': ' + data.message,
                         buttonStyle: 'danger'
                     });
                 } else {
                     this.$bus.$emit('alert-display', {
-                        message: 'Error! Application was unable to connect with your server.',
+                        message: this.$t('sync.connectToServerCantStoreFilesErrorMsg') + '.',
                         buttonStyle: 'danger'
                     });
                 }
@@ -1309,7 +1341,7 @@ export default {
         },
         validateFtp () {
             let portValue = parseInt(this.deploymentSettings.port.trim(), 10)
-            
+
             if (this.deploymentSettings.port.trim() === '' || isNaN(portValue) || portValue < 1 || portValue > 65535) {
                 this.errors.push('port');
             }
@@ -1354,7 +1386,7 @@ export default {
             if (this.deploymentSettings.s3.customProvider) {
                 fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket'];
             }
-            
+
             return this.validateFields(fields);
         },
         validateGithubPages () {
@@ -1387,7 +1419,7 @@ export default {
             if (urlToOpen) {
                 mainProcessAPI.shellOpenExternal(urlToOpen);
             } else {
-                alert('Sorry! The website link seems to be invalid.');
+                alert(this.$t('sync.websiteLinkInvalidMsg'));
             }
         },
         cleanError (field) {
@@ -1399,23 +1431,23 @@ export default {
         },
         toggleDomainName () {
             if (this.deploymentSettings.relativeUrls) {
-                this.domain = '/';	
-            } else {	
-                this.domain = '';	
+                this.domain = '/';
+            } else {
+                this.domain = '';
             }
         },
         getDeploymentMethodName (method) {
             switch (method) {
-                case 'github-pages': return 'Github Pages';
-                case 'gitlab-pages': return 'GitLab Pages';
-                case 'netlify': return 'Netlify';
-                case 's3': return 'S3 compatible storage';
-                case 'google-cloud': return 'Google Cloud';
-                case 'ftp': return 'FTP';
-                case 'sftp':
-                case 'sftp+key': return 'SFTP';
-                case 'ftp+tls': return 'FTP with SSL/TLS';
-                case 'manual': return 'Manual upload';
+                case 'github-pages': return this.$t('sync.githubPages');
+                case 'gitlab-pages': return this.$t('sync.gitlabPages');
+                case 'netlify': return this.$t('sync.netlify');
+                case 's3': return this.$t('sync.s3CompatibleStorage');
+                case 'google-cloud': return this.$t('sync.googleCloud');
+                case 'ftp': return this.$t('sync.ftp');
+                case 'sftp': return this.$t('sync.sftp');
+                case 'sftp+key': return  this.$t('sync.sftpWithKey');
+                case 'ftp+tls': return this.$t('sync.ftpWithSSLTLS');
+                case 'manual': return this.$t('sync.ManualUpload');
             }
 
             return '';
@@ -1449,7 +1481,7 @@ export default {
         },
         setHiddenPasswords (deploymentSettings) {
             let passwordKey = this.$store.state.currentSite.config.name;
-            
+
             if (this.$store.state.currentSite.config.uuid) {
                 passwordKey = this.$store.state.currentSite.config.uuid;
             }
@@ -1520,12 +1552,12 @@ export default {
     .is-invalid + .note {
         color: var(--warning);
     }
-    
-    &-grid {       
+
+    &-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-gap: 2rem;       
-        
+        grid-gap: 2rem;
+
         &-item {
             align-items: center;
             background: var(--gray-1);
@@ -1536,19 +1568,19 @@ export default {
             justify-content: center;
             min-height: calc(8rem + 8vh);
             transition: var(--transition);
-            
+
             &:hover {
                 background: var(--bg-primary);
                 border-color: var(--primary-color);
                 box-shadow: 0 0 26px rgba(black, .07);
                 color: var(--primary-color);
                 cursor: pointer;
-                
+
                 & > svg {
                     fill: var(--primary-color);
                 }
             }
-            
+
             & > svg {
                 fill: var(--gray-5);
                 transition: inherit;
@@ -1567,7 +1599,7 @@ export default {
     #relative-urls {
         margin-top: 0;
     }
-    
+
     .msg {
         margin-bottom: 3rem;
     }
