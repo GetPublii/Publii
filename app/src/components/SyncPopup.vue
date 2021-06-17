@@ -58,7 +58,7 @@
                     <p-button
                         type="primary medium  quarter-width"
                         :onClick="openWebsite">
-                        Visit your website
+                        {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
@@ -108,7 +108,7 @@
                     <p-button
                         :onClick="cancelSync"
                         type="outline medium quarter-width">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
@@ -126,13 +126,13 @@
                     <p-button
                         type="medium  quarter-width"
                         :onClick="goToServerSettings">
-                        Go to Settings
+                        {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
                         type="outline medium  quarter-width">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
@@ -150,13 +150,13 @@
                     <p-button
                         type="medium  quarter-width"
                         :onClick="goToServerSettings">
-                        Go to Settings
+                        {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         type="outline medium  quarter-width"
                         :onClick="close">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
@@ -389,7 +389,7 @@ export default {
             if (urlToOpen) {
                 mainProcessAPI.shellOpenExternal(urlToOpen);
             } else {
-                alert('Sorry! The website link seems to be invalid.');
+                alert(this.$t('sync.websiteLinkInvalidMsg'));
             }
 
             this.close();
@@ -406,7 +406,7 @@ export default {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
                     message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
-                    okLabel: 'Go to settings',
+                    okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         let siteName = this.$route.params.name;
                         this.$route.push('/site/' + siteName + '/settings/');

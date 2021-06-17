@@ -13,18 +13,17 @@
                 v-if="!licenseAccepted"
                 class="license">
                 <p>
-                    This software is licensed under GNU GPL version 3.<br>
-                    By clicking "Accept" you are agree to the
+                    <span v-pure-html="$t('publii.publiiLicenseAgreementInfo')"></span>
                     <a
                         href="#"
                         @click="showLicense">
-                        Publii License Agreement.
+                        {{ $t('publii.publiiLicenseAgreement') }}
                     </a>
                 </p>
 
                 <p-button
                     :onClick="acceptLicense">
-                    Accept
+                    {{ $t('publii.accept') }}
                 </p-button>
             </div>
         </div>

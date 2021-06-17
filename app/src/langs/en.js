@@ -296,13 +296,17 @@ export default {
     },
     publii: {
         aboutPublii: 'About Publii',
+        accept: 'Accept',
         copyright: 'Copyright 2021 <a href="https://tidycustoms.net" target="_blank" rel="noopener noreferrer">TidyCustoms</a>. All rights reserved.<br>Publli is designed and maintained by core team with cooperation with <a href="https://github.com/dziudek" target="_blank" rel="noopener noreferrer">Dev Zen</a> and is made possible by the <a href="https://electronjs.org" target="_blank" rel="noopener noreferrer">Electron</a>Open Source project and other ',
         creditsIntro: 'Publii uses the following third-party Open Source Software:',
         dataCollectionInfo: '<strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track, we do not allow third parties to collect personally identifiable information about you. ',
         homepage: 'Homepage',
         license: 'License',
         licensingInformation: 'Licensing information',
-        openSourceSoftware: 'Open Source Software'
+        openSourceSoftware: 'Open Source Software',
+        publiiLicenseAgreement: 'Publii License Agreement.',
+        publiiLicenseAgreementInfo: 'This software is licensed under GNU GPL version 3.<br>By clicking "Accept" you are agree to the',
+        textHere: 'TEXT HERE'
     },
     rendering: {
         errorDuringPreviewCreatinMsg: 'An error occured during creatin of the preview.',
@@ -558,17 +562,31 @@ export default {
         whatsApp: 'WhatsApp'
     },
     site: {
+        addNewWebsite: 'Add new website',
+        cloneWebsite: 'Clone website',
+        cloneWebsiteSuccessMsg: 'Website has been cloned. Switched to: ',
         createNewWebsite: 'Create new website',
         createWebsite: 'Create website',
         createYourFirstWebsite: 'Create your first website',
         creationInProgress: 'Creation in progress...',
+        deleteWebsite: 'Delete website',
+        deleteWebsiteConfirmMsg: 'Do you really want to remove this website? This action cannot be undone.',
+        deleteWebsiteCSuccessMsg: 'Website has been removed.',
+        deleteWebsiteSuccessMsg: 'Website has been removed. Switched to: ',
+        duplicateWebsite: 'Duplicate website',
         erroOcurredDuringSiteDatabaseCreationInfo: 'An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.',
+        removeWebsite: 'Remove website',
+        siteLoadingErrorMsg: 'An error occured during loading the selected website. Please check the website files and try again.',
         siteName: 'Site name:',
         siteSettingsSaveSuccessMsg: 'Site settings has been successfully saved.',
         siteWithThisNameExists: 'Site using this name exists!',
+        specifyNameForWebsiteDuplicate: 'Please specify the new name for the duplicate website:',
         websiteAuthorRequired: 'author name is required and should contains letters',
         websiteName: 'Website name',
-        websiteNameRequired: 'website name is required'
+        websiteNameAlreadyInUseMsg: 'The selected name is used by other website. Please try again.',
+        websiteNameCantBeEmpty: 'The website name cannot be empty. Please try again.',
+        websiteNameRequired: 'website name is required',
+        websiteNotFound: 'Website not found'
     },
     sync: {
         accessID: 'Access ID',
@@ -892,7 +910,9 @@ export default {
         saveAndPreview: 'Save & Preview',
         saveAsDraft: 'Save as draft',
         saveChanges: 'Save Changes',
+        search: 'Search...',
         selectFile: 'Select file',
+        selectWebsite: 'Select a website',
         seo: 'SEO',
         server: 'Server',
         show: 'Show',

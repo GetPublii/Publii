@@ -11,7 +11,7 @@
             <li
                 v-if="!sites.length"
                 class="empty-state">
-                Website not found&hellip;
+                {{ $t('site.websiteNotFound') }}&hellip;
             </li>
         </ul>
     </div>
@@ -70,8 +70,8 @@ export default {
         margin: 0.5rem 0 0;
         padding: 0 2rem;
         text-align: center;
-        
-        &-wrapper {           
+
+        &-wrapper {
             margin-top: 1rem;
             max-height: calc(100vh - 24rem);
             overflow-y: auto;

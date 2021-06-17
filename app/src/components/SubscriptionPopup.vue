@@ -2,7 +2,7 @@
     <div class="overlay" v-if="isVisible">
         <div class="popup">
             <p class="message">
-                TEXT HERE
+                {{ $t('publii.textHere') }}
             </p>
 
             <div class="buttons">
