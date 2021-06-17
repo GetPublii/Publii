@@ -1,22 +1,22 @@
 <template>
     <section class="content wp-import">
-        <p-header title="WP importer">
+        <p-header :title="$t('tools.wpImport.wpImporter')">
             <p-button
                 :onClick="goBack"
                 slot="buttons"
                 type="outline">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
         </p-header>
 
         <fields-group>
             <field
                 id="wxr-file"
-                label="Please select WXR file:"
+                :label="$t('tools.wpImport.selectWXRFileLabel')"
                 :labelFullWidth="true">
                 <file-select
                     id="wxr-file"
-                    placeholder="Select a WXR file to import"
+                    :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
                     value=""
                     ref="wxr-file"
                     :disabled="uploadDisabled"
@@ -27,7 +27,7 @@
             <div
                 v-if="checkingFile"
                 class="import-check-results">
-                Checking the selected WXR file&hellip;
+                {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
             </div>
 
             <div
@@ -36,10 +36,10 @@
                 {{ errorMessage }}
             </div>
 
-            <small 
+            <small
                 v-if="!stats"
                 class="note">
-                Posts will be imported as compatible with the WYSIWYG editor.
+                {{ $t('tools.wpImport.importNote') }}
             </small>
 
             <wp-import-stats
@@ -50,11 +50,11 @@
                 v-if="configVisible"
                 :class="importConfigCssClasses">
                 <div class="import-config-section">
-                    <strong>Import selected types of posts:</strong>
+                    <strong>{{ $t('tools.wpImport.importSelectedTypesOfPosts') }}</strong>
 
                     <field
                         id="import-cpt-post"
-                        label="posts"
+                        :label="$t('post.posts')"
                         :labelSeparated="false"
                         :noLabelSpace="true"
                         spacing="small">
@@ -67,7 +67,7 @@
 
                     <field
                         id="import-cpt-page"
-                        label="pages"
+                        :label="$t('tools.wpImport.pages')"
                         :labelSeparated="false"
                         :noLabelSpace="true"
                         spacing="small">
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="import-config-section">
-                    <strong>Used taxonomy for posts:</strong>
+                    <strong>{{ $t('tools.wpImport.usedTaxonomyForPosts') }}</strong>
 
                     <radio-buttons
                         name="taxonomy"
@@ -105,7 +105,7 @@
                 </div>
 
                 <div class="import-config-section">
-                    <strong>Post authors:</strong>
+                    <strong>{{ $t('tools.wpImport.postAuthors') }}</strong>
 
                     <radio-buttons
                         name="authors"
@@ -115,11 +115,11 @@
                 </div>
 
                 <div class="import-config-section">
-                    <strong>Content formatting:</strong>
+                    <strong>{{ $t('tools.wpImport.contentFormatting') }}</strong>
 
                     <field
                         id="use-autop"
-                        label="Add <p> and <br> tags to the post content automatically"
+                        :label="$t('tools.wpImport.addTagsToContentAutomaticallty')"
                         :labelSeparated="false"
                         :noLabelSpace="true"
                         spacing="small">
@@ -137,8 +137,8 @@
                 :onClick="importFile"
                 :disabled="importInProgress"
                 type="primary">
-                <template v-if="!importInProgress">Import data</template>
-                <template v-if="importInProgress">Importing data&hellip;</template>
+                <template v-if="!importInProgress">{{ $t('tools.wpImport.importData') }}</template>
+                <template v-if="importInProgress">{{ $t('tools.wpImport.importingData') }}&hellip;</template>
             </p-button>
 
             <span
@@ -176,21 +176,21 @@ export default {
             radioAuthorItems: [
                 {
                     value: "publii-author",
-                    label: "Use main Publii main author"
+                    label: this.$t('tools.wpImport.useMainAuthor')
                 },
                 {
                     value: "wp-authors",
-                    label: "Import authors"
+                    label: this.$t('tools.wpImport.importAuthors')
                 }
             ],
             radioTaxonomyItems: [
                 {
                     value: "tags",
-                    label: "Tags"
+                    label: this.$t('ui.tags')
                 },
                 {
                     value: "categories",
-                    label: "Categories"
+                    label: this.$t('tools.wpImport.categories')
                 }
             ]
         };
@@ -283,9 +283,9 @@ export default {
             this.importInProgress = false;
 
             this.$bus.$emit('confirm-display', {
-                message: 'Your WordPress data has been imported. Thumbnails regeneration can be necessary if you have selected a theme before.',
-                okLabel: 'Go to tools',
-                cancelLabel: 'OK',
+                message: this.$t('tools.wpImport.wpImportGoToRegenerateMsg'),
+                okLabel: this.$t('tools.goToTools'),
+                cancelLabel: this.$t('ui.ok'),
                 okClick: () => {
                     let currentSite = this.$route.params.name;
                     this.$router.push(this.$route.path.replace('wp-importer', 'regenerate-thumbnails'));

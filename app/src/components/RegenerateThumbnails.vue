@@ -1,17 +1,17 @@
 <template>
     <section class="content regenerate-thumbnails">
-        <p-header title="Regenerate Thumbnails">
+        <p-header :title="$t('tools.thumbnails.regenerateThumbnails')">
             <p-button
                 :onClick="goBack"
                 slot="buttons"
                 type="outline">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
         </p-header>
 
         <fields-group v-if="currentSiteHasTheme">
             <p>
-                If you've changed your theme or are having issues with your responsive images, you can regenerate them using the button below. This might take a while if your site has a lot of images, so please be patient.
+                {{ $t('tools.thumbnails.regenerateThumbnailsInfo') }}
             </p>
 
             <div class="result-wrapper">
@@ -19,13 +19,13 @@
                     v-if="regeneratingInProgress"
                     :onClick="abortRegenerate"
                     type="danger">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
 
                 <p-button
                     :onClick="regenerate"
                     :type="buttonStatus">
-                    Regenerate thumbnails
+                    {{ $t('tools.thumbnails.regenerateThumbnails') }}
                 </p-button>
 
                 <span
@@ -39,7 +39,7 @@
         <div
             v-if="regeneratingStarted"
             class="regenerate-thumbnails-list">
-            <p>List of the regenerated files:</p>
+            <p>{{ $t('tools.thumbnails.listRegeneratedFiles') }}</p>
 
             <ul
                 class="list">
@@ -54,7 +54,7 @@
         </div>
 
         <p v-if="!currentSiteHasTheme">
-            Currently you have no selected theme for this website. Thumbnails regeneration is not necessary.
+            {{ $t('tools.thumbnails.regenerateThumbnailsNotNecessaryInfo') }}
         </p>
     </section>
 </template>
@@ -98,7 +98,7 @@ export default {
             this.regeneratingInProgress = true;
             this.regeneratingStarted = true;
             this.files = [];
-            this.resultLabel = 'Regenerating thumbnails...';
+            this.resultLabel = this.$t('tools.thumbnails.regeneratingThumbnails');
             this.resultCssClass = {
                 'result': true,
                 'error': false,
@@ -125,7 +125,7 @@ export default {
                 });
 
                 mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
-                    this.resultLabel = 'Progress: ' + data.value + '%';
+                    this.resultLabel = this.$t('tools.thumbnails.progress') + data.value + '%';
 
                     for(let file of data.files) {
                         if (file) {
@@ -140,7 +140,7 @@ export default {
                         'error': false,
                         'success': true
                     };
-                    this.resultLabel = 'All thumbnails have been created.';
+                    this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreated');
                     this.buttonStatus = '';
                     this.regeneratingInProgress = false;
                 });
@@ -157,7 +157,7 @@ export default {
                 'error': false,
                 'success': false
             };
-            this.resultLabel = 'Thumbnails regeneration cancelled.';
+            this.resultLabel = this.$t('tools.thumbnails.thumbnailsRegenerationCancelled');
             this.buttonStatus = '';
             this.regeneratingInProgress = false;
         }
@@ -175,7 +175,7 @@ export default {
 
 .regenerate-thumbnails {
     user-select: none;
-    
+
     .list {
         list-style-type: none;
         margin: 0;

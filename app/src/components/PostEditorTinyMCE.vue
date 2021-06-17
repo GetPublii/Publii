@@ -14,7 +14,7 @@
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
-                        @keyup="updateTitle" />                
+                        @keyup="updateTitle" />
 
                     <editor ref="tinymceEditor" />
 
@@ -32,10 +32,10 @@
                 id="post-stats-button"
                 type="clean icon small"
                 icon="stats"
-                title="Toggle post statistics panel"
+                :title="$t('editor.togglePostStatsPanel')"
                 @click.native="togglePostStats">
-                <template v-if="!writersPanelOpen">View Stats</template>
-                <template v-else>Hide Stats</template>
+                <template v-if="!writersPanelOpen">{{ $t('editor.viewStats') }}</template>
+                <template v-else>{{ $t('editor.hideStats') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
@@ -231,7 +231,7 @@ export default {
         savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
@@ -263,7 +263,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -278,15 +278,15 @@ export default {
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/tinymce/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -352,7 +352,7 @@ export default {
             width: 80%;
 
             &:empty {
-                color: var(--gray-3); 
+                color: var(--gray-3);
 
                 &:before {
                     content: "Add post title"

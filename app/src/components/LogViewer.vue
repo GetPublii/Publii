@@ -1,11 +1,11 @@
 <template>
     <section class="content tools-log-viewer">
-        <p-header title="Log viewer">
+        <p-header :title="$t('tools.logViewer')">
             <p-button
                 :onClick="goBack"
                 slot="buttons"
                 type="outline">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
         </p-header>
 
@@ -48,7 +48,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-log-files-loaded', (data) => {
                 let items = {};
-                items[""] = 'Select file to load';
+                items[""] = this.$t('tools.selectFileToLoad');
 
                 if(data.files.length) {
                     for(let file of data.files) {
@@ -72,7 +72,7 @@ export default {
                     if(data.fileContent.trim() !== '') {
                         this.$refs.codemirror.editor.setValue(data.fileContent);
                     } else {
-                        this.$refs.codemirror.editor.setValue('This log file is empty...');
+                        this.$refs.codemirror.editor.setValue(this.$t('tools.logFileEmpty'));
                     }
                 }
 

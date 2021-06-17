@@ -50,11 +50,23 @@ export default {
     },
     editor: {
         blockEditorHelpPanelDesc: 'Możesz wstawić blok, klikając <span>+</span> lub <span>TAB</span> w nowym wierszu lub wpisując następujące skróty lub składnię przecen w nowym wierszu:',
+        cantSavePostWithEmptyTitle: 'Nie możesz zapisać wpisu z pustym tytułem.',
+        changesSaved: 'Zmiany zostały zapisane',
         dragAndDropImgToEditor: 'Przeciągnij i upuść obraz do edytora',
         element: 'Element',
+        errorOccured: 'Wystąpił błąd - proszę spróbować ponownie.',
+        hideHelp: 'Ukryj Pomoc',
+        hideStats: 'Ukryj Statystyki',
         markdown: 'Markdown',
         markdownHelpPanelDesc: 'Możesz łatwo zarządzać nagłówkami, stylami tekstu lub tworzyć inne elementy HTML, używając następujących skrótów klawiaturowych lub wpisując składnię markdown:',
-        shortcuts: 'Skróty'
+        newDraftCreated: 'Nowy szkic został utworzony',
+        newPostCreated: 'Nowy wpis został utworzony',
+        shortcuts: 'Skróty',
+        startWriting: 'Zacznij pisać...',
+        togglePostStatsPanel: 'Przełącz panel statystyk wpisów',
+        unableToSetSpellCheckerForLanguage: '(!) Nie można ustawić sprawdzania pisowni dla wybranego języka - ',
+        viewHelp: 'Pokaż Pomoc',
+        viewStats: 'Pokaż Statystyki'
     },
     file: {
         addNewFile: 'Dodaj nowy plik',
@@ -251,6 +263,7 @@ export default {
         postLink: 'Link do wpisu',
         postName: 'Nazwa wpisu:',
         postPage: 'Strona wpisu',
+        posts: 'wpisy',
         postSettings: 'Ustawienia wpisów',
         postSlug: 'Slug wpisu',
         postSlugLengthWarning: 'Slug wpisu dłuższy niż 250 znaków może prowadzić do tworzenia uszkodzonych plików podczas renderowania strony internetowej.',
@@ -641,7 +654,7 @@ export default {
     },
     tools: {
         css: {
-            customCSS: 'Własny CSS',
+            customCSS: 'Niestandardowy CSS',
             customCSSSaveSuccessMsg: 'Niestandardowy kod CSS zpsatł zapisany.',
             normal: 'Normalny',
             putCustomCSSAMPComment: 'Tutaj umieść swój niestandardowy kod CSS (będzie użyty tylko w trybie AMP)',
@@ -653,7 +666,43 @@ export default {
         findAndReplaceShortcut: 'Ctrl + Alt + F',
         findAndReplaceShortcutMac: 'Cmd + Alt + F',
         findShortcut: 'Ctrl + F',
-        findShortcutMac: 'Cmd + F'
+        findShortcutMac: 'Cmd + F',
+        goToTools: 'Idź do narzędzi',
+        logFileEmpty: 'Ten plik dziennika jest pusty...',
+        logViewer: 'Pogląd dziennika',
+        selectFileToLoad: 'Wybierz plik do załadowania',
+        thumbnails: {
+            listRegeneratedFiles: 'Lista zregenerowanych plików:',
+            processingRegenerateThumbanilsInfo: 'Naciśnięcie przycisku Regeneruj miniatury rozpocznie generowanie nowych rozmiarów obrazów zdefiniowanych przez Twój nowy motyw.',
+            progress: 'Postęp: ',
+            regenerateThumbnails: 'Regeneruj miniatury',
+            regenerateThumbnailsInfo: 'Jeśli zmieniłeś motyw lub masz problemy z responsywnymi obrazami, możesz je ponownie wygenerować za pomocą przycisku poniżej. Może to chwilę potrwać, jeśli Twoja witryna zawiera dużo obrazów, więc prosimy o cierpliwość.',
+            regenerateThumbnailsNotNecessaryInfo: 'Obecnie nie masz wybranego motywu dla tej witryny. Regeneracja miniatur nie jest konieczna.',
+            regeneratingThumbnails: 'Regenerowanie miniatur...',
+            skipRegeneration: 'Pomiń regenrację',
+            themeOrThumbnailsSettingsChanged: 'Twój motyw lub ustawienia miniatur zostały zmienione.',
+            thumbnailsCreated: 'Wszystkie miniatury zostały utworzone.',
+            thumbnailsRegenerationCancelled: 'Regeneracja miniatur została anulowana.'
+        },
+        wpImport: {
+            addTagsToContentAutomaticallty: 'Automatycznie dodaj tagi <p> i <br> do treści wpisu',
+            categories: 'Kategorie',
+            checkingWXRFile: 'Sprawdzanie wybranego pliku WXR',
+            contentFormatting: 'Formatowanie treści:',
+            importAuthors: 'Importuj autorów',
+            importData: 'Importuj dane',
+            importingData: 'Importowanie danych',
+            importNote: 'Wpisy zostaną zaimportowane jako zgodne z edytorem WYSIWYG.',
+            importSelectedTypesOfPosts: 'Importuj wybrane rodzaje wpisów:',
+            pages: 'strony',
+            postAuthors: 'Autorzy wpisów',
+            selectWXRFileLabel: 'Proszę wybrać plik WXR:',
+            selectWXRFilePlaceholder: 'Wybierz plik WXR do zaimportowania',
+            usedTaxonomyForPosts: 'Taksonomia używana dla wpisów:',
+            useMainAuthor: 'Użyj głównego autora Publii',
+            wpImporter: 'Importer WP',
+            wpImportGoToRegenerateMsg: 'Twoje dane WordPress zostały zaimportowane. Regeneracja miniatur może być konieczna, jeśli wcześniej wybrałeś motyw.'
+        }
     },
     ui: {
         aboutPublii: 'O Publii',

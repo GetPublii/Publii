@@ -1,7 +1,7 @@
 <template>
-    <div 
-        class="post-editor post-editor-markdown" 
-        ref="post-editor" 
+    <div
+        class="post-editor post-editor-markdown"
+        ref="post-editor"
         :data-post-id="postID">
         <topbar-appbar />
         <post-editor-top-bar />
@@ -17,9 +17,9 @@
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
-                        @keyup="updateTitle" />   
+                        @keyup="updateTitle" />
 
-                    <vue-simplemde 
+                    <vue-simplemde
                         ref="markdownEditor"
                         v-model="postData.text"
                         :configs="editorConfig" />
@@ -36,16 +36,16 @@
                 id="post-help-button"
                 type="clean icon small"
                 icon="help"
-                title="Help"
+                :title="$t('ui.help')"
                 @click.native="toggleHelp">
-                <template v-if="!helpPanelOpen">View help</template>
-                <template v-else>Hide help</template>
+                <template v-if="!helpPanelOpen">{{ $t('editor.viewHelp') }}</template>
+                <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
             <author-popup />
             <date-popup />
-            <link-popup 
+            <link-popup
                 ref="linkPopup"
                 :markdown="true" />
             <help-panel-markdown :isOpen="helpPanelOpen" />
@@ -99,7 +99,7 @@ export default {
             editorConfig: {
                 status: false,
                 toolbar: false,
-                placeholder: 'Start writing...',
+                placeholder: this.$t('editor.startWriting'),
                 spellChecker: false,
                 promptURLs: true
             },
@@ -216,7 +216,7 @@ export default {
         savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
@@ -247,7 +247,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -262,15 +262,15 @@ export default {
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/markdown/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -291,7 +291,7 @@ export default {
                 this.editorIsInitialized = true;
                 return;
             }
-            
+
             this.$bus.$emit('post-editor-possible-data-loss');
             this.simplemde.codemirror.off('change', this.detectDataLoss);
         },
@@ -331,14 +331,14 @@ export default {
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
 @import '../scss/editor/editor-markdown.scss';
-    
-    
-.post-editor-markdown { 
+
+
+.post-editor-markdown {
     overflow-x: hidden;
     position: relative;
     width: 100%;
     z-index: 2;
-    
+
    .post-editor {
         &-wrapper {
             overflow: auto;
@@ -367,7 +367,7 @@ export default {
                 width: 80%;
 
                 &:empty {
-                    color: var(--gray-3); 
+                    color: var(--gray-3);
 
                     &:before {
                         content: "Add post title"

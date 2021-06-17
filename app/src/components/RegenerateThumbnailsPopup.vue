@@ -9,11 +9,11 @@
                 primaryColor="color-8" />
 
             <h1>
-                Your theme or thumbnail settings has been changed.
+                {{ $t('tools.thumbnails.themeOrThumbnailsSettingsChanged') }}
             </h1>
 
             <p class="popup-info">
-                Pressing the Regenerate thumbnails button will start generating new image sizes defined by your new theme.
+                {{ $t('tools.thumbnails.processingRegenerateThumbanilsInfo') }}
             </p>
 
             <progress-bar
@@ -28,7 +28,7 @@
                     @click.native="regenerate"
                     :disabled="regeneratingThumbnails"
                     type="medium no-border-radius half-width">
-                    Regenerate thumbnails
+                    {{ $t('tools.thumbnails.regenerateThumbnails') }}
                 </p-button>
 
                 <p-button
@@ -36,7 +36,7 @@
                     @click.native="skip"
                     :disabled="regeneratingThumbnails"
                     type="medium no-border-radius half-width cancel-popup">
-                    Skip regeneration
+                    {{ $t('tools.thumbnails.skipRegeneration') }}
                 </p-button>
 
                 <p-button
@@ -101,7 +101,7 @@ export default {
 
             this.regeneratingThumbnails = true;
             this.progressIsStopped = false;
-            this.message = 'Regenerating thumbnails...';
+            this.message = $t('tools.thumbnails.regeneratingThumbnails');
 
             setTimeout(() => {
                 mainProcessAPI.send('app-site-regenerate-thumbnails', {
@@ -118,14 +118,14 @@ export default {
 
                 mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
                     this.progress = data.value;
-                    this.message = 'Progress: ' + data.value + '%';
+                    this.message = this.$t('tools.thumbnails.progress') + data.value + '%';
                 });
 
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
                     this.progress = 100;
                     this.progressColor = 'green';
                     this.progressIsStopped = true;
-                    this.message = 'All thumbnails have been created.';
+                    this.message = this.$t('tools.thumbnails.thumbnailsCreated');
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
 

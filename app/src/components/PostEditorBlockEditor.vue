@@ -6,8 +6,8 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <webview 
-                        :src="editorHtmlPath" 
+                    <webview
+                        :src="editorHtmlPath"
                         nodeintegration
                         :webpreferences="$store.state.currentSite.config.spellchecking ? 'spellcheck' : ''"
                         :preload="editorPreloadPath"></webview>
@@ -19,10 +19,10 @@
                 id="post-help-button"
                 type="clean icon small"
                 icon="help"
-                title="Help"
+                :title="$t('ui.help')"
                 @click.native="toggleHelp">
-                <template v-if="!helpPanelOpen">View Help</template>
-                <template v-else>Hide Help</template>
+                <template v-if="!helpPanelOpen">{{ $t('editor.viewHelp') }}</template>
+                <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
@@ -177,7 +177,7 @@ export default {
                 this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
                 this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
-                
+
                 mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
                     dirPath: 'root-files'
@@ -189,7 +189,7 @@ export default {
                     mainProcessAPI.send('app-file-manager-list', {
                         siteName: this.$store.state.currentSite.config.name,
                         dirPath: 'media/files'
-                    }); 
+                    });
 
                     mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                         this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
@@ -270,7 +270,7 @@ export default {
         savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
@@ -294,7 +294,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -309,15 +309,15 @@ export default {
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -341,7 +341,7 @@ export default {
             let language = await mainProcessAPI.invoke('publii-get-spellchecker-language');
             language = language.toLocaleLowerCase();
             let availableLanguages = await mainProcessAPI.invoke('app-main-get-spellchecker-languages');
-            
+
             if (availableLanguages.indexOf(language) > -1) {
                 await mainProcessAPI.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
                 return;
@@ -355,7 +355,7 @@ export default {
                 return;
             }
 
-            console.log('(!) Unable to set spellchecker to use selected language - ' + language);
+            console.log(this.$t('editor.unableToSetSpellCheckerForLanguage') + language);
         },
         handleMainThreadResponse (sender, response) {
             if (response.webContentsID !== this.webContentsID) {
