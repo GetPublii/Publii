@@ -213,7 +213,7 @@ class EditorBridge {
                         galleryElement: clickedElement
                     });
 
-                    window.app.galleryPopupUpdatedEvent(this.galleryPopupUpdated);
+                    window.app.galleryPopupUpdated(this.galleryPopupUpdated);
                 }
             });
 

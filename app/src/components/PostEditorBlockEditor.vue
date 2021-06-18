@@ -206,10 +206,10 @@ export default {
         });
     },
     methods: {
-        initCommunicationWithEditor () {
-            this.webview.addEventListener('ipc-message', this.editorOnIpcMessage);
+        async initCommunicationWithEditor () {
+            this.webview.addEventListener('ipc-message', await this.editorOnIpcMessage);
         },
-        editorOnIpcMessage(event) {
+        async editorOnIpcMessage(event) {
             const {args, channel} = event;
 
             if (channel === 'editor-title-updated') {
@@ -222,7 +222,7 @@ export default {
 
             if (channel === 'editor-post-saved') {
                 document.querySelector('#post-editor').value = args[0];
-                let postData = PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
+                let postData = await PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
 
                 if (!this.saveAction.preview) {
                     this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
