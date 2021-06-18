@@ -16,7 +16,6 @@
         <error-popup />
         <sites-popup />
         <sync-popup />
-        <subscription-popup />
     </div>
 </template>
 
@@ -31,7 +30,6 @@ import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
-import SubscriptionPopup from './SubscriptionPopup';
 
 export default {
     name: 'app',
@@ -47,8 +45,7 @@ export default {
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
         'sites-popup': SitesPopup,
-        'sync-popup': SyncPopup,
-        'subscription-popup': SubscriptionPopup
+        'sync-popup': SyncPopup
     },
     computed: {
         ...mapGetters([
