@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         :class="{ 'sites-popup': true, 'is-hidden': !isVisible }"
         @click="hide">
         <p-header @click.native.stop>
@@ -7,7 +7,7 @@
                 type="outline"
                 slot="buttons"
                 :onClick="hide">
-                Go back
+                {{ $t('ui.goBack') }}
             </p-button>
 
             <p-button
@@ -15,12 +15,12 @@
                 type="primary icon"
                 slot="buttons"
                 :onClick="addNewWebsite">
-                Add new website
+                {{ $t('site.addNewWebsite') }}
             </p-button>
         </p-header>
-        <div class="sites-popup-container" @click.stop>            
+        <div class="sites-popup-container" @click.stop>
            <sites-search ref="search" />
-           <sites-list />            
+           <sites-list />
         </div>
     </div>
 </template>
@@ -92,7 +92,7 @@ export default {
         pointer-events: none;
         opacity: 0;
     }
-    
+
     &-container {
         margin: auto;
         max-width: $wrapper;

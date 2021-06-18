@@ -1,9 +1,9 @@
 <template>
     <div class="overlay" v-if="isVisible">
         <div class="popup">
-            <h1>Rendering ...</h1>
+            <h1>{{ $t('rendering.rendering') }}</h1>
             <p class="popup-info">
-                Please wait while the rendering process is completed.
+                {{ $t('rendering.renderingPleaseWait') }}
             </p>
 
             <progress-bar
@@ -69,8 +69,8 @@ export default {
         runRenderingPreview (itemConfig = false, mode = false) {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
-                    okLabel: 'Go to settings',
+                    message: this.$t('rendering.selectThemeBeforeCreatingPreviewMsg'),
+                    okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         let siteName = this.$route.params.name;
                         this.$route.push('/site/' + siteName + '/settings/');
@@ -117,7 +117,7 @@ export default {
                     }
                 } else {
                     this.$bus.$emit('alert-display', {
-                        message: 'An error occured during creating the preview.'
+                        message: this.$t('rendering.errorDuringPreviewCreatinMsg')
                     });
                 }
             });
@@ -166,8 +166,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {  
-    padding: 4rem 4rem 1rem 4rem;   
+.popup {
+    padding: 4rem 4rem 1rem 4rem;
     width: 60rem;
 
     &-info {

@@ -76,7 +76,7 @@ export default {
                     this.$bus.$emit('site-loaded', true);
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occured during loading the selected website. Please check the website files and try again.',
+                        message: this.$t('v.siteLoadingErrorMsg'),
                         type: 'warning'
                     });
                 }
@@ -170,15 +170,15 @@ export default {
         position: absolute;
     }
 }
-    
+
 @media (max-height: 900px) {
-    .site .content {          
+    .site .content {
            padding: 4rem;
     }
  }
- 
+
 @media (max-width: 1400px) {
-    .site .content {          
+    .site .content {
            padding: 4rem;
     }
 }

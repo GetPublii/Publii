@@ -2,40 +2,40 @@
     <li
         class="single-site"
         @click="showWebsite(site)"
-        @keydown="showWebsiteOnEnter($event, site)">    
-        
+        @keydown="showWebsiteOnEnter($event, site)">
+
         <span class="single-site-icon">
             <icon
                 :name="siteLogoIcon"
-                iconset="svg-map-site"                
+                iconset="svg-map-site"
                 customWidth="22"
                 customHeight="22" />
         </span>
-        
+
         <strong class="single-site-name" :title="displayName">
             {{ displayName }}
-        </strong> 
-        
+        </strong>
+
         <div class="single-site-actions">
             <a
                 href="#"
                 class="single-site-actions-btn"
-                title="Duplicate website"
+                :title="$t('site.duplicateWebsite')"
                 tabindex="-1"
                 @click.stop.prevent="askForClone">
                 <icon
-                    name="duplicate"                
+                    name="duplicate"
                     size="xs" />
             </a>
-        
-            <a  
+
+            <a
                 href="#"
                 class="single-site-actions-btn delete"
-                title="Delete website"
+                :title="$t('site.deleteWebsite')"
                 tabindex="-1"
                 @click.stop.prevent="askForRemove">
                 <icon
-                    name="trash"                
+                    name="trash"
                     size="xs" />
             </a>
         </div>
@@ -75,31 +75,31 @@ export default {
         },
         askForRemove () {
             this.$bus.$emit('confirm-display', {
-                message: `Do you really want to remove this website? This action cannot be undone.`,
+                message: this.$t('site.deleteWebsiteConfirmMsg'),
                 okClick: this.removeWebsite.bind(this, this.site),
-                okLabel: 'Remove website',
+                okLabel: this.$t('site.removeWebsite'),
                 isDanger: true
             });
         },
         askForClone () {
             this.$bus.$emit('confirm-display', {
-                message: `Please specify the new name for the duplicate website:`,
+                message: this.$t('site.specifyNameForWebsiteDuplicate'),
                 okClick: this.cloneWebsite,
                 hasInput: true,
-                okLabel: 'Clone website'
+                okLabel: this.$t('site.cloneWebsite')
             });
         },
         cloneWebsite (newName) {
             if (newName.replace(/\s/gmi, '').trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'The website name cannot be empty. Please try again.'
+                    message: this.$t('site.websiteNameCantBeEmpty')
                 });
                 return;
             }
-            
+
             if (!this.checkIfNewNameIsFree(newName)) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The selected name is used by other website. Please try again.'
+                    message: this.$t('site.websiteNameAlreadyInUseMsg')
                 });
                 return;
             }
@@ -111,15 +111,15 @@ export default {
 
             mainProcessAPI.receiveOnce('app-site-cloned', (clonedWebsiteData) => {
                 this.$store.commit('cloneWebsite', {
-                    clonedWebsiteCatalog: this.site, 
-                    newSiteName: clonedWebsiteData.siteName, 
+                    clonedWebsiteCatalog: this.site,
+                    newSiteName: clonedWebsiteData.siteName,
                     newSiteCatalog: clonedWebsiteData.siteCatalog
                 });
-                
+
                 this.$router.push({ path: `/site/${clonedWebsiteData.siteCatalog}` });
                 window.localStorage.setItem('publii-last-opened-website', clonedWebsiteData.siteCatalog);
                 this.$bus.$emit('message-display', {
-                    message: 'Website has been cloned. Switched to: ' + clonedWebsiteData.siteCatalog,
+                    message: this.$t('site.cloneWebsiteSuccessMsg') + clonedWebsiteData.siteCatalog,
                     type: 'success',
                     lifeTime: 3
                 });
@@ -140,7 +140,7 @@ export default {
                     this.$router.push({ path: `/site/${sites[0]}` });
                     window.localStorage.setItem('publii-last-opened-website', sites[0]);
                     this.$bus.$emit('message-display', {
-                        message: 'Website has been removed. Switched to: ' + sites[0],
+                        message: this.$t('site.deleteWebsiteSuccessMsg') + sites[0],
                         type: 'success',
                         lifeTime: 3
                     });
@@ -149,7 +149,7 @@ export default {
 
                 this.$router.push({ path: `/site/!` });
                 this.$bus.$emit('message-display', {
-                    message: 'Website has been removed.',
+                    message: this.$t('site.deleteWebsiteCSuccessMsg'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -179,9 +179,9 @@ export default {
  */
 .single-site {
     align-items: center;
-    border-bottom: 1px solid var(--border-light-color);        
-    cursor: pointer;   
-    display: flex;    
+    border-bottom: 1px solid var(--border-light-color);
+    cursor: pointer;
+    display: flex;
     margin: 0;
     padding: 1.2rem 0;
     position: relative;
@@ -189,39 +189,39 @@ export default {
     &:focus {
         background: var(--input-bg-light);
     }
-    
+
     &-actions {
         display: flex;
-        margin-left: auto; 
-        
-        &-btn {      
-            background: var(--input-bg-light); 
+        margin-left: auto;
+
+        &-btn {
+            background: var(--input-bg-light);
             position: relative;
-            border-radius: 50%;               
-            display: inline-block;            
-            height: 3rem;      
+            border-radius: 50%;
+            display: inline-block;
+            height: 3rem;
             margin: 0 2px;
-            text-align: center;            
+            text-align: center;
             opacity: 0;
             width: 3rem;
 
             &:active,
             &:focus,
             &:hover {
-                color: var(--headings-color);                
+                color: var(--headings-color);
             }
 
-            &:hover {    
-                background: var(--input-border-color); 
-                
-                & > svg {     
+            &:hover {
+                background: var(--input-border-color);
+
+                & > svg {
                    fill: var(--icon-tertiary-color);
                    transform: scale(1);
                }
             }
 
             svg {
-                fill: var(--icon-secondary-color);               
+                fill: var(--icon-secondary-color);
                 height: 1.6rem;
                 pointer-events: none;
                 transform: scale(.9);
@@ -229,21 +229,21 @@ export default {
                 vertical-align: middle;
                 width: 1.6rem;
             }
-            
+
             &.delete {
-                
-                &:hover { 
-                
+
+                &:hover {
+
                     & > svg {
-                       fill: var(--warning);                  
+                       fill: var(--warning);
                    }
                 }
             }
         }
     }
-   
+
     &-icon {
-        align-items: center;       
+        align-items: center;
         border-radius: 3px;
         color: var(--icon-secondary-color);
         display: flex;
@@ -251,27 +251,27 @@ export default {
         justify-content: center;
         margin-right: 1.5rem;
         position: relative;
-        width: 3.3rem; 
+        width: 3.3rem;
     }
 
-    &:hover {         
-        will-change: transform;   
-        
+    &:hover {
+        will-change: transform;
+
         .single-site-actions-btn {
             opacity: 1;
         }
-        
+
         .single-site-name {
             color: var(--link-tertiary-hover-color);
         }
-        
+
         .single-site-icon {
              color: var(--primary-color);
-        }           
+        }
     }
 
     &-name {
-        display: block;       
+        display: block;
         color: var(--text-primary-color);
         font-weight: var(--font-weight-semibold);
         line-height: 3.6rem;
@@ -279,10 +279,10 @@ export default {
         overflow: hidden;
         padding: 0;
         text-align: left;
-        text-overflow: ellipsis; 
+        text-overflow: ellipsis;
         transition: var(--transition);
-        white-space: nowrap;  
-        max-width: 82%;        
+        white-space: nowrap;
+        max-width: 82%;
     }
 }
 </style>
