@@ -13,7 +13,8 @@
                     chosenClass="is-chosen"
                     ghostClass="is-ghost"
                     class="gallery-popup-images-list"
-                    v-model="images">
+                    v-model="images"
+                    data-translation="Your gallery is empty">
                     <li
                         v-for="(image, index) of images"
                         :data-id="index"
@@ -441,7 +442,7 @@ h1 {
             position: relative;
 
             &:after {
-                content: "Your gallery is empty";
+                content: attr(data-translation);
                 color: var(--label-color);
                 position: absolute;
                 top: 50%;
