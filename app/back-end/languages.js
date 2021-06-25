@@ -18,13 +18,45 @@ class Languages {
     /*
      * Load languages from a specific path
      */
-    loadLanguages(pathToLanguages = false) {
-        if(!pathToLanguages) {
-            pathToLanguages = this.languagesPath;
+    loadLanguages () {
+        let pathToLanguages = this.languagesPath;
+        let output = [];
+
+        // Load default languages
+        let defaultLanguages = fs.readdirSync(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
+
+        for(let i = 0; i < defaultLanguages.length; i++) {
+            if (defaultLanguages[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToLanguages, defaultLanguages[i]))) {
+                continue;
+            }
+
+            let configPath = path.join(pathToLanguages, defaultLanguages[i], 'config.json');
+
+            // Load only proper languages
+            if (!fs.existsSync(configPath)) {
+                continue;
+            }
+
+            // Load only properly configured languages
+            if(languageConfigValidator(configPath) !== true) {
+                continue;
+            }
+
+            let languageData = fs.readFileSync(configPath, 'utf8');
+            languageData = JSON.parse(languageData);
+
+            output.push({
+                type: 'default',
+                directory: defaultLanguages[i],
+                name: languageData.name,
+                version: languageData.version,
+                author: languageData.author,
+                publiiSupport: languageData.publiiSupport
+            });
         }
 
+        // Load additional languages
         let filesAndDirs = fs.readdirSync(pathToLanguages);
-        let output = [];
 
         for(let i = 0; i < filesAndDirs.length; i++) {
             if (filesAndDirs[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToLanguages, filesAndDirs[i]))) {
@@ -47,6 +79,7 @@ class Languages {
             languageData = JSON.parse(languageData);
 
             output.push({
+                type: 'installed',
                 directory: filesAndDirs[i],
                 name: languageData.name,
                 version: languageData.version,
@@ -74,6 +107,20 @@ class Languages {
         imagePath = imagePath.replace('file:/', '');
 
         return imagePath;
+    }
+
+    /**
+     * Load translations
+     */
+    loadTranslations (languageName = 'en', type = 'default') {
+        let translationsPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
+
+        if (type !== 'default') {
+            translationsPath = this.languagesPath;
+        }
+
+        translationsPath = path.join(translationsPath, languageName, 'translations.js');
+        return UtilsHelper.requireWithNoCache(translationsPath);
     }
 }
 

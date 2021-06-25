@@ -323,6 +323,8 @@ class App {
         let languagesLoader = new Languages(this);
         this.languages = languagesLoader.loadLanguages();
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
+        this.currentLanguageName = 'en';
+        this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
     }
 
     // Read or create the application config
@@ -502,11 +504,15 @@ class App {
         });
 
         this.mainWindow.webContents.on('did-finish-load', function() {
-            let appVersionInfo = {
+            let appData = {
                 version: self.versionData,
                 config: self.appConfig,
                 customConfig: {
                     tinymce: self.tinymceOverridedConfig
+                },
+                currentLanguage: {
+                    name: self.currentLanguageName,
+                    translations: self.currentLanguageTranslations
                 },
                 languages: self.languages,
                 languagesPath: self.languagesPath,
@@ -516,7 +522,7 @@ class App {
                 dirs: self.dirPaths
             };
 
-            self.mainWindow.webContents.send('app-data-loaded', appVersionInfo);
+            self.mainWindow.webContents.send('app-data-loaded', appData);
         });
 
         if (process.platform === 'linux') {

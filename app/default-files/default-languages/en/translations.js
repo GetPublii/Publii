@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     author: {
         addNewAuthor: 'Add new author',
         authorDataParsingErrorMessage: 'An error occurred during parsing author data for ID: ',
