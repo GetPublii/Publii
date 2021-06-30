@@ -280,4 +280,14 @@ electronApp.on('ready', function () {
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
     }
+
+    // Load language translations
+    ipcMain.handle('app-main-load-language', (event, lang, type) => {
+        appInstance.loadLanguage(lang, type);
+
+        return {
+            lang: appInstance.currentLanguageName,
+            translations: appInstance.currentLanguageTranslations
+        };
+    });
 });

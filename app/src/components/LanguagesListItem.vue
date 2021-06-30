@@ -1,5 +1,7 @@
 <template>
-    <figure class="language">
+    <figure 
+        @click="activateLanguage(directory, type)"
+        class="language">
         <span class="language-thumbnail-wrapper">
             <img
                 :src="thumbnail"
@@ -15,6 +17,7 @@
                 </span>
              </h3>
             <a
+                v-if="type === 'installed'"
                 href="#"
                 class="language-delete"
                 :title="$t('langs.deleteLanguage')"
@@ -29,6 +32,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'languages-list-item',
     props: [
@@ -46,6 +51,9 @@ export default {
         },
         version () {
             return this.languageData.version;
+        },
+        type () {
+            return this.languageData.type;
         }
     },
     methods: {
@@ -71,6 +79,12 @@ export default {
             };
 
             this.$bus.$emit('confirm-display', confirmConfig);
+        },
+        async activateLanguage (name, type) {
+            let results = await mainProcessAPI.invoke('app-main-load-language', name, type);
+            this.$store.commit('setAppLanguage', results.lang);
+            this.$i18n.setLocaleMessage(results.lang, results.translations);
+            this.$i18n.locale = results.lang;
         }
     }
 }

@@ -367,6 +367,9 @@ export default {
     },
     setWindowState (state, newState) {
         state.app.windowIsMaximized = newState;
+    },
+    setAppLanguage (state, language) {
+        state.app.config.language = language;
     }
 };
 

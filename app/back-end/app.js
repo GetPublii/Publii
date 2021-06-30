@@ -327,6 +327,18 @@ class App {
         this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
     }
 
+    // Load language 
+    loadLanguage (lang, type) {        
+        if (type !== 'default' && type !== 'installed') {
+            type = 'default';
+            lang = 'en';
+        }
+
+        let languagesLoader = new Languages(this);
+        this.currentLanguageName = lang.replace(/[^a-z\-\_\.]/gmi, '');
+        this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
+    }
+
     // Read or create the application config
     loadConfig () {
         // Try to get window bounds

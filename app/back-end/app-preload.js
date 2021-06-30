@@ -207,7 +207,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-window:close',
             'app-main-process-select-directory',
             'app-main-webview-search-find-in-page',
-            'app-main-webview-search-stop-find-in-page'
+            'app-main-webview-search-stop-find-in-page', 
+            'app-main-load-language'
         ];
 
         if (validCommands.includes(command)) {

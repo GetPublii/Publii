@@ -20,17 +20,18 @@ class Languages {
      */
     loadLanguages () {
         let pathToLanguages = this.languagesPath;
+        let pathToDefaultLanguages = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
         let output = [];
 
         // Load default languages
-        let defaultLanguages = fs.readdirSync(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
+        let defaultLanguages = fs.readdirSync(pathToDefaultLanguages);
 
         for(let i = 0; i < defaultLanguages.length; i++) {
-            if (defaultLanguages[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToLanguages, defaultLanguages[i]))) {
+            if (defaultLanguages[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToDefaultLanguages, defaultLanguages[i]))) {
                 continue;
             }
 
-            let configPath = path.join(pathToLanguages, defaultLanguages[i], 'config.json');
+            let configPath = path.join(pathToDefaultLanguages, defaultLanguages[i], 'config.json');
 
             // Load only proper languages
             if (!fs.existsSync(configPath)) {
