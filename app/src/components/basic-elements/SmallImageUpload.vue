@@ -19,7 +19,7 @@
             v-if="!isEmpty"
             href="#"
             class="upload-remove"
-            title="Remove image"
+            :title="$t('image.removeImage')"
             @click="remove">
             &times;
         </a>
