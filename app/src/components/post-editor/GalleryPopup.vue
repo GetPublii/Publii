@@ -210,7 +210,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.uploadProgress = this.uploadProgress + 1;
-                this.uploadMessage = `${this.$t('image.uploading')} ${this.uploadProgress} ${this.$t('image.of')} ${this.imagesToUpload} ${this.$t('image.pictures')}`;
+                this.uploadMessage = `${this.$t('image.uploading')} ${this.uploadProgress} ${this.$t('ui.of')} ${this.imagesToUpload} ${this.$t('image.pictures')}`;
 
                 this.images.push({
                     fullImagePath: data.baseImage.url,

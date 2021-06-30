@@ -12,12 +12,12 @@
                 v-if="isInSync && noIssues && isManual"
                 class="sync-success">
 
-                <h1>Your website is now in sync</h1>
+                <h1>{{ $t('sync.yourWebsiteIsInSync') }}</h1>
 
                 <p
                     v-if="isManual"
-                    class="description">
-                    Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
+                    class="description"
+                    v-pure-html="$t('sync.websiteFilesPreparedInfo')">
                 </p>
 
                 <div class="progress-bars-wrapper">
@@ -34,7 +34,7 @@
                         v-if="isManual"
                         type="primary medium quarter-width"
                         :onClick="showFolder">
-                        Get website files
+                        {{ $t('sync.getWebsiteFiles') }}
                     </p-button>
 
                     <p-button
@@ -48,10 +48,10 @@
             <div
                 v-if="isInSync && !noIssues && !isMinimized"
                 class="sync-success">
-                <h1>Some files were not synced properly.</h1>
+                <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
 
                 <p class="description">
-                    Please check hard-upload-errors-log.txt files using the Tools -&gt; Log Viewer tool.
+                    {{ $t('sync.filesNotSyncedErrorMessage') }}
                 </p>
 
                 <div class="buttons">
@@ -73,10 +73,11 @@
                 v-if="properConfig && !isInSync && !isMinimized"
                 class="sync-todo">
                 <div class="heading">
-                    <h1>Website synchronization</h1>
+                    <h1>{{ $t('sync.websiteSynchronization') }}</h1>
 
-                    <p class="description">
-                        Any duplicate files or filenames already in the destination location <br>that match the Publii-generated files will be overwritten.
+                    <p
+                        class="description"
+                        v-pure-html="$t('sync.websiteSynchronizationInfo')">
                     </p>
                 </div>
 
@@ -102,7 +103,7 @@
                         :onClick="startSync"
                         :type="syncInProgress ? 'disabled medium quarter-width': 'medium quarter-width'"
                         :disabled="syncInProgress">
-                        Sync your website
+                        {{ $t('sync.syncYourWebsite') }}
                     </p-button>
 
                     <p-button
@@ -117,9 +118,10 @@
                 v-if="noDomainConfig"
                 class="sync-issues-to-resolve">
 
-                <h1>Make sure the domain name is set.</h1>
-                <p class="description">
-                    Your website cannot currently be synced as the settings appear to lack a domain name. <br>Check your server settings to ensure a domain name has been entered.
+                <h1>{{ $t('sync.domainNameNotSetErrorText') }}</h1>
+                <p
+                    class="description"
+                    v-pure-html="$t('sync.domainNameNotSetErrorMessage')">
                 </p>
 
                 <div class="buttons">
@@ -141,9 +143,10 @@
                 v-if="!noDomainConfig && noServerConfig"
                 class="sync-issues-to-resolve">
 
-                <h1>Make sure the destination server is properly configured.</h1>
-                <p class="description">
-                    Your website cannot currently be synced as the destination server has not been configured correctly. <br>Check your server settings to ensure that the correct information has been entered.
+                <h1>{{ $t('sync.destinationServerNotConfiguredErrorText') }}</h1>
+                <p
+                    class="description"
+                    v-pure-html="$t('sync.destinationServerNotConfiguredErrorMessage')">
                 </p>
 
                 <div class="buttons">
@@ -195,7 +198,7 @@
             <icon
                 size="s"
                 name="minimize"/>
-            <span>Minimize</span>
+            <span>{{ $t('ui.minimize') }}</span>
         </a>
     </div>
 </template>
@@ -338,7 +341,7 @@ export default {
             this.renderingProgress = 100;
             this.renderingProgressColor = 'red';
             this.renderingProgressIsStopped = true;
-            this.messageFromRenderer = 'An error occurred during rendering of your website.';
+            this.messageFromRenderer = this.$t('rendering.renderingErrorText');
 
             setTimeout(() => {
                 this.close();
@@ -360,14 +363,14 @@ export default {
         });
 
         mainProcessAPI.receive('app-connection-in-progress', () => {
-            this.messageFromUploader = 'Connecting to the server...';
+            this.messageFromUploader = this.$t('sync.connectingToServer');
         });
 
         mainProcessAPI.stopReceive('app-connection-error', this.showError);
         mainProcessAPI.receive('app-connection-error', this.showError);
 
         mainProcessAPI.receive('app-connection-success', () => {
-            this.messageFromUploader = 'Connected to the server';
+            this.messageFromUploader = this.$t('sync.connectedToServer');
         });
 
         mainProcessAPI.receive('app-uploading-progress', this.uploadingProgressUpdate);
@@ -405,7 +408,7 @@ export default {
         startSync () {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
+                    message: this.$t('rendering.selectThemeBeforeCreatingPreviewMsg'),
                     okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         let siteName = this.$route.params.name;
@@ -487,7 +490,7 @@ export default {
                 this.renderingProgressIsStopped = true;
 
                 if(this.isManual) {
-                    this.messageFromRenderer = 'Preparing files in the output directory';
+                    this.messageFromRenderer = this.$t('file.preparingFilesInOutputDir');
                 } else {
                     this.messageFromRenderer = '';
                 }
@@ -499,10 +502,10 @@ export default {
             }
 
             this.uploadingProgress = data.progress;
-            this.messageFromUploader = 'Uploading website';
+            this.messageFromUploader = this.$t('file.uploadingWebsite');
 
             if(data.operations) {
-                this.messageFromUploader = 'Uploading website (' + data.operations[0] + ' of ' + data.operations[1] + ' operations done)';
+                this.messageFromUploader = `${this.$t('file.uploadingWebsite')} (${data.operations[0]} ${this.$t('ui.of')} ${data.operations[1]} ${this.$t('sync.operationsDone')})`;
             }
 
             if(data.message) {
@@ -510,7 +513,7 @@ export default {
             }
         },
         showError: function(data) {
-            this.messageFromUploader = 'An error occurred during connecting to server...';
+            this.messageFromUploader = this.$t('sync.connectionToServerErrorText');
             this.uploadError = true;
             this.uploadingProgressColor = 'red';
             this.uploadingProgress = 100;
@@ -520,11 +523,11 @@ export default {
 
             if(data && data.additionalMessage) {
                 this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server: ' + data.additionalMessage
+                    message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage
                 });
             } else {
                 this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server. Please check your server settings or try again.'
+                    message: this.$t('sync.connectionToServerErrorMessage')
                 });
             }
         },
@@ -541,13 +544,13 @@ export default {
                 let serverName = this.$store.state.currentSite.config.deployment.server;
 
                 this.$bus.$emit('confirm-display', {
-                    message: 'Please provide your FTP password for the following server: ' + serverName,
+                    message: this.$t('sync.provideFTPPasswordForServer') + serverName,
                     hasInput: true,
                     inputIsPassword: true,
                     okClick: (result) => {
                         if(!result || result.trim() === '') {
                             this.$bus.$emit('alert-display', {
-                                message: 'Without password you cannot sync your website. Please try again'
+                                message: this.$t('sync.syncFTPNoPassowrdMsg')
                             });
 
                             this.uploadingProgress = 0;
@@ -561,7 +564,7 @@ export default {
                     },
                     cancelClick: () => {
                         this.$bus.$emit('alert-display', {
-                            message: 'Without password you cannot sync your website. Please try again'
+                            message: this.$t('sync.syncFTPNoPassowrdMsg')
                         });
 
                         this.uploadingProgress = 0;
@@ -599,7 +602,7 @@ export default {
                     this.messageFromUploader = '';
                 } else {
                     this.uploadingProgressColor = 'green';
-                    this.messageFromUploader = 'Your website is now in sync';
+                    this.messageFromUploader = this.$t('sync.yourWebsiteIsInSync');
                 }
 
                 if (data.status) {
