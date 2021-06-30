@@ -1,7 +1,7 @@
 <template>
     <section class="content tools">
         <div class="tools-container">
-            <p-header title="Tools" />
+            <p-header :title="$t('ui.tools')" />
 
             <div class="tools-list">
                 <div
@@ -26,31 +26,31 @@ export default {
     data: function() {
         return {
             items: [{
-                    name: 'Backups',
+                    name: this.$t('file.backups'),
                     link: 'tools/backups',
                     icon: 'backup'
                 }, {
-                    name: 'Custom CSS',
-                    link: 'tools/custom-css', 
+                    name: this.$t('tools.css.customCSS'),
+                    link: 'tools/custom-css',
                     icon: 'css'
                 }, {
-                    name: 'Custom HTML',
+                    name: this.$t('tools.customHTML'),
                     link: 'tools/custom-html',
                     icon: 'code'
                 }, {
-                    name: 'File manager',
+                    name: this.$t('ui.fileManager'),
                     link: 'tools/file-manager',
                     icon: 'file-manager'
                 }, {
-                    name: 'Log viewer',
+                    name: this.$t('tools.logViewer'),
                     link: 'tools/log-viewer',
                     icon: 'log'
                 }, {
-                    name: 'Regenerate thumbnails',
+                    name: this.$t('tools.thumbnails.regenerateThumbnails'),
                     link: 'tools/regenerate-thumbnails',
-                    icon: 'regenerate-thumbnails' 
+                    icon: 'regenerate-thumbnails'
                 }, {
-                    name: 'WP Importer',
+                    name: this.$t('tools.wpImport.wpImporter'),
                     link: 'tools/wp-importer',
                     icon: 'importer'
                 }
@@ -67,45 +67,45 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
-    
+
 .tools {
-    
+
     &-container {
         margin: 0 auto;
         max-width: $wrapper;
         user-select: none;
-        z-index: 1;        
+        z-index: 1;
     }
 
     &-list {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-auto-rows: minmax(calc(8rem + 8vh), auto);
-        grid-gap: 2rem; 
+        grid-gap: 2rem;
 
-       & > div {           
+       & > div {
             background: var(--gray-1);
-            border: 1px solid transparent;   
+            border: 1px solid transparent;
             border-radius: 3px;
             height: 100%;
             transition: var(--transition);
             text-align: center;
-            
+
             &:hover {
                background: var(--bg-primary);
                border-color: var(--secondary-color);
                box-shadow: 0 0 26px rgba(black, .07);
                cursor: pointer;
-                
+
                svg {
                   fill: var(--primary-color);
                }
-                
+
                a {
                   color: var(--primary-color);
                }
             }
-           
+
             a {
                color: var(--text-primary-color);
                display: flex;
@@ -115,7 +115,7 @@ export default {
                height: 100%;
                width: 100%;
             }
-            
+
            svg {
                display: block;
                fill: var(--gray-5);

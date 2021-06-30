@@ -304,7 +304,7 @@
                 <field
                     v-if="['ftp', 'ftp+tls', 'sftp', 'sftp+key'].indexOf(deploymentMethodSelected) > -1"
                     id="username"
-                    :label="$t('ui.username')">
+                    :label="$t('sync.username')">
                     <text-input
                         slot="field"
                         id="username"
@@ -854,7 +854,7 @@
                     <small
                         slot="note"
                         class="note"
-                        v-pur-html="$t('sync.s3PrefixNote')">
+                        v-pure-html="$t('sync.s3PrefixNote')">
                     </small>
                 </field>
 

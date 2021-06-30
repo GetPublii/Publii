@@ -16,7 +16,7 @@
 
         <span
             class="topbar-notification-close"
-            title="Hide this notification"
+            :title="$t('ui.hideThisNotification')"
             @click="closeNotification">
             &times;
         </span>
@@ -92,7 +92,7 @@ export default {
                         timestamp: data.notification.timestamp,
                         text: data.notification.content,
                         visible: false
-                    });    
+                    });
                 }
             } else {
                 this.$store.commit('setNotification', {
@@ -165,7 +165,7 @@ export default {
      position: fixed;
      left: 50%;
      top: 4.2rem;
-     transform: translate(-50%, 0);     
+     transform: translate(-50%, 0);
      user-select: none;
      width: 100%;
      z-index: 100003;
@@ -200,14 +200,14 @@ export default {
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
              border-radius: 6px;
              color: var(--text-primary-color);
-             font-size: 1.5rem;            
+             font-size: 1.5rem;
              display: flex;
-             justify-content: center;  
+             justify-content: center;
              line-height: 1.4;
              margin: 0;
              padding: 2rem;
              pointer-events: all;
-             position: absolute;                     
+             position: absolute;
 
              a {
                  color: var(--white);
@@ -224,19 +224,19 @@ export default {
              p {
                  margin: 0 0 0 2rem;
              }
-             
+
              .icon {
                  flex-shrink: 0;
              }
          }
 
          &-icon {
-             display: block;            
+             display: block;
              margin: 0;
          }
-         
+
          &-close {
-            -webkit-app-region: no-drag; // Make the button clickable again  
+            -webkit-app-region: no-drag; // Make the button clickable again
             background: var(--input-bg-light);
             border-radius: 50%;
             color: var(--icon-secondary-color);
@@ -245,21 +245,21 @@ export default {
             font-weight: 300;
             height: 2.4rem;
             left: auto;
-            line-height: 1; 
+            line-height: 1;
             margin-left: 2rem;
-            text-align: center;       
-            transition: all .3s ease-out;            
+            text-align: center;
+            transition: all .3s ease-out;
             width: 2.4rem;
-                                
+
             &:active,
             &:focus,
             &:hover {
                  color: var(--icon-tertiary-color);
             }
-        
+
             &:hover {
                background: var(--input-border-color);
-            }  
+            }
         }
      }
 }

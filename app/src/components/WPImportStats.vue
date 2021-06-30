@@ -2,15 +2,15 @@
     <div
         v-if="stats"
         class="import-stats">
-        <strong>During WXR analyze we have found:</strong>
-        <p>Posts: <strong>{{ stats.types.post }}</strong></p>
-        <p>Pages: <strong>{{ stats.types.page }}</strong></p>
-        <p>Images: <strong>{{ stats.types.image }}</strong></p>
-        <p v-if="countCpt().length">Custom Post Types:</p>
+        <strong>{{ $t('tools.wpImport.duringWXRAnalyzeWeHaveFound') }}:</strong>
+        <p>{{ $t('ui.posts') }}: <strong>{{ stats.types.post }}</strong></p>
+        <p>{{ $t('ui.pages') }}: <strong>{{ stats.types.page }}</strong></p>
+        <p>{{ $t('image.images') }}: <strong>{{ stats.types.image }}</strong></p>
+        <p v-if="countCpt().length">{{ $t('post.customPostTypes') }}:</p>
         <p v-for="cpt in countCpt()"> - {{ cpt.type }}: <strong>{{ cpt.count }}</strong></p>
-        <p>Tags: <strong>{{ stats.tags }}</strong></p>
-        <p>Categories: <strong>{{ stats.categories }}</strong></p>
-        <p>Authors: <strong>{{ stats.authors }}</strong></p>
+        <p>{{ $t('ui.tags') }}: <strong>{{ stats.tags }}</strong></p>
+        <p>{{ $t('tools.wpImport.categories') }}: <strong>{{ stats.categories }}</strong></p>
+        <p>{{ $t('ui.authors') }}: <strong>{{ stats.authors }}</strong></p>
     </div>
 </template>
 
