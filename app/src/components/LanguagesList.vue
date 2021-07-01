@@ -50,7 +50,19 @@ export default {
     },
     computed: {
         languages () {
-            return this.$store.getters.languages;
+            let languagesList = JSON.parse(JSON.stringify(this.$store.getters.languages));
+            let activeLanguageIndex = languagesList.findIndex(language => language.directory + '-' + language.type === this.activeLanguage);
+            let activeLanguage = languagesList[activeLanguageIndex];
+            languagesList.splice(activeLanguageIndex, 1);
+            languagesList.splice(0, 0, activeLanguage);
+
+            return languagesList;
+        },
+        activeLanguage () {
+            let language = this.$store.state.app.config.language;
+            let languageType = this.$store.state.app.config.languageType;
+
+            return [language, languageType].join('-');
         }
     },
     methods: {
