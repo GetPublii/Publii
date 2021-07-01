@@ -324,10 +324,18 @@ class App {
         this.languages = languagesLoader.loadLanguages();
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
         this.languagesDefaultPath = normalizePath(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
-        this.currentLanguageName = 'en';
-        this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
-        let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
-        this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        
+        if (this.appConfig.language && this.appConfig.languageType) {
+            this.currentLanguageName = this.appConfig.language;
+            this.currentLanguageTranslations = languagesLoader.loadTranslations(this.appConfig.language, this.appConfig.languageType);
+            let languageConfig = languagesLoader.loadLanguageConfig(this.appConfig.language, this.appConfig.languageType);
+            this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        } else {
+            this.currentLanguageName = 'en';
+            this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
+            let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
+            this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        }
     }
 
     // Load language 
@@ -342,6 +350,27 @@ class App {
         this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
         let languageConfig = languagesLoader.loadLanguageConfig(lang, type);
         this.currentLanguageMomentLocale = languageConfig.momentLocale;
+    }
+
+    // Set language
+    setLanguage (lang, type) {
+        if (type !== 'default' && type !== 'installed') {
+            type = 'default';
+            lang = 'en';
+        }
+
+        this.appConfig.language = lang.replace(/[^a-z\-\_\.]/gmi, '');
+        this.appConfig.languageType = type;
+        
+        try {
+            fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
+        } catch (e) {
+            if (this.hasPermissionsErrors(e)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // Read or create the application config

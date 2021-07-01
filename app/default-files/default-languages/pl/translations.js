@@ -157,6 +157,7 @@ module.exports = {
         goToLanguagesManager: 'Idź do menadżera języków',
         installLanguage: 'Zainstaluj język',
         languages: 'Języki',
+        languageChangeError: 'Zmiana języka nie powiodła się - proszę spróbować ponownie.',
         removeLanguageMessagePT1: 'Czy na pewno chcesz usunąć język ',
         removeLanguageMessagePT2: '?',
         removeLanguageSuccessMessage: 'Usunięto wybrany język',

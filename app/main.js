@@ -281,11 +281,13 @@ electronApp.on('ready', function () {
         Menu.setApplicationMenu(menu);
     }
 
-    // Load language translations
+    // Load language translations and set language as used in the app
     ipcMain.handle('app-main-load-language', (event, lang, type) => {
         appInstance.loadLanguage(lang, type);
+        let languageChanged = appInstance.setLanguage(lang, type);
 
         return {
+            languageChanged: languageChanged,
             lang: appInstance.currentLanguageName,
             translations: appInstance.currentLanguageTranslations,
             momentLocale: appInstance.currentLanguageMomentLocale

@@ -82,12 +82,20 @@ export default {
         },
         async activateLanguage (name, type) {
             let results = await mainProcessAPI.invoke('app-main-load-language', name, type);
-            this.$store.commit('setAppLanguage', results.lang);
-            this.$i18n.setLocaleMessage(results.lang, results.translations);
-            this.$i18n.locale = results.lang;
+            
+            if (results.languageChanged) {
+                this.$store.commit('setAppLanguage', results.lang);
+                this.$i18n.setLocaleMessage(results.lang, results.translations);
+                this.$i18n.locale = results.lang;
 
-            if (results.momentLocale) {
-                this.$moment.locale(results.momentLocale);
+                if (results.momentLocale) {
+                    this.$moment.locale(results.momentLocale);
+                }
+            } else {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('langs.languageChangeError'),
+                    buttonStyle: 'danger'
+                });
             }
         }
     }
