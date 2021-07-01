@@ -2,7 +2,6 @@
 const fs = require('fs-extra');
 const listAll = require('ls-all');
 const path = require('path');
-const moment = require('moment');
 const Handlebars = require('handlebars');
 const CleanCSS = require('clean-css');
 const normalizePath = require('normalize-path');
