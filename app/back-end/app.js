@@ -323,6 +323,7 @@ class App {
         let languagesLoader = new Languages(this);
         this.languages = languagesLoader.loadLanguages();
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
+        this.languagesDefaultPath = normalizePath(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
         this.currentLanguageName = 'en';
         this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
         let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
@@ -532,6 +533,7 @@ class App {
                 },
                 languages: self.languages,
                 languagesPath: self.languagesPath,
+                languagesDefaultPath: self.languagesDefaultPath,
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,

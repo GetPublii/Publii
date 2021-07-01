@@ -26,6 +26,7 @@ export default {
     themesPath: '',
     languages: [],
     languagesPath: '',
+    languagesDefaultPath: '',
     dirs: {},
     // Data about available sites
     sites: [],

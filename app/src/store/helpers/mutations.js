@@ -10,6 +10,7 @@ export default {
         state.currentSite = {};
         state.languages = initialData.languages;
         state.languagesPath = initialData.languagesPath;
+        state.languagesDefaultPath = initialData.languagesDefaultPath;
         state.sites = initialData.sites;
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
