@@ -76,7 +76,7 @@ export default {
                     this.$bus.$emit('site-loaded', true);
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('v.siteLoadingErrorMsg'),
+                        message: this.$t('site.siteLoadingErrorMsg'),
                         type: 'warning'
                     });
                 }
