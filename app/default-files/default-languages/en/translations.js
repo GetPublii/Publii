@@ -157,6 +157,7 @@ module.exports = {
         goToLanguagesManager: 'Go to the languages manager',
         installLanguage: 'Install language',
         languages: 'Languages',
+        languageChangedMsg: 'Application language changed',
         languageChangeError: 'Language change error occured - please try again.',
         removeLanguageMessagePT1: 'Do you really want to remove the ',
         removeLanguageMessagePT2: ' language?',

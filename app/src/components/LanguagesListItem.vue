@@ -1,7 +1,10 @@
 <template>
     <figure 
         @click="activateLanguage(directory, type)"
-        class="language">
+        :class="{
+            'language': true,
+            'is-active': isActiveLanguage
+        }">
         <span class="language-thumbnail-wrapper">
             <img
                 :src="thumbnail"
@@ -40,6 +43,16 @@ export default {
         'languageData'
     ],
     computed: {
+        isActiveLanguage () {
+            let language = this.$store.state.app.config.language;
+            let languageType = this.$store.state.app.config.languageType;
+
+            if (this.languageData.directory === language && this.languageData.type === languageType) {
+                return true;
+            }
+
+            return false;
+        },
         thumbnail () {
             return this.languageData.thumbnail;
         },
@@ -81,6 +94,10 @@ export default {
             this.$bus.$emit('confirm-display', confirmConfig);
         },
         async activateLanguage (name, type) {
+            if (this.isActiveLanguage) {
+                return;
+            }
+
             let results = await mainProcessAPI.invoke('app-main-load-language', name, type);
             
             if (results.languageChanged) {
@@ -91,6 +108,12 @@ export default {
                 if (results.momentLocale) {
                     this.$moment.locale(results.momentLocale);
                 }
+
+                this.$bus.$emit('message-display', {
+                    message: this.$t('langs.languageChangedMsg'),
+                    type: 'success',
+                    lifeTime: 3
+                });
             } else {
                 this.$bus.$emit('alert-display', {
                     message: this.$t('langs.languageChangeError'),
@@ -108,6 +131,10 @@ export default {
 .language {
     margin: 0;
     position: relative;
+
+    &.is-active {
+        border: 2px solid var(--primary-color);
+    }
 
     &-thumbnail {
         border-radius: 50%;
