@@ -500,7 +500,7 @@ export default {
         },
         showMessage(message) {
             let messageConfig = {
-                message: this.$t('tag.newTagHasBeenCeated'),
+                message: this.$t('tag.newTagHasBeenCreated'),
                 type: 'success',
                 lifeTime: 3
             };
