@@ -85,6 +85,10 @@ export default {
             this.$store.commit('setAppLanguage', results.lang);
             this.$i18n.setLocaleMessage(results.lang, results.translations);
             this.$i18n.locale = results.lang;
+
+            if (results.momentLocale) {
+                this.$moment.locale(results.momentLocale);
+            }
         }
     }
 }

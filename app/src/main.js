@@ -79,6 +79,11 @@ Vue.directive('pure-html', {
 });
 
 mainProcessAPI.receive('app-data-loaded', function (initialData) {
+    // Set moment locale
+    if (initialData.currentLanguage.momentLocale) {
+        moment.locale(initialData.currentLanguage.momentLocale);
+    }
+
     // Add global Vue properties for commonly used libraries
     Vue.prototype.$moment = moment;
 

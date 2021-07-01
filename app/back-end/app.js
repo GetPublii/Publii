@@ -325,6 +325,8 @@ class App {
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
         this.currentLanguageName = 'en';
         this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
+        let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
+        this.currentLanguageMomentLocale = languageConfig.momentLocale;
     }
 
     // Load language 
@@ -337,6 +339,8 @@ class App {
         let languagesLoader = new Languages(this);
         this.currentLanguageName = lang.replace(/[^a-z\-\_\.]/gmi, '');
         this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
+        let languageConfig = languagesLoader.loadLanguageConfig(lang, type);
+        this.currentLanguageMomentLocale = languageConfig.momentLocale;
     }
 
     // Read or create the application config

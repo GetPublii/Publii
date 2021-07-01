@@ -52,7 +52,8 @@ class Languages {
                 name: languageData.name,
                 version: languageData.version,
                 author: languageData.author,
-                publiiSupport: languageData.publiiSupport
+                publiiSupport: languageData.publiiSupport,
+                momentLocale: languageData.momentLocale
             });
         }
 
@@ -85,7 +86,8 @@ class Languages {
                 name: languageData.name,
                 version: languageData.version,
                 author: languageData.author,
-                publiiSupport: languageData.publiiSupport
+                publiiSupport: languageData.publiiSupport,
+                momentLocale: languageData.momentLocale
             });
         }
 
@@ -122,6 +124,23 @@ class Languages {
 
         translationsPath = path.join(translationsPath, languageName, 'translations.js');
         return UtilsHelper.requireWithNoCache(translationsPath);
+    }
+
+    /**
+     * Load language config
+     */
+    loadLanguageConfig (languageName = 'en', type = 'default') {
+        let configPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
+
+        if (type !== 'default') {
+            configPath = this.languagesPath;
+        }
+
+        configPath = path.join(configPath, languageName, 'config.json');
+        let languageConfig = fs.readFileSync(configPath, 'utf8');
+        languageConfig = JSON.parse(languageConfig);
+
+        return languageConfig;
     }
 }
 

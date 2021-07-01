@@ -15,7 +15,8 @@
             version: language.version,
             directory: language.directory,
             publiiSupport: language.publiiSupport,
-            thumbnail: state.languagesPath + '/' + language.directory + '/' + 'thumbnail.png'
+            thumbnail: state.languagesPath + '/' + language.directory + '/' + 'thumbnail.png',
+            momentLocale: language.momentLocale
         };
     });
 };

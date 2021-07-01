@@ -287,7 +287,8 @@ electronApp.on('ready', function () {
 
         return {
             lang: appInstance.currentLanguageName,
-            translations: appInstance.currentLanguageTranslations
+            translations: appInstance.currentLanguageTranslations,
+            momentLocale: appInstance.currentLanguageMomentLocale
         };
     });
 });
