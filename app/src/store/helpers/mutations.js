@@ -15,6 +15,7 @@ export default {
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
         state.dirs = initialData.dirs;
+        state.wysiwygTranslation = initialData.currentLanguage.wysiwygTranslation;
 
         // Set default ordering based on the app config
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
@@ -371,6 +372,9 @@ export default {
     },
     setAppLanguage (state, language) {
         state.app.config.language = language;
+    },
+    setWysiwygTranslation (state, translations) {
+        state.wysiwygTranslation = translations;
     }
 };
 

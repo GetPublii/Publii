@@ -109,6 +109,8 @@ export default {
                     this.$moment.locale(results.momentLocale);
                 }
 
+                this.$store.commit('setWysiwygTranslation', results.wysiwygTranslation);
+
                 this.$bus.$emit('message-display', {
                     message: this.$t('langs.languageChangedMsg'),
                     type: 'success',

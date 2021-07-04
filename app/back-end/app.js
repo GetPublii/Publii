@@ -330,11 +330,13 @@ class App {
             this.currentLanguageTranslations = languagesLoader.loadTranslations(this.appConfig.language, this.appConfig.languageType);
             let languageConfig = languagesLoader.loadLanguageConfig(this.appConfig.language, this.appConfig.languageType);
             this.currentLanguageMomentLocale = languageConfig.momentLocale;
+            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
         } else {
             this.currentLanguageName = 'en';
             this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
             let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
             this.currentLanguageMomentLocale = languageConfig.momentLocale;
+            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en', 'default');
         }
     }
 
@@ -350,6 +352,7 @@ class App {
         this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
         let languageConfig = languagesLoader.loadLanguageConfig(lang, type);
         this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(lang, type);
     }
 
     // Set language
@@ -558,7 +561,8 @@ class App {
                 },
                 currentLanguage: {
                     name: self.currentLanguageName,
-                    translations: self.currentLanguageTranslations
+                    translations: self.currentLanguageTranslations,
+                    wysiwygTranslation: self.currentWysiwygTranslation
                 },
                 languages: self.languages,
                 languagesPath: self.languagesPath,

@@ -27,6 +27,7 @@ export default {
     languages: [],
     languagesPath: '',
     languagesDefaultPath: '',
+    wysiwygTranslation: {},
     dirs: {},
     // Data about available sites
     sites: [],

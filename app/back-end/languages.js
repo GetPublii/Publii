@@ -53,7 +53,8 @@ class Languages {
                 version: languageData.version,
                 author: languageData.author,
                 publiiSupport: languageData.publiiSupport,
-                momentLocale: languageData.momentLocale
+                momentLocale: languageData.momentLocale,
+                wysiwygTranslation: languageData.wysiwygTranslation
             });
         }
 
@@ -87,7 +88,8 @@ class Languages {
                 version: languageData.version,
                 author: languageData.author,
                 publiiSupport: languageData.publiiSupport,
-                momentLocale: languageData.momentLocale
+                momentLocale: languageData.momentLocale,
+                wysiwygTranslation: languageData.wysiwygTranslation
             });
         }
 
@@ -122,7 +124,26 @@ class Languages {
             translationsPath = this.languagesPath;
         }
 
-        translationsPath = path.join(translationsPath, languageName, 'translations.js');
+        translationsPath = path.join(translationsPath, languageName, 'translations.json');
+        return UtilsHelper.requireWithNoCache(translationsPath);
+    }
+
+    /**
+     * Load translations
+     */
+     loadWysiwygTranslation (languageName = 'en', type = 'default') {
+        let translationsPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
+
+        if (type !== 'default') {
+            translationsPath = this.languagesPath;
+        }
+
+        translationsPath = path.join(translationsPath, languageName, 'wysiwyg.json');
+
+        if (!UtilsHelper.fileExists(translationsPath)) {
+            return false;
+        }
+
         return UtilsHelper.requireWithNoCache(translationsPath);
     }
 

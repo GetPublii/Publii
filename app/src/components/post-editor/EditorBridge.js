@@ -46,6 +46,11 @@ class EditorBridge {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
+        if (window.app.getWysiwygTranslation()) {
+            tinymce.addI18n('custom', window.app.getWysiwygTranslation());
+            editorConfig.language = 'custom';
+        }
+
         tinymce.init(editorConfig);
     }
 
@@ -294,7 +299,7 @@ class EditorBridge {
 
         editor.ui.registry.addButton('gallery', {
             icon: 'gallery',
-            tooltip: "Insert Gallery",
+            tooltip: window.app.translate('editor.insertGallery'),
             onAction: function () {
                 editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
             }
@@ -453,7 +458,7 @@ class EditorBridge {
         });
 
         this.tinymceEditor.ui.registry.addButton('readmore', {
-            text: 'Read more',
+            text: window.app.translate('editor.readMore'),
             onAction: () => {
                 this.tinymceEditor.insertContent('<hr id="read-more">' + "\n");
             }

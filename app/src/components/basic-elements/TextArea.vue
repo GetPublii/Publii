@@ -98,8 +98,13 @@ export default {
                 secondToolbarStructure = "styleselect formatselect removeformat code undo redo";
             }
 
+            if (this.$store.state.wysiwygTranslation) {
+                tinymce.addI18n('custom', this.$store.state.wysiwygTranslation);
+            }
+
             tinymce.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
+                language: this.$store.state.wysiwygTranslation ? 'en' : 'custom',
                 content_css: this.getTinyMCECSSFiles(),
                 plugins: "autolink link lists paste code",
                 toolbar1: "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist",

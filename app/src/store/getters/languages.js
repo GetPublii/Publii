@@ -22,7 +22,8 @@
             directory: language.directory,
             publiiSupport: language.publiiSupport,
             thumbnail: basePath + '/' + language.directory + '/' + 'thumbnail.png',
-            momentLocale: language.momentLocale
+            momentLocale: language.momentLocale,
+            wysiwygTranslation: language.wysiwygTranslation
         };
     });
 };

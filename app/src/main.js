@@ -177,7 +177,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 initLinkEditor: (iframe) => this.$bus.$emit('init-link-editor', iframe),
                 initInlineEditor: (customFormats) => this.$bus.$emit('init-inline-editor', customFormats),
                 updateInlineEditor: (data) => this.$bus.$emit('update-inline-editor', data),
-                galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback)
+                galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback),
+                getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
+                translate: (phraseKey) => this.$t(phraseKey)
             };
         },
         methods: {

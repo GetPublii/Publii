@@ -290,7 +290,8 @@ electronApp.on('ready', function () {
             languageChanged: languageChanged,
             lang: appInstance.currentLanguageName,
             translations: appInstance.currentLanguageTranslations,
-            momentLocale: appInstance.currentLanguageMomentLocale
+            momentLocale: appInstance.currentLanguageMomentLocale,
+            wysiwygTranslation: appInstance.currentWysiwygTranslation
         };
     });
 });
