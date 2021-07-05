@@ -20,7 +20,7 @@
                 </span>
              </h3>
             <a
-                v-if="type === 'installed'"
+                v-if="type === 'installed' && !isActiveLanguage"
                 href="#"
                 class="language-delete"
                 :title="$t('langs.deleteLanguage')"
@@ -47,6 +47,8 @@ export default {
             let language = this.$store.state.app.config.language;
             let languageType = this.$store.state.app.config.languageType;
 
+            console.log('LANG DATA:', this.languageData);
+            
             if (this.languageData.directory === language && this.languageData.type === languageType) {
                 return true;
             }
