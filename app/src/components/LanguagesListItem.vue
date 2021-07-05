@@ -47,8 +47,6 @@ export default {
             let language = this.$store.state.app.config.language;
             let languageType = this.$store.state.app.config.languageType;
 
-            console.log('LANG DATA:', this.languageData);
-            
             if (this.languageData.directory === language && this.languageData.type === languageType) {
                 return true;
             }
@@ -104,6 +102,7 @@ export default {
             
             if (results.languageChanged) {
                 this.$store.commit('setAppLanguage', results.lang);
+                this.$store.commit('setAppLanguageType', results.type);
                 this.$i18n.setLocaleMessage(results.lang, results.translations);
                 this.$i18n.locale = results.lang;
 

@@ -289,6 +289,7 @@ electronApp.on('ready', function () {
         return {
             languageChanged: languageChanged,
             lang: appInstance.currentLanguageName,
+            type: appInstance.currentLanguageType,
             translations: appInstance.currentLanguageTranslations,
             momentLocale: appInstance.currentLanguageMomentLocale,
             wysiwygTranslation: appInstance.currentWysiwygTranslation

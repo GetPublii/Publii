@@ -373,6 +373,9 @@ export default {
     setAppLanguage (state, language) {
         state.app.config.language = language;
     },
+    setAppLanguageType (state, type) {
+        state.app.config.languageType = type;
+    },
     setWysiwygTranslation (state, translations) {
         state.wysiwygTranslation = translations;
     }
