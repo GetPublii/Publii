@@ -283,16 +283,20 @@ electronApp.on('ready', function () {
 
     // Load language translations and set language as used in the app
     ipcMain.handle('app-main-load-language', (event, lang, type) => {
-        appInstance.loadLanguage(lang, type);
-        let languageChanged = appInstance.setLanguage(lang, type);
+        try {
+            appInstance.loadLanguage(lang, type);
+            let languageChanged = appInstance.setLanguage(lang, type);
 
-        return {
-            languageChanged: languageChanged,
-            lang: appInstance.currentLanguageName,
-            type: appInstance.currentLanguageType,
-            translations: appInstance.currentLanguageTranslations,
-            momentLocale: appInstance.currentLanguageMomentLocale,
-            wysiwygTranslation: appInstance.currentWysiwygTranslation
-        };
+            return {
+                languageChanged: languageChanged,
+                lang: appInstance.currentLanguageName,
+                type: appInstance.currentLanguageType,
+                translations: appInstance.currentLanguageTranslations,
+                momentLocale: appInstance.currentLanguageMomentLocale,
+                wysiwygTranslation: appInstance.currentWysiwygTranslation
+            };
+        } catch (error) {
+            return false;
+        }
     });
 });
