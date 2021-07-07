@@ -11,6 +11,7 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
+                        :data-translation="$t('post.addPostTitle')"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
@@ -355,7 +356,7 @@ export default {
                 color: var(--gray-3);
 
                 &:before {
-                    content: "Add post title"
+                    content: attr(data-translation);
                 }
 
                 &:focus:before {

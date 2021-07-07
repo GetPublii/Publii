@@ -14,7 +14,7 @@
                     ghostClass="is-ghost"
                     class="gallery-popup-images-list"
                     v-model="images"
-                    data-translation="Your gallery is empty">
+                    :data-translation="$t('image.yourGalleryIsEmpty')">
                     <li
                         v-for="(image, index) of images"
                         :data-id="index"

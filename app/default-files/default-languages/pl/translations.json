@@ -149,7 +149,8 @@
         "threeColumns": "3 kolumny",
         "twoColumns": "2 kolumny",
         "uploading": "Przesyłanie",
-        "wide": "Szerokie"
+        "wide": "Szerokie",
+        "yourGalleryIsEmpty": "Twoja galeria jest pusta"
     },
     "langs": {
         "addLanguageSuccessMessage": "Język został dodany",
@@ -158,9 +159,9 @@
         "getMoreLanguages": "Pobierz więcej języków",
         "goToLanguagesManager": "Idź do menadżera języków",
         "installLanguage": "Zainstaluj język",
-        "languages": "Języki",
         "languageChangedMsg": "Język aplikacji został zmieniony",
         "languageChangeError": "Zmiana języka nie powiodła się - proszę spróbować ponownie.",
+        "languages": "Języki",
         "removeLanguageMessagePT1": "Czy na pewno chcesz usunąć język ",
         "removeLanguageMessagePT2": "?",
         "removeLanguageSuccessMessage": "Usunięto wybrany język",
@@ -225,6 +226,7 @@
     },
     "post": {
         "addNewPost": "Dodaj nowy wpis",
+        "addPostTitle": "Dodaj tytuł wpisu",
         "all": "Wszystkie",
         "author": "Autor",
         "backToPosts": "Powrót do wpisów",
@@ -631,7 +633,7 @@
         "deploymentMethodNetlifyMsg": "Aby uzyskać szczegółowe informacje o tym, jak skonfigurować stronę internetową za pomocą Netlify, zobacz <a href=\"https://getpublii.com/docs/build-a-static-website-with-netlify.html\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentację</a> online.",
         "deploymentMethodS3Msg": "Aby uzyskać szczegółowe informacje o tym, jak skonfigurować stronę internetową za pomocą S3, zobacz <a href=\"https://getpublii.com/docs/setup-static-website-hosting-amazon-s3.html\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentację</a> online.",
         "deploymentSettingDatHyperIpfsProtocolNote": "Protokół \"dat://\", \"hyper://\" i \"ipfs://\" jest przydatny tylko wtedy, gdy planujesz korzystać ze swojej witryny w sieciach P2P. Przeczytaj więcej o <a href=\"https://datproject.org/\" target=\"_blank\" rel=\"noopener noreferrer\">dat://</a>, <a href=\"https://hypercore-protocol.org/\" target=\"_blank\" rel=\"noopener noreferrer\">hyper://</a> i <a href=\"https://ipfs.io/\" target=\"_blank\" rel=\"noopener noreferrer\">IPFS</a>",
-        "deploymentSettingDoubleSlashProtocolNote": "Uwaga: poczas korzystania z                                                                \"//\" jako protokołu, niektóre funkcje, takie jak tagi Open Graph, przyciski udostępniania itp., nie działają poprawnie.",
+        "deploymentSettingDoubleSlashProtocolNote": "Uwaga: poczas korzystania z                                                                                                                                \"//\" jako protokołu, niektóre funkcje, takie jak tagi Open Graph, przyciski udostępniania itp., nie działają poprawnie.",
         "deploymentSettingFileProtocolNote": "Protokół \"file://\" jest przydatny tylko wtedy, gdy korzystasz z ręcznej metody wdrażania dla witryn intranetowych.",
         "deploymentSettingRelativeUrlsNote": "Uwaga: podczas korzystania z względnych URLi, niektóre funkcje, takie jak tagi Open Graph, mapy witryn, kanały RSS, kanały JSON itp., zostaną wyłączone.",
         "destinationServerNotConfiguredErrorMessage": "Twoja witryna nie może być obecnie zsynchronizowana, ponieważ serwer docelowy nie został poprawnie skonfigurowany. <br>Sprawdź ustawienia serwera, aby upewnić się, że wprowadzono prawidłowe informacje.",

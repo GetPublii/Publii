@@ -149,7 +149,8 @@
         "threeColumns": "3 columns",
         "twoColumns": "2 columns",
         "uploading": "Uploading",
-        "wide": "Wide"
+        "wide": "Wide",
+        "yourGalleryIsEmpty": "Your gallery is empty"
     },
     "langs": {
         "addLanguageSuccessMessage": "Language has been added",
@@ -158,9 +159,9 @@
         "getMoreLanguages": "Get more languages",
         "goToLanguagesManager": "Go to the languages manager",
         "installLanguage": "Install language",
-        "languages": "Languages",
         "languageChangedMsg": "Application language changed",
         "languageChangeError": "Language change error occured - please try again.",
+        "languages": "Languages",
         "removeLanguageMessagePT1": "Do you really want to remove the ",
         "removeLanguageMessagePT2": " language?",
         "removeLanguageSuccessMessage": "The selected language has been removed",
@@ -225,6 +226,7 @@
     },
     "post": {
         "addNewPost": "Add new post",
+        "addPostTitle": "Add post title",
         "all": "All",
         "author": "Author",
         "backToPosts": "Back to posts",
