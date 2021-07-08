@@ -98,7 +98,8 @@
                         :custom-label="customTargetLabels"
                         :close-on-select="true"
                         :show-labels="false"
-                        @select="closeDropdown('targetSelect')"></v-select>
+                        @select="closeDropdown('targetSelect')"
+                        :placeholder="$t('ui.selectOption')"></v-select>
                 </field>
 
                 <field :label="$t('settings.linkLabel') + ':'">
@@ -123,7 +124,7 @@
 
                 <field
                     v-if="!markdown"
-                    :label="$t('link.relAttribute')">
+                    :label="$t('link.linkRelAttribute')">
                     <switcher
                         slot="field"
                         label="nofollow"

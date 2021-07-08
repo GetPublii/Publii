@@ -244,7 +244,6 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.hideCustomExcerptsOnPostPagesInfo') }}
-                                If this option is enabled your post pages won't display text which is placed above "Read more" element in the post editor.
                             </small>
                         </field>
 
@@ -469,7 +468,7 @@
                             <small
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.displayEmptyAuthorsInfo')">
+                                v-pure-html="$t('settings.disableAuthorsPaginationIndexingInfo')">
                             </small>
                         </field>
 
@@ -552,7 +551,7 @@
                             v-if="!advanced.noIndexThisPage && !currentThemeSupportsSearchPage"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
-                            <p>{{ $t('settings.themeDoesNotSupportSearchPage') }}</p>
+                            <p>{{ $t('settings.themeDoesNotSupportSearchPages') }}</p>
                             </div>
 
                         <field
@@ -1542,7 +1541,7 @@
                             :label="$t('post.editorWYSIWYG')" />
 
                         <field
-                            label="Additional valid elements in the WYSIWYG editor">
+                            :label="$t('settings.additionalValidElementsInWYSIWYGEditor')">
                             <text-area
                                 slot="field"
                                 :spellcheck="false"
@@ -1551,7 +1550,7 @@
                             <small
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.editorWYSIWYGInfo')">
+                                v-pure-html="$t('settings.additionalValidElementsInWYSIWYGEditorInfo')">
                             </small>
                         </field>
 

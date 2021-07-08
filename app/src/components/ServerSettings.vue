@@ -934,7 +934,7 @@
                         slot="field"
                         id="manual-output"
                         key="manual-output"
-                        :items="{ 'catalog': 'Non-compressed catalog', 'zip-archive': 'ZIP archive', 'tar-archive': 'TAR archive' }"
+                        :items="{ 'catalog': $t('sync.nonCompressedCatalog'), 'zip-archive': $t('sync.zipArchive'), 'tar-archive': $t('sync.tarArchive') }"
                         :class="{ 'is-invalid': errors.indexOf('manual-output') > -1 }"
                         @click.native="cleanError('manual-output')"
                         v-model="deploymentSettings.manual.output"></dropdown>

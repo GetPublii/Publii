@@ -5,8 +5,8 @@
         class="options-sidebar-wrapper">
         <div class="options-sidebar">
             <h2>
-                <template v-if="tagData.id">{{ $t('tag.addNewTag') }}</template>
-                <template v-if="!tagData.id">{{ $t('tag.editTag') }}</template>
+                <template v-if="tagData.id">{{ $t('tag.editTag') }}</template>
+                <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
             </h2>
 
             <span
@@ -179,7 +179,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>{{ $t('ui.metaDescription') }}</span>
+                            <span>{{ $t('ui.metaDescription') }}:</span>
                             <text-area
                                 v-model="tagData.additionalData.metaDescription"
                                 :placeholder="metaFieldAttrs"

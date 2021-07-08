@@ -647,7 +647,7 @@ export default {
         },
         reset () {
             this.$bus.$emit('confirm-display', {
-                message: this.this.$t('theme.settingsResetMessage'),
+                message: this.$t('theme.settingsResetMessage'),
                 okClick: this.resetSettings
             });
         },

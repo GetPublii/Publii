@@ -116,7 +116,7 @@
             </label>
 
             <label key="menu-item-editor-field-title">
-                <span>{{ $t('menu.linkTitleAttribute') }}</span>
+                <span>{{ $t('link.linkTitleAttribute') }}</span>
                 <input
                     v-model="title"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -143,7 +143,7 @@
             </label>
 
             <label key="menu-item-editor-field-rel">
-                <span>{{ $t('menu.linkRelAttribute') }}:</span>
+                <span>{{ $t('link.linkRelAttribute') }}:</span>
                 <input
                     v-model="rel"
                     spellcheck="false"

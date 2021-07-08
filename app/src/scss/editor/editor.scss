@@ -184,7 +184,7 @@ blockquote {
 
 ul,
 ol {
-    margin-left: 2rem;  
+    margin-left: 2rem;
 
     & > li {
         list-style: inherit;
@@ -306,7 +306,7 @@ hr#read-more {
         border: 1px solid var(--input-border-color);
         border-radius: var(--border-radius);
         color: var(--text-light-color);
-        content: "Read More";
+        content: attr(data-translation);
         display: inline-block;
         font-size: ms(-3);
         left: 50%;
@@ -615,7 +615,7 @@ img {
             border: 1px solid var(--button-gray-bg);
             border-radius: 3px;
             color: var(--white);
-            content: "Add images";
+            content: attr(data-translation);
             font-size: 15px;
             font-weight: var(--font-weight-semibold);
             left: 50%;

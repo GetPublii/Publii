@@ -71,7 +71,7 @@ class EditorBridge {
             // Scroll the editor to bottom in order to avoid issues
             // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
-            
+
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
@@ -186,7 +186,7 @@ class EditorBridge {
                     let selection = iframe.contentWindow.window.getSelection();
                     selection.removeAllRanges();
                     let range = iframe.contentWindow.window.document.createRange();
-                    
+
                     if (clickedElement.tagName === 'A') {
                         range.selectNode(clickedElement);
                     } else if (clickedElement.parentNode && clickedElement.parentNode.tagName === 'A') {
@@ -229,7 +229,7 @@ class EditorBridge {
                 if (linkToolbar.css('display') !== 'block' && inlineToolbar.css('display') !== 'block') {
                     return;
                 }
-                
+
                 let iframeScrollOffset = iframe.contentWindow.document.body.parentNode.scrollTop;
 
                 if (lastScroll !== -1 && Math.abs(iframeScrollOffset - lastScroll) > 20) {
@@ -301,7 +301,7 @@ class EditorBridge {
             icon: 'gallery',
             tooltip: window.app.translate('editor.insertGallery'),
             onAction: function () {
-                editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
+                editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false" data-translation="' + window.app.translate('image.addImages') + '"></div>');
             }
         });
     }
@@ -443,7 +443,7 @@ class EditorBridge {
                 }
             }
         });
-        
+
         this.tinymceEditor.ui.registry.addButton("sourcecode", {
             icon: 'sourcecode',
             tooltip: "Source code",
@@ -460,7 +460,7 @@ class EditorBridge {
         this.tinymceEditor.ui.registry.addButton('readmore', {
             text: window.app.translate('editor.readMore'),
             onAction: () => {
-                this.tinymceEditor.insertContent('<hr id="read-more">' + "\n");
+                this.tinymceEditor.insertContent('<hr id="read-more" data-translation="' + window.app.translate('editor.readMore') + '">' + "\n");
             }
         });
     }
@@ -476,7 +476,7 @@ class EditorBridge {
         $(doc.querySelector('html')).on('mouseup', (e) => {
             let sel = win.getSelection();
             let text = sel.toString();
-            
+
             if (this.checkInlineTrigger(e.target)) {
                 window.app.updateInlineEditor({
                     sel,
@@ -618,7 +618,7 @@ class EditorBridge {
 
         this.contentImageUploading = true;
 
-        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {            
+        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
