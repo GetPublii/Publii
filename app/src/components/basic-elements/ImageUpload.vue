@@ -171,24 +171,24 @@ export default {
         },
         mediaPath () {
             if (this.itemId && this.imageType === 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
             } else if (this.itemId && this.imageType === 'authorImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
             } else if (this.itemId === 0 && this.imageType === 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
             } else if (this.itemId === 0 && this.imageType === 'authorImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
             } else if (this.itemId === 0) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
             } else if (this.itemId) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
 
             if (this.addMediaFolderPath) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
             }
 
-            return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
+            return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
         }
     },
     methods: {
@@ -206,7 +206,7 @@ export default {
         },
         drop (e) {
             this.stopEvents(e);
-            let sourcePath = normalizePath(e.dataTransfer.files[0].path);
+            let sourcePath = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
             this.uploadImage(sourcePath);
         },
         remove (e) {
@@ -221,7 +221,7 @@ export default {
                 return;
             }
 
-            let sourcePath = normalizePath(e.target.files[0].path);
+            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {
