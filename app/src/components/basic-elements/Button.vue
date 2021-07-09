@@ -108,6 +108,9 @@ export default {
     }
     height: 4.2rem;
     line-height: 4.1rem;
+    margin-bottom: $spacing;
+    margin-right: 2.5 * $spacing;
+    margin-top: $spacing;
     padding: 0 1.3rem;
     position: relative;
     transition: var(--transition);
@@ -210,13 +213,13 @@ export default {
             }
         }
     }
-    
+
      &-clean {
         background: transparent;
         box-shadow: none;
-        color: var(--link-primary-color);        
+        color: var(--link-primary-color);
         font: {
-           size: 1.5rem;           
+           size: 1.5rem;
            weight: 400;
         }
 
@@ -298,8 +301,8 @@ export default {
         line-height: 3.9rem;
         padding: 0 1.4rem;
     }
-    
-    &-quarter-width {       
+
+    &-quarter-width {
         width: 25%;
     }
 
@@ -339,17 +342,17 @@ export default {
                 fill: var(--icon-primary-color);
                 transition: var(--transition);
             }
-            
+
             &:active,
             &:focus,
             &:hover {
-                
+
                & > svg {
                 fill: var(--icon-tertiary-color);
-               } 
+               }
             }
         }
-        
+
         &.button-clean {
             & > svg {
                 fill: var(--icon-primary-color);
@@ -397,9 +400,9 @@ export default {
             &-white {
                 border-color: rgba(255, 255, 255, .5);
                 border-top-color: rgba(255, 255, 255, 1);
-            }           
+            }
         }
-        
+
         & > svg {
             display: none;
         }
@@ -432,15 +435,15 @@ export default {
             & > svg {
                 fill: var(--icon-tertiary-color);
             }
-        }  
+        }
 
         &.button-delete {
             color: var(--button-red-bg);
-            
+
             & > svg {
                 fill: var(--button-red-bg);
             }
-        }    
+        }
     }
 
     &.button-disabled,
@@ -456,10 +459,10 @@ export default {
         pointer-events: auto;
     }
 
-    & + .button,
-    & + button {
-        margin-left: 2.5 * $spacing;
-    }
+    // & + .button,
+    // & + button {
+    //     margin-left: 2.5 * $spacing;
+    // }
 }
 
 @keyframes rotate {

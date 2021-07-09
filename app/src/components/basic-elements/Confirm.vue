@@ -88,7 +88,6 @@ export default {
 
                 setTimeout(() => {
                     if (config.hasInput) {
-                        console.log(this.$refs);
                         this.$refs.input.$el.querySelector('input').focus();
                     }
                 }, 100);

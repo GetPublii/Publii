@@ -22,7 +22,7 @@
                         :onClick="toggleAllCheckboxes.bind(this, true)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 270px)">
+                <collection-cell width="calc(100% - 300px)">
                     {{ $t('ui.name') }}
                 </collection-cell>
 
@@ -30,7 +30,7 @@
                     {{ $t('menu.assignedMenu') }}
                 </collection-cell>
 
-                <collection-cell width="50px">
+                <collection-cell width="80px">
                     {{ $t('menu.items') }}
                 </collection-cell>
 
@@ -57,7 +57,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 270px)">
+                <collection-cell width="calc(100% - 300px)">
                     <a
                         href="#"
                         @click.prevent.stop="toggleMenu(index)">
@@ -80,7 +80,7 @@
 
                 <collection-cell
                     textAlign="center"
-                    width="50px">
+                    width="80px">
                     <a
                         @click.prevent.stop="toggleMenu(index)"
                         href="#">

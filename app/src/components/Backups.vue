@@ -48,11 +48,11 @@
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 485px)">
+                <collection-cell width="calc(100% - 555px)">
                     {{ $t('file.filename') }}
                 </collection-cell>
 
-                <collection-cell width="100px">
+                <collection-cell width="120px">
                     {{ $t('file.fileSize') }}
                 </collection-cell>
 
@@ -60,7 +60,7 @@
                     {{ $t('file.creationDate') }}
                 </collection-cell>
 
-                <collection-cell width="170px">
+                <collection-cell width="220px">
                     {{ $t('file.operations') }}
                 </collection-cell>
 
@@ -88,7 +88,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 485px)">
+                <collection-cell width="calc(100% - 555px)">
                     <a
                         :href="item.url"
                         @click.prevent.stop="showFileInFolder(item.url)">
@@ -96,7 +96,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell width="100px">
+                <collection-cell width="120px">
                     {{ item.size }}
                 </collection-cell>
 
@@ -104,7 +104,7 @@
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell width="170px">
+                <collection-cell class="col-buttons" width="220px">
                     <p-button
                         :type="renameButtonType"
                         :onClick="renameFile.bind(this, item.name)">

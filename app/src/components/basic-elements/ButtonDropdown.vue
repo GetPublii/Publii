@@ -1,13 +1,13 @@
 <template>
-    <div :class="{ 
-        'button': true, 
-        'is-green': isGreen, 
+    <div :class="{
+        'button': true,
+        'is-green': isGreen,
         'has-icon': hasIcon,
         'has-icon-preview': previewIcon,
         'is-reversed': isReversed,
         'disabled': disabled
     }">
-        <span 
+        <span
             class="button-trigger"
             :style="'min-width:' + minWidth + 'px;'"
             @click.stop="doCurrentAction()">
@@ -20,7 +20,7 @@
             {{ currentLabel }}
         </span>
 
-        <span 
+        <span
             v-if="previewIcon && currentIcon"
             class="button-trigger-icon">
             <icon
@@ -29,22 +29,22 @@
                 :name="currentIcon" />
         </span>
 
-        <span 
+        <span
             class="button-toggle"
             @click.stop="toggleDropdown()">
         </span>
 
-        <div 
+        <div
             v-if="dropdownVisible"
             class="button-dropdown">
             <div
                 v-for="(item, index) of filteredItems"
                 :key="'button-dropdown-' + index"
-                class="button-dropdown-item" 
+                class="button-dropdown-item"
                 @click="doAction(item.value)">
                 {{ item.label }}
 
-                <div 
+                <div
                     v-if="previewIcon"
                     class="button-dropdown-item-icon">
                     <icon
@@ -88,7 +88,7 @@ export default {
         'previewIcon': {
             default: false,
             type: Boolean
-        },  
+        },
         'localStorageKey': {
             default: false,
             type: [String, Boolean]
@@ -159,7 +159,7 @@ export default {
         doAction (actionName) {
             this.value = actionName;
             this.items.filter(item => item.value === this.value)[0].onClick();
-            
+
             if (this.localStorageKey) {
                 localStorage.setItem(this.localStorageKey, actionName);
             }
@@ -202,7 +202,7 @@ export default {
     font-size: 15px;
     font-weight: 500;
     height: 4.2rem;
-    line-height: 4.1rem;      
+    line-height: 4.1rem;
     padding: 0;
     position: relative;
     text-align: left;
@@ -221,10 +221,10 @@ export default {
         position: relative;
         text-align: left;
         top: 0;
-        transition: var(--transition);          
-            
+        transition: var(--transition);
+
         &:hover {
-            background: var(--button-hover-bg);  
+            background: var(--button-hover-bg);
         }
 
         &-icon {
@@ -244,7 +244,7 @@ export default {
     }
 
     &-toggle {
-        background: var(--button-hover-bg);  
+        background: var(--button-hover-bg);
         border-left: 1px solid var(--button-bg);
         border-radius: 0 3px 3px 0;
         cursor: pointer;
@@ -253,22 +253,22 @@ export default {
         right: 0;
         top: 0;
         transition: var(--transition);
-        width: 44px;        
-        
-        &::before {                
+        width: 44px;
+
+        &::before {
             content: "";
             pointer-events: none;
             height: 100%;
             left: 0;
             position: absolute;
             transition: var(--transition);
-            width: 100%;                       
+            width: 100%;
         }
 
         &::after {
             border-color: var(--white) transparent transparent;
             border-style: solid;
-            border-width: 5px;              
+            border-width: 5px;
             content: "";
             pointer-events: none;
             left: 50%;
@@ -276,13 +276,13 @@ export default {
             top: 50%;
             transform: translateX(-50%) translateY(-2.5px);
         }
-        
+
         &:hover {
-            background: var(--button-hover-bg); 
-            
+            background: var(--button-hover-bg);
+
             &::before {
                background: rgba(black, .1);
-            } 
+            }
         }
     }
 
@@ -290,12 +290,12 @@ export default {
         background: var(--bg-secondary);
         border-radius: 0 0 5px 5px;
         box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
-        left: 0;
         overflow: hidden;
         position: absolute;
+        right: 0;
         text-align: left;
         top: 42px;
-        width: 100%;
+        min-width: 100%;
         z-index: 10;
 
         &-item {
@@ -312,6 +312,10 @@ export default {
                 .button-dropdown-item-icon .icon {
                     color: var(--icon-tertiary-color);
                 }
+            }
+
+            &:first-child {
+                border-top: none;
             }
 
             &-icon {
@@ -350,22 +354,22 @@ export default {
     &.is-green {
         background-color: var(--button-green-bg);
 
-        .button-trigger {            
+        .button-trigger {
             &:hover {
-                background: var(--button-green-hover-bg);  
+                background: var(--button-green-hover-bg);
             }
         }
 
         .button-toggle {
-            background: var(--button-green-hover-bg);  
+            background: var(--button-green-hover-bg);
             border-left: 1px solid var(--button-green-bg);
-            
+
             &:hover {
                 background: var(--button-green-hover-bg);
-                
+
                 &::before {
                     background: rgba(black, .1);
-                }                
+                }
             }
         }
 
@@ -402,7 +406,7 @@ export default {
         }
 
         .button-dropdown-item {
-            padding: .2rem 6rem .2rem 2rem;
+            padding: .2rem 4rem .2rem 2rem;
         }
     }
 
