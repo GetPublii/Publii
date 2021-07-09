@@ -147,34 +147,34 @@
                 <div class="msg msg-icon msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
-                        <template v-if="deploymentMethodSelected === 'ftp'">
+                        <span v-if="deploymentMethodSelected === 'ftp'">
                             {{ $t('sync.deploymentMethodFtpMsg') }}
-                        </template>
+                        </span>
 
-                        <template
+                        <span
                             v-if="deploymentMethodSelected === 'netlify'"
                             v-pure-html="$t('sync.deploymentMethodNetlifyMsg')">
-                        </template>
+                        </span>
 
-                        <template
+                        <span
                             v-if="deploymentMethodSelected === 'github-pages'"
                             v-pure-html="$t('sync.deploymentMethodGithubPagesMsg')">
-                        </template>
+                        </span>
 
-                        <template
+                        <span
                             v-if="deploymentMethodSelected === 'gitlab-pages'"
                             v-pure-html="$t('sync.deploymentMethodGitlabPagesMsg')">
-                        </template>
+                        </span>
 
-                        <template
+                        <span
                             v-if="deploymentMethodSelected === 's3'"
                             v-pure-html="$t('sync.deploymentMethodS3Msg')">
-                        </template>
+                        </span>
 
-                        <template
+                        <span
                             v-if="deploymentMethodSelected === 'google-cloud'"
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
-                        </template>
+                        </span>
                     </p>
                 </div>
 
