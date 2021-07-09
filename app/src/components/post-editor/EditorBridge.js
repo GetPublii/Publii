@@ -218,7 +218,7 @@ class EditorBridge {
                         galleryElement: clickedElement
                     });
 
-                    window.app.galleryPopupUpdated(this.galleryPopupUpdated);
+                    window.app.galleryPopupUpdated(this.galleryPopupUpdated.bind(this));
                 }
             });
 
@@ -293,7 +293,7 @@ class EditorBridge {
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
-                this.hideToolbarsOnCopy();
+                self.hideToolbarsOnCopy();
             });
         });
 
