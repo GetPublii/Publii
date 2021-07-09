@@ -458,11 +458,12 @@ export default {
     &.button-disabled-with-events {
         pointer-events: auto;
     }
+}
 
-    // & + .button,
-    // & + button {
-    //     margin-left: 2.5 * $spacing;
-    // }
+.heading .button,
+.footer .button {
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 @keyframes rotate {
