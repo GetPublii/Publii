@@ -6,12 +6,7 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <webview
-                        :src="editorHtmlPath"
-                        nodeintegration
-                        :webpreferences="$store.state.currentSite.config.spellchecking ? 'spellcheck' : ''"
-                        :preload="editorPreloadPath"></webview>
-                    <textarea id="post-editor"></textarea>
+                    <publii-block-editor />
                 </div>
             </div>
 
@@ -48,6 +43,7 @@ import Utils from './../helpers/utils';
 import path from 'path';
 import url from 'url';
 import PostEditorsCommon from './mixins/PostEditorsCommon';
+import PubliiBlockEditor from './block-editor/PubliiBlockEditor';
 
 export default {
     name: 'post-editor-block-editor',
@@ -62,11 +58,11 @@ export default {
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
         'search-popup': SearchPopup,
-        'help-panel-block-editor': HelpPanelBlockEditor
+        'help-panel-block-editor': HelpPanelBlockEditor,
+        'publii-block-editor': PubliiBlockEditor
     },
     data () {
         return {
-            webContentsID: null,
             postID: this.$route.params.post_id || 0,
             newPost: true,
             helpPanelOpen: false,
@@ -118,29 +114,9 @@ export default {
     computed: {
         isEdit () {
             return !!this.postID;
-        },
-        editorHtmlPath () {
-            return url.format({
-                pathname: path.join(window.__dirname, '/../node_modules/publii-block-editor/dist/index.html'),
-                protocol: 'file',
-                slashes: true
-            });
-        },
-        editorPreloadPath () {
-            return url.format({
-                pathname: path.join(window.__dirname, '/editor-webview-preload.js'),
-                protocol: 'file',
-                slashes: true
-            });
         }
     },
     mounted () {
-        if (this.$store.state.app.config.spellchecking) {
-            mainProcessAPI.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
-        } else {
-            mainProcessAPI.send('publii-set-spellchecker-language', '');
-        }
-
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
 
@@ -156,7 +132,6 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.webview = document.querySelector('webview');
         this.initCommunicationWithEditor();
 
         this.webview.addEventListener('dom-ready', () => {
@@ -173,11 +148,8 @@ export default {
                 await mainProcessAPI.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
                 await mainProcessAPI.invoke('app-main-webview-search-init', this.webContentsID);
                 mainProcessAPI.receive('app-main-webview-input-response', this.handleMainThreadResponse);
-                await this.setWebViewSpellcheckerLanguage(this.webContentsID);
-                this.webview.send('set-app-theme', await this.$root.getCurrentAppTheme());
                 this.webview.send('set-post-id', this.postID);
-                this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
-
+                
                 mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
                     dirPath: 'root-files'
@@ -333,30 +305,6 @@ export default {
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;
         },
-        async setWebViewSpellcheckerLanguage (webContentsID) {
-            if (mainProcessAPI.getEnv().platformName === 'darwin') {
-                return;
-            }
-
-            let language = await mainProcessAPI.invoke('publii-get-spellchecker-language');
-            language = language.toLocaleLowerCase();
-            let availableLanguages = await mainProcessAPI.invoke('app-main-get-spellchecker-languages');
-
-            if (availableLanguages.indexOf(language) > -1) {
-                await mainProcessAPI.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
-                return;
-            }
-
-            language = language.split('-');
-            language = language[0];
-
-            if (availableLanguages.indexOf(language) > -1) {
-                await mainProcessAPI.invoke('app-main-set-spellchecker-language-for-webview', webContentsID, [language]);
-                return;
-            }
-
-            console.log(this.$t('editor.unableToSetSpellCheckerForLanguage') + language);
-        },
         handleMainThreadResponse (sender, response) {
             if (response.webContentsID !== this.webContentsID) {
                 return;
@@ -388,6 +336,17 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
+   
+#publii-block-editor {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#post-editor-fake-image-uploader,
+#post-editor-fake-multiple-images-uploader {
+    display: none;
+}
 
 .post-editor {
     overflow-x: hidden;

@@ -1,0 +1,39 @@
+// Sass does not have native pow() support so this needs to be added.
+// Compass and other libs implement this more extensively.
+// In order to keep this simple, use those when they are avalible.
+// Issue for pow() support in Sass: https://github.com/sass/sass/issues/684
+
+@function ms-pow($b,$e) {
+
+  // Return 1 if exponent is 0
+  @if $e == 0 {
+    @return 1;
+  }
+
+  // If pow() exists (compass or mathsass) use that.
+  @if function-exists('pow') {
+    @return pow($b,$e);
+  }
+
+  // This does not support non-integer exponents,
+  // Check and return an error if a non-integer exponent is passed.
+  @if (floor($e) != $e) {
+    @error 'Non-integer values are not supported in modularscale by default. Try using mathsass in your project to add non-integer scale support. https://github.com/terkel/mathsass'
+  }
+
+  // Seed the return.
+  $ms-return: $b;
+
+  // Multiply or divide by the specified number of times.
+  @if $e > 0 {
+    @for $i from 1 to $e {
+      $ms-return: $ms-return * $b;
+    }
+  }
+  @if $e < 0 {
+    @for $i from $e through 0 {
+      $ms-return: $ms-return / $b;
+    }
+  }
+  @return $ms-return;
+}

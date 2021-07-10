@@ -1,0 +1,53 @@
+@function ms-function($v: 0, $base: false, $ratio: false, $thread: false, $settings: $modularscale) {
+
+  // Parse settings
+  $ms-settings: ms-settings($base,$ratio,$thread,$settings);
+  $base: nth($ms-settings, 1);
+  $ratio: nth($ms-settings, 2);
+
+  // Render target values from settings.
+  @if unit($ratio) != '' {
+    $ratio: ms-target($ratio,$base)
+  }
+
+  // Fast calc if not multi stranded
+  @if(length($base) == 1) {
+    @return ms-pow($ratio, $v) * $base;
+  }
+
+  // Create new base array
+  $ms-bases: nth($base,1);
+
+  // Normalize base values
+  @for $i from 2 through length($base) {
+    // initial base value
+    $ms-base: nth($base,$i);
+    // If the base is bigger than the main base
+    @if($ms-base > nth($base,1)) {
+      // divide the value until it aligns with main base.
+      @while($ms-base > nth($base,1)) {
+        $ms-base: $ms-base / $ratio;
+      }
+      $ms-base: $ms-base * $ratio;
+    }
+    // If the base is smaller than the main base.
+    @else if ($ms-base < nth($base,1)) {
+      // pump up the value until it aligns with main base.
+      @while $ms-base < nth($base,1) {
+        $ms-base: $ms-base * $ratio;
+      }
+    }
+    // Push into new array
+    $ms-bases: append($ms-bases,$ms-base);
+  }
+
+  // Sort array from smallest to largest.
+  $ms-bases: ms-sort($ms-bases);
+
+  // Find step to use in calculation
+  $vtep: floor($v / length($ms-bases));
+  // Find base to use in calculation
+  $ms-base: round(($v / length($ms-bases) - $vtep) * length($ms-bases)) + 1;
+
+  @return ms-pow($ratio, $vtep) * nth($ms-bases,$ms-base);
+}

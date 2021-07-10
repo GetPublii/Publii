@@ -1,0 +1,168 @@
+<template>
+  <div :class="{ 'is-empty': isEmpty }">
+    <div
+      class="publii-block-separator"
+      contenteditable="true"
+      @keyup="getFocusFromTab($event); handleCaret($event)"
+      @paste="pastePlainText"
+      ref="block">
+      <hr :class="config.type" />
+    </div>
+
+    <top-menu
+      ref="top-menu"
+      :conversions="conversions"
+      :config="topMenuConfig"
+      :advancedConfig="configForm" />
+  </div>
+</template>
+
+<script>
+import AvailableConversions from './conversions.js';
+import Block from './../../Block.vue';
+import ConfigForm from './config-form.json';
+import TopMenuUI from './../../helpers/TopMenuUI.vue';
+
+export default {
+  name: 'Separator',
+  mixins: [
+    Block
+  ],
+  components: {
+    'top-menu': TopMenuUI
+  },
+  data () {
+    return {
+      config: {
+        type: 'dots',
+        advanced: {
+          cssClasses: this.getAdvancedConfigDefaultValue('cssClasses'),
+          id: this.getAdvancedConfigDefaultValue('id')
+        }
+      },
+      content: false,
+      topMenuConfig: [
+        {
+          activeState: function () { return this.config.type === 'long-line'; },
+          onClick: function () { this.setType('long-line'); },
+          icon: 'long-line',
+          tooltip: 'Wide line'
+        },
+        {
+          activeState: function () { return this.config.type === 'dots'; },
+          onClick: function () { this.setType('dots'); },
+          icon: 'dotted-line',
+          tooltip: 'Dots'
+        },
+        {
+          activeState: function () { return this.config.type === 'dot'; },
+          onClick: function () { this.setType('dot'); },
+          icon: 'dot',
+          tooltip: 'Dot'
+        }
+      ],
+      conversions: AvailableConversions
+    };
+  },
+  beforeCreate () {
+    this.configForm = ConfigForm;
+  },
+  mounted () {
+    this.$refs['block'].addEventListener('keydown', this.handleKeyboard);
+  },
+  methods: {
+    handleKeyboard (e) {
+      if (e.code === 'Enter' && !e.isComposing) {
+        this.$bus.$emit('block-editor-add-block', 'publii-paragraph', this.id);
+        e.returnValue = false;
+      }
+
+      if (e.code === 'Backspace') {
+        this.$bus.$emit('block-editor-delete-block', this.id);
+        e.returnValue = false;
+      }
+
+      if (e.code !== 'Tab') {
+        e.returnValue = false;
+      }
+    },
+    setType (type) {
+      this.config.type = type;
+    },
+    save () {
+      this.$bus.$emit('block-editor-save-block', {
+        id: this.id,
+        config: JSON.parse(JSON.stringify(this.config)),
+        content: this.content
+      });
+    }
+  },
+  beforeDestroy () {
+    this.$refs['block'].removeEventListener('keydown', this.handleKeyboard);
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../../../vendors/modularscale';
+@import '../../../assets/functions.scss';
+@import '../../../assets/variables.scss';
+@import '../../../assets/mixins.scss';
+
+.publii-block-separator {
+  caret-color: transparent;
+  margin: baseline(2) 0;
+  outline: none;
+  width: 100%;
+
+  hr {
+    border: none;
+    cursor: pointer;
+    height: baseline(5);
+    line-height: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  hr.long-line {
+
+      &::after {
+          border-bottom: 1px solid var(--eb-input-border-color);
+          bottom: baseline(2);
+          content: "";
+          height: 1px;
+          left: 0;
+          position: absolute;
+          width: 100%;
+      }
+  }
+
+  hr.medium {
+    width: 50%;
+  }
+
+  hr.short {
+    width: 25%;
+  }
+
+  hr.dots,
+  hr.dot {
+    margin: 0 auto;
+
+    &:before {
+      content: "* * *";
+      font-size: 30px;
+      left: 50%;
+      position: absolute;
+      bottom: 0;
+      transform: translateX(-50%) translateY(-50%);
+    }
+  }
+
+  hr.dot {
+    &:before {
+      content: "*";
+    }
+  }
+}
+</style>

@@ -1,0 +1,4 @@
+// Baseline for Vertical Rhythm
+@function baseline($value){
+  @return ($baseline) * $value
+}
