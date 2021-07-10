@@ -134,48 +134,45 @@ export default {
 
         this.initCommunicationWithEditor();
 
-        this.webview.addEventListener('dom-ready', () => {
-            // this.webview.openDevTools();
-            if (this.isEdit) {
-                this.newPost = false;
-                this.loadPostData();
-            } else {
-                this.setDataLossWatcher();
-            }
+        if (this.isEdit) {
+            this.newPost = false;
+            this.loadPostData();
+        } else {
+            this.setDataLossWatcher();
+        }
 
-            setTimeout(async () => {
-                this.webContentsID = document.querySelector('webview').getWebContentsId();
-                await mainProcessAPI.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
-                await mainProcessAPI.invoke('app-main-webview-search-init', this.webContentsID);
-                mainProcessAPI.receive('app-main-webview-input-response', this.handleMainThreadResponse);
-                this.webview.send('set-post-id', this.postID);
-                
+        setTimeout(async () => {
+            this.webContentsID = document.querySelector('webview').getWebContentsId();
+            await mainProcessAPI.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
+            await mainProcessAPI.invoke('app-main-webview-search-init', this.webContentsID);
+            mainProcessAPI.receive('app-main-webview-input-response', this.handleMainThreadResponse);
+            this.webview.send('set-post-id', this.postID);
+            
+            mainProcessAPI.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                this.filesList = data.map(file => file.name);
+
                 mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
-                    dirPath: 'root-files'
-                });
+                    dirPath: 'media/files'
+                }); 
 
                 mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
-                    this.filesList = data.map(file => file.name);
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
 
-                    mainProcessAPI.send('app-file-manager-list', {
-                        siteName: this.$store.state.currentSite.config.name,
-                        dirPath: 'media/files'
-                    }); 
-
-                    mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
-                        this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
-
-                        this.webview.send('set-current-site-data', {
-                            tags: this.$store.state.currentSite.tags,
-                            posts: this.$store.state.currentSite.posts,
-                            authors: this.$store.state.currentSite.authors,
-                            files: this.filesList
-                        });
+                    this.webview.send('set-current-site-data', {
+                        tags: this.$store.state.currentSite.tags,
+                        posts: this.$store.state.currentSite.posts,
+                        authors: this.$store.state.currentSite.authors,
+                        files: this.filesList
                     });
                 });
-            }, 0);
-        });
+            });
+        }, 0);
     },
     methods: {
         initCommunicationWithEditor () {

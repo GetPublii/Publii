@@ -46,7 +46,7 @@ import Tabs from './components/basic-elements/Tabs';
 import TextArea from './components/basic-elements/TextArea';
 import TextInput from './components/basic-elements/TextInput';
 import vSelect from '../node_modules/vue-multiselect/dist/vue-multiselect.min.js';
-import VuePrismEditor from 'vue-prism-editor';
+import VuePrismEditor from 'vue-prism-editor/dist/VuePrismEditor.common';
 import 'vue-prism-editor/dist/VuePrismEditor.css';
 
 // Prism JS languages
