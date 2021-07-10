@@ -37,23 +37,21 @@ export default {
     BlockEditor
   },
   mounted () {
-    if (this.$ipcRenderer) {
-      this.$ipcRenderer.on('set-post-id', this.setPostID);
-      this.$ipcRenderer.on('set-post-text', this.setPostText);
-      this.$ipcRenderer.on('set-post-title', this.setPostTitle);
-      this.$ipcRenderer.on('post-save', this.postSave);
-      this.$ipcRenderer.on('set-current-site-data', this.setCurrentSiteData);
-      this.$ipcRenderer.on('block-editor-undo', this.undoAction);
-      this.$ipcRenderer.on('block-editor-redo', this.redoAction);
-    }
+    this.$bus.$on('block-editor-set-post-id', this.setPostID);
+    this.$bus.$on('block-editor-set-post-text', this.setPostText);
+    this.$bus.$on('block-editor-set-post-title', this.setPostTitle);
+    this.$bus.$on('block-editor-post-save', this.postSave);
+    this.$bus.$on('block-editor-set-current-site-data', this.setCurrentSiteData);
+    this.$bus.$on('block-editor-undo', this.undoAction);
+    this.$bus.$on('block-editor-redo', this.redoAction);
 
     this.$refs['post-title'].focus();
   },
   methods: {
-    setPostID (event, postID) {
+    setPostID (postID) {
       this.$refs['block-editor'].setPostID(postID);
     },
-    setPostText (event, postText) {
+    setPostText (postText) {
       document.getElementById('post-editor').value = postText;
 
       setTimeout(() => {
@@ -67,15 +65,12 @@ export default {
         this.$refs['block-editor'].$refs['block-' + firstBlockID][0].focus();
       }
     },
-    setPostTitle (event, postTitle) {
+    setPostTitle (postTitle) {
       this.$refs['post-title'].innerText = postTitle;
     },
     updateTitle () {
       let title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
-
-      if (this.$ipcRenderer) {
-        this.$ipcRenderer.sendToHost('editor-title-updated', title);
-      }
+      this.$bus.$emit('block-editor-title-updated', title);
     },
     pasteTitle (e) {
       let text = (e.originalEvent || e).clipboardData.getData('text/plain').replace(/\n/gmi, '');
@@ -85,12 +80,10 @@ export default {
       this.$bus.$emit('publii-block-editor-save');
 
       setTimeout(() => {
-        if (this.$ipcRenderer) {
-          this.$ipcRenderer.sendToHost('editor-post-saved', document.querySelector('#post-editor').value);
-        }
+        this.$bus.$emit('block-editor-post-saved');
       }, 500);
     },
-    setCurrentSiteData (event, currentSiteData) {
+    setCurrentSiteData (currentSiteData) {
       this.$refs['block-editor'].currentSiteData = currentSiteData;
     },
     undoAction () {
@@ -99,6 +92,15 @@ export default {
     redoAction () {
 
     }
+  },
+  beforeDestroy () {
+    this.$bus.$off('block-editor-set-post-id', this.setPostID);
+    this.$bus.$off('block-editor-set-post-text', this.setPostText);
+    this.$bus.$off('block-editor-set-post-title', this.setPostTitle);
+    this.$bus.$off('block-editor-post-save', this.postSave);
+    this.$bus.$off('block-editor-set-current-site-data', this.setCurrentSiteData);
+    this.$bus.$off('block-editor-undo', this.undoAction);
+    this.$bus.$off('block-editor-redo', this.redoAction);
   }
 }
 </script>

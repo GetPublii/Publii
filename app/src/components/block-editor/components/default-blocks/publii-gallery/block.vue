@@ -203,42 +203,25 @@ export default {
       this.isHovered = false;
     },
     drop (e) {
-      if (this.$ipcRenderer) {
-        let files = e.dataTransfer.files;
+      let files = e.dataTransfer.files;
 
-        if (!files[0] || !files[0].path) {
-          this.imageUploadInProgress = false;
-        } else {
-          this.imagesQueue = [];
-
-          for (let i = 0; i < files.length; i++) {
-            this.imagesQueue.push(files[i].path);
-          }
-
-          this.imageUploadInProgress = true;
-          this.$parent.$el.setAttribute('style', 'height: ' + this.$parent.$el.clientHeight + 'px; overflow: hidden;');
-          this.uploadImage();
-        }
+      if (!files[0] || !files[0].path) {
+        this.imageUploadInProgress = false;
       } else {
-        for (let i = 0; i < e.dataTransfer.items.length; i++) {
-          let blob = e.dataTransfer.items[i].getAsFile();
-          this.content.images.push({
-            src: window.URL.createObjectURL(blob),
-            height: 240,
-            width: 320,
-            alt: '',
-            caption: ''
-          });
+        this.imagesQueue = [];
+
+        for (let i = 0; i < files.length; i++) {
+        this.imagesQueue.push(files[i].path);
         }
+
+        this.imageUploadInProgress = true;
+        this.$parent.$el.setAttribute('style', 'height: ' + this.$parent.$el.clientHeight + 'px; overflow: hidden;');
+        this.uploadImage();
       }
 
       this.isHovered = false;
     },
     initFakeFilePicker () {
-      if (!this.$ipcRenderer) {
-        return false;
-      }
-
       this.imageUploader = document.getElementById('post-editor-fake-multiple-images-uploader');
       this.imageUploader.addEventListener('change', () => {
         if (!this.imageUploader.value) {
@@ -270,7 +253,7 @@ export default {
       let filePath = this.imagesQueue.shift();
 
       // eslint-disable-next-line
-      this.$ipcRenderer.send('app-image-upload', {
+      mainProcessAPI.send('app-image-upload', {
         id: this.editor.config.postID,
         site: window.app.getSiteName(),
         path: filePath,
@@ -278,7 +261,7 @@ export default {
       });
 
       // eslint-disable-next-line
-      this.$ipcRenderer.once('app-image-uploaded', (event, data) => {
+      mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
         let thumbnailSrc = data.thumbnailDimensions ? data.thumbnailPath[0] : data.thumbnailPath;
         let sizeWidth = data.baseImage.size[0] || '';
         let sizeHeight = data.baseImage.size[1] || '';

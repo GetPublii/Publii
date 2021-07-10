@@ -159,12 +159,7 @@ export default {
       return '16';
     },
     iconPath () {
-      // Detect if editor is running in Publii or standalone
-      if (window.process) {
-        return `./assets/svg/editor-ui-svg-map.svg#${this.name}`;
-      }
-
-      return `../assets/svg/editor-ui-svg-map.svg#${this.name}`;
+        return `../src/assets/svg/svg-map-block-editor.svg#${this.name}`;
     }
   }
 }

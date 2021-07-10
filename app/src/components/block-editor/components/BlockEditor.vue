@@ -18,9 +18,10 @@
         v-if="!bulkOperationsMode"
         @click.stop="startBulkOperations"
         class="batch">
-        <icon name="gear"
-              :customHeight="19"
-              :customWidth="19"/>
+        <icon 
+          name="gear"
+          :customHeight="19"
+          :customWidth="19"/>
       </button>
       <button
         v-if="bulkOperationsMode"
@@ -35,9 +36,7 @@
         <icon name="cancel" />
       </button>
     </div>
-    <div
-      v-if="state.externalComponentsLoaded"
-      :class="{ 'editor-inner': true, 'is-bulk-edit-mode': bulkOperationsMode }">
+    <div :class="{ 'editor-inner': true, 'is-bulk-edit-mode': bulkOperationsMode }">
       <block-wrapper
         v-for="block of content"
         :id="block.id"
@@ -51,7 +50,7 @@
           :inputContent="block.content"
           :key="'block-' + block.id"
           :ref="'block-' + block.id"
-          :editor="$self" />
+          :editor="editorInstance" />
       </block-wrapper>
       <div
         class="editor-inner-trigger"
@@ -118,6 +117,7 @@ export default {
   },
   data () {
     return {
+      editorInstance: this,
       config: {
         postID: ''
       },
@@ -127,8 +127,7 @@ export default {
       bulkContentBackup: '',
       bulkOperationsLog: [],
       state: {
-        selectedBlockID: false,
-        externalComponentsLoaded: false
+        selectedBlockID: false
       },
       internal: {
         lastScroll: 0,
@@ -160,10 +159,7 @@ export default {
 
         if (!this.internal.firstChangeDone && this.internal.editorIsLoaded) {
           this.internal.firstChangeDone = true;
-
-          if (this.$parent.$ipcRenderer) {
-            this.$parent.$ipcRenderer.sendToHost('editor-content-updated');
-          }
+          this.$bus.$emit('block-editor-content-updated');
         }
 
         if (this.content.length) {
@@ -175,17 +171,7 @@ export default {
       deep: true
     }
   },
-  beforeMount () {
-    let externalComponent = document.createElement('script');
-    externalComponent.setAttribute('src', 'external-component.js');
-    document.body.appendChild(externalComponent);
-
-    setTimeout(() => {
-      this.state.externalComponentsLoaded = true;
-    }, 500);
-  },
   mounted () {
-    this.$self = this;
     this.$bus.$on('block-editor-move-block-up', this.moveBlockUp);
     this.$bus.$on('block-editor-move-block-down', this.moveBlockDown);
     this.$bus.$on('block-editor-save-block', this.saveBlock);
@@ -201,21 +187,12 @@ export default {
     this.$bus.$on('publii-block-editor-load', this.loadAllBlocks);
     this.$bus.$on('publii-block-editor-update-current-block-id', this.updateCurrentBlockID);
     this.$bus.$on('undomanager-save-history', this.saveChangesHistory);
-    this.initGlobals();
 
     setTimeout(() => {
       this.internal.editorIsLoaded = true;
-      window.xxx = this.undo;
     }, 1500);
   },
   methods: {
-    initGlobals () {
-      window.Vue = Vue;
-      window.publiiBlockEditor = {};
-      window.publiiBlockEditor.Block = Block;
-      window.publiiBlockEditor.compileToFunctions = compileToFunctions;
-      window.publiiBlockEditor.ContentEditableImprovements = ContentEditableImprovements;
-    },
     moveBlockUp (blockID, startBlockTop) {
       let blockIndex = this.content.findIndex(el => el.id === blockID);
 
