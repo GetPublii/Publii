@@ -102,7 +102,7 @@ export default {
 
             mainProcessAPI.send('app-image-upload', uploadData);
 
-            mainProcessAPI.receiveOnce('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.isEmpty = false;
                 this.fileName = 'media/website/' + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
                 this.isUploading = false;

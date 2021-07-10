@@ -213,7 +213,7 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost (newPostStatus, preview = false, closeEditor = false) {
+        async savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
                     message: 'You cannot save a post with empty title.'
@@ -222,7 +222,7 @@ export default {
                 return;
             }
 
-            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            let postData = await PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);

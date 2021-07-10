@@ -24,7 +24,7 @@
             <author-popup />
             <date-popup />
             <help-panel-block-editor :isOpen="helpPanelOpen" />
-            <search-popup />
+            <!--<search-popup />-->
         </div>
     </div>
 </template>
@@ -38,10 +38,8 @@ import HelpPanelBlockEditor from './post-editor/HelpPanelBlockEditor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
-import SearchPopup from './post-editor/SearchPopup';
+// import SearchPopup from './post-editor/SearchPopup';
 import Utils from './../helpers/utils';
-import path from 'path';
-import url from 'url';
 import PostEditorsCommon from './mixins/PostEditorsCommon';
 import PubliiBlockEditor from './block-editor/PubliiBlockEditor';
 
@@ -57,7 +55,7 @@ export default {
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
-        'search-popup': SearchPopup,
+        // 'search-popup': SearchPopup,
         'help-panel-block-editor': HelpPanelBlockEditor,
         'publii-block-editor': PubliiBlockEditor
     },
@@ -117,22 +115,11 @@ export default {
         }
     },
     mounted () {
-        this.$bus.$on('date-changed', (timestamp) => {
-            let format = 'MMM DD, YYYY  HH:mm';
-
-            if (this.$store.state.app.config.timeFormat == 12) {
-                format = 'MMM DD, YYYY  hh:mm a';
-            }
-
-            this.postData.creationDate.timestamp = timestamp;
-            this.postData.creationDate.text = this.$moment(this.postData.creationDate.timestamp).format(format);
-        });
-
-        this.$bus.$on('post-editor-possible-data-loss', () => {
-            this.possibleDataLoss = true;
-        });
-
-        this.initCommunicationWithEditor();
+        this.$bus.$on('date-changed', this.setCreationDate);
+        this.$bus.$on('post-editor-possible-data-loss', this.setPossibleDataLoss);
+        this.$bus.$on('block-editor-title-updated', this.updateTitle);
+        this.$bus.$on('block-editor-content-updated', this.setPossibleDataLoss);
+        this.$bus.$on('block-editor-post-saved', this.editorPostSaved);
 
         if (this.isEdit) {
             this.newPost = false;
@@ -142,11 +129,7 @@ export default {
         }
 
         setTimeout(async () => {
-            this.webContentsID = document.querySelector('webview').getWebContentsId();
-            await mainProcessAPI.invoke('app-main-initialize-context-menu-for-webview', this.webContentsID);
-            await mainProcessAPI.invoke('app-main-webview-search-init', this.webContentsID);
-            mainProcessAPI.receive('app-main-webview-input-response', this.handleMainThreadResponse);
-            this.webview.send('set-post-id', this.postID);
+            this.$bus.$emit('block-editor-set-post-id', this.postID);
             
             mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
@@ -164,7 +147,7 @@ export default {
                 mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                     this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
 
-                    this.webview.send('set-current-site-data', {
+                    this.$bus.$emit('block-editor-set-current-site-data', {
                         tags: this.$store.state.currentSite.tags,
                         posts: this.$store.state.currentSite.posts,
                         authors: this.$store.state.currentSite.authors,
@@ -175,33 +158,30 @@ export default {
         }, 0);
     },
     methods: {
-        initCommunicationWithEditor () {
-            this.webview.addEventListener('ipc-message', this.editorOnIpcMessage);
+        setCreationDate (timestamp) {
+            let format = 'MMM DD, YYYY  HH:mm';
+
+            if (this.$store.state.app.config.timeFormat == 12) {
+                format = 'MMM DD, YYYY  hh:mm a';
+            }
+
+            this.postData.creationDate.timestamp = timestamp;
+            this.postData.creationDate.text = this.$moment(this.postData.creationDate.timestamp).format(format);
         },
-        editorOnIpcMessage(event) {
-            const {args, channel} = event;
+        setPossibleDataLoss () {
+            this.possibleDataLoss = true;
+        },
+        async editorPostSaved () {
+            let postData = await PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
 
-            if (channel === 'editor-title-updated') {
-                this.updateTitle(args[0]);
-            }
-
-            if (channel === 'editor-content-updated') {
-                this.$bus.$emit('post-editor-possible-data-loss');
-            }
-
-            if (channel === 'editor-post-saved') {
-                document.querySelector('#post-editor').value = args[0];
-                let postData = PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
-
-                if (!this.saveAction.preview) {
-                    this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
-                } else {
-                    this.$bus.$emit('rendering-popup-display', {
-                        itemID: this.postID,
-                        postData: postData,
-                        postOnly: true
-                    });
-                }
+            if (!this.saveAction.preview) {
+                this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
+            } else {
+                this.$bus.$emit('rendering-popup-display', {
+                    itemID: this.postID,
+                    postData: postData,
+                    postOnly: true
+                });
             }
         },
         updateTitle (newTitle) {
@@ -217,11 +197,11 @@ export default {
 
             // Load post data
             mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
-                if(data !== false && this.postID !== 0) {
+                if (data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
-                    this.webview.send('set-post-text', this.postData.text);
-                    this.webview.send('set-post-title', this.postData.title);
+                    this.$bus.$emit('block-editor-set-post-text', this.postData.text);
+                    this.$bus.$emit('block-editor-set-post-title', this.postData.title);
                 }
 
                 setTimeout(() => {
@@ -248,7 +228,7 @@ export default {
             this.saveAction.status = newPostStatus;
             this.saveAction.preview = preview;
             this.saveAction.closeEditor = closeEditor;
-            this.webview.send('post-save');
+            this.$bus.$emit('block-editor-post-save');
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
@@ -274,7 +254,7 @@ export default {
                 this.closeEditor();
                 return;
             } else {
-                this.webview.send('set-post-id', this.postID);
+                this.$bus.$emit('block-editor-set-post-id', this.postID);
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
@@ -301,19 +281,6 @@ export default {
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;
-        },
-        handleMainThreadResponse (sender, response) {
-            if (response.webContentsID !== this.webContentsID) {
-                return;
-            }
-
-            if (response.action === 'show-search') {
-                this.$bus.$emit('app-show-search-form');
-            } else if (response.action === 'undo') {
-                this.webview.send('block-editor-undo');
-            } else if (response.action === 'redo') {
-                this.webview.send('block-editor-redo');
-            }
         }
     },
     beforeDestroy () {
@@ -321,10 +288,11 @@ export default {
             this.unwatchDataLoss();
         }
 
-        this.webview.removeEventListener('ipc-message', this.editorOnIpcMessage);
-        this.$bus.$off('date-changed');
-        this.$bus.$off('post-editor-possible-data-loss');
-        mainProcessAPI.stopReceiveAll('app-main-webview-input-response', this.handleMainThreadResponse);
+        this.$bus.$off('date-changed', this.setCreationDate);
+        this.$bus.$off('post-editor-possible-data-loss', this.setPossibleDataLoss);
+        this.$bus.$off('block-editor-title-updated', this.updateTitle);
+        this.$bus.$off('block-editor-content-updated', this.setPossibleDataLoss);
+        this.$bus.$off('block-editor-post-saved', this.editorPostSaved);
     }
 };
 </script>

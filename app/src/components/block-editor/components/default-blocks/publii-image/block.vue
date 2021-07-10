@@ -206,45 +206,36 @@ export default {
       this.isHovered = false;
     },
     drop (e) {
-      if (this.$ipcRenderer) {
-        let files = e.dataTransfer.files;
-        let siteName = window.app.getSiteName();
-        this.imageUploadInProgress = true;
+      let files = e.dataTransfer.files;
+      let siteName = window.app.getSiteName();
+      this.imageUploadInProgress = true;
 
-        if (!files[0] || !files[0].path) {
-          this.imageUploadInProgress = false;
-        } else {
-          this.$ipcRenderer.send('app-image-upload', {
-            id: this.editor.config.postID,
-            site: siteName,
-            path: files[0].path,
-            imageType: 'contentImages'
-          });
-
-          this.$ipcRenderer.once('app-image-uploaded', (event, data) => {
-            if (data.baseImage && data.baseImage.size && data.baseImage.size.length >= 2) {
-              this.content.imageWidth = data.baseImage.size[0];
-              this.content.imageHeight = data.baseImage.size[1];
-              this.content.image = data.baseImage.url;
-            } else {
-              this.content.image = data.url;
-            }
-
-            this.imageUploadInProgress = false;
-          });
-        }
+      if (!files[0] || !files[0].path) {
+        this.imageUploadInProgress = false;
       } else {
-        let blob = e.dataTransfer.items[0].getAsFile();
-        this.content.image = window.URL.createObjectURL(blob);
+        mainProcessAPI.send('app-image-upload', {
+          id: this.editor.config.postID,
+          site: siteName,
+          path: files[0].path,
+          imageType: 'contentImages'
+        });
+
+        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+          if (data.baseImage && data.baseImage.size && data.baseImage.size.length >= 2) {
+            this.content.imageWidth = data.baseImage.size[0];
+            this.content.imageHeight = data.baseImage.size[1];
+            this.content.image = data.baseImage.url;
+          } else {
+            this.content.image = data.url;
+          }
+
+          this.imageUploadInProgress = false;
+        });
       }
 
       this.isHovered = false;
     },
     initFakeFilePicker () {
-      if (!this.$ipcRenderer) {
-        return;
-      }
-
       let imageUploader = document.getElementById('post-editor-fake-image-uploader');
 
       imageUploader.addEventListener('change', () => {
@@ -269,7 +260,7 @@ export default {
 
           this.imageUploadInProgress = true;
           // eslint-disable-next-line
-          this.$ipcRenderer.send('app-image-upload', {
+          mainProcessAPI.send('app-image-upload', {
             id: this.editor.config.postID,
             site: window.app.getSiteName(),
             path: filePath,
@@ -277,7 +268,7 @@ export default {
           });
 
           // eslint-disable-next-line
-          this.$ipcRenderer.once('app-image-uploaded', (event, data) => {
+          mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
             this.content.imageWidth = data.baseImage.size[0];
             this.content.imageHeight = data.baseImage.size[1];
             this.content.image = data.baseImage.url;
