@@ -287,6 +287,7 @@ export default {
     &__single {
       background: inherit;
       color: var(--eb-text-primary-color);
+      height: 20px;
     }
 
     &__select {
@@ -340,6 +341,7 @@ export default {
       background: none !important;
       color: var(--eb-text-primary-color);
       font-size: 13px;
+      height: 27px;
 
       &::placeholder {
         color: var(--eb-gray-5);

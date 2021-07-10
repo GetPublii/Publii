@@ -537,12 +537,15 @@ export default {
       width: 500px;
 
       &-add-button {
+        align-items: center;
         animation: fadeInAddButton .25s ease-out forwards;
         background: transparent;
         border: none;
         border-radius: 50%;
         cursor: pointer;
+        display: flex;
         height: 34px;
+        justify-content: center;
         outline: none;
         width: 34px;
 

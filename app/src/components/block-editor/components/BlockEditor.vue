@@ -589,7 +589,9 @@ export default {
     }
 
     & > button {
-      display: inline-block;
+      align-items: center;
+      display: flex;
+      justify-content: center;
       margin: 0;
       padding: 0;
       position: relative;
