@@ -144,7 +144,7 @@ export default {
       },
       content: [
         {
-          id: 1555941466744,
+          id: +new Date(),
           type: 'publii-paragraph',
           content: '',
           config: {}
@@ -412,7 +412,7 @@ export default {
       let inputField = document.querySelector('#post-editor');
 
       if (inputField.value !== '') {
-        this.content = JSON.parse(inputField.value);
+        Vue.set(this, 'content', JSON.parse(inputField.value));
       }
     },
     saveAllBlocks () {
