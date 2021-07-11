@@ -61,19 +61,19 @@ export default {
           activeState: function () { return this.config.listType === 'ul'; },
           onClick: function () { this.setListType('ul'); },
           icon: 'unordered-list',
-          tooltip: 'Use unordered list'
+          tooltip: this.$t('editor.useUnorderedList')
         },
         {
           activeState: function () { return this.config.listType === 'ol'; },
           onClick: function () { this.setListType('ol'); },
           icon: 'ordered-list',
-          tooltip: 'Use ordered list'
+          tooltip: this.$t('editor.useOrderedList')
         },
         {
           activeState: () => false,
           onClick: function () { this.clearListHtml(); },
           icon: 'eraser',
-          tooltip: 'Clear formatting'
+          tooltip: this.$t('editor.clearFormatting')
         }
       ]
     };

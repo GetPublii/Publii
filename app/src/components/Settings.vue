@@ -48,7 +48,7 @@
 
                 <field
                     id="language"
-                    :label="$t('settings.language')">
+                    :label="$t('langs.language')">
                     <dropdown
                         slot="field"
                         id="language"

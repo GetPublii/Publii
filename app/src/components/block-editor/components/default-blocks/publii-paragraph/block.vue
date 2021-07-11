@@ -12,7 +12,8 @@
       @keydown="handleKeyboard"
       @mouseup="handleMouseUp"
       contenteditable="true"
-      v-initial-html="content">
+      v-initial-html="content"
+      :data-translation="$t('editor.startWritingOrPressTabToChooseBlock')">
     </p>
 
     <div
@@ -34,7 +35,7 @@
           <icon name="headings" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Header
+              {{ $t('editor.header') }}
             </span>
           </div>
         </button>
@@ -44,7 +45,7 @@
           <icon name="image" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Image
+              {{ $t('image.image') }}
             </span>
           </div>
         </button>
@@ -54,7 +55,7 @@
           <icon name="gallery" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Gallery
+              {{ $t('editor.gallery') }}
             </span>
           </div>
         </button>
@@ -64,7 +65,7 @@
           <icon name="unordered-list" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              List
+              {{ $t('editor.list') }}
             </span>
           </div>
         </button>
@@ -74,7 +75,7 @@
           <icon name="quote" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Quote
+              {{ $t('editor.quote') }}
             </span>
           </div>
         </button>
@@ -84,7 +85,7 @@
           <icon name="code" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Code
+              {{ $t('editor.code') }}
             </span>
           </div>
         </button>
@@ -94,7 +95,7 @@
           <icon name="html" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-            HTML
+              {{ $t('editor.html') }}
             </span>
           </div>
         </button>
@@ -104,7 +105,7 @@
           <icon name="separator" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Separator
+              {{ $t('editor.separator') }}
             </span>
           </div>
         </button>
@@ -115,7 +116,7 @@
           <icon name="readmore" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              Readmore
+              {{ $t('editor.readMoreBlockName') }}
             </span>
           </div>
         </button>
@@ -125,7 +126,7 @@
           <icon name="toc" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
-              TOC
+              {{ $t('editor.toc') }}
             </span>
           </div>
         </button>
@@ -184,25 +185,25 @@ export default {
           activeState: function () { return this.config.textAlign === 'left'; },
           onClick: function () { this.alignText('left'); },
           icon: 'align-left',
-          tooltip: 'Align text left'
+          tooltip: this.$t('editor.alignTextLeft')
         },
         {
           activeState: function () { return this.config.textAlign === 'center'; },
           onClick: function () { this.alignText('center'); },
           icon: 'align-center',
-          tooltip: 'Align text center'
+          tooltip: this.$t('editor.alignTextCenter')
         },
         {
           activeState: function () { return this.config.textAlign === 'right'; },
           onClick: function () { this.alignText('right'); },
           icon: 'align-right',
-          tooltip: 'Align text right'
+          tooltip: this.$t('editor.alignTextRight')
         },
         {
           activeState: () => false,
           onClick: function () { this.clearContentHtml('block'); },
           icon: 'eraser',
-          tooltip: 'Clear formatting'
+          tooltip: this.$t('editor.clearFormatting')
         }
       ]
     };
@@ -447,7 +448,7 @@ export default {
 
   &:empty {
     &:before {
-      content: 'Start writing or press the TAB key to choose a block';
+      content: attr(data-translation);
       color: var(--eb-gray-4);
     }
   }

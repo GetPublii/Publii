@@ -128,9 +128,9 @@
                         class="col-sortable-title"
                         @click="ordering('author')">
                         <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('post.author') }}</strong>
+                            <strong>{{ $t('author.author') }}</strong>
                         </template>
-                        <template v-else>{{ $t('post.author') }}</template>
+                        <template v-else>{{ $t('author.author') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>

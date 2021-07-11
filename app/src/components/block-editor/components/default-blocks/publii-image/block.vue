@@ -24,7 +24,7 @@
     <div
       v-if="content.image === '' && editor.bulkOperationsMode"
       class="publii-block-image-empty-state">
-      Empty image block
+      {{ $t('editor.emptyImageBlock') }}
     </div>
 
     <div
@@ -48,12 +48,12 @@
             height="48"
             width="68" />
           <span v-if="!imageUploadInProgress">
-            Drop to upload your photo or
+            {{ $t('editor.dropToUploadYourPhotoOr') }}
           </span>
           <button
             v-if="!imageUploadInProgress"
             @click="filePickerCallback">
-            Select file
+            {{ $t('file.selectFile') }}
           </button>
           <span
             v-if="imageUploadInProgress"
@@ -69,7 +69,7 @@
         @keyup="handleCaretCaption"
         @click.stop
         v-model="content.caption"
-        placeholder="Enter a caption"
+        :placeholder="$t('image.enterCaption')"
         ref="contentCaption" />
       <input
         v-if="!editor.bulkOperationsMode && $parent.uiOpened"
@@ -79,7 +79,7 @@
         @keyup="handleCaretAlt"
         @click.stop
         v-model="content.alt"
-        placeholder="Enter alt text"
+        :placeholder="$t('image.enterAltText')"
         ref="contentAlt" />
     </div>
 
@@ -153,32 +153,32 @@ export default {
           activeState: function () { return this.config.imageAlign === 'center'; },
           onClick: function () { this.alignImage('center'); },
           icon: 'center',
-          tooltip: 'Centered image'
+          tooltip: this.$t('image.centeredImage')
         },
         {
           activeState: function () { return this.config.imageAlign === 'wide'; },
           onClick: function () { this.alignImage('wide'); },
           icon: 'wide',
-          tooltip: 'Wide image'
+          tooltip: this.$t('image.wideImage')
         },
         {
           activeState: function () { return this.config.imageAlign === 'full'; },
           onClick: function () { this.alignImage('full'); },
           icon: 'full',
-          tooltip: 'Full-width image'
+          tooltip: this.$t('image.fullWidthImage')
         },
         {
           activeState: () => this.config.link.url !== '',
           onClick: this.showLinkPopupWithoutHighlight,
           icon: 'link',
-          tooltip: 'Add link'
+          tooltip: this.$t('link.addLink')
         },
         {
           activeState: () => false,
           onClick: this.removeLink,
           isVisible: () => this.config.link.url !== '',
           icon: 'unlink',
-          tooltip: 'Remove link'
+          tooltip: this.$t('link.removeLink')
         }
       ]
     };

@@ -7,11 +7,12 @@
       contenteditable="true"
       @paste.prevent="pasteTitle"
       @keydown="detectEnterInTitle"
-      @keyup="updateTitle"></div>
+      @keyup="updateTitle"
+      :data-translation="$t('post.addPostTitle')"></div>
 
-    <block-editor 
+    <block-editor
         ref="block-editor" />
-    <textarea 
+    <textarea
         id="post-editor"></textarea>
     <input
         name="image"
@@ -131,7 +132,7 @@ export default {
 }
 
 #post-title:empty:before {
-  content: "Add post title";
+  content: attr(data-translation);
   color: var(--eb-gray-4);
 }
 

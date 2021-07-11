@@ -10,7 +10,8 @@
       :emitEvents="true"
       v-model="content"
       :lineNumbers="true"
-      :language="config.language">
+      :language="config.language"
+      :data-translation="$t('editor.enterCode')">
     </prism-editor>
 
     <top-menu
@@ -52,7 +53,7 @@ export default {
       topMenuConfig: [
         {
           type: 'select',
-          label: 'Language:',
+          label: this.$t('langs.language'),
           configKey: 'language',
           clearable: true,
           searchable: true,
@@ -197,7 +198,7 @@ export default {
 
     &:empty {
         &:before {
-            content: 'Enter code';
+            content: attr(data-translation);
             color: var(--eb-gray-4);
         }
     }

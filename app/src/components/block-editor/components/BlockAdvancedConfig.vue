@@ -50,10 +50,10 @@
 
       <div class="block-advanced-config-buttons">
         <button @click="save()">
-          Save
+          {{ $t('ui.save') }}
         </button>
         <button @click="hide()" class="outline">
-          Cancel
+          {{ $t('ui.cancel') }}
         </button>
       </div>
     </div>

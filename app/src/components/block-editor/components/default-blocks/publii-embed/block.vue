@@ -7,7 +7,7 @@
         @keydown="handleKeyboard"
         @keyup="handleCaret($event); debouncedSave()"
         ref="code"
-        placeholder="Enter URL or embed code..."
+        :placeholder="$t('editor.enterUrlOrEmbedCode')"
         v-model="content"></textarea>
     </div>
     <div

@@ -426,7 +426,7 @@ class EditorBridge {
     addEditorButtons() {
         this.tinymceEditor.ui.registry.addButton("publiilink", {
             icon: 'link',
-            tooltip: 'Insert/edit link',
+            tooltip: window.app.translate('link.insertEditLink'),
             onAction: () => {
                 let selectedNode = tinymce.activeEditor.selection.getNode();
 
@@ -446,7 +446,7 @@ class EditorBridge {
 
         this.tinymceEditor.ui.registry.addButton("sourcecode", {
             icon: 'sourcecode',
-            tooltip: "Source code",
+            tooltip: window.app.translate('editor.sourceCode'),
             text: "HTML",
             onAction: () => {
                 let content = this.tinymceEditor.getContent({

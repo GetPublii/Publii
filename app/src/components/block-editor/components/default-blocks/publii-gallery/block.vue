@@ -50,8 +50,8 @@
         </div>
 
         <div class="publii-block-gallery-list-item-config">
-          <input type="text" v-model="image.alt" placeholder="Enter alt text"/>
-          <input type="text" v-model="image.caption" placeholder="Enter a caption"/>
+          <input type="text" v-model="image.alt" :placeholder="$t('editor.enterAltText')"/>
+          <input type="text" v-model="image.caption" :placeholder="$t('editor.enterCaption')"/>
         </div>
       </div>
     </draggable>
@@ -59,7 +59,7 @@
     <div
       v-if="content.images.length === 0 && editor.bulkOperationsMode && view === 'preview'"
       class="publii-block-gallery-empty-state">
-      Empty gallery block
+      {{ $t('editor.emptyGalleryBlock') }}
     </div>
 
     <div
@@ -75,12 +75,12 @@
             height="50"
             width="66" />
           <span v-if="!imageUploadInProgress">
-            Drop to upload your photos or
+            {{ $t('editor.dropToUploadYourPhotosOr') }}
           </span>
           <button
             v-if="!imageUploadInProgress"
             @click="filePickerCallback">
-            Select files
+            {{ $t('editor.selectFiles') }}
           </button>
         </div>
       </div>
@@ -154,7 +154,7 @@ export default {
       topMenuConfig: [
         {
           type: 'select',
-          label: 'Columns:',
+          label: this.$t('image.columns'),
           configKey: 'columns',
           clearable: false,
           searchable: false,
@@ -165,19 +165,19 @@ export default {
           activeState: function () { return this.config.imageAlign === 'center'; },
           onClick: function () { this.alignImage('center'); },
           icon: 'center',
-          tooltip: 'Centered image'
+          tooltip: this.$t('image.centeredImage')
         },
         {
           activeState: function () { return this.config.imageAlign === 'wide'; },
           onClick: function () { this.alignImage('wide'); },
           icon: 'wide',
-          tooltip: 'Wide image'
+          tooltip: this.$t('image.wideImage')
         },
         {
           activeState: function () { return this.config.imageAlign === 'full'; },
           onClick: function () { this.alignImage('full'); },
           icon: 'full',
-          tooltip: 'Full-width image'
+          tooltip: this.$t('image.fullWidthImage')
         }
       ]
     };

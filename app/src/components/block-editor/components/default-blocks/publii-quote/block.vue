@@ -20,13 +20,14 @@
           @keyup="handleCaretAuthor($event); debouncedSave()"
           @keydown="handleAuthorKeyboard"
           v-model="content.author"
-          placeholder="Quote author"
+          :placeholder="$t('editor.quoteAuthor')"
           ref="contentAuthor" />
       </div>
       <figure
         v-if="view === 'preview'"
         class="publii-block-quote"
-        ref="block">
+        ref="block"
+        :data-translation="$t('editor.quoteText')">
           <blockquote v-html="content.text" />
           <figcaption v-html="content.author" />
       </figure>
@@ -89,7 +90,7 @@ export default {
           activeState: () => false,
           onClick: function () { this.clearContentHtml('contentText'); },
           icon: 'eraser',
-          tooltip: 'Clear formatting'
+          tooltip: this.$t('editor.clearFormatting')
         }
       ]
     };
@@ -284,7 +285,7 @@ export default {
 
     &:empty {
       &:before {
-        content: 'Quote text';
+        content: attr(data-translation);
         color: var(--eb-gray-4);
       }
     }

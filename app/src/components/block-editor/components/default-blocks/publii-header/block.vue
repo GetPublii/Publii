@@ -11,7 +11,8 @@
       :style="'text-align: ' + config.textAlign + ';'"
       :class="{ 'publii-block-header': true, 'is-link': config.link.url !== '' }"
       :title="config.link.url !== '' ? config.link.url : ''"
-      v-initial-html="content" />
+      v-initial-html="content"
+      :data-translation="$t('editor.addHeading')" />
 
     <top-menu
       ref="top-menu"
@@ -76,68 +77,68 @@ export default {
           activeState: function () { return this.config.headingLevel === 1; },
           onClick: function () { this.setHeadingLevel(1); },
           icon: 'h1',
-          tooltip: 'Heading 1'
+          tooltip: this.$t('editor.heading1')
         },
         {
           activeState: function () { return this.config.headingLevel === 2; },
           onClick: function () { this.setHeadingLevel(2); },
           icon: 'h2',
-          tooltip: 'Heading 2'
+          tooltip: this.$t('editor.heading2')
         },
         {
           activeState: function () { return this.config.headingLevel === 3; },
           onClick: function () { this.setHeadingLevel(3); },
           icon: 'h3',
-          tooltip: 'Heading 3'
+          tooltip: this.$t('editor.heading3')
         },
         {
           activeState: function () { return this.config.headingLevel === 4; },
           onClick: function () { this.setHeadingLevel(4); },
           icon: 'h4',
-          tooltip: 'Heading 4'
+          tooltip: this.$t('editor.heading4')
         },
         {
           activeState: function () { return this.config.headingLevel === 5; },
           onClick: function () { this.setHeadingLevel(5); },
           icon: 'h5',
-          tooltip: 'Heading 5'
+          tooltip: this.$t('editor.heading5')
         },
         {
           activeState: function () { return this.config.headingLevel === 6; },
           onClick: function () { this.setHeadingLevel(6); },
           icon: 'h6',
-          tooltip: 'Heading 6'
+          tooltip: this.$t('editor.heading6')
         },
         {
           activeState: function () { return this.config.textAlign === 'left'; },
           onClick: function () { this.alignText('left'); },
           icon: 'align-left',
-          tooltip: 'Align text left'
+          tooltip: this.$t('editor.alignTextLeft')
         },
         {
           activeState: function () { return this.config.textAlign === 'center'; },
           onClick: function () { this.alignText('center'); },
           icon: 'align-center',
-          tooltip: 'Align text center'
+          tooltip: this.$t('editor.alignTextCenter')
         },
         {
           activeState: function () { return this.config.textAlign === 'right'; },
           onClick: function () { this.alignText('right'); },
           icon: 'align-right',
-          tooltip: 'Align text right'
+          tooltip: this.$t('editor.alignTextRight')
         },
         {
           activeState: () => this.config.link.url !== '',
           onClick: this.showLinkPopupWithoutHighlight,
           icon: 'link',
-          tooltip: 'Add link'
+          tooltip: this.$t('link.addLink')
         },
         {
           activeState: () => false,
           onClick: this.removeLink,
           isVisible: () => this.config.link.url !== '',
           icon: 'unlink',
-          tooltip: 'Remove link'
+          tooltip: this.$t('link.removeLink')
         }
       ]
     };
@@ -219,7 +220,7 @@ export default {
 
   &:empty {
     &:before {
-      content: 'Add heading';
+      content: attr(data-translation);
       color: var(--eb-gray-4);
     }
   }

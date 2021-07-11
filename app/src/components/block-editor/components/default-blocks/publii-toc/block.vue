@@ -10,11 +10,13 @@
         @keydown="handleKeyboard"
         @keyup="handleCaret($event, 'title'); debouncedSave()"
         contenteditable="true"
-        v-initial-html="content.title"></h3>
+        v-initial-html="content.title"
+        :data-translation="$t('editor.addLabel')"></h3>
       <ol
         class="publii-block-toc"
         ref="content"
-        v-html="content.toc">
+        v-html="content.toc"
+        :data-translation="$t('editor.tocAutoGenerationInfo')">
       </ol>
     </div>
 
@@ -173,7 +175,7 @@ export default {
 
       &:empty {
         &:before {
-          content: "Add label";
+          content: attr(data-translation);
           color: var(--eb-gray-4);
         }
       }
@@ -186,7 +188,7 @@ export default {
 
   &:empty {
     &:before {
-      content: 'The table of content is generated automatically by collecting headings (H1-H6) of your content.';
+      content: attr(data-translation);
       color: var(--eb-gray-4);
       display: block;
       text-align: center;

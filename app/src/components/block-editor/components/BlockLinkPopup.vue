@@ -9,27 +9,27 @@
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'post' }"
           @click="setLinkType('post')">
-          Post
+          {{ $t('post.post') }}
         </div>
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'tag' }"
           @click="setLinkType('tag')">
-          Tag
+          {{ $t('tag.tag') }}
         </div>
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'author' }"
           @click="setLinkType('author')">
-          Author
+          {{ $t('author.author') }}
         </div>
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'external' }"
           @click="setLinkType('external')">
-          Custom
+          {{ $t('editor.custom') }}
         </div>
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'file' }"
           @click="setLinkType('file')">
-          File
+          {{ $t('file.file') }}
         </div>
       </div>
       <vue-select
@@ -41,7 +41,7 @@
         :custom-label="customPostLabels"
         :close-on-select="true"
         :show-labels="false"
-        placeholder="Select post page"></vue-select>
+        :placeholder="$t('post.selectPostPage')"></vue-select>
       <vue-select
         v-if="linkType === 'tag'"
         slot="field"
@@ -51,7 +51,7 @@
         :custom-label="customTagLabels"
         :close-on-select="true"
         :show-labels="false"
-        placeholder="Select tag page"></vue-select>
+        :placeholder="$t('tag.selectTagPage')"></vue-select>
       <vue-select
         v-if="linkType === 'author'"
         slot="field"
@@ -61,7 +61,7 @@
         :custom-label="customAuthorsLabels"
         :close-on-select="true"
         :show-labels="false"
-        placeholder="Select author page"></vue-select>
+        :placeholder="$t('author.selectAuthorPage')"></vue-select>
       <vue-select
         v-if="linkType === 'file'"
         slot="field"
@@ -70,7 +70,7 @@
         v-model="linkSelectedFile"
         :close-on-select="true"
         :show-labels="false"
-        placeholder="Select file from File Manager"></vue-select>
+        :placeholder="$t('file.selectFileFromFileManager')"></vue-select>
       <input
         v-if="linkType === 'external'"
         type="text"
@@ -82,27 +82,27 @@
       <div class="block-link-popup-link-switcher">
         <switcher
           v-model="link.targetBlank" />
-        Open in new tab
-      </div>
+          {{ $t('link.openInNewTab') }}
+=      </div>
 
       <div
         v-if="linkType === 'file'"
         class="block-link-popup-link-switcher">
-        <switcher v-model="link.download" /> Add "download" attribute
+        <switcher v-model="link.download" /> {{ $t('link.addDownloadAttr') }}
       </div>
 
       <div class="block-link-popup-link-switcher">
-        <switcher v-model="link.noFollow" /> Add rel="nofollow"
+        <switcher v-model="link.noFollow" /> {{ $t('link.addNofollow') }}
         <switcher v-model="link.sponsored"/> rel="sponsored"
         <switcher v-model="link.ugc" /> rel="ugc"
       </div>
 
       <div class="block-link-popup-buttons">
         <button @click.stop="save()">
-          Save
+          {{ $t('ui.save') }}
         </button>
         <button @click.stop="hide()" class="outline">
-          Cancel
+          {{ $t('ui.cancel') }}
         </button>
       </div>
     </div>

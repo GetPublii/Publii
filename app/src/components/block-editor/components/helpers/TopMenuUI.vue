@@ -6,7 +6,7 @@
     <span
       v-if="conversions.length"
       class="wrapper-ui-top-menu-title wrapper-ui-top-menu-conversions">
-      Convert to:
+      {{ $t('editor.convertTo') }}
       <span
         v-for="(conversion, index) of conversions"
         :key="'conversion-' + index"
@@ -54,7 +54,7 @@
         @click.stop="showAdvancedConfig(); resetDeleteConfirmation();">
         <icon name="gear" />
         <span class="ui-top-menu-tooltip has-bigger-space">
-          Advanced options
+          {{ $t('settings.advancedOptions') }}
         </span>
       </button>
       <button
@@ -64,7 +64,7 @@
         @click.stop="deleteBlock">
         <icon name="trash" />
         <span class="ui-top-menu-tooltip has-bigger-space">
-          Delete block
+          {{ $t('editor.deleteBlock') }}
         </span>
       </button>
       <button
@@ -74,7 +74,7 @@
         @click.stop="deleteBlock">
         <icon name="open-trash" />
         <span class="ui-top-menu-tooltip has-bigger-space">
-          Click to confirm
+          {{ $t('editor.clickToConfirm') }}
         </span>
       </button>
     </div>

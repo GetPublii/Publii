@@ -36,7 +36,7 @@
                             </dl>
 
                             <dl>
-                                <dt>{{ $t('post.author') }}</dt>
+                                <dt>{{ $t('author.author') }}</dt>
                                 <dd>
                                     <a
                                         href="#"

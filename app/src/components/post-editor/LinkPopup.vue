@@ -75,7 +75,7 @@
 
                 <field
                     v-if="type === 'file'"
-                    :label="$t('ui.file')">
+                    :label="$t('file.fileSemicolon')">
                     <v-select
                         slot="field"
                         ref="fileSelect"
@@ -84,7 +84,7 @@
                         :close-on-select="true"
                         :show-labels="false"
                         @select="closeDropdown('fileSelect')"
-                        :placeholder="$t('ui.selectFile')"></v-select>
+                        :placeholder="$t('file.selectFile')"></v-select>
                 </field>
 
                 <field
@@ -243,7 +243,7 @@ export default {
                 case 'author': return this.$t('author.authorLink');
                 case 'frontpage': return this.$t('ui.frontpageLink');
                 case 'external': return this.$t('ui.customLink');
-                case 'file': return this.$t('ui.fileFromFileManager');
+                case 'file': return this.$t('file.fileFromFileManager');
             }
         },
         customTagLabels (value) {

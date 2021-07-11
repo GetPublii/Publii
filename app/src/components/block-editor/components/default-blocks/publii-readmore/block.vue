@@ -6,7 +6,8 @@
       @keyup="getFocusFromTab($event); handleCaret($event)"
       @paste="pastePlainText"
       @click="updateCurrentBlockID"
-      ref="block">
+      ref="block"
+      :data-translation="$t('editor.readMore')">
       <hr />
     </div>
 
@@ -97,7 +98,7 @@ export default {
     background: var(--eb-input-bg);
     border: 1px solid var(--eb-input-border-color);
     border-radius: var(--eb-border-radius);
-    content: "Read More";
+    content: attr(data-translation);
     display: inline-block;
     font-size: ms(-3);
     left: 50%;

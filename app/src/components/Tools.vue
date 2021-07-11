@@ -38,7 +38,7 @@ export default {
                     link: 'tools/custom-html',
                     icon: 'code'
                 }, {
-                    name: this.$t('ui.fileManager'),
+                    name: this.$t('file.fileManager'),
                     link: 'tools/file-manager',
                     icon: 'file-manager'
                 }, {
