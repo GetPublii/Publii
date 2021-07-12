@@ -1,4 +1,4 @@
-const blocksMapping = require('publii-block-editor/src/blocks-mapping.js');
+const blocksMapping = require('./../../../../src/components/block-editor/blocks-mapping.js');
 
 class BlocksToHtml {
     static parse (inputJson) {
@@ -20,7 +20,7 @@ class BlocksToHtml {
                 console.error(err);
             }
         }
-        
+
         return outputText.join("\n");
     }
 }
