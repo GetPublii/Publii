@@ -662,7 +662,7 @@ class WxrParser {
         text = text.replace(/\[\/caption\]/g, '');
 
         // Replace <!-- more --> with Publii separator
-        text = text.replace(/<!--more-->/g, '<hr id="read-more" data-translation="' + window.app.translate('editor.readMore') + '" />');
+        text = text.replace(/<!--more-->/g, '<hr id="read-more" />');
 
         if(this.autop) {
             console.log('(i) Used automatic paragraphs for the post content');
