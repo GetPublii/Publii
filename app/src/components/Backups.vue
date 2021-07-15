@@ -394,7 +394,7 @@ export default {
             mainProcessAPI.receiveOnce('app-backup-restored', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('file.restoreBackupErrorMsg') + data.error,
+                        message: this.$t('file.restoreBackupErrorMsg') + ' ' + this.$t(data.error),
                         type: 'warning',
                         lifeTime: 3
                     });

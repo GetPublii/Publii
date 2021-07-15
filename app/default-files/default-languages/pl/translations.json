@@ -34,6 +34,17 @@
         "useGravatarServiceMessage": "Aby skorzystać z usługi Gravatar podaj adres e-mail autora.",
         "website": "Strona internetowa"
     },
+    "core": {
+        "backup": {
+            "destinationDirectoryDoesNotExists": "Katalog docelowy nie istnieje",
+            "errorDuringFileSaveProcess": "Wystąpił błąd podczas zapisu pliku",
+            "errorDuringReadingBackupFile": "Wystapił błąd podczas odczytu pliku kopii zapasowej",
+            "fileDoesNotExists": "Plik kopii zapasowej nie istnieje XXX",
+            "fileIsCorrupted": "Plik kopii zapasowej jest uszkodzony - przerwano proces odtwarzania.",
+            "locationDoesNotExists": "Lokalizacja kopii zapasowych nie istnieje",
+            "temporaryDirectoryDoesNotExists": "Katalog tymczasowy nie istnieje"
+        }
+    },
     "date": {
         "apr": "Kwi",
         "aug": "Sier",

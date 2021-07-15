@@ -34,6 +34,17 @@
         "useGravatarServiceMessage": "In order to use Gravatar service provide the author e-mail at first.",
         "website": "Website"
     },
+    "core": {
+        "backup": {
+            "destinationDirectoryDoesNotExists": "Destination directory does not exists",
+            "errorDuringFileSaveProcess": "An error during the file save process",
+            "errorDuringReadingBackupFile": "An error occurred during reading of backup file",
+            "fileDoesNotExists": "Backup file does not exists",
+            "fileIsCorrupted": "The backup file is corrupted - aborting the restore process.",
+            "locationDoesNotExists": "Backup location does not exists",
+            "temporaryDirectoryDoesNotExists": "Temporary directory does not exists"
+        }
+    },
     "date": {
         "apr": "Apr",
         "aug": "Aug",

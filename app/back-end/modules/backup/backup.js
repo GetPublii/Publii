@@ -86,7 +86,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-create-error',
                     status: false,
-                    error: 'Backup location does not exists'
+                    error: 'core.backup.locationDoesNotExists'
                 });
 
                 return;
@@ -138,7 +138,7 @@ class Backup {
         process.send({
             type: 'app-backup-create-error',
             status: false,
-            error: 'Backups location not exists'
+            error: 'core.backup.locationDoesNotExists'
         });
     }
 
@@ -230,7 +230,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'Backup file does not exists'
+                error: 'core.backup.fileDoesNotExists'
             });
 
             return;
@@ -240,7 +240,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'Destination directory does not exists'
+                error: 'core.backup.destinationDirectoryDoesNotExists'
             });
 
             return;
@@ -253,7 +253,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-restore-error',
                     status: false,
-                    error: 'Temporary directory does not exists'
+                    error: 'core.backup.temporaryDirectoryDoesNotExists'
                 });
 
                 return;
@@ -270,7 +270,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-restore-error',
                     status: false,
-                    error: 'An error during the file save process'
+                    error: 'core.backup.errorDuringFileSaveProcess'
                 });
 
                 setTimeout(function () {
@@ -318,7 +318,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-restore-error',
                     status: false,
-                    error: 'An error occurred during reading of backup file'
+                    error: 'core.backup.errorDuringReadingBackupFile'
                 });
 
                 setTimeout(function () {
@@ -366,7 +366,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'The backup file is corrupted - aborting the restore process.'
+                error: 'core.backup.fileIsCorrupted'
             });
 
             return false;
