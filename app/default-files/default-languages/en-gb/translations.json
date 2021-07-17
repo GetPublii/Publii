@@ -35,6 +35,10 @@
         "website": "Website"
     },
     "core": {
+        "archive": {
+            "errorDuringCreatingTAR": "An error occurred during creating TAR archive. Please try again.",
+            "errorDuringCreatingZIP": "An error occurred during creating ZIP archive. Please try again."
+        },
         "backup": {
             "destinationDirectoryDoesNotExists": "Destination directory does not exists",
             "errorDuringFileSaveProcess": "An error during the file save process",
@@ -51,6 +55,18 @@
             "renderingProcessCrashed": "Rendering process crashed",
             "renderingProcessCrashedMsg": "Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
             "renderingProcessFiled": "Rendering process failed"
+        },
+        "server": {
+            "branchDoesNotExist": "Selected branch does not exist.",
+            "creatingNewRemoteFilesTree": "Creating the new remote tree of files...",
+            "finishingDeploymentProcess": "Finishing the deployment process...",
+            "getInfoAboutLatestCommit": "Get information about the latest commit...",
+            "preparingFilesTreeToUpload": "Preparing tree of files to upload...",
+            "repositoryDoesNotExist": "Selected repository does not exist.",
+            "requestTimeout": "Request timeout.",
+            "retrievingHandlerOfRemoteFilesTree": "Retrieving handler of the remote tree of files...",
+            "retrievingRemoteFilesTree": "Retrieving the remote tree of files...",
+            "tokenOrServerAddressInvalid": "Provided token or server address is invalid."
         },
         "site": {
             "noConfigurationForResponsiveImages": "There is no configuration for responsive images",
@@ -704,7 +720,7 @@
         "connectionToServerErrorAdditionalMessage": "An error occurred during connecting to the server: ",
         "connectionToServerErrorMessage": "An error occurred during connecting to the server. Please check your server settings or try again.",
         "connectionToServerErrorText": "An error occurred during connecting to server...",
-        "connectToServerCantStoreFilesErrorMsg": "Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server.",
+        "connectToServerCantStoreFilesErrorMsg": "Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server",
         "connectToServerErrorMsg": "Error! Application was unable to connect with your server.",
         "connectToServerSuccessMsg": "Success! Application was able to connect with your server.",
         "deploymentMethodFtpMsg": "FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend to use FTPS or SFTP protocols if possible.",

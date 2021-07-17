@@ -515,6 +515,9 @@ export default {
             }
 
             if(data.message) {
+                if (this.$t(data.message)) {
+                    data.message = this.$t(data.message);
+                }
                 this.messageFromUploader = data.message;
             }
         },
@@ -528,6 +531,9 @@ export default {
             this.$store.commit('setSidebarStatus', 'prepared');
 
             if(data && data.additionalMessage) {
+                if (this.$t(data.additionalMessage)) {
+                    data.additionalMessage = this.$t(data.additionalMessage);
+                }
                 this.$bus.$emit('alert-display', {
                     message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage
                 });

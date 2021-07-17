@@ -21,7 +21,7 @@ class S3 {
 
     async initConnection() {
         let self = this;
-        let s3Provider = this.deployment.siteConfig.deployment.s3.provider;    
+        let s3Provider = this.deployment.siteConfig.deployment.s3.provider;
         let s3Endpoint = this.deployment.siteConfig.deployment.s3.endpoint;
         let s3Id = this.deployment.siteConfig.deployment.s3.id;
         let s3Key = this.deployment.siteConfig.deployment.s3.key;
@@ -44,9 +44,9 @@ class S3 {
         }
 
         let connectionParams
-        
+
         if (s3Provider === 'aws') {
-            connectionParams = {            
+            connectionParams = {
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key,
                 region: region,
@@ -55,7 +55,7 @@ class S3 {
             }
         } else {
             connectionParams = {
-                endpoint: s3Endpoint,                
+                endpoint: s3Endpoint,
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key,
                 sslEnabled: true,
@@ -423,7 +423,7 @@ class S3 {
     }
 
     async testConnection(app, deploymentConfig, siteName, uuid) {
-        let s3Provider = deploymentConfig.s3.provider;     
+        let s3Provider = deploymentConfig.s3.provider;
         let s3Endpoint = deploymentConfig.s3.endpoint;
         let s3Id = deploymentConfig.s3.id;
         let s3Key = deploymentConfig.s3.key;
@@ -446,9 +446,9 @@ class S3 {
         }
 
         let connectionParams;
-        
+
         if (s3Provider === 'aws') {
-            connectionParams = {            
+            connectionParams = {
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key,
                 region: region,
@@ -457,7 +457,7 @@ class S3 {
             }
         } else {
             connectionParams = {
-                endpoint: s3Endpoint,                
+                endpoint: s3Endpoint,
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key,
                 sslEnabled: true,
@@ -490,7 +490,7 @@ class S3 {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Request timeout'
+                    message: 'core.server.requestTimeout'
                 });
             }
         }, 10000);

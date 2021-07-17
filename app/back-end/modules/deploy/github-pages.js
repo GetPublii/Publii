@@ -92,7 +92,7 @@ class GithubPages {
         if (this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
             let cnameFilePath = path.join(self.deployment.inputDir, 'CNAME');
             let domainName = this.deployment.siteConfig.domain;
-            
+
             if (domainName.indexOf('//') > -1) {
                 domainName = domainName.split('//')[1];
             }
@@ -153,7 +153,7 @@ class GithubPages {
 
                 setTimeout(function () {
                     process.kill(process.pid, 'SIGTERM');
-                }, 1000); 
+                }, 1000);
             }
         });
 
@@ -163,7 +163,7 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Request timeout'
+                        additionalMessage: 'core.server.requestTimeout'
                     }
                 });
             }
@@ -209,7 +209,7 @@ class GithubPages {
             if(result === null) {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Selected branch does not exist'
+                    message: 'core.server.branchDoesNotExist'
                 });
 
                 return;
@@ -228,7 +228,7 @@ class GithubPages {
         setTimeout(function() {
             if(this.waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Request timeout'
+                    message: 'core.server.requestTimeout'
                 });
 
                 this.waitForTimeout = false;
@@ -252,7 +252,7 @@ class GithubPages {
             let sha = await this.createTree(finalTree);
             sha = await this.createCommit(sha, commitSHA);
             let result = await this.createReference(sha);
-            
+
             if(result === false) {
                 setTimeout(function () {
                     process.kill(process.pid, 'SIGTERM');
@@ -339,7 +339,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Get informations about the latest commit...'
+                message: 'core.server.getInfoAboutLatestCommit'
             }
         });
 
@@ -368,7 +368,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Retrieving handler of the remote tree of files...'
+                message: 'core.server.retrievingHandlerOfRemoteFilesTree'
             }
         });
 
@@ -389,7 +389,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Retrieving the remote tree of files...'
+                message: 'core.server.retrievingRemoteFilesTree'
             }
         });
 
@@ -411,7 +411,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Preparing tree of files to upload...'
+                message: 'core.server.preparingFilesTreeToUpload'
             }
         });
 
@@ -549,7 +549,7 @@ class GithubPages {
     async createBlobs(files, reuploadSession = false) {
         if (this.apiRateLimiting) {
             let result = await this.getAPIRateLimit();
-            
+
             if(result.remaining < this.filesToUpdate + 10) {
                 process.send({
                     type: 'web-contents',
@@ -615,7 +615,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'Creating the new remote tree of files...'
+                message: 'core.server.creatingNewRemoteFilesTree'
             }
         });
 
@@ -643,7 +643,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'Creating the new remote tree of files...'
+                message: 'core.server.creatingNewRemoteFilesTree'
             }
         });
 
@@ -670,7 +670,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 99,
-                message: 'Finishing the deployment process...'
+                message: 'core.server.finishingDeploymentProcess'
             }
         });
 

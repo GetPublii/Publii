@@ -70,7 +70,7 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'An error occurred during creating ZIP archive. Please try again.'
+                    additionalMessage: 'core.archive.errorDuringCreatingZIP'
                 }
             });
 
@@ -108,7 +108,7 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'An error occurred during creating TAR archive. Please try again.'
+                    additionalMessage: 'core.archive.errorDuringCreatingTAR'
                 }
             });
 

@@ -35,6 +35,10 @@
         "website": "Strona internetowa"
     },
     "core": {
+        "archive": {
+            "errorDuringCreatingTAR": "An error occurred during creating TAR archive. Please try again.",
+            "errorDuringCreatingZIP": "An error occurred during creating ZIP archive. Please try again."
+        },
         "backup": {
             "destinationDirectoryDoesNotExists": "Katalog docelowy nie istnieje",
             "errorDuringFileSaveProcess": "Wystąpił błąd podczas zapisu pliku",
@@ -51,6 +55,18 @@
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",
             "renderingProcessFiled": "Proces renderowania nie powiódł się"
+        },
+        "server": {
+            "branchDoesNotExist": "Wybrana gałąź nie istnieje.",
+            "creatingNewRemoteFilesTree": "Tworzenie nowego zdalnego drzewa plików...",
+            "finishingDeploymentProcess": "Zakończenie procesu wdrażania...",
+            "getInfoAboutLatestCommit": "Uzyskaj informacje o najnowszym commicie...",
+            "preparingFilesTreeToUpload": "Przygotowywanie drzewa plików do przesłania...",
+            "repositoryDoesNotExist": "Wybrane repozytorium nie istnieje.",
+            "requestTimeout": "Przekroczono limit czasu żądania.",
+            "retrievingHandlerOfRemoteFilesTree": "Pobieranie obsługi zdalnego drzewa plików...",
+            "retrievingRemoteFilesTree": "Pobieranie zdalnego drzewa plików...",
+            "tokenOrServerAddressInvalid": "Podany token lub adres serwera jest nieprawidłowy."
         },
         "site": {
             "noConfigurationForResponsiveImages": "Nie ma konfiguracji dla responsywnych obrazów",
@@ -704,7 +720,7 @@
         "connectionToServerErrorAdditionalMessage": "Wystąpił błąd podczas łączenia się z serwerem: ",
         "connectionToServerErrorMessage": "Wystąpił błąd podczas łączenia się z serwerem. Proszę sprawdzić ustawienia serwera i spróbować ponownie.",
         "connectionToServerErrorText": "Wystąpił błąd podczas łączenia się z serwerem...",
-        "connectToServerCantStoreFilesErrorMsg": "Błąd! Aplikacja mogła połączyć się z Twoim serwerem, ale nie mogła przechowywać plików. Sprawdź uprawnienia do plików na swoim serwerze.",
+        "connectToServerCantStoreFilesErrorMsg": "Błąd! Aplikacja mogła połączyć się z Twoim serwerem, ale nie mogła zapisać plików. Sprawdź uprawnienia do plików na Twoim serwerze",
         "connectToServerErrorMsg": "Błąd! Aplikacja nie mogła połączyć się z Twoim serwerem.",
         "connectToServerSuccessMsg": "Sukces! Aplikacja mogła połączyć się z Twoim serwerem.",
         "deploymentMethodFtpMsg": "Protokół FTP wykorzystuje transmisję nieszyfrowaną, co oznacza, że ​​wszelkie dane przesyłane za jego pośrednictwem, w tym nazwa użytkownika i hasło, mogą zostać odczytane przez każdego, kto może przechwycić Twoją transmisję. Zdecydowanie zalecamy korzystanie z protokołów FTPS lub SFTP, jeśli to możliwe.",
