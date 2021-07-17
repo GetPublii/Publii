@@ -108,9 +108,6 @@ export default {
     }
     height: 4.2rem;
     line-height: 4.1rem;
-    margin-bottom: $spacing;
-    margin-right: 2.5 * $spacing;
-    margin-top: $spacing;
     padding: 0 1.3rem;
     position: relative;
     transition: var(--transition);
@@ -458,12 +455,11 @@ export default {
     &.button-disabled-with-events {
         pointer-events: auto;
     }
-}
 
-.heading .button,
-.footer .button {
-    margin-bottom: 0;
-    margin-top: 0;
+    & + .button,
+    & + button {
+        margin-left: 2.5 * $spacing;
+    }
 }
 
 @keyframes rotate {

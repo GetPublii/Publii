@@ -18,13 +18,13 @@
             <btn-dropdown
                 ref="dropdown-button"
                 :items="dropdownItems"
-                :min-width="184"
+                :min-width="200"
                 :defaultValue="retrieveCurrentAction()" />
 
             <p-button
                 type="outline"
                 @click.native="cancelPost">
-                {{ $t('post.backToPosts') }}
+                {{ $t('ui.close') }}
             </p-button>
 
             <p-button
@@ -230,7 +230,8 @@ export default {
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: 120px;
+                min-width: 115px;
+                width: auto;
             }
 
             &:nth-child(3) {

@@ -254,7 +254,7 @@ export default {
             font-size: 1.6rem;
             font-weight: 500;
             justify-content: center;
-            padding: 1.4rem 2.4rem;
+            padding: 1.4rem 2.1rem;
             position: relative;
 
             // sync cloud icon
@@ -371,7 +371,7 @@ export default {
         color: var(--sidebar-preview-btn-color) !important;
         display: block;
         margin-bottom: 1rem;
-        padding: 1.2rem 2.4rem;
+        padding: 1.2rem 2.1rem;
         text-align: center;
 
         & > span {

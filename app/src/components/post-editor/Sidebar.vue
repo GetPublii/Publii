@@ -728,7 +728,7 @@ export default {
         position: absolute;
         right: 0;
         top: var(--topbar-height);
-        width: 44.2rem;
+        width: 45rem;
         z-index: 99999;
 
         &.is-visible {
