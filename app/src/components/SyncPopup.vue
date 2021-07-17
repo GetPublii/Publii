@@ -335,6 +335,12 @@ export default {
         mainProcessAPI.receive('app-deploy-render-error', (data) => {
             this.$store.commit('setSidebarStatus', 'not-prepared');
 
+            data.message[0].message = this.$t(data.message[0].message);
+
+            if (this.$t(data.message[0].desc)) {
+                data.message[0].desc = this.$t(data.message[0].desc);
+            }
+
             let errorsHTML = Utils.generateErrorLog(data);
             let errorsText = Utils.generateErrorLog(data, true);
 

@@ -140,6 +140,12 @@ export default {
             }
         },
         renderError(data) {
+            data.message[0].message = this.$t(data.message[0].message);
+
+            if (this.$t(data.message[0].desc)) {
+                data.message[0].desc = this.$t(data.message[0].desc);
+            }
+
             let errorsHTML = Utils.generateErrorLog(data.message);
             let errorsText = Utils.generateErrorLog(data.message, true);
 

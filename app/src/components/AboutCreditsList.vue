@@ -87,6 +87,10 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-license-loaded', function(licenseText) {
+                if (this.$t(licenseText)) {
+                    licenseText = this.$t(licenseText);
+                }
+
                 link.parentNode.nextElementSibling.querySelector('pre').innerText = licenseText;
             });
         },

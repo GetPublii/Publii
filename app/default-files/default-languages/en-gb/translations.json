@@ -43,6 +43,14 @@
             "fileIsCorrupted": "The backup file is corrupted - aborting the restore process.",
             "locationDoesNotExists": "Backup location does not exists",
             "temporaryDirectoryDoesNotExists": "Temporary directory does not exists"
+        },
+        "credits": {
+            "errorLoadingLicenseMsg": "An error occurred during loading the license. Please try again..."
+        },
+        "rendering": {
+            "renderingProcessCrashed": "Rendering process crashed",
+            "renderingProcessCrashedMsg": "Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
+            "renderingProcessFiled": "Rendering process failed"
         }
     },
     "date": {

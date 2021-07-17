@@ -43,6 +43,14 @@
             "fileIsCorrupted": "Plik kopii zapasowej jest uszkodzony - przerwano proces odtwarzania.",
             "locationDoesNotExists": "Lokalizacja kopii zapasowych nie istnieje",
             "temporaryDirectoryDoesNotExists": "Katalog tymczasowy nie istnieje"
+        },
+        "credits": {
+            "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
+        },
+        "rendering": {
+            "renderingProcessCrashed": "Proces renderowania uległ awarii",
+            "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",
+            "renderingProcessFiled": "Proces renderowania nie powiódł się"
         }
     },
     "date": {
