@@ -137,7 +137,7 @@ class Site {
         let db = new sqlite(dbPath);
         let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, @name, @slug, '', '{}', '{}')`);
         sqlQuery.run({
-            name: authorName, 
+            name: authorName,
             slug: slug(authorName).toLowerCase()
         });
         db.close();
@@ -149,7 +149,7 @@ class Site {
     regenerateThumbnailsIsRequired(sender) {
         let themesHelper = new Themes(this.application, { site: this.name });
         let themeName = themesHelper.currentTheme();
-    
+
         // If there is no theme selected
         if(themeName === 'not selected') {
             sender.send('app-site-regenerate-thumbnails-required-status', {
@@ -224,7 +224,7 @@ class Site {
         // If there is no theme selected - abort
         if(themeName === 'not selected') {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "No theme selected"
+                message: 'core.site.noThemeSelected'
             });
 
             return;
@@ -235,7 +235,7 @@ class Site {
 
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "There is no configuration for responsive images"
+                message: 'core.site.noConfigurationForResponsiveImages'
             });
 
             return;
@@ -286,7 +286,7 @@ class Site {
         // If there is no posts - abort
         if(numberOfImagesToRegenerate === 0) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "There is no images to regenerate"
+                message: 'core.site.noImagesToRegenerate'
             });
 
             return;
@@ -427,7 +427,7 @@ class Site {
             appInstance.db.close();
         }
 
-        setTimeout(async () => {    
+        setTimeout(async () => {
             await shell.trashItem(sitePath);
         }, 500);
     }
@@ -454,13 +454,13 @@ class Site {
     }
 
     /**
-     * 
+     *
      * Find first free name
-     * 
+     *
      * e.g. XYZ -> XYZ copy
      * e.g. XYZ copy -> XYZ copy copy
-     * 
-     * @param {string} name 
+     *
+     * @param {string} name
      */
     static findFreeName (name, basePath) {
         let baseName = name;
@@ -477,9 +477,9 @@ class Site {
 
     /**
      * Update site.config.json to use a new name of the website
-     * 
-     * @param {string} sitePath 
-     * @param {string} newNameSlug 
+     *
+     * @param {string} sitePath
+     * @param {string} newNameSlug
      */
     static updateNameAndUUIDInSiteConfig (sitePath, newSiteSlug, newSiteName) {
         let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');

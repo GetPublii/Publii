@@ -51,6 +51,11 @@
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",
             "renderingProcessFiled": "Proces renderowania nie powiódł się"
+        },
+        "site": {
+            "noConfigurationForResponsiveImages": "Nie ma konfiguracji dla responsywnych obrazów",
+            "noImagesToRegenerate": "Brak obrazów do regeneracji",
+            "noThemeSelected": "Nie wybrano motywu"
         }
     },
     "date": {

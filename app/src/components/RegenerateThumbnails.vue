@@ -120,7 +120,7 @@ export default {
                         'error': true,
                         'success': false
                     };
-                    this.resultLabel = data.message;
+                    this.resultLabel = this.$t(data.message);
                     this.buttonStatus = '';
                 });
 

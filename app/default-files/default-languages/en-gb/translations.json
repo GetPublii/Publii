@@ -51,6 +51,11 @@
             "renderingProcessCrashed": "Rendering process crashed",
             "renderingProcessCrashedMsg": "Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
             "renderingProcessFiled": "Rendering process failed"
+        },
+        "site": {
+            "noConfigurationForResponsiveImages": "There is no configuration for responsive images",
+            "noImagesToRegenerate": "There are no images to regenerate",
+            "noThemeSelected": "No theme selected"
         }
     },
     "date": {
