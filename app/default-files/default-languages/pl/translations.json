@@ -51,6 +51,9 @@
         "credits": {
             "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
         },
+        "wpImport": {
+            "progressInfo": "Importowanie wpisów ({progress} / {total})"
+        },
         "rendering": {
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",

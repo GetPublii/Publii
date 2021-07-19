@@ -451,7 +451,13 @@ class WxrParser {
 
             process.send({
                 type: 'progress',
-                message: 'Importing posts (' + (i+1) + ' / ' + posts.length + ')'
+                message: {
+                    translation: 'core.wpImport.progressInfo',
+                    translationVars: {
+                        progress: (i+1),
+                        total: posts.length
+                    }
+                }
             });
 
             console.log('-> Imported post (' + (i+1) + ' / ' + posts.length + '): ' + postTitle);

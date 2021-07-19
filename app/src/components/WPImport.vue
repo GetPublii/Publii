@@ -276,7 +276,7 @@ export default {
             mainProcessAPI.receive('app-wxr-import-progress', this.bindedFileImportProgress);
         },
         fileImportProgress(data) {
-            this.progressInfo = data.message;
+            this.progressInfo = this.$t(data.message.translation, data.message.translationVars);
         },
         fileImported: function(data) {
             let siteName = this.$store.state.currentSite.config.name;
