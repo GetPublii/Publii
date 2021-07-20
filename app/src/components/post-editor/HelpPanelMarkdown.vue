@@ -58,32 +58,44 @@
                 <tr>
                     <td>H1</td>
                     <td># Heading</td>
-                    <td>Ctrl/⌘ + H</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>H2</td>
                     <td>## Heading</td>
-                    <td>Ctrl/⌘ + H (x2)</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H (x2)</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>H3</td>
                     <td>### Heading</td>
-                    <td>Ctrl/⌘ + H (x3)</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H (x3)</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>H4</td>
                     <td>#### </td>
-                    <td>Ctrl/⌘ + H (x4)</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H (x4)</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>H5</td>
                     <td>##### </td>
-                    <td>Ctrl/⌘ + H (x5)</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H (x5)</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>H6</td>
                     <td>###### </td>
-                    <td>Ctrl/⌘ + H (x6)</td>
+                    <td>
+                        <template v-if="!isMac">Ctrl + H (x6)</template>
+                    </td>
                 </tr>
                 <tr>
                     <td>Readmore</td>
@@ -106,6 +118,11 @@ export default {
         isOpen: {
             default: false,
             type: Boolean
+        }
+    },
+    computed: {
+        isMac () {
+            return document.body.getAttribute('data-os') === 'osx';
         }
     }
 }

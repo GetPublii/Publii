@@ -97,13 +97,6 @@ export default {
             sidebarVisible: false,
             editorIsInitialized: false,
             sidebarVisible: false,
-            editorConfig: {
-                status: false,
-                toolbar: false,
-                placeholder: 'Start writing...',
-                spellChecker: false,
-                promptURLs: true
-            },
             postData: {
                 editor: this.$options.editorType,
                 title: '',
@@ -145,6 +138,21 @@ export default {
         },
         simplemde () {
             return this.$refs.markdownEditor.simplemde;
+        },
+        isMac () {
+            return document.body.getAttribute('data-os') === 'osx';
+        },
+        editorConfig () {
+            return {
+                status: false,
+                toolbar: false,
+                placeholder: 'Start writing...',
+                spellChecker: false,
+                promptURLs: true,
+                shortcuts: {
+                    toggleHeadingSmaller: this.isMac ? null : 'Ctrl-H'
+                }
+            }
         }
     },
     mounted () {
