@@ -49,7 +49,7 @@ export default {
     methods: {
         deleteTheme: function(themeName, themeDirectory) {
             let confirmConfig = {
-                message: this.$t('theme.removeThemeMessagePT1') + themeName + this.$t('theme.removeThemeMessagePT2'),
+                message: this.$t('theme.removeThemeMessage', themeName),
                 okClick: function() {
                     mainProcessAPI.send('app-theme-delete', {
                         name: themeName,

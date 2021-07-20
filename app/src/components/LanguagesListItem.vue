@@ -1,5 +1,5 @@
 <template>
-    <figure 
+    <figure
         @click="activateLanguage(directory, type)"
         :class="{
             'language': true,
@@ -72,7 +72,7 @@ export default {
     methods: {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
-                message: this.$t('langs.removeLanguageMessagePT1') + languageName + this.$t('langs.removeLanguageMessagePT2'),
+                message: this.$t('langs.removeLanguageMessage', languageName),
                 okClick: function() {
                     mainProcessAPI.send('app-language-delete', {
                         name: languageName,
@@ -99,7 +99,7 @@ export default {
             }
 
             let results = await mainProcessAPI.invoke('app-main-load-language', name, type);
-            
+
             if (results.languageChanged) {
                 this.$store.commit('setAppLanguage', results.lang);
                 this.$store.commit('setAppLanguageType', results.type);
