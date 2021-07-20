@@ -51,9 +51,6 @@
         "credits": {
             "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
         },
-        "wpImport": {
-            "progressInfo": "Importowanie wpisów ({progress} / {total})"
-        },
         "rendering": {
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",
@@ -75,6 +72,13 @@
             "noConfigurationForResponsiveImages": "Nie ma konfiguracji dla responsywnych obrazów",
             "noImagesToRegenerate": "Brak obrazów do regeneracji",
             "noThemeSelected": "Nie wybrano motywu"
+        },
+        "wpImport": {
+            "authorsProgressInfo": "Importowanie autorów ({progress} / {total})",
+            "imageDownloadError": "Wystąpił błąd podczas pobierania obrazu: {image}",
+            "imagesProgressInfo": "Pobieranie obrazów ({progress} / {total})",
+            "postsProgressInfo": "Importowanie wpisów ({progress} / {total})",
+            "tagsProgressInfo": "Importowanie tagów ({progress} / {total})"
         }
     },
     "date": {

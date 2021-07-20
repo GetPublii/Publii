@@ -230,7 +230,11 @@ export default {
             this.checkingFile = false;
 
             if(data.status === 'error') {
-                this.errorMessage = data.message;
+                if (this.$t(data.message.translation, data.message.translationVars)) {
+                    this.errorMessage = this.$t(data.message.translation, data.message.translationVars);
+                } else {
+                    this.errorMessage = data.message;
+                }
             }
 
             if(data.status === 'success') {
