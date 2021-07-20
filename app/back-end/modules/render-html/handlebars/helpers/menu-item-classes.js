@@ -23,22 +23,22 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
         // If there is no arguments Handlebars will push
         // context as an argument which will cause
         // that the default params won't work
-        if(typeof activeClass !== 'string') {
+        if (typeof activeClass !== 'string') {
             activeClass = 'active';
         }
 
-        if(typeof activeParentClass !== 'string') {
+        if (typeof activeParentClass !== 'string') {
             activeParentClass = 'active-parent';
         }
 
-        if(typeof hasSubmenuClassClass !== 'string') {
+        if (typeof hasSubmenuClass !== 'string') {
             hasSubmenuClass = 'has-submenu';
         }
 
         // Check for the state of the menu item
-        if(hasActiveChild(this.items, context)) {
+        if (hasActiveChild(this.items, context)) {
             output.push(activeParentClass);
-        } else if(
+        } else if (
             (this.type === 'frontpage' && context[0] === 'frontpage') ||
             (this.type === 'tags' && context[0] === 'tags') ||
             (this.type === context[0] && this.link === context[1])
@@ -46,16 +46,16 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             output.push(activeClass);
         }
 
-        if(this.cssClass !== '') {
+        if (this.cssClass !== '') {
             output.push(this.cssClass);
         }
 
-        if(this.items.length) {
+        if (this.items.length) {
             output.push(hasSubmenuClass);
         }
 
         // Prepare output
-        if(output.length) {
+        if (output.length) {
             output = ' class="' + output.join(' ') + '"';
             return new Handlebars.SafeString(output);
         }
@@ -70,22 +70,22 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
         // If there is no arguments Handlebars will push
         // context as an argument which will cause
         // that the default params won't work
-        if(typeof activeClass !== 'string') {
+        if (typeof activeClass !== 'string') {
             activeClass = 'active';
         }
 
-        if(typeof activeParentClass !== 'string') {
+        if (typeof activeParentClass !== 'string') {
             activeParentClass = 'active-parent';
         }
 
-        if(typeof hasSubmenuClassClass !== 'string') {
+        if (typeof hasSubmenuClass !== 'string') {
             hasSubmenuClass = 'has-submenu';
         }
 
         // Check for the state of the menu item
-        if(hasActiveChild(this.items, context)) {
+        if (hasActiveChild(this.items, context)) {
             output.push(activeParentClass);
-        } else if(
+        } else if (
             (this.type === 'frontpage' && context[0] === 'frontpage') ||
             (this.type === 'tags' && context[0] === 'tags') ||
             (this.type === context[0] && this.link === context[1])
@@ -93,29 +93,22 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
             output.push(activeClass);
         }
 
-        if(this.cssClass !== '') {
+        if (this.cssClass !== '') {
             output.push(this.cssClass);
         }
 
-        if(this.items.length) {
+        if (this.items.length) {
             output.push(hasSubmenuClass);
         }
 
         // Prepare output
-        if(output.length) {
+        if (output.length) {
             output = output.join(' ');
             return new Handlebars.SafeString(output);
         }
 
         return '';
     });
-}
-
-/**
- *
- */
-function generateCssClasses(rendererInstance, Handlebars, activeClass, activeParentClass, hasSubmenuClass, useClass = true) {
-
 }
 
 /**
@@ -130,8 +123,8 @@ function generateCssClasses(rendererInstance, Handlebars, activeClass, activePar
 function hasActiveChild(items, context) {
     let result = false;
 
-    for(let i = 0; i < items.length; i++) {
-        if(
+    for (let i = 0; i < items.length; i++) {
+        if (
             (items[i].type === 'frontpage' && context[0] === 'frontpage') ||
             (items[i].type === 'tags' && context[0] === 'tags') ||
             (items[i].type === context[0] && items[i].link === context[1])
@@ -139,7 +132,7 @@ function hasActiveChild(items, context) {
             return true;
         }
 
-        if(items[i].items.length) {
+        if (items[i].items.length) {
             result = hasActiveChild(items[i].items, context);
 
             if (result) {
