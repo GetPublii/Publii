@@ -532,7 +532,11 @@ export default {
 
             if(data && data.additionalMessage) {
                 if (this.$t(data.additionalMessage)) {
-                    data.additionalMessage = this.$t(data.additionalMessage);
+                    if (data.additionalMessage.translation) {
+                        data.additionalMessage = this.$t(data.additionalMessage.translation, data.message.translationVars);
+                    } else {
+                        data.additionalMessage = this.$t(data.additionalMessage);
+                    }
                 }
                 this.$bus.$emit('alert-display', {
                     message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage

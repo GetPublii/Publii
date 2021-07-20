@@ -115,7 +115,12 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your website contains over 4000 items (' + numberOfFiles + ' files and directories). Currently our Github Pages implementation supports pages up to 4000 items'
+                        additionalMessage: {
+                            translation: 'core.server.tooManyFilesInfo',
+                            translationVars: {
+                                numberOfFiles: numberOfFiles
+                            }
+                        }
                     }
                 });
 
@@ -131,7 +136,13 @@ class GithubPages {
                             type: 'web-contents',
                             message: 'app-connection-error',
                             value: {
-                                additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                                additionalMessage: {
+                                    translation: 'core.server.requestLimitExceededInfo',
+                                    translationVars: {
+                                        remaining: parseInt(result.remaining, 10),
+                                        resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                                    }
+                                }
                             }
                         });
 

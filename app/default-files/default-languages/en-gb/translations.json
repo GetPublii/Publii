@@ -63,10 +63,12 @@
             "getInfoAboutLatestCommit": "Get information about the latest commit...",
             "preparingFilesTreeToUpload": "Preparing tree of files to upload...",
             "repositoryDoesNotExist": "Selected repository does not exist.",
+            "requestLimitExceededInfo": "Your API request limit were exceed ({remaining} requests left). Please wait till {resetTime} UTC and then try again.",
             "requestTimeout": "Request timeout.",
             "retrievingHandlerOfRemoteFilesTree": "Retrieving handler of the remote tree of files...",
             "retrievingRemoteFilesTree": "Retrieving the remote tree of files...",
-            "tokenOrServerAddressInvalid": "Provided token or server address is invalid."
+            "tokenOrServerAddressInvalid": "Provided token or server address is invalid.",
+            "tooManyFilesInfo": "Your website contains over 4000 items ({numberOfFiles} files and directories). Currently our Github Pages implementation supports pages up to 4000 items'"
         },
         "site": {
             "noConfigurationForResponsiveImages": "There is no configuration for responsive images",

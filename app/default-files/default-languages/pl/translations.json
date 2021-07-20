@@ -63,10 +63,12 @@
             "getInfoAboutLatestCommit": "Uzyskaj informacje o najnowszym commicie...",
             "preparingFilesTreeToUpload": "Przygotowywanie drzewa plików do przesłania...",
             "repositoryDoesNotExist": "Wybrane repozytorium nie istnieje.",
+            "requestLimitExceededInfo": "Przekroczono limit żądań API (pozostało {remaining} żądań). Proszę zaczekać do {resetTime} UTC i spróbować pózniej.",
             "requestTimeout": "Przekroczono limit czasu żądania.",
             "retrievingHandlerOfRemoteFilesTree": "Pobieranie obsługi zdalnego drzewa plików...",
             "retrievingRemoteFilesTree": "Pobieranie zdalnego drzewa plików...",
-            "tokenOrServerAddressInvalid": "Podany token lub adres serwera jest nieprawidłowy."
+            "tokenOrServerAddressInvalid": "Podany token lub adres serwera jest nieprawidłowy.",
+            "tooManyFilesInfo": "Twoja strona zawiera ponad 4000 elementów ({numberOfFiles} plików and katalogów). Aktualnie nasz implementacja Github Pages wspiera strony zawierające do 4000 elementów"
         },
         "site": {
             "noConfigurationForResponsiveImages": "Nie ma konfiguracji dla responsywnych obrazów",
