@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import defaultAstAppConfig from './../../../config/AST.app.config';
+import defaultAstCurrentSiteConfig from './../../../config/AST.currentSite.config';
 import Utils from './../../helpers/utils.js';
 
 export default {
@@ -95,6 +96,7 @@ export default {
         let copiedData = JSON.parse(JSON.stringify(state.sites[data.clonedWebsiteCatalog]));
         copiedData.name = data.newSiteCatalog;
         copiedData.displayName = data.newSiteName;
+        copiedData.deployment = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig.deployment));
         Vue.set(state.sites, data.newSiteCatalog, copiedData);
     },
     addNewSite (state, siteData) {

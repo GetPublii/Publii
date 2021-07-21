@@ -12,6 +12,7 @@ const UtilsHelper = require('./helpers/utils');
 const childProcess = require('child_process');
 const slug = require('./helpers/slug');
 const trash = require('trash');
+const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 
 class Site {
     constructor(appInstance, config, maintenanceMode = false) {
@@ -501,6 +502,7 @@ class Site {
         siteConfig.name = newSiteSlug;
         siteConfig.uuid = 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000);
         siteConfig.displayName = newSiteName;
+        siteConfig.deployment = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig.deployment));
         siteConfig = JSON.stringify(siteConfig, null, 4);
         fs.writeFileSync(configFilePath, siteConfig);
     }
