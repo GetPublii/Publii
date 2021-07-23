@@ -359,6 +359,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
@@ -370,6 +371,7 @@ class Image extends Model {
                                 }).catch(err => reject(err))
                         } else if (extension.toLowerCase() === '.webp') {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .webp({
                                     quality: imagesQuality
@@ -384,6 +386,7 @@ class Image extends Model {
                                 }).catch(err => reject(err))
                         } else {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
@@ -422,6 +425,7 @@ class Image extends Model {
                     result = new Promise ((resolve, reject) => {
                         if (extension.toLowerCase() === '.png') {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .toBuffer()
                                 .then(function (outputBuffer) {
@@ -432,6 +436,7 @@ class Image extends Model {
                                 }).catch(err => reject(err));
                         } else if (extension.toLowerCase() === '.webp') {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .webp({
                                     quality: imagesQuality
@@ -445,6 +450,7 @@ class Image extends Model {
                                 }).catch(err => reject(err));
                         } else {
                             sharp(originalPath)
+                                .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .jpeg({
                                     quality: imagesQuality
