@@ -246,18 +246,17 @@ class Image extends Model {
         let dimensions = false;
         let dimensionsConfig = false;
 
-        if (imageType === 'featuredImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
-            dimensions = Utils.responsiveImagesDimensions(themeConfig, 'featuredImages');
-            dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'featuredImages');
-        } else if (imageType === 'optionImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
-            dimensions = Utils.responsiveImagesDimensions(themeConfig, 'optionImages');
-            dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'optionImages');
-        } else if (imageType === 'tagImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
-            dimensions = Utils.responsiveImagesDimensions(themeConfig, 'tagImages');
-            dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'tagImages');
-        } else if (imageType === 'authorImages' && Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
-            dimensions = Utils.responsiveImagesDimensions(themeConfig, 'authorImages');
-            dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'authorImages');
+        if (['featuredImages', 'optionImages', 'tagImages', 'authorImages'].indexOf(imageType) > -1) {
+            if (Utils.responsiveImagesConfigExists(themeConfig, imageType)) {
+                dimensions = Utils.responsiveImagesDimensions(themeConfig, imageType);
+                dimensionsConfig = Utils.responsiveImagesData(themeConfig, imageType);
+            } else if (Utils.responsiveImagesConfigExists(themeConfig, 'featuredImages')) {
+                dimensions = Utils.responsiveImagesDimensions(themeConfig, 'featuredImages');
+                dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'featuredImages');
+            } else if (Utils.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
+                dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
+                dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'contentImages');
+            }
         } else if (imageType === 'contentImages' && Utils.responsiveImagesConfigExists(themeConfig, 'contentImages')) {
             dimensions = Utils.responsiveImagesDimensions(themeConfig, 'contentImages');
             dimensionsConfig = Utils.responsiveImagesData(themeConfig, 'contentImages');
