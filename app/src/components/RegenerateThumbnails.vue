@@ -47,7 +47,7 @@
                     v-for="(file, index) in files"
                     :key="file + '-' + index"
                     class="item"
-                    :title="file">
+                    :title="getFilePhrase(file)">
                     {{ removeSiteDir(file) }}
                 </li>
             </ul>
@@ -86,7 +86,16 @@ export default {
         }
     },
     methods: {
+        getFilePhrase (filePath) {
+            if (filePath.translation) {
+                return this.$t(filePath.translation);
+            }
+
+            return filePath;
+        },
         removeSiteDir (filePath) {
+            filePath = this.getFilePhrase(filePath);
+
             return filePath.replace(this.$store.state.currentSite.siteDir, '');
         },
         regenerate () {

@@ -51,9 +51,12 @@
         "credits": {
             "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
         },
+        "images": {
+            "responsiveImagesDisabled": "Responsywne obrazy są wyłączone w ustawieniach witryny – wszystkie responsywne obrazy zostały usunięte."
+        },
         "rendering": {
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
-            "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Podgląd dziennika.",
+            "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Przeglądarka logów.",
             "renderingProcessFiled": "Proces renderowania nie powiódł się"
         },
         "server": {
@@ -529,7 +532,7 @@
         "googleAnalyticsTrackingID": "ID Google Analytics Tracking",
         "hiddenPostsOrderBy": "Sortuj ukryte wpisy po:",
         "hiddenPostsOrdering": "Sortowanie ukrytych wpisów:",
-        "hideCustomExcerptsOnPostPages": "Ukryj własne krótkie opisy na stronach wpisów",
+        "hideCustomExcerptsOnPostPages": "Ukryj własne zajawki na stronach wpisów",
         "hideCustomExcerptsOnPostPagesInfo": "Jeśli ta opcja jest włączona strony wpisów nie będą pokazywać tekstu umieszczonego nad elementem \"Czytaj więcej\" w edytorze wpisu.",
         "homepageNoIndexPagination": "Jeśli ta opcja jest włączona, pliki paginacji strony głównej zostaną wykluczone z mapy witryny i otrzymają <strong>noindex, follow</strong> metatag robotów.",
         "homepagePagination": "Paginacja strony głównej",
@@ -746,7 +749,7 @@
         "domainNameNotSetErrorText": "Upewnij się, że nazwa domeny jest ustawiona.",
         "duringSyncYouCantChangeFilesLocation": "W trakcie synchronizacji nie możesz zmienić lokalizacji plików.",
         "fieldIsCaseSensitive": "W tym polu rozróżniana jest wielkość liter.",
-        "filesNotSyncedErrorMessage": "Proszę sprawdzić plik hard-upload-errors-log.txt przy pomocy narzędzia Narzędzia -&gt; Podgląd dziennika.",
+        "filesNotSyncedErrorMessage": "Proszę sprawdzić plik hard-upload-errors-log.txt przy pomocy narzędzia Narzędzia -&gt; Przeglądarka logów.",
         "filesNotSyncedErrorText": "Niektóre pliki nie zostały poprawnie zsynchronizowane.",
         "ftp": "FTP",
         "ftps": "FTPS",
@@ -894,7 +897,7 @@
         "defaultTemplate": "Szablon domyślny",
         "deleteTheme": "Usuń motyw",
         "dropYourThemeHere": "Upuść tutaj swój motyw",
-        "excerptLength": "Długość krótkiego opisu:",
+        "excerptLength": "Długość zajawki:",
         "getMoreThemes": "Pobierz więcej motywów",
         "goToThemesManager": "Przejdż do menadżera motywów",
         "installTheme": "Zainstaluj motyw",
@@ -936,8 +939,8 @@
         "findShortcut": "Ctrl + F",
         "findShortcutMac": "Cmd + F",
         "goToTools": "Idź do narzędzi",
-        "logFileEmpty": "Ten plik dziennika jest pusty...",
-        "logViewer": "Podgląd dziennika",
+        "logFileEmpty": "Ten plik logów jest pusty...",
+        "logViewer": "Przeglądarka logów",
         "selectFileToLoad": "Wybierz plik do załadowania",
         "thumbnails": {
             "listRegeneratedFiles": "Lista zregenerowanych plików:",

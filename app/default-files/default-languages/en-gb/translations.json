@@ -51,6 +51,9 @@
         "credits": {
             "errorLoadingLicenseMsg": "An error occurred during loading the license. Please try again..."
         },
+        "images": {
+            "responsiveImagesDisabled": "The responsive images are disabled under site settings - all responsive images have been removed."
+        },
         "rendering": {
             "renderingProcessCrashed": "Rendering process crashed",
             "renderingProcessCrashedMsg": "Checkout the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
