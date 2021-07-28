@@ -38,10 +38,7 @@ export default {
             return [''].concat(this.$store.state.currentSite.authors.map(author => author.id));
         },
         placeholder () {
-            return {
-                type: String,
-                default: this.$t('author.selectAuthor')
-            }
+            return this.$t('author.selectAuthor');
         }
     },
     watch: {
