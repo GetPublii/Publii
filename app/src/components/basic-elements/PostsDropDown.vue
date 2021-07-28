@@ -45,7 +45,7 @@ export default {
             }).map(post => post.id));
         },
         placeholder () {
-            return this.$t('post.selectPostPage')
+            return this.$t('post.selectPostPage');
         }
     },
     watch: {
