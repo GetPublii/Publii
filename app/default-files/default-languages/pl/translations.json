@@ -78,6 +78,7 @@
             "noImagesToRegenerate": "Brak obrazów do regeneracji",
             "noThemeSelected": "Nie wybrano motywu"
         },
+        "sureYouWantQuit": "Na pewno chcesz wyjść z programu? \nWszystkie niezapisane zmiany zostaną utracone.",
         "wpImport": {
             "authorsProgressInfo": "Importowanie autorów ({progress} / {total})",
             "imageDownloadError": "Wystąpił błąd podczas pobierania obrazu: {image}",

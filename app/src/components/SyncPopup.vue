@@ -514,10 +514,10 @@ export default {
             }
 
             this.uploadingProgress = data.progress;
-            this.messageFromUploader = this.$t('file.uploadingWebsite');
+            this.messageFromUploader = this.$t('sync.uploadingWebsite');
 
             if(data.operations) {
-                this.messageFromUploader = `${this.$t('file.uploadingWebsite')} (${data.operations[0]} ${this.$t('ui.of')} ${data.operations[1]} ${this.$t('sync.operationsDone')})`;
+                this.messageFromUploader = `${this.$t('sync.uploadingWebsite')} (${data.operations[0]} ${this.$t('ui.of')} ${data.operations[1]} ${this.$t('sync.operationsDone')})`;
             }
 
             if(data.message) {

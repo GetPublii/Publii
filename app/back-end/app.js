@@ -69,14 +69,14 @@ class App {
 
         this.loadAdditionalConfig();
         this.checkThemes();
-        
+
         let loadingSitesResult = this.loadSites();
-        
+
         if (!loadingSitesResult) {
             this.app.quit();
             return;
         }
-        
+
         this.loadThemes();
         this.loadLanguages();
         this.initWindow();
@@ -97,7 +97,7 @@ class App {
             fs.copySync(
                 path.join(__dirname, '..', 'default-files', 'default-themes').replace('app.asar', 'app.asar.unpacked'),
                 path.join(this.appDir, 'themes'),
-                { 
+                {
                     filter: this.skipSystemFiles,
                     dereference: true
                 }
@@ -138,7 +138,7 @@ class App {
                     fs.copySync(
                         path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
                         path.join(userThemesPath, file),
-                        { 
+                        {
                             filter: this.skipSystemFiles,
                             dereference: true
                         }
@@ -165,7 +165,7 @@ class App {
                         fs.copySync(
                             path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
                             path.join(userThemesPath, file),
-                            { 
+                            {
                                 filter: this.skipSystemFiles,
                                 dereference: true
                             }
@@ -293,7 +293,7 @@ class App {
     loadSites() {
         if (fs.ensureDirSync(this.sitesDir)) {
             dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' existing or create it manually, then reopen the application.');
-            return false; 
+            return false;
         }
 
         let files = fs.readdirSync(this.sitesDir);
@@ -324,7 +324,7 @@ class App {
         this.languages = languagesLoader.loadLanguages();
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
         this.languagesDefaultPath = normalizePath(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
-        
+
         if (this.appConfig.language && this.appConfig.languageType) {
             this.currentLanguageName = this.appConfig.language;
             this.currentLanguageType = this.appConfig.languageType;
@@ -342,8 +342,8 @@ class App {
         }
     }
 
-    // Load language 
-    loadLanguage (lang, type) {        
+    // Load language
+    loadLanguage (lang, type) {
         if (type !== 'default' && type !== 'installed') {
             type = 'default';
             lang = 'en';
@@ -367,7 +367,7 @@ class App {
 
         this.appConfig.language = lang.replace(/[^a-z\-\_\.]/gmi, '');
         this.appConfig.languageType = type;
-        
+
         try {
             fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
         } catch (e) {
@@ -392,7 +392,7 @@ class App {
             let screens = screen.getAllDisplays();
             let width = screens[0].workAreaSize.width;
             let height = screens[0].workAreaSize.height;
-           
+
             for (let i = 0; i < screens.length; i++) {
                 if (screens[i].width < width) {
                     width = screens[i].width;
@@ -521,7 +521,7 @@ class App {
         // Register search shortcut listener
         this.mainWindow.webContents.on('before-input-event', (e, input) => {
             if (input.key === 'f' && (input.meta || input.control)) {
-                this.mainWindow.webContents.send('app-show-search-form');     
+                this.mainWindow.webContents.send('app-show-search-form');
             }
         });
 
@@ -532,16 +532,16 @@ class App {
             if (typeof urlToOpen !== 'string') {
                 return false;
             }
-        
+
             let url;
             let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:'];
-        
+
             try {
                 url = new URL(urlToOpen);
             } catch (e) {
                 return false;
             }
-        
+
             if (allowedProtocols.indexOf(url.protocol) > -1) {
                 url = url.href.replace(/\s/gmi, '');
                 shell.openExternal(url);
@@ -587,7 +587,7 @@ class App {
             });
         }
 
-        this.mainWindow.on('close', function(e) {
+        this.mainWindow.on('close', async function(e) {
             let currentWindowURL = e.sender.webContents.getURL();
 
             if (
@@ -598,13 +598,15 @@ class App {
                 return;
             }
 
+            let messageText = await e.sender.webContents.mainFrame.top.executeJavaScript('window.app.translate("core.sureYouWantQuit")');
+
             const choice = dialog.showMessageBoxSync(this, {
                 type: 'question',
                 buttons: ['Yes', 'No'],
                 title: 'Confirm',
-                message: "Are you sure you want to quit? \nAll unsaved changes will be lost."
+                message: messageText
             });
-            
+
             if (choice === 1) {
                 e.preventDefault();
             }
@@ -613,11 +615,11 @@ class App {
         // Create context menu
         const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
         let contextMenuBuilder = new ContextMenuBuilder(this.mainWindow.webContents);
-            
+
         this.mainWindow.webContents.on('context-menu', (event, params) => {
             event.preventDefault();
             contextMenuBuilder.showPopupMenu(params);
-        });        
+        });
 
         // Open Dev Tools
         if (this.appConfig.openDevToolsInMain) {

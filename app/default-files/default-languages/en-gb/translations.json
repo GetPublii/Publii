@@ -78,6 +78,7 @@
             "noImagesToRegenerate": "There are no images to regenerate",
             "noThemeSelected": "No theme selected"
         },
+        "sureYouWantQuit": "Are you sure you want to quit? \nAll unsaved changes will be lost.",
         "wpImport": {
             "authorsProgressInfo": "Importing authors ({progress} / {total})",
             "imageDownloadError": "An error occurred during downloading the image: {image}",
