@@ -70,7 +70,9 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'core.archive.errorDuringCreatingZIP'
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingZIP'
+                    }
                 }
             });
 
@@ -108,7 +110,9 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'core.archive.errorDuringCreatingTAR'
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingTAR'
+                    }
                 }
             });
 

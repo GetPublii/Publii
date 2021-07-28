@@ -13,7 +13,9 @@ class CreditsEvents {
          */
         ipcMain.on('app-license-load', function(event, config) {
             let filePath = path.join(__dirname, '../../', config.url);
-            let licenseText = 'core.credits.errorLoadingLicenseMsg';
+            let licenseText = {
+                translation: 'core.credits.errorLoadingLicenseMsg'
+            }
 
             if(fs.existsSync(filePath)) {
                 licenseText = fs.readFileSync(filePath, 'utf-8');

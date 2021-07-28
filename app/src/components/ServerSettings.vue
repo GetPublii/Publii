@@ -1293,8 +1293,8 @@ export default {
 
             mainProcessAPI.receiveOnce('app-deploy-test-error', (data) => {
                 if(data && data.message) {
-                    if (this.$t(data.message)) {
-                        data.message = this.$t(data.message);
+                    if (data.message.translation) {
+                        data.message = this.$t(data.message.translation);
                     }
                     this.$bus.$emit('alert-display', {
                         message: this.$t('sync.connectToServerCantStoreFilesErrorMsg') + ': ' + data.message,

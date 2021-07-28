@@ -87,7 +87,7 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-license-loaded', function(licenseText) {
-                if (this.$t(licenseText)) {
+                if (licenseText.translation) {
                     licenseText = this.$t(licenseText);
                 }
 

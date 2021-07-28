@@ -129,7 +129,7 @@ export default {
                         'error': true,
                         'success': false
                     };
-                    this.resultLabel = this.$t(data.message);
+                    this.resultLabel = data.message.translation ? this.$t(data.message.translation) : data.message;
                     this.buttonStatus = '';
                 });
 

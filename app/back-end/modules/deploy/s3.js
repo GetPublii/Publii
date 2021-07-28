@@ -490,7 +490,9 @@ class S3 {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'core.server.requestTimeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
             }
         }, 10000);

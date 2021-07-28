@@ -335,10 +335,12 @@ export default {
         mainProcessAPI.receive('app-deploy-render-error', (data) => {
             this.$store.commit('setSidebarStatus', 'not-prepared');
 
-            data.message[0].message = this.$t(data.message[0].message);
+            if (data.message[0].message.translation) {
+                data.message[0].message = this.$t(data.message[0].message.translation);
+            }
 
-            if (this.$t(data.message[0].desc)) {
-                data.message[0].desc = this.$t(data.message[0].desc);
+            if (data.message[0].desc.translation) {
+                data.message[0].desc = this.$t(data.message[0].desc.translation);
             }
 
             let errorsHTML = Utils.generateErrorLog(data);
@@ -488,6 +490,10 @@ export default {
                 return;
             }
 
+            if (data.message.translation) {
+                data.message = this.$t(data.message.translation);
+            }
+
             this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
             this.renderingProgress = data.progress;
 
@@ -515,8 +521,8 @@ export default {
             }
 
             if(data.message) {
-                if (this.$t(data.message)) {
-                    data.message = this.$t(data.message);
+                if (data.message.translation) {
+                    data.message = this.$t(data.message.translation);
                 }
                 this.messageFromUploader = data.message;
             }
@@ -530,12 +536,12 @@ export default {
             this.syncInProgress = false;
             this.$store.commit('setSidebarStatus', 'prepared');
 
-            if(data && data.additionalMessage) {
-                if (this.$t(data.additionalMessage)) {
-                    if (data.additionalMessage.translation) {
+            if(data && data.additionalMessage ) {
+                if (data.additionalMessage.translation) {
+                    if (data.additionalMessage.translationVars) {
                         data.additionalMessage = this.$t(data.additionalMessage.translation, data.message.translationVars);
                     } else {
-                        data.additionalMessage = this.$t(data.additionalMessage);
+                        data.additionalMessage = this.$t(data.additionalMessage.translation);
                     }
                 }
                 this.$bus.$emit('alert-display', {

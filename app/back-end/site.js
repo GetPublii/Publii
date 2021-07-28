@@ -224,7 +224,9 @@ class Site {
         // If there is no theme selected - abort
         if(themeName === 'not selected') {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: 'core.site.noThemeSelected'
+                message: {
+                    translation: 'core.site.noThemeSelected'
+                }
             });
 
             return;
@@ -235,7 +237,9 @@ class Site {
 
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: 'core.site.noConfigurationForResponsiveImages'
+                message: {
+                    translation: 'core.site.noConfigurationForResponsiveImages'
+                }
             });
 
             return;
@@ -286,7 +290,9 @@ class Site {
         // If there is no posts - abort
         if(numberOfImagesToRegenerate === 0) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: 'core.site.noImagesToRegenerate'
+                message: {
+                    translation: 'core.site.noImagesToRegenerate'
+                }
             });
 
             return;

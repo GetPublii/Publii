@@ -111,7 +111,7 @@ export default {
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
                     this.progressColor = 'red';
                     this.progressIsStopped = true;
-                    this.message = data.message;
+                    this.message = data.message.translation ? this.$t(data.message.translation) : data.message;
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
                 });

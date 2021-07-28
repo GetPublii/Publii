@@ -174,7 +174,9 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'core.server.requestTimeout'
+                        additionalMessage: {
+                            translation: 'core.server.requestTimeout'
+                        }
                     }
                 });
             }
@@ -220,7 +222,9 @@ class GithubPages {
             if(result === null) {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'core.server.branchDoesNotExist'
+                    message: {
+                        translation: 'core.server.branchDoesNotExist'
+                    }
                 });
 
                 return;
@@ -239,7 +243,9 @@ class GithubPages {
         setTimeout(function() {
             if(this.waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'core.server.requestTimeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
 
                 this.waitForTimeout = false;
@@ -400,7 +406,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'core.server.retrievingRemoteFilesTree'
+                message: {
+                    translation: 'core.server.retrievingRemoteFilesTree'
+                }
             }
         });
 
@@ -422,7 +430,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'core.server.preparingFilesTreeToUpload'
+                message: {
+                    translation: 'core.server.preparingFilesTreeToUpload'
+                }
             }
         });
 
@@ -566,7 +576,13 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                        additionalMessage: {
+                            translation: 'core.server.requestLimitExceededInfo',
+                            translationVars: {
+                                remaining: parseInt(result.remaining, 10),
+                                resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                            }
+                        }
                     }
                 });
 
@@ -626,7 +642,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'core.server.creatingNewRemoteFilesTree'
+                message: {
+                    translation: 'core.server.creatingNewRemoteFilesTree'
+                }
             }
         });
 
@@ -654,7 +672,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'core.server.creatingNewRemoteFilesTree'
+                message: {
+                    translation: 'core.server.creatingNewRemoteFilesTree'
+                }
             }
         });
 
@@ -681,7 +701,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 99,
-                message: 'core.server.finishingDeploymentProcess'
+                message: {
+                    translation: 'core.server.finishingDeploymentProcess'
+                }
             }
         });
 

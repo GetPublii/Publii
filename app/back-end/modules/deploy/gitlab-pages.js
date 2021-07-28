@@ -69,7 +69,9 @@ class GitlabPages {
                 if (projects[0].name !== repository) {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'core.server.repositoryDoesNotExist'
+                        message: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
                     });
 
                     return;
@@ -78,7 +80,9 @@ class GitlabPages {
                 if(!projectID) {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'core.server.repositoryDoesNotExist'
+                        message: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
                     });
 
                     return;
@@ -88,7 +92,9 @@ class GitlabPages {
                     if(!branch) {
                         this.waitForTimeout = false;
                         app.mainWindow.webContents.send('app-deploy-test-error', {
-                            message: 'core.server.branchDoesNotExist'
+                            message: {
+                                translation: 'core.server.branchDoesNotExist'
+                            }
                         });
 
                         return;
@@ -99,26 +105,34 @@ class GitlabPages {
                 }).catch(err => {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'core.server.branchDoesNotExist'
+                        message: {
+                            translation: 'core.server.branchDoesNotExist'
+                        }
                     });
                 });
             }).catch(err => {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'core.server.repositoryDoesNotExist'
+                    message: {
+                        translation: 'core.server.repositoryDoesNotExist'
+                    }
                 });
             });
         }).catch(err => {
             this.waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: 'core.server.tokenOrServerAddressInvalid'
+                message: {
+                    translation: 'core.server.tokenOrServerAddressInvalid'
+                }
             });
         });
 
         setTimeout(function() {
             if(this.waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'core.server.requestTimeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
 
                 this.waitForTimeout = false;
