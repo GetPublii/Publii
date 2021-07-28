@@ -1,5 +1,5 @@
 .options-sidebar {
-    padding: 3.6rem;
+    padding: 3.5rem;
 
     &-wrapper {
         background: var(--option-sidebar-bg);
@@ -10,9 +10,9 @@
         right: 0;
         top: 0;
         user-select: none;
-        width: 48rem;
-        z-index: 9999;   
-        
+        width: 50rem;
+        z-index: 9999;
+
         &.v-enter-active,
         &.v-leave-active {
             transition: all .25s ease;
@@ -34,8 +34,8 @@
             &.v-leave-active {
                 transition: none;
                 transition-delay: .1s;
-            } 
-            
+            }
+
             &.v-enter,
             &.v-leave-to {
                 right: 0;
@@ -48,7 +48,7 @@
         }
     }
 
-    h2 {        
+    h2 {
         color: var(--gray-3);
         font-size: 1.2rem;
         font-weight: 600;
@@ -64,14 +64,14 @@
         font-size: 1.5rem;
         font-weight: 500;
         line-height: 2.6;
-        margin-bottom: 1.2rem; 
+        margin-bottom: 1.2rem;
         user-select: none;
-        
+
         small {
            font-size: 90%;
         }
 
-        input { 
+        input {
             width: 100%;
         }
 
@@ -82,31 +82,31 @@
         }
     }
 
-    &-close {                   
+    &-close {
         border-radius: 50%;
         color: var(--icon-secondary-color);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 3rem;                   
-        line-height: 1.1; 
+        height: 3rem;
+        line-height: 1.1;
         padding: 0;
         position: absolute;
         right: 3.5rem;
-        text-align: center;       
-        transition: var(--transition);         
-        top: 3rem;        
+        text-align: center;
+        transition: var(--transition);
+        top: 3rem;
         width: 3rem;
-                                
+
         &:active,
         &:focus,
         &:hover {
             color: var(--icon-tertiary-color);
         }
-        
+
         &:hover {
             background: var(--input-border-color);
-        }  
+        }
     }
 
     &-buttons {

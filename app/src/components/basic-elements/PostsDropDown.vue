@@ -1,6 +1,7 @@
 <template>
     <v-select
         ref="dropdown"
+        class="posts-dropdown"
         :id="anchor"
         :options="postPages"
         v-model="selectedPost"
@@ -85,7 +86,8 @@ export default {
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }
-.multiselect__input {
-    max-width: 120px;
+
+.posts-dropdown .multiselect__input {
+    max-width: 100%;
 }
 </style>
