@@ -58,28 +58,30 @@
             </a>
         </div>
 
-        <collection v-if="!emptySearchResults && hasFiles">
+        <collection
+            v-if="!emptySearchResults && hasFiles"
+            :itemsCount="5">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, true)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 590px)">
+                <collection-cell>
                     {{ $t('file.filename') }}
                 </collection-cell>
 
-                <collection-cell width="150px">
+                <collection-cell min-width="100px">
                     {{ $t('file.fileSize') }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell min-width="130px">
                     {{ $t('file.creationDate') }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell min-width="200px">
                     {{ $t('ui.lastModified') }}
                 </collection-cell>
 
@@ -99,7 +101,7 @@
                 v-for="(item, index) in filteredFiles"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :value="item.name"
                         :checked="isChecked(index)"
@@ -107,8 +109,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="titles"
-                    width="calc(100% - 590px)">
+                    type="titles">
                     <a
                         :href="item.name"
                         class="file-link"
@@ -126,15 +127,15 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell width="150px">
+                <collection-cell>
                     {{ item.size }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell>
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell>
                     {{ item.modifiedAt }}
                 </collection-cell>
             </collection-row>

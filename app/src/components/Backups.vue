@@ -39,28 +39,30 @@
             </p-button>
         </empty-state>
 
-        <collection v-if="!noBackups">
+        <collection
+            v-if="!noBackups"
+            :itemsCount="5">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 565px)">
+                <collection-cell>
                     {{ $t('file.filename') }}
                 </collection-cell>
 
-                <collection-cell width="120px">
+                <collection-cell min-width="120px">
                     {{ $t('file.fileSize') }}
                 </collection-cell>
 
-                <collection-cell width="175px">
+                <collection-cell min-width="160px">
                     {{ $t('file.creationDate') }}
                 </collection-cell>
 
-                <collection-cell width="230px">
+                <collection-cell min-width="150px">
                     {{ $t('file.operations') }}
                 </collection-cell>
 
@@ -80,7 +82,7 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :id="item.name"
                         :value="item.id"
@@ -88,7 +90,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 565px)">
+                <collection-cell>
                     <a
                         :href="item.url"
                         @click.prevent.stop="showFileInFolder(item.url)">
@@ -96,15 +98,15 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell width="120px">
+                <collection-cell>
                     {{ item.size }}
                 </collection-cell>
 
-                <collection-cell width="175px">
+                <collection-cell>
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell class="col-buttons" width="230px">
+                <collection-cell class="col-buttons">
                     <p-button
                         :type="renameButtonType"
                         :onClick="renameFile.bind(this, item.name)">

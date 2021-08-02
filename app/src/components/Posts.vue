@@ -69,318 +69,320 @@
             </li>
         </ul>
 
-        <collection v-if="dataLoaded && !emptySearchResults && hasPosts">
-            <collection-header slot="header">
-                <collection-cell width="40px">
-                    <checkbox
-                        value="all"
-                        :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, false)"
-                        @click.native="$bus.$emit('document-body-clicked')" />
-                </collection-cell>
 
-                <collection-cell :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('title')">
-                        <template v-if="orderBy === 'title'">
-                            <strong>{{ $t('post.title') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.title') }}</template>
+        <!-- <div class="my-collection-container"> -->
+            <collection
+                v-if="dataLoaded && !emptySearchResults && hasPosts"
+                :itemsCount="6">
+                <collection-header slot="header">
+                    <collection-cell>
+                        <checkbox
+                            value="all"
+                            :checked="anyCheckboxIsSelected"
+                            :onClick="toggleAllCheckboxes.bind(this, false)"
+                            @click.native="$bus.$emit('document-body-clicked')" />
+                    </collection-cell>
 
-                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    </span>
-                </collection-cell>
+                    <collection-cell>
+                        <span
+                            class="col-sortable-title"
+                            @click="ordering('title')">
+                            <template v-if="orderBy === 'title'">
+                                <strong>{{ $t('post.title') }}</strong>
+                            </template>
+                            <template v-else>{{ $t('post.title') }}</template>
 
-                <collection-cell width="200px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('created')">
-                        <template v-if="orderBy === 'created'">
-                            <strong>{{ $t('post.publicationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.publicationDate') }}</template>
+                            <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                            <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                        </span>
+                    </collection-cell>
 
-                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    </span>
-                </collection-cell>
+                    <collection-cell min-width="140px">
+                        <span
+                            class="col-sortable-title"
+                            @click="ordering('created')">
+                            <template v-if="orderBy === 'created'">
+                                <strong>{{ $t('post.publicationDate') }}</strong>
+                            </template>
+                            <template v-else>{{ $t('post.publicationDate') }}</template>
 
-                <collection-cell
-                    v-if="showModificationDateAsColumn"
-                    width="200px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('modified')">
-                        <template v-if="orderBy === 'modified'">
-                            <strong>{{ $t('post.modificationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.modificationDate') }}</template>
+                            <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                            <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                        </span>
+                    </collection-cell>
 
-                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                    </span>
-                </collection-cell>
+                    <collection-cell
+                        v-if="showModificationDateAsColumn"
+                        min-width="140px">
+                        <span
+                            class="col-sortable-title"
+                            @click="ordering('modified')">
+                            <template v-if="orderBy === 'modified'">
+                                <strong>{{ $t('post.modificationDate') }}</strong>
+                            </template>
+                            <template v-else>{{ $t('post.modificationDate') }}</template>
 
-                <collection-cell width="200px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('author')">
-                        <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('author.author') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('author.author') }}</template>
+                            <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                            <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
+                        </span>
+                    </collection-cell>
 
-                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    </span>
-                </collection-cell>
+                    <collection-cell min-width="130px">
+                        <span
+                            class="col-sortable-title"
+                            @click="ordering('author')">
+                            <template v-if="orderBy === 'author'">
+                                <strong>{{ $t('author.author') }}</strong>
+                            </template>
+                            <template v-else>{{ $t('author.author') }}</template>
 
-                <collection-cell width="40px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('id')">
-                        <template v-if="orderBy === 'id'">
-                            <strong>{{ $t('ui.id') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('ui.id') }}</template>
+                            <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                            <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                        </span>
+                    </collection-cell>
 
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    </span>
-                </collection-cell>
+                    <collection-cell min-width="40px">
+                        <span
+                            class="col-sortable-title"
+                            @click="ordering('id')">
+                            <template v-if="orderBy === 'id'">
+                                <strong>{{ $t('ui.id') }}</strong>
+                            </template>
+                            <template v-else>{{ $t('ui.id') }}</template>
 
-                <div
-                    v-if="anyCheckboxIsSelected"
-                    class="tools">
-                    <p-button
-                        v-if="trashVisible"
-                        icon="delete"
-                        type="small light icon delete"
-                        :onClick="bulkDelete">
-                        {{ $t('ui.delete') }}
-                    </p-button>
-
-                    <p-button
-                        v-if="trashVisible"
-                        icon="restore"
-                        type="small light icon"
-                        :onClick="bulkRestore">
-                        {{ $t('file.restore') }}
-                    </p-button>
-
-                    <p-button
-                        v-if="!trashVisible"
-                        icon="trash"
-                        type="small light icon delete"
-                        :onClick="bulkTrash">
-                        {{ $t('post.moveToTrash') }}
-                    </p-button>
-
-                    <p-button
-                        v-if="!trashVisible"
-                        icon="duplicate"
-                        type="small light icon"
-                        :onClick="bulkDuplicate">
-                        {{ $t('post.duplicate') }}
-                    </p-button>
+                            <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                            <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                        </span>
+                    </collection-cell>
 
                     <div
-                        v-if="!trashVisible"
-                        class="dropdown-wrapper">
+                        v-if="anyCheckboxIsSelected"
+                        class="tools">
                         <p-button
-                            icon="more"
-                            :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
-                            @click.native.stop="toggleBulkDropdown">
-                            {{ $t('ui.more') }}
+                            v-if="trashVisible"
+                            icon="delete"
+                            type="small light icon delete"
+                            :onClick="bulkDelete">
+                            {{ $t('ui.delete') }}
                         </p-button>
 
-                        <ul
-                            v-if="bulkDropdownVisible"
-                            class="dropdown">
-                            <li
-                                v-if="selectedPostsNeedsStatus('published')"
-                                @click="bulkPublish">
-                                <icon
-                                   size="xs"
-                                   name="draft-post"
-                                   primaryColor="color-8" />
-                                {{ $t('post.publish') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('draft')"
-                                @click="bulkUnpublish">
-                                <icon
-                                   size="xs"
-                                   name="draft-post"
-                                   primaryColor="color-7" />
-                                {{ $t('post.markAsDraft') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('featured')"
-                                @click="bulkFeatured">
-                                 <icon
-                                   size="xs"
-                                   name="featured-post"
-                                   primaryColor="color-helper-6" />
-                                {{ $t('post.markAsFeatured') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('featured')"
-                                @click="bulkUnfeatured">
-                                 <icon
-                                   size="xs"
-                                   name="featured-post"
-                                   primaryColor="color-8" />
-                                {{ $t('post.markAsUnfeatured') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('excluded_homepage')"
-                                @click="bulkExclude">
-                                <icon
-                                   size="xs"
-                                   name="excluded-post"
-                                   primaryColor="color-3" />
-                                {{ $t('post.excludeFromHomepage') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('excluded_homepage')"
-                                @click="bulkInclude">
-                                <icon
-                                   size="xs"
-                                   name="excluded-post"
-                                   primaryColor="color-8" />
-                                {{ $t('post.includeInHomepage') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('hidden')"
-                                @click="bulkHide">
-                                <icon
-                                   size="xs"
-                                   name="hidden-post"
-                                   primaryColor="color-7" />
-                                {{ $t('ui.hide') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('hidden')"
-                                @click="bulkUnhide">
-                                <icon
-                                   size="xs"
-                                   name="hidden-post"
-                                   primaryColor="color-8" />
-                                {{ $t('ui.unhide') }}
-                            </li>
-                        </ul>
+                        <p-button
+                            v-if="trashVisible"
+                            icon="restore"
+                            type="small light icon"
+                            :onClick="bulkRestore">
+                            {{ $t('file.restore') }}
+                        </p-button>
+
+                        <p-button
+                            v-if="!trashVisible"
+                            icon="trash"
+                            type="small light icon delete"
+                            :onClick="bulkTrash">
+                            {{ $t('post.moveToTrash') }}
+                        </p-button>
+
+                        <p-button
+                            v-if="!trashVisible"
+                            icon="duplicate"
+                            type="small light icon"
+                            :onClick="bulkDuplicate">
+                            {{ $t('post.duplicate') }}
+                        </p-button>
+
+                        <div
+                            v-if="!trashVisible"
+                            class="dropdown-wrapper">
+                            <p-button
+                                icon="more"
+                                :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
+                                @click.native.stop="toggleBulkDropdown">
+                                {{ $t('ui.more') }}
+                            </p-button>
+
+                            <ul
+                                v-if="bulkDropdownVisible"
+                                class="dropdown">
+                                <li
+                                    v-if="selectedPostsNeedsStatus('published')"
+                                    @click="bulkPublish">
+                                    <icon
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-8" />
+                                    {{ $t('post.publish') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsNeedsStatus('draft')"
+                                    @click="bulkUnpublish">
+                                    <icon
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-7" />
+                                    {{ $t('post.markAsDraft') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsNeedsStatus('featured')"
+                                    @click="bulkFeatured">
+                                    <icon
+                                    size="xs"
+                                    name="featured-post"
+                                    primaryColor="color-helper-6" />
+                                    {{ $t('post.markAsFeatured') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsHaveStatus('featured')"
+                                    @click="bulkUnfeatured">
+                                    <icon
+                                    size="xs"
+                                    name="featured-post"
+                                    primaryColor="color-8" />
+                                    {{ $t('post.markAsUnfeatured') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsNeedsStatus('excluded_homepage')"
+                                    @click="bulkExclude">
+                                    <icon
+                                    size="xs"
+                                    name="excluded-post"
+                                    primaryColor="color-3" />
+                                    {{ $t('post.excludeFromHomepage') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsHaveStatus('excluded_homepage')"
+                                    @click="bulkInclude">
+                                    <icon
+                                    size="xs"
+                                    name="excluded-post"
+                                    primaryColor="color-8" />
+                                    {{ $t('post.includeInHomepage') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsNeedsStatus('hidden')"
+                                    @click="bulkHide">
+                                    <icon
+                                    size="xs"
+                                    name="hidden-post"
+                                    primaryColor="color-7" />
+                                    {{ $t('ui.hide') }}
+                                </li>
+                                <li
+                                    v-if="selectedPostsHaveStatus('hidden')"
+                                    @click="bulkUnhide">
+                                    <icon
+                                    size="xs"
+                                    name="hidden-post"
+                                    primaryColor="color-8" />
+                                    {{ $t('ui.unhide') }}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </collection-header>
+                </collection-header>
 
-            <collection-row
-                v-for="(item, index) in items"
-                slot="content"
-                :data-is-draft="item.isDraft"
-                :key="index">
-                <collection-cell width="40px">
-                    <checkbox
-                        :value="item.id"
-                        :checked="isChecked(item.id)"
-                        :onClick="toggleSelection" />
-                </collection-cell>
+                <collection-row
+                    class="my-content"
+                    v-for="(item, index) in items"
+                    slot="content"
+                    :data-is-draft="item.isDraft"
+                    :key="index">
+                    <collection-cell>
+                        <checkbox
+                            :value="item.id"
+                            :checked="isChecked(item.id)"
+                            :onClick="toggleSelection" />
+                    </collection-cell>
 
-                <collection-cell
-                    type="titles"
-                    :width="showModificationDateAsColumn ? 'calc(100% - 680px)' : 'calc(100% - 480px)'">
-                    <h2 class="title">
+                    <collection-cell
+                        type="titles">
+                        <h2 class="title">
+                            <a
+                                href="#"
+                                @click.prevent.stop="editPost(item.id, item.editor)">
+
+                                {{ item.title }}
+
+                                <icon
+                                    v-if="item.isFeatured"
+                                    size="xs"
+                                    name="featured-post"
+                                    primaryColor="color-helper-6"
+                                    :title="$t('post.thisPostIsFeatured')" />
+                                <icon
+                                    v-if="item.isHidden"
+                                    size="xs"
+                                    name="hidden-post"
+                                    primaryColor="color-7"
+                                    :title="$t('post.thisPostIsHidden')" />
+                                <icon
+                                    v-if="item.isExcludedOnHomepage"
+                                    name="excluded-post"
+                                    size="xs"
+                                    primaryColor="color-3"
+                                    :title="$t('post.thisPostIsExcludedFromHomepage')" />
+                                <icon
+                                    v-if="item.isDraft"
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-7"
+                                    :title="$t('post.thisPostIsADraft')" />
+                            </a>
+                        </h2>
+
+                        <div
+                            v-if="showPostSlugs"
+                            class="post-slug">
+                            {{ $t('post.url') }}: /{{ item.slug }}
+                        </div>
+
+                        <div
+                            v-if="item.tags"
+                            class="post-tags"
+                            style="width: 100%;">
+                            <a
+                                v-for="tag in item.tags"
+                                href="#"
+                                :class="{ 'tag': true, 'is-main-tag': tag.id === item.mainTag }"
+                                :key="'tag-' + tag.id"
+                                @click.stop.prevent="setFilter('tag:' + tag.name)">
+                                #{{ tag.name }}
+                            </a>
+                        </div>
+                    </collection-cell>
+
+                    <collection-cell
+                        type="publish-dates">
+                        <span class="publish-date">{{ getCreationDate(item.created) }}</span>
+                        <span
+                            v-if="!showModificationDateAsColumn"
+                            class="modify-date">
+                            {{ $t('ui.lastModified') }}: {{ getModificationDate(item.modified) }}
+                        </span>
+                    </collection-cell>
+
+                    <collection-cell
+                        v-if="showModificationDateAsColumn"
+                        type="modification-dates">
+                        <span class="modify-date">
+                            {{ getModificationDate(item.modified) }}
+                        </span>
+                    </collection-cell>
+
+                    <collection-cell
+                        type="authors">
                         <a
                             href="#"
-                            @click.prevent.stop="editPost(item.id, item.editor)">
-
-                            {{ item.title }}
-
-                            <icon
-                                v-if="item.isFeatured"
-                                size="xs"
-                                name="featured-post"
-                                primaryColor="color-helper-6"
-                                :title="$t('post.thisPostIsFeatured')" />
-                            <icon
-                                v-if="item.isHidden"
-                                size="xs"
-                                name="hidden-post"
-                                primaryColor="color-7"
-                                :title="$t('post.thisPostIsHidden')" />
-                            <icon
-                                v-if="item.isExcludedOnHomepage"
-                                name="excluded-post"
-                                size="xs"
-                                primaryColor="color-3"
-                                :title="$t('post.thisPostIsExcludedFromHomepage')" />
-                            <icon
-                                v-if="item.isDraft"
-                                size="xs"
-                                name="draft-post"
-                                primaryColor="color-7"
-                                :title="$t('post.thisPostIsADraft')" />
+                            @click.prevent.stop="setFilter('author:' + item.author)">
+                            {{ item.author }}
                         </a>
-                    </h2>
+                    </collection-cell>
 
-                    <div
-                        v-if="showPostSlugs"
-                        class="post-slug">
-                        {{ $t('post.url') }}: /{{ item.slug }}
-                    </div>
-
-                    <div
-                        v-if="item.tags"
-                        class="post-tags">
-                        <a
-                            v-for="tag in item.tags"
-                            href="#"
-                            :class="{ 'tag': true, 'is-main-tag': tag.id === item.mainTag }"
-                            :key="'tag-' + tag.id"
-                            @click.stop.prevent="setFilter('tag:' + tag.name)">
-                            #{{ tag.name }}
-                        </a>
-                    </div>
-                </collection-cell>
-
-                <collection-cell
-                    type="publish-dates"
-                    width="200px">
-                    <span class="publish-date">{{ getCreationDate(item.created) }}</span>
-                    <span
-                        v-if="!showModificationDateAsColumn"
-                        class="modify-date">
-                        {{ $t('ui.lastModified') }}: {{ getModificationDate(item.modified) }}
-                    </span>
-                </collection-cell>
-
-                <collection-cell
-                    v-if="showModificationDateAsColumn"
-                    type="modification-dates"
-                    width="200px">
-                    <span class="modify-date">
-                        {{ getModificationDate(item.modified) }}
-                    </span>
-                </collection-cell>
-
-                <collection-cell
-                    type="authors"
-                    width="200px">
-                    <a
-                        href="#"
-                        @click.prevent.stop="setFilter('author:' + item.author)">
-                        {{ item.author }}
-                    </a>
-                </collection-cell>
-
-                <collection-cell
-                    width="40px">
-                    {{ item.id }}
-                </collection-cell>
-            </collection-row>
-        </collection>
+                    <collection-cell>
+                        {{ item.id }}
+                    </collection-cell>
+                </collection-row>
+            </collection>
+        <!-- </div> -->
 
         <empty-state
             v-if="emptySearchResults"
@@ -1034,4 +1036,70 @@ export default {
         }
     }
 }
+
+.collection.my-collection {
+    // display: grid!important;
+    // grid-template-columns: auto 1fr auto auto auto auto!important;
+    // border-collapse: collapse;
+    // overflow: auto;
+
+    // &:after {
+    //     content: none;
+    // }
+
+    // .header,
+    // .content,
+    // .item {
+    //     display: contents!important;
+    // }
+
+    // .my-content.content {
+    //     display: contents!important;
+    // }
+
+    .header {
+        // .tools {
+        //     position: fixed;
+        //     left: unset;
+        //     z-index: 5;
+        //     margin-left: 3rem;
+        //     padding: .9rem 0;
+        // }
+
+        // .col {
+        //     position: sticky;
+        //     top: 0;
+        //     background: white;
+        //     z-index: 2;
+        // }
+    }
+
+    // .col {
+    //     border-bottom: 1px solid var(--border-light-color);
+    //     padding-right: 1.6rem;
+    //     display: flex;
+    //     flex-direction: column!important;
+    //     justify-content: center!important;
+    //     align-items: flex-start!important;
+    //     box-sizing: content-box;
+    // }
+}
+
+// .my-collection-container {
+//     &:after {
+//         background: linear-gradient(transparent, var(--bg-primary));
+//         bottom: 0;
+//         content: "";
+//         height: 100px;
+//         left: 0;
+//         pointer-events: none;
+//         position: absolute;
+//         right: 5px;
+//         z-index: 9999;
+//     }
+// }
+
+
+// let col = jQuery('.collection .header .col')[1]
+// jQuery(col).offset()
 </style>

@@ -10,6 +10,10 @@
 export default {
     name: 'collectioncell',
     props: {
+        minWidth: {
+            default: 'auto',
+            type: String
+        },
         width: {
             default: 'auto',
             type: String
@@ -42,6 +46,7 @@ export default {
         cellStyle: function() {
             let styles = [
                 'width: ' + this.width,
+                'min-width: ' + this.minWidth,
                 'text-align: ' + this.textAlign,
                 'justify-content: ' + this.justifyContent
             ];
@@ -56,8 +61,13 @@ export default {
 @import '../../scss/variables.scss';
 
 .col {
+    align-items: center;
+    box-sizing: content-box;
+    border-bottom: 1px solid var(--border-light-color);
+    display: flex;
     font-weight: var(--font-weight-normal);
-    padding: 1.6rem 0;
+    justify-content: left;
+    padding: 1.6rem 1.6rem 1.6rem 0;
     text-align: left;
 
     &.checkbox {
@@ -72,11 +82,14 @@ export default {
     }
 
     &.titles {
+        flex-wrap: wrap;
+
         .title {
             font-size: 1.6rem;
             font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
+            width: 100%;
         }
 
         .tag {

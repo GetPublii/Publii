@@ -14,17 +14,15 @@ export default {
 @import '../../scss/variables.scss';
 
 .item {
-    align-items: center;
     border-bottom: 1px solid var(--border-light-color);
-    display: flex;
-    flex-wrap: wrap;   
+    display: contents;
 
     &:last-child {
         .col {
             border-bottom: none;
         }
     }
-    
+
     .add-form {
         margin-top: 0;
     }

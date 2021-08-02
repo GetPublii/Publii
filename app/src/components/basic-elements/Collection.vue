@@ -1,9 +1,13 @@
 <template>
-    <div :class="cssClasses">
-        <slot name="header"></slot>
+    <div class="collection-wrapper">
+        <div
+            :class="cssClasses"
+            :style="gridLayout">
+            <slot name="header"></slot>
 
-        <div class="content">
-            <slot name="content"></slot>
+            <div class="content">
+                <slot name="content"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -15,6 +19,10 @@ export default {
         formIsOpened: {
             default: false,
             type: Boolean
+        },
+        itemsCount: {
+            default: 3,
+            type: Number
         }
     },
     computed: {
@@ -23,6 +31,12 @@ export default {
                 'collection': true,
                 'is-add-form-opened': this.formIsOpened
             };
+        },
+        gridLayout: function() {
+            let column = ' auto';
+            let templateColumns = `auto 1fr${column.repeat(Math.max(0, this.itemsCount - 2))}`;
+
+            return `grid-template-columns: ${templateColumns}`;
         }
     }
 }
@@ -34,13 +48,8 @@ export default {
 /*
  * Collection element
  */
-.collection {
-    bottom: 0;
-    position: absolute;
-    top: 13rem;
-    width: calc(100% - 10rem);
-
-    &:after {
+ .collection-wrapper {
+     &:after {
         background: linear-gradient(transparent, var(--bg-primary));
         bottom: 0;
         content: "";
@@ -52,12 +61,24 @@ export default {
         z-index: 9999;
     }
 
+ }
+.collection {
+    border-collapse: collapse;
+    bottom: 0;
+    display: grid;
+    grid-auto-rows: max-content;
+    overflow: auto;
+    position: absolute;
+    top: 13rem;
+    width: calc(100% - 10rem);
+
     &.is-add-form-opened {
         top: 64.75rem;
     }
 
     .content {
         bottom: 0;
+        display: contents;
         left: 0;
         overflow-y: scroll;
         padding: 0 0 5rem 0;
@@ -93,14 +114,15 @@ export default {
         }
     }*/
 }
+
 @media (max-height: 900px) {
-    .collection {          
+    .collection {
          width: calc(100% - 8rem);
     }
  }
- 
+
 @media (max-width: 1400px) {
-   .collection {          
+   .collection {
          width: calc(100% - 8rem);
     }
 }

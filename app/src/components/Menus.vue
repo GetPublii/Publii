@@ -13,24 +13,28 @@
         </p-header>
 
         <collection
-            v-if="!showEmptyState">
+            v-if="!showEmptyState"
+            :itemsCount="4">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, true)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 300px)">
+                <collection-cell>
                     {{ $t('ui.name') }}
                 </collection-cell>
 
-                <collection-cell width="180px">
+                <collection-cell min-width="180px">
                     {{ $t('menu.assignedMenu') }}
                 </collection-cell>
 
-                <collection-cell width="80px">
+                <collection-cell
+                    justifyContent="center"
+                    textAlign="center"
+                    min-width="80px">
                     {{ $t('menu.items') }}
                 </collection-cell>
 
@@ -50,14 +54,14 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :value="index"
                         :checked="isChecked(index)"
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 300px)">
+                <collection-cell>
                     <a
                         href="#"
                         @click.prevent.stop="toggleMenu(index)">
@@ -66,7 +70,6 @@
                 </collection-cell>
 
                 <collection-cell
-                    width="180px"
                     type="assignment">
                     <dropdown
                         :id="'menu-select-' + index"
@@ -79,8 +82,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    textAlign="center"
-                    width="80px">
+                    justifyContent="center"
+                    textAlign="center">
                     <a
                         @click.prevent.stop="toggleMenu(index)"
                         href="#">

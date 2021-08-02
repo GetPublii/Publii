@@ -15,16 +15,18 @@
             </p-button>
         </p-header>
 
-        <collection v-if="!emptySearchResults">
+        <collection
+            v-if="!emptySearchResults"
+            :itemsCount="4">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
+                <collection-cell>
                     <span
                         class="col-sortable-title"
                         @click="ordering('name')">
@@ -41,7 +43,7 @@
                 <collection-cell
                     justifyContent="center"
                     textAlign="center"
-                    width="100px">
+                    min-width="100px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('postsCounter')">
@@ -55,7 +57,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell width="40px">
+                <collection-cell min-width="40px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
@@ -85,7 +87,7 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         v-if="item.id !== 1"
                         :value="item.id"
@@ -103,7 +105,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
+                <collection-cell>
                     <a
                         href="#"
                         @click.prevent.stop="editAuthor(item)">
@@ -119,8 +121,7 @@
 
                 <collection-cell
                     justifyContent="center"
-                    textAlign="center"
-                    width="100px">
+                    textAlign="center">
                     <a
                         @click.prevent.stop="showPostsConnectedWithAuthor(item.name)"
                         href="#">
@@ -128,8 +129,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell
-                    width="40px">
+                <collection-cell>
                     {{ item.id }}
                 </collection-cell>
             </collection-row>

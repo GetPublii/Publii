@@ -14,17 +14,27 @@ export default {
 @import '../../scss/variables.scss';
 
 .header {
-    align-items: center;
     background: var(--bg-primary);
     border-bottom: 1px solid var(--border-light-color);
-    display: flex;
-    overflow-y: scroll; 
+    display: contents;
+    overflow-y: scroll;
     position: relative;
     user-select: none;
 
     .tools {
-        left: 3rem;
-        position: absolute;
+        background: var(--bg-primary);
+        margin-left: 3rem;
+        min-width: 200px;
+        padding: .9rem 0;
+        position: fixed;
+        z-index: 5;
+    }
+
+    .col {
+        position: sticky;
+        top: 0;
+        background: var(--bg-primary);
+        z-index: 2;
     }
 }
 
