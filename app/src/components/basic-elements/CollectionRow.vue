@@ -19,7 +19,7 @@ export default {
     &:last-child {
         .col {
             border-bottom: none;
-            padding-bottom: 6rem;
+            border-bottom: 6rem solid transparent;
         }
     }
 
