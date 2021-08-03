@@ -397,7 +397,9 @@ export default {
     }
 
     .item-content {
-        border-top: 1px solid var(--input-border-color);
+        border-bottom: 1px solid var(--input-border-color);
+        grid-column-start: 1;
+        grid-column-end: 5;
         overflow: hidden;
         padding: 3rem 0 3rem 3rem;
         user-select: none;
