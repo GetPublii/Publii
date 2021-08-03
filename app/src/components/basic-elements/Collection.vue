@@ -60,8 +60,8 @@ export default {
         right: 5px;
         z-index: 9999;
     }
-
  }
+
 .collection {
     border-collapse: collapse;
     bottom: 0;
@@ -77,15 +77,7 @@ export default {
     }
 
     .content {
-        bottom: 0;
         display: contents;
-        left: 0;
-        overflow-y: scroll;
-        padding: 0 0 5rem 0;
-        position: absolute;
-        right: 0;
-        top: 5.8rem;
-        width: 100%;
     }
 
     /*

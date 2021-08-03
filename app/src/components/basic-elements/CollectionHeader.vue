@@ -14,12 +14,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .header {
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-light-color);
     display: contents;
-    overflow-y: scroll;
-    position: relative;
-    user-select: none;
 
     .tools {
         background: var(--bg-primary);

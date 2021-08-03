@@ -14,12 +14,12 @@ export default {
 @import '../../scss/variables.scss';
 
 .item {
-    border-bottom: 1px solid var(--border-light-color);
     display: contents;
 
     &:last-child {
         .col {
             border-bottom: none;
+            padding-bottom: 6rem;
         }
     }
 
