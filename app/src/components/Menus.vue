@@ -339,6 +339,7 @@ export default {
 
             this.$store.commit('deleteMenuByIDs', itemsToRemove);
             this.saveNewMenuStructure();
+            this.selectedItems = [];
 
             this.$bus.$emit('message-display', {
                 message: this.$t('menu.menusRemoveSuccessMessage'),
