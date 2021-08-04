@@ -111,7 +111,8 @@ export default {
           }
         }
 
-        html += '<a href="#' + processedHeader.config.advanced.id + '">' + processedHeader.content + '</a>';
+        let headingID = processedHeader.config.advanced ? processedHeader.config.advanced.id : '';
+        html += '<a href="#' + headingID + '">' + processedHeader.content + '</a>';
 
         if (!nextLevel || nextLevel === headingLevel) {
           html += '</li>';

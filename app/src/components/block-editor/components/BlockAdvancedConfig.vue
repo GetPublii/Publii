@@ -212,9 +212,10 @@ export default {
   }
 
   &-buttons {
-      margin: 3rem -2rem -2rem;
+    display: flex;
+    margin: 3rem -2rem -2rem;
 
-   button {
+    button {
       background: var(--eb-button-bg);
       border: none;
       box-shadow: none;
