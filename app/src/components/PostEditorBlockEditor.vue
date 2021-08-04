@@ -330,14 +330,6 @@ export default {
 
         & > div {
             padding: 9rem 4rem 3rem 4rem;
-
-            & > webview {
-                bottom: 0;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 8rem;
-            }
         }
     }
 
