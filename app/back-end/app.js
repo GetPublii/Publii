@@ -564,7 +564,8 @@ class App {
                 currentLanguage: {
                     name: self.currentLanguageName,
                     translations: self.currentLanguageTranslations,
-                    wysiwygTranslation: self.currentWysiwygTranslation
+                    wysiwygTranslation: self.currentWysiwygTranslation,
+                    momentLocale: self.currentLanguageMomentLocale
                 },
                 languages: self.languages,
                 languagesPath: self.languagesPath,
