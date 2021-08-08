@@ -117,7 +117,7 @@ class Languages {
     /**
      * Load translations
      */
-    loadTranslations (languageName = 'en', type = 'default') {
+    loadTranslations (languageName = 'en-gb', type = 'default') {
         let translationsPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
 
         if (type !== 'default') {
@@ -125,13 +125,18 @@ class Languages {
         }
 
         translationsPath = path.join(translationsPath, languageName, 'translations.json');
+
+        if (!UtilsHelper.fileExists(translationsPath)) {
+            return false;
+        }
+
         return UtilsHelper.requireWithNoCache(translationsPath);
     }
 
     /**
      * Load translations
      */
-     loadWysiwygTranslation (languageName = 'en', type = 'default') {
+     loadWysiwygTranslation (languageName = 'en-gb', type = 'default') {
         let translationsPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
 
         if (type !== 'default') {
@@ -150,7 +155,7 @@ class Languages {
     /**
      * Load language config
      */
-    loadLanguageConfig (languageName = 'en', type = 'default') {
+    loadLanguageConfig (languageName = 'en-gb', type = 'default') {
         let configPath = path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked');
 
         if (type !== 'default') {
@@ -158,8 +163,18 @@ class Languages {
         }
 
         configPath = path.join(configPath, languageName, 'config.json');
+
+        if (!UtilsHelper.fileExists(configPath)) {
+            return false;   
+        }
+
         let languageConfig = fs.readFileSync(configPath, 'utf8');
-        languageConfig = JSON.parse(languageConfig);
+
+        try {
+            languageConfig = JSON.parse(languageConfig);
+        } catch (e) {
+            return false;
+        }
 
         return languageConfig;
     }

@@ -324,21 +324,42 @@ class App {
         this.languages = languagesLoader.loadLanguages();
         this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
         this.languagesDefaultPath = normalizePath(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
+        this.languageLoadingError = false;
 
         if (this.appConfig.language && this.appConfig.languageType) {
             this.currentLanguageName = this.appConfig.language;
             this.currentLanguageType = this.appConfig.languageType;
             this.currentLanguageTranslations = languagesLoader.loadTranslations(this.appConfig.language, this.appConfig.languageType);
             let languageConfig = languagesLoader.loadLanguageConfig(this.appConfig.language, this.appConfig.languageType);
-            this.currentLanguageMomentLocale = languageConfig.momentLocale;
-            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
+
+            if (languageConfig) {
+                this.currentLanguageMomentLocale = languageConfig.momentLocale;
+                this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
+            }
+            
+            if (
+                !this.currentLanguageTranslations ||
+                !languageConfig ||
+                (!this.currentWysiwygTranslation && this.currentLanguageName !== 'en-gb')
+            ) {
+                this.loadDefaultLanguage(languagesLoader, true);
+            }
         } else {
-            this.currentLanguageName = 'en';
-            this.currentLanguageType = 'default';
-            this.currentLanguageTranslations = languagesLoader.loadTranslations('en', 'default');
-            let languageConfig = languagesLoader.loadLanguageConfig('en', 'default');
-            this.currentLanguageMomentLocale = languageConfig.momentLocale;
-            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en', 'default');
+            this.loadDefaultLanguage(languagesLoader, false);
+        }
+    }
+
+    // Load default language
+    loadDefaultLanguage (languagesLoader, errorOccurred = false) {
+        this.currentLanguageName = 'en-gb';
+        this.currentLanguageType = 'default';
+        this.currentLanguageTranslations = languagesLoader.loadTranslations('en-gb', 'default');
+        let languageConfig = languagesLoader.loadLanguageConfig('en-gb', 'default');
+        this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en-gb', 'default');
+
+        if (errorOccurred) {
+            this.languageLoadingError = true;
         }
     }
 
@@ -346,23 +367,35 @@ class App {
     loadLanguage (lang, type) {
         if (type !== 'default' && type !== 'installed') {
             type = 'default';
-            lang = 'en';
+            lang = 'en-gb';
         }
 
         let languagesLoader = new Languages(this);
         this.currentLanguageName = lang.replace(/[^a-z\-\_\.]/gmi, '');
         this.currentLanguageType = type;
         this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
+        this.languageLoadingError = false;
         let languageConfig = languagesLoader.loadLanguageConfig(lang, type);
-        this.currentLanguageMomentLocale = languageConfig.momentLocale;
-        this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(lang, type);
+
+        if (languageConfig) {
+            this.currentLanguageMomentLocale = languageConfig.momentLocale;
+            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(lang, type);
+        }
+
+        if (
+            !this.currentLanguageTranslations ||
+            !languageConfig ||
+            (!this.currentWysiwygTranslation && lang !== 'en-gb')
+        ) {
+            this.languageLoadingError = true;
+        }
     }
 
     // Set language
     setLanguage (lang, type) {
         if (type !== 'default' && type !== 'installed') {
             type = 'default';
-            lang = 'en';
+            lang = 'en-gb';
         }
 
         this.appConfig.language = lang.replace(/[^a-z\-\_\.]/gmi, '');
@@ -565,7 +598,8 @@ class App {
                     name: self.currentLanguageName,
                     translations: self.currentLanguageTranslations,
                     wysiwygTranslation: self.currentWysiwygTranslation,
-                    momentLocale: self.currentLanguageMomentLocale
+                    momentLocale: self.currentLanguageMomentLocale,
+                    languageLoadingError: self.languageLoadingError
                 },
                 languages: self.languages,
                 languagesPath: self.languagesPath,

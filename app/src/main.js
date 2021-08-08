@@ -226,6 +226,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             await this.setupAppTheme();
             
             window.app = {
+                languageLoadingError: !!initialData.currentLanguage.languageLoadingError,
                 getSiteName: () => this.$store.state.currentSite.config.name,
                 getSiteDir: () => this.$store.state.currentSite.siteDir,
                 getSiteTheme: () => this.$store.state.currentSite.config.theme,
@@ -250,6 +251,15 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
                 translate: (phraseKey) => this.$t(phraseKey)
             };
+
+            // Find issues with loading languages
+            if (window.app.languageLoadingError) {
+                window.app.languageLoadingError = false;
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('langs.languageLoadingError'),
+                    buttonStyle: 'danger'
+                });
+            }
         },
         methods: {
             async setupAppTheme () {

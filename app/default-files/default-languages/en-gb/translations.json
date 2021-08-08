@@ -269,6 +269,7 @@
         "language": "Language:",
         "languageChangedMsg": "Application language changed",
         "languageChangeError": "Language change error occured - please try again.",
+        "languageLoadingError": "An error occurred during loading app language. The default language (english) will be used instead. Please go to the language settings to select a correct language.",
         "languages": "Languages",
         "removeLanguageMessage": "Do you really want to remove the {languageName} language?",
         "removeLanguageSuccessMessage": "The selected language has been removed",

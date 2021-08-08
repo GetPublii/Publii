@@ -55,6 +55,7 @@ export default {
             let activeLanguage = languagesList[activeLanguageIndex];
             languagesList.splice(activeLanguageIndex, 1);
             languagesList.splice(0, 0, activeLanguage);
+            languagesList = languagesList.filter(language => !!language);
 
             return languagesList;
         },

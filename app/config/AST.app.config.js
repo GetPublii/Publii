@@ -17,7 +17,7 @@ const AstAppConfig = {
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
     appTheme: 'system',
-    language: 'en',
+    language: 'en-gb',
     languageType: 'default'
 };
 

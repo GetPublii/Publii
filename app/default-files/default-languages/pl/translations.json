@@ -269,6 +269,7 @@
         "language": "Język:",
         "languageChangedMsg": "Język aplikacji został zmieniony",
         "languageChangeError": "Zmiana języka nie powiodła się - proszę spróbować ponownie.",
+        "languageLoadingError": "Wystapił błąd podczas wczytywania plików językowych. Zostanie użyty domyślny język (angielski). Przejdź do ustawień językowych aby ustawić prawidłowy język.",
         "languages": "Języki",
         "removeLanguageMessage": "Czy na pewno chcesz usunąć język {languageName}?",
         "removeLanguageSuccessMessage": "Usunięto wybrany język",
