@@ -49,7 +49,7 @@ visit our [Community Hub](https://getpublii.com/forum) or follow us on [Twitter]
 * [Developer docs](https://getpublii.com/dev/)
 * [Wiki](https://github.com/GetPublii/Publii/wiki/)
 * [Issues](https://github.com/GetPublii/Publii/issues/)
-* [Community forum](https://getpublii.com/forum)
+* [Community forum](https://forum.getpublii.com/)
 
 ## Contributors
 
