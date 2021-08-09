@@ -220,7 +220,7 @@
         "uploadFiles": "Prześlij pliki"
     },
     "gdpr": {
-        "addGroup": "Dodaj grupe",
+        "addGroup": "Dodaj grupę",
         "groupID": "ID grupy",
         "groupName": "Nazwa grupy",
         "state": "Stan"

@@ -1163,7 +1163,7 @@
                                 id="posts-listing-order-by"
                                 key="posts-listing-order-by"
                                 v-model="advanced.gdpr.behaviour"
-                                :items="{ 'badge': $t('ui.badge'), 'link': $t('ui.customLink'), 'badge-link': $t('settings.badgeAndCustomLink') }"></dropdown>
+                                :items="{ 'badge': $t('settings.badge'), 'link': $t('ui.customLink'), 'badge-link': $t('settings.badgeAndCustomLink') }"></dropdown>
                         </field>
 
                         <field
