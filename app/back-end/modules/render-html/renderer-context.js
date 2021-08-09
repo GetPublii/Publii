@@ -193,6 +193,8 @@ class RendererContext {
         let logoSize = false;
         let assetsUrl = normalizePath(this.siteConfig.domain) + '/' +
                         normalizePath(this.themeConfig.files.assetsPath);
+        let rootUrl = normalizePath(this.siteConfig.domain) + '/';
+        let mediaFilesUrl = normalizePath(this.siteConfig.domain) + '/media/files/';
         let postsOrdering = 'desc';
         
         if (typeof this.siteConfig.advanced.postsListingOrder === 'string') {
@@ -200,6 +202,8 @@ class RendererContext {
         }
 
         assetsUrl = URLHelper.fixProtocols(assetsUrl);
+        rootUrl = URLHelper.fixProtocols(rootUrl);
+        mediaFilesUrl = URLHelper.fixProtocols(mediaFilesUrl);
 
         if(addIndexHtml) {
             fullURL += '/index.html';
@@ -248,6 +252,8 @@ class RendererContext {
                 logo: logoUrl,
                 logoSize: logoSize,
                 assetsUrl: assetsUrl,
+                rootUrl: rootUrl,
+                mediaFilesUrl: mediaFilesUrl,
                 postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
                 contentStructure: {}
