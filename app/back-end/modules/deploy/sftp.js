@@ -370,7 +370,7 @@ class SFTP {
                         fs.unlinkSync(testFilePath);
                     }
 
-                    client.end();
+                    client.end().catch(err => console.log('SFTP session end error'));
                 }).catch(err => {
                     app.mainWindow.webContents.send('app-deploy-test-write-error');
                     
@@ -378,7 +378,7 @@ class SFTP {
                         fs.unlinkSync(testFilePath);
                     }
 
-                    client.end();
+                    client.end().catch(err => console.log('SFTP session end error'));
                 });
             }).catch(err => {
                 app.mainWindow.webContents.send('app-deploy-test-write-error');
@@ -387,7 +387,7 @@ class SFTP {
                     fs.unlinkSync(testFilePath);
                 }
 
-                client.end();
+                client.end().catch(err => console.log('SFTP session end error'));
             });
 
             waitForTimeout = false;
@@ -397,14 +397,14 @@ class SFTP {
 
             if(waitForTimeout) {
                 waitForTimeout = false;
-                client.end();
+                client.end().catch(err => console.log('SFTP session end error'));
                 app.mainWindow.webContents.send('app-deploy-test-error');
             }
         });
 
         setTimeout(function() {
             if(waitForTimeout === true) {
-                client.end();
+                client.end().catch(err => console.log('SFTP session end error'));
                 app.mainWindow.webContents.send('app-deploy-test-error');
             }
         }, 15000);
