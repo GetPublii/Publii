@@ -39,17 +39,17 @@ class PostItem {
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
-        let readmoreMatches = this.post.text.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+        let readmoreMatches = this.post.text.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
 
         if (readmoreMatches && readmoreMatches.length) {
             hasCustomExcerpt = true;
 
             // Detect if hide of the custom excerpt is enabled
             if (this.renderer.siteConfig.advanced.postUseTextWithoutCustomExcerpt) {
-                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
                 preparedText = preparedText[1];
             } else {
-                preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
+                preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi, '');
             }
         }
 
