@@ -183,6 +183,7 @@ class ContentHelper {
         text = text.replace(/<(?:.|\s)*?>/g, ''); // Remove HTML tags
         text = text.replace(/\s{2,}/g, ' '); // Shrink multiple spaces into one space
         text = text.split(' '); // Create an array of words
+        text = text.filter(word => !!word);
         let textLength = text.length;
         text = text.slice(0, parseInt(length, 10)); // Select first X elements
         text = text.join(' ');  // Merge the text with spaces and return
