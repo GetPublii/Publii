@@ -10,6 +10,12 @@
                 :src="thumbnail"
                 class="language-thumbnail"
                 alt="">
+            <span 
+                v-if="isOutdated"
+                class="language-is-outdated"
+                :title="$t('langs.isOutdatedTitle', { supportedVersion: languageData.publiiSupport, currentVersion: this.$store.state.app.versionInfo.version })">
+                {{ $t('langs.isOutdated') }}
+            </span>
         </span>
 
         <figcaption class="language-name">
@@ -36,6 +42,7 @@
 
 <script>
 import Vue from 'vue';
+import compare from 'node-version-compare';
 
 export default {
     name: 'languages-list-item',
@@ -48,6 +55,13 @@ export default {
             let languageType = this.$store.state.app.config.languageType;
 
             if (this.languageData.directory === language && this.languageData.type === languageType) {
+                return true;
+            }
+
+            return false;
+        },
+        isOutdated () {
+            if (compare(this.languageData.publiiSupport, this.$store.state.app.versionInfo.version) === -1) {
                 return true;
             }
 
@@ -210,6 +224,19 @@ export default {
         font-size: 1.2rem;
         font-weight: 400;
         margin: 0 4rem 0 auto;
+    }
+
+    &-is-outdated {
+        background: var(--warning);
+        border-radius: 5px;
+        color: var(--white);
+        cursor: help;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: .3rem .5rem;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
     }
 }
 </style>

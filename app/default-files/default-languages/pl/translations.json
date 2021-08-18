@@ -266,6 +266,8 @@
         "getMoreLanguages": "Pobierz więcej języków",
         "goToLanguagesManager": "Idź do menadżera języków",
         "installLanguage": "Zainstaluj język",
+        "isOutdated": "Nieaktualny",
+        "isOutdatedTitle": "Ta paczka językowa wspiera Publii do wersji v.{supportedVersion}, podczas gdy używasz Publii w wersji v.{currentVersion} - sprawdź dostępność aktualizacji",
         "language": "Język:",
         "languageChangedMsg": "Język aplikacji został zmieniony",
         "languageChangeError": "Zmiana języka nie powiodła się - proszę spróbować ponownie.",
