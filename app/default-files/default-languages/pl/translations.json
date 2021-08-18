@@ -775,7 +775,7 @@
         "nonCompressedCatalog": "Katalog nieskompresowany",
         "operationsDone": "wykonanych operacji",
         "outputDirectory": "Katalog docelowy",
-        "outputDirectoryNote": "Zawartość wyranego katalogu zostanie usunięta podczas generowania strony",
+        "outputDirectoryNote": "W wybranym katalogu zostanie utworzony katalog/plik {siteName}-files. Jeśli już istnieje - zostanie zastąpiony nowymi plikami.",
         "outputType": "Typ wyjścia",
         "outputTypeNote": "Publii wygeneruje katalog lub archiwum ZIP/TAR z Twoją stroną internetową. Następnie możesz ręcznie przesłać te pliki na dowolny serwer docelowy.",
         "parallelUploads": "Przesyłanie równoległe",

@@ -775,7 +775,7 @@
         "nonCompressedCatalog": "Non-compressed catalog",
         "operationsDone": "operations done",
         "outputDirectory": "Output directory",
-        "outputDirectoryNote": "Selected directory content will be removed during website generating",
+        "outputDirectoryNote": "In the selected directory Publii will create catalog/file {siteName}-files. If it exists - it will be replaced with the new files.",
         "outputType": "Output type",
         "outputTypeNote": "Publii will generate a catalog or ZIP/TAR archive with your website. Then you can upload these files to any destination server manually.",
         "parallelUploads": "Parallel uploads",

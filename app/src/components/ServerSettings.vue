@@ -968,8 +968,7 @@
                         v-if="deploymentSettings.manual.outputDirectory"
                         slot="note"
                         class="note">
-                        <icon name="alert" size="m" />
-                        {{ $t('sync.outputDirectoryNote') }}
+                        {{ $t('sync.outputDirectoryNote', { siteName: this.$store.state.currentSite.config.name }) }}
                     </small>
                 </field>
             </fields-group>

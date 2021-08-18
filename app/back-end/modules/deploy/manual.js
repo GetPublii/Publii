@@ -31,7 +31,8 @@ class ManualDeployment {
     }
 
     returnCatalog() {
-        let outputPath = this.deployment.siteConfig.deployment.manual.outputDirectory;
+        let outputDirName = slug(this.deployment.siteName) + '-files'; 
+        let outputPath = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, outputDirName);
 
         if(outputPath !== '') {
             if(Utils.dirExists(outputPath)) {
@@ -55,7 +56,7 @@ class ManualDeployment {
         );
 
         if(this.deployment.siteConfig.deployment.manual.outputDirectory !== '') {
-            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '.zip');
+            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '-files.zip');
         }
 
         let output = fs.createWriteStream(backupFile);
@@ -95,7 +96,7 @@ class ManualDeployment {
         );
 
         if(this.deployment.siteConfig.deployment.manual.outputDirectory !== '') {
-            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '.tar');
+            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '-files.tar');
         }
 
         let output = fs.createWriteStream(backupFile);
