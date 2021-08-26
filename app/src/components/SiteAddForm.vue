@@ -1,49 +1,58 @@
 <template>
     <div class="site-create-wrapper">
         <div class="site-create">
-            <h2 class="title">
-                {{ header }}
-            </h2>
+            <tabs
+                ref="site-create-tabs"
+                id="site-create-options-tabs"
+                :items="tabsItems"
+                isHorizontal>
+                <div slot="tab-0">
+                    <div class="site-create-form">
+                        <logo-creator ref="logo-creator" />
 
-            <div class="site-create-form">
-                <logo-creator ref="logo-creator" />
+                        <div class="site-create-field">
+                            <label for="site-name">
+                                {{ $t('site.websiteName') }}:
+                                <span
+                                    v-if="siteNameError"
+                                    class="site-create-field-error">
+                                    {{ $t('site.websiteNameRequired') }}
+                                </span>
+                            </label>
 
-                <div class="site-create-field">
-                    <label for="site-name">
-                        {{ $t('site.websiteName') }}:
-                        <span
-                            v-if="siteNameError"
-                            class="site-create-field-error">
-                            {{ $t('site.websiteNameRequired') }}
-                        </span>
-                    </label>
+                            <text-input
+                                ref="site-name"
+                                id="site-name"
+                                :spellcheck="false"
+                                changeEventName="add-website-name-changed"
+                                :customCssClasses="siteNameCssClasses" />
+                        </div>
 
-                    <text-input
-                        ref="site-name"
-                        id="site-name"
-                        :spellcheck="false"
-                        changeEventName="add-website-name-changed"
-                        :customCssClasses="siteNameCssClasses" />
+                        <div class="site-create-field">
+                            <label for="author-name">
+                                {{ $t('author.authorName') }}:
+                                <span
+                                    v-if="authorNameError"
+                                    class="site-create-field-error">
+                                    {{ $t('site.websiteAuthorRequired') }}
+                                </span>
+                            </label>
+
+                            <text-input
+                                ref="author-name"
+                                id="author-name"
+                                :spellcheck="false"
+                                changeEventName="add-website-author-changed"
+                                :customCssClasses="authorNameCssClasses" />
+                        </div>
+                    </div>
                 </div>
-
-                <div class="site-create-field">
-                    <label for="author-name">
-                        {{ $t('author.authorName') }}:
-                        <span
-                            v-if="authorNameError"
-                            class="site-create-field-error">
-                            {{ $t('site.websiteAuthorRequired') }}
-                        </span>
-                    </label>
-
-                    <text-input
-                        ref="author-name"
-                        id="author-name"
-                        :spellcheck="false"
-                        changeEventName="add-website-author-changed"
-                        :customCssClasses="authorNameCssClasses" />
+                <div slot="tab-1">
+                    <image-upload
+                        slot="field"
+                        v-model="backupFile" />
                 </div>
-            </div>
+            </tabs>
 
             <div :data-mode="status" class="site-create-buttons">
                 <p-button
@@ -86,7 +95,8 @@ export default {
             authorName: '',
             siteNameError: false,
             authorNameError: false,
-            overlayIsVisible: false
+            overlayIsVisible: false,
+            backupFile: null,
         }
     },
     computed: {
@@ -116,6 +126,12 @@ export default {
         },
         defaultSiteConfig () {
             return JSON.parse(JSON.stringify(defaultSiteConfig));
+        },
+        tabsItems () {
+            return [
+                this.header,
+                this.$t('site.installFromBackup'),
+            ];
         }
     },
     mounted () {

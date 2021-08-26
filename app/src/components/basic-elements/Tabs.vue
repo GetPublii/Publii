@@ -1,10 +1,14 @@
 <template>
-    <div 
-        class="tabs"
+    <div
+        :class="{
+            'tabs': true,
+            'tabs-horizontal': isHorizontal
+        }"
         @click="detectInternalNavigation">
         <ul>
             <li
                 v-for="(item, index) in items"
+                :key="index"
                 :class="{ 'active': item === activeItem}"
                 @click="toggle(item)">
                 {{ item }}
@@ -14,6 +18,7 @@
         <div class="content">
             <div
                 v-for="(item, index) in items"
+                :key="index"
                 :class="{ 'tab': true, 'active': item === activeItem}">
                 <slot :name="'tab-' + index"></slot>
             </div>
@@ -36,6 +41,10 @@ export default {
         onToggle: {
             default: () => false,
             type: Function
+        },
+        isHorizontal: {
+            defalt: false,
+            type: Boolean
         }
     },
     data () {
@@ -92,14 +101,56 @@ export default {
 
     @include clearfix;
 
-    & > ul {        
+    &.tabs-horizontal {
+        flex-direction: column;
+
+        & > ul {
+            border-bottom: 2px solid var(--input-border-color);
+            text-align: left;
+            width: 100%;
+
+            & > li {
+                color: var(--input-border-color);
+                display: inline-block;
+                padding: 1.5rem 2rem;
+                top: 2px;
+                width: auto;
+
+                &.active {
+                    background: none!important;
+                    border-bottom: 2px solid var(--button-green-bg);
+                    border-radius: 0;
+                    color: var(--tab-color);
+                }
+
+                &:hover {
+                    background: none;
+                    border-radius: 0;
+                    color: var(--tab-color);
+                }
+
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+        }
+
+        & > .content {
+            border: none;
+            margin-top: 3rem;
+            padding-left: 0;
+            width: 100%;
+        }
+    }
+
+    & > ul {
         list-style-type: none;
         margin: 0;
         padding: 0;
         user-select: none;
         width: 18rem;
 
-        & > li {           
+        & > li {
             color: var(--tab-color);
             cursor: pointer;
             padding: 0.8rem 1.2rem;
@@ -144,7 +195,7 @@ export default {
             display: none;
 
             &.active {
-                display: block;            
+                display: block;
             }
 
             .msg {
@@ -158,11 +209,11 @@ export default {
  * Responsive improvements
  */
 @media (max-height: 900px) {
-    
+
     .tabs > ul {
         width: 15rem;
     }
-    
+
     .tabs > ul > li {
         font-size: 1.5rem;
     }
@@ -174,11 +225,11 @@ export default {
 }
 
 @media (max-width: 1400px) {
-    
+
     .tabs > ul {
         width: 15rem;
     }
-    
+
     .tabs > ul > li {
         font-size: 1.5rem;
     }

@@ -169,6 +169,7 @@
     "file": {
         "addNewFile": "Dodaj nowy plik",
         "backups": "Kopie zapasowe",
+        "chooseFile": "Wybierz plik",
         "createBackup": "Utwórz kopię zapasową",
         "createBackupConfirmMsg": "Wybierz nazwę kopii zapasowej — nazwa pliku może zawierać tylko znaki alfanumeryczne, myślniki i podkreślenia:",
         "createBackupErrorMsg": "Wystąpił błąd podczas tworzenia kopii zapasowej. Proszę spóbować ponownie.",
@@ -181,6 +182,7 @@
         "deletBackupsConfirmMsg": "Czy na pewno chcesz usunąć wybrane kopie zapasowe? Tej czynności nie można cofnąć.",
         "deletBackupsErrorMsg": "Wystąpił błąd podczas usuwania wybranego pliku kopii zapasowej. Proszę spóbować ponownie.",
         "deletBackupsSuccessMsg": "Wybrane kopie zapasowe zostały usunięte",
+        "dragAndDropBackupFile": "Przeciągnij i upuść plik kopii zapasowej tutaj lub",
         "file": "Plik",
         "fileFromFileManager": "Plik z Menedżera Plików",
         "fileManager": "Menedżer plików",
@@ -694,6 +696,7 @@
         "deleteWebsiteSuccessMsg": "Witryna została usunięta. Przełączono na: ",
         "duplicateWebsite": "Duplikuj stronę internetową",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Wystąpił błąd poczas tworzenia bazy danych dla strony. Sprawdź swój program antywirusowy i spróbuj ponownie. Możliwe, że musisz również usunąć niepoprawny katalog strony z katalogu stron Publii.",
+        "installFromBackup": "Zainstaluj z kopii zapasowej",
         "removeWebsite": "Usuń stronę internetową",
         "siteLoadingErrorMsg": "Wystąpił błąd podczas ładowania wybranej witryny. Sprawdź pliki witryny i spróbuj ponownie.",
         "siteName": "Nazwa strony:",
