@@ -263,7 +263,7 @@ class Backup {
         // Empty the temp directory before extracting the backups content
         fs.emptyDirSync(tempDir);
 
-        let extractor = tar.Extract({
+        let extractor = tar.extract({
             path: tempDir
         })
             .on('error', function(err) {
