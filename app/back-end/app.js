@@ -291,8 +291,8 @@ class App {
 
     // Load websites
     loadSites() {
-        if (fs.ensureDirSync(this.sitesDir)) {
-            dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' existing or create it manually, then reopen the application.');
+        if (!fs.existsSync(this.sitesDir)) {
+            dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' exists or create it manually, then reopen the application.');
             return false;
         }
 
