@@ -48,9 +48,60 @@
                     </div>
                 </div>
                 <div slot="tab-1">
-                    <image-upload
-                        slot="field"
-                        v-model="backupFile" />
+                    <template v-if="backupFile">
+                        <div class="backup-selected">
+                            <span>{{ $t('site.selectedBackupFile') }}</span>
+                            <div class="backup-selected-file">
+                                <strong>{{ backupFile.name }}</strong>
+
+                                <a
+                                    href="#"
+                                    class="backup-remove"
+                                    :title="$t('ui.delete')"
+                                    @click.prevent="removeBackupFile">
+                                    <icon
+                                        name="trash"
+                                        size="xs" />
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            @drop.stop.prevent="uploadBackup"
+                            @dragleave.stop.prevent="hideOverlay"
+                            @dragenter.stop.prevent="showOverlay"
+                            @dragover.stop.prevent="showOverlay"
+                            @drag.stop.prevent="showOverlay"
+                            @dragstart.stop.prevent
+                            @dragend.stop.prevent
+                            :class="{ 'backup': true, 'backup-is-over': backupIsOver }">
+                            <div class="backup-upload">
+                                <icon
+                                    customWidth="60"
+                                    customHeight="60"
+                                    properties="not-clickable"
+                                    name="backup"
+                                    :primaryColor="'color-7'" />
+
+                                    <span>{{ $t('file.dragAndDropBackupFile') }}</span>
+
+                                    <input
+                                        ref="input"
+                                        type="file"
+                                        class="backup-upload-input"
+                                        spellcheck="false"
+                                        @change="valueChanged">
+                            </div>
+
+                            <overlay
+                                v-if="backupIsOver"
+                                :hasBorder="true"
+                                :isBlue="true">
+                                <div>{{ $t('file.dropYourFileHere') }}</div>
+                            </overlay>
+                        </div>
+                    </template>
                 </div>
             </tabs>
 
@@ -97,6 +148,7 @@ export default {
             authorNameError: false,
             overlayIsVisible: false,
             backupFile: null,
+            backupIsOver: false
         }
     },
     computed: {
@@ -269,6 +321,35 @@ export default {
         },
         onEnterKey () {
             this.onOk();
+        },
+        showOverlay (e) {
+            this.backupIsOver = true;
+        },
+        hideOverlay (e) {
+            if (e.target.classList.contains('backup')) {
+                this.backupIsOver = false;
+            }
+        },
+        uploadBackup (e) {
+            this.backupIsOver = false;
+            this.backupFile = e.dataTransfer.files[0];
+
+            // mainProcessAPI.send('app-language-upload', {
+            //     sourcePath: e.dataTransfer.files[0].path
+            // });
+
+            // mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);
+        },
+        valueChanged (e) {
+            if(!e.target.files.length) {
+                return;
+            }
+
+            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
+            this.uploadBackup(sourcePath);
+        },
+        removeBackupFile () {
+            this.backupFile = null;
         }
     },
     beforeDestroy () {
@@ -397,6 +478,74 @@ export default {
                 }
           }
        }
+    }
+
+    .backup-selected {
+        text-align: left;
+
+        &-file {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+
+            strong {
+                margin-right: 1rem;
+            }
+        }
+    }
+
+    .backup {
+        border: 2px dashed var(--input-border-color);
+        border-radius: 3px;
+        color: var(--gray-3);
+        position: relative;
+
+        &-upload {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 340px;
+            justify-content: center;
+            padding: 2rem;
+
+            .icon {
+                margin-bottom: 1.5rem;
+            }
+
+            &-input {
+                clear: both;
+                color: transparent; // hack to remove the phrase "no file selected" from the file input
+                display: block;
+                line-height: 1.6!important;
+                margin: 3rem auto 0 auto!important;
+                width: 16rem!important;
+
+                &::-webkit-file-upload-button {
+                    -webkit-appearance: none;
+                    background: var(--button-gray-bg);
+                    border: 1px solid var(--button-gray-bg);
+                    border-radius: 3px;
+                    color: var(--white);
+                    cursor: pointer;
+                    font-weight: 500;
+                    font-size: 1.5rem;
+                    padding: .5rem;
+                    text-align: center;
+                    width: 16rem;
+                    outline: none;
+
+                    &:hover {
+                        background: var(--button-gray-hover-bg);
+                        border-color: var(--button-gray-hover-bg);
+                    }
+                }
+            }
+        }
+
+        .overlay.has-border {
+            border-radius: 3px;
+        }
     }
 }
 </style>

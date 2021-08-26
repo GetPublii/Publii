@@ -30,7 +30,7 @@
             v-if="languageIsOver"
             :hasBorder="true"
             :isBlue="true">
-            <div>{{ $t('langs.dropYourLanguageHere') }}</div>
+            <div>{{ $t('file.dropYourFileHere') }}</div>
         </overlay>
     </div>
 </template>

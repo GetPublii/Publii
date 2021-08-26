@@ -112,7 +112,8 @@ export default {
             & > li {
                 color: var(--input-border-color);
                 display: inline-block;
-                padding: 1.5rem 2rem;
+                margin: 0 2rem;
+                padding: 0 0 1.7rem 0;
                 top: 2px;
                 width: auto;
 
@@ -130,7 +131,7 @@ export default {
                 }
 
                 &:first-child {
-                    padding-left: 0;
+                    margin-left: 0;
                 }
             }
         }

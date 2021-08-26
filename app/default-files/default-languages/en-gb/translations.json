@@ -169,7 +169,6 @@
     "file": {
         "addNewFile": "Add new file",
         "backups": "Backups",
-        "chooseFile": "Choose file",
         "createBackup": "Create backup",
         "createBackupConfirmMsg": "Select a name for your backup - filename can contain only alphanumeric characters, dashes and underscores:",
         "createBackupErrorMsg": "An error occurred during backup creation. Please try again.",
@@ -183,6 +182,7 @@
         "deletBackupsErrorMsg": "An error occurred during selected backup file removal. Please try again.",
         "deletBackupsSuccessMsg": "Selected backups have been removed",
         "dragAndDropBackupFile": "Drag and drop backup file here or",
+        "dropYourFileHere": "Drop your file here",
         "file": "File",
         "fileFromFileManager": "File from File Manager",
         "fileManager": "File manager",
@@ -264,7 +264,6 @@
     "langs": {
         "addLanguageSuccessMessage": "Language has been added",
         "deleteLanguage": "Delete language",
-        "dropYourLanguageHere": "Drop your file here",
         "getMoreLanguages": "Get more languages",
         "goToLanguagesManager": "Go to the languages manager",
         "installLanguage": "Install language",
@@ -698,6 +697,7 @@
         "erroOcurredDuringSiteDatabaseCreationInfo": "An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.",
         "installFromBackup": "Install from backup",
         "removeWebsite": "Remove website",
+        "selectedBackupFile": "Selected backup file: ",
         "siteLoadingErrorMsg": "An error occured during loading the selected website. Please check the website files and try again.",
         "siteName": "Site name:",
         "siteSettingsSaveSuccessMsg": "Site settings has been successfully saved.",

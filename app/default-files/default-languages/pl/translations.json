@@ -169,7 +169,6 @@
     "file": {
         "addNewFile": "Dodaj nowy plik",
         "backups": "Kopie zapasowe",
-        "chooseFile": "Wybierz plik",
         "createBackup": "Utwórz kopię zapasową",
         "createBackupConfirmMsg": "Wybierz nazwę kopii zapasowej — nazwa pliku może zawierać tylko znaki alfanumeryczne, myślniki i podkreślenia:",
         "createBackupErrorMsg": "Wystąpił błąd podczas tworzenia kopii zapasowej. Proszę spóbować ponownie.",
@@ -183,6 +182,7 @@
         "deletBackupsErrorMsg": "Wystąpił błąd podczas usuwania wybranego pliku kopii zapasowej. Proszę spóbować ponownie.",
         "deletBackupsSuccessMsg": "Wybrane kopie zapasowe zostały usunięte",
         "dragAndDropBackupFile": "Przeciągnij i upuść plik kopii zapasowej tutaj lub",
+        "dropYourFileHere": "Upuść plik tutaj",
         "file": "Plik",
         "fileFromFileManager": "Plik z Menedżera Plików",
         "fileManager": "Menedżer plików",
@@ -264,7 +264,6 @@
     "langs": {
         "addLanguageSuccessMessage": "Język został dodany",
         "deleteLanguage": "Usuń język",
-        "dropYourLanguageHere": "Upuść plik tutaj",
         "getMoreLanguages": "Pobierz więcej języków",
         "goToLanguagesManager": "Idź do menadżera języków",
         "installLanguage": "Zainstaluj język",
@@ -698,6 +697,7 @@
         "erroOcurredDuringSiteDatabaseCreationInfo": "Wystąpił błąd poczas tworzenia bazy danych dla strony. Sprawdź swój program antywirusowy i spróbuj ponownie. Możliwe, że musisz również usunąć niepoprawny katalog strony z katalogu stron Publii.",
         "installFromBackup": "Zainstaluj z kopii zapasowej",
         "removeWebsite": "Usuń stronę internetową",
+        "selectedBackupFile": "Wybrano plik kopii zapasowej: ",
         "siteLoadingErrorMsg": "Wystąpił błąd podczas ładowania wybranej witryny. Sprawdź pliki witryny i spróbuj ponownie.",
         "siteName": "Nazwa strony:",
         "siteSettingsSaveSuccessMsg": "Ustawienia witryny zostały pomyślnie zapisane.",
