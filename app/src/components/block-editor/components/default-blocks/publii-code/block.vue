@@ -10,8 +10,7 @@
       :emitEvents="true"
       v-model="content"
       :lineNumbers="true"
-      :language="config.language"
-      :data-translation="$t('editor.enterCode')">
+      :language="config.language">
     </prism-editor>
 
     <top-menu
@@ -211,13 +210,6 @@ export default {
     & > pre {
         background: var(--eb-gray-8) !important;
         display: block;
-
-        &:empty {
-            &:before {
-                content: 'Enter HTML code';
-                color: var(--eb-gray-4);
-            }
-        }
 
         code {
             background: transparent !important;

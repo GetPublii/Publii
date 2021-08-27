@@ -125,13 +125,6 @@ export default {
 
     & > pre {
       background: var(--eb-gray-8) !important;
-
-      &:empty {
-        &:before {
-          content: 'Enter HTML code';
-          color: var(--eb-gray-4);
-        }
-      }
     }
 
     code {
