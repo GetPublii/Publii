@@ -14,7 +14,7 @@
         @click="makeConversion(conversion.type, conversion.convert); resetDeleteConfirmation();">
         <icon :name="conversion.icon" />
         <span class="ui-top-menu-tooltip">
-          {{ conversion.name }}
+          {{ $t(conversion.name) }}
         </span>
       </span>
     </span>

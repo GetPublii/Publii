@@ -109,14 +109,38 @@
         "alignTextLeft": "Align text left",
         "alignTextRight": "Align text right",
         "blockEditorHelpPanelDesc": "You can insert a block either by clicking the <span>+</span> or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:",
+        "blocks": {
+            "paragraph": {
+                "cssClassesLabel": "CSS class",
+                "cssClassesTooltip": "This CSS classes will be added as the class attribute of the field",
+                "idLabel": "ID",
+                "idTooltip": "This value will be used as ID of the paragraph",
+                "styleLabel": "Paragraph style",
+                "styleTooltip": "Select additional styling for the paragraph block",
+                "styles": {
+                    "highlight": "Highlight",
+                    "info": "Info",
+                    "success": "Success",
+                    "warning": "Warning"
+                }
+            }
+        },
         "cantSavePostWithEmptyTitle": "You cannot save a post with empty title.",
         "changesSaved": "Changes have been saved",
         "clearFormatting": "Clear formatting",
         "clickToConfirm": "Click to confirm",
         "code": "Code",
+        "conversions": {
+            "toCode": "Code",
+            "toHeader": "Header",
+            "toHTML": "HTML",
+            "toList": "List",
+            "toQuote": "Quote"
+        },
         "convertTo": "Convert to:",
         "custom": "Custom",
         "deleteBlock": "Delete block",
+        "defaultSelect": "- Select -",
         "dot": "Dot",
         "dots": "Dots",
         "dragAndDropImgToEditor": "Drag and drop an image onto the editor",

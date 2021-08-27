@@ -1,7 +1,7 @@
 const availableConversions = [
   {
     'icon': 'headings',
-    'name': 'Header',
+    'name': 'editor.conversions.toHeader',
     'type': 'publii-header',
     'convert': function (config, content, editorInstance) {
       // eslint-disable-next-line
@@ -31,7 +31,7 @@ const availableConversions = [
   },
   {
     'icon': 'quote',
-    'name': 'Quote',
+    'name': 'editor.conversions.toQuote',
     'type': 'publii-quote',
     'convert': function (config, content, editorInstance) {
       let newConfig = {
@@ -52,7 +52,7 @@ const availableConversions = [
   },
   {
     'icon': 'unordered-list',
-    'name': 'List',
+    'name': 'editor.conversions.toList',
     'type': 'publii-list',
     'convert': function (config, content, editorInstance) {
       let newContent = '<li>' + content.split('<br>').join('</li><li>') + '</li>';
@@ -72,7 +72,7 @@ const availableConversions = [
   },
   {
     'icon': 'code',
-    'name': 'Code',
+    'name': 'editor.conversions.toCode',
     'type': 'publii-code',
     'convert': function (config, content, editorInstance) {
       // eslint-disable-next-line
@@ -93,7 +93,7 @@ const availableConversions = [
   },
   {
     'icon': 'html',
-    'name': 'HTML',
+    'name': 'editor.conversions.toHTML',
     'type': 'publii-html',
     'convert': function (config, content, editorInstance, rawBlock) {
       let newContent = rawBlock.outerHTML.replace(/<p.*?>/gmi, '<p>');

@@ -12,8 +12,8 @@
         class="block-advanced-config-field">
         <label
           :for="'advanced-config-field-' + index"
-          :title="field.tooltip !== '' ? field.tooltip : ''">
-          {{ field.label }}
+          :title="field.tooltip !== '' ? $t(field.tooltip) : ''">
+          {{ $t(field.label) }}
           <span
             v-if="field.tooltip !== ''"
             class="block-advanced-config-field-help">?</span>
@@ -38,12 +38,12 @@
           :key="'field-input-' + index"
           blockData.config.advanced.style
           v-model="config[field.name]">
-          <option value="">- Select -</option>
+          <option value="">{{ $t('editor.defaultSelect') }}</option>
           <option
             v-for="(option, index) of field.values"
             :key="'option-' + index"
             :value="option.value">
-            {{ option.label }}
+            {{ $t(option.label) }}
           </option>
         </select>
       </div>
