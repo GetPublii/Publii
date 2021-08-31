@@ -1,7 +1,7 @@
 const availableConversions = [
   {
     'icon': 'paragraph',
-    'name': 'Paragraph',
+    'name': 'editor.conversions.toParagraph',
     'type': 'publii-paragraph',
     'convert': function (config, content, editorInstance) {
       let newContent = editorInstance.extensions.conversionHelpers.stripTags(content).replace(/\n/gmi, '<br>');

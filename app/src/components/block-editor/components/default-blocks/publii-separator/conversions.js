@@ -1,7 +1,7 @@
 const availableConversions = [
   {
     'icon': 'html',
-    'name': 'HTML',
+    'name': 'editor.conversions.toHTML',
     'type': 'publii-html',
     'convert': function (config, content, editorInstance, rawBlock) {
       let newContent = rawBlock.innerHTML;

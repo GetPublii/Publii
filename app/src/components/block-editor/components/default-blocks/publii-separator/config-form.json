@@ -2,15 +2,15 @@
     {
         "name": "cssClasses",
         "type": "text",
-        "label": "CSS class",
-        "tooltip": "This CSS classes will be added as the class attribute of the field",
+        "label": "editor.blocks.cssClassesLabel",
+        "tooltip": "editor.blocks.cssClassesTooltip",
         "defaultValue": ""
     },
     {
         "name": "id",
         "type": "text",
-        "label": "ID",
-        "tooltip": "This value will be used as ID of the paragraph",
+        "label": "editor.blocks.idLabel",
+        "tooltip": "editor.blocks.separator.idTooltip",
         "defaultValue": ""
     }
 ]

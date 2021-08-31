@@ -2,8 +2,8 @@
     {
         "name": "cssClasses",
         "type": "text",
-        "label": "editor.blocks.paragraph.cssClassesLabel",
-        "tooltip": "editor.blocks.paragraph.cssClassesTooltip",
+        "label": "editor.blocks.cssClassesLabel",
+        "tooltip": "editor.blocks.cssClassesTooltip",
         "defaultValue": ""
     },
     {
@@ -11,7 +11,7 @@
         "type": "select",
         "label": "editor.blocks.paragraph.styleLabel",
         "tooltip": "editor.blocks.paragraph.styleTooltip",
-        "values": [            
+        "values": [
             {
                 "value": "msg msg--info",
                 "label": "editor.blocks.paragraph.styles.info"
@@ -27,15 +27,15 @@
             {
                 "value": "msg msg--warning",
                 "label": "editor.blocks.paragraph.styles.warning"
-            } 
+            }
         ],
         "defaultValue": ""
     },
     {
         "name": "id",
         "type": "text",
-        "label": "editor.blocks.paragraph.idLabel",
-        "tooltip": "editor.tooltips.id",
+        "label": "editor.blocks.idLabel",
+        "tooltip": "editor.blocks.paragraph.idTooltip",
         "defaultValue": ""
     }
 ]

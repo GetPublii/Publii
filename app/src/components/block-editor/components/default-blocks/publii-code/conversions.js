@@ -1,7 +1,7 @@
 const availableConversions = [
   {
     'icon': 'paragraph',
-    'name': 'Paragraph',
+    'name': 'editor.conversions.toParagraph',
     'type': 'publii-paragraph',
     'convert': function (config, content, editorInstance) {
       let newContent = editorInstance.extensions.conversionHelpers.stripTags(content).replace(/\n/gmi, '<br>');
@@ -22,7 +22,7 @@ const availableConversions = [
   },
   {
     'icon': 'html',
-    'name': 'HTML',
+    'name': 'editor.conversions.toHTML',
     'type': 'publii-html',
     'convert': function (config, content, editorInstance, rawBlock) {
       let newContent = content;

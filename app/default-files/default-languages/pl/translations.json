@@ -109,13 +109,70 @@
         "alignTextLeft": "Wyrównaj tekst do lewej",
         "alignTextRight": "Wyrównaj tekst do prawej",
         "blockEditorHelpPanelDesc": "Możesz wstawić blok, klikając <span>+</span> lub <span>TAB</span> w nowym wierszu lub wpisując następujące skróty lub składnię przecen w nowym wierszu:",
+        "blocks": {
+            "code": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego kodu"
+            },
+            "cssClassesLabel": "Klasa CSS",
+            "cssClassesTooltip": "Ta klasa CSS zostanie dodana jako atrybut klasy tego pola",
+            "embed": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego osadzenia"
+            },
+            "gallery": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tej galerii"
+            },
+            "header": {
+                "customIdLabel": "Zastosuj własne ID",
+                "customIdTooltip": "Enable this option if you want to use own ID, instead of the auto-generated one",
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego nagłówka"
+            },
+            "html": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego bloku HTML"
+            },
+            "idLabel": "ID",
+            "image": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego obrazu"
+            },
+            "list": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tej listy"
+            },
+            "paragraph": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego pragrafu",
+                "styleLabel": "Styl pragrafu",
+                "styles": {
+                    "highlight": "Wyróżnienie",
+                    "info": "Informacja",
+                    "success": "Sukces",
+                    "warning": "Ostrzeżenie"
+                },
+                "styleTooltip": "Wybierz dodatkowe stylowanie dla bloku paragrafu"
+            },
+            "quote": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego cytatu"
+            },
+            "separator": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego separatora"
+            },
+            "toc": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tego spisu treści"
+            }
+        },
         "cantSavePostWithEmptyTitle": "Nie możesz zapisać wpisu z pustym tytułem.",
         "changesSaved": "Zmiany zostały zapisane",
         "clearFormatting": "Wyczyść formatowanie",
         "clickToConfirm": "Kliknij, aby potwierdzić",
         "code": "Kod",
+        "conversions": {
+            "toCode": "Kod",
+            "toHeader": "Nagłówek",
+            "toHTML": "HTML",
+            "toList": "Lista",
+            "toParagraph": "Pargraf",
+            "toQuote": "Cytat"
+        },
         "convertTo": "Przekształć w:",
         "custom": "Niestandardowy",
+        "defaultSelect": "- Wybierz -",
         "deleteBlock": "Usuń blok",
         "dot": "Kropka",
         "dots": "Kropki",
@@ -125,7 +182,6 @@
         "element": "Element",
         "emptyGalleryBlock": "Pusty blok galerii",
         "emptyImageBlock": "Pusty blok obrazu",
-        "enterCode": "Wpisz kod",
         "enterUrlOrEmbedCode": "Podaj URL lub kod do osadzenia...",
         "errorOccured": "Wystąpił błąd - proszę spróbować ponownie.",
         "gallery": "Galeria",

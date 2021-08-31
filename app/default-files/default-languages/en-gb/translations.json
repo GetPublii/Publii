@@ -110,19 +110,51 @@
         "alignTextRight": "Align text right",
         "blockEditorHelpPanelDesc": "You can insert a block either by clicking the <span>+</span> or <span>TAB</span> button on a new line, or typing the following shortcuts or markdown syntax on a new line:",
         "blocks": {
+            "code": {
+                "idTooltip": "This value will be used as ID of the code"
+            },
+            "cssClassesLabel": "CSS class",
+            "cssClassesTooltip": "This CSS classes will be added as the class attribute of the field",
+            "embed": {
+                "idTooltip": "This value will be used as ID of the embed"
+            },
+            "gallery": {
+                "idTooltip": "This value will be used as ID of the gallery"
+            },
+            "header": {
+                "customIdLabel": "Use custom ID",
+                "customIdTooltip": "Enable this option if you want to use own ID, instead of the auto-generated one",
+                "idTooltip": "This value will be used as ID of the header"
+            },
+            "html": {
+                "idTooltip": "This value will be used as ID of the HTML"
+            },
+            "idLabel": "ID",
+            "image": {
+                "idTooltip": "This value will be used as ID of the image"
+            },
+            "list": {
+                "idTooltip": "This value will be used as ID of the list"
+            },
             "paragraph": {
-                "cssClassesLabel": "CSS class",
-                "cssClassesTooltip": "This CSS classes will be added as the class attribute of the field",
-                "idLabel": "ID",
                 "idTooltip": "This value will be used as ID of the paragraph",
                 "styleLabel": "Paragraph style",
-                "styleTooltip": "Select additional styling for the paragraph block",
                 "styles": {
                     "highlight": "Highlight",
                     "info": "Info",
                     "success": "Success",
                     "warning": "Warning"
-                }
+                },
+                "styleTooltip": "Select additional styling for the paragraph block"
+            },
+            "quote": {
+                "idTooltip": "This value will be used as ID of the quote"
+            },
+            "separator": {
+                "idTooltip": "This value will be used as ID of the separator"
+            },
+            "toc": {
+                "idTooltip": "This value will be used as ID of the table of contents"
             }
         },
         "cantSavePostWithEmptyTitle": "You cannot save a post with empty title.",
@@ -135,12 +167,13 @@
             "toHeader": "Header",
             "toHTML": "HTML",
             "toList": "List",
+            "toParagraph": "Paragraph",
             "toQuote": "Quote"
         },
         "convertTo": "Convert to:",
         "custom": "Custom",
-        "deleteBlock": "Delete block",
         "defaultSelect": "- Select -",
+        "deleteBlock": "Delete block",
         "dot": "Dot",
         "dots": "Dots",
         "dragAndDropImgToEditor": "Drag and drop an image onto the editor",
