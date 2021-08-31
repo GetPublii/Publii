@@ -378,9 +378,15 @@ export default {
 
   .multiselect {
     margin: 32px 0 24px;
+
+    &__tags {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
   }
 
   &-buttons {
+    display: flex;
     margin: 3rem -2rem -2rem;
 
     button {
