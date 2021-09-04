@@ -115,22 +115,38 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: this.$t('ui.renderFullWebsite'),
+                    label: this.$t('ui.previewFullWebsite'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'full-site',
-                    icon: 'full-preview-monitor',
+                    value: 'full-site-preview',
                     isVisible: () => true,
+                    icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: this.$t('ui.renderFrontPageOnly'),
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'homepage',
+                    value: 'homepage-preview',
                     icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-preview',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
                 }
-            ]
+            ];
         }
     },
     mounted: function() {
@@ -159,7 +175,7 @@ export default {
                 this.$refs.codemirrorAmp.editor.refresh();
             });
         },
-        save (showPreview = false, renderingType = false) {
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             this.$refs.codemirrorNormal.editor.save();
             this.$refs.codemirrorAmp.editor.save();
 
@@ -172,22 +188,24 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-site-css-saved', (data) => {
-                this.saved(showPreview, renderingType);
+                this.saved(showPreview, renderingType, renderFiles);
             });
-        },
-        saveAndPreview () {
-            this.save(true);
         },
         saveAndPreview (renderingType = false) {
             this.$bus.$emit('theme-settings-before-save');
 
             setTimeout(() => {
-                this.save(true, renderingType);
+                this.save(true, renderingType, false);
             }, 500);
         },
-        saved (showPreview, renderingType = false) {
-            console.log('SP', showPreview);
+        saveAndRender (renderingType = false) {
+            this.$bus.$emit('theme-settings-before-save');
 
+            setTimeout(() => {
+                this.save(true, renderingType, true);
+            }, 500);
+        },
+        saved (showPreview, renderingType = false, renderFiles = false) {
             this.$bus.$emit('message-display', {
                 message: this.$t('tools.css.customCSSSaveSuccessMsg'),
                 type: 'success',
@@ -208,10 +226,13 @@ export default {
 
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
-                        homepageOnly: true
+                        homepageOnly: true,
+                        showPreview: !renderFiles
                     });
                 } else {
-                    this.$bus.$emit('rendering-popup-display');
+                    this.$bus.$emit('rendering-popup-display', {
+                        showPreview: !renderFiles
+                    });
                 }
             }
         },

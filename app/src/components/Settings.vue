@@ -1775,22 +1775,38 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: this.$t('ui.renderFullWebsite'),
+                    label: this.$t('ui.previewFullWebsite'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'full-site',
+                    value: 'full-site-preview',
                     isVisible: () => true,
                     icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: this.$t('ui.renderFrontPageOnly'),
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'homepage',
+                    value: 'homepage-preview',
                     icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-preview',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
                 }
-            ]
+            ];
         },
         hasNonAutomaticSpellchecker () {
             return mainProcessAPI.getEnv().platformName !== 'darwin';
@@ -1858,9 +1874,12 @@ export default {
     },
     methods: {
         saveAndPreview (renderingType = false) {
-            this.save(true, renderingType);
+            this.save(true, renderingType, false);
         },
-        save (showPreview = false, renderingType = false) {
+        saveAndRender (renderingType = false) {
+            this.save(true, renderingType, true);
+        },
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             this.buttonsLocked = true;
 
             if (!this.validate()) {
@@ -1956,15 +1975,16 @@ export default {
                                         newSettings,
                                         siteName,
                                         showPreview,
-                                        renderingType
+                                        renderingType,
+                                        renderFiles
                                     }
                                 });
                             } else {
-                                this.saved(newSettings, siteName, showPreview, renderingType);
+                                this.saved(newSettings, siteName, showPreview, renderingType, renderFiles);
                             }
                         });
                     } else {
-                        this.saved(newSettings, siteName, showPreview, renderingType);
+                        this.saved(newSettings, siteName, showPreview, renderingType, renderFiles);
                     }
 
                     if(data.newThemeConfig) {
@@ -2042,9 +2062,9 @@ export default {
             });
         },
         savedFromPopup (callbackData) {
-            this.saved(callbackData.newSettings, callbackData.siteName, callbackData.showPreview, callbackData.renderingType);
+            this.saved(callbackData.newSettings, callbackData.siteName, callbackData.showPreview, callbackData.renderingType, callbackData.renderFiles);
         },
-        saved (newSettings, oldName, showPreview = false, renderingType = false) {
+        saved (newSettings, oldName, showPreview = false, renderingType = false, renderFiles = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
 
             if (newSettings.theme) {
@@ -2088,10 +2108,13 @@ export default {
 
                     if (renderingType === 'homepage') {
                         this.$bus.$emit('rendering-popup-display', {
-                            homepageOnly: true
+                            homepageOnly: true,
+                            showPreview: !renderFiles,
                         });
                     } else {
-                        this.$bus.$emit('rendering-popup-display');
+                        this.$bus.$emit('rendering-popup-display', {
+                            showPreview: !renderFiles 
+                        });
                     }
                 }
             }, 1000);

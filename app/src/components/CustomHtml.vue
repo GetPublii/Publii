@@ -95,22 +95,38 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: this.$t('ui.renderFullWebsite'),
+                    label: this.$t('ui.previewFullWebsite'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'full-site',
-                    icon: 'full-preview-monitor',
+                    value: 'full-site-preview',
                     isVisible: () => true,
+                    icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: this.$t('ui.renderFrontPageOnly'),
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
                     activeLabel: this.$t('ui.saveAndPreview'),
-                    value: 'homepage',
+                    value: 'homepage-preview',
                     icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-preview',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
                 }
-            ]
+            ];
         }
     },
     mounted: function() {
@@ -181,7 +197,7 @@ export default {
                 }
             }, 0);
         },
-        save (showPreview = false, renderingType = false) {
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             let customCodeEditors = document.querySelectorAll('.tools-custom-html textarea');
 
             for(let editor of Object.keys(this.editors)) {
@@ -229,7 +245,7 @@ export default {
             // Settings saved
             mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
-                    this.saved (newSettings, showPreview, renderingType);
+                    this.saved (newSettings, showPreview, renderingType, renderFiles);
 
                     if(data.newThemeConfig) {
                         this.$store.commit('refreshSiteThemeConfig', data);
@@ -255,9 +271,12 @@ export default {
             });
         },
         saveAndPreview (renderingType = false) {
-            this.save(true, renderingType);
+            this.save(true, renderingType, false);
         },
-        saved (newSettings, showPreview, renderingType = false) {
+        saveAndRender (renderingType = false) {
+            this.save(true, renderingType, true);
+        },
+        saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
             let siteName = this.$store.state.currentSite.config.name;
 
             this.$store.commit('refreshSiteConfig', {
@@ -279,10 +298,13 @@ export default {
 
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
-                        homepageOnly: true
+                        homepageOnly: true,
+                        showPreview: !renderFiles
                     });
                 } else {
-                    this.$bus.$emit('rendering-popup-display');
+                    this.$bus.$emit('rendering-popup-display', {
+                        showPreview: !renderFiles
+                    });
                 }
             }
         }

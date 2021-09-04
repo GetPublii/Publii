@@ -18,7 +18,8 @@ const AstAppConfig = {
     authorsOrdering: 'id DESC',
     appTheme: 'system',
     language: 'en-gb',
-    languageType: 'default'
+    languageType: 'default',
+    enableAdvancedPreview: false
 };
 
 module.exports = AstAppConfig;

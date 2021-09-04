@@ -199,7 +199,7 @@
                 </field>
             </fields-group>
 
-            <fields-group :title="$t('settings.fefaultOrderingOnLists')">
+            <fields-group :title="$t('settings.defaultOrderingOnLists')">
                 <field
                     id="posts-ordering"
                     :label="$t('settings.defaultPostsOrdering')">
@@ -228,6 +228,23 @@
                         id="authors-ordering"
                         :items="orderingAuthorItems"
                         v-model="authorsOrdering"></dropdown>
+                </field>
+            </fields-group>
+
+            <fields-group :title="$t('settings.optionsForDevelopers')">
+                <field
+                    id="enable-advanced-preview"
+                    :label="$t('settings.enableAdvancedPreview')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="enable-advanced-preview"
+                        v-model="enableAdvancedPreview" />
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.advancedPreviewDesc') }}
+                    </small>
                 </field>
             </fields-group>
 
@@ -274,6 +291,7 @@ export default {
             authorsOrdering: 'id DESC',
             originalSitesLocation: '',
             theme: 'default',
+            enableAdvancedPreview: false,
             locations: {
                 sites: '',
                 backups: '',
@@ -381,6 +399,7 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+        this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
         this.theme = this.getAppTheme();
 
         if (mainProcessAPI.getEnv().platformName === 'linux') {
@@ -439,7 +458,8 @@ export default {
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
-                authorsOrdering: this.authorsOrdering
+                authorsOrdering: this.authorsOrdering,
+                enableAdvancedPreview: this.enableAdvancedPreview
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

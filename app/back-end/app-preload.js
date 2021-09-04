@@ -55,7 +55,6 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-regenerate-thumbnails',
             'app-site-abort-regenerate-thumbnails',
             'app-preview-render',
-            'app-preview-show',
             'app-deploy-test',
             'app-site-regenerate-thumbnails-required',
             'app-site-switch',

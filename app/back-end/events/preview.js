@@ -21,6 +21,7 @@ class PreviewEvents {
                 let itemID = false;
                 let mode = false;
                 let postData = false;
+                let showPreview = true;
 
                 if (siteData.itemID !== false && typeof siteData.itemID !== 'undefined') {
                     itemID = siteData.itemID;
@@ -34,7 +35,11 @@ class PreviewEvents {
                     postData = siteData.postData;
                 }
 
-                self.renderSite(siteData.site, itemID, postData, mode, event);
+                if (typeof siteData.showPreview !== 'undefined') {
+                    showPreview = siteData.showPreview;
+                }
+
+                self.renderSite(siteData.site, itemID, postData, mode, event, showPreview);
             } else {
                 event.sender.send('app-preview-rendered', {
                     status: false
@@ -51,7 +56,7 @@ class PreviewEvents {
      * @param postData
      * @param event
      */
-    renderSite(site, itemID, postData, mode, event) {
+    renderSite(site, itemID, postData, mode, event, showPreview) {
         let self = this;
         let previewMode = true;
         let resultsRetrieved = false;
@@ -113,7 +118,9 @@ class PreviewEvents {
                         status: true
                     });
 
-                    self.showPreview(site, mode);
+                    if (showPreview) {
+                        self.showPreview(site, mode);
+                    }
                 } else {
                     let errorDesc = 'core.rendering.renderingProcessCrashedMsg';
                     let errorTitle = 'core.rendering.renderingProcessCrashed';

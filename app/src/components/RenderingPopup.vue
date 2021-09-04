@@ -45,6 +45,11 @@ export default {
             this.isHomepagePreview = false;
             this.isTagPreview = false;
             this.isAuthorPreview = false;
+            this.showPreview = true;
+
+            if (config && typeof config.showPreview !== 'undefined') {
+                this.showPreview = config.showPreview;
+            }
 
             if (config && config.homepageOnly) {
                 this.isHomepagePreview = true;
@@ -83,7 +88,8 @@ export default {
             let renderConfig = {
                 "site": this.$store.state.currentSite.config.name,
                 "theme": this.$store.state.currentSite.config.theme,
-                "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
+                "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled,
+                "showPreview": this.showPreview
             };
 
             if (mode === 'post' && itemConfig) {
@@ -104,12 +110,7 @@ export default {
             mainProcessAPI.send('app-preview-render', renderConfig);
 
             mainProcessAPI.receiveOnce('app-preview-rendered', (data) => {
-                if(data.status === true) {
-                    mainProcessAPI.send('app-preview-show', {
-                        "site": this.$store.state.currentSite.config.name,
-                        "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
-                    });
-
+                if (data.status === true) {
                     if (mode === 'post' || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
                             this.isVisible = false;
