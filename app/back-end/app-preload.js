@@ -101,7 +101,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-connection-success',
             'app-uploading-progress',
             'app-wxr-import-progress',
-            'app-show-search-form'
+            'app-show-search-form',
+            'block-editor-undo',
+            'block-editor-redo'
         ];
 
         if (validChannels.includes(channel)) {

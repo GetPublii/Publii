@@ -554,6 +554,13 @@ class App {
         this.mainWindow.webContents.on('before-input-event', (e, input) => {
             if (input.key === 'f' && (input.meta || input.control)) {
                 this.mainWindow.webContents.send('app-show-search-form');
+            } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
+                this.mainWindow.webContents.send('block-editor-undo');
+            } else if (
+                (input.key === 'z' && (input.meta || input.control) && input.shift) || 
+                (input.key === 'y' && (input.meta || input.control) && !input.shift)
+            ) {
+                this.mainWindow.webContents.send('block-editor-redo');
             }
         });
 

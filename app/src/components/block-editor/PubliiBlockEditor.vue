@@ -43,9 +43,8 @@ export default {
     this.$bus.$on('block-editor-set-post-title', this.setPostTitle);
     this.$bus.$on('block-editor-post-save', this.postSave);
     this.$bus.$on('block-editor-set-current-site-data', this.setCurrentSiteData);
-    this.$bus.$on('block-editor-undo', this.undoAction);
-    this.$bus.$on('block-editor-redo', this.redoAction);
-
+    mainProcessAPI.receive('block-editor-undo', this.undoAction);
+    mainProcessAPI.receive('block-editor-redo', this.redoAction);
     this.$refs['post-title'].focus();
   },
   methods: {
@@ -100,8 +99,8 @@ export default {
     this.$bus.$off('block-editor-set-post-title', this.setPostTitle);
     this.$bus.$off('block-editor-post-save', this.postSave);
     this.$bus.$off('block-editor-set-current-site-data', this.setCurrentSiteData);
-    this.$bus.$off('block-editor-undo', this.undoAction);
-    this.$bus.$off('block-editor-redo', this.redoAction);
+    mainProcessAPI.stopReceiveAll('block-editor-undo', this.undoAction);
+    mainProcessAPI.stopReceiveAll('block-editor-redo', this.redoAction);
   }
 }
 </script>
