@@ -231,6 +231,9 @@ export default {
         config: JSON.parse(JSON.stringify(this.config)),
         content: JSON.parse(JSON.stringify(this.content))
       });
+    },
+    saveChangesHistory () {
+      this.$bus.$emit('undomanager-save-history', this.id, this.$refs['block'].innerHTML);
     }
   }
 }

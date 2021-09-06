@@ -208,6 +208,9 @@ export default {
     },
     addBlockAfter () {
       this.$bus.$emit('block-editor-add-block', 'publii-paragraph', this.id);
+    },
+    saveChangesHistory () {
+        this.$slots.default[0].componentInstance.saveChangesHistory();
     }
   },
   beforeDestroy () {

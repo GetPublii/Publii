@@ -159,6 +159,9 @@ export default {
 
       this.$refs['block'].innerHTML = tempNode.innerHTML;
       tempNode.remove();
+    },
+    saveChangesHistory () {
+      this.$bus.$emit('undomanager-save-history', this.id, this.$refs['block'].innerHTML);
     }
   }
 }
