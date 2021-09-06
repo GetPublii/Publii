@@ -34,7 +34,6 @@ export default {
     name: 'search-popup',
     data () {
         return {
-            webContentsID: null,
             searchPhrase: '',
             isVisible: false,
             currentResultIndex: 0,
@@ -44,23 +43,21 @@ export default {
     watch: {
         searchPhrase (newValue) {
             if (this.isVisible && newValue.trim() !== '') {
-                mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, newValue);
+                mainProcessAPI.invoke('app-main-webview-search-find-in-page', newValue);
             } else {
                 this.resultsCount = 0;
                 this.currentResultIndex = 0;
-                mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
+                mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page');
             }
         }
     },
     mounted () {
-        document.querySelector('webview').addEventListener('dom-ready', () => {
-            this.webContentsID = document.querySelector('webview').getWebContentsId();
-
+        /*document.querySelector('webview').addEventListener('dom-ready', () => {
             document.querySelector('webview').addEventListener('found-in-page', e => {
                 this.currentResultIndex = e.result.activeMatchOrdinal;
                 this.resultsCount = e.result.matches;
             });
-        });
+        });*/
 
         mainProcessAPI.receive('app-show-search-form', this.showSearch);
         this.$bus.$on('app-show-search-form', this.showSearch);
@@ -71,14 +68,14 @@ export default {
                 return;
             }
 
-            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase);
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.searchPhrase);
         },
         getPrevResult () {
             if (this.resultsCount === 0) {
                 return;
             }
 
-            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.webContentsID, this.searchPhrase, {
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.searchPhrase, {
                 forward: false
             });
         },
@@ -87,7 +84,7 @@ export default {
             this.$refs['search-phrase-input'].focus();
         },
         finishSearch () {
-            mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page', this.webContentsID);
+            mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page');
             this.isVisible = false;
         },
         doKeyboardNavigation (e) {

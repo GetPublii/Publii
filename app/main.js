@@ -43,19 +43,16 @@ electronApp.on('ready', function () {
 
     ipcMain.handle('app-main-set-spellchecker-language-for-webview', (event, webContentsID, languages) => webContents.fromId(webContentsID).session.setSpellCheckerLanguages(languages));
     
-    ipcMain.handle('app-main-webview-search-find-in-page', (event, webContentsID, searchPhrase, searchConfig = null) => {
-        let webView = webContents.fromId(webContentsID);
-
+    ipcMain.handle('app-main-webview-search-find-in-page', (event, searchPhrase, searchConfig = null) => {
         if (searchConfig) {
-            webView.findInPage(searchPhrase, searchConfig);
+            appInstance.getMainWindow().webContents.findInPage(searchPhrase, searchConfig);
         } else {
-            webView.findInPage(searchPhrase)
+            appInstance.getMainWindow().webContents.findInPage(searchPhrase)
         }
     });
 
-    ipcMain.handle('app-main-webview-search-stop-find-in-page', (event, webContentsID) => {
-        let webView = webContents.fromId(webContentsID);
-        webView.stopFindInPage('clearSelection');
+    ipcMain.handle('app-main-webview-search-stop-find-in-page', (event) => {
+        appInstance.getMainWindow().webContents.stopFindInPage('clearSelection');
     });
 
     // App theme mode

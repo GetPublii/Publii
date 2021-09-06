@@ -245,7 +245,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-creation-db-error',
             'app-site-creation-error',
             'app-connection-error',
-            'app-show-search-form'
+            'app-show-search-form',
+            'block-editor-undo',
+            'block-editor-redo'
         ];
 
         if (validChannels.includes(channel)) {
