@@ -103,6 +103,7 @@ class App {
                 }
             );
             fs.mkdirSync(path.join(this.appDir, 'languages'));
+            fs.mkdirSync(path.join(this.appDir, 'plugins'));
         }
 
         if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
@@ -111,6 +112,10 @@ class App {
 
         if (!fs.existsSync(path.join(this.appDir, 'languages'))) {
             fs.mkdirSync(path.join(this.appDir, 'languages'));
+        }
+
+        if (!fs.existsSync(path.join(this.appDir, 'plugins'))) {
+            fs.mkdirSync(path.join(this.appDir, 'plugins'));
         }
     }
 

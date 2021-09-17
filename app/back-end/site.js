@@ -67,6 +67,7 @@ class Site {
         // Create also other dirs
         fs.mkdirSync(path.join(this.siteDir, 'input'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'config'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'config', 'plugins'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'root-files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'temp'));
@@ -539,6 +540,8 @@ class Site {
      * - input/media/files directory
      * - input/media/tags directory
      * - input/media/authors directory
+     * - input/config/plugins directory
+     * - input/config/site.plugins.json file
      *
      * Moves .htaccess, robots.txt and _redirects files to root-files directory
      *
@@ -550,6 +553,8 @@ class Site {
         let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
         let authorImagesPath = path.join(siteBasePath, 'media', 'authors');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
+        let pluginsPath = path.join(siteBasePath, 'config', 'plugins');
+        let pluginsConfigPath = path.join(siteBasePath, 'config', 'site.plugins.json');
 
         if(!UtilsHelper.dirExists(rootFilesPath)) {
             fs.mkdirSync(rootFilesPath);
@@ -567,6 +572,15 @@ class Site {
             fs.mkdirSync(authorImagesPath);
         }
 
+        if(!UtilsHelper.dirExists(pluginsPath)) {
+            fs.mkdirSync(pluginsPath);
+        }
+
+        // Create site.plugins.json if not exists
+        if (!UtilsHelper.fileExists(pluginsConfigPath)) {
+            fs.writeFileSync(pluginsConfigPath, '{}');
+        }
+
         // Move files - if exists to new root-files directory
         let filesToMove = {
             'robots.txt': path.join(siteBasePath, 'config', 'robots.txt'),
@@ -576,14 +590,14 @@ class Site {
 
         let fileNames = Object.keys(filesToMove);
 
-        for(let i = 0; i < fileNames.length; i++) {
+        for (let i = 0; i < fileNames.length; i++) {
             let fileName = fileNames[i];
 
             if(!UtilsHelper.dirExists(rootFilesPath)) {
                 break;
             }
 
-            if(UtilsHelper.fileExists(filesToMove[fileName])) {
+            if (UtilsHelper.fileExists(filesToMove[fileName])) {
                 let destinationPath = path.join(siteBasePath, 'root-files', fileName);
                 fs.moveSync(filesToMove[fileName], destinationPath);
             }
