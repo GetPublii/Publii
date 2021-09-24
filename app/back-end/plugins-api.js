@@ -1,95 +1,203 @@
 class PluginsAPI {
     constructor () {
-        this.insertions = {};
-        this.modifiers = {};
-        this.events = {};
+        this.insertions = {
+            app: {},
+            site: {}
+        };
+        this.modifiers = {
+            app: {},
+            site: {}
+        };
+        this.events = {
+            app: {},
+            site: {}
+        };
     }
 
     /**
      * Add 
      */
-    addInsertion (place, callback, priority) {
-        if (!this.insertions[place]) {
-            this.insertions[place] = [{ priority, callback }];
+    _add (type, scope, place, callback, priority) {
+        if (!this[type][scope][place]) {
+            this[type][scope][place] = [{ priority, callback }];
         } else {
-            this.insertions[place].push({ priority, callback });
+            this[type][scope][place].push({ priority, callback });
         }
 
-        this.insertions[place].sort(this.sortByPriority);
+        this[type][scope][place].sort(this.sortByPriority);
     }
 
-    addModifier (value, callback, priority) {
-        if (!this.modifiers[value]) {
-            this.modifiers[value] = [{ priority, callback }];
-        } else {
-            this.modifiers[value].push({ priority, callback });
-        }
-
-        this.modifiers[value].sort(this.sortByPriority);
+    addInsertion (scope, place, callback, priority) {
+        this._add('insertions', scope, place, callback, priority);
     }
 
-    addEvent (event, callback, priority) {
-        if (!this.events[event]) {
-            this.events[event] = [{ priority, callback }];
-        } else {
-            this.events[event].push({ priority, callback });
-        }
+    addSiteInsertion (place, callback, priority) {
+        this._add('insertions', 'site', place, callback, priority);
+    }
 
-        this.events[event].sort(this.sortByPriority);
+    addAppInsertion (place, callback, priority) {
+        this._add('insertions', 'app', place, callback, priority);
+    }
+
+    addModifier (scope, value, callback, priority) {
+        this._add('modifiers', scope, value, callback, priority);
+    }
+
+    addSiteModifier (value, callback, priority) {
+        this._add('modifiers', 'site', value, callback, priority);
+    }
+
+    addAppModifier (value, callback, priority) {
+        this._add('modifiers', 'app', value, callback, priority);
+    }
+
+    addEvent (scope, event, callback, priority) {
+        this._add('events', scope, event, callback, priority);
+    }
+
+    addSiteEvent (event, callback, priority) {
+        this._add('events', 'site', event, callback, priority);
+    }
+
+    addAppEvent (event, callback, priority) {
+        this._add('events', 'app', event, callback, priority);
     }
 
     /**
      * Get
      */
-    getInsertions (place) {
-        if (!this.insertions[place]) {
+    _get(type, scope, place) {
+        if (!this[type][scope][place]) {
             return [];
         }
 
-        return this.insertions[place];
+        return this[type][scope][place];
     }
 
-    getModifiers (value) {
-        if (!this.modifiers[value]) {
-            return [];
-        }
-
-        return this.modifiers[value];
+    getInsertions (scope, place) {
+        this._get('insertions', scope, place);
     }
 
-    getEvents (event) {
-        if (!this.events[event]) {
-            return [];
-        }
+    getSiteInsertions (place) {
+        this._get('insertions', 'site', place);
+    }
 
-        return this.events[event];
+    getAppInsertions (place) {
+        this._get('insertions', 'app', place);
+    }
+
+    getModifiers (scope, value) {
+        this._get('modifiers', scope, value);
+    }
+
+    getSiteModifiers (value) {
+        this._get('modifiers', 'site', value);
+    }
+
+    getAppModifiers (value) {
+        this._get('modifiers', 'app', value);
+    }
+
+    getEvents (scope, event) {
+        this._get('events', scope, event);
+    }
+
+    getSiteEvents (event) {
+        this._get('events', 'site', event);
+    }
+
+    getAppEvents (event) {
+        this._get('events', 'app', event);
     }
 
     /**
      * Remove 
      */
-    removeInsertion (place, callback, priority) {
-        if (!this.insertions[place]) {
+    _remove (type, scope, place, callback, priority) {
+        if (!this[type][scope][place]) {
             return;
         }
 
-        this.insertions[place] = this.insertions[place].filter(insertion => insertion.callback !== callback && insertion.priority !== priority);
+        this[type][scope][place] = this[type][scope][place].filter(insertion => insertion.callback !== callback && insertion.priority !== priority);
     }
 
-    removeModifier (value, callback, priority) {
-        if (!this.modifiers[value]) {
-            return;
-        }
-
-        this.modifiers[value] = this.modifiers[value].filter(modifier => modifier.callback !== callback && modifier.priority !== priority);
+    removeInsertion (scope, place, callback, priority) {
+        this._remove('insertion', scope, place, callback, priority);
     }
 
-    removeEvent (event, callback, priority) {
-        if (!this.events[event]) {
-            return;
-        }
+    removeSiteInsertion (place, callback, priority) {
+        this._remove('insertion', 'site', place, callback, priority);
+    }
 
-        this.events[event] = this.events[event].filter(event => event.callback !== callback && event.priority !== priority);
+    removeAppInsertion (place, callback, priority) {
+        this._remove('insertion', 'app', place, callback, priority);
+    }
+
+    removeModifier (scope, value, callback, priority) {
+        this._remove('modifiers', scope, value, callback, priority);
+    }
+
+    removeSiteModifier (value, callback, priority) {
+        this._remove('modifiers', 'site', value, callback, priority);
+    }
+
+    removeAppModifier (value, callback, priority) {
+        this._remove('modifiers', 'app', value, callback, priority);
+    }
+
+    removeEvent (scope, event, callback, priority) {
+        this._remove('events', scope, event, callback, priority);
+    }
+
+    removeSiteEvent (event, callback, priority) {
+        this._remove('events', 'site', event, callback, priority);
+    }
+
+    removeAppEvent (event, callback, priority) {
+        this._remove('events', 'app', event, callback, priority);
+    }
+
+    /**
+     * Reset
+     */
+    _reset (type, scope) {
+        this[type][scope] = {}
+    }
+
+    resetInsertions (scope) {
+        this._reset('insertions', scope);
+    }
+
+    resetSiteInsertions () {
+        this._reset('insertions', 'site');
+    }
+
+    resetAppInsertions () {
+        this._reset('insertions', 'app');
+    }
+
+    resetModifiers (scope) {
+        this._reset('modifiers', scope);
+    }
+
+    resetSiteModifiers () {
+        this._reset('modifiers', 'site');
+    }
+
+    resetAppModifiers () {
+        this._reset('modifiers', 'app');
+    }
+
+    resetEvents (scope) {
+        this._reset('events', scope);
+    }
+
+    resetSiteEvents () {
+        this._reset('events', 'site');
+    }
+
+    resetAppEvents () {
+        this._reset('events', 'app');
     }
 
     /**
