@@ -18,6 +18,7 @@ const Tags = require('./tags.js');
 const Authors = require('./authors.js');
 const Themes = require('./themes.js');
 const Languages = require('./languages.js');
+const Plugins = require('./plugins.js');
 // Helper classes
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
@@ -28,6 +29,8 @@ const SiteConfigMigrator = require('./migrators/site-config.js');
 // Default config
 const defaultAstAppConfig = require('./../config/AST.app.config');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+// Plugins packages
+const PluginsAPI = require('./modules/plugins/plugins-api.js')
 
 /**
  * Main app class
@@ -55,6 +58,8 @@ class App {
         this.sitesDir = null;
         this.app.sitesDir = null;
         this.db = false;
+        this.pluginsAPI = new PluginsAPI();
+        this.pluginsHelper = new Plugins(this);
 
         /*
          * Run the app
@@ -290,6 +295,9 @@ class App {
         if (!this.sites[siteConfig.name].displayName) {
             this.sites[siteConfig.name].displayName = siteConfig.name;
         }
+
+        // Load plugins
+        this.pluginsHelper.loadSiteSpecificPlugins(siteConfig.name);
 
         return siteConfig;
     }

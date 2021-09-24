@@ -75,39 +75,39 @@ class PluginsAPI {
     }
 
     getInsertions (scope, place) {
-        this._get('insertions', scope, place);
+        return this._get('insertions', scope, place);
     }
 
     getSiteInsertions (place) {
-        this._get('insertions', 'site', place);
+        return this._get('insertions', 'site', place);
     }
 
     getAppInsertions (place) {
-        this._get('insertions', 'app', place);
+        return this._get('insertions', 'app', place);
     }
 
     getModifiers (scope, value) {
-        this._get('modifiers', scope, value);
+        return this._get('modifiers', scope, value);
     }
 
     getSiteModifiers (value) {
-        this._get('modifiers', 'site', value);
+        return this._get('modifiers', 'site', value);
     }
 
     getAppModifiers (value) {
-        this._get('modifiers', 'app', value);
+        return this._get('modifiers', 'app', value);
     }
 
     getEvents (scope, event) {
-        this._get('events', scope, event);
+        return this._get('events', scope, event);
     }
 
     getSiteEvents (event) {
-        this._get('events', 'site', event);
+        return this._get('events', 'site', event);
     }
 
     getAppEvents (event) {
-        this._get('events', 'app', event);
+        return this._get('events', 'app', event);
     }
 
     /**
@@ -207,3 +207,5 @@ class PluginsAPI {
         return itemA.priority - itemB.priority;
     }
 }
+
+module.exports = PluginsAPI;
