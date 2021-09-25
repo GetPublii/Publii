@@ -43,7 +43,11 @@ class Plugins {
 
             let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'main.js');
             let PluginInstance = require(pluginPath);
-            new PluginInstance(this.appInstance.pluginsAPI);
+            let plugin = new PluginInstance(this.appInstance.pluginsAPI);
+            
+            if (typeof plugin.addEvents !== 'undefined') {
+                plugin.addEvents();
+            }
         }
     }
 
@@ -52,6 +56,21 @@ class Plugins {
      */
     loadAppSpecificPlugins () {
         
+    }
+
+    /*
+     * Run insertions for a specific place
+     */
+    getInsertions (place, params) {
+        let output = this.appInstance.pluginsAPI.runSiteInsertions(place, params);
+        output = output.filter(out => !!out);
+        
+        if (output.length) {
+            output = output.join("\n");
+            return output;
+        }
+
+        return false;
     }
 }
 

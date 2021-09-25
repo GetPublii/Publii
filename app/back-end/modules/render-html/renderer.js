@@ -25,6 +25,7 @@ const RendererContextFeed = require('./contexts/feed.js');
 const RendererContext404 = require('./contexts/404.js');
 const RendererContextSearch = require('./contexts/search.js');
 const RendererHelpers = require('./helpers/helpers.js');
+const RendererPlugins = require('./renderer-plugins.js');
 const themeConfigValidator = require('./validators/theme-config.js');
 const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
@@ -51,6 +52,7 @@ class Renderer {
         this.previewMode = false;
         this.ampMode = false;
         this.useRelativeUrls = siteConfig.deployment.relativeUrls;
+        this.plugins = new RendererPlugins();
         this.translations = {
             user: false,
             theme: false
@@ -82,6 +84,7 @@ class Renderer {
         };
         this.itemID = itemID;
         this.postData = postData;
+        this.loadPlugins();
     }
 
     /*
@@ -1989,6 +1992,49 @@ class Renderer {
 
         content = content.replace(/#PUBLII_RELATIVE_URL_BASE#/gmi, relativeDomain);
         fs.writeFileSync(filePath, content, 'utf8');
+    }
+
+    /**
+     * Load plugins
+     */
+    loadPlugins () {
+        let sitePath = path.join(this.sitesDir, this.siteName, 'input', 'config'); 
+        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
+
+        if (!fs.existsSync(sitePluginsConfigPath)) {
+            return;
+        }
+
+        let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
+
+        try {
+            pluginsConfig = JSON.parse(pluginsConfig);
+        } catch (e) {
+            console.log('(!) Error during loading plugins config for site ', siteName);
+            return;
+        }
+
+        let pluginNames = Object.keys(pluginsConfig);
+
+        for (let i = 0; i < pluginNames.length; i++) {
+            let pluginName = pluginNames[i];
+
+            if (!pluginsConfig[pluginName]) {
+                continue;
+            }
+
+            let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'main.js');
+            let PluginInstance = require(pluginPath);
+            let plugin = new PluginInstance(this.plugins);
+            
+            if (typeof plugin.addInsertions !== 'undefined') {
+                plugin.addInsertions();
+            }
+
+            if (typeof plugin.addModifiers !== 'undefined') {
+                plugin.addModifiers();
+            }
+        }
     }
 }
 
