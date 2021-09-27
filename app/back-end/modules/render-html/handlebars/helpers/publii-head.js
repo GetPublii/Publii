@@ -13,7 +13,7 @@ function publiiHeadHelper(rendererInstance, Handlebars) {
 
         if (rendererInstance.plugins.hasInsertions('publiiHead')) {
             output += "\n";
-            output += rendererInstance.plugins.runInsertions('publiiHead');
+            output += rendererInstance.plugins.runInsertions('publiiHead', rendererInstance);
         }
 
         return new Handlebars.SafeString(output);

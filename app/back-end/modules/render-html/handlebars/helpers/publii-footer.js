@@ -17,6 +17,11 @@ function publiiFooterHelper(rendererInstance, Handlebars) {
             output += Gdpr.popupJsOutput(rendererInstance.siteConfig.advanced.gdpr);
         }
 
+        if (rendererInstance.plugins.hasInsertions('publiiFooter')) {
+            output += "\n";
+            output += rendererInstance.plugins.runInsertions('publiiFooter', rendererInstance);
+        }
+
         return new Handlebars.SafeString(output);
     });
 }

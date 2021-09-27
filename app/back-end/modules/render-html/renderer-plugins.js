@@ -100,12 +100,12 @@ class RendererPlugins {
     /**
      * Run
      */
-    runInsertions (place, params = false) {
+    runInsertions (place, rendererInstance, params = false) {
         let insertions = this.getInsertions(place);
         let output = [];
 
         for (let i = 0; i < insertions.length; i++) {
-            let insertionOutput = insertions[i].callback(params);
+            let insertionOutput = insertions[i].callback(rendererInstance, params);
 
             if (insertionOutput) {
                 output.push(insertionOutput);
