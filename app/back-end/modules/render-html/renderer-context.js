@@ -361,6 +361,8 @@ class RendererContext {
             return false;
         }
 
+        object = JSON.parse(JSON.stringify(object));
+
         let keys = Object.keys(object);
 
         for (let i = 0; i < keys.length; i++) {
