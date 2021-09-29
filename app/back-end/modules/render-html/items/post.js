@@ -124,6 +124,18 @@ class PostItem {
             this.postData.hiddenTags = [];
             this.postData.mainTag = false;
         }
+
+        if (this.renderer.plugins.hasModifiers('postTitle')) {
+            this.postData.title = this.renderer.plugins.runModifiers('postTitle', this.renderer, this.postData.title, { postData: this.postData }); 
+        }
+
+        if (this.renderer.plugins.hasModifiers('postText')) {
+            this.postData.text = this.renderer.plugins.runModifiers('postText', this.renderer, this.postData.text, { postData: this.postData }); 
+        }
+
+        if (this.renderer.plugins.hasModifiers('postExcerpt')) {
+            this.postData.excerpt = this.renderer.plugins.runModifiers('postExcerpt', this.renderer, this.postData.excerpt, { postData: this.postData }); 
+        }
     }
 
     storeData() {

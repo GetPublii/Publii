@@ -115,8 +115,15 @@ class RendererPlugins {
         return output.join("\n");
     }
 
-    runModifiers (value) {
+    runModifiers (value, rendererInstance, originalValue, params = false) {
+        let modifiers = this.getModifiers(value);
+        let output = originalValue;
 
+        for (let i = 0; i < modifiers.length; i++) {
+            output = modifiers[i].callback(rendererInstance, output, params);
+        }
+
+        return output;
     }
 
     /**
