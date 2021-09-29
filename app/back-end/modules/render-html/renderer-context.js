@@ -266,12 +266,12 @@ class RendererContext {
                 create404page: RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)
             },
             pagination: false,
-            headCustomCode: this.siteConfig.advanced.customHeadCode || '',
-            headAmpCustomCode: this.siteConfig.advanced.customHeadAmpCode || '',
-            bodyCustomCode: this.siteConfig.advanced.customBodyCode || '',
-            footerCustomCode: this.siteConfig.advanced.customFooterCode || '',
-            footerAmpCustomCode: this.siteConfig.advanced.customFooterAmpCode || '',
-            customHTML: this.siteConfig.advanced.customHTML || false,
+            headCustomCode: this.getCustomHTMLCode('customHeadCode'),
+            headAmpCustomCode: this.getCustomHTMLCode('customHeadAmpCode'),
+            bodyCustomCode: this.getCustomHTMLCode('customBodyCode'),
+            footerCustomCode: this.getCustomHTMLCode('customFooterCode'),
+            footerAmpCustomCode: this.getCustomHTMLCode('customFooterAmpCode'),
+            customHTML: this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML),
             utils: {
                 currentYear: new Date().getFullYear(),
                 buildDate: +new Date()
@@ -343,6 +343,39 @@ class RendererContext {
                 }
             }
         }
+    }
+
+    getCustomHTMLCode (optionName) {
+        let baseCode = this.siteConfig.advanced[optionName] || '';
+
+        if (this.renderer.plugins.hasInsertions(optionName)) {
+            baseCode += "\n";
+            baseCode += this.renderer.plugins.runInsertions(optionName, this);
+        }
+
+        return baseCode;
+    }
+
+    getCustomHTMLCodeObject (object) {
+        if (!object) {
+            return false;
+        }
+
+        let keys = Object.keys(object);
+
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            let code = object[key];
+
+            if (this.renderer.plugins.hasInsertions('customHTML.' + key)) {
+                code += "\n";
+                code += this.renderer.plugins.runInsertions('customHTML.' + key, this);
+            }
+
+            object[key] = code;
+        }
+
+        return object;
     }
 
     getGlobalContext() {
