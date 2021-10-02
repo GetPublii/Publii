@@ -708,6 +708,10 @@ class Renderer {
                 globalContext.website.ampUrl = '';
             }
 
+            if (this.plugins.hasModifiers('globalContext')) {
+                globalContext = this.plugins.runModifiers('globalContext', this, globalContext); 
+            }
+
             try {
                 output = compiledTemplate(context, {
                     data: globalContext
@@ -1915,6 +1919,10 @@ class Renderer {
 
     renderTemplate(compiledTemplate, context, globalContext, inputFile) {
         let output = '';
+
+        if (globalContext && this.plugins.hasModifiers('globalContext')) {
+            globalContext = this.plugins.runModifiers('globalContext', this, globalContext); 
+        }
 
         try {
             output = compiledTemplate(context, {
