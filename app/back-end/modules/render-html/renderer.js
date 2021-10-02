@@ -1839,6 +1839,11 @@ class Renderer {
         };
         globalContextGenerator.getCachedItems();
         this.contentStructure = globalContextGenerator.getContentStructure();
+
+        if (this.plugins.hasModifiers('contentStructure')) {
+            this.contentStructure = this.plugins.runModifiers('contentStructure', this, this.contentStructure); 
+        }
+
         console.timeEnd("CONTENT DATA");
     }
 
