@@ -179,6 +179,10 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             }
         }
 
+        if (rendererInstance.plugins.hasModifiers('jsonLD')) {
+            jsonLDObject = rendererInstance.plugins.runModifiers('jsonLD', rendererInstance, jsonLDObject); 
+        }
+
         output += '<script type="application/ld+json">';
         output += JSON.stringify(jsonLDObject);
         output += '</script>';
