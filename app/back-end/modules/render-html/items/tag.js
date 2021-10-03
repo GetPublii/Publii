@@ -48,6 +48,10 @@ class TagItem {
      * Stores tag data in the cached items of renderer
      */
     storeData() {
+        if (this.renderer.plugins.hasModifiers('tagItemData')) {
+            this.tagData = this.renderer.plugins.runModifiers('tagItemData', this.renderer, this.tagData); 
+        }
+
         // Store tag data without references
         this.renderer.cachedItems.tags[this.tagID] = JSON.parse(JSON.stringify(this.tagData));
     }

@@ -89,6 +89,10 @@ class AuthorItem {
      * Stores tag data in the cached items of renderer
      */
     storeData() {
+        if (this.renderer.plugins.hasModifiers('authorItemData')) {
+            this.authorData = this.renderer.plugins.runModifiers('authorItemData', this.renderer, this.authorData); 
+        }
+
         // Store tag data without references
         this.renderer.cachedItems.authors[this.authorID] = JSON.parse(JSON.stringify(this.authorData));
     }

@@ -139,6 +139,10 @@ class PostItem {
     }
 
     storeData() {
+        if (this.renderer.plugins.hasModifiers('postItemData')) {
+            this.postData = this.renderer.plugins.runModifiers('postItemData', this.renderer, this.postData); 
+        }
+
         this.renderer.cachedItems.posts[this.postID] = JSON.parse(JSON.stringify(this.postData));
     }
 

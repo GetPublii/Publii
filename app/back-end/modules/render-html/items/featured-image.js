@@ -141,6 +141,10 @@ class FeaturedImageItem {
      * Stores image data in the cached items
      */
     storeData() {
+        if (this.renderer.plugins.hasModifiers('featuredImageItemData')) {
+            this.imageData = this.renderer.plugins.runModifiers('featuredImageItemData', this.renderer, this.imageData, this.itemType); 
+        }
+
         // Store tag data without references
         this.renderer.cachedItems.featuredImages[this.itemType + 's'][this.itemID] = JSON.parse(JSON.stringify(this.imageData));
     }
