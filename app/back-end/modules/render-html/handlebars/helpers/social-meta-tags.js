@@ -122,6 +122,10 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             }
         }
 
+        if (rendererInstance.plugins.hasModifiers('socialMetaTags')) {
+            output = rendererInstance.plugins.runModifiers('socialMetaTags', rendererInstance, output); 
+        }
+
         return new Handlebars.SafeString(output);
     });
 }
