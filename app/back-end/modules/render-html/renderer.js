@@ -1855,12 +1855,22 @@ class Renderer {
         console.time("COMMON DATA");
         let globalContextGenerator = new RendererContext(this);
         let menusData = globalContextGenerator.getMenus();
+        let menus = menusData.assigned;
+        let unassignedMenus = menusData.unassigned;
+
+        if (this.plugins.hasModifiers('menuStructure')) {
+            menus = this.plugins.runModifiers('menuStructure', this, menus); 
+        }
+
+        if (this.plugins.hasModifiers('unassignedMenuStructure')) {
+            unassignedMenus = this.plugins.runModifiers('unassignedMenuStructure', this, unassignedMenus); 
+        }
 
         this.commonData = {
             tags: globalContextGenerator.getAllTags(),
             authors: globalContextGenerator.getAuthors(),
-            menus: menusData.assigned,
-            unassignedMenus: menusData.unassigned,
+            menus: menus,
+            unassignedMenus: unassignedMenus,
             featuredPosts: {
                 homepage: globalContextGenerator.getFeaturedPosts('homepage'),
                 tag: globalContextGenerator.getFeaturedPosts('tag'),
