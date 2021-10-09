@@ -71,5 +71,4 @@ body[data-os="linux"] {
         }
     }
 }
-
 </style>

@@ -3,6 +3,7 @@ const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Themes = require('../themes.js');
 const Languages = require('../languages.js');
+const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
 const unzip = require("unzipper");
 
@@ -125,6 +126,26 @@ class AppEvents {
                 event.sender.send('app-language-deleted', {
                     status: true,
                     languages: appInstance.languages
+                });
+            }
+        });
+
+        /*
+         * Delete plugin
+         */
+        ipcMain.on('app-plugin-delete', function(event, config) {
+            let pluginsLoader = new Plugins(appInstance);
+
+            if(config.directory !== '') {
+                pluginsLoader.removePlugin(config.directory);
+
+                appInstance.plugins = appInstance.plugins.filter(function (plugin) {
+                    return plugin.name !== config.name;
+                });
+
+                event.sender.send('app-plugin-deleted', {
+                    status: true,
+                    plugins: appInstance.plugins
                 });
             }
         });
@@ -298,6 +319,92 @@ class AppEvents {
             event.sender.send('app-language-uploaded', {
                 status: status,
                 languages: appInstance.languages
+            });
+        });
+
+        /*
+         * Add new plugin
+         */
+        ipcMain.on('app-plugin-upload', function(event, config) {
+            let pluginsLoader = new Plugins(appInstance);
+            let newPluginDir = path.parse(config.sourcePath).name;
+            let extension = path.parse(config.sourcePath).ext;
+            let status = '';
+
+            if(extension === '.zip' || extension === '') {
+                if(extension === '.zip') {
+                    let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
+                    fs.mkdirSync(zipPath);
+
+                    let stream = fs.createReadStream(config.sourcePath)
+                                 .pipe(unzip.Extract({
+                                    path: zipPath
+                                 }));
+
+                    stream.on('finish', function() {
+                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                                return false;
+                            }
+
+                            return fs.statSync(path.join(zipPath, file)).isDirectory();
+                        });
+
+                        if (dirs.length !== 1) {
+                            event.sender.send('app-plugin-uploaded', {
+                                status: 'wrong-format',
+                                plugins: appInstance.plugins
+                            });
+
+                            fs.removeSync(zipPath);
+
+                            return;
+                        }
+
+                        newPluginDir = dirs[0];
+
+                        let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
+
+                        try {
+                            fs.statSync(directoryPath);
+                            status = 'updated';
+                            fs.removeSync(directoryPath);
+                        } catch (e) {
+                            status = 'added';
+                        }
+
+                        fs.copySync(path.join(zipPath, newPluginDir), directoryPath);
+                        fs.removeSync(zipPath);
+                        appInstance.plugins = pluginsLoader.loadPlugins();
+
+                        event.sender.send('app-plugin-uploaded', {
+                            status: status,
+                            plugins: appInstance.plugins
+                        });
+                    });
+
+                    return;
+                } else {
+                    let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(config.sourcePath, directoryPath);
+                    appInstance.plugins = pluginsLoader.loadPlugins();
+                }
+            } else {
+                status = 'wrong-format';
+            }
+
+            event.sender.send('app-plugin-uploaded', {
+                status: status,
+                plugins: appInstance.plugins
             });
         });
 

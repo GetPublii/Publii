@@ -12,6 +12,7 @@ import siteAuthors from './getters/site-authors';
 import sitePosts from './getters/site-posts';
 import appVersion from './getters/app-version';
 import languages from './getters/languages';
+import plugins from './getters/plugins';
 import themes from './getters/themes';
 import themeSelect from './getters/theme-select';
 import tagTemplates from './getters/tag-templates';
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     state: defaultState,
     getters: {
         languages,
+        plugins,
         siteNames,
         siteDisplayNames,
         siteTags,

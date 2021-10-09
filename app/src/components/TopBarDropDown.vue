@@ -17,6 +17,10 @@
                 :title="$t('theme.goToThemesManager')"
                 path="/app-themes" />
             <topbar-dropdown-item
+                :label="$t('plugins.plugins')"
+                :title="$t('plugins.goToPluginsManager')"
+                path="/app-plugins" />
+            <topbar-dropdown-item
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />

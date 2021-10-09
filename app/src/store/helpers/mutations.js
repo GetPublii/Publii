@@ -11,6 +11,8 @@ export default {
         state.languages = initialData.languages;
         state.languagesPath = initialData.languagesPath;
         state.languagesDefaultPath = initialData.languagesDefaultPath;
+        state.plugins = initialData.plugins;
+        state.pluginsPath = initialData.pluginsPath;
         state.sites = initialData.sites;
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
@@ -190,6 +192,9 @@ export default {
     },
     replaceAppLanguages (state, newLanguages) {
         state.languages = newLanguages.slice();
+    },
+    replaceAppPlugins (state, newPlugins) {
+        state.plugins = newPlugins.slice();
     },
     setTags (state, tags) {
         Vue.set(state.currentSite, 'tags', tags.slice());

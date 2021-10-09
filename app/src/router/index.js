@@ -26,6 +26,7 @@ const ServerSettings = () => import('../components/ServerSettings');
 const Settings = () => import('../components/Settings');
 const AppThemes = () => import('../components/AppThemes');
 const AppLanguages = () => import('../components/AppLanguages');
+const AppPlugins = () => import('../components/AppPlugins');
 const ThemeSettings = () => import('../components/ThemeSettings');
 
 // Avoid NavigationDuplicated errors
@@ -151,6 +152,11 @@ export default new Router({
             path: '/app-themes',
             name: 'AppThemes',
             component: AppThemes
+        },
+        {
+            path: '/app-plugins',
+            name: 'AppPlugins',
+            component: AppPlugins
         },
         {
             path: '/app-languages',

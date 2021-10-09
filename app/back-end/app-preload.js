@@ -78,7 +78,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-wxr-check',
             'app-wxr-import',
             'app-language-upload',
-            'app-language-delete'
+            'app-language-delete',
+            'app-plugin-upload',
+            'app-plugin-delete'
         ];
 
         if (validChannels.includes(channel)) {
@@ -174,7 +176,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-image-uploaded',
             'app-files-selected',
             'app-language-uploaded',
-            'app-language-deleted'
+            'app-language-deleted',
+            'app-plugin-uploaded',
+            'app-plugin-deleted'
         ];
 
         if (validChannels.includes(channel)) {

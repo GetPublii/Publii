@@ -394,6 +394,21 @@
         "type": "Type",
         "unassigned": "Unassigned"
     },
+    "plugins": {
+        "addPluginSuccessMessage": "Plugin has been added",
+        "deletePlugin": "Delete plugin",
+        "getMorePlugins": "Get more plugins",
+        "goToPluginsManager": "Go to the plugins manager",
+        "installPlugin": "Install plugin",
+        "isIncompatible": "Is outdated",
+        "isIncompatibleTitle": "This plugin supports Publii from v.{supportedVersion}, while you are using Publii v.{currentVersion} - please check updates availability for Publii",
+        "plugin": "Plugin:",
+        "plugins": "Plugins",
+        "removePluginMessage": "Do you really want to remove the {pluginName} plugin?",
+        "removePluginSuccessMessage": "The selected plugin has been removed",
+        "updatedPluginSuccessMessage": "Selected plugin has been updated",
+        "uploadPluginErrorMessage": "An error occurred during installation. Please try again."
+    },
     "post": {
         "addNewPost": "Add new post",
         "addPostTitle": "Add post title",

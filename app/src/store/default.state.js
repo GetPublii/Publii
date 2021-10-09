@@ -27,6 +27,8 @@ export default {
     languages: [],
     languagesPath: '',
     languagesDefaultPath: '',
+    plugins: [],
+    pluginsPath: '',
     wysiwygTranslation: {},
     dirs: {},
     // Data about available sites

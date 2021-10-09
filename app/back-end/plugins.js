@@ -4,12 +4,55 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const UtilsHelper = require('./helpers/utils.js');
+const pluginConfigValidator = require('./helpers/validators/plugin-config.js');
 
 class Plugins {
     constructor(appInstance) {
         this.basePath = appInstance.appDir;
         this.pluginsPath = path.join(this.basePath, 'plugins');
         this.appInstance = appInstance;
+    }
+
+    /*
+     * Load plugins from a specific path
+     */
+    loadPlugins () {
+        let pathToPlugins = this.pluginsPath;
+        let output = [];
+        let filesAndDirs = fs.readdirSync(pathToPlugins);
+
+        for (let i = 0; i < filesAndDirs.length; i++) {
+            if (filesAndDirs[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToPlugins, filesAndDirs[i]))) {
+                continue;
+            }
+
+            let configPath = path.join(pathToPlugins, filesAndDirs[i], 'plugin.json');
+
+            // Load only proper plugins
+            if (!fs.existsSync(configPath)) {
+                continue;
+            }
+
+            // Load only properly configured languages
+            if(pluginConfigValidator(configPath) !== true) {
+                continue;
+            }
+
+            let pluginData = fs.readFileSync(configPath, 'utf8');
+            pluginData = JSON.parse(pluginData);
+
+            output.push({
+                scope: pluginData.scope,
+                directory: filesAndDirs[i],
+                name: pluginData.name,
+                version: pluginData.version,
+                author: pluginData.author,
+                minimumPubliiVersion: pluginData.minimumPubliiVersion
+            });
+        }
+
+        return output;
     }
 
     /*
@@ -59,18 +102,10 @@ class Plugins {
     }
 
     /*
-     * Run insertions for a specific place
+     * Remove specific language from the app directory
      */
-    getInsertions (place, params) {
-        let output = this.appInstance.pluginsAPI.runSiteInsertions(place, params);
-        output = output.filter(out => !!out);
-        
-        if (output.length) {
-            output = output.join("\n");
-            return output;
-        }
-
-        return false;
+    removePlugin (directory) {
+        fs.removeSync(path.join(this.pluginsPath, directory));
     }
 }
 

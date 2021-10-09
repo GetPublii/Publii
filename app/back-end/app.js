@@ -84,6 +84,7 @@ class App {
 
         this.loadThemes();
         this.loadLanguages();
+        this.loadPlugins();
         this.initWindow();
         this.initWindowEvents();
     }
@@ -362,6 +363,13 @@ class App {
         }
     }
 
+    // Load plugins
+    loadPlugins() {
+        let pluginsLoader = new Plugins(this);
+        this.plugins = pluginsLoader.loadPlugins();
+        this.pluginsPath = normalizePath(path.join(this.appDir, 'plugins'));
+    }
+
     // Load default language
     loadDefaultLanguage (languagesLoader, errorOccurred = false) {
         this.currentLanguageName = 'en-gb';
@@ -624,6 +632,8 @@ class App {
                 languages: self.languages,
                 languagesPath: self.languagesPath,
                 languagesDefaultPath: self.languagesDefaultPath,
+                plugins: self.plugins,
+                pluginsPath: self.pluginsPath,
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,

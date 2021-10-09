@@ -394,6 +394,21 @@
         "type": "Rodzaj",
         "unassigned": "Nieprzypisane"
     },
+    "plugins": {
+        "addPluginSuccessMessage": "Wtyczka została dodana",
+        "deletePlugin": "Usuń wtyczkę",
+        "getMorePlugins": "Znajdź więcej wtyczek",
+        "goToPluginsManager": "Idź do menadżera wtyczek",
+        "installPlugin": "Zainstaluj wtyczkę",
+        "isIncompatible": "Jest niekompatybilna",
+        "isIncompatibleTitle": "Ta wtyczka wspiera Publii od wersji v.{supportedVersion}, podczas gdy używasz Publii w wersji v.{currentVersion} - sprawdź dostępność aktualizacji Publii",
+        "plugin": "Wtyczka:",
+        "plugins": "Wtyczki",
+        "removePluginMessage": "Czy na pewno chcesz usunąć wtyczkę {pluginName}?",
+        "removePluginSuccessMessage": "Wybrana wtyczka została usunięta",
+        "updatedPluginSuccessMessage": "Wybrana wtyczka została zaktualizowana",
+        "uploadPluginErrorMessage": "Wystąpił błąd podczas instalacji. Spróbuj ponownie."
+    },
     "post": {
         "addNewPost": "Dodaj nowy wpis",
         "addPostTitle": "Dodaj tytuł wpisu",
