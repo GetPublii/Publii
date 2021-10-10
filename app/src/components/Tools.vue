@@ -21,41 +21,62 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'tools',
-    data: function() {
-        return {
-            items: [{
-                    name: this.$t('file.backups'),
-                    link: 'tools/backups',
-                    icon: 'backup'
-                }, {
-                    name: this.$t('tools.css.customCSS'),
-                    link: 'tools/custom-css',
-                    icon: 'css'
-                }, {
-                    name: this.$t('tools.customHTML'),
-                    link: 'tools/custom-html',
-                    icon: 'code'
-                }, {
-                    name: this.$t('file.fileManager'),
-                    link: 'tools/file-manager',
-                    icon: 'file-manager'
-                }, {
-                    name: this.$t('tools.logViewer'),
-                    link: 'tools/log-viewer',
-                    icon: 'log'
-                }, {
-                    name: this.$t('tools.thumbnails.regenerateThumbnails'),
-                    link: 'tools/regenerate-thumbnails',
-                    icon: 'regenerate-thumbnails'
-                }, {
-                    name: this.$t('tools.wpImport.wpImporter'),
-                    link: 'tools/wp-importer',
-                    icon: 'importer'
-                }
-            ]
-        };
+    computed: {
+        ...mapGetters([
+            'sitePlugins'
+        ]),
+        items () {
+            let coreItems = [{
+                type: 'core',
+                name: this.$t('file.backups'),
+                link: 'tools/backups',
+                icon: 'backup'
+            }, {
+                type: 'core',
+                name: this.$t('tools.css.customCSS'),
+                link: 'tools/custom-css',
+                icon: 'css'
+            }, {
+                type: 'core',
+                name: this.$t('tools.customHTML'),
+                link: 'tools/custom-html',
+                icon: 'code'
+            }, {
+                type: 'core',
+                name: this.$t('file.fileManager'),
+                link: 'tools/file-manager',
+                icon: 'file-manager'
+            }, {
+                type: 'core',
+                name: this.$t('tools.logViewer'),
+                link: 'tools/log-viewer',
+                icon: 'log'
+            }, {
+                type: 'core',
+                name: this.$t('tools.thumbnails.regenerateThumbnails'),
+                link: 'tools/regenerate-thumbnails',
+                icon: 'regenerate-thumbnails'
+            }, {
+                type: 'core',
+                name: this.$t('tools.wpImport.wpImporter'),
+                link: 'tools/wp-importer',
+                icon: 'importer'
+            }];
+
+            let pluginItems = this.sitePlugins.map(plugin => ({
+                type: 'plugin',
+                name: plugin.name,
+                link: '#',
+                icon: plugin.thumbnail,
+                enabled: false
+            }));
+
+            return coreItems.concat(pluginItems);
+        }
     },
     methods: {
         getUrl: function(link) {
