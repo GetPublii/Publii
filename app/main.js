@@ -12,6 +12,7 @@ const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
+const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
@@ -247,6 +248,17 @@ electronApp.on('ready', function () {
 
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
+    } else {
+        const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+        
+        installExtension(VUEJS_DEVTOOLS, {
+            loadExtensionOptions: {
+                allowFileAccess: true
+            }, 
+            forceDownload: forceDownload
+        })
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            .catch((err) => console.log('An error occurred: ', err));
     }
 
     // Load language translations and set language as used in the app
