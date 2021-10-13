@@ -64,7 +64,7 @@
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^7.0.1",
     "striptags": "^3.2.0",
-    "tar": "^6.1.11",
+    "tar-fs": "^2.1.1",
     "transliteration": "^2.1.11",
     "unzipper": "^0.9.10",
     "vue": "^2.6.11",
