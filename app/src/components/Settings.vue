@@ -115,8 +115,8 @@
                     <icon
                         name="warning"
                         customWidth="28"
-                        customHeight="28"
-                        v-pure-html="$t('settings.themeDoesNotHaveSupportedFeaturesList')"/>
+                        customHeight="28" />
+                    <div v-pure-html="$t('settings.themeDoesNotHaveSupportedFeaturesList')"></div>
                 </div>
             </fields-group>
 
