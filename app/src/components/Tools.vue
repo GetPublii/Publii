@@ -4,16 +4,44 @@
             <p-header :title="$t('ui.tools')" />
 
             <div class="tools-list">
-                <div
-                    v-for="(item, key) in items">
-                    <router-link :to="getUrl(item.link)">
-                        <icon
-                            :name="item.icon"
-                            iconset="svg-map-tools"
-                            customWidth="50"
-                            customHeight="46" />
-                        {{ item.name }}
-                    </router-link>
+                <div 
+                    v-for="(item, key) in items"
+                    :key="'item-' + key">
+                    <template v-if="item.type === 'core'">
+                        <router-link :to="getUrl(item.link)">
+                            <icon
+                                :name="item.icon"
+                                iconset="svg-map-tools"
+                                customWidth="50"
+                                customHeight="46" />
+                            {{ item.name }}
+                        </router-link>
+                    </template>
+                    <template v-else>
+                        <router-link 
+                            v-if="pluginsStatus[item.directory]"
+                            :to="getUrl(item.link)">
+                            <img :src="item.icon" />
+                            {{ item.name }}<br>
+
+                            <span
+                                class="plugin-deactivate" 
+                                @click.stop.prevent="deactivatePlugin(item.directory)">
+                                {{ $t('tools.deactivatePlugin') }}
+                            </span>
+                        </router-link>
+
+                        <div v-else>
+                            <img :src="item.icon" />
+                            {{ item.name }}<br>
+                            
+                            <span 
+                                class="plugin-activate"
+                                @click.stop.prevent="activatePlugin(item.directory)">
+                                {{ $t('tools.activatePlugin') }}
+                            </span>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -22,6 +50,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import Vue from 'vue';
 
 export default {
     name: 'tools',
@@ -29,6 +58,9 @@ export default {
         ...mapGetters([
             'sitePlugins'
         ]),
+        siteName () {
+            return this.$route.params.name;
+        },
         items () {
             let coreItems = [{
                 type: 'core',
@@ -70,17 +102,68 @@ export default {
             let pluginItems = this.sitePlugins.map(plugin => ({
                 type: 'plugin',
                 name: plugin.name,
-                link: '#',
-                icon: plugin.thumbnail,
-                enabled: false
+                directory: plugin.directory,
+                link: 'tools/plugins/' + plugin.name,
+                icon: plugin.thumbnail
             }));
 
             return coreItems.concat(pluginItems);
         }
     },
+    data () {
+        return {
+            pluginsStatus: {}
+        }
+    },
+    mounted () {
+        this.getPluginsStatus();
+    },
     methods: {
-        getUrl: function(link) {
-            return '/site/' + this.$route.params.name + '/' + link;
+        getUrl (link) {
+            return '/site/' + this.siteName + '/' + link;
+        },
+        getPluginsStatus () {
+            mainProcessAPI.send('app-site-get-plugins-state', {
+                siteName: this.siteName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-plugins-state-loaded', status => {
+                this.pluginsStatus = status;
+            });
+        },
+        activatePlugin (pluginName) {
+            mainProcessAPI.send('app-site-plugin-activate', {
+                siteName: this.siteName,
+                pluginName: pluginName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-plugin-activated', status => {
+                if (status) {
+                    Vue.set(this.pluginsStatus, pluginName, true);
+                } else {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('tools.pluginActivationError'),
+                        buttonStyle: 'danger'
+                    });
+                }
+            });
+        },
+        deactivatePlugin (pluginName) {
+            mainProcessAPI.send('app-site-plugin-deactivate', {
+                siteName: this.siteName,
+                pluginName: pluginName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-plugin-deactivated', status => {
+                if (status) {
+                    Vue.set(this.pluginsStatus, pluginName, false);
+                } else {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('tools.pluginDeactivationError'),
+                        buttonStyle: 'danger'
+                    });
+                }
+            });
         }
     }
 }
@@ -90,7 +173,6 @@ export default {
 @import '../scss/variables.scss';
 
 .tools {
-
     &-container {
         margin: 0 auto;
         max-width: $wrapper;
@@ -143,6 +225,15 @@ export default {
                margin: 0 auto 1rem;
                transition: inherit;
             }
+        }
+
+        .plugin-activate,
+        .plugin-deactivate {
+            background: #fff;
+            border: 1px solid #eee;
+            display: inline-block;
+            height: 20px;
+            width: 200px;
         }
     }
 

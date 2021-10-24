@@ -1022,6 +1022,8 @@
         "goToTools": "Idź do narzędzi",
         "logFileEmpty": "Ten plik logów jest pusty...",
         "logViewer": "Przeglądarka logów",
+        "pluginActivationError": "Nie udało się aktywować wtyczki - spróbuj ponownie",
+        "pluginDeactivationError": "Nie udało się deaktywować wtyczki - spróbuj ponownie",
         "selectFileToLoad": "Wybierz plik do załadowania",
         "thumbnails": {
             "listRegeneratedFiles": "Lista zregenerowanych plików:",

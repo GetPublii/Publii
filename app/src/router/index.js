@@ -15,6 +15,7 @@ const Tags = () => import('../components/Tags');
 const Menus = () => import('../components/Menus');
 const Authors = () => import('../components/Authors');
 const Tools = () => import('../components/Tools');
+const ToolsPlugin = () => import('../components/ToolsPlugin');
 const LogViewer = () => import('../components/LogViewer');
 const RegenerateThumbnails = () => import('../components/RegenerateThumbnails');
 const WPImport = () => import('../components/WPImport');
@@ -140,6 +141,10 @@ export default new Router({
                 {
                     path: 'tools/file-manager',
                     component: FileManager
+                },
+                {
+                    path: 'tools/plugins/:pluginname',
+                    component: ToolsPlugin
                 }
             ]
         },

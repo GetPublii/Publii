@@ -1022,6 +1022,8 @@
         "goToTools": "Go to tools",
         "logFileEmpty": "This log file is empty...",
         "logViewer": "Log viewer",
+        "pluginActivationError": "Cannot activate plugin - please try again",
+        "pluginDeactivationError": "Cannot deactivate plugin - please try again",
         "selectFileToLoad": "Select file to load",
         "thumbnails": {
             "listRegeneratedFiles": "List of the regenerated files:",

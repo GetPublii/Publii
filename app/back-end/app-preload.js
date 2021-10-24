@@ -80,7 +80,10 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-language-upload',
             'app-language-delete',
             'app-plugin-upload',
-            'app-plugin-delete'
+            'app-plugin-delete',
+            'app-site-get-plugins-state',
+            'app-site-plugin-activate',
+            'app-site-plugin-deactivate'
         ];
 
         if (validChannels.includes(channel)) {
@@ -178,7 +181,10 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-language-uploaded',
             'app-language-deleted',
             'app-plugin-uploaded',
-            'app-plugin-deleted'
+            'app-plugin-deleted',
+            'app-site-plugins-state-loaded',
+            'app-site-plugin-activated',
+            'app-site-plugin-deactivated'
         ];
 
         if (validChannels.includes(channel)) {

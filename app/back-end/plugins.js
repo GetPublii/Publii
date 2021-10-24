@@ -59,22 +59,7 @@ class Plugins {
      * Load plugins for specific site
      */
     loadSiteSpecificPlugins (siteName) {
-        let sitePath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config'); 
-        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
-
-        if (!fs.existsSync(sitePluginsConfigPath)) {
-            return;
-        }
-
-        let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
-
-        try {
-            pluginsConfig = JSON.parse(pluginsConfig);
-        } catch (e) {
-            console.log('(!) Error during loading plugins config for site ', siteName);
-            return;
-        }
-
+        let pluginsConfig = this.loadSitePluginsConfig(siteName);
         let pluginNames = Object.keys(pluginsConfig);
 
         for (let i = 0; i < pluginNames.length; i++) {
@@ -99,6 +84,73 @@ class Plugins {
      */
     loadAppSpecificPlugins () {
         
+    }
+
+    /**
+     * Get status of site-specific plugins 
+     */
+    getSiteSpecificPluginsState (siteName) {
+        let pluginsConfig = this.loadSitePluginsConfig(siteName);
+        let pluginNames = Object.keys(pluginsConfig);
+        let status = {};
+
+        for (let i = 0; i < pluginNames.length; i++) {
+            let pluginName = pluginNames[i];
+            status[pluginName] = !!pluginsConfig[pluginName];
+        }
+
+        return status;
+    }
+
+    /**
+     * Load plugins config for specific site
+     */
+    loadSitePluginsConfig (siteName) {
+        let sitePath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config'); 
+        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
+
+        if (!fs.existsSync(sitePluginsConfigPath)) {
+            return;
+        }
+
+        let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
+
+        try {
+            pluginsConfig = JSON.parse(pluginsConfig);
+        } catch (e) {
+            console.log('(!) Error during loading plugins config for site ', siteName);
+            return {};
+        }
+
+        return pluginsConfig;
+    }
+
+    /**
+     * Save plugins config 
+     */
+    saveSitePluginsConfig (siteName, config) {
+        let sitePath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config'); 
+        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
+
+        try {
+            fs.writeFileSync(sitePluginsConfigPath, JSON.stringify(config, null, 4));
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
+    activatePlugin (siteName, pluginName) {
+        let pluginsConfig = this.loadSitePluginsConfig(siteName);
+        pluginsConfig[pluginName] = true;
+        return this.saveSitePluginsConfig(siteName, pluginsConfig);
+    }
+
+    deactivatePlugin (siteName, pluginName) {
+        let pluginsConfig = this.loadSitePluginsConfig(siteName);
+        pluginsConfig[pluginName] = false;
+        return this.saveSitePluginsConfig(siteName, pluginsConfig);
     }
 
     /*
