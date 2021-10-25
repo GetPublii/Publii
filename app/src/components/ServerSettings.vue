@@ -178,10 +178,10 @@
                         The "file://" protocol is useful only if you are using manual deployment method for the intranet websites.
                     </small>
                     <small
-                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'ipfs')"
+                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'dweb' || httpProtocolSelected === 'ipfs')"
                         class="note"
                         slot="note">
-                        The "dat://", "hyper://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank" rel="noopener noreferrer">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank" rel="noopener noreferrer">hyper://</a> and <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>
+                        The "dat://", "hyper://", "dweb://" and the "ipfs://" protocol is useful only if you have plans to use your website on P2P networks. Read more about <a href="https://datproject.org/" target="_blank" rel="noopener noreferrer">dat://</a>, <a href="https://hypercore-protocol.org/" target="_blank" rel="noopener noreferrer">hyper://</a>, <a href="https://dwebx.org/" target="_blank" rel="noopener noreferrer">dweb://</a> and <a href="https://ipfs.io/" target="_blank" rel="noopener noreferrer">IPFS</a>
                     </small>
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === '//'"
@@ -984,6 +984,7 @@ export default {
                 'file': 'file://',
                 'dat': 'dat://',
                 'hyper': 'hyper://',
+                'dweb': 'dweb://',
                 'ipfs': 'ipfs://',
                 '//': '//'
             },
