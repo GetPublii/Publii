@@ -59,7 +59,7 @@
     "normalize-path": "^2.0.1",
     "prismjs": "^1.24.1",
     "request": "^2.88.0",
-    "sharp": "^0.27.2",
+    "sharp": "^0.29.2",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
     "ssh2-sftp-client": "^7.0.1",
@@ -79,8 +79,8 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^14.0.0",
+    "electron": "^15.3.0",
     "electron-devtools-installer": "^3.2.0",
-    "node-abi": "^2.21.0"
+    "node-abi": "^3.3.0"
   }
 }

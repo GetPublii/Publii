@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $color-1: #42a5f5;
 $color-4: #2a2e30;
 $color-8: #dddddd;
@@ -56,7 +58,7 @@ $maxScreen: 100rem;
 
 // Baseline
 $line-height: 1.6;
-$baseline: 1.6rem / 7; 
+$baseline: math.div(1.6rem, 7); 
 
 
 // Font size map

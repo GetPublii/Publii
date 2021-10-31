@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Links
 @mixin links ($link, $hover, $active, $focus) {
     & {
@@ -68,5 +70,5 @@
 
 
 @function strip-unit($value) {
-    @return $value / ($value * 0 + 1);
+    @return math.div($value, ($value * 0 + 1));
 }

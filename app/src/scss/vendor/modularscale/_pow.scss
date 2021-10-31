@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Sass does not have native pow() support so this needs to be added.
 // Compass and other libs implement this more extensively.
 // In order to keep this simple, use those when they are avalible.
@@ -32,7 +34,7 @@
   }
   @if $e < 0 {
     @for $i from $e through 0 {
-      $ms-return: $ms-return / $b;
+      $ms-return: math.div($ms-return, $b);
     }
   }
   @return $ms-return;

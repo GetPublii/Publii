@@ -12,10 +12,13 @@ const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
-const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
+}
+
+if (process.env.NODE_ENV === 'development') {
+    let { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 }
 
 // Keep a global reference of the window object for avoiding Garbage Collector
