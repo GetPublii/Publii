@@ -32,10 +32,15 @@ class ManualDeployment {
 
     returnCatalog() {
         let outputDirName = slug(this.deployment.siteName) + '-files'; 
+
+        if (!this.deployment.siteConfig.deployment.manual.outputDirectory) {
+            this.deployment.siteConfig.deployment.manual.outputDirectory = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        }
+
         let outputPath = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, outputDirName);
 
-        if(outputPath !== '') {
-            if(Utils.dirExists(outputPath)) {
+        if (outputPath !== '') {
+            if (Utils.dirExists(outputPath)) {
                 fs.emptyDirSync(outputPath);
             }
 
