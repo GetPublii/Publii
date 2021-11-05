@@ -125,9 +125,12 @@ export default {
     }
 
     &.publish-dates {
+        flex-wrap: wrap;
+
         .publish-date,
         .modify-date {
             display: block;
+            width: 100%;
         }
 
         .publish-date {

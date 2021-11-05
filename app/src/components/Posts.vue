@@ -72,7 +72,7 @@
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPosts"
-            :itemsCount="6">
+            :itemsCount="showModificationDateAsColumn ? 6 : 5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
