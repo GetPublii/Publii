@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode=development --progress --colors --watch",
     "prod": "cross-env NODE_ENV=production webpack --mode=production --progress --colors --hide-modules",
-    "build": "cross-env NODE_ENV=development gulp build",
+    "build": "gulp build && cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
     "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/back-end/**/*.spec.js --reporter dot",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "cross-env": "^7.0.2",
     "css-loader": "^0.28.7",
-    "electron": "^15.3.0",
+    "electron": "^15.2.0",
     "electron-builder": "^22.13.1",
     "file-loader": "^4.2.0",
     "glob": "^7.1.6",
@@ -56,7 +56,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "15.3.0",
+    "electronVersion": "15.2.0",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2021 TidyCustoms. All rights reserved.",
     "asar": true,
