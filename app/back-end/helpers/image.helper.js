@@ -140,7 +140,7 @@ class ImageHelper {
                     }
                 });
 
-                fs.rmdirSync(directoryPath);
+                fs.rmSync(directoryPath, { recursive: true });
             }
         }
     }

@@ -412,7 +412,7 @@ class Renderer {
                     continue;
                 }
 
-                fs.rmdirSync(path.join(this.outputDir, file), { recursive: true });
+                fs.rmSync(path.join(this.outputDir, file), { recursive: true });
             }
         } else {
             fs.mkdirSync(this.outputDir);
