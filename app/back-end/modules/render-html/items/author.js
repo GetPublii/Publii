@@ -49,10 +49,6 @@ class AuthorItem {
             template: this.author.template
         };
 
-        if (this.authorData.template === '' && this.themeConfig.defaultTemplates.author) {
-            this.authorData.template = this.themeConfig.defaultTemplates.author;
-        }
-
         if (this.renderer.cachedItems.featuredImages.authors[this.authorData.id]) {
             this.authorData.featuredImage = this.renderer.cachedItems.featuredImages.authors[this.authorData.id];
         }

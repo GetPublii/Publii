@@ -40,10 +40,6 @@ class TagItem {
             template: this.tag.template
         };
 
-        if (this.tagData.template === '' && this.themeConfig.defaultTemplates.tag) {
-            this.tagData.template = this.themeConfig.defaultTemplates.tag;
-        }
-
         if (this.renderer.cachedItems.featuredImages.tags[this.tagData.id]) {
             this.tagData.featuredImage = this.renderer.cachedItems.featuredImages.tags[this.tagData.id];
         }
