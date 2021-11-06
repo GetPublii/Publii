@@ -36,8 +36,13 @@ class TagItem {
             additionalData: this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {},
             featuredImage: {},
             postsNumber: this.getPostsNumber(),
-            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml)
+            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml),
+            template: this.tag.template
         };
+
+        if (this.tagData.template === '' && this.themeConfig.defaultTemplates.tag) {
+            this.tagData.template = this.themeConfig.defaultTemplates.tag;
+        }
 
         if (this.renderer.cachedItems.featuredImages.tags[this.tagData.id]) {
             this.tagData.featuredImage = this.renderer.cachedItems.featuredImages.tags[this.tagData.id];
