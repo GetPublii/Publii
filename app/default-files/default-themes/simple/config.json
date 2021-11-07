@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.3.2.0",
+    "version": "2.3.3.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -1081,7 +1081,7 @@
             "name": "copyrightText",
             "label": "Copyright text",
             "group": "Footer",
-            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii</a>",
+            "value": "Powered by Publii",
             "type": "wysiwyg"
         },
         {
