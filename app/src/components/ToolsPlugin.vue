@@ -29,7 +29,22 @@ export default {
     },
     methods: {
         loadPluginConfig (pluginName, siteName) {
-            
+            mainProcessAPI.send('app-site-get-plugin-config', {
+                siteName,
+                pluginName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-get-plugin-config-retrieved', result => {
+                if (!result) {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('tools.pluginLoadError'),
+                        buttonStyle: 'danger'
+                    });
+                    return;
+                }
+
+                this.pluginName = result.pluginData.name;
+            });
         }
     }
 }

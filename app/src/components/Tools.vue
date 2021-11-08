@@ -103,7 +103,7 @@ export default {
                 type: 'plugin',
                 name: plugin.name,
                 directory: plugin.directory,
-                link: 'tools/plugins/' + plugin.name,
+                link: 'tools/plugins/' + plugin.directory,
                 icon: plugin.thumbnail
             }));
 

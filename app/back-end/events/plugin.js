@@ -10,22 +10,45 @@ class PluginEvents {
         // Get plugins status
         ipcMain.on('app-site-get-plugins-state', function (event, data) {
             let pluginsInstance = new Plugins(appInstance);
-            let pluginsStatus = pluginsInstance.getSiteSpecificPluginsState(data.siteName);
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let pluginsStatus = pluginsInstance.getSiteSpecificPluginsState(siteName);
             event.sender.send('app-site-plugins-state-loaded', pluginsStatus);
         });
 
         // Activate
         ipcMain.on('app-site-plugin-activate', function (event, data) {
             let pluginsInstance = new Plugins(appInstance);
-            let result = pluginsInstance.activatePlugin(data.siteName, data.pluginName);
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
+            let result = pluginsInstance.activatePlugin(siteName, pluginName);
             event.sender.send('app-site-plugin-activated', result);
         });
 
         // Deactivate
         ipcMain.on('app-site-plugin-deactivate', function (event, data) {
             let pluginsInstance = new Plugins(appInstance);
-            let result = pluginsInstance.deactivatePlugin(data.siteName, data.pluginName);
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
+            let result = pluginsInstance.deactivatePlugin(siteName, pluginName);
             event.sender.send('app-site-plugin-deactivated', result);
+        });
+
+        // Get plugin info and config
+        ipcMain.on('app-site-get-plugin-config', function (event, data) {
+            let pluginsInstance = new Plugins(appInstance);
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
+            let result = pluginsInstance.getPluginConfig(siteName, pluginName);
+            event.sender.send('app-site-get-plugin-config-retrieved', result);
+        });
+
+        // Save plugin config
+        ipcMain.on('app-site-save-plugin-config', function (event, data) {
+            let pluginsInstance = new Plugins(appInstance);
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
+            let result = pluginsInstance.savePluginConfig(siteName, pluginName, data.pluginConfig);
+            event.sender.send('app-site-plugin-config-saved', result);
         });
     }
 }

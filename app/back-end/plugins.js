@@ -141,12 +141,18 @@ class Plugins {
         return true;
     }
 
+    /**
+     * Plugin activation
+     */
     activatePlugin (siteName, pluginName) {
         let pluginsConfig = this.loadSitePluginsConfig(siteName);
         pluginsConfig[pluginName] = true;
         return this.saveSitePluginsConfig(siteName, pluginsConfig);
     }
 
+    /**
+     * Plugin deactivation
+     */
     deactivatePlugin (siteName, pluginName) {
         let pluginsConfig = this.loadSitePluginsConfig(siteName);
         pluginsConfig[pluginName] = false;
@@ -158,6 +164,45 @@ class Plugins {
      */
     removePlugin (directory) {
         fs.removeSync(path.join(this.pluginsPath, directory));
+    }
+
+    getPluginConfig (siteName, pluginName) {
+        let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'plugin.json');
+        let pluginConfigPath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        let output = {
+            pluginData: null,
+            pluginConfig: null
+        };
+
+        if (fs.existsSync(pluginPath)) {
+            try {
+                let pluginData = fs.readFileSync(pluginPath, 'utf8');
+                output.pluginData = JSON.parse(pluginData);
+            } catch (e) {
+                return 0;
+            }
+        } else {
+            return pluginPath;
+        }
+
+        if (fs.existsSync(pluginConfigPath)) {
+            try {
+                let pluginConfig = fs.readFileSync(pluginConfigPath, 'utf8');
+                output.pluginConfig = pluginConfig;
+            } catch (e) {
+                output.pluginConfig = {};
+            }
+        }
+
+        if (output?.pluginData?.config) {
+            output.pluginConfig = Object.assign(output.pluginData.config, output.pluginConfig);
+        }
+
+        return output;
+    }
+
+    savePluginConfig (siteName, pluginName, newConfig) {
+
     }
 }
 

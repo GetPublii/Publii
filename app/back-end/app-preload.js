@@ -83,7 +83,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugin-delete',
             'app-site-get-plugins-state',
             'app-site-plugin-activate',
-            'app-site-plugin-deactivate'
+            'app-site-plugin-deactivate',
+            'app-site-get-plugin-config'
         ];
 
         if (validChannels.includes(channel)) {
@@ -184,7 +185,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugin-deleted',
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
-            'app-site-plugin-deactivated'
+            'app-site-plugin-deactivated',
+            'app-site-get-plugin-config-retrieved'
         ];
 
         if (validChannels.includes(channel)) {
