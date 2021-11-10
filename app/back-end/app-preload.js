@@ -84,7 +84,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-get-plugins-state',
             'app-site-plugin-activate',
             'app-site-plugin-deactivate',
-            'app-site-get-plugin-config'
+            'app-site-get-plugin-config',
+            'app-site-save-plugin-config'
         ];
 
         if (validChannels.includes(channel)) {
@@ -186,7 +187,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
             'app-site-plugin-deactivated',
-            'app-site-get-plugin-config-retrieved'
+            'app-site-get-plugin-config-retrieved',
+            'app-site-plugin-config-saved'
         ];
 
         if (validChannels.includes(channel)) {

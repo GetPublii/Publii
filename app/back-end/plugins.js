@@ -202,7 +202,15 @@ class Plugins {
     }
 
     savePluginConfig (siteName, pluginName, newConfig) {
+        let pluginConfigPath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
 
+        try {
+            fs.writeFileSync(pluginConfigPath, JSON.stringify(newConfig, null, 4));
+        } catch (e) {
+            return false;
+        }
+
+        return true;
     }
 }
 

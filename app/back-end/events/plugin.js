@@ -47,7 +47,7 @@ class PluginEvents {
             let pluginsInstance = new Plugins(appInstance);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
-            let result = pluginsInstance.savePluginConfig(siteName, pluginName, data.pluginConfig);
+            let result = pluginsInstance.savePluginConfig(siteName, pluginName, data.newConfig);
             event.sender.send('app-site-plugin-config-saved', result);
         });
     }

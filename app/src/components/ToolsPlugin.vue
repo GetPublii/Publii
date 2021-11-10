@@ -145,19 +145,11 @@
 
         <p-footer>
             <p-button
-                @click.native="save"
+                @click.native="saveSettings"
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
                 {{ $t('settings.saveSettings') }}
-            </p-button>
-
-            <p-button
-                @click.native="reset"
-                slot="buttons"
-                type="outline"
-                :disabled="buttonsLocked">
-                {{ $t('theme.resetThemeSettings') }}
             </p-button>
         </p-footer>
     </section>
@@ -294,7 +286,6 @@ export default {
             return options;
         },
         getFieldsByGroupName (groupName) {
-            console.log('G:', groupName, this.settings.filter(field => field.group === groupName));
             return this.settings.filter(field => field.group === groupName);
         },
         loadSettings (config) {
@@ -312,6 +303,29 @@ export default {
                     Vue.set(this.settingsValues, setting[0], setting[1]);
                 }
             }
+        },
+        saveSettings () {
+            mainProcessAPI.send('app-site-save-plugin-config', {
+                siteName: this.$route.params.name,
+                pluginName: this.$route.params.pluginname,
+                newConfig: this.settingsValues
+            });
+
+            mainProcessAPI.receiveOnce('app-site-plugin-config-saved', (result) => {
+                if (result === true) {
+                    this.$bus.$emit('message-display', {
+                        message: this.$t('toolsPlugin.pluginSettingsSaveSuccess'),
+                        type: 'success',
+                        lifeTime: 3
+                    });
+                } else {
+                    this.$bus.$emit('message-display', {
+                        message: this.$t('toolsPlugin.pluginSettingsSaveError'),
+                        type: 'warning',
+                        lifeTime: 3
+                    });
+                }
+            });
         }
     }
 }

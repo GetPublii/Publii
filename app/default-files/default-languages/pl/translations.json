@@ -1059,6 +1059,10 @@
             "wpImportGoToRegenerateMsg": "Twoje dane WordPress zostały zaimportowane. Regeneracja miniatur może być konieczna, jeśli wcześniej wybrałeś motyw."
         }
     },
+    "toolsPlugin": {
+        "pluginSettingsSaveSuccess": "Ustawienia wtyczki zostały zapisane",
+        "pluginSettingsSaveError": "Wystąpił błąd podczas zapisu ustawień wtyczki"
+    },
     "ui": {
         "aboutPublii": "O Publii",
         "alternativeText": "Tekst alternatywny",

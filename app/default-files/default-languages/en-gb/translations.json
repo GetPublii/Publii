@@ -1059,6 +1059,10 @@
             "wpImportGoToRegenerateMsg": "Your WordPress data has been imported. Thumbnails regeneration can be necessary if you have selected a theme before."
         }
     },
+    "toolsPlugin": {
+        "pluginSettingsSaveSuccess": "Plugin settings saved successfully",
+        "pluginSettingsSaveError": "An error occured during plugin settings save"
+    },
     "ui": {
         "aboutPublii": "About Publii",
         "alternativeText": "Alternative text",
