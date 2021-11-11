@@ -194,10 +194,6 @@ class Plugins {
             }
         }
 
-        if (output?.pluginData?.config) {
-            output.pluginConfig = Object.assign(output.pluginData.config, output.pluginConfig);
-        }
-
         return output;
     }
 

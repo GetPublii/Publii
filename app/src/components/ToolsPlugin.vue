@@ -205,7 +205,7 @@ export default {
                 }
 
                 this.pluginName = result.pluginData.name;
-                this.loadSettings(result.pluginData.config);
+                this.loadSettings(result.pluginData.config, result.pluginConfig);
             });
         },
         getFieldLabel (field) {
@@ -288,11 +288,26 @@ export default {
         getFieldsByGroupName (groupName) {
             return this.settings.filter(field => field.group === groupName);
         },
-        loadSettings (config) {
-            this.settings = JSON.parse(JSON.stringify(config));
+        loadSettings (config, savedConfig) {
+            try {
+                this.settings = JSON.parse(JSON.stringify(config));
+                savedConfig = JSON.parse(savedConfig);
+            } catch (e) {
+                this.$bus.$emit('message-display', {
+                    message: this.$t('toolsPlugin.pluginSettingsLoadError'),
+                    type: 'warning',
+                    lifeTime: 3
+                });
+                return;
+            }
+
             let settings = config.map(field => {
                 if (field.type !== 'separator') {
-                    return [field.name, field.value]
+                    if (typeof savedConfig[field.name] !== 'undefined') {
+                        return [field.name, savedConfig[field.name]];
+                    }
+
+                    return [field.name, field.value];
                 }
 
                 return false;

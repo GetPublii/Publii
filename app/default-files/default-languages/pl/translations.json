@@ -1060,6 +1060,7 @@
         }
     },
     "toolsPlugin": {
+        "pluginSettingsLoadError": "Wystąpił błąd podczas wczytywania ustawień wtyczki",
         "pluginSettingsSaveSuccess": "Ustawienia wtyczki zostały zapisane",
         "pluginSettingsSaveError": "Wystąpił błąd podczas zapisu ustawień wtyczki"
     },
