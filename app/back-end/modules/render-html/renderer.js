@@ -1646,8 +1646,10 @@ class Renderer {
         if (UtilsHelper.fileExists(themeVariablesPath)) {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
-                let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                return generateOverride(visualParams);
+                let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
+                let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
+                return generateOverride(customConfig, postConfig, commonConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS theme variables.',
@@ -1699,8 +1701,10 @@ class Renderer {
         if (UtilsHelper.fileExists(overridePath)) {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
-                let visualParams = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                return generateOverride(visualParams);
+                let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
+                let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
+                return generateOverride(customConfig, postConfig, commonConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS overrides.',
