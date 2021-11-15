@@ -7,157 +7,179 @@
                 type="outline">
                 {{ $t('ui.backToTools') }}
             </p-button>
+
+            <p-button
+                v-if="hasPluginCustomOptions && pluginStandardOptionsVisible"
+                :onClick="showPluginCustomOptions"
+                slot="buttons"
+                type="primary">
+                {{ $t('ui.goToPluginCustomOptions') }}
+            </p-button>
+
+            <p-button
+                v-if="hasPluginCustomOptions && !pluginStandardOptionsVisible"
+                :onClick="showPluginStandardOptions"
+                slot="buttons"
+                type="primary">
+                {{ $t('ui.goToPluginStandardOptions') }}
+            </p-button>
         </p-header>
 
-        <fields-group
-            v-for="(groupName, index) of settingsGroups"
-            :key="'settings-group-' + index"
-            :title="groupName">
-            <template v-for="(field, subindex) of getFieldsByGroupName(groupName)">
-                <field
-                    v-if="checkDependencies(field.dependencies)"
-                    :label="getFieldLabel(field)"
-                    :key="'tab-' + index + '-field-' + subindex"
-                    :noLabelSpace="field.type === 'separator'"
-                    :labelFullWidth="field.type === 'wysiwyg'">
-                    <range-slider
-                        v-if="field.type === 'range'"
-                        :min="field.min"
-                        :max="field.max"
-                        :step="field.step"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        slot="field"></range-slider>
+        <template v-if="pluginStandardOptionsVisible">
+            <fields-group
+                v-for="(groupName, index) of settingsGroups"
+                :key="'settings-group-' + index"
+                :title="groupName">
+                <template v-for="(field, subindex) of getFieldsByGroupName(groupName)">
+                    <field
+                        v-if="checkDependencies(field.dependencies)"
+                        :label="getFieldLabel(field)"
+                        :key="'tab-' + index + '-field-' + subindex"
+                        :noLabelSpace="field.type === 'separator'"
+                        :labelFullWidth="field.type === 'wysiwyg'">
+                        <range-slider
+                            v-if="field.type === 'range'"
+                            :min="field.min"
+                            :max="field.max"
+                            :step="field.step"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            slot="field"></range-slider>
 
-                    <separator
-                        v-if="field.type === 'separator'"
-                        slot="field"
-                        :type="field.size"
-                        :label="field.label"
-                        :anchor="field.anchor"
-                        :note="field.note"></separator>
+                        <separator
+                            v-if="field.type === 'separator'"
+                            slot="field"
+                            :type="field.size"
+                            :label="field.label"
+                            :anchor="field.anchor"
+                            :note="field.note"></separator>
 
-                    <text-area
-                        v-if="field.type === 'textarea'"
-                        slot="field"
-                        :rows="field.rows"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                        :cols="field.cols"></text-area>
+                        <text-area
+                            v-if="field.type === 'textarea'"
+                            slot="field"
+                            :rows="field.rows"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                            :cols="field.cols"></text-area>
 
-                    <text-area
-                        v-if="field.type === 'wysiwyg'"
-                        slot="field"
-                        :id="'theme-settings-' + index"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        :wysiwyg="true"></text-area>
+                        <text-area
+                            v-if="field.type === 'wysiwyg'"
+                            slot="field"
+                            :id="'theme-settings-' + index"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            :wysiwyg="true"></text-area>
 
-                    <image-upload
-                        v-if="field.type === 'upload'"
-                        v-model="settingsValues[field.name]"
-                        slot="field"
-                        :anchor="field.anchor"
-                        :addMediaFolderPath="true"></image-upload>
+                        <image-upload
+                            v-if="field.type === 'upload'"
+                            v-model="settingsValues[field.name]"
+                            slot="field"
+                            :anchor="field.anchor"
+                            :addMediaFolderPath="true"></image-upload>
 
-                    <small-image-upload
-                        v-if="field.type === 'smallupload'"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        slot="field"></small-image-upload>
+                        <small-image-upload
+                            v-if="field.type === 'smallupload'"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            slot="field"></small-image-upload>
 
-                    <radio-buttons
-                        v-if="field.type === 'radio'"
-                        :items="field.options"
-                        :name="field.name"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        slot="field" />
+                        <radio-buttons
+                            v-if="field.type === 'radio'"
+                            :items="field.options"
+                            :name="field.name"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            slot="field" />
 
-                    <dropdown
-                        v-if="field.type === 'select'"
-                        slot="field"
-                        :multiple="field.multiple"
-                        v-model="settingsValues[field.name]"
-                        :id="field.anchor"
-                        :items="getDropdownOptions(field.options)"></dropdown>
+                        <dropdown
+                            v-if="field.type === 'select'"
+                            slot="field"
+                            :multiple="field.multiple"
+                            v-model="settingsValues[field.name]"
+                            :id="field.anchor"
+                            :items="getDropdownOptions(field.options)"></dropdown>
 
-                    <switcher
-                        v-if="field.type === 'checkbox'"
-                        v-model="settingsValues[field.name]"
-                        :lower-zindex="true"
-                        :anchor="field.anchor"
-                        slot="field"></switcher>
+                        <switcher
+                            v-if="field.type === 'checkbox'"
+                            v-model="settingsValues[field.name]"
+                            :lower-zindex="true"
+                            :anchor="field.anchor"
+                            slot="field"></switcher>
 
-                    <color-picker
-                        v-if="field.type === 'colorpicker'"
-                        v-model="settingsValues[field.name]"
-                        :data-field="field.name"
-                        :anchor="field.anchor"
-                        slot="field"></color-picker>
+                        <color-picker
+                            v-if="field.type === 'colorpicker'"
+                            v-model="settingsValues[field.name]"
+                            :data-field="field.name"
+                            :anchor="field.anchor"
+                            slot="field"></color-picker>
 
-                    <posts-dropdown
-                        v-if="field.type === 'posts-dropdown'"
-                        v-model="settingsValues[field.name]"
-                        :allowed-post-status="field.allowedPostStatus || ['any']"
-                        :multiple="field.multiple"
-                        :anchor="field.anchor"
-                        slot="field"></posts-dropdown>
+                        <posts-dropdown
+                            v-if="field.type === 'posts-dropdown'"
+                            v-model="settingsValues[field.name]"
+                            :allowed-post-status="field.allowedPostStatus || ['any']"
+                            :multiple="field.multiple"
+                            :anchor="field.anchor"
+                            slot="field"></posts-dropdown>
 
-                    <tags-dropdown
-                        v-if="field.type === 'tags-dropdown'"
-                        v-model="settingsValues[field.name]"
-                        :multiple="field.multiple"
-                        :anchor="field.anchor"
-                        slot="field"></tags-dropdown>
+                        <tags-dropdown
+                            v-if="field.type === 'tags-dropdown'"
+                            v-model="settingsValues[field.name]"
+                            :multiple="field.multiple"
+                            :anchor="field.anchor"
+                            slot="field"></tags-dropdown>
 
-                    <authors-dropdown
-                        v-if="field.type === 'authors-dropdown'"
-                        v-model="settingsValues[field.name]"
-                        :multiple="field.multiple"
-                        :anchor="field.anchor"
-                        slot="field"></authors-dropdown>
+                        <authors-dropdown
+                            v-if="field.type === 'authors-dropdown'"
+                            v-model="settingsValues[field.name]"
+                            :multiple="field.multiple"
+                            :anchor="field.anchor"
+                            slot="field"></authors-dropdown>
 
-                    <text-input
-                        v-if="isNormalInput(field.type)"
-                        slot="field"
-                        :type="field.type"
-                        :min="field.min"
-                        :max="field.max"
-                        :size="field.size"
-                        :step="field.step"
-                        :pattern="field.pattern"
-                        :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                        v-model="settingsValues[field.name]"
-                        :anchor="field.anchor"
-                        :placeholder="field.placeholder"></text-input>
+                        <text-input
+                            v-if="isNormalInput(field.type)"
+                            slot="field"
+                            :type="field.type"
+                            :min="field.min"
+                            :max="field.max"
+                            :size="field.size"
+                            :step="field.step"
+                            :pattern="field.pattern"
+                            :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                            v-model="settingsValues[field.name]"
+                            :anchor="field.anchor"
+                            :placeholder="field.placeholder"></text-input>
 
-                    <small
-                        v-if="field.note && field.type !== 'separator'"
-                        slot="note"
-                        class="note"
-                        v-pure-html="field.note">
-                    </small>
-                </field>
-            </template>
-        </fields-group>
+                        <small
+                            v-if="field.note && field.type !== 'separator'"
+                            slot="note"
+                            class="note"
+                            v-pure-html="field.note">
+                        </small>
+                    </field>
+                </template>
+            </fields-group>
 
-        <p-footer>
-            <p-button
-                @click.native="saveSettings"
-                slot="buttons"
-                type="secondary"
-                :disabled="buttonsLocked">
-                {{ $t('settings.saveSettings') }}
-            </p-button>
-        </p-footer>
+            <p-footer>
+                <p-button
+                    @click.native="saveSettings"
+                    slot="buttons"
+                    type="secondary"
+                    :disabled="buttonsLocked">
+                    {{ $t('settings.saveSettings') }}
+                </p-button>
+            </p-footer>
+        </template>
+        <template v-else>
+            CUSTOM OPTIONS
+        </template>
     </section>
 </template>
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
 import Vue from 'vue';
+// import { compileToFunctions } from 'vue-template-compiler';
 
 export default {
     name: 'tools-plugin',
@@ -177,12 +199,14 @@ export default {
             return groups;
         }
     },
-    data: function() {
+    data () {
         return {
             pluginName: '',
             settings: [],
             settingsValues: {},
-            buttonsLocked: false
+            buttonsLocked: false,
+            hasPluginCustomOptions: false,
+            pluginStandardOptionsVisible: true
         };
     },
     mounted () {
@@ -205,6 +229,12 @@ export default {
                 }
 
                 this.pluginName = result.pluginData.name;
+                this.hasPluginCustomOptions = !!result.pluginData.usePluginSettingsView;
+
+                if (this.hasPluginCustomOptions) {
+                    this.pluginStandardOptionsVisible = false;
+                }
+
                 this.loadSettings(result.pluginData.config, result.pluginConfig);
             });
         },
@@ -341,6 +371,12 @@ export default {
                     });
                 }
             });
+        },
+        showPluginCustomOptions () {
+            this.pluginStandardOptionsVisible = false;
+        },
+        showPluginStandardOptions () {
+            this.pluginStandardOptionsVisible = true;
         }
     }
 }

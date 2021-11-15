@@ -1092,6 +1092,8 @@
         "frontpageLink": "Link do strony startowej",
         "githubRepository": "Repozytorium Github",
         "goBack": "Wróć",
+        "goToPluginCustomOptions": "Ukryj dodatkowe opcje",
+        "goToPluginStandardOptions": "Pokaż dodatkowe opcje",
         "help": "Pomoc",
         "hide": "Ukryj",
         "hideThisNotification": "Schowaj to powiadominie",

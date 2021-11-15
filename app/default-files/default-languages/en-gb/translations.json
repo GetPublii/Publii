@@ -1092,6 +1092,8 @@
         "frontpageLink": "Frontpage link",
         "githubRepository": "Github repository",
         "goBack": "Go back",
+        "goToPluginCustomOptions": "Hide additional options",
+        "goToPluginStandardOptions": "Show additional options",
         "help": "Help",
         "hide": "Hide",
         "hideThisNotification": "Hide this notification",
