@@ -2052,7 +2052,8 @@ class Renderer {
 
             let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'main.js');
             let PluginInstance = require(pluginPath);
-            let plugin = new PluginInstance(this.plugins);
+            let pluginSavedConfig = this.loadPluginConfig(pluginName, this.siteName);
+            let plugin = new PluginInstance(this.plugins, pluginSavedConfig);
             
             if (typeof plugin.addInsertions !== 'undefined') {
                 plugin.addInsertions();
@@ -2062,6 +2063,62 @@ class Renderer {
                 plugin.addModifiers();
             }
         }
+    }
+
+    loadPluginConfig (pluginName, siteName) {
+        let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'plugin.json');
+        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        let pluginData = null;
+        let pluginSavedConfig = null;
+        let output = {};
+
+        if (fs.existsSync(pluginPath)) {
+            try {
+                pluginData = fs.readFileSync(pluginPath, 'utf8');
+                pluginData = JSON.parse(pluginData);
+            } catch (e) {
+                pluginData = {};
+            }
+        } else {
+            pluginData =  {};
+        }
+
+        if (fs.existsSync(pluginConfigPath)) {
+            try {
+                pluginSavedConfig = fs.readFileSync(pluginConfigPath, 'utf8');
+                pluginSavedConfig = JSON.parse(pluginConfig);
+            } catch (e) {
+                pluginSavedConfig = {};
+            }
+        } else {
+            pluginSavedConfig = {};
+        }
+
+        let settings = pluginData.config.map(field => {
+            if (field.type !== 'separator') {
+                if (pluginSavedConfig && typeof pluginSavedConfig[field.name] !== 'undefined') {
+                    return {
+                        name: field.name, 
+                        value: savedConfig[field.name]
+                    };
+                }
+
+                return {
+                    name: field.name, 
+                    value: field.value
+                };
+            }
+
+            return false;
+        });
+
+        for (let setting of settings) {
+            if (setting) {
+                output[setting.name] = setting.value;
+            }
+        }
+
+        return output;
     }
 }
 

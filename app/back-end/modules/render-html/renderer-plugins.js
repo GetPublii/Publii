@@ -7,22 +7,22 @@ class RendererPlugins {
     /**
      * Add 
      */
-     _add (type, key, callback, priority) {
+     _add (type, key, callback, priority, pluginInstance) {
         if (!this[type][key]) {
-            this[type][key] = [{ priority, callback }];
+            this[type][key] = [{ priority, callback, pluginInstance }];
         } else {
-            this[type][key].push({ priority, callback });
+            this[type][key].push({ priority, callback, pluginInstance });
         }
 
         this[type][key].sort(this.sortByPriority);
     }
 
-    addInsertion (place, callback, priority) {
-        this._add('insertions', place, callback, priority);
+    addInsertion (place, callback, priority, pluginInstance) {
+        this._add('insertions', place, callback, priority, pluginInstance);
     }
 
-    addModifier (value, callback, priority) {
-        this._add('modifiers', value, callback, priority);
+    addModifier (value, callback, priority, pluginInstance) {
+        this._add('modifiers', value, callback, priority, pluginInstance);
     }
 
     /**
@@ -105,7 +105,7 @@ class RendererPlugins {
         let output = [];
 
         for (let i = 0; i < insertions.length; i++) {
-            let insertionOutput = insertions[i].callback(rendererInstance, params);
+            let insertionOutput = insertions[i].callback.bind(insertions[i].pluginInstance, rendererInstance, params)();
 
             if (insertionOutput) {
                 output.push(insertionOutput);
@@ -120,7 +120,7 @@ class RendererPlugins {
         let output = originalValue;
 
         for (let i = 0; i < modifiers.length; i++) {
-            output = modifiers[i].callback(rendererInstance, output, params);
+            output = modifiers[i].callback.bind(insertions[i].pluginInstance, rendererInstance, output, params)();
         }
 
         return output;
