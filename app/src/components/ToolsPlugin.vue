@@ -333,7 +333,7 @@ export default {
 
             let settings = config.map(field => {
                 if (field.type !== 'separator') {
-                    if (typeof savedConfig[field.name] !== 'undefined') {
+                    if (savedConfig && typeof savedConfig[field.name] !== 'undefined') {
                         return [field.name, savedConfig[field.name]];
                     }
 
