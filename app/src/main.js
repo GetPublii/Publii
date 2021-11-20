@@ -260,6 +260,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     buttonStyle: 'danger'
                 });
             }
+
+            // Object for plugins
+            window.pluginsAPI = {};
         },
         methods: {
             async setupAppTheme () {

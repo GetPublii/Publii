@@ -171,7 +171,9 @@
             </p-footer>
         </template>
         <template v-else>
-            CUSTOM OPTIONS
+            <iframe 
+                id="plugin-settings-root"
+                :src="this.pluginPath + '/options/index.html'"></iframe>
         </template>
     </section>
 </template>
@@ -179,7 +181,6 @@
 <script>
 import BackToTools from './mixins/BackToTools.js';
 import Vue from 'vue';
-// import { compileToFunctions } from 'vue-template-compiler';
 
 export default {
     name: 'tools-plugin',
@@ -202,6 +203,7 @@ export default {
     data () {
         return {
             pluginName: '',
+            pluginPath: '',
             settings: [],
             settingsValues: {},
             buttonsLocked: false,
@@ -233,6 +235,7 @@ export default {
 
                 if (this.hasPluginCustomOptions) {
                     this.pluginStandardOptionsVisible = false;
+                    this.pluginPath = result.pluginData.path;
                 }
 
                 this.loadSettings(result.pluginData.config, result.pluginConfig);
@@ -384,4 +387,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+#plugin-settings-root {
+    border: none;
+    height: calc(100vh - 200px);
+    width: 100%;
+}
 </style>

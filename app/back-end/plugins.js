@@ -48,7 +48,9 @@ class Plugins {
                 name: pluginData.name,
                 version: pluginData.version,
                 author: pluginData.author,
-                minimumPubliiVersion: pluginData.minimumPubliiVersion
+                minimumPubliiVersion: pluginData.minimumPubliiVersion,
+                assets: pluginData.assets,
+                path: path.join(pathToPlugins, filesAndDirs[i])
             });
         }
 
@@ -179,6 +181,7 @@ class Plugins {
             try {
                 let pluginData = fs.readFileSync(pluginPath, 'utf8');
                 output.pluginData = JSON.parse(pluginData);
+                output.pluginData.path = path.join(this.appInstance.appDir, 'plugins', pluginName);
             } catch (e) {
                 return 0;
             }

@@ -17,7 +17,9 @@
             version: plugin.version,
             directory: plugin.directory,
             minimumPubliiVersion: plugin.minimumPubliiVersion,
-            thumbnail: basePath + '/' + plugin.directory + '/' + 'thumbnail.png'
+            thumbnail: basePath + '/' + plugin.directory + '/' + 'thumbnail.png',
+            assets: plugin.assets,
+            path: plugin.path
         };
     });
 };
