@@ -76,6 +76,7 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'authors'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'plugins'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'themes'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'languages'));
         fs.mkdirSync(path.join(this.siteDir, 'output'));

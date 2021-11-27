@@ -84,6 +84,7 @@ class Renderer {
         };
         this.itemID = itemID;
         this.postData = postData;
+        this.pluginsDir = path.join(this.appDir, 'plugins');
         this.loadPlugins();
     }
 
@@ -276,6 +277,7 @@ class Renderer {
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         process.send({
             type: 'app-rendering-preview',
@@ -303,6 +305,7 @@ class Renderer {
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         process.send({
             type: 'app-rendering-preview',
@@ -341,6 +344,7 @@ class Renderer {
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         process.send({
             type: 'app-rendering-preview',
@@ -379,6 +383,7 @@ class Renderer {
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         process.send({
             type: 'app-rendering-preview',
@@ -1825,6 +1830,7 @@ class Renderer {
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
         await FilesHelper.removeEmptyDirectories(this.outputDir);
         console.timeEnd("FILES");
     }

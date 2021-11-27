@@ -5,6 +5,7 @@ const deleteEmpty = require('delete-empty');
 const UtilsHelper = require('./../../../helpers/utils');
 const normalizePath = require('normalize-path');
 const DiffCopy = require('./diffCopy.js');
+const PluginsHelpers = require('./../../plugins/plugins-helpers');
 
 class Files {
     /**
@@ -119,11 +120,11 @@ class Files {
         }
 
         if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
-            fs.mkdir(path.join(basePathOutput));
+            fs.mkdirSync(path.join(basePathOutput));
         }
 
         if (!UtilsHelper.dirExists(path.join(basePathOutput, 'posts'))) {
-            fs.mkdir(path.join(basePathOutput, 'posts'));
+            fs.mkdirSync(path.join(basePathOutput, 'posts'));
         }
 
         for (let i = 0; i < dirs.length; i++) {
@@ -153,6 +154,48 @@ class Files {
         }
 
         DiffCopy.removeUnusedPostFolders(postIDs, path.join(basePathOutput, 'posts'));
+    }
+
+    /**
+     * Copy plugin files from the input dir to the output dir
+     *
+     * @param inputDir
+     * @param outputDir
+     */
+     static async copyPluginFiles (inputDir, outputDir, pluginsDir) {
+        let pluginsList = PluginsHelpers.getActivePluginsList(path.join(inputDir, 'config', 'site.plugins.json'));
+        let basePathOutput = path.join(outputDir, 'media');
+        
+        // create media dir if not exists
+        if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
+            fs.mkdirSync(path.join(basePathOutput));
+        }
+
+        // if media/plugins dir exists - remove it
+        if (UtilsHelper.dirExists(path.join(basePathOutput, 'plugins'))) {
+            fs.removeSync(path.join(basePathOutput, 'plugins'));
+        }
+
+        // put plugin files if necessary
+        if (pluginsList.length) {
+            fs.mkdirSync(path.join(basePathOutput, 'plugins'));
+        }
+
+        for (let i = 0; i < pluginsList.length; i++) {
+            let pluginName = pluginsList[i];
+            let filesToCopy = PluginsHelpers.getPluginFrontEndFiles(pluginName, pluginsDir);
+
+            if (filesToCopy.length) {
+                fs.mkdirSync(path.join(basePathOutput, 'plugins', pluginName));
+            }
+
+            for (let j = 0; j < filesToCopy.length; j++) {
+                fs.copySync(
+                    path.join(filesToCopy[j].input),
+                    path.join(basePathOutput, 'plugins', pluginName, filesToCopy[j].output)
+                );
+            }
+        }
     }
 
     static async removeEmptyDirectories (outputDir) {
