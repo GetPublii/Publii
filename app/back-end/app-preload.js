@@ -187,8 +187,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
             'app-site-plugin-deactivated',
-            'app-site-get-plugin-config-retrieved',
-            'app-site-plugin-config-saved'
+            'app-site-get-plugin-config-retrieved'
         ];
 
         if (validChannels.includes(channel)) {
@@ -220,7 +219,10 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-process-select-directory',
             'app-main-webview-search-find-in-page',
             'app-main-webview-search-stop-find-in-page', 
-            'app-main-load-language'
+            'app-main-load-language',
+            'app-plugins-api:save-file',
+            'app-plugins-api:read-file',
+            'app-plugins-api:delete-file'
         ];
 
         if (validCommands.includes(command)) {

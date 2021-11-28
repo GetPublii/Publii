@@ -262,7 +262,11 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             }
 
             // Object for plugins
-            window.pluginsAPI = {};
+            window.pluginsAPI = {
+                saveFile: (fileName, fileContent) => this.pluginsApiSaveFile(fileName, fileContent),
+                readFile: (fileName) => this.pluginsApiReadFile(fileName),
+                deleteFile: (fileName) => this.pluginsApiDeleteFile(fileName)
+            };
         },
         methods: {
             async setupAppTheme () {
@@ -330,6 +334,37 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 setTimeout(() => {
                     this.skipThemeChangeEvents = false;
                 }, 500);
+            },
+            async pluginsApiSaveFile (fileName, fileContent) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:save-file', {
+                    fileName, 
+                    siteName,
+                    pluginName,
+                    fileContent
+                });
+                return result;
+            },
+            async pluginsApiReadFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            async pluginsApiDeleteFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:delete-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
             }
         },
         beforeDestroy () {
