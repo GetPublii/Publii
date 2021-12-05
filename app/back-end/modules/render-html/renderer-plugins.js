@@ -1,5 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
 class RendererPlugins {
-    constructor () {
+    constructor (sitePath) {
+        this.sitePath = sitePath;
         this.insertions = {};
         this.modifiers = {};
     }
@@ -131,6 +135,59 @@ class RendererPlugins {
      */
     sortByPriority (itemA, itemB) {
         return itemA.priority - itemB.priority;
+    }
+
+    /**
+     * Read file from input/config/plugins/PLUGIN_NAME/
+     */
+    readFile (fileName, pluginInstance) {
+        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+        let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+        let filePath = path.join(this.sitePath, 'input', 'config', 'plugins', pluginName, fileName);
+        let fileContent;
+        
+        if (!fs.existsSync(filePath)) {
+            return fileContent;
+        }
+
+        try {
+            fileContent = fs.readFileSync(filePath).toString();
+        } catch (e) {
+            return;
+        }
+
+        return fileContent;
+    }
+
+    /**
+     * Create file in input/media/PLUGIN_NAME/
+     */
+    createFile (fileName, fileContent, pluginInstance) {
+        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+        let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+        let pluginsDir = path.join(this.sitePath, 'input', 'media', 'plugins');
+        let pluginDir = path.join(pluginsDir, pluginName);
+        let filePath = path.join(pluginDir, fileName);
+        
+        if (!fs.existsSync(pluginsDir)) {
+            fs.mkdirSync(pluginsDir);
+        }
+
+        if (!fs.existsSync(pluginDir)) {
+            fs.mkdirSync(pluginDir);
+        }
+
+        try {
+            fs.writeFileSync(filePath, fileContent);
+        } catch (e) {
+            return {
+                status: 'FILE_NOT_SAVED'
+            };
+        }
+
+        return {
+            status: 'FILE_SAVED'
+        };
     }
 }
 

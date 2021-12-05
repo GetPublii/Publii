@@ -52,7 +52,8 @@ class Renderer {
         this.previewMode = false;
         this.ampMode = false;
         this.useRelativeUrls = siteConfig.deployment.relativeUrls;
-        this.plugins = new RendererPlugins();
+        let sitePath = path.join(this.sitesDir, this.siteName);
+        this.plugins = new RendererPlugins(sitePath);
         this.translations = {
             user: false,
             theme: false
@@ -2059,7 +2060,7 @@ class Renderer {
             let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'main.js');
             let PluginInstance = require(pluginPath);
             let pluginSavedConfig = this.loadPluginConfig(pluginName, this.siteName);
-            let plugin = new PluginInstance(this.plugins, pluginSavedConfig);
+            let plugin = new PluginInstance(this.plugins, pluginName, pluginSavedConfig);
             
             if (typeof plugin.addInsertions !== 'undefined') {
                 plugin.addInsertions();

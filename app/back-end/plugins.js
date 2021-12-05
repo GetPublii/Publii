@@ -74,7 +74,7 @@ class Plugins {
             let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'main.js');
             let PluginInstance = require(pluginPath);
             let pluginSavedConfig = this.loadPluginConfig(pluginName, siteName);
-            let plugin = new PluginInstance(this.appInstance.pluginsAPI, pluginSavedConfig);
+            let plugin = new PluginInstance(this.appInstance.pluginsAPI, pluginName, pluginSavedConfig);
             
             if (typeof plugin.addEvents !== 'undefined') {
                 plugin.addEvents();
