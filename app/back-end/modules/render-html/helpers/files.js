@@ -164,6 +164,7 @@ class Files {
      */
      static async copyPluginFiles (inputDir, outputDir, pluginsDir) {
         let pluginsList = PluginsHelpers.getActivePluginsList(path.join(inputDir, 'config', 'site.plugins.json'));
+        let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
         
         // create media dir if not exists
@@ -184,8 +185,17 @@ class Files {
         for (let i = 0; i < pluginsList.length; i++) {
             let pluginName = pluginsList[i];
             let filesToCopy = PluginsHelpers.getPluginFrontEndFiles(pluginName, pluginsDir);
+            let pluginInputDir = path.join(basePathInput, 'plugins', pluginName);
+            let pluginOutputDir = path.join(basePathOutput, 'plugins', pluginName);
 
-            if (filesToCopy.length) {
+            if (fs.existsSync(pluginInputDir)) {
+                fs.copySync(
+                    pluginInputDir,
+                    pluginOutputDir
+                );
+            }
+
+            if (filesToCopy.length && !fs.existsSync(pluginOutputDir)) {
                 fs.mkdirSync(path.join(basePathOutput, 'plugins', pluginName));
             }
 
