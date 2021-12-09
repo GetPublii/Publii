@@ -173,6 +173,7 @@ class Renderer {
     async renderFullPreview() {
         console.time("RENDERING");
         this.preparePageToRender();
+        this.triggerEvent('beforeRender');
         await this.generateWWW();
         this.generateAMP();
         console.timeEnd("RENDERING");
@@ -256,13 +257,11 @@ class Renderer {
         }
 
         this.createRobotsTxt();
+        this.triggerEvent('afterRender');
         this.sendProgress(90, 'Finishing the render process');
     }
 
-    /**
-     * Renders post preview
-     */
-    renderPostPreview() {
+    preparePreview (type) {
         this.loadSiteConfig();
         this.loadSiteTranslations();
         this.loadDataFromDB();
@@ -272,13 +271,33 @@ class Renderer {
         this.registerThemeHelpers();
         this.loadContentStructure();
         this.loadCommonData();
+        this.triggerEvent('beforeRender');
         this.generatePartials();
-        this.generatePost();
+
+        if (type === 'post') {
+            this.generatePost();
+        } else if (type === 'frontpage') {
+            this.generateFrontpage();
+        } else if (type === 'tag') {
+            this.generateTags(this.itemID);
+        } else if (type === 'author') {
+            this.generateAuthors(this.itemID);
+        }
+
         this.generateCSS();
+    }
+
+    /**
+     * Renders post preview
+     */
+    renderPostPreview() {
+        this.preparePreview('post');
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        this.triggerEvent('afterRender');
 
         process.send({
             type: 'app-rendering-preview',
@@ -290,23 +309,14 @@ class Renderer {
      * Renders homepage preview
      */
     renderHomepagePreview() {
-        this.loadSiteConfig();
-        this.loadSiteTranslations();
-        this.loadDataFromDB();
-        this.loadThemeConfig();
-        this.loadThemeFiles();
-        this.registerHelpers();
-        this.registerThemeHelpers();
-        this.loadContentStructure();
-        this.loadCommonData();
-        this.generatePartials();
-        this.generateFrontpage();
-        this.generateCSS();
+        this.preparePreview('frontpage');
 
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        this.triggerEvent('afterRender');
 
         process.send({
             type: 'app-rendering-preview',
@@ -318,18 +328,7 @@ class Renderer {
      * Renders tag page preview
      */
     renderTagPreview() {
-        this.loadSiteConfig();
-        this.loadSiteTranslations();
-        this.loadDataFromDB();
-        this.loadThemeConfig();
-        this.loadThemeFiles();
-        this.registerHelpers();
-        this.registerThemeHelpers();
-        this.loadContentStructure();
-        this.loadCommonData();
-        this.generatePartials();
-        this.generateTags(this.itemID);
-        this.generateCSS();
+        this.preparePreview('tag');
 
         let postIDs = Object.keys(this.cachedItems.posts);
         let postIDsToRender = [];
@@ -347,6 +346,8 @@ class Renderer {
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
+        this.triggerEvent('afterRender');
+
         process.send({
             type: 'app-rendering-preview',
             result: true
@@ -357,18 +358,7 @@ class Renderer {
      * Renders author page preview
      */
     renderAuthorPreview() {
-        this.loadSiteConfig();
-        this.loadSiteTranslations();
-        this.loadDataFromDB();
-        this.loadThemeConfig();
-        this.loadThemeFiles();
-        this.registerHelpers();
-        this.registerThemeHelpers();
-        this.loadContentStructure();
-        this.loadCommonData();
-        this.generatePartials();
-        this.generateAuthors(this.itemID);
-        this.generateCSS();
+        this.preparePreview('author');
 
         let postIDs = Object.keys(this.cachedItems.posts);
         let postIDsToRender = [];
@@ -385,6 +375,8 @@ class Renderer {
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        this.triggerEvent('afterRender');
 
         process.send({
             type: 'app-rendering-preview',
@@ -2069,6 +2061,10 @@ class Renderer {
             if (typeof plugin.addModifiers !== 'undefined') {
                 plugin.addModifiers();
             }
+
+            if (typeof plugin.addEvents !== 'undefined') {
+                plugin.addEvents();
+            }
         }
     }
 
@@ -2126,6 +2122,15 @@ class Renderer {
         }
 
         return output;
+    }
+
+    /**
+     * Trigger events during rendering process
+     */
+    triggerEvent (eventName) {
+        if (this.plugins.hasEvents(eventName)) {
+            this.plugins.runEvents(eventName, this); 
+        }
     }
 }
 

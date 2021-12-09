@@ -57,38 +57,6 @@ class Plugins {
         return output;
     }
 
-    /*
-     * Load plugins for specific site
-     */
-    loadSiteSpecificPlugins (siteName) {
-        let pluginsConfig = this.loadSitePluginsConfig(siteName);
-        let pluginNames = Object.keys(pluginsConfig);
-
-        for (let i = 0; i < pluginNames.length; i++) {
-            let pluginName = pluginNames[i];
-
-            if (!pluginsConfig[pluginName]) {
-                continue;
-            }
-
-            let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'main.js');
-            let PluginInstance = require(pluginPath);
-            let pluginSavedConfig = this.loadPluginConfig(pluginName, siteName);
-            let plugin = new PluginInstance(this.appInstance.pluginsAPI, pluginName, pluginSavedConfig);
-            
-            if (typeof plugin.addEvents !== 'undefined') {
-                plugin.addEvents();
-            }
-        }
-    }
-
-    /*
-     * Load plugins for app
-     */
-    loadAppSpecificPlugins () {
-        
-    }
-
     /**
      * Get status of site-specific plugins 
      */

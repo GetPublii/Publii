@@ -6,6 +6,7 @@ class RendererPlugins {
         this.sitePath = sitePath;
         this.insertions = {};
         this.modifiers = {};
+        this.events = {};
     }
 
     /**
@@ -29,6 +30,10 @@ class RendererPlugins {
         this._add('modifiers', value, callback, priority, pluginInstance);
     }
 
+    addEvent (value, callback, priority, pluginInstance) {
+        this._add('events', value, callback, priority, pluginInstance);
+    }
+
     /**
      * Get
      */
@@ -46,6 +51,10 @@ class RendererPlugins {
 
     getModifiers (value) {
         return this._get('modifiers', value);
+    }
+
+    getEvents (value) {
+        return this._get('events', value);
     }
 
     /**
@@ -67,6 +76,10 @@ class RendererPlugins {
         return this._has('modifiers', value);
     }
 
+    hasEvents (value) {
+        return this._has('events', value);
+    }
+
     /**
      * Remove 
      */
@@ -86,6 +99,10 @@ class RendererPlugins {
         this._remove('modifiers', value, callback, priority);
     }
 
+    removeEvent (value, callback, priority) {
+        this._remove('events', value, callback, priority);
+    }
+
     /**
      * Reset
      */
@@ -99,6 +116,10 @@ class RendererPlugins {
 
     resetModifiers () {
         this._reset('modifiers');
+    }
+
+    resetEvents () {
+        this._reset('events');
     }
 
     /**
@@ -124,10 +145,20 @@ class RendererPlugins {
         let output = originalValue;
 
         for (let i = 0; i < modifiers.length; i++) {
-            output = modifiers[i].callback.bind(insertions[i].pluginInstance, rendererInstance, output, params)();
+            output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, params)();
         }
 
         return output;
+    }
+
+    runEvents (value, rendererInstance, params = false) {
+        let events = this.getEvents(value);
+
+        for (let i = 0; i < events.length; i++) {
+            events[i].callback.bind(events[i].pluginInstance, rendererInstance, params)();
+        }
+
+        return true;
     }
 
     /**

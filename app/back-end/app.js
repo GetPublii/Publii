@@ -297,9 +297,6 @@ class App {
             this.sites[siteConfig.name].displayName = siteConfig.name;
         }
 
-        // Load plugins
-        this.pluginsHelper.loadSiteSpecificPlugins(siteConfig.name);
-
         return siteConfig;
     }
 
