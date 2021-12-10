@@ -85,7 +85,7 @@ class DeployEvents {
 
         this.rendererProcess.send({
             type: 'dependencies',
-            appDir: this.app.app.getPath('logs'),
+            appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
             siteConfig: this.app.sites[site],
             itemID: false,
@@ -154,7 +154,7 @@ class DeployEvents {
 
         this.deploymentProcess.send({
             type: 'dependencies',
-            appDir: this.app.app.getPath('logs'),
+            appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
             siteConfig: deploymentConfig
         });
