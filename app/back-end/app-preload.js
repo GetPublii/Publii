@@ -49,6 +49,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-post-save',
             'app-post-cancel',
             'app-image-upload',
+            'app-image-upload-remove',
             'app-post-delete',
             'app-post-duplicate',
             'app-post-status-change',

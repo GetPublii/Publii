@@ -78,7 +78,8 @@
                             :anchor="field.anchor"
                             imageType="pluginImages"
                             :pluginDir="$route.params.pluginname"
-                            :addMediaFolderPath="false"></image-upload>
+                            :addMediaFolderPath="false"
+                            :onBeforeRemove="removePluginImage"></image-upload>
 
                         <small-image-upload
                             v-if="field.type === 'smallupload'"
@@ -86,7 +87,8 @@
                             :anchor="field.anchor"
                             imageType="pluginImages"
                             :pluginDir="$route.params.pluginname"
-                            slot="field"></small-image-upload>
+                            slot="field"
+                            :onBeforeRemove="removePluginImage"></small-image-upload>
 
                         <radio-buttons
                             v-if="field.type === 'radio'"
@@ -384,6 +386,11 @@ export default {
         },
         showPluginStandardOptions () {
             this.pluginStandardOptionsVisible = true;
+        },
+        removePluginImage (filePath) {
+            if (filePath) {
+                mainProcessAPI.send('app-image-upload-remove', filePath, this.$route.params.name);
+            }
         }
     }
 }

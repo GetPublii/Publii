@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import PreloaderImages from './../configs/preloaderImages';
-
 export default {
     name: 'small-image-upload',
     props: {
@@ -37,6 +35,10 @@ export default {
             type: String
         },
         onRemove: {
+            default: () => false,
+            type: Function
+        },
+        onBeforeRemove: {
             default: () => false,
             type: Function
         },
@@ -78,7 +80,7 @@ export default {
     mounted () {
         setTimeout(() => {
             if (this.value !== '') {
-                this.filePath = this.value;
+                this.fileName = this.value;
                 this.isEmpty = false;
             }
         }, 0);
@@ -86,6 +88,7 @@ export default {
     methods: {
         remove (e) {
             e.preventDefault();
+            this.onBeforeRemove(this.fileName);
             this.fileName = '';
             this.isEmpty = true;
             this.onRemove();

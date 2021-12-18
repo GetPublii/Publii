@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Image = require('../image.js');
 const childProcess = require('child_process');
@@ -31,6 +33,23 @@ class ImageUploaderEvents {
                     event.sender.send('app-image-uploaded', data.result);
                 }
             });
+        });
+
+        // Remove
+        ipcMain.on('app-image-upload-remove', function (event, filePath, siteName) {
+            let sitePath = path.join(appInstance.sitesDir, siteName);
+
+            if (filePath.indexOf('media/plugins/') === 0) {
+                filePath = path.join(sitePath, 'input', filePath);
+            }
+
+            if (filePath.indexOf(sitePath) !== 0) {
+                return;
+            }
+
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
         });
     }
 }

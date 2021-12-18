@@ -67,6 +67,10 @@ export default {
             default: () => false,
             type: Function
         },
+        onBeforeRemove: {
+            default: () => false,
+            type: Function
+        },
         onAdd: {
             default: () => false,
             type: Function
@@ -217,6 +221,7 @@ export default {
         },
         remove (e) {
             e.preventDefault();
+            this.onBeforeRemove(this.filePath);
             this.filePath = '';
             this.$refs['input'].value = '';
             this.isEmpty = true;
