@@ -43,6 +43,14 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        imageType: {
+            default: 'optionImages',
+            type: String
+        },
+        pluginDir: {
+            default: '',
+            type: String
         }
     },
     data () {
@@ -97,14 +105,21 @@ export default {
                 id: 'website',
                 site: this.$store.state.currentSite.config.name,
                 path: sourcePath,
-                imageType: 'optionImages'
+                imageType: this.imageType,
+                pluginDir: this.pluginDir
             };
 
             mainProcessAPI.send('app-image-upload', uploadData);
 
             mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+                let dir = 'media/website/';
+
+                if (this.imageType === 'pluginImages') {
+                    dir = 'media/plugins/' + this.pluginDir + '/';
+                }
+
                 this.isEmpty = false;
-                this.fileName = 'media/website/' + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
+                this.fileName = dir + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
                 this.isUploading = false;
             });
         },

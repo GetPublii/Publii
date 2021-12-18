@@ -184,6 +184,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-language-deleted',
             'app-plugin-uploaded',
             'app-plugin-deleted',
+            'app-site-plugin-config-saved',
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
             'app-site-plugin-deactivated',

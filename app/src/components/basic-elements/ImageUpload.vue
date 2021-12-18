@@ -80,7 +80,11 @@ export default {
             type: String
         },
         imageType: {
-            default: 'optionImages',
+            default: 'pluginImages',
+            type: String
+        },
+        pluginDir: {
+            default: '',
             type: String
         }
     },
@@ -182,6 +186,8 @@ export default {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
             } else if (this.itemId) {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
+            } else if (this.imageType === 'pluginImages') {
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             }
 
             if (this.addMediaFolderPath) {
@@ -240,10 +246,13 @@ export default {
             } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'authorImages';
+            } else if (this.imageType === 'pluginImages') {
+                uploadData.imageType = 'pluginImages';
+                uploadData.pluginDir = this.pluginDir;
             } else if ((this.itemId || this.itemId === 0)) {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
-            }
+            } 
 
             mainProcessAPI.send('app-image-upload', uploadData);
 

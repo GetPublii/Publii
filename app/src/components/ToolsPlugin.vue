@@ -76,12 +76,16 @@
                             v-model="settingsValues[field.name]"
                             slot="field"
                             :anchor="field.anchor"
-                            :addMediaFolderPath="true"></image-upload>
+                            imageType="pluginImages"
+                            :pluginDir="$route.params.pluginname"
+                            :addMediaFolderPath="false"></image-upload>
 
                         <small-image-upload
                             v-if="field.type === 'smallupload'"
                             v-model="settingsValues[field.name]"
                             :anchor="field.anchor"
+                            imageType="pluginImages"
+                            :pluginDir="$route.params.pluginname"
                             slot="field"></small-image-upload>
 
                         <radio-buttons
