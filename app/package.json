@@ -36,6 +36,7 @@
     "count-files": "^2.6.2",
     "delete-empty": "^3.0.0",
     "dompurify": "^2.2.7",
+    "electron-devtools-installer": "^3.2.0",
     "fast-memoize": "^2.2.7",
     "fast-xml-parser": "^3.19.0",
     "file-exists": "^1.0.0",
@@ -80,7 +81,6 @@
   "devDependencies": {
     "devtron": "^1.4.0",
     "electron": "^15.3.2",
-    "electron-devtools-installer": "^3.2.0",
     "node-abi": "^3.5.0"
   }
 }
