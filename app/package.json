@@ -29,7 +29,7 @@
     "@google-cloud/storage": "^5.8.0",
     "archiver": "^5.1.0",
     "aws-sdk": "^2.632.0",
-    "better-sqlite3": "^7.4.3",
+    "better-sqlite3": "^7.4.5",
     "clean-css": "^4.1.9",
     "codemirror": "^5.59.1",
     "codemirror-revisedsearch": "^1.0.12",
@@ -49,7 +49,7 @@
     "image-size": "^0.9.3",
     "isbinaryfile": "^3.0.2",
     "jimp": "^0.16.0",
-    "keytar": "^7.2.0",
+    "keytar": "^7.7.0",
     "ls-all": "^1.1.0",
     "marked": "^0.7.0",
     "md5": "^2.1.0",
@@ -59,10 +59,10 @@
     "normalize-path": "^2.0.1",
     "prismjs": "^1.24.1",
     "request": "^2.88.0",
-    "sharp": "^0.29.2",
+    "sharp": "^0.29.3",
     "slug": "^0.9.1",
     "sqlstring": "^2.2.0",
-    "ssh2-sftp-client": "^7.0.1",
+    "ssh2-sftp-client": "^7.2.1",
     "striptags": "^3.2.0",
     "tar-fs": "^2.1.1",
     "transliteration": "^2.1.11",
@@ -79,8 +79,8 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^15.2.0",
+    "electron": "^15.3.2",
     "electron-devtools-installer": "^3.2.0",
-    "node-abi": "^3.3.0"
+    "node-abi": "^3.5.0"
   }
 }
