@@ -21,7 +21,7 @@
             version: language.version,
             directory: language.directory,
             publiiSupport: language.publiiSupport,
-            thumbnail: basePath + '/' + language.directory + '/' + 'thumbnail.png',
+            thumbnail: basePath + '/' + language.directory + '/' + 'thumbnail.svg',
             momentLocale: language.momentLocale,
             wysiwygTranslation: language.wysiwygTranslation
         };
