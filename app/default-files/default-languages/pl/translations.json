@@ -1005,6 +1005,7 @@
         "websiteLogo": "Logo strony:"
     },
     "tools": {
+        "activatePlugin": "Włącz",
         "css": {
             "customCSS": "Niestandardowy CSS",
             "customCSSSaveSuccessMsg": "Niestandardowy kod CSS zpsatł zapisany.",
@@ -1013,6 +1014,7 @@
             "putCustomCSSComment": "Tutaj umieść swój niestandardowy kod CSS"
         },
         "customHTML": "Niestandardowy HTML",
+        "deactivatePlugin": "Wyłącz",
         "find": "Znajdź:",
         "findAndReplace": "Znajdź i zastąp:",
         "findAndReplaceShortcut": "Ctrl + Alt + F",

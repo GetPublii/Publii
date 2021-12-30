@@ -1005,6 +1005,7 @@
         "websiteLogo": "Website logo:"
     },
     "tools": {
+        "activatePlugin": "Activate",
         "css": {
             "customCSS": "Custom CSS",
             "customCSSSaveSuccessMsg": "Custom CSS has been successfully saved.",
@@ -1013,6 +1014,7 @@
             "putCustomCSSComment": "Put your custom CSS code here"
         },
         "customHTML": "Custom HTML",
+        "deactivatePlugin": "Deactivate",
         "find": "Find:",
         "findAndReplace": "Find and replace:",
         "findAndReplaceShortcut": "Ctrl + Alt + F",
