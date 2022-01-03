@@ -1,5 +1,5 @@
 <template>
-    <section class="content wp-import">
+    <section class="content plugin-content">
         <p-header :title="pluginName">
             <p-button
                 :onClick="goBack"
@@ -9,7 +9,7 @@
             </p-button>
 
             <p-button
-                v-if="hasPluginCustomOptions && pluginStandardOptionsVisible"
+                v-if="pluginHasConfig && hasPluginCustomOptions && pluginStandardOptionsVisible"
                 :onClick="showPluginCustomOptions"
                 slot="buttons"
                 type="primary">
@@ -17,7 +17,7 @@
             </p-button>
 
             <p-button
-                v-if="hasPluginCustomOptions && !pluginStandardOptionsVisible"
+                v-if="pluginHasConfig && hasPluginCustomOptions && !pluginStandardOptionsVisible"
                 :onClick="showPluginStandardOptions"
                 slot="buttons"
                 type="primary">
@@ -25,7 +25,11 @@
             </p-button>
         </p-header>
 
-        <template v-if="pluginStandardOptionsVisible">
+        <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
+            <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
+        </template>
+
+        <template v-if="pluginHasConfig && pluginStandardOptionsVisible">
             <fields-group
                 v-for="(groupName, index) of settingsGroups"
                 :key="'settings-group-' + index"
@@ -204,6 +208,9 @@ export default {
             });
 
             return groups;
+        },
+        pluginHasConfig () {
+            return !!this.settings.length;
         }
     },
     data () {

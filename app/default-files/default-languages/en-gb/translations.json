@@ -1064,7 +1064,8 @@
     "toolsPlugin": {
         "pluginSettingsLoadError": "An error occured during loading plugin settings",
         "pluginSettingsSaveSuccess": "Plugin settings saved successfully",
-        "pluginSettingsSaveError": "An error occured during plugin settings save"
+        "pluginSettingsSaveError": "An error occured during plugin settings save",
+        "thisPluginHasNoOptions": "This plugin has no additional options..."
     },
     "ui": {
         "aboutPublii": "About Publii",
