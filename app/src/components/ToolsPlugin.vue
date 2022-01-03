@@ -224,8 +224,11 @@ export default {
             pluginStandardOptionsVisible: true
         };
     },
-    mounted () {
+    async mounted () {
         this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);
+        document.getElementById('plugin-settings-root').addEventListener('load', async function () {
+            this.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.getCurrentAppTheme());
+        }, false);
     },
     methods: {
         loadPluginConfig (pluginName, siteName) {
