@@ -223,8 +223,12 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-webview-search-stop-find-in-page', 
             'app-main-load-language',
             'app-plugins-api:save-file',
+            'app-plugins-api:save-language-file',
             'app-plugins-api:read-file',
-            'app-plugins-api:delete-file'
+            'app-plugins-api:read-language-file',
+            'app-plugins-api:read-theme-file',
+            'app-plugins-api:delete-file',
+            'app-plugins-api:delete-language-file'
         ];
 
         if (validCommands.includes(command)) {

@@ -264,8 +264,12 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             // Object for plugins
             window.pluginsAPI = {
                 saveFile: (fileName, fileContent) => this.pluginsApiSaveFile(fileName, fileContent),
+                saveLanguageFile: (fileName, fileContent) => this.pluginsApiSaveLanguageFile(fileName, fileContent),
                 readFile: (fileName) => this.pluginsApiReadFile(fileName),
-                deleteFile: (fileName) => this.pluginsApiDeleteFile(fileName)
+                readLanguageFile: (fileName) => this.pluginsApiReadThemeFile(fileName),
+                readThemeFile: (themeName, fileName) => this.pluginsApiReadThemeFile(themeName, fileName),
+                deleteFile: (fileName) => this.pluginsApiDeleteFile(fileName),
+                deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName)
             };
         },
         methods: {
@@ -346,6 +350,17 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 });
                 return result;
             },
+            async pluginsApiSaveLanguageFile (fileName, fileContent) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:save-language-file', {
+                    fileName, 
+                    siteName,
+                    pluginName,
+                    fileContent
+                });
+                return result;
+            },
             async pluginsApiReadFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
@@ -356,10 +371,41 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 });
                 return result;
             },
+            async pluginsApiReadLangugaeFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-language-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            async pluginsApiReadThemeFile (themeName, fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-theme-file', {
+                    themeName,
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
             async pluginsApiDeleteFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
                 let result = await mainProcessAPI.invoke('app-plugins-api:delete-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            async pluginsApiDeleteLanguageFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:delete-language-file', {
                     fileName, 
                     siteName,
                     pluginName

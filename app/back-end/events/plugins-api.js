@@ -16,8 +16,38 @@ class PluginsApiEvents {
             let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
 
             if (!fs.existsSync(filePath)) {
-                event.sender.send('app-plugins-api:file-readed', false);  
-                return;  
+                return false;  
+            }
+
+            let fileContent = fs.readFileSync(filePath);
+            fileContent = fileContent.toString();
+            return fileContent;
+        });
+
+        // Read file in the languages
+        ipcMain.handle('app-plugins-api:read-language-file', function (event, data) {
+            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
+
+            if (!fs.existsSync(filePath)) { 
+                return false;
+            }
+
+            let fileContent = fs.readFileSync(filePath);
+            fileContent = fileContent.toString();
+            return fileContent;
+        });
+
+        // Read file in the themes
+        ipcMain.handle('app-plugins-api:read-theme-file', function (event, data) {
+            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
+            let themeName = data.themeName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'themes', themeName, fileName);
+
+            if (!fs.existsSync(filePath)) {
+                return false;  
             }
 
             let fileContent = fs.readFileSync(filePath);
@@ -44,12 +74,44 @@ class PluginsApiEvents {
             }
         });
 
+        // Save file in languages
+        ipcMain.handle('app-plugins-api:save-language-file', function (event, data) {
+            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
+
+            try {
+                fs.writeFileSync(filePath, data.fileContent);
+                return { status: 'FILE_SAVED' };
+            } catch (e) {
+                return { status: 'FILE_NOT_SAVED' };
+            }
+        });
+
         // Delete file in site
         ipcMain.handle('app-plugins-api:delete-file', function (event, data) {
             let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
             let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
+           
+            if (!fs.existsSync(filePath)) {  
+                return { status: 'FILE_TO_REMOVE_NOT_EXISTS' };
+            }
+
+            try {
+                fs.unlinkSync(filePath);
+                return { status: 'FILE_REMOVED' };
+            } catch (e) {
+                return { status: 'FILE_NOT_REMOVED' };
+            }
+        });
+
+        // Delete file in site
+        ipcMain.handle('app-plugins-api:delete-language-file', function (event, data) {
+            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
+            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
            
             if (!fs.existsSync(filePath)) {  
                 return { status: 'FILE_TO_REMOVE_NOT_EXISTS' };
