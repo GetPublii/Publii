@@ -269,7 +269,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 readLanguageFile: (fileName) => this.pluginsApiReadThemeFile(fileName),
                 readThemeFile: (themeName, fileName) => this.pluginsApiReadThemeFile(themeName, fileName),
                 deleteConfigFile: (fileName) => this.pluginsApiDeleteConfigFile(fileName),
-                deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName)
+                deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName),
+                getThemesList: () => this.pluginsApiGetThemesList(),
+                getCurrentTheme: () => this.pluginsApiGetCurrentTheme()
             };
         },
         methods: {
@@ -411,6 +413,12 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     pluginName
                 });
                 return result;
+            },
+            pluginsApiGetThemesList () {
+                return JSON.parse(JSON.stringify(this.$store.state.currentSite.themes));
+            },
+            getCurrentTheme () {
+                return this.$store.state.currentSite.config.theme;
             }
         },
         beforeDestroy () {
