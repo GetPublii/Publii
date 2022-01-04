@@ -1065,6 +1065,7 @@
         "pluginSettingsLoadError": "An error occured during loading plugin settings",
         "pluginSettingsSaveSuccess": "Plugin settings saved successfully",
         "pluginSettingsSaveError": "An error occured during plugin settings save",
+        "tabsLabel": "Plugin settings",
         "thisPluginHasNoOptions": "This plugin has no additional options..."
     },
     "ui": {
