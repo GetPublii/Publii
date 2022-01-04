@@ -9,7 +9,7 @@ const path = require('path');
 class PluginsApiEvents {
     constructor (appInstance) {
         // Read file in site
-        ipcMain.handle('app-plugins-api:read-file', function (event, data) {
+        ipcMain.handle('app-plugins-api:read-config-file', function (event, data) {
             let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
@@ -56,7 +56,7 @@ class PluginsApiEvents {
         });
 
         // Save file in site
-        ipcMain.handle('app-plugins-api:save-file', function (event, data) {
+        ipcMain.handle('app-plugins-api:save-config-file', function (event, data) {
             let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
@@ -89,7 +89,7 @@ class PluginsApiEvents {
         });
 
         // Delete file in site
-        ipcMain.handle('app-plugins-api:delete-file', function (event, data) {
+        ipcMain.handle('app-plugins-api:delete-config-file', function (event, data) {
             let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');

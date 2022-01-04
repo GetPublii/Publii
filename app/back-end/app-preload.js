@@ -222,12 +222,12 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-webview-search-find-in-page',
             'app-main-webview-search-stop-find-in-page', 
             'app-main-load-language',
-            'app-plugins-api:save-file',
+            'app-plugins-api:save-config-file',
             'app-plugins-api:save-language-file',
-            'app-plugins-api:read-file',
+            'app-plugins-api:read-config-file',
             'app-plugins-api:read-language-file',
             'app-plugins-api:read-theme-file',
-            'app-plugins-api:delete-file',
+            'app-plugins-api:delete-config-file',
             'app-plugins-api:delete-language-file'
         ];
 

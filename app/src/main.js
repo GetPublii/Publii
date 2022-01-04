@@ -263,12 +263,12 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
 
             // Object for plugins
             window.pluginsAPI = {
-                saveFile: (fileName, fileContent) => this.pluginsApiSaveFile(fileName, fileContent),
+                saveConfigFile: (fileName, fileContent) => this.pluginsApiSaveConfigFile(fileName, fileContent),
                 saveLanguageFile: (fileName, fileContent) => this.pluginsApiSaveLanguageFile(fileName, fileContent),
-                readFile: (fileName) => this.pluginsApiReadFile(fileName),
+                readConfigFile: (fileName) => this.pluginsApiReadConfigFile(fileName),
                 readLanguageFile: (fileName) => this.pluginsApiReadThemeFile(fileName),
                 readThemeFile: (themeName, fileName) => this.pluginsApiReadThemeFile(themeName, fileName),
-                deleteFile: (fileName) => this.pluginsApiDeleteFile(fileName),
+                deleteConfigFile: (fileName) => this.pluginsApiDeleteConfigFile(fileName),
                 deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName)
             };
         },
@@ -339,10 +339,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     this.skipThemeChangeEvents = false;
                 }, 500);
             },
-            async pluginsApiSaveFile (fileName, fileContent) {
+            async pluginsApiSaveConfigFile (fileName, fileContent) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
-                let result = await mainProcessAPI.invoke('app-plugins-api:save-file', {
+                let result = await mainProcessAPI.invoke('app-plugins-api:save-config-file', {
                     fileName, 
                     siteName,
                     pluginName,
@@ -361,17 +361,17 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 });
                 return result;
             },
-            async pluginsApiReadFile (fileName) {
+            async pluginsApiReadConfigFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
-                let result = await mainProcessAPI.invoke('app-plugins-api:read-file', {
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-config-file', {
                     fileName, 
                     siteName,
                     pluginName
                 });
                 return result;
             },
-            async pluginsApiReadLangugaeFile (fileName) {
+            async pluginsApiReadLanguageFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
                 let result = await mainProcessAPI.invoke('app-plugins-api:read-language-file', {
@@ -392,10 +392,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 });
                 return result;
             },
-            async pluginsApiDeleteFile (fileName) {
+            async pluginsApiDeleteConfigFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
                 let pluginName = this.$route.params.pluginname;
-                let result = await mainProcessAPI.invoke('app-plugins-api:delete-file', {
+                let result = await mainProcessAPI.invoke('app-plugins-api:delete-config-file', {
                     fileName, 
                     siteName,
                     pluginName
