@@ -262,7 +262,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             }
 
             // Object for plugins
-            window.pluginsAPI = {
+            let pluginsAPI = {
                 saveConfigFile: (fileName, fileContent) => this.pluginsApiSaveConfigFile(fileName, fileContent),
                 saveLanguageFile: (fileName, fileContent) => this.pluginsApiSaveLanguageFile(fileName, fileContent),
                 readConfigFile: (fileName) => this.pluginsApiReadConfigFile(fileName),
@@ -273,6 +273,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getThemesList: () => this.pluginsApiGetThemesList(),
                 getCurrentTheme: () => this.pluginsApiGetCurrentTheme()
             };
+
+            // Make window.pluginsAPI immutable
+            window.pluginsAPI = Object.freeze(pluginsAPI);
         },
         methods: {
             async setupAppTheme () {
