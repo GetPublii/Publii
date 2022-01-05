@@ -8,7 +8,7 @@
                     v-for="(item, key) in items"
                     :key="'item-' + key">
                     <template v-if="item.type === 'core'">
-                        <router-link :to="getUrl(item.link)">
+                        <router-link :to="getUrl(item.link, true)">
                             <icon
                                 :name="item.icon"
                                 iconset="svg-map-tools"
@@ -19,28 +19,14 @@
                     </template>
                     <template v-else>
                         <router-link 
-                            v-if="pluginsStatus[item.directory]"
-                            :to="getUrl(item.link)">
+                            :to="getUrl(item.link, pluginsStatus[item.directory])">
                             <img :src="item.icon" />
                             {{ item.name }}<br>
 
-                            <span
-                                class="plugin-deactivate" 
-                                @click.stop.prevent="deactivatePlugin(item.directory)">
-                                {{ $t('tools.deactivatePlugin') }}
-                            </span>
+                            <switcher
+                                @click.native.prevent.stop="togglePluginState(item.directory)"
+                                v-model="pluginsStatus[item.directory]" />
                         </router-link>
-
-                        <div v-else>
-                            <img :src="item.icon" />
-                            {{ item.name }}<br>
-                            
-                            <span 
-                                class="plugin-activate"
-                                @click.stop.prevent="activatePlugin(item.directory)">
-                                {{ $t('tools.activatePlugin') }}
-                            </span>
-                        </div>
                     </template>
                 </div>
             </div>
@@ -119,7 +105,11 @@ export default {
         this.getPluginsStatus();
     },
     methods: {
-        getUrl (link) {
+        getUrl (link, status) {
+            if (!status) {
+                return '';
+            }
+
             return '/site/' + this.siteName + '/' + link;
         },
         getPluginsStatus () {
@@ -162,6 +152,15 @@ export default {
                         message: this.$t('tools.pluginDeactivationError'),
                         buttonStyle: 'danger'
                     });
+                }
+            });
+        },
+        togglePluginState (pluginName) {
+            Vue.nextTick(() => {
+                if (this.pluginsStatus[pluginName]) {
+                    this.activatePlugin(pluginName);
+                } else {
+                    this.deactivatePlugin(pluginName);
                 }
             });
         }
