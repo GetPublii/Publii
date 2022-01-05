@@ -6,6 +6,12 @@
             <div class="tools-list">
                 <div 
                     v-for="(item, key) in items"
+                    :class="{ 
+                        'is-core': item.type === 'core',
+                        'is-plugin': item.type !== 'core',
+                        'plugin-is-enabled': item.type !== 'core' && !!pluginsStatus[item.directory],
+                        'plugin-is-disabled': item.type !== 'core' && !pluginsStatus[item.directory]
+                    }"
                     :key="'item-' + key">
                     <template v-if="item.type === 'core'">
                         <router-link :to="getUrl(item.link, true)">
