@@ -488,8 +488,9 @@
     },
     "publii": {
         "aboutPublii": "About Publii",
+        "currentPubliiVersion": "Version",
         "accept": "Accept",
-        "copyright": "Copyright 2021 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. All rights reserved.<br>Publli is designed and maintained by core team with cooperation with <a href=\"https://github.com/dziudek\" target=\"_blank\" rel=\"noopener noreferrer\">Dev Zen</a> and is made possible by the <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a>Open Source project and other ",
+        "copyright": "Copyright 2021 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. All rights reserved.<br>Publli is designed and maintained by core team with cooperation with <a href=\"https://github.com/dziudek\" target=\"_blank\" rel=\"noopener noreferrer\">Dev Zen</a> and is made possible by the <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> Open Source project and other ",
         "creditsIntro": "Publii uses the following third-party Open Source Software:",
         "dataCollectionInfo": "<strong>We do not collect any </strong>personal data while you use Publii app; also we do not store, we do not track, we do not allow third parties to collect personally identifiable information about you. ",
         "homepage": "Homepage",
@@ -893,7 +894,7 @@
         "serverSettingsSaveErrorMsg": "Publii cannot save settings due to a problem with the safe password storage software. Restart the application and try again. If the problem persists, please report it to our team via the community forum.",
         "serverSettingsSaveLinuxErrorMsg": "Publii cannot save settings as no safe password storage software is installed. Follow the installation instructions for Node Keytar via https://github.com/atom/node-keytar/ and try again. Most likely the libsecret-1-dev and gnome-keyring packages are missing from your system.",
         "serverSettingsSaveSuccessMsg": "Server settings has been successfully saved.",
-        "settings": " settings",
+        "settings": "Settings",
         "sftp": "SFTP",
         "sftpkeyNote": "Please select the key file",
         "sftpWithKey": "SFTP (with key)",
@@ -1026,7 +1027,7 @@
         "pluginDeactivationError": "Cannot deactivate plugin - please try again",
         "selectFileToLoad": "Select file to load",
         "thumbnails": {
-            "listRegeneratedFiles": "List of the regenerated files:",
+            "listRegeneratedFiles": "List of regenerated files:",
             "processingRegenerateThumbanilsInfo": "Pressing the Regenerate thumbnails button will start generating new image sizes defined by your new theme.",
             "progress": "Progress: ",
             "regenerateThumbnails": "Regenerate thumbnails",
@@ -1156,7 +1157,7 @@
         "supportPublii": "Support Publii and donate today!",
         "tags": "Tags",
         "theme": "Theme",
-        "tools": "Tools",
+        "tools": "Tools & Plugins",
         "unhide": "Unhide",
         "uploadInProgress": "Upload in progress..."
     }

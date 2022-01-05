@@ -24,11 +24,8 @@
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />
-            <topbar-dropdown-item
+            <topbar-dropdown-item 
                 class="topbar-app-submenu-separator"
-                path="/app-settings"
-                :label="$t('theme.changeAppTheme')" />
-            <topbar-dropdown-item
                 :label="$t('ui.help')"
                 :title="$t('ui.checkDocumentation')"
                 path="https://getpublii.com/docs/" />
@@ -107,7 +104,6 @@ export default {
         padding: 0 1rem;
         width: 35px;
 
-
         &:hover {
             color: var(--icon-tertiary-color);
         }
@@ -157,14 +153,14 @@ export default {
 
     &-app-submenu {
         background: var(--bg-secondary);
-        box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
-                     0 2px 16px rgba(29, 39, 52, 0.07);
+        box-shadow: var(--box-shadow-medium);
+        border-radius: var(--border-radius);
         font-size: 1.5rem;
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
-        right: 2.7rem;
-        top: 2.5rem;
+        right: 3.2rem;
+        top: 1.5rem;
 
         &-separator {
             border-bottom: 1px solid var(--border-light-color);
@@ -180,13 +176,13 @@ export default {
 
 @media (max-height: 900px) {
     .topbar-app-submenu {
-        right: 2.3rem;
+        right: 2.8rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar-app-submenu {
-        right: 2.3rem;
+        right: 2.8rem;
     }
 }
 </style>

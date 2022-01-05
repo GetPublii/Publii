@@ -7,12 +7,12 @@
             class="server-settings">
             <p-header
                 v-if="deploymentMethodSelected !== ''"
-                :title="getDeploymentMethodName(deploymentMethodSelected) + $t('sync.settings')">
+                :title="getDeploymentMethodName(deploymentMethodSelected)">
                 <p-button
                     @click.native="deploymentMethodSelected = ''"
                     slot="buttons"
                     :title="$t('sync.clickToChangeDeploymentMethod')"
-                    type="outline">
+                    type="clean back">
                     {{ $t('sync.changeServerType') }}
                 </p-button>
 
@@ -133,17 +133,12 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     class="server-settings-grid-item deployment-others">
-                    <icon
-                        customWidth="29"
-                        customHeight="29"
-                        name="deployment-others"
-                        iconset="svg-map-server"/>
-                        <h3>{{ $t('ui.more') }}...</h3>
+                    <span>{{ $t('ui.more') }}...</span>
                 </a>
 
             </div>
 
-            <fields-group v-if="deploymentMethodSelected !== ''">
+            <fields-group v-if="deploymentMethodSelected !== ''" :title="$t('sync.settings')">
                 <div class="msg msg-icon msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
@@ -985,7 +980,7 @@
                     :onClick="testConnection"
                     :disabled="testInProgress"
                     slot="buttons"
-                    type="outline">
+                    type="secondary">
                     <template v-if="!testInProgress">{{ $t('sync.testConnection') }}</template>
                     <template v-if="testInProgress">{{ $t('sync.checkingConnection') }}</template>
                 </p-button>
@@ -1558,14 +1553,15 @@ export default {
     &-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-gap: 2rem;
+        gap: 2rem;
 
         &-item {
             align-items: center;
-            background: var(--gray-1);
+            background-color: var(--bg-secondary);
             border: 1px solid transparent;
-            border-radius: 3px;
-            color:  var(--gray-5);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-small);
+            color: var(--link-primary-hover-color);
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
@@ -1574,7 +1570,7 @@ export default {
             &:hover {
                 background: var(--bg-primary);
                 border-color: var(--primary-color);
-                box-shadow: 0 0 26px rgba(black, .07);
+                box-shadow: var(--box-shadow---box-shadow-medium);
                 color: var(--primary-color);
                 cursor: pointer;
 

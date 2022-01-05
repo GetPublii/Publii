@@ -96,7 +96,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="140px">
+                <collection-cell>
                     <span
                         class="col-sortable-title"
                         @click="ordering('created')">
@@ -111,8 +111,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    v-if="showModificationDateAsColumn"
-                    min-width="140px">
+                    v-if="showModificationDateAsColumn">
                     <span
                         class="col-sortable-title"
                         @click="ordering('modified')">
@@ -126,7 +125,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="130px">
+                <collection-cell min-width="110px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('author')">
@@ -140,7 +139,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="40px">
+                <collection-cell min-width="35px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
@@ -921,7 +920,7 @@ export default {
 .filters {
     font-size: 1.4rem;
     list-style-type: none;
-    margin: -2rem 0 0 0;
+    margin: -2.2rem 0 0 0;
     padding: 0;
     position: relative;
     user-select: none;
@@ -956,52 +955,14 @@ export default {
 }
 
 .tools {
-   background: var(--bg-primary);
-    display: flex;
-
-    .button {
-        padding-left: 4rem;
-        position: relative;
-        z-index: 0;
-
-         &::before {
-             content: "";
-             background: var(--gray-1);  border-radius: 3px;
-             display: block;
-             left: -2px;
-             opacity: 0;
-             position: absolute;
-             right: 0;
-             height: 100%;
-             top: 0;
-             transition: all .15s cubic-bezier(0.4,0.0,0.2,1);
-             transform: scale(.5);
-             width: calc(100% + 2px);
-             z-index: -1;
-        }
-
-        & + .button {
-            margin: 0;
-            position: relative;
-        }
-
-        &:hover {
-            background: none;
-
-            &::before {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-    }
-
+    
     .dropdown-wrapper {
         position: relative;
 
         .dropdown {
            background: var(--bg-secondary);
-            border-radius: 3px;
-            box-shadow: 0 2px 8px rgba(29, 39, 52, 0.15);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-medium);
             left: 0;
             list-style-type: none;
             margin: 0;

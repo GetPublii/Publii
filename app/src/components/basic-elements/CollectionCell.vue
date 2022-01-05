@@ -62,13 +62,18 @@ export default {
 
 .col {
     align-items: center;
+    background: var(--bg-secondary);
     box-sizing: content-box;
     border-bottom: 1px solid var(--border-light-color);
-    display: flex;
+    display: grid;
     font-weight: var(--font-weight-normal);
     justify-content: left;
-    padding: 1.6rem 1.6rem 1.6rem 0;
+    padding: 1.5rem 2rem 1.5rem 2rem;
     text-align: left;
+
+    &:first-child {
+        padding-right: 0;
+    }
 
     &.checkbox {
         .featured-icon {
@@ -142,6 +147,10 @@ export default {
             font-size: 1.2rem;
             margin: .2rem 0 0 0;
         }
+    }
+
+    &-buttons {
+        display:  flex !important;
     }
 }
 

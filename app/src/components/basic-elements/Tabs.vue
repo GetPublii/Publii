@@ -152,16 +152,18 @@ export default {
         width: 18rem;
 
         & > li {
+            border-radius: var(--border-radius);
             color: var(--tab-color);
             cursor: pointer;
             padding: 0.8rem 1.2rem;
             position: relative;
+            transition: var(--transition);
             width: 100%;
 
             &.active {
                 background: var(--tab-active-bg)!important;
-                border-radius: 3px;
-                color: var(--tab-active-color);
+                border-radius: var(--border-radius);
+                color: var(--tab-active-color) !important;
                 transition: all .125s ease-out;
 
                 &:after {
@@ -176,8 +178,7 @@ export default {
             }
 
             &:hover {
-                background: var(--tab-hover-color);
-                border-radius: 3px;
+                color: var(--tab-hover-color);
             }
 
             &:last-child {
@@ -187,7 +188,7 @@ export default {
     }
 
     & > .content {
-        border-left: 1px solid var(--input-border-color);
+        border-left: 5px solid var(--bg-site);
         margin-left: auto;
         padding-left: 4rem;
         width: calc( 100% - 22rem);

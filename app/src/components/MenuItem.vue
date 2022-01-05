@@ -348,7 +348,7 @@ li {
     }
 
     &.is-ghost {
-        border: 1px dashed var(--input-border-color);
+        border: 1px dashed #42a5f5;
 
         & > .menu-item-wrapper {
             opacity: 0;
@@ -441,14 +441,14 @@ li {
         .menu-item-hide,
         .menu-item-show,
         .menu-item-submenu {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             font-size: 1.4rem;
             padding: 1rem .5rem;
 
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-hover-color);
             }
         }
 

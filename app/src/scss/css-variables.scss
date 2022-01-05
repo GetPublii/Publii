@@ -1,6 +1,14 @@
 // common
 html {
+    --border-radius: 6px;
+    --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --font-serif: Georgia, Times New Roman, Times, Serif;
+    --font-monospace: Menlo, Monaco, Consolas, Courier New, monospace;       
+    --font-weight-normal: 400;
+    --font-weight-semibold: 500;
+    --font-weight-bold: 700;
     --topbar-height: 2.2rem;
+    --transition: all .2s ease-out;
 }
 
 html[data-is-osx-11-or-higher="true"] {
@@ -9,14 +17,14 @@ html[data-is-osx-11-or-higher="true"] {
 
 // default
 html[data-theme="default"] {
-    --primary-color: #42a5f5;
+    --primary-color: #359ff2;
     --primary-color-rgb: 66, 165, 245;
     --secondary-color: #2a99f4;   
     --gray-7: #f6f7f8;
     --gray-6: #EDEEF1;
     --gray-5: #3d464e;  
     --gray-4: #707277;
-    --gray-3: #8e929d;
+    --gray-3: #686c78;
     --gray-2: #dddddd;
     --gray-1: #f6f7f8;
     --white: #fff;
@@ -28,62 +36,64 @@ html[data-theme="default"] {
     --highlighted: #FFF8E1;
     --yellow: 255, 196, 0;
     --shadow: rgba(61, 70, 78, .25);
+    --box-shadow-small: 0 2px 6px rgba(0, 0, 0, 0.06);
+    --box-shadow-medium: 0 2px 6px rgba(0, 0, 0, 0.15);
         
     --overlay: rgba(0,0,0, .35);
-        
-    --transition: all .2s ease-out;
-        
+                
     --icon-primary-color: #4e5360;
-    --icon-secondary-color: #8e929d;
+    --icon-secondary-color: #686c78;
     --icon-tertiary-color: #3d464e;
         
     --bg-primary: #fff; 
-    --bg-secondary: #fff;    
+    --bg-secondary: #fff;
+    --bg-site: #F6F8FA;    
 
-    --border-light-color: #dfe0e3; 
+    --border-light-color: #eee; 
         
-    --input-bg: #fff;
+    --input-bg: #FFFFFF;
     --input-bg-hover: #f6f7f8;
     --input-bg-light: #f6f7f8;
-    --input-border-color: #dfe0e3;
-    --input-border-focus: #42a5f5;
-    --label-color: #2a2e30;
+    --input-border-color: #d5d6da;
+    --input-border-focus: #359ff2;
+    --input-border-checked: #cde7fc;
+    --label-color: #031c30;
         
-    --button-bg: #42a5f5;
-    --button-hover-bg: #1d93f3;    
-    --button-green-bg: #40B771;
+    --button-bg: #359ff2;
+    --button-hover-bg: #0f8df0;  
+    --button-secondary-bg: #d8ecfd;
+    --button-secondary-hover-bg: #c7e4fc; 
+    --button-secondary-color: #0c77ca; 
+    --button-secondary-hover-color: #0a60a3; 
+    --button-green-bg: #359ff2;
     --button-green-bg-alt: #36a263;
-    --button-green-hover-bg: #38a063;    
+    --button-green-hover-bg: #0f8df0;    
     --button-red-bg: #EA1A16;
     --button-red-hover-bg: #cd1613; 
-    --button-gray-bg: #8e929d;
+    --button-gray-bg: #686c78;
     --button-gray-hover-bg: #707277;
         
     --text-primary-color: #3d464e; 
-    --text-light-color: #8e929d; 
+    --text-light-color: #686c78; 
     --text-editor-body-color: #3d464e; 
-    --headings-color: #2a2e30;  
+    --headings-color: #031c30;  
         
-    --link-primary-color: #328ed8; 
-    --link-primary-hover-color: #2a2e30; 
-    --link-secondary-color:  #328ed8; 
-    --link-secondary-hover-color: #2a2e30; 
-    --link-tertiary-color:  #2a2e30; 
-    --link-tertiary-hover-color: #328ed8; 
+    --link-primary-color: #0c77ca; 
+    --link-primary-hover-color: #031c30; 
         
-    --sidebar-bg-top: #2093f1;
-    --sidebar-bg-bottom: #42a5f5;     
+    --sidebar-bg-top: #0f8df0;
+    --sidebar-bg-bottom: #359ff2;     
     --sidebar-link-color: #fff;  
     --sidebar-link-hover-bg: rgba(98, 185, 255, 0.35); 
     --sidebar-link-hover-color: #fff; 
-    --sidebar-link-opacity: .7; 
+    --sidebar-link-opacity: .85; 
     --sidebar-link-icon: #ffffff;
     --sidebar-link-icon-hover: #ffffff;
     --sidebar-link-active-color: #fff;  
-    --sidebar-link-active-bg: rgba(255,255,255, .18); 
-    --sidebar-sync-btn-bg: rgba(255,255,255, .18); 
+    --sidebar-link-active-bg: rgba(98, 185, 255, 0.35); 
+    --sidebar-sync-btn-bg: rgba(98, 185, 255, 0.55); 
     --sidebar-sync-btn-color: #fff;
-    --sidebar-preview-btn-border-color: rgba(255,255,255, .38);
+    --sidebar-preview-btn-border-color: rgba(255,255,255, .4);
     --sidebar-preview-btn-border-hover-color: #fff;
     --sidebar-preview-btn-color: #fff;
     --sidebar-preview-btn-hover-color: #fff;
@@ -91,13 +101,13 @@ html[data-theme="default"] {
         
     --option-sidebar-bg: #fff;
         
-    --tab-color: #2a2e30;
-    --tab-hover-color: rgba($color-helper-8, 0.4);
-    --tab-active-bg: #42a5f5; 
-    --tab-active-color: #FFF; 
+    --tab-color: #031c30;
+    --tab-hover-color: #0c77ca;
+    --tab-active-bg: #d8ecfd; 
+    --tab-active-color: #0c77ca; 
         
-    --scrollbar: #ddd;
-    --scrollbar-hover: #707277;
+    --scrollbar: #f6f6f9;
+    --scrollbar-hover: #DDDDDD;
         
     --progress-bar: rgba(255, 255, 255, 0.3);
         
@@ -106,14 +116,6 @@ html[data-theme="default"] {
     --popup-btn-cancel-hover-color: #707277;
     --popup-btn-cancel-bg: #fff;
     --popup-btn-cancel-hover-bg: #f6f7f8;
-        
-    --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    --font-serif: Georgia, Times New Roman, Times, Serif;
-    --font-monospace: Menlo, Monaco, Consolas, Courier New, monospace;
-        
-    --font-weight-normal: 400;
-    --font-weight-semibold: 500;
-    --font-weight-bold: 700;
 
     --code-1: #708;
     --code-2: #219;
@@ -149,7 +151,7 @@ html[data-theme="dark"] {
     --gray-5: #8e929d;   
     --gray-4: #6f7480;   
     --gray-3: #8e929d;
-    --gray-2: #dddddd;
+    --gray-2: #3e3f4c;
     --gray-1: #2b2c35;  
     --white: #fff;
     --white-rgb: 255,255,255;
@@ -160,29 +162,35 @@ html[data-theme="dark"] {
     --highlighted: #343540;
     --yellow: 255, 196, 0;
     --shadow: rgba(30, 33, 40, .25);
+    --box-shadow-small: 0 2px 6px rgb(23 25 31);
+    --box-shadow-medium: 0 2px 6px rgb(23 25 31);
         
     --overlay: rgba(30,33,40, .80);
-        
-    --transition: all .2s ease-out;
-        
+                
     --icon-primary-color: #8e929d;
     --icon-secondary-color: #7F838D;
     --icon-tertiary-color: rgba(255,255,255, .87);
         
     --bg-primary: #202128; 
-    --bg-secondary: #191a1f;     
+    --bg-secondary: #191a1f; 
+    --bg-site: #202128;    
 
-    --border-light-color: #282930; 
+    --border-light-color: #282930;
         
     --input-bg: #2b2c35;
     --input-bg-hover: #343540;
     --input-bg-light: #2b2c35;
     --input-border-color: #3e3f4c;
     --input-border-focus: #1089ff;
+    --input-border-checked: rgba(16,137,255, .59);
     --label-color: #8e929d;
         
     --button-bg: #1089ff;
-    --button-hover-bg: #0067cb;    
+    --button-hover-bg: #0067cb; 
+    --button-secondary-bg: #1089ff;
+    --button-secondary-hover-bg: #0067cb; 
+    --button-secondary-color: #FFFFFF;   
+    --button-secondary-hover-color: #FFFFFF; 
     --button-green-bg: #56a900;
     --button-green-bg-alt: #529400;
     --button-green-hover-bg: #458800;
@@ -198,10 +206,10 @@ html[data-theme="dark"] {
         
     --link-primary-color: rgba(255,255,255, .87);
     --link-primary-hover-color: #2e98ff; 
-    --link-secondary-color: #8e929d;
-    --link-secondary-hover-color: #2e98ff; 
-    --link-tertiary-color: rgba(255,255,255, .87);
-    --link-tertiary-hover-color: #2e98ff;         
+    --link-primary-color: #8e929d;
+    --link-primary-hover-color: #2e98ff; 
+    --link-primary-color: rgba(255,255,255, .87);
+    --link-primary-hover-color: #2e98ff;         
     
     --sidebar-bg-top: #191a1f;
     --sidebar-bg-bottom: #191a1f;
@@ -224,11 +232,11 @@ html[data-theme="dark"] {
     --option-sidebar-bg: #22232a;
         
     --tab-color: rgba(255,255,255, .87);
-    --tab-hover-color: #23262e;
+    --tab-hover-color: #2e98ff;
     --tab-active-bg: #1089ff; 
     --tab-active-color: #FFFFFF; 
         
-    --scrollbar: #3b414f;
+    --scrollbar: #202128;
     --scrollbar-hover: #6f7480;
         
     --progress-bar: rgba(25, 26, 31, 0.3);
@@ -238,14 +246,6 @@ html[data-theme="dark"] {
     --popup-btn-cancel-hover-color: rgba(255,255,255, .87);
     --popup-btn-cancel-bg: #2b2c35;
     --popup-btn-cancel-hover-bg: #343540;
-        
-    --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    --font-serif: Georgia, Times New Roman, Times, Serif;
-    --font-monospace: Menlo, Monaco, Consolas, Courier New, monospace;
-        
-    --font-weight-normal: 400;
-    --font-weight-semibold: 500;
-    --font-weight-bold: 700;
         
     --code-1: #f2777a;
     --code-2: #DC7EED;

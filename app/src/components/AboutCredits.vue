@@ -8,16 +8,18 @@
 
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
             </div>
 
             <p class="credits-intro">{{ $t('publii.creditsIntro') }}</p>
-
-            <credits-list
-                :licenses="licenses" />
+            
+            <fields-group>
+               <credits-list
+                   :licenses="licenses" />
+            </fields-group>
         </div>
     </div>
 </template>
@@ -55,7 +57,7 @@ export default {
 @import '../scss/mixins.scss';
 
 .credits {
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     width: 100%;
 
     &-wrapper {
@@ -81,7 +83,7 @@ export default {
     }
 
     &-intro {
-        margin: -2rem 0 5rem 0;
+        margin: -2.5rem 0 4rem 0;
     }
 }
 </style>

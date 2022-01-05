@@ -4,7 +4,7 @@
             <p-button
                 @click.native="goBack"
                 slot="buttons"
-                type="outline"
+                type="clean back"
                 :disabled="buttonsLocked">
                 {{ $t('ui.backToTools') }}
             </p-button>

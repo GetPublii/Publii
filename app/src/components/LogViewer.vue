@@ -4,7 +4,7 @@
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="outline">
+                type="clean back">
                 {{ $t('ui.backToTools') }}
             </p-button>
         </p-header>

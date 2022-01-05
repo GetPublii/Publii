@@ -44,7 +44,7 @@ input[type="checkbox"] {
     -webkit-appearance: none;
     background: var(--bg-primary);
     border: 1px solid var(--input-border-color);
-    border-radius:2px;
+    border-radius: 50%;
     height: 1.9rem;
     line-height: 1.6rem;
     margin: 0 .5rem 0 0;

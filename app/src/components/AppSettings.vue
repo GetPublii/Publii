@@ -4,7 +4,7 @@
             <p-header :title="$t('settings.appSettings')">
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -537,7 +537,7 @@ export default {
 
 .settings {
     margin: 0 auto;
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     user-select: none;
     width: 100%;
 

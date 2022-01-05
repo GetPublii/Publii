@@ -56,6 +56,7 @@ export default {
             return {
                 'button': true,
                 'button-primary': types.indexOf('primary') > -1,
+                'button-secondary': types.indexOf('secondary') > -1,
                 'button-success': types.indexOf('success') > -1,
                 'button-danger': types.indexOf('danger') > -1,
                 'button-error': types.indexOf('error') > -1,
@@ -80,6 +81,7 @@ export default {
                 'button-active': types.indexOf('active') > -1,
                 'button-delete': types.indexOf('delete') > -1,
                 'button-clean': types.indexOf('clean') > -1,
+                'button-back': types.indexOf('back') > -1,
             }
         }
     }
@@ -96,18 +98,16 @@ export default {
 .button {
     background: var(--button-bg);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    font: {
-        size: 1.5rem;
-        family: $secondary-font;
-        weight: 500;
-    }
-    height: 4.2rem;
-    line-height: 4.1rem;
+    font-size: 1.5rem;
+    font-family: var(--font-base);
+    font-weight: var(--font-weight-semibold);  
+    height: 4.6rem;
+    line-height: 4.5rem;
     padding: 0 1.3rem;
     position: relative;
     transition: var(--transition);
@@ -126,6 +126,15 @@ export default {
         color: var(--white);
     }
 
+    & > svg {
+        display: inline-block;
+        fill: var(--white);
+        left: 1.8rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
     &-link {
        background: var(--bg-primary);
         color: var(--primary-color);
@@ -142,6 +151,7 @@ export default {
     &-primary,
     &-success {
         background: var(--button-green-bg);
+        color: var(--white);
 
         &:active,
         &:focus,
@@ -150,6 +160,27 @@ export default {
             background: var(--button-green-hover-bg);
             color: var(--white);
         }
+    }
+
+    &-secondary {
+        background: var(--button-secondary-bg);
+        color: var(--button-secondary-color);
+
+        & > svg {
+           fill: var(--button-secondary-color);
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: var(--button-secondary-hover-bg);
+            color: var(--button-secondary-hover-color);
+
+            & > svg {
+                fill: var(--button-secondary-hover-color);
+            }
+        }  
     }
 
     &-cancel-popup {
@@ -211,7 +242,7 @@ export default {
         }
     }
 
-     &-clean {
+    &-clean {
         background: transparent;
         box-shadow: none;
         color: var(--link-primary-color);
@@ -230,13 +261,10 @@ export default {
         }
     }
 
-    & > svg {
-        display: inline-block;
-        fill: var(--white);
-        left: 1.8rem;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+    &-back {
+        & + .button {
+            margin-left: 2rem !important;
+        }
     }
 
     &-bottom {
@@ -322,11 +350,10 @@ export default {
         padding-right: 1.3rem;
 
         & > svg {
-            left: 1.4rem;
+            left: 1.2rem;
         }
 
         &.button-small {
-            padding-left: 4.2rem;
 
             & > svg {
                 height: 16px;
@@ -435,11 +462,7 @@ export default {
         }
 
         &.button-delete {
-            color: var(--button-red-bg);
-
-            & > svg {
-                fill: var(--button-red-bg);
-            }
+            
         }
     }
 

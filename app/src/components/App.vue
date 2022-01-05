@@ -192,6 +192,7 @@ export default {
 
 #app {
     & > .topbar + section {
+        background: var(--bg-site);
         height: calc(100vh - var(--topbar-height));
         margin-top: var(--topbar-height);
         width: 100%;

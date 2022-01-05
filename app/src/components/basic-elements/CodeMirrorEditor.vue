@@ -117,7 +117,7 @@ export default {
             border-radius: 30px;
             box-shadow: none!important;            
             float: left;
-            font-family: $secondary-font;
+            font-family: var(--font-base);
             margin: 0;
             padding: 1rem 2rem;
             width: calc(100% - 80px);
@@ -153,7 +153,7 @@ export default {
             display: inline-block;
             font: {
                 size: 1.4rem;
-                family: $secondary-font;
+                family: var(--font-base);
                 weight: 500;
             }
             height: 3.8rem;

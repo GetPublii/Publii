@@ -11,14 +11,14 @@
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="outline">
+                type="clean back">
                 {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
                 :onClick="addNewFile"
                 slot="buttons"
-                type="primary icon"
+                type="secondary icon"
                 icon="plus">
                 {{ $t('file.addNewFile') }}
             </p-button>
@@ -90,7 +90,7 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small danger icon"
+                        type="small danger icon light"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>

@@ -142,7 +142,7 @@ export default {
 
 .credits {
     &-list {
-        margin-top: 2rem;
+        margin-top: 0;
     }
 
     &-item {
@@ -150,7 +150,7 @@ export default {
         padding: 1.4rem 0;
 
         & > a {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             float: right;
             font-size: 1.4rem;
             margin-left: 5rem;
@@ -158,7 +158,7 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-hover-color);
             }
         }
 

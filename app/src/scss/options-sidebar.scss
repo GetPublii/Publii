@@ -3,7 +3,7 @@
 
     &-wrapper {
         background: var(--option-sidebar-bg);
-        border-left: 1px solid var(--input-border-color);
+        box-shadow: var(--box-shadow-small);
         height: 100%;
         overflow: auto;
         position: absolute;

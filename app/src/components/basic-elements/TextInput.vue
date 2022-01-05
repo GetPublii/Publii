@@ -225,7 +225,7 @@ export default {
         box-shadow: inset 0 0 0 1px var(--input-border-color);
         color: var(--text-primary-color);
         display: inline-block;
-        font: 400 1.6rem/1.5 $secondary-font;
+        font: 400 1.6rem/1.5 var(--font-base);
         outline: none;
         padding: 12px 18px;
         width: 100%;

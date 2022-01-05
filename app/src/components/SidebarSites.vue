@@ -45,7 +45,7 @@ export default {
     cursor: pointer;
     display: block;
     font-weight: 500;  
-    margin: 1rem -4rem;    
+    margin: 1rem -4rem .5rem;    
     position: relative;
     order: 1;
 
