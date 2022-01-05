@@ -266,7 +266,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 saveConfigFile: (fileName, fileContent) => this.pluginsApiSaveConfigFile(fileName, fileContent),
                 saveLanguageFile: (fileName, fileContent) => this.pluginsApiSaveLanguageFile(fileName, fileContent),
                 readConfigFile: (fileName) => this.pluginsApiReadConfigFile(fileName),
-                readLanguageFile: (fileName) => this.pluginsApiReadThemeFile(fileName),
+                readLanguageFile: (fileName) => this.pluginsApiReadLanguageFile(fileName),
                 readThemeFile: (themeName, fileName) => this.pluginsApiReadThemeFile(themeName, fileName),
                 deleteConfigFile: (fileName) => this.pluginsApiDeleteConfigFile(fileName),
                 deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName),
@@ -378,22 +378,18 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             },
             async pluginsApiReadLanguageFile (fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
-                let pluginName = this.$route.params.pluginname;
                 let result = await mainProcessAPI.invoke('app-plugins-api:read-language-file', {
                     fileName, 
-                    siteName,
-                    pluginName
+                    siteName
                 });
                 return result;
             },
             async pluginsApiReadThemeFile (themeName, fileName) {
                 let siteName = this.$store.state.currentSite.config.name;
-                let pluginName = this.$route.params.pluginname;
                 let result = await mainProcessAPI.invoke('app-plugins-api:read-theme-file', {
                     themeName,
                     fileName, 
-                    siteName,
-                    pluginName
+                    siteName
                 });
                 return result;
             },
@@ -420,7 +416,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             pluginsApiGetThemesList () {
                 return JSON.parse(JSON.stringify(this.$store.state.currentSite.themes));
             },
-            getCurrentTheme () {
+            pluginsApiGetCurrentTheme () {
                 return this.$store.state.currentSite.config.theme;
             }
         },

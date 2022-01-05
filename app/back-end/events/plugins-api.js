@@ -78,7 +78,12 @@ class PluginsApiEvents {
         ipcMain.handle('app-plugins-api:save-language-file', function (event, data) {
             let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
+            let dirPath = path.join(appInstance.sitesDir, siteName, 'input', 'languages');
             let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
+
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath);
+            }
 
             try {
                 fs.writeFileSync(filePath, data.fileContent);
