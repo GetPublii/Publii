@@ -93,11 +93,11 @@ export default {
     padding: 0;
 
     a {
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--sidebar-link-color);
         display: block;
         font-size: 1.6rem;
-        font-weight: 400;
+        font-weight: var(---font-weight-semibold);
         line-height: 3.2rem;
         margin: 0 0;
         opacity: var(--sidebar-link-opacity);
@@ -124,10 +124,11 @@ export default {
         margin-right: 2.6rem;
         position: relative;
         transition: var(--transition);
-        top: .4rem;
+        top: .5rem;
     }
 
     &-item {
+
         &.is-active {
             a {
                 background: var(--sidebar-link-active-bg);
@@ -145,6 +146,16 @@ export default {
     .sidebar-menu {
         a {
             padding: 0.5rem 0.8rem;
+        }
+    }
+}
+
+@media (min-height: 1080px) {
+    .sidebar-menu {
+
+        &-item {
+             margin: 0 0 .4rem;
+
         }
     }
 }

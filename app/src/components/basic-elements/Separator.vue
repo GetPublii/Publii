@@ -63,15 +63,15 @@ export default {
     &.small,
     &.medium,
     &.big {
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
     }
 
     &.small {
-        padding-top: 1rem;
+        padding-top: 2rem;
     }
 
     &.medium {
-        padding-top: 2rem;
+        padding-top: 3rem;
     }
 
     &.big {
@@ -79,28 +79,24 @@ export default {
     }
 
     &.line > .separator-wrapper:before {
-        border-top: 2px solid var(--input-border-color);
+        border-top: 4px solid var(--bg-site);
         content: "";
         left: 0;
         position: absolute;
-        top: 50%;
+        top: 0;
         width: 100%;
     }
 
     & > .separator-wrapper {
-        height: 2rem;
         position: relative;
 
         & > label {
-            background: var(--bg-primary);
             color: var(--headings-color);
-            font-size: 1.7rem;
+            display: block;
+            font-size: 1.8rem;
             font-weight: 600;
-            padding-right: .75rem;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
+            padding: 3.5rem 0 0;
+
         }
     }
 

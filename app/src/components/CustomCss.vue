@@ -4,7 +4,7 @@
             <p-button
                 @click.native="goBack"
                 slot="buttons"
-                type="outline"
+                type="clean back"
                 :disabled="buttonsLocked">
                 {{ $t('ui.backToTools') }}
             </p-button>
@@ -277,7 +277,7 @@ export default {
 .filters {
     font-size: 1.4rem;
     list-style-type: none;
-    margin: -2rem 0 0 0;
+    margin: -2.2rem 0 0 0;
     padding: 0;
     position: relative;
     user-select: none;

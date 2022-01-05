@@ -27,9 +27,9 @@
                         <router-link 
                             :to="getUrl(item.link, pluginsStatus[item.directory])">
                             <img :src="item.icon" />
-                            {{ item.name }}<br>
+                            {{ item.name }}
 
-                            <switcher
+                            <switcher class="tools-switcher"
                                 @click.native.prevent.stop="togglePluginState(item.directory)"
                                 v-model="pluginsStatus[item.directory]" />
                         </router-link>
@@ -189,12 +189,13 @@ export default {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-auto-rows: minmax(calc(8rem + 8vh), auto);
-        grid-gap: 2rem;
+        gap: 2rem;
 
        & > div {
-            background: var(--gray-1);
+            background-color: var(--bg-secondary);
             border: 1px solid transparent;
-            border-radius: 3px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-small);      
             height: 100%;
             transition: var(--transition);
             text-align: center;
@@ -202,7 +203,7 @@ export default {
             &:hover {
                background: var(--bg-primary);
                border-color: var(--secondary-color);
-               box-shadow: 0 0 26px rgba(black, .07);
+               box-shadow: var(--box-shadow-medium);  
                cursor: pointer;
 
                svg {
@@ -221,25 +222,35 @@ export default {
                justify-content: center;
                font-weight: 500;
                height: 100%;
+               position: relative;
                width: 100%;
+
+               &.router-link-active {
+                   filter: grayscale(1);
+               }
             }
 
-           svg {
+            svg {
                display: block;
                fill: var(--gray-5);
                margin: 0 auto 1rem;
                transition: inherit;
             }
-        }
 
-        .plugin-activate,
-        .plugin-deactivate {
-            background: #fff;
-            border: 1px solid #eee;
-            display: inline-block;
-            height: 20px;
-            width: 200px;
-        }
+            img {
+               display: block;
+               height: 46px;
+               margin: 0 auto 1rem;
+               width: auto;
+               max-width: 60%;
+            }
+        }      
+    }
+
+    &-switcher {
+       position: absolute;
+       left: 1.5rem;
+       bottom: 1rem;
     }
 
     &-description {

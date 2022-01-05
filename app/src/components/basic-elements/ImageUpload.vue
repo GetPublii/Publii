@@ -19,7 +19,7 @@
                     customWidth="64"
                     customHeight="64" />
 
-                {{ labelText }}
+               <div> {{ labelText }}</div>
                 <input
                     ref="input"
                     type="file"
@@ -291,7 +291,6 @@ export default {
 
 .upload {
     &-image {
-        background: var(--input-bg-light);
         background-clip: padding-box;
         background-position: center;
         background-repeat: no-repeat;
@@ -341,25 +340,31 @@ export default {
             display: block;
             line-height: 1.6!important;
             margin: 2rem auto 0 auto!important;
-            width: 16rem!important;
+
+            span {
+                    display: none;
+                }
 
             &::-webkit-file-upload-button {
                 -webkit-appearance: none;
-                background: var(--button-gray-bg);
-                border: 1px solid var(--button-gray-bg);
-                border-radius: 3px;
-                color: var(--white);
+                background: var(--button-secondary-bg);
+                border: 1px solid var(--button-secondary-bg);
+                border-radius: var(--border-radius);
+                color: var(--button-secondary-color);
                 cursor: pointer;
-                font-weight: 500;
+                display: inline-block;
                 font-size: 1.5rem;
-                padding: .5rem;
-                text-align: center;
-                width: 16rem;
+                font-weight: var(--font-weight-semibold);
+                left: 50%;
+                padding: .75rem 1.5rem;
+                position: relative;
+                transform: translate(-50%, 0);
                 outline: none;
-
+                
                 &:hover {
-                    background: var(--button-gray-hover-bg);
-                    border-color: var(--button-gray-hover-bg);
+                    background: var(--button-secondary-hover-bg);
+                    border-color: var(--button-secondary-hover-bg);
+                    color: var(--button-secondary-hover-color);
                 }
             }
         }

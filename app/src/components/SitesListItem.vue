@@ -262,7 +262,7 @@ export default {
         }
 
         .single-site-name {
-            color: var(--link-tertiary-hover-color);
+            color: var(--link-primary-hover-color);
         }
 
         .single-site-icon {

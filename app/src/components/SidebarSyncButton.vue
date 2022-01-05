@@ -248,7 +248,7 @@ export default {
         &-link {
             align-items: center;
             background: var(--sidebar-sync-btn-bg);
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             color: var(--sidebar-sync-btn-color);
             display: flex;
             font-size: 1.6rem;
@@ -367,7 +367,7 @@ export default {
 
     &-preview-link {
         border: 2px solid var(--sidebar-preview-btn-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--sidebar-preview-btn-color) !important;
         display: block;
         margin-bottom: 1rem;

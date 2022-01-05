@@ -40,7 +40,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell
+                <collection-cell 
                     justifyContent="center"
                     textAlign="center"
                     min-width="100px">
@@ -99,9 +99,8 @@
                         class="main-author-icon"
                         :title="$t('author.mainAuthorCannotBeRemoved')">
                         <icon
-                            size="xs"
-                            name="padlock"
-                            primaryColor="color-3" />
+                            size="s"
+                            name="padlock" />
                     </span>
                 </collection-cell>
 

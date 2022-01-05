@@ -25,7 +25,7 @@ input[type="colorpicker"],
     border-radius: 3px;
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
-    font: 400 1.6rem/1.5 $secondary-font;
+    font: 400 1.6rem/1.5 var(--font-base);
     outline: none;
     padding: 1.2rem 1.8rem;
 
@@ -157,7 +157,7 @@ input[type="range"] {
 /* Fix for the colorpicker */
 .colorpicker input {
     box-shadow: none;
-    font: 400 1.2rem/1.5 $secondary-font;
+    font: 400 1.2rem/1.5 var(--font-base);
     padding: 2px;
 }
 

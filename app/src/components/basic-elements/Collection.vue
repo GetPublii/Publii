@@ -50,7 +50,7 @@ export default {
  */
  .collection-wrapper {
      &:after {
-        background: linear-gradient(transparent, var(--bg-primary));
+        background: linear-gradient(transparent, var(--bg-site));
         bottom: 0;
         content: "";
         height: 100px;
@@ -63,13 +63,14 @@ export default {
  }
 
 .collection {
+    border-top: 1px solid var(--gray-2);
     border-collapse: collapse;
     bottom: 0;
     display: grid;
     grid-auto-rows: max-content;
     overflow: auto;
     position: absolute;
-    top: 13rem;
+    top: 12.5rem;
     width: calc(100% - 10rem);
 
     &.is-add-form-opened {

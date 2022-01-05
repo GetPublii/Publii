@@ -176,28 +176,30 @@ export default {
 
     .upload-input {
         display: block;
+        overflow: hidden;
         position: absolute;
-        right: .7rem;
-        top: .7rem;
-        width: 16rem!important;
+        right: .6rem;
+        top: .6rem;
+        width: 12rem!important;
 
         &::-webkit-file-upload-button {
             -webkit-appearance: none;
-            background: var(--button-gray-bg);
-            border: 1px solid var(--button-gray-bg);
-            border-radius: 3px;
-            color: var(--white);
+            background: var(--button-secondary-bg);
+            border: 1px solid var(--button-secondary-bg);
+            border-radius: var(--border-radius);
+            color: var(--button-secondary-color);
             cursor: pointer;
             font-weight: 500;
             font-size: 1.5rem;
-            padding: .5rem;
+            padding: .6rem;
             text-align: center;
-            width: 16rem;
+            width: 12rem;
             outline: none;
 
             &:hover {
-               background: var(--button-gray-hover-bg);
-               border-color: var(--button-gray-hover-bg);
+                background: var(--button-secondary-hover-bg);
+                border-color: var(--button-secondary-hover-bg);
+                color: var(--button-secondary-hover-color);
             }
         }
     }

@@ -488,6 +488,7 @@
     },
     "publii": {
         "aboutPublii": "O Publii",
+        "currentPubliiVersion": "Wersja",
         "accept": "Akceptuj",
         "copyright": "Prawa autorskie 2021 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. Wszelkie prawa zastrzeżone.<br>Publli jest zaprojektowane i utrzymywane przez główny zespół we współpracy z <a href=\"https://github.com/dziudek\" target=\"_blank\" rel=\"noopener noreferrer\">Dev Zen</a> i powstało dzięki projektowi Open Source <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> i innemu ",
         "creditsIntro": "Publii korzysta z następującego oprogramowania Open Source stron trzecich:",
@@ -893,7 +894,7 @@
         "serverSettingsSaveErrorMsg": "Publii nie może zapisać ustawień z powodu problemu z oprogramowaniem do bezpiecznego przechowywania haseł. Uruchom ponownie aplikację i spróbuj ponownie. Jeśli problem będzie się powtarzał, zgłoś go naszemu zespołowi za pośrednictwem forum.",
         "serverSettingsSaveLinuxErrorMsg": "Publii nie może zapisać ustawień, ponieważ nie jest zainstalowane żadne oprogramowanie do bezpiecznego przechowywania haseł. Postępuj zgodnie z instrukcjami instalacji dla Node Keytar via https://github.com/atom/node-keytar/ i spróbuj ponownie. Najprawdopodobniej w Twoim systemie brakuje paczek libsecret-1-dev i gnome-keyring packages.",
         "serverSettingsSaveSuccessMsg": "Ustawienia serwera zostały pomyślnie zapisane.",
-        "settings": " ustawienia",
+        "settings": "Ustawienia",
         "sftp": "SFTP",
         "sftpkeyNote": "Proszę wybrać plik klucza",
         "sftpWithKey": "SFTP (z kluczem)",
@@ -1156,7 +1157,7 @@
         "supportPublii": "Wspieraj Publii i przekaż darowiznę już dzisiaj!",
         "tags": "Tagi",
         "theme": "Motywy",
-        "tools": "Narzędzia",
+        "tools": "Narzędzia & Pluginy",
         "unhide": "Odkryj",
         "uploadInProgress": "Trwa przesyłanie..."
     }

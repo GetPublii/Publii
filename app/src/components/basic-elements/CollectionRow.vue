@@ -15,11 +15,12 @@ export default {
 
 .item {
     display: contents;
+    
 
-    &:last-child {
+    &:last-child:not(:first-child) {
         .col {
             border-bottom: none;
-            border-bottom: 6rem solid transparent;
+            margin-bottom: 6rem;
         }
     }
 

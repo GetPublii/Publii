@@ -4,14 +4,16 @@
             <p-header :title="$t('plugins.plugins')">
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
 
                 <p-button
                     :onClick="installPlugin"
-                    slot="buttons">
+                    slot="buttons" 
+                    type="icon"
+                    icon="upload-file">
                     {{ $t('plugins.installPlugin') }}
                 </p-button>
             </p-header>
@@ -96,7 +98,7 @@ export default {
 @import '../scss/variables.scss';
 
 .settings {
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     width: 100%;
 
     &-wrapper {

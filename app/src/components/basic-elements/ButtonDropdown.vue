@@ -18,7 +18,7 @@
                 :name="buttonIcon" />
 
             {{ currentLabel }}
-        </span>
+       
 
         <span
             v-if="previewIcon && currentIcon"
@@ -28,6 +28,8 @@
                 properties="not-clickable"
                 :name="currentIcon" />
         </span>
+
+         </span>
 
         <span
             class="button-toggle"
@@ -194,15 +196,15 @@ export default {
 .button {
     background: var(--button-bg);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
     display: inline-flex;
     font-size: 15px;
     font-weight: 500;
-    height: 4.2rem;
-    line-height: 4.1rem;
+    height: 4.6rem;
+    line-height: 4.5rem;
     padding: 0;
     position: relative;
     text-align: left;
@@ -212,11 +214,11 @@ export default {
     width: auto;
 
     &-trigger {
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         display: block;
-        height: 4.2rem;
+        height: 4.6rem;
         left: 0;
-        padding-left: 2rem;
+        padding-left: 1.3rem;
         padding-right: 6rem;
         position: relative;
         text-align: left;
@@ -230,11 +232,11 @@ export default {
         &-icon {
             align-items: center;
             display: flex;
-            height: 4.2rem;
+            height: 4.6rem;
             justify-content: center;
             position: absolute;
             top: 0;
-            right: 4.8rem;
+            right: 4.4rem;
             width: 4.4rem;
 
             .icon {
@@ -246,17 +248,18 @@ export default {
     &-toggle {
         background: var(--button-hover-bg);
         border-left: 1px solid var(--button-bg);
-        border-radius: 0 3px 3px 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         cursor: pointer;
         height: 100%;
         position: absolute;
         right: 0;
         top: 0;
         transition: var(--transition);
-        width: 44px;
+        width: 4.4rem;
 
         &::before {
             content: "";
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
             pointer-events: none;
             height: 100%;
             left: 0;
@@ -288,13 +291,13 @@ export default {
 
     &-dropdown {
         background: var(--bg-secondary);
-        border-radius: 0 0 5px 5px;
-        box-shadow: 0 5px 5px rgba(0, 0, 0, .125);
+        border-radius: var(--border-radius) var(--border-radius);
+        box-shadow: var(--box-shadow-medium);
         overflow: hidden;
         position: absolute;
         right: 0;
         text-align: left;
-        top: 42px;
+        top: 5.3rem;
         min-width: 100%;
         z-index: 10;
 
@@ -402,7 +405,7 @@ export default {
 
     &.has-icon-preview {
         .button-trigger {
-            padding-right: 9.5rem;
+            padding-right: 8.8rem;
         }
 
         .button-dropdown-item {
@@ -417,8 +420,8 @@ export default {
         }
 
         .button-dropdown {
-            border-radius: 5px 5px 0 0;
-            bottom: 42px;
+            border-radius: var(--border-radius);
+            bottom: 5.3rem;
             box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.125);
             top: unset;
         }

@@ -146,10 +146,10 @@ export default {
     }
 
     .content {
-       background: var(--bg-primary);
+        background: var(--bg-site);
         bottom: 0;
         overflow: scroll;
-        padding: 4rem 5rem;
+        padding: 3rem 5rem 4rem;
         right: 0;
         width: calc(100% - 32rem); // 32rem = sideabr width
 
@@ -173,13 +173,13 @@ export default {
 
 @media (max-height: 900px) {
     .site .content {
-           padding: 4rem;
+           padding: 3rem 4rem 4rem;
     }
  }
 
 @media (max-width: 1400px) {
     .site .content {
-           padding: 4rem;
+           padding: 3rem 4rem 4rem;
     }
 }
 

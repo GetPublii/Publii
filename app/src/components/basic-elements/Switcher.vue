@@ -123,7 +123,7 @@ export default {
     }
 
     &.is-checked {
-        background: rgba(66, 165, 245, 0.45);
+        background: var(--input-border-checked);
 
         &:after {
             left: 14px;

@@ -4,7 +4,7 @@
         @click="hide">
         <p-header @click.native.stop>
             <p-button
-                type="outline"
+                type="clean back"
                 slot="buttons"
                 :onClick="hide">
                 {{ $t('ui.goBack') }}

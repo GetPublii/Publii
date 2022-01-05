@@ -18,7 +18,7 @@
 
 html,
 body {
-    font-family: $primary-font;
+    font-family: var(--font-base);
 }
 
 body,

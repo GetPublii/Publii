@@ -1,61 +1,66 @@
 <template>
-    <section class="content regenerate-thumbnails">
-        <p-header :title="$t('tools.thumbnails.regenerateThumbnails')">
-            <p-button
-                :onClick="goBack"
-                slot="buttons"
-                type="outline">
-                {{ $t('ui.backToTools') }}
-            </p-button>
-        </p-header>
+    <section class="content">
+        <div class="regenerate-thumbnails">
+            <p-header :title="$t('tools.thumbnails.regenerateThumbnails')">
+                <p-button
+                    :onClick="goBack"
+                    slot="buttons"
+                    type="clean back">
+                    {{ $t('ui.backToTools') }}
+                </p-button>
+            </p-header>
 
-        <fields-group v-if="currentSiteHasTheme">
-            <p>
-                {{ $t('tools.thumbnails.regenerateThumbnailsInfo') }}
+            <fields-group v-if="currentSiteHasTheme">
+                <p>
+                    {{ $t('tools.thumbnails.regenerateThumbnailsInfo') }}
+                </p>
+
+                <div class="result-wrapper">
+                    <p-button
+                        v-if="regeneratingInProgress"
+                        :onClick="abortRegenerate"
+                        type="danger">
+                        {{ $t('ui.cancel') }}
+                    </p-button>
+
+                    <p-button
+                        class="button-secondary"
+                        :onClick="regenerate"
+                        :type="buttonStatus">
+                        {{ $t('tools.thumbnails.regenerateThumbnails') }}
+                    </p-button>
+
+                    <span
+                        v-if="resultLabel"
+                        :class="resultCssClass">
+                        {{ resultLabel }}
+                    </span>
+                </div>
+           
+
+            <div
+                v-if="regeneratingStarted"
+                class="regenerate-thumbnails-list-container">
+                <h4>{{ $t('tools.thumbnails.listRegeneratedFiles') }}</h4>
+
+                <ul
+                    class="regenerate-thumbnails-list">
+                    <li
+                        v-for="(file, index) in files"
+                        :key="file + '-' + index"
+                        class="item"
+                        :title="getFilePhrase(file)">
+                        {{ removeSiteDir(file) }}
+                    </li>
+                </ul>
+            </div>
+
+            <p v-if="!currentSiteHasTheme">
+                {{ $t('tools.thumbnails.regenerateThumbnailsNotNecessaryInfo') }}
             </p>
 
-            <div class="result-wrapper">
-                <p-button
-                    v-if="regeneratingInProgress"
-                    :onClick="abortRegenerate"
-                    type="danger">
-                    {{ $t('ui.cancel') }}
-                </p-button>
-
-                <p-button
-                    :onClick="regenerate"
-                    :type="buttonStatus">
-                    {{ $t('tools.thumbnails.regenerateThumbnails') }}
-                </p-button>
-
-                <span
-                    v-if="resultLabel"
-                    :class="resultCssClass">
-                    {{ resultLabel }}
-                </span>
-            </div>
-        </fields-group>
-
-        <div
-            v-if="regeneratingStarted"
-            class="regenerate-thumbnails-list">
-            <p>{{ $t('tools.thumbnails.listRegeneratedFiles') }}</p>
-
-            <ul
-                class="list">
-                <li
-                    v-for="(file, index) in files"
-                    :key="file + '-' + index"
-                    class="item"
-                    :title="getFilePhrase(file)">
-                    {{ removeSiteDir(file) }}
-                </li>
-            </ul>
+             </fields-group>
         </div>
-
-        <p v-if="!currentSiteHasTheme">
-            {{ $t('tools.thumbnails.regenerateThumbnailsNotNecessaryInfo') }}
-        </p>
     </section>
 </template>
 
@@ -183,17 +188,26 @@ export default {
 @import '../scss/variables.scss';
 
 .regenerate-thumbnails {
+    margin: 0 auto;
+    max-width: $wrapper;
     user-select: none;
 
-    .list {
-        list-style-type: none;
+    &-list {  
+        list-style-type: decimal;
+        list-style-position: outside;
         margin: 0;
-        padding: 2rem 0;
+        padding: 0 0 0 2rem;
         user-select: text;
 
+        &-container {
+           border-top: 1px solid var(--border-light-color);
+           margin-top: 4rem;
+           padding: 3rem 0 0;
+        }
+
         .item {
-            border-top: 1px solid var(--gray-1);
-            padding: .5rem 0;
+            font-size: 1.4rem;
+            padding: .5rem 0 .5rem .5rem;
 
             &:first-child {
                 border-top: none;

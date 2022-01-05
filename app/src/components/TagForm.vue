@@ -607,7 +607,7 @@ export default {
     &-header {
         align-items: center;
         border-top: 1px solid var(--input-border-color);
-        color: var(--link-tertiary-color);
+        color: var(--link-primary-hover-color);
         cursor: pointer;
         display: flex;
         height: 6.4rem;
@@ -620,7 +620,7 @@ export default {
         width: 100%;
 
         &:hover {
-            color: var(--link-tertiary-hover-color);
+            color: var(--link-primary-color);
         }
 
         &.is-open {

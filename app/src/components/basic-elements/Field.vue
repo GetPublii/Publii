@@ -204,12 +204,12 @@ label {
         }
         
         a {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-hover-color);
             }
         }
     }

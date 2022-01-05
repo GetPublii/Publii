@@ -8,27 +8,26 @@
 
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
             </div>
 
-            <p class="about-version">
-                v.{{ appVersion.version }} (build {{ appVersion.build }})
-            </p>
+            <p class="about-version">{{ $t('publii.currentPubliiVersion') }}: {{ appVersion.version }} (build {{ appVersion.build }})</p>
 
-            <p class="about-copyright">
-                <span v-pure-html="$t('publii.copyright')"></span>
-                <router-link to="/about/credits">{{ $t('publii.openSourceSoftware') }}</router-link>.
-            </p>
+            <fields-group>
+                <p class="about-copyright">
+                    <span v-pure-html="$t('publii.copyright')"></span>
+                    <router-link to="/about/credits">{{ $t('publii.openSourceSoftware') }}</router-link>.
+                </p>
 
-            <p v-pure-html="$t('publii.dataCollectionInfo')">
-            </p>
+                <p v-pure-html="$t('publii.dataCollectionInfo')"></p>
 
-            <p>
-                <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">{{ $t('publii.licensingInformation') }}</a>
-            </p>
+                <p>
+                    <a href="https://getpublii.com/license.html" target="_blank" rel="noopener noreferrer">{{ $t('publii.licensingInformation') }}</a>
+                </p>
+            </fields-group>
         </div>
     </div>
 </template>
@@ -58,8 +57,7 @@ export default {
 @import '../scss/mixins.scss';
 
 .about {
-    color: var(--text-light-color);
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     width: 100%;
 
     &-wrapper {
@@ -85,8 +83,8 @@ export default {
     }
 
     &-version {
-        color: var(--text-primary-color);
-        margin: -2rem 0 5rem;
+       
+        margin: -2.5rem 0 4rem 0;
     }
 }
 </style>

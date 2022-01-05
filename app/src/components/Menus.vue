@@ -408,7 +408,8 @@ export default {
     }
 
     .col.assignment {
-        padding: 0;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     .menu-content {
@@ -422,12 +423,12 @@ export default {
     }
 
     &-edit-btn {
-         color: var(--link-secondary-color) !important;
+         color: var(--link-primary-color) !important;
 
          &:active,
          &:focus,
          &:hover {
-            color: var(--link-secondary-hover-color) !important;
+            color: var(--link-primary-hover-color) !important;
          }
     }
 
