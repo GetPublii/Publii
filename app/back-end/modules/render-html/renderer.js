@@ -83,6 +83,7 @@ class Renderer {
                 tags: {}
             }
         };
+        this.globalContext = null;
         this.itemID = itemID;
         this.postData = postData;
         this.pluginsDir = path.join(this.appDir, 'plugins');
@@ -678,7 +679,7 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('index');
+        this.globalContext = this.createGlobalContext('index');
 
         // Render index site
         let contextGenerator = new RendererContextHome(this);
@@ -696,23 +697,23 @@ class Renderer {
             let output = '';
 
             this.menuContext = ['frontpage'];
-            globalContext.website.pageUrl = this.siteConfig.domain + '/';
-            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
-            globalContext.renderer.isFirstPage = true;
-            globalContext.renderer.isLastPage = true;
-            globalContext.pagination = false;
+            this.globalContext.website.pageUrl = this.siteConfig.domain + '/';
+            this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
+            this.globalContext.renderer.isFirstPage = true;
+            this.globalContext.renderer.isLastPage = true;
+            this.globalContext.pagination = false;
 
             if (!this.siteConfig.advanced.ampIsEnabled) {
-                globalContext.website.ampUrl = '';
+                this.globalContext.website.ampUrl = '';
             }
 
             if (this.plugins.hasModifiers('globalContext')) {
-                globalContext = this.plugins.runModifiers('globalContext', this, globalContext); 
+                this.globalContext = this.plugins.runModifiers('globalContext', this, this.globalContext); 
             }
 
             try {
                 output = compiledTemplate(context, {
-                    data: globalContext
+                    data: this.globalContext
                 });
             } catch (e) {
                 this.errorLog.push({
@@ -730,7 +731,7 @@ class Renderer {
             postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
             for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
-                globalContext.context = ['index'];
+                this.globalContext.context = ['index'];
                 let context = contextGenerator.getContext(offset, postsPerPage);
 
                 // Add pagination data to the global context
@@ -745,7 +746,7 @@ class Renderer {
                 let nextPage = (currentPage < totalPages) ? currentPage + 1 : false;
                 let previousPage = (currentPage > 1) ? currentPage - 1 : false;
 
-                globalContext.pagination = {
+                this.globalContext.pagination = {
                     context: '',
                     pages: Array.from({length: totalPages}, (v, k) => k + 1),
                     totalPosts: totalNumberOfPosts,
@@ -758,34 +759,34 @@ class Renderer {
                     previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'home', false, addIndexHtml)
                 };
 
-                globalContext.renderer.isFirstPage = currentPage === 1;
-                globalContext.renderer.isLastPage = currentPage === totalPages;
+                this.globalContext.renderer.isFirstPage = currentPage === 1;
+                this.globalContext.renderer.isLastPage = currentPage === totalPages;
 
                 if (currentPage > 1) {                    
                     let pagePart = this.siteConfig.advanced.urls.pageName;
-                    globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
-                    globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
+                    this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + pagePart +  '/' + currentPage + '/';
+                    this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + pagePart + '/' + currentPage + '/';
                 } else {                    
-                    globalContext.website.pageUrl = this.siteConfig.domain + '/';
-                    globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
+                    this.globalContext.website.pageUrl = this.siteConfig.domain + '/';
+                    this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/';
                 }
 
                 if (!this.siteConfig.advanced.ampIsEnabled) {
-                    globalContext.website.ampUrl = '';
+                    this.globalContext.website.ampUrl = '';
                 }
 
                 if (offset > 0) {
-                    if (globalContext.context.indexOf('pagination') === -1) {
-                        globalContext.context.push('pagination');
+                    if (this.globalContext.context.indexOf('pagination') === -1) {
+                        this.globalContext.context.push('pagination');
                     }
 
-                    if (globalContext.context.indexOf('index-pagination') === -1) {
-                        globalContext.context.push('index-pagination');
+                    if (this.globalContext.context.indexOf('index-pagination') === -1) {
+                        this.globalContext.context.push('index-pagination');
                     }
                 }
 
                 this.menuContext = ['frontpage'];
-                let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+                let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
                 if (offset === 0) {
                     this.templateHelper.saveOutputFile('index.html', output);
@@ -865,7 +866,7 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('post');
+        this.globalContext = this.createGlobalContext('post');
         let progressIncrease = 40 / postIDs.length;
 
         if(ampMode) {
@@ -874,7 +875,7 @@ class Renderer {
 
         // Render post sites
         for (let i = 0; i < postIDs.length; i++) {
-            globalContext.context = ['post'];
+            this.globalContext.context = ['post'];
             let contextGenerator = new RendererContextPost(this);
             let context = contextGenerator.getContext(postIDs[i]);
             let fileSlug = 'DEFAULT';
@@ -884,18 +885,18 @@ class Renderer {
             }
 
             this.menuContext = ['post', postSlugs[i]];    
-            globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '.html';
-            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '.html';
+            this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '.html';
+            this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '.html';
 
             if (this.siteConfig.advanced.urls.cleanUrls) {                
-                globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '/';
-                globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '/';
+                this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlugs[i] + '/';
+                this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlugs[i] + '/';
             }
 
-            globalContext.config.post = this.cachedItems.posts[postIDs[i]].postViewConfig;
+            this.globalContext.config.post = this.cachedItems.posts[postIDs[i]].postViewConfig;
 
             if (!this.siteConfig.advanced.ampIsEnabled) {
-                globalContext.website.ampUrl = '';
+                this.globalContext.website.ampUrl = '';
             }
 
             let ampPrefix = ampMode ? 'amp-' : '';
@@ -905,7 +906,7 @@ class Renderer {
             }
 
             inputFile = inputFile.replace('.hbs', '') + ampPrefix + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-            let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+            let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
             this.templateHelper.saveOutputPostFile(postSlugs[i], output);
 
@@ -959,7 +960,7 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('post');
+        this.globalContext = this.createGlobalContext('post');
 
         // Render post site
         let contextGenerator = new RendererContextPostPreview(this);
@@ -968,12 +969,12 @@ class Renderer {
         fileSlug = postTemplate === '' ? 'DEFAULT' : postTemplate;
 
         this.menuContext = ['post', postSlug];
-        globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlug + '.html';
-        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlug + '.html';
-        globalContext.config.post = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
+        this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + postSlug + '.html';
+        this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + postSlug + '.html';
+        this.globalContext.config.post = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
 
         if(!this.siteConfig.advanced.ampIsEnabled) {
-            globalContext.website.ampUrl = '';
+            this.globalContext.website.ampUrl = '';
         }
 
         if(!compiledTemplates[fileSlug]) {
@@ -981,7 +982,7 @@ class Renderer {
         }
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-        let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+        let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(postSlug + '.html', output);
     }
 
@@ -1041,28 +1042,28 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('tags');
+        this.globalContext = this.createGlobalContext('tags');
 
         // Render tags list
-        globalContext.context = ['tags'];
+        this.globalContext.context = ['tags'];
         let contextGenerator = new RendererContextTags(this);
         let context = contextGenerator.getContext();
         this.menuContext = ['tags'];
 
         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
-            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
-            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
         }
 
-        globalContext.renderer.isFirstPage = true;
-        globalContext.renderer.isLastPage = true;
-        globalContext.pagination = false;
+        this.globalContext.renderer.isFirstPage = true;
+        this.globalContext.renderer.isLastPage = true;
+        this.globalContext.pagination = false;
 
         if (!this.siteConfig.advanced.ampIsEnabled) {
-            globalContext.website.ampUrl = '';
+            this.globalContext.website.ampUrl = '';
         }
 
-        let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+        let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputTagsListFile(output);
         console.timeEnd(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
     }
@@ -1151,7 +1152,7 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('tag');
+        this.globalContext = this.createGlobalContext('tag');
         let progressIncrease = 10 / tagsData.length;
 
         if(ampMode) {
@@ -1160,7 +1161,7 @@ class Renderer {
 
         // Render tag sites
         for (let i = 0; i < tagsData.length; i++) {
-            globalContext.context = ['tag'];
+            this.globalContext.context = ['tag'];
             let contextGenerator = new RendererContextTag(this);
             let fileSlug = 'DEFAULT';
 
@@ -1182,20 +1183,20 @@ class Renderer {
                 let context = contextGenerator.getContext(tagIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['tag', tagSlug];
-                globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
-                globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
+                this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
+                this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                 if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
-                    globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
-                    globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
+                    this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
+                    this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                 }
 
-                globalContext.renderer.isFirstPage = true;
-                globalContext.renderer.isLastPage = true;
-                globalContext.pagination = false;
+                this.globalContext.renderer.isFirstPage = true;
+                this.globalContext.renderer.isLastPage = true;
+                this.globalContext.pagination = false;
 
                 if (!this.siteConfig.advanced.ampIsEnabled) {
-                    globalContext.website.ampUrl = '';
+                    this.globalContext.website.ampUrl = '';
                 }
 
                 if (!compiledTemplates[fileSlug]) {
@@ -1203,7 +1204,7 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+                let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
                 this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
@@ -1212,7 +1213,7 @@ class Renderer {
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
                 for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
-                    globalContext.context = ['tag'];
+                    this.globalContext.context = ['tag'];
                     let context = contextGenerator.getContext(tagIDs[i], offset, postsPerPage);
 
                     // Add pagination data to the global context
@@ -1232,7 +1233,7 @@ class Renderer {
                         tagsContextInUrl = this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug;
                     }
 
-                    globalContext.pagination = {
+                    this.globalContext.pagination = {
                         context: tagsContextInUrl,
                         pages: Array.from({length: totalPages}, (v, k) => k + 1),
                         totalPosts: totalNumberOfPosts,
@@ -1245,16 +1246,16 @@ class Renderer {
                         previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'tag', tagSlug, addIndexHtml)
                     };
 
-                    globalContext.renderer.isFirstPage = currentPage === 1;
-                    globalContext.renderer.isLastPage = currentPage === totalPages;
+                    this.globalContext.renderer.isFirstPage = currentPage === 1;
+                    this.globalContext.renderer.isLastPage = currentPage === totalPages;
 
                     if (offset > 0) {
-                        if (globalContext.context.indexOf('pagination') === -1) {
-                            globalContext.context.push('pagination');
+                        if (this.globalContext.context.indexOf('pagination') === -1) {
+                            this.globalContext.context.push('pagination');
                         }
 
-                        if (globalContext.context.indexOf('tag-pagination') === -1) {
-                            globalContext.context.push('tag-pagination');
+                        if (this.globalContext.context.indexOf('tag-pagination') === -1) {
+                            this.globalContext.context.push('tag-pagination');
                         }
                     }
 
@@ -1262,25 +1263,25 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                        this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                        this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
-                            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                            this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
+                            this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/' + pagePart + '/' + currentPage + '/';
                         }
                     } else {
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
+                        this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + tagSlug + '/';
+                        this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + tagSlug + '/';
 
                         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                            globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
-                            globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
+                            this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
+                            this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug + '/';
                         }
                     }
 
                     if (!this.siteConfig.advanced.ampIsEnabled) {
-                        globalContext.website.ampUrl = '';
+                        this.globalContext.website.ampUrl = '';
                     }
 
                     if (!compiledTemplates[fileSlug]) {
@@ -1288,7 +1289,7 @@ class Renderer {
                     }
 
                     inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                    let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+                    let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (offset === 0) {
                         this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
@@ -1410,11 +1411,11 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('author');
+        this.globalContext = this.createGlobalContext('author');
 
         // Render author sites
         for (let i = 0; i < authorsData.length; i++) {
-            globalContext.context = ['author'];
+            this.globalContext.context = ['author'];
             let contextGenerator = new RendererContextAuthor(this);
             let fileSlug = 'DEFAULT';
 
@@ -1435,14 +1436,14 @@ class Renderer {
                 let context = contextGenerator.getContext(authorsIDs[i], 0, postsPerPage);
 
                 this.menuContext = ['author', authorUsername];
-                globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
-                globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
-                globalContext.renderer.isFirstPage = true;
-                globalContext.renderer.isLastPage = true;
-                globalContext.pagination = false;
+                this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
+                this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
+                this.globalContext.renderer.isFirstPage = true;
+                this.globalContext.renderer.isLastPage = true;
+                this.globalContext.pagination = false;
 
                 if (!this.siteConfig.advanced.ampIsEnabled) {
-                    globalContext.website.ampUrl = '';
+                    this.globalContext.website.ampUrl = '';
                 }
 
                 if (!compiledTemplates[fileSlug]) {
@@ -1450,7 +1451,7 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+                let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
                 this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
@@ -1459,7 +1460,7 @@ class Renderer {
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
                 for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
-                    globalContext.context = ['author'];
+                    this.globalContext.context = ['author'];
                     let context = contextGenerator.getContext(authorsIDs[i], offset, postsPerPage);
 
                     // Add pagination data to the global context
@@ -1475,7 +1476,7 @@ class Renderer {
                     let previousPage = (currentPage > 1) ? currentPage - 1 : false;
                     let authorsContextInUrl = this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername;
 
-                    globalContext.pagination = {
+                    this.globalContext.pagination = {
                         context: authorsContextInUrl,
                         pages: Array.from({length: totalPages}, (v, k) => k + 1),
                         totalPosts: totalNumberOfPosts,
@@ -1488,16 +1489,16 @@ class Renderer {
                         previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'author', authorUsername, addIndexHtml)
                     };
 
-                    globalContext.renderer.isFirstPage = currentPage === 1;
-                    globalContext.renderer.isLastPage = currentPage === totalPages;
+                    this.globalContext.renderer.isFirstPage = currentPage === 1;
+                    this.globalContext.renderer.isLastPage = currentPage === totalPages;
 
                     if (offset > 0) {
-                        if (globalContext.context.indexOf('pagination') === -1) {
-                            globalContext.context.push('pagination');
+                        if (this.globalContext.context.indexOf('pagination') === -1) {
+                            this.globalContext.context.push('pagination');
                         }
 
-                        if (globalContext.context.indexOf('author-pagination') === -1) {
-                            globalContext.context.push('author-pagination');
+                        if (this.globalContext.context.indexOf('author-pagination') === -1) {
+                            this.globalContext.context.push('author-pagination');
                         }
                     }
 
@@ -1505,15 +1506,15 @@ class Renderer {
 
                     if (currentPage > 1) {
                         let pagePart = this.siteConfig.advanced.urls.pageName;
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
+                        this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
+                        this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/' + pagePart + '/' + currentPage + '/';
                     } else {
-                        globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
-                        globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
+                        this.globalContext.website.pageUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
+                        this.globalContext.website.ampUrl = this.siteConfig.domain + '/amp/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername + '/';
                     }
 
                     if (!this.siteConfig.advanced.ampIsEnabled) {
-                        globalContext.website.ampUrl = '';
+                        this.globalContext.website.ampUrl = '';
                     }
 
                     if (!compiledTemplates[fileSlug]) {
@@ -1521,7 +1522,7 @@ class Renderer {
                     }
 
                     inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                    let output = this.renderTemplate(compiledTemplates[fileSlug], context, globalContext, inputFile);
+                    let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (offset === 0) {
                         this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
@@ -1550,19 +1551,19 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('404');
+        this.globalContext = this.createGlobalContext('404');
 
         // Render index site
         let contextGenerator = new RendererContext404(this);
         let context = contextGenerator.getContext();
 
         this.menuContext = ['404'];
-        globalContext.website.pageUrl = this.siteConfig.domain + '/';
-        globalContext.website.ampUrl = '';
-        globalContext.renderer.isFirstPage = true;
-        globalContext.renderer.isLastPage = true;
+        this.globalContext.website.pageUrl = this.siteConfig.domain + '/';
+        this.globalContext.website.ampUrl = '';
+        this.globalContext.renderer.isFirstPage = true;
+        this.globalContext.renderer.isLastPage = true;
 
-        let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+        let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.errorPage, output);
         console.timeEnd("404");
     }
@@ -1581,19 +1582,19 @@ class Renderer {
         }
 
         // Create global context
-        let globalContext = this.createGlobalContext('search');
+        this.globalContext = this.createGlobalContext('search');
 
         // Render index site
         let contextGenerator = new RendererContextSearch(this);
         let context = contextGenerator.getContext();
 
         this.menuContext = ['search'];
-        globalContext.website.pageUrl = this.siteConfig.domain + '/';
-        globalContext.website.ampUrl = '';
-        globalContext.renderer.isFirstPage = true;
-        globalContext.renderer.isLastPage = true;
+        this.globalContext.website.pageUrl = this.siteConfig.domain + '/';
+        this.globalContext.website.ampUrl = '';
+        this.globalContext.renderer.isFirstPage = true;
+        this.globalContext.renderer.isLastPage = true;
 
-        let output = this.renderTemplate(compiledTemplate, context, globalContext, inputFile);
+        let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.searchPage, output);
         console.timeEnd("SEARCH");
     }

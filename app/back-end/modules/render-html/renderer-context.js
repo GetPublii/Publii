@@ -350,7 +350,7 @@ class RendererContext {
 
         if (this.renderer.plugins.hasInsertions(optionName)) {
             baseCode += "\n";
-            baseCode += this.renderer.plugins.runInsertions(optionName, this);
+            baseCode += this.renderer.plugins.runInsertions(optionName, this.renderer);
         }
 
         return baseCode;
@@ -371,7 +371,7 @@ class RendererContext {
 
             if (this.renderer.plugins.hasInsertions('customHTML.' + key)) {
                 code += "\n";
-                code += this.renderer.plugins.runInsertions('customHTML.' + key, this);
+                code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer);
             }
 
             object[key] = code;
