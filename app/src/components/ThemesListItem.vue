@@ -79,16 +79,23 @@ export default {
 @import '../scss/variables.scss';
 
 .theme {
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);      
+    height: 100%;
     margin: 0;
+    overflow: hidden;
+    padding: 1rem;
     position: relative;
+    transition: var(--transition);
+    text-align: center;
+
 
     &-thumbnail {
-        border: 1px solid var(--gray-1);
-        border-radius: 4px;
         display: block;
         height: auto;
         max-width: 100%;
-        transition: var(--transition);
     }
 
     &-delete {

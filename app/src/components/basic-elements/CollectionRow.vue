@@ -15,14 +15,7 @@ export default {
 
 .item {
     display: contents;
-    
 
-    &:last-child:not(:first-child) {
-        .col {
-            border-bottom: none;
-            margin-bottom: 6rem;
-        }
-    }
 
     .add-form {
         margin-top: 0;

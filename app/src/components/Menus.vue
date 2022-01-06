@@ -95,12 +95,14 @@
                     v-if="menuIsOpened(index)"
                     class="item-content">
                     <p-button
-                        type="primary small"
+                        icon="add-site-mono"
+                        type="secondary icon"
                         @click.native="addMenuItem(index)">
                         {{ $t('menu.addMenuItem') }}
                     </p-button>
                     <p-button
-                        type="clean small"
+                     icon="edit"
+                        type="clean icon"
                         class="menu-edit-btn"
                         @click.native="editMenuName(item.name, index)">
                         {{ $t('menu.editMenuName') }}
@@ -398,7 +400,7 @@ export default {
     }
 
     .item-content {
-        border-bottom: 1px solid var(--input-border-color);
+        border-bottom: 1px solid var(--border-light-color);
         grid-column-start: 1;
         grid-column-end: 5;
         overflow: hidden;

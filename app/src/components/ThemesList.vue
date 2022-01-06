@@ -81,7 +81,7 @@ export default {
 .themes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 5rem 3rem;
+    gap: 3rem;
     overflow: hidden;
     position: relative;
     user-select: none;
@@ -94,11 +94,13 @@ export default {
 }
 
 .add-more-theme {
-    background: var(--gray-1);
+    background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: 4px;
-    margin: 0;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);      
+    height: 100%;
     transition: var(--transition);
+    text-align: center;
 
     &:hover {
          background: var(--bg-primary);

@@ -6,12 +6,13 @@
             <div class="tools-list">
                 <div 
                     v-for="(item, key) in items"
-                    :class="{ 
+                    :class="{
                         'is-core': item.type === 'core',
                         'is-plugin': item.type !== 'core',
                         'plugin-is-enabled': item.type !== 'core' && !!pluginsStatus[item.directory],
                         'plugin-is-disabled': item.type !== 'core' && !pluginsStatus[item.directory]
                     }"
+                    class="tools-list-item"
                     :key="'item-' + key">
                     <template v-if="item.type === 'core'">
                         <router-link :to="getUrl(item.link, true)">
@@ -191,7 +192,7 @@ export default {
         grid-auto-rows: minmax(calc(8rem + 8vh), auto);
         gap: 2rem;
 
-       & > div {
+       &-item {
             background-color: var(--bg-secondary);
             border: 1px solid transparent;
             border-radius: var(--border-radius);
@@ -224,10 +225,6 @@ export default {
                height: 100%;
                position: relative;
                width: 100%;
-
-               &.router-link-active {
-                   filter: grayscale(1);
-               }
             }
 
             svg {
@@ -243,6 +240,19 @@ export default {
                margin: 0 auto 1rem;
                width: auto;
                max-width: 60%;
+            }
+
+            &.plugin-is-disabled {
+
+                a {
+                    color: var(--text-light-color);
+                    cursor: default;
+                }
+
+                &:hover {
+                   border-color: var(--border-light-color);
+                   box-shadow: var(--box-shadow-small);   
+                }
             }
         }      
     }

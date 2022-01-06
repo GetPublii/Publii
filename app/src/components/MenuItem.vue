@@ -381,7 +381,7 @@ li {
     }
 
     & > div {
-        background: var(--gray-1);
+        background: var(--input-bg);
         border-left: 2px solid var(--input-border-color);
         border-radius: 3px;
         cursor: move !important;

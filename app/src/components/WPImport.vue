@@ -1,152 +1,154 @@
 <template>
-    <section class="content wp-import">
-        <p-header :title="$t('tools.wpImport.wpImporter')">
-            <p-button
-                :onClick="goBack"
-                slot="buttons"
-                type="clean back">
-                {{ $t('ui.backToTools') }}
-            </p-button>
-        </p-header>
+    <section class="content">
+        <div class="wp-import">
+            <p-header :title="$t('tools.wpImport.wpImporter')">
+                <p-button
+                    :onClick="goBack"
+                    slot="buttons"
+                    type="clean back">
+                    {{ $t('ui.backToTools') }}
+                </p-button>
+            </p-header>
 
-        <fields-group>
-            <field
-                id="wxr-file"
-                :label="$t('tools.wpImport.selectWXRFileLabel')"
-                :labelFullWidth="true">
-                <file-select
+            <fields-group>
+                <field
                     id="wxr-file"
-                    :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
-                    value=""
-                    ref="wxr-file"
-                    :disabled="uploadDisabled"
-                    :onChange="selectedFileChanged"
-                    slot="field" />
-            </field>
+                    :label="$t('tools.wpImport.selectWXRFileLabel')"
+                    :labelFullWidth="true">
+                    <file-select
+                        id="wxr-file"
+                        :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
+                        value=""
+                        ref="wxr-file"
+                        :disabled="uploadDisabled"
+                        :onChange="selectedFileChanged"
+                        slot="field" />
+                </field>
 
-            <div
-                v-if="checkingFile"
-                class="import-check-results">
-                {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
-            </div>
+                <div
+                    v-if="checkingFile"
+                    class="import-check-results">
+                    {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
+                </div>
 
-            <div
-                v-if="errorMessage"
-                class="import-check-results is-error">
-                {{ errorMessage }}
-            </div>
+                <div
+                    v-if="errorMessage"
+                    class="import-check-results is-error">
+                    {{ errorMessage }}
+                </div>
 
-            <small
-                v-if="!stats"
-                class="note">
-                {{ $t('tools.wpImport.importNote') }}
-            </small>
+                <small
+                    v-if="!stats"
+                    class="note">
+                    {{ $t('tools.wpImport.importNote') }}
+                </small>
 
-            <wp-import-stats
-                v-if="stats"
-                :stats="stats" />
+                <wp-import-stats
+                    v-if="stats"
+                    :stats="stats" />
 
-            <div
-                v-if="configVisible"
-                :class="importConfigCssClasses">
-                <div class="import-config-section">
-                    <strong>{{ $t('tools.wpImport.importSelectedTypesOfPosts') }}</strong>
+                <div
+                    v-if="configVisible"
+                    :class="importConfigCssClasses">
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.importSelectedTypesOfPosts') }}</strong>
 
-                    <field
-                        id="import-cpt-post"
-                        :label="$t('post.posts')"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="import-cpt-post"
-                            ref="import-cpt-post"
-                            :checked="true" />
-                    </field>
+                            :label="$t('post.posts')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="import-cpt-post"
+                                ref="import-cpt-post"
+                                :checked="true" />
+                        </field>
 
-                    <field
-                        id="import-cpt-page"
-                        :label="$t('tools.wpImport.pages')"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="import-cpt-page"
-                            ref="import-cpt-page"
-                            :checked="true" />
-                    </field>
+                            :label="$t('tools.wpImport.pages')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="import-cpt-page"
+                                ref="import-cpt-page"
+                                :checked="true" />
+                        </field>
 
-                    <field
-                        v-for="(cpt, index) in customPostTypes"
-                        :id="'import-cpt-' + cpt"
-                        :label="cpt"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        :key="index"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
+                            v-for="(cpt, index) in customPostTypes"
                             :id="'import-cpt-' + cpt"
-                            :ref="'import-cpt-' + cpt"
-                            :checked="true" />
-                    </field>
-                </div>
+                            :label="cpt"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            :key="index"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                :id="'import-cpt-' + cpt"
+                                :ref="'import-cpt-' + cpt"
+                                :checked="true" />
+                        </field>
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>{{ $t('tools.wpImport.usedTaxonomyForPosts') }}</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.usedTaxonomyForPosts') }}</strong>
 
-                    <radio-buttons
-                        name="taxonomy"
-                        :items="radioTaxonomyItems"
-                        selected="tags"
-                        ref="taxonomy" />
-                </div>
+                        <radio-buttons
+                            name="taxonomy"
+                            :items="radioTaxonomyItems"
+                            selected="tags"
+                            ref="taxonomy" />
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>{{ $t('tools.wpImport.postAuthors') }}</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.postAuthors') }}</strong>
 
-                    <radio-buttons
-                        name="authors"
-                        :items="radioAuthorItems"
-                        selected="publii-author"
-                        ref="authors" />
-                </div>
+                        <radio-buttons
+                            name="authors"
+                            :items="radioAuthorItems"
+                            selected="publii-author"
+                            ref="authors" />
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>{{ $t('tools.wpImport.contentFormatting') }}</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.contentFormatting') }}</strong>
 
-                    <field
-                        id="use-autop"
-                        :label="$t('tools.wpImport.addTagsToContentAutomaticallty')"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="use-autop"
-                            ref="use-autop"
-                            :checked="true" />
-                    </field>
+                            :label="$t('tools.wpImport.addTagsToContentAutomaticallty')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="use-autop"
+                                ref="use-autop"
+                                :checked="true" />
+                        </field>
+                    </div>
                 </div>
-            </div>
 
-            <p-button
-                v-if="configVisible"
-                :onClick="importFile"
-                :disabled="importInProgress"
-                type="primary">
-                <template v-if="!importInProgress">{{ $t('tools.wpImport.importData') }}</template>
-                <template v-if="importInProgress">{{ $t('tools.wpImport.importingData') }}&hellip;</template>
-            </p-button>
+                <p-button
+                    v-if="configVisible"
+                    :onClick="importFile"
+                    :disabled="importInProgress"
+                    type="primary">
+                    <template v-if="!importInProgress">{{ $t('tools.wpImport.importData') }}</template>
+                    <template v-if="importInProgress">{{ $t('tools.wpImport.importingData') }}&hellip;</template>
+                </p-button>
 
-            <span
-                v-if="configVisible && progressInfo"
-                id="import-progress">
-                {{ progressInfo }}
-            </span>
-        </fields-group>
+                <span
+                    v-if="configVisible && progressInfo"
+                    id="import-progress">
+                    {{ progressInfo }}
+                </span>
+            </fields-group>
+        </div>
     </section>
 </template>
 
@@ -335,6 +337,10 @@ export default {
 @import '../scss/variables.scss';
 
 .wp-import {
+    margin: 0 auto;
+    max-width: $wrapper;
+    user-select: none;
+
     p {
         margin-top: 0;
     }

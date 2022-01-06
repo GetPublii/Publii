@@ -146,27 +146,44 @@ export default {
 @import '../scss/variables.scss';
 
 .language {
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small); 
+    cursor: default;  
+    height: 100%;
     margin: 0;
+    overflow: hidden;
+    padding: 1rem;
     position: relative;
+    transition: var(--transition);
+    text-align: center;
+
+    &:hover:not(.is-active) {
+        background: var(--bg-primary);
+        border-color: var(--secondary-color);
+        box-shadow: var(--box-shadow-medium);  
+        cursor: pointer;
+
+        a {
+            color: var(--primary-color);
+        }
+    }
 
     &.is-active {
-        border: 2px solid var(--primary-color);
+        background: var(--button-secondary-bg);
     }
 
     &-thumbnail {
-        border-radius: 50%;
         display: block;
-        height: 128px;
+        max-height: 90%;
         left: 50%;
         position: absolute;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
-        width: 128px;
+        max-width: 90%;
 
         &-wrapper {
-            background: var(--gray-1);
-            border: 1px solid var(--gray-1);
-            border-radius: 4px;
             display: block;
             padding-bottom: 75%;
             position: relative;
@@ -227,16 +244,17 @@ export default {
     }
 
     &-is-outdated {
-        background: var(--warning);
-        border-radius: 5px;
-        color: var(--white);
-        cursor: help;
-        font-size: 1.3rem;
-        font-weight: bold;
-        padding: .3rem .5rem;
+        bottom: 7rem;
+        border: 2px solid var(--warning);  
+        font-size: 1.4rem;
+        line-height: 1.5;
+        left: 1rem;        
+        padding: 3rem;
         position: absolute;
-        right: 1rem;
-        top: 1rem;
+        right: 1rem;        
+        text-align: left;
+        top: 1rem; 
+        z-index: 1;
     }
 }
 </style>

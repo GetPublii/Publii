@@ -69,6 +69,7 @@ export default {
     display: grid;
     grid-auto-rows: max-content;
     overflow: auto;
+    padding-bottom: 6rem;
     position: absolute;
     top: 12.5rem;
     width: calc(100% - 10rem);

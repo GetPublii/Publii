@@ -323,7 +323,7 @@ export default {
         font-size: 1.4rem;
         font-weight: 400;
         height: 3.8rem;
-        line-height: 3.9rem;
+        line-height: 3.8rem;
         padding: 0 1.4rem;
     }
 
@@ -354,6 +354,7 @@ export default {
         }
 
         &.button-small {
+            padding-left: 3.8rem;
 
             & > svg {
                 height: 16px;
@@ -379,7 +380,7 @@ export default {
 
         &.button-clean {
             & > svg {
-                fill: var(--icon-primary-color);
+                fill: currentColor;
             }
         }
 

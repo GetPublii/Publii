@@ -330,7 +330,6 @@
                     <p-button
                         @click.native="saveSettings"
                         slot="buttons"
-                        type="secondary"
                         :disabled="buttonsLocked">
                         {{ $t('settings.saveSettings') }}
                     </p-button>
