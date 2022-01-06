@@ -73,6 +73,14 @@ class RendererContext {
             }
         }
 
+        if (this.renderer.plugins.hasModifiers('menuStructure')) {
+            menus.assigned = this.renderer.plugins.runModifiers('menuStructure', this.renderer, menus.assigned); 
+        }
+
+        if (this.renderer.plugins.hasModifiers('unassignedMenuStructure')) {
+            menus.unassigned = this.renderer.plugins.runModifiers('unassignedMenuStructure', this.renderer, menus.unassigned); 
+        }
+
         return menus;
     }
 
@@ -184,7 +192,7 @@ class RendererContext {
         return authors;
     }
 
-    setGlobalContext() {
+    setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig) {
         let addIndexHtml = this.renderer.previewMode || this.siteConfig.advanced.urls.addIndex;
         let fullURL = normalizePath(this.siteConfig.domain);
         let searchUrl = fullURL + '/' + this.siteConfig.advanced.urls.searchPage;
@@ -236,21 +244,31 @@ class RendererContext {
             fullURL = fullURL + '/';
         }
 
+        let contextItems = [context].concat(additionalContexts);
+        contextItems = [...new Set(contextItems)];
+
         this.context = {
+            context: contextItems,
+            config: URLHelper.prepareSettingsImages(this.siteConfig.domain, {
+                basic: JSON.parse(JSON.stringify(this.themeConfig.config)),
+                site: JSON.parse(JSON.stringify(this.siteConfig.advanced)),
+                custom: JSON.parse(JSON.stringify(this.themeConfig.customConfig))
+            }),
             website: {
                 url: fullURL,
                 baseUrl: fullURL.replace('/index.html', '/'),
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
-                pageUrl: '',
-                ampUrl: '',
+                pageUrl: this.getPageUrl(context, paginationData, itemSlug),
+                ampUrl: this.getAmpPageUrl(context, paginationData, itemSlug),
                 name: siteNameValue,
                 logo: logoUrl,
                 logoSize: logoSize,
                 assetsUrl: assetsUrl,
                 postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
-                contentStructure: {}
+                contentStructure: this.renderer.contentStructure,
+                language: this.siteConfig.language
             },
             renderer: {
                 previewMode: this.renderer.previewMode,
@@ -263,20 +281,27 @@ class RendererContext {
                 createAuthorPages: RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig),
                 createTagPages: RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig),
                 createSearchPage: RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig),
-                create404page: RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)
+                create404page: RendererHelpers.getRendererOptionValue('create404page', this.themeConfig),
+                isFirstPage: this.getFirstPageContextData(paginationData),
+                isLastPage: this.getLastPageContextData(paginationData)
             },
-            pagination: false,
-            headCustomCode: this.getCustomHTMLCode('customHeadCode'),
-            headAmpCustomCode: this.getCustomHTMLCode('customHeadAmpCode'),
-            bodyCustomCode: this.getCustomHTMLCode('customBodyCode'),
-            footerCustomCode: this.getCustomHTMLCode('customFooterCode'),
-            footerAmpCustomCode: this.getCustomHTMLCode('customFooterAmpCode'),
-            customHTML: this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML),
+            pagination: this.getPaginationContextData(paginationData),
             utils: {
                 currentYear: new Date().getFullYear(),
                 buildDate: +new Date()
             }
         };
+
+        if (context === 'post' && itemConfig) {
+            this.context.config.post = itemConfig;
+        }
+
+        this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode');
+        this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode');
+        this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode');
+        this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode');
+        this.context.footerAmpCustomCode = this.getCustomHTMLCode('customFooterAmpCode');
+        this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML);
 
         // In AMP mode create special global @amp variable
         if(this.renderer.ampMode) {
@@ -343,6 +368,10 @@ class RendererContext {
                 }
             }
         }
+
+        if (this.renderer.plugins.hasModifiers('globalContext')) {
+            this.context = this.renderer.plugins.runModifiers('globalContext', this.renderer, this.context); 
+        }
     }
 
     getCustomHTMLCode (optionName) {
@@ -380,14 +409,13 @@ class RendererContext {
         return object;
     }
 
-    getGlobalContext() {
-        this.setGlobalContext();
-
+    getGlobalContext(context, additionalContexts, paginationData, itemSlug) {
+        this.setGlobalContext(context, additionalContexts, paginationData, itemSlug);
         return this.context;
     }
 
     getContentStructure() {
-        if(this.themeConfig.renderer && !this.themeConfig.renderer.createContentStructure) {
+        if (this.themeConfig.renderer && !this.themeConfig.renderer.createContentStructure) {
             return false;
         }
 
@@ -427,11 +455,17 @@ class RendererContext {
             authors[i].posts = this.getContentStructureAuthorPosts(authors[i].id);
         }
 
-        return {
+        let finalContentStructure = {
             posts: posts,
             tags: tags,
             authors: authors
         };
+
+        if (this.renderer.plugins.hasModifiers('contentStructure')) {
+            finalContentStructure = this.renderer.plugins.runModifiers('contentStructure', this.renderer, finalContentStructure); 
+        }
+
+        return finalContentStructure;
     }
 
     getContentStructureTagPosts(tagID) {
@@ -555,6 +589,84 @@ class RendererContext {
         `).all();
 
         return results;
+    }
+
+    getPageUrl (context, paginationData, itemSlug) {
+        let pagePart = this.siteConfig.advanced.urls.pageName;
+
+        if (context === 'index' || context === '404' || context === 'search') {
+            if (!paginationData || paginationData.currentPage === 1) {
+                return this.siteConfig.domain + '/';
+            } else {
+                return this.siteConfig.domain + '/' + pagePart +  '/' + paginationData.currentPage + '/';
+            }
+        } else if (context === 'tags') {
+            if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
+                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            } else {
+                return this.siteConfig.domain + '/';
+            }
+        } else if (context === 'author') {
+            if (!paginationData || paginationData.currentPage === 1) {
+                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/';
+            } else {
+                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+            }
+        } else if (context === 'tag') {
+            if (!paginationData || paginationData.currentPage === 1) {
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
+                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
+                } else {
+                    return this.siteConfig.domain + '/' + itemSlug + '/';
+                }
+            } else {
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
+                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                } else {
+                    return this.siteConfig.domain + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                }
+            }
+        } else if (context === 'post') {
+            if (this.siteConfig.advanced.urls.cleanUrls) { 
+                return this.siteConfig.domain + '/' + itemSlug + '.html';
+            } else {           
+                return this.siteConfig.domain + '/' + itemSlug + '/';
+            }
+        }
+    }
+
+    getAmpPageUrl (context, paginationData, itemSlug) {
+        if (!this.siteConfig.advanced.ampIsEnabled || context === '404' || context === 'search') {
+            return '';
+        }
+
+        let siteUrl = this.siteConfig.domain + '/';
+        let ampUrl = this.siteConfig.domain + '/amp/';
+        return this.getPageUrl(context, paginationData, itemSlug).replace(siteUrl, ampUrl);
+    }
+
+    getPaginationContextData (paginationData) {
+        if (!paginationData) {
+            return false;
+        }
+       
+        return paginationData.pagination;
+    }
+
+    getFirstPageContextData (paginationData) {
+        if (!paginationData) {
+            return true;
+        }
+        
+        return paginationData.isFirstPage;
+    }
+
+    getLastPageContextData (paginationData) {
+        if (!paginationData) {
+            return true;
+        }
+        
+        return paginationData.isLastPage;
     }
 }
 
