@@ -259,6 +259,7 @@ class RendererContext {
                 baseUrl: fullURL.replace('/index.html', '/'),
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
+                tagsUrl: this.getTagsUrl(),
                 pageUrl: this.getPageUrl(context, paginationData, itemSlug),
                 ampUrl: this.getAmpPageUrl(context, paginationData, itemSlug),
                 name: siteNameValue,
@@ -667,6 +668,14 @@ class RendererContext {
         }
         
         return paginationData.isLastPage;
+    }
+
+    getTagsUrl () {
+        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
+            return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+        } else {
+            return this.siteConfig.domain + '/';
+        }
     }
 }
 
