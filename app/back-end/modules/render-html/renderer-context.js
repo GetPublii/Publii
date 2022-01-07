@@ -296,7 +296,7 @@ class RendererContext {
         if (context === 'post' && itemConfig) {
             this.context.config.post = itemConfig;
         }
-        
+
         this.renderer.globalContext = this.context;
         this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode');
         this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode');
@@ -629,7 +629,7 @@ class RendererContext {
                 }
             }
         } else if (context === 'post') {
-            if (this.siteConfig.advanced.urls.cleanUrls) { 
+            if (!this.siteConfig.advanced.urls.cleanUrls) { 
                 return this.siteConfig.domain + '/' + itemSlug + '.html';
             } else {           
                 return this.siteConfig.domain + '/' + itemSlug + '/';
