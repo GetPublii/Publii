@@ -108,8 +108,8 @@ export default {
         &:active,
         &:focus,
         &:hover {
-            background: var(--sidebar-link-hover-bg);
-            color: var(--sidebar-link-hover-color);
+            background: var(--sidebar-link-bg-hover);
+            color: var(--sidebar-link-color-hover);
             opacity: 1;
 
             svg {
@@ -131,8 +131,8 @@ export default {
 
         &.is-active {
             a {
-                background: var(--sidebar-link-active-bg);
-                color: var(--sidebar-link-active-color);
+                background: var(--sidebar-link-bg-active);
+                color: var(--sidebar-link-color-active);
                 opacity: 1;
             }
         }

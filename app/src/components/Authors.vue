@@ -334,7 +334,7 @@ export default {
     }
 
     .is-main-author {
-        color: var(--gray-4);
+        color: var(--text-light-color);
     }
 
     .main-author-icon {

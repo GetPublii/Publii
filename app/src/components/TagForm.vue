@@ -653,7 +653,7 @@ export default {
     }
 
     &-icon {
-        fill: var(--primary-color);
+        fill: var(--color-primary);
         left: 0;
         height: 2.4rem;
         margin-right: 1.6rem;

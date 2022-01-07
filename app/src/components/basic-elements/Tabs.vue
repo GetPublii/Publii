@@ -119,7 +119,7 @@ export default {
 
                 &.active {
                     background: none!important;
-                    border-bottom: 2px solid var(--button-green-bg);
+                    border-bottom: 2px solid var(--button-tertiary-bg);
                     border-radius: 0;
                     color: var(--tab-color);
                 }
@@ -178,7 +178,7 @@ export default {
             }
 
             &:hover {
-                color: var(--tab-hover-color);
+                color: var(--tab-color-hover);
             }
 
             &:last-child {

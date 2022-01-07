@@ -91,7 +91,6 @@ export default {
     transition: var(--transition);
     text-align: center;
 
-
     &-thumbnail {
         display: block;
         height: auto;

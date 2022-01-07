@@ -104,15 +104,15 @@ export default {
 
     &:hover {
          background: var(--bg-primary);
-         border-color: var(--secondary-color);
+         border-color: var(--color-primary);
          box-shadow: 0 0 26px rgba(black, .07);
 
          svg {
-             fill: var(--primary-color);
+             fill: var(--color-primary);
          }
 
          h3 {
-             color: var(--primary-color);
+             color: var(--color-primary);
          }
     }
 
@@ -134,7 +134,7 @@ export default {
     }
 
     svg {
-         fill: var(--gray-5);
+         fill: var(--icon-primary-color);
          transition: inherit;
     }
 }

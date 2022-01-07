@@ -68,7 +68,7 @@ export default {
 .appbar {
     -webkit-app-region: drag; // necessary for making window draggable
     -webkit-user-select: none; // remove conflict with the text selection
-    background: var(--gray-7);
+    background: var(--top-app-bar);
     height: var(--topbar-height);
     padding: 0;
     position: relative;

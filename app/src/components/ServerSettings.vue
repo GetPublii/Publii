@@ -1569,18 +1569,18 @@ export default {
 
             &:hover {
                 background: var(--bg-primary);
-                border-color: var(--primary-color);
+                border-color: var(--color-primary);
                 box-shadow: var(--box-shadow---box-shadow-medium);
-                color: var(--primary-color);
+                color: var(--color-primary);
                 cursor: pointer;
 
                 & > svg {
-                    fill: var(--primary-color);
+                    fill: var(--color-primary);
                 }
             }
 
             & > svg {
-                fill: var(--gray-5);
+                fill: var(--icon-primary-color);
                 transition: inherit;
             }
 

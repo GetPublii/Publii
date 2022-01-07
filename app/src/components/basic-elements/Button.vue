@@ -122,7 +122,7 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-hover-bg);
+        background: var(--button-bg-hover);
         color: var(--white);
     }
 
@@ -137,27 +137,27 @@ export default {
 
     &-link {
        background: var(--bg-primary);
-        color: var(--primary-color);
+        color: var(--color-primary);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
             background: var(--gray-1);
-            color: var(--primary-color);
+            color: var(--color-primary);
         }
     }
 
     &-primary,
     &-success {
-        background: var(--button-green-bg);
+        background: var(--button-tertiary-bg);
         color: var(--white);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-green-hover-bg);
+            background: var(--button-tertiary-bg-hover);
             color: var(--white);
         }
     }
@@ -174,11 +174,11 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-secondary-hover-bg);
-            color: var(--button-secondary-hover-color);
+            background: var(--button-secondary-bg-hover);
+            color: var(--button-secondary-color-hover);
 
             & > svg {
-                fill: var(--button-secondary-hover-color);
+                fill: var(--button-secondary-color-hover);
             }
         }  
     }
@@ -206,7 +206,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-red-hover-bg);
+            background: var(--button-red-bg-hover);
             color: var(--white);
         }
     }
@@ -218,7 +218,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--primary-color);
+            background: var(--color-primary);
             color: var(--white);
         }
     }
@@ -268,7 +268,7 @@ export default {
     }
 
     &-bottom {
-        background: var(--button-green-bg);
+        background: var(--button-tertiary-bg);
         border-radius: 0 0 3px 3px;
         display: block;
         height: 5.6rem;
@@ -281,7 +281,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-green-hover-bg);
+            background: var(--button-tertiary-bg-hover);
         }
 
         & > svg {
@@ -399,7 +399,7 @@ export default {
             width: 48px;
 
              & > svg {
-                fill: var(--primary-color);
+                fill: var(--color-primary);
             }
         }
 

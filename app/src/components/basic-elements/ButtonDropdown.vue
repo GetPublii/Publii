@@ -226,7 +226,7 @@ export default {
         transition: var(--transition);
 
         &:hover {
-            background: var(--button-hover-bg);
+            background: var(--button-bg-hover);
         }
 
         &-icon {
@@ -246,7 +246,7 @@ export default {
     }
 
     &-toggle {
-        background: var(--button-hover-bg);
+        background: var(--button-bg-hover);
         border-left: 1px solid var(--button-bg);
         border-radius: 0 var(--border-radius) var(--border-radius) 0;
         cursor: pointer;
@@ -281,7 +281,7 @@ export default {
         }
 
         &:hover {
-            background: var(--button-hover-bg);
+            background: var(--button-bg-hover);
 
             &::before {
                background: rgba(black, .1);
@@ -355,20 +355,20 @@ export default {
     }
 
     &.is-green {
-        background-color: var(--button-green-bg);
+        background-color: var(--button-tertiary-bg);
 
         .button-trigger {
             &:hover {
-                background: var(--button-green-hover-bg);
+                background: var(--button-tertiary-bg-hover);
             }
         }
 
         .button-toggle {
-            background: var(--button-green-hover-bg);
-            border-left: 1px solid var(--button-green-bg);
+            background: var(--button-tertiary-bg-hover);
+            border-left: 1px solid var(--button-tertiary-bg);
 
             &:hover {
-                background: var(--button-green-hover-bg);
+                background: var(--button-tertiary-bg-hover);
 
                 &::before {
                     background: rgba(black, .1);

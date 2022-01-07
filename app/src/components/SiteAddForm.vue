@@ -519,25 +519,27 @@ export default {
                 display: block;
                 line-height: 1.6!important;
                 margin: 3rem auto 0 auto!important;
-                width: 16rem!important;
 
                 &::-webkit-file-upload-button {
                     -webkit-appearance: none;
-                    background: var(--button-gray-bg);
-                    border: 1px solid var(--button-gray-bg);
-                    border-radius: 3px;
-                    color: var(--white);
-                    cursor: pointer;
-                    font-weight: 500;
-                    font-size: 1.5rem;
-                    padding: .5rem;
-                    text-align: center;
-                    width: 16rem;
-                    outline: none;
+                background: var(--button-secondary-bg);
+                border: 1px solid var(--button-secondary-bg);
+                border-radius: var(--border-radius);
+                color: var(--button-secondary-color);
+                cursor: pointer;
+                display: inline-block;
+                font-size: 1.5rem;
+                font-weight: var(--font-weight-semibold);
+                left: 50%;
+                padding: .75rem 1.5rem;
+                position: relative;
+                transform: translate(-50%, 0);
+                outline: none;
 
                     &:hover {
-                        background: var(--button-gray-hover-bg);
-                        border-color: var(--button-gray-hover-bg);
+                        background: var(--button-secondary-bg-hover);
+                        border-color: var(--button-secondary-bg-hover);
+                        color: var(--button-secondary-color-hover);
                     }
                 }
             }

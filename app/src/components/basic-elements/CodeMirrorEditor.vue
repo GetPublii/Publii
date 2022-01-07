@@ -172,7 +172,7 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                background: var(--button-hover-bg);
+                background: var(--button-bg-hover);
                 color: var(--white);
             }
         }

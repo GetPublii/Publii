@@ -252,7 +252,7 @@ label {
 
             & > label {
                 background: var(--bg-primary);
-                color: var(--primary-color);
+                color: var(--color-primary);
                 font-size: 1.4rem;
                 font-weight: 500;
                 padding-right: .5rem;

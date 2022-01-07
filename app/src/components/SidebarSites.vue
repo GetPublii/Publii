@@ -64,7 +64,7 @@ export default {
     &:focus,
     &:hover {
         & > span {
-            color: var(--primary-color);
+            color: var(--color-primary);
 
         }
 

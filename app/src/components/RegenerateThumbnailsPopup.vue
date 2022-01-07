@@ -5,8 +5,7 @@
         <div class="popup">
             <icon
                 name="blank-image"
-                size="xl"
-                primaryColor="color-8" />
+                size="xl" />
 
             <h1>
                 {{ $t('tools.thumbnails.themeOrThumbnailsSettingsChanged') }}
@@ -170,7 +169,18 @@ export default {
     padding: 4rem 4rem 6rem 4rem;
     width: 60rem;
 
+    h1 {
+        margin-top: 2rem;
+    }
+
+    svg {
+        fill: var(--icon-secondary-color);
+
+    }
+
     &-info {
+        font-size: 1.5rem;
+        color: var(--text-light-color);
         margin: -1.5rem 0 4rem;
     }
 }

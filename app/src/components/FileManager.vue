@@ -415,7 +415,7 @@ export default {
             }
 
             &.is-active {
-                color: var(--primary-color);
+                color: var(--color-primary);
             }
         }
     }

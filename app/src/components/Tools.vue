@@ -203,16 +203,16 @@ export default {
 
             &:hover {
                background: var(--bg-primary);
-               border-color: var(--secondary-color);
+               border-color: var(--color-primary);
                box-shadow: var(--box-shadow-medium);  
                cursor: pointer;
 
                svg {
-                  fill: var(--primary-color);
+                  fill: var(--color-primary);
                }
 
                a {
-                  color: var(--primary-color);
+                  color: var(--color-primary);
                }
             }
 
@@ -229,7 +229,7 @@ export default {
 
             svg {
                display: block;
-               fill: var(--gray-5);
+               fill: var(--icon-primary-color);
                margin: 0 auto 1rem;
                transition: inherit;
             }
@@ -251,7 +251,12 @@ export default {
 
                 &:hover {
                    border-color: var(--border-light-color);
-                   box-shadow: var(--box-shadow-small);   
+                   box-shadow: var(--box-shadow-small);  
+                   
+                   .tools-switcher {
+                         animation: tools-switcher-animation 3s linear infinite;
+
+                   }
                 }
             }
         }      
@@ -261,6 +266,10 @@ export default {
        position: absolute;
        left: 1.5rem;
        bottom: 1rem;
+
+       &:hover {
+             animation: none !important;
+       }
     }
 
     &-description {
@@ -308,5 +317,14 @@ export default {
             flex-basis: calc(20% - 2rem);
         }
     }
+}
+
+@keyframes tools-switcher-animation {
+  0% {transform:scale(1)}
+  16% {transform:scale(.8)}
+  33% {transform:scale(1)}
+  50% {transform:scale(.8)}
+  67% {transform:scale(1)}
+  84% {transform:scale(.8)}
 }
 </style>

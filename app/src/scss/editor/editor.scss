@@ -169,7 +169,7 @@ blockquote {
     @include fluid-type(font-size, $minScreen, $maxScreen, ms(1), ms(2));
 
     &::before {
-        color: var(--secondary-color);
+        color: var(--color-primary);
         content: "“";
         font: normal 360%/0.9 var(--font-serif);
         top: baseline(1);
@@ -342,8 +342,8 @@ hr#read-more {
     &:hover,
     &:active,
     &:focus {
-        background: var(--button-hover-bg);
-        border-color: var(--button-hover-bg);
+        background: var(--button-bg-hover);
+        border-color: var(--button-bg-hover);
         text-decoration: none !important;
     }
 }
@@ -566,7 +566,7 @@ img {
     }
 
     &--info {
-        border-color: rgba(var(--primary-color-rgb), 1);
+        border-color: rgba(var(--color-primary-rgb), 1);
     }
 
     &--success {
@@ -640,8 +640,8 @@ img {
         }
 
         &:hover:after {
-            background: var(--button-gray-hover-bg);
-            border-color: var(--button-gray-hover-bg);
+            background: var(--button-gray-bg-hover);
+            border-color: var(--button-gray-bg-hover);
         }
     }
 
@@ -736,7 +736,7 @@ publii-non-amp:before {
  * Outline selected elements
  */
 .mce-match-marker-selected {
-    background: var(--primary-color);
+    background: var(--color-primary);
 }
 
 .mce-content-body img[data-mce-selected],
@@ -746,13 +746,13 @@ publii-non-amp:before {
 .mce-content-body [contentEditable=false] [contentEditable=true]:hover,
 .mce-content-body [contentEditable=false][data-mce-selected],
 .mce-content-body .mce-edit-focus {
-    outline: 3px solid rgba(var(--primary-color-rgb), .55) !important;
+    outline: 3px solid rgba(var(--color-primary-rgb), .55) !important;
 }
 
 .mce-content-body [data-mce-selected=inline-boundary],
 .mce-content-body td[data-mce-selected],
 .mce-content-body th[data-mce-selected] {
-    background-color: rgba(var(--primary-color-rgb), .55) !important;
+    background-color: rgba(var(--color-primary-rgb), .55) !important;
 }
 
 

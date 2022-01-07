@@ -266,7 +266,7 @@ export default {
         }
 
         .single-site-icon {
-             color: var(--primary-color);
+             color: var(--color-primary);
         }
     }
 

@@ -197,9 +197,9 @@ export default {
             outline: none;
 
             &:hover {
-                background: var(--button-secondary-hover-bg);
-                border-color: var(--button-secondary-hover-bg);
-                color: var(--button-secondary-hover-color);
+                background: var(--button-secondary-bg-hover);
+                border-color: var(--button-secondary-bg-hover);
+                color: var(--button-secondary-color-hover);
             }
         }
     }

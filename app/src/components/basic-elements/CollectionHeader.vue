@@ -66,6 +66,7 @@ export default {
 
     .col {
         background: var(--bg-site);
+        color: var(--headings-color);
         position: sticky;
         top: 0;
         z-index: 2;

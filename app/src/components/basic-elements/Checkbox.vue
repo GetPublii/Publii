@@ -56,13 +56,13 @@ input[type="checkbox"] {
     z-index: 1;
 
     &:hover {
-        border: 1px solid var(--primary-color);
+        border: 1px solid var(--color-primary);
         cursor: pointer;
     }
 
     &.is-checked {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
+        background: var(--color-primary);
+        border-color: var(--color-primary);
 
         &:before {
             color: var(--white);

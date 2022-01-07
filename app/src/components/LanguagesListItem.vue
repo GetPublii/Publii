@@ -161,12 +161,12 @@ export default {
 
     &:hover:not(.is-active) {
         background: var(--bg-primary);
-        border-color: var(--secondary-color);
+        border-color: var(--color-primary);
         box-shadow: var(--box-shadow-medium);  
         cursor: pointer;
 
         a {
-            color: var(--primary-color);
+            color: var(--color-primary);
         }
     }
 

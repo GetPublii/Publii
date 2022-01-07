@@ -230,7 +230,7 @@ export default {
             text-align: center;
 
             &:hover {
-                color: var(--sidebar-link-hover-color);
+                color: var(--sidebar-link-color-hover);
                 opacity: 1;
             }
 
@@ -269,7 +269,7 @@ export default {
                 }
 
                 polygon {
-                    fill: var(--primary-color);
+                    fill: var(--color-primary);
                     transition: var(--transition);
                 }
             }
@@ -380,8 +380,8 @@ export default {
         }
 
         &:hover {
-            border-color: var(--sidebar-preview-btn-border-hover-color) !important;
-            color: var(--sidebar-preview-btn-hover-color) !important;
+            border-color: var(--sidebar-preview-btn-border-color-hover) !important;
+            color: var(--sidebar-preview-btn-color-hover) !important;
         }
 
         &.is-disabled {

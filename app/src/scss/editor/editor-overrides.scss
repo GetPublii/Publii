@@ -48,8 +48,8 @@
         }
 
         .tinymce-overlay {
-            border: 3px solid var(--primary-color);
-            background: rgba(var(--primary-color-rgb), .17);
+            border: 3px solid var(--color-primary);
+            background: rgba(var(--color-primary-rgb), .17);
             display: none;
             height: 100%;
             left: 0;
@@ -62,7 +62,7 @@
 
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
-                background: var(--primary-color);
+                background: var(--color-primary);
                 border-radius: 3px;
                 color: var(--white);
                 font-size: 1.6rem;
@@ -454,7 +454,7 @@ body {
                         &:focus,
                         &:hover,
                         &.button-active {
-                            background: var(--button-hover-bg);
+                            background: var(--button-bg-hover);
                             color: var(--white);
                         }
                         
@@ -600,7 +600,7 @@ body {
                     
                     &--enabled {
                         background-color: var(--gray-1);
-                        color: var(--primary-color);
+                        color: var(--color-primary);
                     }
                     
                     &--active {
@@ -646,7 +646,7 @@ body {
         
        .tox-checkbox__icons {
            .tox-checkbox-icon__indeterminate svg {
-              fill: var(--primary-color); 
+              fill: var(--color-primary); 
            }
            
            .tox-checkbox-icon__unchecked svg {
@@ -654,7 +654,7 @@ body {
            }
            
            .tox-checkbox-icon__checked svg {
-               fill: var(--primary-color); 
+               fill: var(--color-primary); 
            }
         }
         
@@ -752,7 +752,7 @@ body[data-os="win"] {
 
         &:active,
         &:focus {
-            color: var(--primary-color);
+            color: var(--color-primary);
         }
 
         &:hover {
@@ -795,7 +795,7 @@ body[data-os="win"] {
             &:focus,
             &:hover {
                 background: var(--white) !important;
-                color: var(--gray-5) !important;
+                color: var(--icon-primary-color) !important;
             }
 
             i {

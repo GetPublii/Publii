@@ -362,15 +362,15 @@ export default {
                 outline: none;
                 
                 &:hover {
-                    background: var(--button-secondary-hover-bg);
-                    border-color: var(--button-secondary-hover-bg);
-                    color: var(--button-secondary-hover-color);
+                    background: var(--button-secondary-bg-hover);
+                    border-color: var(--button-secondary-bg-hover);
+                    color: var(--button-secondary-color-hover);
                 }
             }
         }
 
         &.is-hovered {
-            border-color: var(--primary-color);
+            border-color: var(--color-primary);
         }
 
         &:not(.is-empty):not(.is-hovered) {
@@ -439,10 +439,10 @@ export default {
 
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-right: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-bottom: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-left: 2px solid var(--primary-color);
+                border-top: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-right: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-left: 2px solid var(--color-primary);
                 border-radius: 50%;
                 display: block;
                 height: 2.5rem;

@@ -949,7 +949,7 @@ export default {
             }
 
             &-icon {
-                fill: var(--primary-color);
+                fill: var(--color-primary);
                 left: 0;
                 height: 2.4rem;
                 margin-right: 1.6rem;
@@ -1041,7 +1041,7 @@ body > .select2-container {
     font-size: 1.4rem;
 
     .select2-results__option--highlighted[aria-selected] {
-        background: var(--primary-color);
+        background: var(--color-primary);
     }
 
     .select2-dropdown {
