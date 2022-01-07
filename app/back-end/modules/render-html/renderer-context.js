@@ -296,7 +296,8 @@ class RendererContext {
         if (context === 'post' && itemConfig) {
             this.context.config.post = itemConfig;
         }
-
+        
+        this.renderer.globalContext = this.context;
         this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode');
         this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode');
         this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode');
