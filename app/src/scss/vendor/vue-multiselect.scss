@@ -66,8 +66,7 @@
         color: var(--text-primary-color);
     }
 }
-
-.menu-item-editor {
+.options-sidebar {
     label {
         &.is-invalid {
             .multiselect__tags {
@@ -76,4 +75,3 @@
         }
     }
 }
-

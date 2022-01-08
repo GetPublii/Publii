@@ -141,6 +141,8 @@ html[data-theme="default"] {
     --sidebar-icon: var(--white);
         
     --option-sidebar-bg: var(--white);
+
+    --collection-bg-hover: var(--color-5);
         
     --tab-color: var(--color-90);
     --tab-color-hover: var(--color-65);
@@ -186,6 +188,49 @@ html[data-theme="default"] {
   
 //dark
 html[data-theme="dark"] { 
+
+    // color pallete
+    --color-5: #f2f9ff;
+    --color-10: #d9ecff;
+    --color-15: #c0dfff;
+    --color-20: #a7d3ff;
+    --color-25: #8dc6ff;
+    --color-30: #74baff;
+    --color-35: #5badff;
+    --color-40: #42a0ff;
+    --color-45: #2994ff;
+    --color-50: #1089ff;
+    --color-55: #0079f2;
+    --color-60: #006bd5;
+    --color-65: #005cb9;
+    --color-70: #004e9c;
+    --color-75: #004080;
+    --color-80: #003264;
+    --color-85: #002447;
+    --color-90: #00152b;
+    --color-95: #00070e;
+
+    --neutral-5: #f6f6f9;
+    --neutral-10: #e7e8ea;
+    --neutral-15: #d7d8dc;
+    --neutral-20: #c7c9ce;
+    --neutral-25: #b7b9c0;
+    --neutral-30: #a7a9b2;
+    --neutral-35: #969aa4;
+    --neutral-40: #868a96;
+    --neutral-45: #767b88;
+    --neutral-50: #686c78;
+    --neutral-55: #5d616b;
+    --neutral-60: #52555f;
+    --neutral-65: #474a52;
+    --neutral-70: #3c3f46;
+    --neutral-75: #313339;
+    --neutral-80: #26282c;
+    --neutral-85: #1b1c20;
+    --neutral-90: #101113;
+    --neutral-95: #050606;
+
+    // basic
     --color-primary: #1089ff;
     --color-primary-rgb: 16, 137, 255;
     
@@ -245,11 +290,7 @@ html[data-theme="dark"] {
     --headings-color: rgba(255,255,255, .87);
         
     --link-primary-color: rgba(255,255,255, .87);
-    --link-primary-hover-color: #2e98ff; 
-    --link-primary-color: #8e929d;
-    --link-primary-hover-color: #2e98ff; 
-    --link-primary-color: rgba(255,255,255, .87);
-    --link-primary-hover-color: #2e98ff;         
+    --link-primary-hover-color: #2e98ff;        
     
     --sidebar-bg-top: #191a1f;
     --sidebar-bg-bottom: #191a1f;
@@ -271,6 +312,8 @@ html[data-theme="dark"] {
     --sidebar-icon: rgba(255,255,255, .87);
         
     --option-sidebar-bg: #22232a;
+
+    --collection-bg-hover: var(--gray-1);
         
     --tab-color: rgba(255,255,255, .87);
     --tab-color-hover: #2e98ff;
