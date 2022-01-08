@@ -411,8 +411,8 @@ class RendererContext {
         return object;
     }
 
-    getGlobalContext(context, additionalContexts, paginationData, itemSlug) {
-        this.setGlobalContext(context, additionalContexts, paginationData, itemSlug);
+    getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig) {
+        this.setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig);
         return this.context;
     }
 

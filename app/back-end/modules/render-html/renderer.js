@@ -1718,9 +1718,9 @@ class Renderer {
         console.timeEnd("COMMON DATA");
     }
 
-    createGlobalContext(context, additionalContexts = [], paginationData = false, itemSlug = false) {
+    createGlobalContext(context, additionalContexts = [], paginationData = false, itemSlug = false, itemConfig = false) {
         let globalContextGenerator = new RendererContext(this);
-        return globalContextGenerator.getGlobalContext(context, additionalContexts, paginationData, itemSlug);
+        return globalContextGenerator.getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig);
     }
 
     compileTemplate(inputFile) {
