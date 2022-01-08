@@ -155,6 +155,16 @@ export default {
 }
 
 .item {
+    &:hover {
+        .col {
+           background: var(--collection-bg-hover);
+
+           &:first-child {
+               box-shadow: inset 3px 0 0 var(--color-primary);
+           }
+        }
+    }
+
     &[data-is-draft="true"] {
         .title,
         .tags,

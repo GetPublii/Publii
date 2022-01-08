@@ -94,7 +94,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/variables.scss';
-@import '../../assets/vue-multiselect.scss';
 
 .is-highlighted {
   background: var(--eb-primary-color);

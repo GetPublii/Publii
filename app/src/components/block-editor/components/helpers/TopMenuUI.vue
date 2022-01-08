@@ -272,26 +272,40 @@ export default {
     margin-left: auto;
     margin-right: 6px;
     position: relative;
-    top: 4px;
+    top: 3px;
     width: auto;
 
     &__tags {
       background: var(--eb-bg-secondary);
       border: 2px solid var(--eb-input-border-color);
+      color: var(--eb-text-primary-color);
       height: 34px;
       min-height: 100%;
       padding: 4px 40px 5px 14px;
       min-width: 34px;
     }
 
+    &__placeholder {
+      color: var(--eb-text-light-color);
+      display: block;
+      font-size: 16px;
+      margin-bottom: 0;
+      padding-top: 1px;
+    }
+
     &__single {
-      background: inherit;
+      background: transparent;
       color: var(--eb-text-primary-color);
-      height: 20px;
+      min-height: 20px;
+      line-height: 20px;
+      margin-bottom: 0;
+      padding: 1px 0 0 0;
     }
 
     &__select {
       height: 28px;
+      top: 3px;
+      width: 34px;
 
       &::before {
           border-color: var(--eb-gray-4) transparent transparent;
@@ -315,8 +329,8 @@ export default {
     }
 
     &__option {
-      padding: 8px 14px;
-      min-height: 30px;
+        padding: 15px;
+        min-height: 30px;
 
       &--highlight {
         background: var(--eb-input-bg-light);
@@ -328,8 +342,8 @@ export default {
       }
 
       &.multiselect__option--selected {
-        background: var(--eb-primary-color);
-        color: var(--eb-white);
+        background: var(--eb-input-bg-hover);
+        color: var(--eb-text-primary-color);
 
         &:after {
           display: none;

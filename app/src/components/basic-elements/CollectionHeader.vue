@@ -22,7 +22,7 @@ export default {
         gap: .75rem;
         margin-left: 5rem;
         min-width: 200px;
-        padding: .9rem 0;
+        padding: .825rem 0;
         position: fixed;
         z-index: 5;
 
