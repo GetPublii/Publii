@@ -31,7 +31,7 @@ export default {
         return [0];
       }
 
-      return this.$parent.currentSiteData.posts.map(post => post.id);
+      return this.$parent.currentSiteData.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
     },
     filesList () {
       if (!this.$parent.currentSiteData || !this.$parent.currentSiteData.files.length) {

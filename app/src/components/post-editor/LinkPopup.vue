@@ -218,7 +218,7 @@ export default {
             });
         },
         postPages () {
-            return this.$store.state.currentSite.posts.map(post => post.id);
+            return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
         },
         targetList () {
             return [ '-', '_blank' ];
