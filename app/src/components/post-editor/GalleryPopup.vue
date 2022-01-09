@@ -183,7 +183,7 @@ export default {
             await mainProcessAPI.invoke('app-main-process-select-files', false, [
                 {
                     name: 'Images',
-                    extensions: ['jpg', 'jpeg', 'png']
+                    extensions: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'tiff']
                 }
             ]);
 
