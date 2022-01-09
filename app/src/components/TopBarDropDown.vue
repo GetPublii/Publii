@@ -152,7 +152,7 @@ export default {
     }
 
     &-app-submenu {
-        background: var(--bg-secondary);
+        background: var(--popup-bg);
         box-shadow: var(--box-shadow-medium);
         border-radius: var(--border-radius);
         font-size: 1.5rem;

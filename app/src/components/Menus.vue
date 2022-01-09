@@ -430,7 +430,7 @@ export default {
          &:active,
          &:focus,
          &:hover {
-            color: var(--link-primary-hover-color) !important;
+            color: var(--link-primary-color-hover) !important;
          }
     }
 

@@ -381,15 +381,17 @@ li {
     }
 
     & > div {
-        background: var(--input-bg);
-        border-left: 2px solid var(--input-border-color);
+        background: var(--collection-bg);
+        border: 1px solid var(--border-light-color);
+        border-left: 3px solid var(--input-border-color);
         border-radius: 3px;
         cursor: move !important;
         padding: 4 * $spacing 10 * $spacing;
         position: relative;
 
         &:hover {
-            background: var(--gray-6);
+            background: var(--collection-bg-hover);
+            border-left: 3px solid var(--color-primary);
         }
 
         .menu-item-label {
@@ -448,7 +450,7 @@ li {
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-primary-hover-color);
+                color: var(--link-primary-color-hover);
             }
         }
 

@@ -912,7 +912,7 @@ export default {
                 width: calc(100% - 7.2rem);
 
                 &:hover {
-                    color: var(--link-primary-hover-color);
+                    color: var(--link-primary-color-hover);
                 }
 
                 &.is-open {

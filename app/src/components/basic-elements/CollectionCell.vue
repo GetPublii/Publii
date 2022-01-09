@@ -62,7 +62,7 @@ export default {
 
 .col {
     align-items: center;
-    background: var(--bg-secondary);
+    background: var(--collection-bg);
     box-sizing: content-box;
     border-bottom: 1px solid var(--border-light-color);
     display: grid;

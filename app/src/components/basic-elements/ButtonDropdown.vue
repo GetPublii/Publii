@@ -232,12 +232,12 @@ export default {
         &-icon {
             align-items: center;
             display: flex;
-            height: 4.6rem;
+            height: inherit;
             justify-content: center;
             position: absolute;
             top: 0;
             right: 4.4rem;
-            width: 4.4rem;
+            width: 4.2rem;
 
             .icon {
                 color: var(--white)
@@ -405,7 +405,7 @@ export default {
 
     &.has-icon-preview {
         .button-trigger {
-            padding-right: 8.8rem;
+            padding-right: 8.4rem;
         }
 
         .button-dropdown-item {

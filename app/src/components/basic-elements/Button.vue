@@ -257,7 +257,7 @@ export default {
         &.button-active {
             background: transparent;
             box-shadow: none;
-            color: var(--link-primary-hover-color);
+            color: var(--link-primary-color-hover);
         }
     }
 
@@ -460,10 +460,6 @@ export default {
             & > svg {
                 fill: var(--icon-tertiary-color);
             }
-        }
-
-        &.button-delete {
-            
         }
     }
 

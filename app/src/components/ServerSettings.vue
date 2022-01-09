@@ -1561,7 +1561,7 @@ export default {
             border: 1px solid transparent;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow-small);
-            color: var(--link-primary-hover-color);
+            color: var(--link-primary-color-hover);
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);

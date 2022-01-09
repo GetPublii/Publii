@@ -35,7 +35,7 @@ $logo-colors: (
  * Others
  */
 
-$wrapper: 960px;
+$wrapper: 960px; // app pages view
 $spacing: 0.25rem; // ($baseline / 6.4)
 
 // Modular scale
@@ -58,12 +58,12 @@ $baseline: math.div(1.6rem, 7);
 // Font size map
 $font: ( 
 	min: 1em,
-	max: 1.15em 
+	max: 1.2em 
 );
 
 $h1: ( 
-	min: (ms(5)), 
-	max: (ms(6))
+	min: (ms(4)), 
+	max: (ms(5))
 ); 
 $h2: ( 
 	min: (ms(3)),

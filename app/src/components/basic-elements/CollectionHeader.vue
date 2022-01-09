@@ -33,7 +33,7 @@ export default {
 
             &::before {
                 content: "";
-                background: var(--input-bg);  
+                background: var(--popup-bg);  
                 border-radius: var(--border-radius);
                 display: block;
                 left: -2px;
@@ -60,6 +60,10 @@ export default {
                     opacity: 1;
                     transform: scale(1);
                 }
+            }
+
+            &.button-active {
+                 background: var(--popup-bg);  
             }
         }
     }

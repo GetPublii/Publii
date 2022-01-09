@@ -678,7 +678,7 @@ export default {
     &-header {
         align-items: center;
         border-top: 1px solid var(--input-border-color);
-        color: var(--link-primary-hover-color);
+        color: var(--link-primary-color-hover);
         cursor: pointer;
         display: flex;
         height: 6.4rem;

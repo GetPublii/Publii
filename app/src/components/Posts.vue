@@ -960,7 +960,7 @@ export default {
         position: relative;
 
         .dropdown {
-           background: var(--bg-secondary);
+            background: var(--popup-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow-medium);
             left: 0;
