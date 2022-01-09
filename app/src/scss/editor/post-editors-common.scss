@@ -24,10 +24,6 @@
         overflow: hidden;
         position: relative;
         width: 100%;
-
-        & > div {
-            padding: 4rem 4rem 3rem 4rem;
-        }
     }
 
     #post-stats-button {
@@ -96,21 +92,4 @@ body[data-os="linux"] {
     }
 }
 
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-    }
-}
 
-@media (max-width: 1400px) {    
-    .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-    }
-}

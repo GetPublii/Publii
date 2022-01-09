@@ -133,14 +133,7 @@
         
         .tox-tbtn {
             svg {
-                fill: var(--icon-primary-color);
-                transition: var(--transition);
-            }
-            
-            &:hover {
-                svg {
-                    fill: var(--icon-tertiary-color);
-                }
+                fill: var(--icon-tertiary-color);
             }
         }
 
@@ -235,7 +228,7 @@
     #link-toolbar,
     #inline-toolbar {
         align-items: center;
-        background: var(--input-bg);
+        background: var(--input-bg-light);
         border-radius: 4px;
         box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
         display: none;
@@ -294,9 +287,6 @@
             }
 
             &:hover {
-               svg {
-                  fill: var(--icon-tertiary-color);
-               }
 
                &::before {
                   opacity: 1;
@@ -305,8 +295,7 @@
             }
            
             svg {
-               fill: var(--icon-primary-color);
-               transition: var(--transition);
+               fill: var(--icon-tertiary-color);
             }
         }
 
@@ -557,6 +546,7 @@ body {
         
         .tox-tbtn {
             color: var(--text-primary-color);
+            cursor: pointer;
             margin: 2px 2px 3px 0;
             transition: var(--transition);
             
@@ -583,7 +573,11 @@ body {
                 svg {
                    fill: var(--icon-tertiary-color);
                 }
-            }                     
+            }  
+            
+            &__select-label {
+                cursor: pointer;
+            }
         }
         
         .tox-menu {
@@ -635,6 +629,7 @@ body {
                 }
                 
                 .tox-collection__item--enabled {
+                    background-color: var(--input-bg-light);
                     color: var(--text-primary-color);
                 }
 

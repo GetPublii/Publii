@@ -58,6 +58,7 @@ img {
  */
 
 html {
+    background: var(--bg-primary);
     height: 100%;
     overflow-y: auto !important;
 
@@ -65,7 +66,6 @@ html {
 }
 
 body#tinymce {
-    background: var(--bg-primary);
     color: var(--text-editor-body-color);
     -webkit-font-smoothing: antialiased;
     font-size: inherit;
