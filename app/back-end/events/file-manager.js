@@ -170,6 +170,8 @@ class FileManagerEvents {
             case 'xml':
                 return 'xml';
             case 'webp':
+            case 'avif':
+            case 'tiff':
             case 'bmp':
                 return 'img';
             case 'jpg':
