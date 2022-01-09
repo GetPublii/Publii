@@ -88,6 +88,12 @@ class EditorBridge {
                 }
             }, false);
 
+            iframe.contentWindow.window.document.body.addEventListener("dblclick", function(e) {
+                if (e.target.tagName === 'IMG') {
+                    tinymce.activeEditor.execCommand('mceImage');
+                }
+            }, false);
+
             // Support for dark mode
             iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.getCurrentAppTheme());
 
