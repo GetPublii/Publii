@@ -57,15 +57,15 @@ export default {
             content: this.value
         };
     },
-    mounted () {
-        setTimeout(() => {
+    async mounted () {
+        setTimeout(async () => {
             this.content = this.value;
 
             if (this.wysiwyg) {
                 this.editorID = this.generateID();
 
-                setTimeout(() => {
-                    this.initWysiwyg();
+                setTimeout(async () => {
+                    await this.initWysiwyg();
                 }, 0);
             }
 
@@ -89,7 +89,7 @@ export default {
         }
     },
     methods: {
-        initWysiwyg () {
+        async initWysiwyg () {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
             let secondToolbarStructure = "formatselect removeformat code undo redo";
@@ -133,10 +133,10 @@ export default {
                 style_formats: customFormats,
                 contextmenu: false,
                 browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
-                setup: function (editor) {
-                    editor.on('init', function () {
+                setup: async function (editor) {
+                    editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$root.getCurrentAppTheme());
+                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await self.$root.getCurrentAppTheme());
                     });
                 }
             });
