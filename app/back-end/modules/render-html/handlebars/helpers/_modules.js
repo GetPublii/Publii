@@ -47,5 +47,7 @@ module.exports = {
     concatenate: require('./concatenate.js'),
     contains: require('./contains.js'),
     join: require('./join.js'),
-    lazyloadHelper: require('./lazyload.js')
+    lazyloadHelper: require('./lazyload.js'),
+    getAuthorHelper: require('./get-author.js'),
+    getAuthorsHelper: require('./get-authors.js')
 };
