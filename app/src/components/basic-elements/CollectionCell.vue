@@ -75,6 +75,16 @@ export default {
         padding-right: 0;
     }
 
+    a {
+        color: var(--link-invert-color);
+
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-invert-color-hover);
+        }
+    }
+
     &.checkbox {
         .featured-icon {
             fill: $color-8;
@@ -114,6 +124,7 @@ export default {
             position: relative;
             top: .1rem;
         }
+        
     }
 
     &.names {

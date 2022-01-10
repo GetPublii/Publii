@@ -120,6 +120,11 @@ html[data-theme="default"] {
         
     --link-primary-color: var(--color-65); 
     --link-primary-color-hover: var(--color-90); 
+    --link-invert-color: var(--color-65); 
+    --link-invert-color-hover: var(--color-90); 
+
+    --collection-bg: var(--white);
+    --collection-bg-hover: var(--color-5);
         
     --sidebar-bg-top: var(--color-60);
     --sidebar-bg-bottom: var(--color-55);     
@@ -141,9 +146,6 @@ html[data-theme="default"] {
     --sidebar-icon: var(--white);
         
     --option-sidebar-bg: var(--white);
-
-    --collection-bg: var(--white);
-    --collection-bg-hover: var(--color-5);
         
     --tab-color: var(--color-90);
     --tab-color-hover: var(--color-65);
@@ -294,8 +296,13 @@ html[data-theme="dark"] {
     --headings-color: var(--neutral-5);
     --label-color: var(--neutral-15);
         
-    --link-primary-color: var(--neutral-10);
-    --link-primary-color-hover: var(--color-40);        
+    --link-primary-color: var(--color-40);
+    --link-primary-color-hover: var(--neutral-10);  
+    --link-invert-color: var(--neutral-10);
+    --link-invert-color-hover: var(--color-40);
+    
+    --collection-bg: var(--neutral-55);
+    --collection-bg-hover: var(--neutral-50);
     
     --sidebar-bg-top: var(--neutral-65);
     --sidebar-bg-bottom: var(--neutral-60);
@@ -317,14 +324,11 @@ html[data-theme="dark"] {
     --sidebar-icon: var(--neutral-5);
         
     --option-sidebar-bg: #22232a;
-
-    --collection-bg: var(--neutral-55);
-    --collection-bg-hover: var(--neutral-50);
         
     --tab-color: var(--neutral-10);
-    --tab-color-hover: #2e98ff;
-    --tab-active-bg: var(--color-50); 
-    --tab-active-color: #FFFFFF; 
+    --tab-color-hover: var(--color-40);
+    --tab-active-bg: var(--color-80); 
+    --tab-active-color: var(--color-25); 
         
     --scrollbar: var(--bg-site);
     --scrollbar-hover: var(--neutral-45);

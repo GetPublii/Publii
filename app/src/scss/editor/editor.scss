@@ -78,7 +78,7 @@ body#tinymce {
 }
 
 a:not(.btn):not(.mce-item-anchor):not(.gallery__item a) {
-    @include links (var(--link-primary-color), var(--link-primary-color), var(--link-primary-color), var(--link-primary-color));
+    @include links (var(--link-invert-color), var(--link-invert-color), var(--link-invert-color), var(--link-invert-color));
 }
 
 p,

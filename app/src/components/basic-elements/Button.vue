@@ -81,6 +81,7 @@ export default {
                 'button-active': types.indexOf('active') > -1,
                 'button-delete': types.indexOf('delete') > -1,
                 'button-clean': types.indexOf('clean') > -1,
+                'button-clean-invert': types.indexOf('clean-invert') > -1,
                 'button-back': types.indexOf('back') > -1,
             }
         }
@@ -261,6 +262,25 @@ export default {
         }
     }
 
+    &-clean-invert {
+        background: transparent;
+        box-shadow: none;
+        color: var(--link-primary-color-hover);
+        font: {
+            size: 1.5rem;
+            weight: 400;
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: transparent;
+            box-shadow: none;
+            color: var(--link-primary-color);
+        }
+    }
+
     &-back {
         & + .button {
             margin-left: 2rem !important;
@@ -378,7 +398,8 @@ export default {
             }
         }
 
-        &.button-clean {
+        &.button-clean,
+        &.button-clean-invert {
             & > svg {
                 fill: currentColor;
             }

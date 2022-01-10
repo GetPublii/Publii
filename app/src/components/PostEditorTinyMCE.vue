@@ -31,7 +31,7 @@
 
             <p-button
                 id="post-stats-button"
-                type="clean icon small"
+                type="clean-invert icon small"
                 icon="stats"
                 :title="$t('editor.togglePostStatsPanel')"
                 @click.native="togglePostStats">
