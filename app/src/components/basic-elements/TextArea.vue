@@ -4,6 +4,7 @@
             :id="editorID"
             :data-id="editorID"
             :rows="rows"
+            :cols="cols"
             class="publii-textarea"
             :spellcheck="spellcheck"
             v-model="content"></textarea>
@@ -32,7 +33,11 @@ export default {
         },
         rows: {
             default: false,
-            type: [Number, Boolean]
+            type: [String, Number, Boolean]
+        },
+        cols: {
+            default: false,
+            type: [String, Number, Boolean]
         },
         charCounter: {
             default: false,
