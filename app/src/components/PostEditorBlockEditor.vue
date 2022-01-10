@@ -12,7 +12,7 @@
 
             <p-button
                 id="post-help-button"
-                type="clean icon small"
+                type="clean-invert icon small"
                 icon="help"
                 :title="$t('ui.help')"
                 @click.native="toggleHelp">

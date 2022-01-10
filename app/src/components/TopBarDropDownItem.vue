@@ -49,10 +49,17 @@ export default {
 <style lang="scss" scoped>
 li {
     & > a {
+        color: var(--link-invert-color);
         display: block;
         font-weight: 400;
         padding: .5rem 3rem;
         white-space: nowrap;
+
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-invert-color-hover);
+        }
     }
 }
 </style>
