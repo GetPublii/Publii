@@ -1,5 +1,5 @@
 <template>
-    <section :class="{ 'content': true, 'no-scroll': editorVisible }">
+    <section :class="{ 'content': true, 'tags-list-view': true, 'no-scroll': editorVisible }">
         <p-header
             v-if="!showEmptyState"
             :title="$t('ui.tags')">
@@ -267,6 +267,10 @@ export default {
         });
 
         this.$bus.$on('hide-tag-item-editor', () => {
+            if (document.querySelector('.tags-list-view .item.is-edited')) {
+                document.querySelector('.tags-list-view .item.is-edited').classList.remove('is-edited');
+            }
+            
             this.editorVisible = false;
         });
 
@@ -301,6 +305,11 @@ export default {
             this.editorVisible = true;
         },
         editTag (item) {
+            if (document.querySelector('.tags-list-view .item.is-edited')) {
+                document.querySelector('.tags-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
+            document.querySelector('.tags-list-view .item input[value="' + parseInt(item.id, 10) + '"]').parentNode.parentNode.classList.add('is-edited');
             this.editorVisible = true;
 
             setTimeout(() => {

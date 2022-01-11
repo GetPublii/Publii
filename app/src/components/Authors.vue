@@ -1,5 +1,5 @@
 <template>
-    <section :class="{ 'content': true, 'authors': true, 'no-scroll': editorVisible }">
+    <section :class="{ 'content': true, 'authors': true, 'authors-list-view': true, 'no-scroll': editorVisible }">
         <p-header :title="$t('ui.authors')">
             <header-search
                 slot="search"
@@ -206,6 +206,10 @@ export default {
         });
 
         this.$bus.$on('hide-author-item-editor', () => {
+            if (document.querySelector('.authors-list-view .item.is-edited')) {
+                document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
             this.editorVisible = false;
         });
 
@@ -245,6 +249,12 @@ export default {
             this.editorVisible = true;
         },
         editAuthor (item) {
+            if (document.querySelector('.authors-list-view .item.is-edited')) {
+                document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
+            document.querySelector('.authors-list-view .item input[value="' + parseInt(item.id, 10) + '"]').parentNode.parentNode.classList.add('is-edited');
+
             this.editorVisible = true;
 
             setTimeout(() => {

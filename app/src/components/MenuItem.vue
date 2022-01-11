@@ -81,10 +81,11 @@
             @add="listItemAdded">
             <menu-item
                 v-for="(item, index) in items"
-                :key="getUID()"
+                :key="'item-' + index + '-' + getUID()"
                 :itemData="item"
                 :itemMenuID="menuID"
-                :itemOrder="index" />
+                :itemOrder="index"
+                :editedID="editedID" />
         </draggable>
     </li>
 </template>
@@ -96,6 +97,10 @@ import Draggable from 'vuedraggable';
 export default {
     name: 'menu-item',
     props: {
+        editedID: {
+            type: [Boolean, Number],
+            required: false
+        },
         itemData: {
             type: Object,
             required: true
@@ -131,6 +136,7 @@ export default {
         cssClasses () {
             return {
                 'menu-item': true,
+                'is-edited': this.editedID === this.id,
                 'is-invalid': this.isInvalid,
                 'is-draft': this.isDraft
             };
@@ -259,7 +265,7 @@ export default {
             }, 50);
         },
         editMenuItem () {
-            this.$bus.$emit('show-menu-item-editor-from-submenu');
+            this.$bus.$emit('show-menu-item-editor-from-submenu', this.id);
 
             setTimeout(() => {
                 this.$bus.$emit('show-menu-item-editor', {

@@ -1,5 +1,5 @@
 <template>
-    <section :class="{ 'content': true, 'menu': true, 'no-scroll': editorVisible }">
+    <section :class="{ 'content': true, 'menu': true, 'menus-list-view': true, 'no-scroll': editorVisible }">
         <p-header
             v-if="!showEmptyState"
             :title="$t('menu.menu')">
@@ -128,10 +128,11 @@
                             @add="listItemAdded($event, index)">
                             <menu-item
                                 v-for="(subitem, subindex) in item.items"
-                                :key="getUID()"
+                                :key="'menu-' + subindex + '-' + getUID()"
                                 :itemData="subitem"
                                 :itemMenuID="index"
-                                :itemOrder="subindex" />
+                                :itemOrder="subindex"
+                                :editedID="editedID" />
                         </draggable>
                     </div>
                 </div>
@@ -178,6 +179,7 @@ export default {
     },
     data () {
         return {
+            editedID: false,
             editorVisible: false,
             filterValue: '',
             selectedItems: [],
@@ -203,10 +205,12 @@ export default {
     },
     mounted () {
         this.$bus.$on('hide-menu-item-editor', () => {
+            this.editedID = false;
             this.editorVisible = false;
         });
 
-        this.$bus.$on('show-menu-item-editor-from-submenu', () => {
+        this.$bus.$on('show-menu-item-editor-from-submenu', (itemID) => {
+            this.editedID = itemID;
             this.editorVisible = true;
         });
 
