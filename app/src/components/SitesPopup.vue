@@ -76,7 +76,7 @@ export default {
 @import '../scss/variables.scss';
 
 .sites-popup {
-    background: var(--bg-primary);
+    background: var(--bg-site);
     height: 100vh;
     left: 0;
     opacity: 1;

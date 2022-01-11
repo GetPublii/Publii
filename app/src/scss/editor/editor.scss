@@ -56,7 +56,7 @@ html {
 }
 
 body {
-    color: var(--text-editor-body-color);
+    color: var(--text-primary-color);
     font-family: var(--font-base);
     font-weight: var(--font-weight-normal);
     line-height: $line-height;
@@ -414,7 +414,7 @@ select {
     border: 1px solid var(--input-border-color);
     border-radius: 0;
     font-family: inherit;
-    color: var(--text-editor-body-color);
+    color: var(--text-primary-color);
     font-size: ms(-1);
     outline: none;
     padding: baseline(2) baseline(3);

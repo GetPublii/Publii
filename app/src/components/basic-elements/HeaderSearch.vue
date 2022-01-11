@@ -158,7 +158,7 @@ export default {
         }
 
         & > input {
-            background: var(--input-bg);           
+            background: var(--input-bg-lightest);           
             opacity: 1;
             pointer-events: auto;
             transform: scaleX(1);

@@ -368,7 +368,7 @@ export default {
  */
 .site-create {
     background: var(--popup-bg);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     box-shadow: 0 0 60px rgba($color-4, 0.07);
     font-size: 1.6rem;
     margin: 0;
@@ -428,12 +428,12 @@ export default {
         top: 1px;
 
         .button {
-            border-radius: 0 0 0 3px;
+            border-radius: 0 0 0 var(--border-radius);
 
             & + .button {
                 box-shadow: none!important;
                 border-top: 1px solid var(--input-border-color);
-                border-radius: 0 0 3px 0;
+                border-radius: 0 0 var(--border-radius) 0;
                 color: var(--popup-btn-cancel-color);
                 margin-left: 0;
 
@@ -497,7 +497,7 @@ export default {
 
     .backup {
         border: 2px dashed var(--input-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--gray-3);
         position: relative;
 

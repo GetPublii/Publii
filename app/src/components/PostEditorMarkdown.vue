@@ -357,6 +357,7 @@ export default {
             #post-title {
                 border: none;
                 box-shadow: none;
+                columns: var(--headings-color);
                 display: block;
                 font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
                 font-size: 3.5rem;

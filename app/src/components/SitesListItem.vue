@@ -184,7 +184,7 @@ export default {
     display: flex;
     margin: 0;
     padding: 1.2rem 0;
-    position: relative;
+    position: relative;color: var(--link-primary-color-hover);
 
     &:focus {
         background: var(--input-bg-light);
@@ -195,7 +195,7 @@ export default {
         margin-left: auto;
 
         &-btn {
-            background: var(--input-bg-light);
+            background: var(--input-bg-lightest);
             position: relative;
             border-radius: 50%;
             display: inline-block;
@@ -212,7 +212,6 @@ export default {
             }
 
             &:hover {
-                background: var(--input-border-color);
 
                 & > svg {
                    fill: var(--icon-tertiary-color);
@@ -245,7 +244,7 @@ export default {
     &-icon {
         align-items: center;
         border-radius: 3px;
-        color: var(--icon-secondary-color);
+        color: currentColor;
         display: flex;
         height: auto;
         justify-content: center;
@@ -255,24 +254,19 @@ export default {
     }
 
     &:hover {
+        color: var(--link-primary-color);
         will-change: transform;
 
         .single-site-actions-btn {
             opacity: 1;
         }
 
-        .single-site-name {
-            color: var(--link-primary-color-hover);
-        }
-
-        .single-site-icon {
-             color: var(--color-primary);
-        }
+       
     }
 
     &-name {
         display: block;
-        color: var(--text-primary-color);
+      
         font-weight: var(--font-weight-semibold);
         line-height: 3.6rem;
         margin: 0;
