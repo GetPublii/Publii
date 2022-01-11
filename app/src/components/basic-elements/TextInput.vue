@@ -282,7 +282,7 @@ export default {
 
     .password-show,
     .password-hide {
-        color: var(--color-primary);
+        color: var(--link-primary-color);
         cursor: pointer;
         font-size: 1.4rem;
         position: absolute;

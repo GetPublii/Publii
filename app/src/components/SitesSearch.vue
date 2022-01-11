@@ -44,7 +44,7 @@ export default {
             padding: 1rem;
 
             input {
-                background: var(--gray-1);
+                background: var(--input-bg-lightest);
                 border-radius: 30px;
                 box-shadow: none!important;
                 padding: 1.2rem 4.4rem 1.2rem 6rem!important;

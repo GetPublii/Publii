@@ -109,7 +109,7 @@ export default {
 #post-title {
   border: none;
   box-shadow: none;
-  color: var(--eb-text-primary-color);
+  color: var(--eb-headings-color);
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: 35px;

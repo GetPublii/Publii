@@ -93,8 +93,8 @@ html[data-theme="default"] {
     --border-light-color: var(--neutral-10); 
         
     --input-bg: var(--white);
-    --input-bg-hover: var(--neutral-5);
     --input-bg-light: var(--neutral-5);
+    --input-bg-lightest: var(--white);
     --input-border-color: var(--neutral-15);
     --input-border-focus: var(--color-55);
     --input-border-checked: var(--color-20);
@@ -112,9 +112,8 @@ html[data-theme="default"] {
     --button-gray-bg: var(--neutral-50);
     --button-gray-bg-hover: var(--neutral-55);
         
-    --text-primary-color: var(--neutral-70);
+    --text-primary-color: var(--neutral-75);
     --text-light-color: var(--neutral-55); 
-    --text-editor-body-color: var(--neutral-70);
     --headings-color: var(--color-90);  
     --label-color: var(--color-90);
         
@@ -152,7 +151,7 @@ html[data-theme="default"] {
     --tab-active-bg: var(--color-10); 
     --tab-active-color: var(--color-65); 
         
-    --scrollbar: #F6F8FA;
+    --scrollbar: var(--neutral-10);  
     --scrollbar-hover: var(--neutral-15);
 
     --top-app-bar: var(--neutral-15);
@@ -248,7 +247,7 @@ html[data-theme="dark"] {
     --gray-1: var(--neutral-48);  
     --white: #fff;
     --white-rgb: 255,255,255;
-    --warning: #FF1011;
+    --warning: #ff4a4b;
     --warning-rgb: 255,16,17;
     --success: #56a900;
     --success-rgb: 86,169,0;
@@ -268,19 +267,19 @@ html[data-theme="dark"] {
     --bg-secondary: var(--neutral-50); 
     --bg-site: var(--neutral-60);   
 
-    --border-light-color: #272831;
+    --border-light-color: var(--neutral-48);
         
     --input-bg: var(--neutral-55);
-    --input-bg-hover: var(--neutral-49);
     --input-bg-light: var(--neutral-48);
+    --input-bg-lightest: var(--neutral-48);
     --input-border-color: var(--neutral-45);
     --input-border-focus: var(--color-50);
     --input-border-checked: rgba(16,137,255, .59);
         
     --button-bg: var(--color-50);
     --button-bg-hover: var(--color-55); 
-    --button-secondary-bg: var(--color-80); 
-    --button-secondary-bg-hover: var(--color-75); 
+    --button-secondary-bg: var(--color-75); 
+    --button-secondary-bg-hover: var(--color-70); 
     --button-secondary-color: var(--color-25);    
     --button-secondary-color-hover: var(--color-15); 
     --button-tertiary-bg: var(--color-50);
@@ -290,9 +289,8 @@ html[data-theme="dark"] {
     --button-gray-bg: var(--neutral-35);
     --button-gray-bg-hover: var(--color-50);
         
-    --text-primary-color: var(--neutral-10); 
+    --text-primary-color: var(--neutral-20); 
     --text-light-color: var(--neutral-25); 
-    --text-editor-body-color: var(--neutral-15);
     --headings-color: var(--neutral-5);
     --label-color: var(--neutral-15);
         
@@ -313,27 +311,27 @@ html[data-theme="dark"] {
     --sidebar-link-bg-active: var(--neutral-49);  
     --sidebar-link-opacity: 1; 
     --sidebar-link-icon: var(--neutral-20);
-    --sidebar-link-icon-hover: #ffffff;
+    --sidebar-link-icon-hover: var(--white);
     --sidebar-sync-btn-bg: var(--color-50); 
     --sidebar-sync-btn-color: var(--neutral-5);
     --sidebar-preview-btn-color: var(--neutral-5);
-    --sidebar-preview-btn-color-hover: #fff;
+    --sidebar-preview-btn-color-hover: var(--white);
     --sidebar-preview-btn-border-color: var(--neutral-45);
     --sidebar-preview-btn-border-color-hover: var(--neutral-20);
 
     --sidebar-icon: var(--neutral-5);
         
-    --option-sidebar-bg: #22232a;
+    --option-sidebar-bg: var(--neutral-50);
         
-    --tab-color: var(--neutral-10);
-    --tab-color-hover: var(--color-40);
-    --tab-active-bg: var(--color-80); 
-    --tab-active-color: var(--color-25); 
+    --tab-color: var(--neutral-15);
+    --tab-color-hover: var(--neutral-10);
+    --tab-active-bg: var(--neutral-48); 
+    --tab-active-color: var(--neutral-10); 
         
-    --scrollbar: var(--bg-site);
-    --scrollbar-hover: var(--neutral-45);
+    --scrollbar: var(--neutral-48);
+    --scrollbar-hover: var(--neutral-46);
 
-    --top-app-bar: #272831;
+    --top-app-bar: var(--neutral-49);
         
     --progress-bar: rgba(25, 26, 31, 0.3);
         

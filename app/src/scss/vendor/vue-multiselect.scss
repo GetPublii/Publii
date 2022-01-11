@@ -28,12 +28,12 @@
 
         &--highlight,
         &--highlight:after {
-            background: var(--input-bg-hover);
+            background: var(--input-bg-light);
             color: var(--text-primary-color);
         }
 
         &.multiselect__option--selected {
-            background: var(--input-bg-hover);
+            background: var(--input-bg-light);
             color: var(--text-primary-color);
             font-weight: 600;
         }
@@ -42,7 +42,7 @@
         &--group-selected {
             &.multiselect__option--highlight,
             &.multiselect__option--highlight:after {
-                background: var(--input-bg-hover);
+                background: var(--input-bg-light);
                 color: var(--text-primary-color);
             }                
         }
