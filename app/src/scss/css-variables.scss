@@ -278,8 +278,8 @@ html[data-theme="dark"] {
         
     --button-bg: var(--color-50);
     --button-bg-hover: var(--color-55); 
-    --button-secondary-bg: var(--color-80); 
-    --button-secondary-bg-hover: var(--color-75); 
+    --button-secondary-bg: var(--color-75); 
+    --button-secondary-bg-hover: var(--color-70); 
     --button-secondary-color: var(--color-25);    
     --button-secondary-color-hover: var(--color-15); 
     --button-tertiary-bg: var(--color-50);
@@ -289,7 +289,7 @@ html[data-theme="dark"] {
     --button-gray-bg: var(--neutral-35);
     --button-gray-bg-hover: var(--color-50);
         
-    --text-primary-color: var(--neutral-15); 
+    --text-primary-color: var(--neutral-20); 
     --text-light-color: var(--neutral-25); 
     --headings-color: var(--neutral-5);
     --label-color: var(--neutral-15);
@@ -323,12 +323,12 @@ html[data-theme="dark"] {
         
     --option-sidebar-bg: var(--neutral-50);
         
-    --tab-color: var(--neutral-10);
-    --tab-color-hover: var(--color-40);
-    --tab-active-bg: var(--color-80); 
-    --tab-active-color: var(--color-40); 
+    --tab-color: var(--neutral-15);
+    --tab-color-hover: var(--neutral-10);
+    --tab-active-bg: var(--neutral-48); 
+    --tab-active-color: var(--neutral-10); 
         
-    --scrollbar: var(--neutral-49);
+    --scrollbar: var(--neutral-48);
     --scrollbar-hover: var(--neutral-46);
 
     --top-app-bar: var(--neutral-49);
