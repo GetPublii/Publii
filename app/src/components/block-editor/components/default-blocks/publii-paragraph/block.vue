@@ -31,7 +31,9 @@
         :class="{ 'publii-block-paragraph-block-selector-list': true, 'is-visible': true }">
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 0 }"
-          @click.stop="addNewBlock('publii-header');">
+          @click.stop="addNewBlock('publii-header');"
+          @mouseenter="newBlockUIActiveIndex = 0"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="headings" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -41,7 +43,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 1 }"
-          @click.stop="addNewBlock('publii-image');">
+          @click.stop="addNewBlock('publii-image');"
+          @mouseenter="newBlockUIActiveIndex = 1"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="image" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -51,7 +55,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 2 }"
-          @click.stop="addNewBlock('publii-gallery');">
+          @click.stop="addNewBlock('publii-gallery');"
+          @mouseenter="newBlockUIActiveIndex = 2"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="gallery" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -61,7 +67,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 3 }"
-          @click.stop="addNewBlock('publii-list');">
+          @click.stop="addNewBlock('publii-list');"
+          @mouseenter="newBlockUIActiveIndex = 3"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="unordered-list" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -71,7 +79,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 4 }"
-          @click.stop="addNewBlock('publii-quote');">
+          @click.stop="addNewBlock('publii-quote');"
+          @mouseenter="newBlockUIActiveIndex = 4"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="quote" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -81,7 +91,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 5 }"
-          @click.stop="addNewBlock('publii-code');">
+          @click.stop="addNewBlock('publii-code');"
+          @mouseenter="newBlockUIActiveIndex = 5"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="code" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -91,7 +103,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 6 }"
-          @click.stop="addNewBlock('publii-html');">
+          @click.stop="addNewBlock('publii-html');"
+          @mouseenter="newBlockUIActiveIndex = 6"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="html" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -101,7 +115,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 7 }"
-          @click.stop="addNewBlock('publii-separator');">
+          @click.stop="addNewBlock('publii-separator');"
+          @mouseenter="newBlockUIActiveIndex = 7"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="separator" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -112,7 +128,9 @@
         <button
           v-if="!editor.hasReadMore"
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === 8 }"
-          @click.stop="addNewBlock('publii-readmore');">
+          @click.stop="addNewBlock('publii-readmore');"
+          @mouseenter="newBlockUIActiveIndex = 8"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="readmore" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -122,7 +140,9 @@
         </button>
         <button
           :class="{ 'publii-block-paragraph-block-selector-list-button': true, 'is-active': newBlockUIActiveIndex === (!editor.hasReadMore ? 9 : 8) }"
-          @click.stop="addNewBlock('publii-toc');">
+          @click.stop="addNewBlock('publii-toc');"
+          @mouseenter="newBlockUIActiveIndex = (!editor.hasReadMore ? 9 : 8)"
+          @mouseleave="newBlockUIActiveIndex = -1">
           <icon name="toc" />
           <div class="publii-block-paragraph-block-selector-tooltip is-small">
             <span class="publii-block-paragraph-block-selector-tooltip-label1">
@@ -588,8 +608,10 @@ export default {
         }
 
         &.is-active {
-          animation: fadeIn .75s 1 forwards;
-          color: var(--eb-secondary-color);
+          svg {
+            animation: fadeIn .75s 1 forwards;
+            color: var(--eb-secondary-color);
+          }
 
           @keyframes fadeIn {
             0% {
@@ -611,16 +633,6 @@ export default {
             }
           }
 
-          .publii-block-paragraph-block-selector-tooltip {
-            display: flex;
-
-            &.is-small {
-              display: block;
-            }
-          }
-        }
-
-        &:hover {
           .publii-block-paragraph-block-selector-tooltip {
             display: flex;
 
