@@ -486,7 +486,8 @@ li {
 
     ol {
         list-style-type: none;
-        padding-left: 10 * $spacing;
+        padding-left: 0;
+        margin-left: 15 * $spacing;
 
         & > li:first-child {
             margin-top: 3 * $spacing;
