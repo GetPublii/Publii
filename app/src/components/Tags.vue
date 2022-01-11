@@ -208,7 +208,11 @@ export default {
         items: function() {
             return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
                 if (item.additionalData) {
-                    item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                    if (typeof item.additionalData === 'string') {
+                        item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                    } else {
+                        item.isHidden = item.additionalData.isHidden;
+                    }
                 }
 
                 return item;
@@ -230,7 +234,7 @@ export default {
                 return false;
             }
 
-            let notHiddenTags = selectedTags.filter(item => (item.additionalData && item.additionalData.indexOf('"isHidden":false') > -1) || (item.additionalData && item.additionalData.indexOf('"isHidden"') === -1));
+            let notHiddenTags = selectedTags.filter(item => !item.isHidden);
             return !!notHiddenTags.length;
         },
         selectedTagsAreHidden () {
@@ -240,7 +244,7 @@ export default {
                 return false;
             }
 
-            let hiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
+            let hiddenTags = selectedTags.filter(item => item.isHidden);
             return !!hiddenTags.length;
         }
     },
