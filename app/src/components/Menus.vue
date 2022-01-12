@@ -418,14 +418,17 @@ export default {
         padding-bottom: 0;
     }
 
-    .menu-content {
+    &-content {
         margin: 2.5rem 0 0 0;
     }
 
-    .menu-item-list {
-        list-style-type: none;
-        margin: .25 * $spacing 0;
-        padding: 0;
+    &-item {
+
+        &-list {
+            list-style-type: none;
+            margin: .25 * $spacing 0;
+            padding: 0;
+        }
     }
 
     &-edit-btn {

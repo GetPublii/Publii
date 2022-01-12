@@ -110,7 +110,7 @@ export default {
 
     &-thumbnail {
         display: block;
-        max-height: 90%;
+        max-height: 50%;
         left: 50%;
         position: absolute;
         top: 50%;

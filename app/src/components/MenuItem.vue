@@ -386,6 +386,13 @@ li {
         top: 2px;
     }
 
+    &.is-edited {
+        & > div {
+            background: var(--collection-bg-hover);
+            border-left: 3px solid var(--color-primary);
+        }
+    }
+
     & > div {
         background: var(--collection-bg);
         border: 1px solid var(--border-light-color);
