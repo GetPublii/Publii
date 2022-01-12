@@ -110,7 +110,7 @@ export default {
             width: 100%;
 
             & > li {
-                color: var(--input-border-color);
+                color: var(--text-light-color);
                 display: inline-block;
                 margin: 0 2rem;
                 padding: 0 0 1.7rem 0;
@@ -165,16 +165,6 @@ export default {
                 border-radius: var(--border-radius);
                 color: var(--tab-active-color) !important;
                 transition: all .125s ease-out;
-
-                &:after {
-                   background: var(--bg-primary);
-                    content: "";
-                    height: 100%;
-                    position: absolute;
-                    right: -1px;
-                    top: 0;
-                    width: 1px;
-                }
             }
 
             &:hover {
