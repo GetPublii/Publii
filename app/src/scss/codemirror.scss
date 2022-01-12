@@ -6,19 +6,36 @@
 }
 
 .tools-custom-css {
+
+    .editor-wrapper > div {
+        display: flex;
+        flex-direction: column-reverse;
+    }
     .CodeMirror {
         height: calc(100vh - 35rem)!important;
         top: 2rem;
     }
+    .CodeMirror-advanced-dialog {
+        position: relative;
+    }
 }
 
 .tools-custom-html {
+
+    .tab > div {
+        display: flex;
+        flex-direction: column-reverse;
+    }
     .CodeMirror {
         background: var(--bg-primary);
         border: 1px solid var(--input-border-color);
         height: calc(100vh - 43rem)!important;
     }
+    .CodeMirror-advanced-dialog {
+        position: relative;
+    }
 }
+
 
 // Special styles for win
 body[data-os="win"] {
@@ -63,6 +80,21 @@ body[data-os="linux"] {
             .CodeMirror {
                 height: calc(100vh - 31.4rem)!important;
             }
+        }
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+
+ @media (max-width: 1540px) {
+    .tools-custom-html {
+
+        .CodeMirror-advanced-dialog {
+            position: fixed;
+            width: calc(100% - 32rem - 1px);
+            left: 32rem;
         }
     }
 }

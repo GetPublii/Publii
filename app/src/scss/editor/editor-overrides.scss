@@ -484,7 +484,7 @@ body {
                         padding: 0.3rem 0.1rem;   
                         
                         &:hover {
-                            color: var(--tab-active-bg);
+                            color: var(--tab-active-color); 
                         }
 
                         &:focus {
@@ -492,8 +492,8 @@ body {
                         }
 
                         &--active {
-                            border-color: var(--tab-active-bg);
-                            color: var(--tab-active-bg);  
+                            border-color: var(--button-tertiary-bg);
+                            color: var(--tab-active-color);  
                         }
                     }
                 }

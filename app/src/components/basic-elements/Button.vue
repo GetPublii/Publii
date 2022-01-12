@@ -322,7 +322,7 @@ export default {
             &:hover,
             &.button-active {
                 background: transparent;
-                box-shadow: inset 0 0 0 2px darken($color-8, 20%);
+                box-shadow: inset 0 0 0 2px var(--gray-3);
                 color: var(--text-primary-color);
 
                 &:disabled {
