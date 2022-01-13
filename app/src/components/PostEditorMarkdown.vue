@@ -417,7 +417,7 @@ export default {
     bottom: 20px;
     position: absolute;
     right: 20px;
-    z-index: 100;
+    z-index: 99991;
 }
 
 body[data-os="win"] {

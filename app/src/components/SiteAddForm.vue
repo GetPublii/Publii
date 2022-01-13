@@ -438,7 +438,7 @@ export default {
                 margin-left: 0;
 
                 &:hover {
-                   background: var(--popup-btn-cancel-hover-bg);
+                   background: var(--popup-btn-cancel-bg-hover);
                    color: var(--popup-btn-cancel-hover-color);
                 }
             }

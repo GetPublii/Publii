@@ -19,7 +19,7 @@
                             <icon
                                 :name="item.icon"
                                 iconset="svg-map-tools"
-                                customWidth="58"
+                                customWidth="54"
                                 customHeight="58" />
                             {{ item.name }}
                         </router-link>

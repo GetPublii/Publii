@@ -476,7 +476,7 @@ li {
 
             &:hover {
                 & > svg {
-                   fill: var(--color-primary);
+                   fill: currentColor;
                    transform: scale(1);
                }
             }

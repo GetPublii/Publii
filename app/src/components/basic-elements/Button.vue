@@ -194,7 +194,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--popup-btn-cancel-hover-bg);
+            background: var(--popup-btn-cancel-bg-hover);
             color: var(--popup-btn-cancel-hover-color);
         }
     }
@@ -486,7 +486,7 @@ export default {
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: var(--popup-btn-cancel-hover-bg);
+        background-color: var(--popup-btn-cancel-bg-hover);
         border-color: var(--input-border-color);
         color: var(--popup-btn-cancel-color);
         cursor: not-allowed;

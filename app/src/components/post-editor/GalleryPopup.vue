@@ -101,7 +101,7 @@
                     <select
                         v-model="layout"
                         class="gallery-popup-config-cols">
-                        <option value="">{{ $t('image.centered') }}</option>
+                        <option value="">{{ $t('image.none') }}</option>
                         <option value="gallery-wrapper--wide">{{ $t('image.wide') }}</option>
                         <option value="gallery-wrapper--full">{{ $t('image.fullWidth') }}</option>
                     </select>

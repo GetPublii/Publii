@@ -8,6 +8,7 @@
     right: 0;
     top: var(--topbar-height);    
     width: 44.2rem;
+    z-index: 9999;
     
      &::before {
             background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);

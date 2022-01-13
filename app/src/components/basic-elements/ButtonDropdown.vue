@@ -377,28 +377,28 @@ export default {
         }
 
         &.disabled {
-            background-color: var(--popup-btn-cancel-hover-bg);
+            background-color: var(--popup-btn-cancel-bg-hover);
             color: var(--popup-btn-cancel-color);
             cursor: not-allowed;
             pointer-events: none;
 
             &:hover {
-                background-color: var(--popup-btn-cancel-hover-bg);
+                background-color: var(--popup-btn-cancel-bg-hover);
                 color: var(--popup-btn-cancel-color);
             }
 
             .button-toggle {
-                background: var(--popup-btn-cancel-hover-bg);
-                border-left: 1px solid var(--popup-btn-cancel-hover-bg);
+                background: var(--popup-btn-cancel-bg-hover);
+                border-left: 1px solid var(--popup-btn-cancel-bg-hover);
 
                 &:hover {
-                    background-color: var(--popup-btn-cancel-hover-bg);
+                    background-color: var(--popup-btn-cancel-bg-hover);
                     color: var(--popup-btn-cancel-color);
                 }
             }
 
             .button-trigger-icon {
-                background: var(--popup-btn-cancel-hover-bg);
+                background: var(--popup-btn-cancel-bg-hover);
             }
         }
     }
