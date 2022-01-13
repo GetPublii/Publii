@@ -86,7 +86,8 @@
             <collection-row
                 v-for="(item, index) in items"
                 slot="content"
-                :key="index">
+                :key="index"
+                :cssClasses="item.id === 1 ? 'is-main-author' : ''">
                 <collection-cell>
                     <checkbox
                         v-if="item.id !== 1"
@@ -253,7 +254,13 @@ export default {
                 document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
             }
 
-            document.querySelector('.authors-list-view .item input[value="' + parseInt(item.id, 10) + '"]').parentNode.parentNode.classList.add('is-edited');
+            let input = document.querySelector('.authors-list-view .item input[value="' + parseInt(item.id, 10) + '"]');
+            
+            if (input) {
+                input.parentNode.parentNode.classList.add('is-edited');
+            } else {
+                document.querySelector('.authors-list-view .item.is-main-author').classList.add('is-edited');
+            }
 
             this.editorVisible = true;
 

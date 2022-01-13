@@ -1,12 +1,17 @@
 <template>
-    <div class="item">
+    <div :class="'item ' + cssClasses">
         <slot></slot>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'collection-row'
+    name: 'collection-row',
+    props: {
+        'cssClasses': {
+            default: ''
+        }
+    }
 }
 </script>
 
