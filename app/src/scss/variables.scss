@@ -1,35 +1,12 @@
 @use "sass:math";
 
-$color-1: #42a5f5;
+$color-1: #2a99f4;
 $color-4: #2a2e30;
 $color-8: #dddddd;
 
 $color-helper-6: #ffc400;
 $color-helper-7: #1e2128;
 $color-helper-8: #e5e6e8;
-
-/*
- * Logo color sets
- */
-
-$logo-colors: (
-    bg1: #68CBF6, color1: #fff,
-    bg2: #348FD6, color2: #fff,
-    bg3: #46D6DB, color3: #fff,
-    bg4: #8ED892, color4: #fff,
-    bg5: #FEC32D, color5: #fff,
-    bg6: #FD9F28, color6: #fff,
-    bg7: #FD8A6A, color7: #fff,
-    bg8: #FD82AB, color8: #fff,
-    bg9: #95BDF8, color9: #fff,
-    bg10: #B49AE6, color10: #fff,
-    bg11: #DC7EED, color11: #fff,
-    bg12: #B0BEC5, color12: #fff,
-    bg13: #717E88, color13: #fff,
-    bg14: #38474F, color14: #fff,
-    bg15: #B6A6A0, color15: #fff,
-    bg16: #8C6E64, color16: #fff
-);
 
 /*
  * Others

@@ -19,8 +19,8 @@
                             <icon
                                 :name="item.icon"
                                 iconset="svg-map-tools"
-                                customWidth="50"
-                                customHeight="46" />
+                                customWidth="58"
+                                customHeight="58" />
                             {{ item.name }}
                         </router-link>
                     </template>
@@ -223,6 +223,7 @@ export default {
                justify-content: center;
                font-weight: 500;
                height: 100%;
+               padding: 4rem 1rem;
                position: relative;
                width: 100%;
             }
@@ -236,7 +237,7 @@ export default {
 
             img {
                display: block;
-               height: 46px;
+               height: 58px;
                margin: 0 auto 1rem;
                width: auto;
                max-width: 60%;
@@ -294,10 +295,28 @@ export default {
     }
 }
 
+@keyframes tools-switcher-animation {
+  0% {transform:scale(1)}
+  16% {transform:scale(.8)}
+  33% {transform:scale(1)}
+  50% {transform:scale(.8)}
+  67% {transform:scale(1)}
+  84% {transform:scale(.8)}
+}
+
+/*
+ * Responsive improvements
+ */
+
 @media (max-width: 1400px) {
     .tools {
-        &-list li {
-            flex-basis: calc(50% - 2rem);
+        &-list {
+            li {
+                flex-basis: calc(50% - 2rem);
+            }
+            &-item a {
+                padding: 3rem 1rem 3.5rem;
+            }
         }
     }
 }
@@ -319,12 +338,4 @@ export default {
     }
 }
 
-@keyframes tools-switcher-animation {
-  0% {transform:scale(1)}
-  16% {transform:scale(.8)}
-  33% {transform:scale(1)}
-  50% {transform:scale(.8)}
-  67% {transform:scale(1)}
-  84% {transform:scale(.8)}
-}
 </style>
