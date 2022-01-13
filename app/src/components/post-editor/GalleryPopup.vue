@@ -319,9 +319,9 @@ export default {
             }
 
             $(this.galleryElement).attr('data-columns', this.columns);
+            $(this.galleryElement).removeClass('gallery-wrapper--wide').removeClass('gallery-wrapper--full');
 
             if (this.layout !== '') {
-                $(this.galleryElement).removeClass('gallery-wrapper--wide').removeClass('gallery-wrapper--full');
                 $(this.galleryElement).addClass(this.layout);
             }
 
