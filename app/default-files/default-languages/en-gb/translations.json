@@ -286,7 +286,6 @@
     "image": {
         "addImages": "Add images",
         "align": "Align",
-        "centered": "Centered",
         "centeredImage": "Centered image",
         "columns": "Columns:",
         "dropFeaturedImageOr": "Drop featured image here or",
@@ -305,6 +304,7 @@
         "insertEditGallery": "Insert/Edit Gallery",
         "layout": "Layout",
         "loadingImage": "Loading image...",
+        "none": "None",
         "oneColumn": "1 column",
         "pictures": "pictures",
         "removeImage": "Remove image",

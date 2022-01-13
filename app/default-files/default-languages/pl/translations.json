@@ -286,7 +286,6 @@
     "image": {
         "addImages": "Dodaj obrazy",
         "align": "Wyrównanie",
-        "centered": "Wycentrowane",
         "centeredImage": "Obraz wyśrodkowany",
         "columns": "Kolumny:",
         "dropFeaturedImageOr": "Upuść tutaj obrazek wyróżnony lub",
@@ -305,6 +304,7 @@
         "insertEditGallery": "Dodaj/Edytuj Galerię",
         "layout": "Układ",
         "loadingImage": "Wczytywanie obrazu...",
+        "none": "Brak",
         "oneColumn": "1 kolumna",
         "pictures": "obrazów",
         "removeImage": "Usuń obraz",
