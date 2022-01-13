@@ -600,13 +600,13 @@ export default {
       white-space: nowrap;
 
       & > svg {
-         fill: var(--eb-icon-primary-color);
+         fill: var(--icon-primary-color);
       }
 
       &.batch {
          background: var(--eb-bg-secondary);
          box-shadow: 0 0 16px rgba(var(--eb-shadow-rgb), .1);
-         border: 1px solid var(--eb-gray-2);
+         border: 1px solid var(--gray-6);
          border-radius: 30px;
          font-size: 15px;
          font-weight: 500;
@@ -623,7 +623,7 @@ export default {
 
          &::after {
             content:"";
-            border: 2px solid rgba(var(--eb-primary-color-rgb), .4);
+            border: 2px solid rgba(var(--color-primary-rgb), .4);
             border-radius: 50%;
             height: 58px;
             left: 50%;
@@ -646,7 +646,7 @@ export default {
       }
 
       &.save {
-         background: var(--eb-input-bg);
+         background: var(--input-bg);
          border: 2px solid var(--eb-gray-3);
          border-radius: 50%;
          height: 58px;
@@ -682,9 +682,9 @@ export default {
 
       &.undo,
       &.cancel {
-         border: 1px solid var(--eb-input-border-color);
+         border: 1px solid var(--input-border-color);
          box-shadow: 0 0 16px rgba(var(--eb-shadow-rgb), .1);
-         background: var(--eb-input-bg);
+         background: var(--input-bg);
          height: 48px;
          opaciy: 0;
          width: 70px;
@@ -709,10 +709,10 @@ export default {
          }
 
          &:not([disabled]):hover {
-            border-color: var(--eb-primary-color);
+            border-color: var(--color-primary);
 
             &::after {
-               box-shadow: inset 0 0 0 1px var(--eb-primary-color);
+               box-shadow: inset 0 0 0 1px var(--color-primary);
             }
          }
 

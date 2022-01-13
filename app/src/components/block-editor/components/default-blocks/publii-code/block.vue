@@ -188,9 +188,9 @@ export default {
 @import '../../../assets/mixins.scss';
 
 .publii-block-code {
-    border-radius: var(--eb-border-radius);
+    border-radius: var(--border-radius);
     background: var(--eb-gray-8);
-    border-radius: var(--eb-border-radius);
+    border-radius: var(--border-radius);
     box-shadow: 2px 4px 26px var(--eb-shadow);
     outline: none;
     width: 100%;

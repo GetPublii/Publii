@@ -256,7 +256,7 @@ export default {
   }
 
   &.show-bulk-operations {
-      background: var(--eb-bg-secondary);
+      background: var(--popup-bg);
       margin-top: baseline(8);
       transition: all .25s ease-out;
 
@@ -278,7 +278,7 @@ export default {
   }
 
   &.has-ui-opened {
-    background: var(--eb-bg-secondary);
+    background: var(--popup-bg);
     border-radius: 6px;
     box-shadow: 0 0 32px var(--eb-shadow);
     margin-top: -44px;
@@ -287,7 +287,7 @@ export default {
     z-index: 2;
 
     &::after {
-      background: var(--eb-primary-color);
+      background: var(--color-primary);
       bottom: -1px;
       content: "";
       position: absolute;
@@ -374,7 +374,7 @@ export default {
 
         &::after {
           content:"";
-          border: 2px solid rgba(var(--eb-primary-color-rgb), .4);
+          border: 2px solid rgba(var(--color-primary-rgb), .4);
           border-radius: 50%;
           height: 50px;
           left: 50%;
@@ -395,7 +395,7 @@ export default {
         }
 
         & > svg {
-          fill: var(--eb-primary-color);
+          fill: var(--color-primary);
           vertical-align: middle;
         }
 
@@ -446,14 +446,14 @@ export default {
         z-index: 0;
 
         svg {
-          fill: var(--eb-icon-primary-color);
-          transition: var(--eb-transition);
+          fill: var(--icon-primary-color);
+          transition: var(--transition);
         }
 
         // hover effect
         &::before {
           content: "";
-          background: var(--eb-gray-2);
+          background: var(--gray-6);
           border-radius: 3px;
           display: block;
           left: 50%;
@@ -472,7 +472,7 @@ export default {
         &.is-active {
 
           svg {
-            fill: var(--eb-icon-tertiary-color);
+            fill: var(--icon-tertiary-color);
           }
 
           &::before {
@@ -525,14 +525,13 @@ export default {
         width: 38px;
 
         svg {
-          fill: var(--eb-icon-primary-color);
-          transition: var(--eb-transition);
+          fill: var(--icon-tertiary-color);
         }
 
         // hover effect
         &::before {
           content: "";
-          background: var(--eb-gray-2);
+          background: var(--gray-6);
           border-radius: 3px;
           display: block;
           left: 50%;
@@ -550,10 +549,6 @@ export default {
         &:hover,
         &.is-active {
 
-          svg {
-            fill: var(--eb-icon-tertiary-color);
-          }
-
           &::before {
             opacity: 1;
             transform: scale(1) translate(-50%, -50%);
@@ -565,14 +560,14 @@ export default {
 
   &-ui-bulk {
     background: transparent;
-    border-right: 3px solid var(--eb-primary-color);
+    border-right: 3px solid var(--color-primary);
     border-radius: 6px 0 0 6px;
     box-shadow: 0 0 16px var(--eb-shadow);
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    width: calc(var(--eb-editor-width) + 4rem);
+    width: calc(var(--eb-editor-width) + 64px);
 
     &-move,
     &-delete,
@@ -589,14 +584,14 @@ export default {
         width: 38px;
 
         svg {
-          fill: var(--eb-icon-primary-color);
-          transition: var(--eb-transition);
+          fill: var(--icon-primary-color);
+          transition: var(--transition);
         }
 
         // hover effect
         &::before {
           content: "";
-          background: var(--eb-gray-2);
+          background: var(--gray-6);
           border-radius: 3px;
           display: block;
           left: 50%;
@@ -615,7 +610,7 @@ export default {
         &.is-active {
 
           svg {
-            fill: var(--eb-icon-tertiary-color);
+            fill: var(--icon-tertiary-color);
           }
 
           &::before {
@@ -657,7 +652,7 @@ export default {
     width: 60px;
 
     & > svg {
-        fill: var(--eb-primary-color);
+        fill: var(--color-primary);
     }
   }
 

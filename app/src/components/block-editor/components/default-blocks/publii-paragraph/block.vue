@@ -482,10 +482,10 @@ export default {
     z-index: 10;
 
     &-tooltip {
-      background: var(--eb-input-bg-light);
-      border-radius: var(--eb-border-radius);
+      background: var(--input-bg-light);
+      border-radius: var(--border-radius);
       box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
-      color: var(--eb-text-primary-color);
+      color: var(--text-primary-color);
       display: none;
       flex-wrap: wrap;
       justify-content: center;
@@ -582,7 +582,7 @@ export default {
         }
 
         & > svg {
-          fill: var(--eb-primary-color);
+          fill: var(--color-primary);
           vertical-align:text-bottom;
           transition: all .25s ease-out;
         }
@@ -603,7 +603,7 @@ export default {
         position: relative;
 
         svg {
-          fill: var(--eb-icon-tertiary-color);
+          fill: var(--icon-tertiary-color);
           transition: all .125s ease-out;
         }
 
@@ -644,7 +644,7 @@ export default {
 
         &:hover {
            svg {
-             fill: var(--eb-primary-color);
+             fill: var(--color-primary);
            }
         }
       }

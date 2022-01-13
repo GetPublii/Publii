@@ -258,10 +258,10 @@ export default {
     }
 
     input {
-      background: var(--eb-input-bg);
-      border: 1px solid var(--eb-input-border-color);
-      border-radius: var(--eb-border-radius);
-      color: var(--eb-text-primary-color);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary-color);
       display: block;
       font-size: inherit;
       line-height: inherit;
@@ -276,9 +276,9 @@ export default {
   }
 
   &-text {
-    background: var(--eb-input-bg);
-    border: 1px solid var(--eb-input-border-color);
-    border-radius: var(--eb-border-radius);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--border-radius);
     font-size: inherit;
     line-height: inherit;
     margin-bottom: 16px;

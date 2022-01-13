@@ -113,7 +113,7 @@ export default {
 
     &:after {
         left: 14px;
-        background: var(--eb-input-border-focus);
+        background: var(--input-border-focus);
     }
   }
 

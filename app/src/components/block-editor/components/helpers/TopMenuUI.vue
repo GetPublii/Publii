@@ -196,12 +196,7 @@ export default {
 
 .wrapper-ui-top-menu {
   svg {
-    fill: var(--eb-icon-primary-color);
-    transition: var(--eb-transition);
-
-    &:hover {
-       fill: var(--eb-icon-tertiary-color);
-    }
+    fill: var(--icon-tertiary-color);
   }
 
   &-conversions {
@@ -219,7 +214,7 @@ export default {
     // hover effect
     &::before {
        content: "";
-       background: var(--eb-gray-2);
+       background: var(--gray-6);
        border-radius: 3px;
        display: block;
        left: 50%;
@@ -243,7 +238,7 @@ export default {
       }
 
       & > svg {
-         fill: var(--eb-icon-tertiary-color);
+         fill: var(--icon-tertiary-color);
       }
     }
   }
@@ -277,8 +272,8 @@ export default {
 
     &__tags {
       background: var(--eb-bg-secondary);
-      border: 2px solid var(--eb-input-border-color);
-      color: var(--eb-text-primary-color);
+      border: 2px solid var(--input-border-color);
+      color: var(--text-primary-color);
       height: 34px;
       min-height: 100%;
       padding: 4px 40px 5px 14px;
@@ -286,7 +281,7 @@ export default {
     }
 
     &__placeholder {
-      color: var(--eb-text-light-color);
+      color: var(--text-light-color);
       display: block;
       font-size: 16px;
       margin-bottom: 0;
@@ -295,7 +290,7 @@ export default {
 
     &__single {
       background: transparent;
-      color: var(--eb-text-primary-color);
+      color: var(--text-primary-color);
       min-height: 20px;
       line-height: 20px;
       margin-bottom: 0;
@@ -322,9 +317,9 @@ export default {
 
     &__content-wrapper {
       background: var(--eb-bg-secondary);
-      border: 2px solid var(--eb-input-border-color);
+      border: 2px solid var(--input-border-color);
       border-top: none;
-      color: var(--eb-text-primary-color);
+      color: var(--text-primary-color);
       margin-top: -1px;
     }
 
@@ -333,8 +328,8 @@ export default {
         min-height: 30px;
 
       &--highlight {
-        background: var(--eb-input-bg-light);
-        color: var(--eb-text-primary-color);
+        background: var(--input-bg-light);
+        color: var(--text-primary-color);
 
         &:after {
           display: none;
@@ -342,8 +337,8 @@ export default {
       }
 
       &.multiselect__option--selected {
-        background: var(--eb-input-bg-hover);
-        color: var(--eb-text-primary-color);
+        background: var(--input-bg-hover);
+        color: var(--text-primary-color);
 
         &:after {
           display: none;
@@ -353,7 +348,7 @@ export default {
 
     &__input {
       background: none !important;
-      color: var(--eb-text-primary-color);
+      color: var(--text-primary-color);
       font-size: 13px;
       height: 27px;
 
@@ -382,10 +377,10 @@ export default {
 }
 
 .ui-top-menu-tooltip {
-  background: var(--eb-input-bg-light);
-  border-radius: var(--eb-border-radius);
+  background: var(--input-bg-light);
+  border-radius: var(--border-radius);
   box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
-  color: var(--eb-text-primary-color);
+  color: var(--text-primary-color);
   display: flex;
   flex-wrap: wrap;
   font-size: 13px;

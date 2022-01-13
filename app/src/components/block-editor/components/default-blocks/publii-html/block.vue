@@ -105,7 +105,7 @@ export default {
 @import '../../../assets/mixins.scss';
 
 .publii-block-html {
-  border-radius: var(--eb-border-radius);
+  border-radius: var(--border-radius);
   background: var(--eb-gray-8);
   box-shadow: 2px 4px 26px var(--eb-shadow);
   outline: none;
@@ -134,7 +134,7 @@ export default {
   }
 
   .prism-editor__line-numbers {
-    background: var(--eb-input-bg) !important;
+    background: var(--input-bg) !important;
   }
 }
 </style>

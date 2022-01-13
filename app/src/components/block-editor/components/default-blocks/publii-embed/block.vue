@@ -106,7 +106,7 @@ export default {
 
 .publii-block-embed {
     background: var(--eb-gray-1);
-    border-radius: var(--eb-border-radius);
+    border-radius: var(--border-radius);
     color: var(--eb-gray-3);
     display: none;
     font-size: ms(-1);
@@ -117,7 +117,7 @@ export default {
     textarea {
         background: var(--eb-white);
         border: 1px solid var(--eb-gray-3);
-        border-radius: var(--eb-border-radius);
+        border-radius: var(--border-radius);
         font-family: var(--font-monospace);
         font-size: ms(-1);
         min-height: 180px;

@@ -109,7 +109,7 @@ export default {
 #post-title {
   border: none;
   box-shadow: none;
-  color: var(--eb-headings-color);
+  color: var(--headings-color);
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: 35px;
@@ -124,10 +124,6 @@ export default {
 
 #post-editor {
   display: none;
-}
-
-#post-title:empty {
-  color: var(--eb-icon-primary-color);
 }
 
 #post-title:empty:before {

@@ -96,7 +96,7 @@ export default {
 @import '../../assets/variables.scss';
 
 .is-highlighted {
-  background: var(--eb-primary-color);
+  background: var(--color-primary);
 }
 
 .wrapper-ui-inline-menu {
@@ -164,14 +164,13 @@ export default {
     }
 
     svg {
-      fill: var(--eb-icon-primary-color);
-      transition: var(--eb-transition);
+      fill: var(--icon-tertiary-color);
     }
 
     // hover effect
     &::before {
        content: "";
-       background: var(--eb-gray-2);
+       background: var(--gray-6);
        border-radius: 3px;
        display: block;
        left: 50%;
@@ -188,10 +187,6 @@ export default {
 
     &:hover,
     &.is-active {
-
-      svg {
-         fill: var(--eb-icon-tertiary-color);
-      }
 
       &::before {
          opacity: 1;

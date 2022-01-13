@@ -127,7 +127,7 @@ export default {
   hr.long-line {
 
       &::after {
-          border-bottom: 1px solid var(--eb-input-border-color);
+          border-bottom: 1px solid var(--input-border-color);
           bottom: baseline(2);
           content: "";
           height: 1px;
