@@ -360,6 +360,7 @@
         "classCSS": "Klasa CSS",
         "createNewMenu": "Stwórz nowe menu",
         "deleteThisMenuItem": "Usuń ten element menu",
+        "duplicateThisMenuItem": "Duplikuj ten element menu",
         "editMenuItem": "Edytuj element menu",
         "editMenuName": "Edytuj nazwę menu",
         "editThisMenuItem": "Edytuj ten element menu",

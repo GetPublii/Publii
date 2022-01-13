@@ -34,6 +34,16 @@
 
             <a
                 href="#"
+                class="menu-item-duplicate"
+                :title="$t('menu.duplicateThisMenuItem')"
+                @click.prevent="duplicateMenuItem">
+                <icon
+                    name="duplicate"
+                    size="xs" />
+            </a>
+
+            <a
+                href="#"
                 class="menu-item-remove"
                 :title="$t('menu.deleteThisMenuItem')"
                 @click.prevent="removeMenuItem">
@@ -266,7 +276,7 @@ export default {
         },
         editMenuItem () {
             this.$bus.$emit('show-menu-item-editor-from-submenu', this.id);
-
+            
             setTimeout(() => {
                 this.$bus.$emit('show-menu-item-editor', {
                     menuID: this.menuID,
@@ -281,6 +291,14 @@ export default {
                     link: this.link
                 });
             }, 50);
+        },
+        duplicateMenuItem () {
+            this.$store.commit('duplicateMenuItem', {
+                menuID: this.menuID,
+                menuItemID: this.id
+            });
+
+            this.$bus.$emit('save-new-menu-structure');
         },
         removeMenuItem () {
             this.$bus.$emit('confirm-display', {
@@ -412,7 +430,8 @@ li {
             margin-right: 2rem;
         }
 
-        .menu-item-remove {
+        .menu-item-remove,
+        .menu-item-duplicate {
             background: var(--bg-primary);
             position: relative;
             border-radius: 50%;
@@ -449,6 +468,17 @@ li {
                 transition: var(--transition);
                 vertical-align: middle;
                 width: 1.6rem;
+            }
+        }
+
+        .menu-item-duplicate {
+            right: 5rem;
+
+            &:hover {
+                & > svg {
+                   fill: var(--color-primary);
+                   transform: scale(1);
+               }
             }
         }
 

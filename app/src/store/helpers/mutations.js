@@ -343,6 +343,23 @@ export default {
             return menu;
         });
     },
+    duplicateMenuItem(state, data) {
+        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
+            if (index === data.menuID) {
+                let dataToDuplicate = findMenuItemByIDwithParent(menu.items, data.menuItemID);
+                let itemToDuplicate = dataToDuplicate.item;
+
+                if (itemToDuplicate) {
+                    let clone = JSON.parse(JSON.stringify(itemToDuplicate));
+                    let newID = +new Date();
+                    let cloneUpdated = updateMenuItemIDs(clone, newID);
+                    menu.items = insertMenuItem(menu.items, cloneUpdated, dataToDuplicate.parentItemID);
+                }
+            }
+
+            return menu;
+        });
+    },
     reorderMenuItems (state, data) {
         let itemToModify = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.itemID);
         Vue.set(itemToModify, 'items', data.items.slice());
@@ -402,15 +419,54 @@ function findMenuItemByID (items, menuItemID) {
     }
 }
 
+function findMenuItemByIDwithParent (items, menuItemID, parentItemID = 0) {
+    if (items) {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].id == menuItemID) {
+                return {
+                    item: items[i],
+                    parentItemID: parentItemID
+                };
+            }
+
+            let found = findMenuItemByIDwithParent(items[i].items, menuItemID, items[i].id);
+
+            if (found) {
+                return found;
+            }
+        }
+    }
+}
+
 function insertSubmenuItem (menuItems, menuItem, parentItemID) {
     return menuItems.map(item => {
-        if(item.id === parentItemID) {
+        if (item.id === parentItemID) {
             item.items.push(menuItem);
             return item;
         }
 
-        if(item.items) {
+        if (item.items) {
             item.items = insertSubmenuItem(item.items, menuItem, parentItemID);
+        }
+
+        return item;
+    });
+}
+
+function insertMenuItem (menuItems, menuItem, parentItemID) {
+    if (parentItemID === 0) {
+        menuItems.push(menuItem);
+        return menuItems;
+    }
+    
+    return menuItems.map(item => {
+        if (item.id === parentItemID) {
+            item.items.push(menuItem);
+            return item;
+        }
+
+        if (item.items) {
+            item.items = insertMenuItem(item.items, menuItem, parentItemID);
         }
 
         return item;
@@ -442,6 +498,17 @@ function deleteMenuItemByID (item, id) {
     item.items = item.items.filter(item => deleteMenuItemByID(item, id));
 
     return item.id !== id;
+}
+
+function updateMenuItemIDs (item, newID) {
+    item = JSON.stringify(item);
+    let offsetIndex = 0;
+
+    item = item.replace(/"id":[0-9]{1,}/g, () => {
+        return ('"id":' + newID + (++offsetIndex));
+    });
+
+    return JSON.parse(item);
 }
 
 function hideMenuItemByID (item, itemID) {
