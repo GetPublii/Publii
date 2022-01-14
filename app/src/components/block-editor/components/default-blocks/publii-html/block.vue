@@ -106,8 +106,8 @@ export default {
 
 .publii-block-html {
   border-radius: var(--border-radius);
-  background: var(--eb-gray-8);
-  box-shadow: 2px 4px 26px var(--eb-shadow);
+  background: var(--gray-4);
+  box-shadow: 2px 4px 26px var(--shadow);
   outline: none;
   width: 100%;
 
@@ -119,12 +119,12 @@ export default {
   &.is-visible {
     & > pre,
     & > .prism-editor__line-numbers {
-      background: var(--eb-gray-8) !important;
+      background: var(--pre-bg) !important;
       display: block;
     }
 
     & > pre {
-      background: var(--eb-gray-8) !important;
+      background: var(--pre-bg) !important;
     }
 
     code {

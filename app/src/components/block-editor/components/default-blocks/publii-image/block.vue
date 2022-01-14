@@ -467,7 +467,7 @@ export default {
   }
 
   &-empty-state {
-    color: var(--eb-gray-4);
+    color: var(--gray-3);
     font-size: 12px;
     font-weight: bold;
     text-align: center;
@@ -476,7 +476,7 @@ export default {
 
   &-delete {
     align-items: center;
-    background: var(--eb-warning);
+    background: var(--warning);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -493,7 +493,7 @@ export default {
     z-index: 2;
 
     svg {
-       fill: var(--eb-white);
+       fill: var(--white);
        transition: var(--transition);
     }
 
@@ -503,7 +503,7 @@ export default {
        background: var(--gray-6);
 
        svg {
-          fill: var(--eb-warning);
+          fill: var(--warning);
        }
     }
   }
@@ -518,26 +518,11 @@ export default {
     }
 
     input,
-    textarea {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border-color);
-      border-radius: var(--border-radius);
-      color: var(--text-primary-color);
+    textarea {  
       display: block;
-      font-size: ms(-1);
-      line-height: inherit;
-      outline: none;
-      padding: baseline(5);
       width: 100%;
-
-      &::placeholder {
-         color: var(--text-light-color);
-      }
     }
 
-    input {
-      padding: 10px 20px;
-    }
 
     input + input {
       margin-top: 16px;

@@ -257,28 +257,16 @@ export default {
       display: block;
     }
 
-    input {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border-color);
-      border-radius: var(--border-radius);
-      color: var(--text-primary-color);
-      display: block;
-      font-size: inherit;
-      line-height: inherit;
-      outline: none;
-      padding: 10px 20px;
+    input {    
+      display: block;   
       width: 100%;
-
-      &::placeholder {
-        color: var(--eb-gray-4);
-      }
     }
   }
 
   &-text {
     background: var(--input-bg);
     border: 1px solid var(--input-border-color);
-    border-radius: var(--border-radius);
+    border-radius: 3px;
     font-size: inherit;
     line-height: inherit;
     margin-bottom: 16px;
@@ -289,7 +277,7 @@ export default {
     &:empty {
       &:before {
         content: attr(data-translation);
-        color: var(--eb-gray-4);
+        color: var(--gray-4);
       }
     }
   }

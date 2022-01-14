@@ -233,7 +233,7 @@ export default {
   padding: 0 32px;
   position: relative;
   transition: width .25s ease-out, opacity .35s ease-out;
-  width: var(--eb-editor-width);
+  width: var(--editor-width);
   z-index: 1;
 
   &[data-block-type="publii-embed"] {
@@ -280,7 +280,7 @@ export default {
   &.has-ui-opened {
     background: var(--popup-bg);
     border-radius: 6px;
-    box-shadow: 0 0 32px var(--eb-shadow);
+    box-shadow: 0 0 32px var(--shadow);
     margin-top: -44px;
     opacity: 1;
     user-select: none;
@@ -306,11 +306,11 @@ export default {
       }
       .publii-block-code > .prism-editor__line-numbers,
       .publii-block-html > .prism-editor__line-numbers {
-          background: var(--eb-gray-7) !important;
+          background: var(--pre-bg) !important;
       }
       .publii-block-code > pre,
       .publii-block-html > pre {
-          background: var(--eb-gray-7) !important;
+          background: var(--pre-bg) !important;
       }
       .publii-block-gallery-uploader-loader-overlay {
           height: 250px;
@@ -329,7 +329,7 @@ export default {
   }
 
   &.contains-wide-image {
-      width: calc(var(--eb-editor-width) + 168px)!important;
+      width: calc(var(--editor-width) + 168px)!important;
   }
 
   &.contains-full-image {
@@ -338,7 +338,7 @@ export default {
     .publii-block-image-form input {
       margin-left: auto;
       margin-right: auto;
-      max-width: calc(var(--eb-editor-width) + 84px);
+      max-width: calc(var(--editor-width) + 84px);
     }
   }
 
@@ -501,7 +501,7 @@ export default {
       margin: -9px 0 9px 0;
 
       &-title {
-          color: var(--eb-gray-4);
+          color: var(--gray-3);
           display: block;
           font-size: 11px;
           font-weight: 700;
@@ -562,12 +562,12 @@ export default {
     background: transparent;
     border-right: 3px solid var(--color-primary);
     border-radius: 6px 0 0 6px;
-    box-shadow: 0 0 16px var(--eb-shadow);
+    box-shadow: 0 0 16px var(--shadow);
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    width: calc(var(--eb-editor-width) + 64px);
+    width: calc(var(--editor-width) + 64px);
 
     &-move,
     &-delete,

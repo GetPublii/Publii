@@ -469,7 +469,7 @@ export default {
   &:empty {
     &:before {
       content: attr(data-translation);
-      color: var(--eb-gray-4);
+      color: var(--gray-4);
     }
   }
 
@@ -510,7 +510,7 @@ export default {
       }
 
       &:after {
-        border: 6px solid var(--eb-gray-1);
+        border: 6px solid var(--gray-1);
         border-left-color: transparent;
         border-right-color: transparent;
         border-top-color: transparent;
@@ -588,7 +588,7 @@ export default {
         }
 
         &:hover {
-          border: 1px solid var(--eb-secondary-color);
+          border: 1px solid var(--color-primary);
         }
       }
 
@@ -610,7 +610,7 @@ export default {
         &.is-active {
           svg {
             animation: fadeIn .75s 1 forwards;
-            color: var(--eb-secondary-color);
+            color: var(--color-primary);
           }
 
           @keyframes fadeIn {
@@ -650,7 +650,7 @@ export default {
       }
 
       &.is-visible {
-        background: var(--eb-bg-primary);
+        background: var(--bg-primary);
         display: flex;
       }
     }

@@ -105,9 +105,9 @@ export default {
 @import '../../../assets/mixins.scss';
 
 .publii-block-embed {
-    background: var(--eb-gray-1);
+    background: var(--gray-1);
     border-radius: var(--border-radius);
-    color: var(--eb-gray-3);
+    color: var(--gray-2);
     display: none;
     font-size: ms(-1);
     padding: baseline(6);
@@ -115,8 +115,8 @@ export default {
     width: 100%;
 
     textarea {
-        background: var(--eb-white);
-        border: 1px solid var(--eb-gray-3);
+        background: var(--white);
+        border: 1px solid var(--gray-2);
         border-radius: var(--border-radius);
         font-family: var(--font-monospace);
         font-size: ms(-1);
@@ -131,7 +131,7 @@ export default {
     }
 
     &-preview {
-        background: var(--eb-gray-1);
+        background: var(--gray-1);
         margin: 0;
         padding: 0 0 56.25%;
         position: relative;

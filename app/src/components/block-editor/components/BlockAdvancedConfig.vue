@@ -129,7 +129,7 @@ export default {
 .block-advanced-config {
    background: var(--popup-bg);
   border-radius: 6px;
-  box-shadow: 0 0 32px var(--eb-shadow);
+  box-shadow: 0 0 32px var(--shadow);
   padding: 4rem;
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
@@ -168,7 +168,7 @@ export default {
       align-items: center;
       background: var(--color-primary);
       border-radius: 50%;
-      color: var(--eb-white);
+      color: var(--white);
       cursor: help;
       display: inline-flex;
       font-size: 10px;
@@ -188,14 +188,8 @@ export default {
     }
 
     input,
-    select {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border-color);
-      border-radius: var(--border-radius);
-      color: var(--text-primary-color);
+    select {  
       display: block;
-      font-size: 16px;
-      padding: 14px;
       width: 100%;
 
       &[disabled] {
@@ -221,7 +215,7 @@ export default {
       box-shadow: none;
       border-bottom-left-radius: 6px;
       border-top: 1px solid var(--button-bg);
-      color: var(--eb-white);
+      color: var(--white);
       cursor: pointer;
       font-size: 15px;
       font-weight: var(--font-weight-semibold);

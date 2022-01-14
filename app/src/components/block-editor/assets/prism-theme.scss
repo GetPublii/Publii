@@ -7,7 +7,7 @@
 .editor > .editor-inner {
     code[class*="language-"],
     pre[class*="language-"] {
-        color: #f8f8f2;
+        color: var(--pre-color);
         background: none;
         text-shadow: 0 1px rgba(0, 0, 0, 0.3);
         font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
@@ -53,7 +53,7 @@
     .token.prolog,
     .token.doctype,
     .token.cdata {
-        color: slategray;
+        color: rgba(var(--white-rgb), .45);
     }
 
     .token.punctuation {

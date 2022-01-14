@@ -128,7 +128,7 @@ export default {
 
 #post-title:empty:before {
   content: attr(data-translation);
-  color: var(--eb-gray-4);
+  color: var(--gray-4);
 }
 
 #post-title:empty:focus:before {

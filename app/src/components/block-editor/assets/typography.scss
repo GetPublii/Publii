@@ -18,8 +18,8 @@
         line-height: $line-height;
         font-size: 1em;
 
-        a:not(.btn) {
-            @include links (var(--link-primary-color), var(--link-primary-color), var(--link-primary-color), var(--link-primary-color));
+        a:not(.btn):not(.publii-block-toc a) {
+            @include links (var(--link-invert-color), var(--link-invert-color), var(--link-invert-color), var(--link-invert-color));
         }
 
         p,
@@ -49,6 +49,7 @@
             letter-spacing: -0.03rem;
             line-height: 1.3;
             margin: 0;
+            text-transform: none;
         }
 
         h1 {
@@ -117,9 +118,9 @@
         }
 
         code {
-            background-color: #ffeeee;
+            background-color: rgba(var(--warning-rgb), .15);
             border-radius: 2px;
-            color: var(--eb-warning);
+            color: var(--warning);
             font-size: ms(-1);
             font-family: var(--font-monospace);
             padding: baseline(1) baseline(2);
@@ -154,7 +155,7 @@
             padding: baseline(2) 0 baseline(2) baseline(6);
 
             &--highlight {
-                border-color: var(--eb-yellow);        
+                border-color: rgba(var(--yellow), 1);        
             }
 
             &--info {
@@ -162,11 +163,11 @@
             }
 
             &--success {
-                 border-color: rgba(var(--eb-success-rgb), 1);       
+                 border-color: rgba(var(--success-rgb), 1);       
             }
 
             &--warning {
-                 border-color: rgba(var(--eb-warning-rgb), 1);        
+                 border-color: rgba(var(--warning-rgb), 1);        
             }
         }
     }

@@ -3,7 +3,7 @@
 // Links
 @mixin links ($link, $hover, $active, $focus) {
     & {
-        border-bottom: 3px solid var(--eb-yellow);
+        border-bottom: 3px solid rgba(var(--yellow), 1);
         color: $link;
         cursor: pointer;
         text-decoration: none !important;
@@ -11,7 +11,7 @@
     }
 
     &:hover {
-        background: var(--eb-yellow-light);
+        background: rgba(var(--yellow), 0.2);
         color: $hover;
     }
 

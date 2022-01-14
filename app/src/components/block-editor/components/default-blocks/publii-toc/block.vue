@@ -177,7 +177,7 @@ export default {
       &:empty {
         &:before {
           content: attr(data-translation);
-          color: var(--eb-gray-4);
+          color: var(--gray-4);
         }
       }
     }
@@ -190,7 +190,7 @@ export default {
   &:empty {
     &:before {
       content: attr(data-translation);
-      color: var(--eb-gray-4);
+      color: var(--gray-4);
       display: block;
       text-align: center;
       width: 100%;

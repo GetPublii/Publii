@@ -189,26 +189,26 @@ export default {
 
 .publii-block-code {
     border-radius: var(--border-radius);
-    background: var(--eb-gray-8);
+    background: var(--pre-bg);
     border-radius: var(--border-radius);
-    box-shadow: 2px 4px 26px var(--eb-shadow);
+    box-shadow: 2px 4px 26px var(--shadow);
     outline: none;
     width: 100%;
 
     &:empty {
         &:before {
             content: attr(data-translation);
-            color: var(--eb-gray-4);
+            color: var(--gray-4);
         }
     }
 
     & > .prism-editor__line-numbers {
-        background: var(--eb-gray-8) !important;
+        background: var(--pre-bg) !important;
         display: block;
     }
 
     & > pre {
-        background: var(--eb-gray-8) !important;
+        background: var(--pre-bg) !important;
         display: block;
 
         code {

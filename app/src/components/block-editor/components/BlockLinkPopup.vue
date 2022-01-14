@@ -277,7 +277,7 @@ export default {
 .block-link-popup {
   background: var(--popup-bg);
   border-radius: 6px;
-  box-shadow: 0 0 32px var(--eb-shadow);
+  box-shadow: 0 0 32px var(--shadow);
   padding: 4rem;
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
@@ -395,7 +395,7 @@ export default {
       box-shadow: none;
       border-bottom-left-radius: 6px;
       border-top: 1px solid var(--button-bg);
-      color: var(--eb-white);
+      color: var(--white);
       cursor: pointer;
       font-size: 15px;
       font-weight: var(--font-weight-semibold);

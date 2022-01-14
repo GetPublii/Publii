@@ -102,10 +102,10 @@ export default {
 .wrapper-ui-inline-menu {
   animation: inlineMenuIn .15s ease backwards;
   align-items: center;
-  background: var(--eb-bg-secondary);
+  background: var(--popup-bg);
   border: none;
-  border-radius: 4px;
-  box-shadow: 0 5px 10px -5px var(--eb-shadow), 4px -11px 26px -12px var(--eb-shadow), 0 24px 50px 2px var(--eb-shadow);
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
   left: 50%;
   margin-top: 16px;
   min-height: 44px;
@@ -129,7 +129,7 @@ export default {
   }
 
   &::after {
-    border: 9px solid var(--eb-bg-secondary);
+    border: 9px solid var(--popup-bg);
     border-left-color: transparent;
     border-right-color: transparent;
     border-top-color: transparent;

@@ -221,14 +221,15 @@ export default {
   &:empty {
     &:before {
       content: attr(data-translation);
-      color: var(--eb-gray-4);
+      color: var(--gray-4);
     }
   }
 
   &.is-link {
     cursor: pointer;
     text-decoration: underline;
-    text-decoration-color: var(--eb-yellow);
+    text-decoration-color: rgba(var(--yellow), 1);  
+    text-decoration-thickness: 3px;
   }
 }
 </style>

@@ -255,10 +255,10 @@ export default {
 
   .top-menu-button-trash {
       &::before {
-         background: var(--eb-warning);
+         background: var(--warning);
       }
          svg {
-         fill: var(--eb-white);
+         fill: var(--white);
       }
   }
 
@@ -271,7 +271,7 @@ export default {
     width: auto;
 
     &__tags {
-      background: var(--eb-bg-secondary);
+      background: var(--bg-secondary);
       border: 2px solid var(--input-border-color);
       color: var(--text-primary-color);
       height: 34px;
@@ -303,7 +303,7 @@ export default {
       width: 34px;
 
       &::before {
-          border-color: var(--eb-gray-4) transparent transparent;
+          border-color: var(--gray-3) transparent transparent;
       }
     }
 
@@ -316,7 +316,7 @@ export default {
     }
 
     &__content-wrapper {
-      background: var(--eb-bg-secondary);
+      background: var(--bg-secondary);
       border: 2px solid var(--input-border-color);
       border-top: none;
       color: var(--text-primary-color);
@@ -324,7 +324,7 @@ export default {
     }
 
     &__option {
-        padding: 15px;
+        padding: 8px 15px;
         min-height: 30px;
 
       &--highlight {
@@ -353,7 +353,7 @@ export default {
       height: 27px;
 
       &::placeholder {
-        color: var(--eb-gray-5);
+        color: var(--gray-4);
       }
     }
 
@@ -403,7 +403,7 @@ export default {
   }
 
   &:after {
-    border: 6px solid var(--eb-gray-1);
+    border: 6px solid var(--input-bg-light);
     border-left-color: transparent;
     border-right-color: transparent;
     border-top-color: transparent;

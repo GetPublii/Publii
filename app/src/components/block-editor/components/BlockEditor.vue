@@ -539,13 +539,13 @@ export default {
       position: relative;
       top: 0;
       transform: translateX(-50%);
-      width: var(--eb-editor-width);
+      width: var(--editor-width);
       z-index: 0;
     }
 
     &.is-bulk-edit-mode {
       .wrapper {
-        width: var(--eb-editor-width)!important;
+        width: var(--editor-width)!important;
       }
     }
   }
@@ -579,7 +579,7 @@ export default {
     z-index: 1000;
 
     &.is-visible {
-      background: linear-gradient(to top, var(--eb-bg-primary) 50%, transparent 100%);
+      background: linear-gradient(to top, var(--bg-primary) 50%, transparent 100%);
       bottom: 0;
       opacity: 1;
 
@@ -604,8 +604,8 @@ export default {
       }
 
       &.batch {
-         background: var(--eb-bg-secondary);
-         box-shadow: 0 0 16px rgba(var(--eb-shadow-rgb), .1);
+         background: var(--bg-secondary);
+         box-shadow: var(--box-shadow-small);
          border: 1px solid var(--gray-6);
          border-radius: 30px;
          font-size: 15px;
@@ -614,7 +614,7 @@ export default {
          width: 58px;
 
          &:hover {
-            border: 2px solid var(--eb-gray-3);
+            border: 2px solid var(--gray-2);
 
             & > svg {
                transform: scale(1.1) rotate(180deg);
@@ -647,7 +647,7 @@ export default {
 
       &.save {
          background: var(--input-bg);
-         border: 2px solid var(--eb-gray-3);
+         border: 2px solid var(--gray-2);
          border-radius: 50%;
          height: 58px;
          margin: 0 -10px;
@@ -657,7 +657,7 @@ export default {
          &::after {
             content: "";
             border-radius: 50%;
-            border: 2px solid var(--eb-bg-primary);
+            border: 2px solid var(--bg-primary);
             position: absolute;
             left: -4px;
             top: -4px;
@@ -666,14 +666,14 @@ export default {
          }
 
          &.is-active {
-            border-color: var(--eb-success);
+            border-color: var(--success);
 
             &:hover {
-               border-color: var(--eb-success);
-               box-shadow: inset 0 0 0 1px var(--eb-success);
+               border-color: var(--success);
+               box-shadow: inset 0 0 0 1px var(--success);
 
                & > svg {
-               fill: var(--eb-success) !important;
+               fill: var(--success) !important;
                transform: scale(1.15);
                }
             }
@@ -683,7 +683,7 @@ export default {
       &.undo,
       &.cancel {
          border: 1px solid var(--input-border-color);
-         box-shadow: 0 0 16px rgba(var(--eb-shadow-rgb), .1);
+         box-shadow: var(--box-shadow-small);
          background: var(--input-bg);
          height: 48px;
          opaciy: 0;
@@ -737,10 +737,10 @@ export default {
          }
 
          &:hover {
-            border-color: var(--eb-warning);
+            border-color: var(--warning);
 
             &::after {
-               box-shadow: inset 0 0 0 1px var(--eb-warning);
+               box-shadow: inset 0 0 0 1px var(--warning);
             }
          }
 
@@ -762,7 +762,7 @@ export default {
 
       &:disabled  {
          & > svg {
-            fill: var(--eb-gray-3) !important;
+            fill: var(--gray-2) !important;
          }
       }
     }
