@@ -28,7 +28,7 @@
 
             <p-button
                 icon="settings"
-                :type="$parent.sidebarVisible ? 'outline icon only-icon-color' : 'outline icon only-icon'"
+                :type="$parent.sidebarVisible ? 'clean clean-invert icon only-icon-color' : 'clean clean-invert icon only-icon'"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
@@ -234,6 +234,7 @@ export default {
 
             &:nth-child(3) {
                 margin-left: 1rem;
+                margin-right: -1.3rem; // button padding
             }
         }
     }

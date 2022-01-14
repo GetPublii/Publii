@@ -297,7 +297,6 @@ export default {
 }
 
 .message {
-    color: var(--gray-4);
     font-size: 1.8rem;
     padding: 0 0 4rem 0;
 }
@@ -320,8 +319,7 @@ export default {
     select {
         -webkit-appearance: none;
         background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat 100% 50%;
-        background-color: var(--input-bg);
-        background-size: 10px;
+        background-size: 8px;
         border: none;
         box-shadow: none;
         color: var(--text-primary-color);
@@ -344,6 +342,7 @@ export default {
     }
 
     .post-date-editor-year {
+        background-color: transparent;
         box-shadow: none;
         font-size: 2.6rem;
         margin-right: 3rem;

@@ -529,7 +529,6 @@ h1 {
 }
 
 .message {
-    color: var(--gray-4);
     font-size: 1.8rem;
     padding: 0;
 }

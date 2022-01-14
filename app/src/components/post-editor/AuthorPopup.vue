@@ -102,7 +102,6 @@ export default {
 }
 
 .message {
-    color: var(--gray-4);
     font-size: 1.8rem;
     padding: 0 0 4rem 0;
 }

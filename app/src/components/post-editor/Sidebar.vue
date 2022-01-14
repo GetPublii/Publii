@@ -898,7 +898,6 @@ export default {
             clear: both;
             color: var(--text-light-color);
             display: block;
-            font-size: 1.4rem;
             font-style: italic;
             font-weight: var(---font-weight-normal);
             line-height: 1.4;
