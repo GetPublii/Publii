@@ -665,29 +665,29 @@ body {
         .tox-pop {
             
             &__dialog {
-                background: var(--input-bg);
-                border: 1px solid var(--input-bg);
+                background: var(--popup-bg);
+                border: 1px solid var(--popup-bg);
                 border-radius: 4px;
                 box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
             }
             
             &.tox-pop--bottom {
                 &::before {
-                    border-color: var(--input-bg) transparent transparent transparent;
+                    border-color: var(--popup-bg) transparent transparent transparent;
                 }
                 
                 &::after {
-                    border-color: var(--input-bg) transparent transparent transparent;
+                    border-color: var(--popup-bg) transparent transparent transparent;
                 }
             }
             
             &.tox-pop--top {
                 &::before {
-                    border-color: transparent transparent var(--input-bg) transparent;
+                    border-color: transparent transparent var(--popup-bg) transparent;
                 }
                 
                 &::after {
-                    border-color: transparent transparent var(--input-bg) transparent;
+                    border-color: transparent transparent var(--popup-bg) transparent;
                 }
             }         
             
