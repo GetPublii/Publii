@@ -354,7 +354,7 @@ export default {
             width: 80%;
 
             &:empty {
-                color: var(--gray-3);
+                color: var(--gray-4);
 
                 &:before {
                     content: attr(data-translation);

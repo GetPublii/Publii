@@ -29,6 +29,10 @@
         overflow: unset !important;
     }
 
+    .CodeMirror-sizer {
+        border-right: none;
+    }
+
     .CodeMirror-fullscreen {
         background: #fff;
         position: fixed !important;

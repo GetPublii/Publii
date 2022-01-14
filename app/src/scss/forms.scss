@@ -19,7 +19,8 @@ input[type="email"],
 input[type="search"],
 input[type="password"],
 input[type="colorpicker"],
-.small-image-upload {
+.small-image-upload,
+select {
     background-color: var(--input-bg);
     border: none;
     border-radius: 3px;

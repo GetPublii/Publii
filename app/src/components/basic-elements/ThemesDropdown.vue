@@ -64,23 +64,11 @@ export default {
 
 select {
     -webkit-appearance: none;
-    background-color: var(--input-bg);
-    border: none;
-    border-radius: 3px;
-    box-shadow: inset 0 0 0 1px var(--input-border-color);
-    color: var(--text-primary-color);
-    font: 400 1.6rem/1.5 var(--font-base);
     max-width: 100%;
     min-width: 100px;
     min-height: 48px;
-    outline: none;
-    padding: 0 12px 0 18px;
     position: relative;
     width: 100%;
-
-    &:focus {
-        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
-    }
 
     &:not([multiple]) {
         background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;

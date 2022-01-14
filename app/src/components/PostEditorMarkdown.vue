@@ -369,7 +369,7 @@ export default {
                 width: 80%;
 
                 &:empty {
-                    color: var(--gray-3);
+                    color: var(--gray-4);
 
                     &:before {
                         content: attr(data-translation);
@@ -382,14 +382,14 @@ export default {
             }
 
             .vue-simplemde {
-                margin: 0 auto;
-                max-width: 720px;
                 position: relative;
                 z-index: 1000;
 
                 .CodeMirror {
                     border: none;
                     height: auto!important;
+                    margin: 0 auto;
+                    max-width: var(--editor-width);
                     padding: 0;
 
                     .CodeMirror-selected {

@@ -228,8 +228,8 @@
     #link-toolbar,
     #inline-toolbar {
         align-items: center;
-        background: var(--input-bg-light);
-        border-radius: 4px;
+        background: var(--popup-bg);
+        border-radius: var(--border-radius);
         box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
         display: none;
         min-height: 44px;

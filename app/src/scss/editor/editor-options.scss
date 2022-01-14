@@ -71,7 +71,6 @@ body#tinymce {
     font-size: inherit;
     line-height: 1.6;
     padding: 1.8rem 1rem 0 1rem;
-    max-width: 40rem;
 
     & > :nth-child(1) {
         margin-top: 0;
@@ -79,7 +78,7 @@ body#tinymce {
 }
 
 a:not(.btn) {
-    @include links (var(--link-primary-color), var(--link-primary-color), var(--link-primary-color), var(--link-primary-color));
+    @include links (var(--link-invert-color), var(--link-invert-color), var(--link-invert-color), var(--link-invert-color));
 }
 
 
@@ -217,7 +216,7 @@ pre {
 }
 
 code {
-    background-color: #ffeeee;
+    background-color: rgba(var(--warning-rgb), .15);
     border-radius: 2px;
     color: var(--warning);
     font-size: ms(-1);

@@ -395,17 +395,9 @@ h1 {
 
         select {
             -webkit-appearance: none;
-            background-color: var(--input-bg);
-            border: none;
-            border-radius: 3px;
-            box-shadow: inset 0 0 0 1px var(--input-border-color);
-            color: var(--text-primary-color);
-            font: 400 1.6rem/1.5 var(--font-base);
-            margin-left: auto;
             max-width: 100%;
             min-width: 100px;
-            min-height: 48px;
-            outline: none;
+            min-height: 48px;          
             margin-left: 10px;
             padding: 0 12px 0 18px;
             position: relative;

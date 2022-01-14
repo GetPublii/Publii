@@ -69,7 +69,7 @@ body#tinymce {
     -webkit-font-smoothing: antialiased;
     font-size: inherit;
     margin: 1rem auto 0;
-    max-width: 40rem;
+    max-width: var(--editor-width);
     overflow-y: initial !important;
     padding: 0 0 1.4rem !important;
     width: 100%;
