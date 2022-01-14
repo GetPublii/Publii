@@ -2,7 +2,7 @@
     <div
         :key="'tag-view-' + tagData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
-        class="options-sidebar-wrapper">
+        class="options-sidebar-container">
         <div class="options-sidebar">
             <h2>
                 <template v-if="tagData.id">{{ $t('tag.editTag') }}</template>
@@ -16,16 +16,16 @@
                 &times;
             </span>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'basic' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
                     @click="openItem('basic')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.basicInformation') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
                 </div>
 
                 <div
@@ -72,16 +72,16 @@
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'image' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
                     @click="openItem('image')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.featuredImage') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
                 </div>
 
                 <div
@@ -138,16 +138,16 @@
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'seo' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
                     @click="openItem('seo')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-seo"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.seo') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
                 </div>
 
                 <div
@@ -215,16 +215,16 @@
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'other' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
                     @click="openItem('other')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="tag-settings-label">{{ $t('ui.otherOptions') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
@@ -266,7 +266,7 @@
                 <p-button
                     :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
                     type="primary"
-                    class="tag-settings-preview-button"
+                    class="options-sidebar-preview-button"
                     @click.native="saveAndPreview">
                     {{ $t('ui.saveAndPreview') }}
                     <span>
@@ -593,111 +593,6 @@ export default {
 
         .msg {
             margin: 0 0 2rem;
-        }
-    }
-
-    &-wrapper {
-        &:first-of-type {
-            .tag-settings-header {
-                border-top: none;
-            }
-        }
-    }
-
-    &-header {
-        align-items: center;
-        border-top: 1px solid var(--input-border-color);
-        color: var(--link-primary-color-hover);
-        cursor: pointer;
-        display: flex;
-        height: 6.4rem;
-        margin-left: 0;
-        margin-top: -1px;
-        padding: 0;
-        position: relative;
-        transition: var(--transition);
-        user-select: none;
-        width: 100%;
-
-        &:hover {
-            color: var(--link-primary-color);
-        }
-
-        &.is-open {
-            .tag-settings {
-                &-label {
-                    left: -3.6rem;
-                }
-
-                &-icon {
-                    left: -1.6rem;
-                    position: relative;
-                    opacity: 0;
-                }
-            }
-        }
-    }
-
-    &-label {
-        font-weight: 600;
-        left: 0;
-        position: relative;
-        transition: left .25s ease-out, color .0s ease-out;
-        width: calc(100% - 5.8rem);
-
-        &-warning {
-            color: var(--warning);
-            font-size: 1.2rem;
-            margin-left: 1rem;
-        }
-    }
-
-    &-icon {
-        fill: var(--color-primary);
-        left: 0;
-        height: 2.4rem;
-        margin-right: 1.6rem;
-        opacity: 1;
-        position: relative;
-        transition: var(--transition);
-        width: 2.4rem;
-    }
-
-    &-preview-button {
-        display: inline-flex;
-
-        & > span {
-            align-self: center;
-            display: flex;
-            margin-left: 1rem;
-        }
-    }
-
-    label {
-        color: var(--label-color);
-        display: block;
-        font-size: 1.5rem;
-        font-weight: 500;
-        line-height: 2.6;
-        margin-bottom: 1.2rem;
-
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            background-color: var(--input-bg);
-            width: 100%;
-        }
-
-        textarea {
-            height: 100px;
-        }
-
-        &.with-char-counter {
-            .note {
-                margin-top: -3rem;
-                width: 70%;
-            }
         }
     }
 

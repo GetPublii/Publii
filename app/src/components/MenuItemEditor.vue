@@ -1,7 +1,7 @@
 <template>
     <div
         :key="'menu-item-view-' + id"
-        class="options-sidebar-wrapper">
+        class="options-sidebar-container">
         <div class="options-sidebar">
             <h2>
                 <template v-if="menuItemID !== ''">{{ $t('menu.editMenuItem') }}</template>

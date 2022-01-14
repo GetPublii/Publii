@@ -693,6 +693,7 @@
         "RSSJSONFeed": "Kanał RSS/JSON",
         "saveButtonLabel": "Etykieta przyciku zapisu",
         "saveSearchStateInfo": "Po włączeniu Publii zapisze bieżące wyniki wyszukiwania, nawet podczas tworzenia nowego wpisu, umożliwiając powrót do listy. Domyślnie Publii zapisuje wyniki wyszukiwania tylko podczas otwierania wpisu do edycji.",
+        "requiresRestartingApp": "Wymaga ponowengo uruchomienia aplikacji.",
         "saveSettings": "Zapisz Ustawienia",
         "searchPage": "Strona wyszukiwania:",
         "searchPageFilenameCannotBeEmpty": "Nazwa pliku strony wyszukiwania nie może być pusta.",

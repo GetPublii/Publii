@@ -112,9 +112,14 @@
                     :label="$t('settings.openDevtoolsInMainW')"
                     :labelSeparated="false">
                     <switcher
-                        slot="field"
+                        slot="field" 
                         id="open-devtools-in-main"
                         v-model="openDevToolsInMainWindow" />
+                        <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.requiresRestartingApp') }}
+                    </span>
                 </field>
 
                 <field

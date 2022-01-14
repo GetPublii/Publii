@@ -656,7 +656,7 @@
             "titleDESC": "By title (descending)"
         },
         "pageName": "Page name",
-        "pageTitle": "Page Title:",
+        "pageTitle": "Page Title",
         "pageTitleVariables": "The following variables can be used in the Page Title: %posttitle, %sitename, %authorname",
         "paginationPhrase": "Pagination phrase:",
         "paginationPhraseCannotBeEmpty": "Pagination phrase cannot be empty.",
@@ -693,6 +693,7 @@
         "RSSJSONFeed": "RSS/JSON Feed",
         "saveButtonLabel": "Save button label",
         "saveSearchStateInfo": "When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.",
+        "requiresRestartingApp": "Requires restarting Publii app",
         "saveSettings": "Save Settings",
         "searchPage": "Search page:",
         "searchPageFilenameCannotBeEmpty": "Search page filename cannot be empty.",

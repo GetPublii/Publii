@@ -1,21 +1,21 @@
 <template>
-    <div :class="{ 'post-editor-sidebar': true, 'is-visible': isVisible }">
-        <div>
+    <div :class="{ 'options-sidebar-container': true, 'post-editor-sidebar': true, 'is-visible': isVisible }" >
+        <div class="options-sidebar">
             <div class="post-editor-sidebar-header">
                 {{ $t('post.postSettings') }}
             </div>
 
-            <div class="post-editor-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'status' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'status' }"
                     class="is-first"
                     @click="openItem('status')">
                     <icon
-                        class="post-editor-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="post-editor-settings-label">{{ $t('post.status') }}</span>
+                    <span class="options-sidebar-label">{{ $t('post.status') }}</span>
                 </div>
 
                 <div
@@ -161,16 +161,16 @@
                 </div>
             </div>
 
-            <div class="post-editor-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'image' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
                     @click="openItem('image')">
                     <icon
-                        class="post-editor-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="post-editor-settings-label">{{ $t('ui.featuredImage') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
                 </div>
 
                 <div
@@ -211,16 +211,16 @@
                     </div>
                 </div>
 
-                <div class="post-editor-settings-wrapper">
+                <div class="options-sidebar-item">
                     <div
-                        :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'tags' }"
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'tags' }"
                         @click="openItem('tags')">
                         <icon
-                            class="post-editor-settings-icon"
+                            class="options-sidebar-icon"
                             size="s"
                             name="sidebar-tags"/>
 
-                        <span class="post-editor-settings-label">{{ $t('ui.tags') }}</span>
+                        <span class="options-sidebar-label">{{ $t('ui.tags') }}</span>
                     </div>
 
                     <div
@@ -271,21 +271,21 @@
                     </div>
                 </div>
 
-                <div class="post-editor-settings-wrapper">
+                <div class="options-sidebar-item">
                     <div
-                        :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'seo' }"
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
                         @click="openItem('seo')">
                         <icon
-                            class="post-editor-settings-icon"
+                            class="options-sidebar-icon"
                             size="s"
                             name="sidebar-seo"/>
 
-                        <span class="post-editor-settings-label">
+                        <span class="options-sidebar-label">
                             {{ $t('ui.seo') }}
 
                             <span
                                 v-if="$parent.postData.slug.length > 250"
-                                class="post-editor-settings-label-warning">
+                                class="options-sidebar-label-warning">
                                 {{ $t('post.postSlugTooLong') }}
                             </span>
                         </span>
@@ -359,16 +359,16 @@
                 </div>
             </div>
 
-            <div class="post-editor-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'post-editor-settings-header': true, 'is-open': openedItem === 'other' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
                     @click="openItem('other')">
                     <icon
-                        class="post-editor-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="post-editor-settings-label">{{ $t('ui.otherOptions') }}</span>
+                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
@@ -715,20 +715,16 @@ export default {
 
 <style lang="scss">
 @import '../../scss/variables.scss';
+@import '../../scss/options-sidebar.scss';
 @import '../../scss/mixins.scss';
 
 .post-editor {
     &-sidebar {
-        background: var(--option-sidebar-bg);
-        border-left: 1px solid var(--input-border-color);
+        box-shadow: var(--box-shadow-medium);
         height: calc(100vh - var(--topbar-height));
-        overflow: auto;
         opacity: 0;
         pointer-events: none;
-        position: absolute;
-        right: 0;
         top: var(--topbar-height);
-        width: 45rem;
         z-index: 99999;
 
         &.is-visible {
@@ -743,12 +739,8 @@ export default {
             position: fixed;
             top: var(--topbar-height);
             right: 0;
-            width: 44.1rem;
+            width: $options-sidebar-width;
             z-index: 1;
-        }
-
-        & > div {
-            padding: 10rem 0 0 0;
         }
 
         &-header {
@@ -889,104 +881,14 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                padding: 0 3.6rem 3.6rem;
+                padding: 0 0 3.6rem;
 
                 .image-uploader {
                     margin-top: 0;
                 }
             }
 
-            &-header {
-                align-items: center;
-                border-top: 1px solid var(--input-border-color);
-                color: var(--link-primary-color);
-                cursor: pointer;
-                display: flex;
-                height: 6.4rem;
-                margin-left: 3.6rem;
-                margin-top: -1px;
-                padding: 0;
-                position: relative;
-                transition: var(--transition);
-                user-select: none;
-                width: calc(100% - 7.2rem);
-
-                &:hover {
-                    color: var(--link-primary-color-hover);
-                }
-
-                &.is-open {
-                    .post-editor-settings {
-                        &-label {
-                            left: -3.6rem;
-                        }
-
-                        &-icon {
-                            left: -1.6rem;
-                            position: relative;
-                            opacity: 0;
-                        }
-                    }
-                }
-
-                &.is-first {
-                   border: none;
-                }
-            }
-
-            &-label {
-                font-weight: 600;
-                left: 0;
-                position: relative;
-                transition: left .25s ease-out, color .0s ease-out;
-                width: calc(100% - 5.8rem);
-
-                &-warning {
-                    color: var(--warning);
-                    font-size: 1.2rem;
-                    margin-left: 1rem;
-                }
-            }
-
-            &-icon {
-                fill: var(--color-primary);
-                left: 0;
-                height: 2.4rem;
-                margin-right: 1.6rem;
-                opacity: 1;
-                position: relative;
-                transition: var(--transition);
-                width: 2.4rem;
-            }
-
-            label {
-                color: var(--label-color);
-                display: block;
-                font-size: 1.5rem;
-                font-weight: 500;
-                line-height: 2.6;
-                margin: 0 0 1.2rem 0;
-
-                input[type="text"],
-                input[type="number"],
-                select,
-                textarea {
-                    background-color: var(--input-bg);
-                    width: 100%;
-                }
-
-                textarea {
-                    height: 100px;
-                }
-
-                &.with-char-counter {
-                    .note {
-                        margin-top: -3rem;
-                        width: 70%;
-                    }
-                }
-            }
-
+        
             #post-featured-wrapper {
                 margin-top: 0;
             }
@@ -998,6 +900,7 @@ export default {
             display: block;
             font-size: 1.4rem;
             font-style: italic;
+            font-weight: var(---font-weight-normal);
             line-height: 1.4;
             padding-top: .5rem;
 
@@ -1016,7 +919,7 @@ export default {
 }
 
 /*
- * Special styles for win
+ * Special styles for linux
  */
 
 body[data-os="linux"] {

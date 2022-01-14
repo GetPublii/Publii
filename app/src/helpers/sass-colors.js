@@ -19,11 +19,4 @@ export default {
     'color-helper-4': '#D48CDA',
     'color-helper-5': '#FFF8E1',
     'color-helper-6': '#ffc400',
-
-    'link-color': '#0080bf',
-    'link-hover-color': '#2a2e30',
-
-    'grey-icon-color': '#a2a2a2',
-    'danger-color': '#ef5350',
-    'post-editor-sidebar-color': '#f8f9fa'
 };
