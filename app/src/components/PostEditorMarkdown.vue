@@ -361,7 +361,8 @@ export default {
                 display: block;
                 font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
                 font-size: 3.5rem;
-                font-weight: 600;
+                font-weight: var(--font-weight-bold);
+                letter-spacing: var(--letter-spacing);
                 line-height: 1.2;
                 margin: 0 10% 2.6rem;
                 padding: 0;

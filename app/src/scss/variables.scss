@@ -40,26 +40,26 @@ $font: (
 );
 
 $h1: ( 
-	min: (ms(4)), 
-	max: (ms(5))
+	min: (ms(5)), 
+	max: (ms(6))
 ); 
 $h2: ( 
+	min: (ms(4)),
+	max: (ms(5))
+);
+$h3: ( 
 	min: (ms(3)),
 	max: (ms(4))
 );
-$h3: ( 
+$h4: ( 
 	min: (ms(2)),
 	max: (ms(3))
 );
-$h4: ( 
+$h5: ( 
 	min: (ms(1)),
 	max: (ms(2))
 );
-$h5: ( 
-	min: (ms(0)),
-	max: (ms(1))
-);
 $h6: ( 
 	min: (ms(0)),
-	max: (ms(0)) 
+	max: (ms(1)) 
 );

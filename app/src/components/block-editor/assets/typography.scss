@@ -3,9 +3,6 @@
 @import './variables.scss';
 @import './mixins.scss';
 
-.editor > .editor-inner {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
-}
 
 .editor > .editor-inner {
     @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
@@ -46,7 +43,7 @@
             color: var(--headings-color);
             font-family: var(--font-base);
             font-weight: var(--font-weight-bold);
-            letter-spacing: -0.03rem;
+            letter-spacing: var(--letter-spacing);
             line-height: 1.3;
             margin: 0;
             text-transform: none;
