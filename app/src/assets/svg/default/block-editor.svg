@@ -9,25 +9,25 @@
         }
 
         .st1 {
-            fill: #5CA4EF;
-            stroke: #5CA4EF;
+            fill: #0d8bf2;
+            stroke: #0d8bf2;
             stroke-width: 3;
         }
 
         .st2 {
-            fill: #FFFFFF;
-            stroke: #DEEDFC;
+            fill: #fff;
+            stroke: #d7d8dc;
             stroke-width: 3;
             stroke-linecap: round;
             stroke-miterlimit: 10;
         }
 
         .st3 {
-            fill: #DFE8F7;
+            fill: #d7d8dc;
         }
 
         .st4 {
-            fill: #5CA4EF;
+            fill: #0d8bf2;
         }
 
         .st5 {
@@ -36,8 +36,8 @@
 
     </style>
     <linearGradient id="background" gradientUnits="userSpaceOnUse" x1="9.6225" y1="224.2177" x2="640.5616" y2="224.2177">
-        <stop offset="0" style="stop-color:#F7FBFF" />
-        <stop offset="1" style="stop-color:#EAF4FF" />
+        <stop offset="0" style="stop-color:#f6f6f9" />
+        <stop offset="1" style="stop-color:#e7e8ea" />
     </linearGradient>
      <defs>
         <filter id="shadow" filterUnits="userSpaceOnUse">

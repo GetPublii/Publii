@@ -5,23 +5,23 @@
 <style type="text/css">
 	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_1_);}
 	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_2_);}
-	.st2{fill:#202128;stroke:#3e3f4c;stroke-width:3;stroke-linejoin:round;}
+	.st2{fill:#191a1f;stroke:#3e3f4c;stroke-width:3;stroke-linejoin:round;}
 	.st3{fill:#3e3f4c;}
-	.st4{opacity:0.76;fill-rule:evenodd;clip-rule:evenodd;fill:#202128;}
+	.st4{opacity:0.76;fill-rule:evenodd;clip-rule:evenodd;fill:#191a1f;}
 	.st5{fill:none;stroke:#1089ff;stroke-width:4;stroke-linecap:round;stroke-dasharray:11.8633,11.8633;}
 	.st6{fill-rule:evenodd;clip-rule:evenodd;fill:#1089ff;}
 </style>
 <g id="background">
 	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="44.5844" y1="159.5291" x2="284.7748" y2="159.5291">
-		<stop  offset="0" style="stop-color:#21242c"/>
-		<stop  offset="1" style="stop-color:#2b2c35"/>
+		<stop  offset="0" style="stop-color:#191a1f"/>
+		<stop  offset="1" style="stop-color:#202128"/>
 	</linearGradient>
 	<path class="st0" d="M284.8,121.1c-21.1-7.4-41.5-14.8-60.6-18.9c-17-4.1-32.5-5.5-46.8-4.3c-3.5,0.3-7,0.8-10.5,1.5
 		c-3.4,0.7-6.7,1.5-10,2.6c-1.6,0.5-3.2,1.1-4.8,1.7c-1.6,0.6-3.1,1.3-4.7,2c-3.1,1.5-6.1,3.1-8.9,5c-23.7,14.7-46.5,41.4-71.1,74.8
 		c-6,8.4-11.9,17.2-17.4,26.4c-1.9,3.2-3.7,6.4-5.5,9.7L284.8,121.1z"/>
 	<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="18" y1="296.0413" x2="640" y2="296.0413">
-		<stop  offset="0" style="stop-color:#23252c"/>
-		<stop  offset="1" style="stop-color:#2b2c35"/>
+		<stop  offset="0" style="stop-color:#191a1f"/>
+		<stop  offset="1" style="stop-color:#202128"/>
 	</linearGradient>
 	<path class="st1" d="M637.2,199c-0.1-0.6-0.2-1.1-0.3-1.7c-0.1-0.6-0.2-1.1-0.4-1.7c-0.2-1.1-0.5-2.3-0.8-3.4
 		c-0.5-2.2-1.1-4.4-1.7-6.6c-1.2-4.2-2.6-8.4-4.3-12.5c-3-7.7-6.9-15-11.6-21.7c-9-13-20.3-22.6-32.8-28.5c-6.2-2.9-12.8-5-19.5-6.1
