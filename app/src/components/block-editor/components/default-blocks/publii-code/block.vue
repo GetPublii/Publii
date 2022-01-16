@@ -182,10 +182,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../vendors/modularscale';
-@import '../../../assets/functions.scss';
-@import '../../../assets/variables.scss';
-@import '../../../assets/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+@import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
 
 .publii-block-code {
     border-radius: var(--border-radius);
@@ -220,7 +219,7 @@ export default {
     &-lang {
         position: absolute;
         right: 40px;
-        top: baseline(6);
+        top: baseline(6,em);
 
         .multiselect__content {
             margin: 0 !important;

@@ -519,7 +519,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/variables.scss';
+@import '../../../scss/variables.scss';
 @import '../assets/typography.scss';
 @import '../assets/prism-theme.scss';
 

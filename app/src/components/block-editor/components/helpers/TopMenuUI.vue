@@ -192,7 +192,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/variables.scss';
+@import '../../../../scss/variables.scss';
 
 .wrapper-ui-top-menu {
   svg {
@@ -264,10 +264,11 @@ export default {
 
   .multiselect {
     font-size: 13px;
+    min-height: auto;
     margin-left: auto;
     margin-right: 6px;
     position: relative;
-    top: 3px;
+    top: 0;
     width: auto;
 
     &__tags {

@@ -59,15 +59,15 @@ img {
 
 html {
     background: var(--bg-primary);
+    font-size: 16px;
     height: 100%;
     overflow-y: auto !important;
-
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
 }
 
 body#tinymce {
     color: var(--text-primary-color);
     -webkit-font-smoothing: antialiased;
+    font-family: var(--font-base);
     font-size: inherit;
     line-height: 1.6;
     padding: 1.8rem 1rem 0 1rem;
@@ -127,27 +127,27 @@ h6 {
 }
 
 h1 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+    font-size: $h1;
 }
 
 h2 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+    font-size: $h2;
 }
 
 h3 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+    font-size: $h3;
 }
 
 h4 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+    font-size: $h4;
 }
 
 h5 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+    font-size: $h5;
 }
 
 h6 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+    font-size: $h6;
 }
 
 h2,

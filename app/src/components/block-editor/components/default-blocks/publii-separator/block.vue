@@ -104,21 +104,20 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../vendors/modularscale';
-@import '../../../assets/functions.scss';
-@import '../../../assets/variables.scss';
-@import '../../../assets/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+@import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
 
 .publii-block-separator {
   caret-color: transparent;
-  margin: baseline(2) 0;
+  margin: baseline(2,em) 0;
   outline: none;
   width: 100%;
 
   hr {
     border: none;
     cursor: pointer;
-    height: baseline(5);
+    height: baseline(5,em);
     line-height: 0;
     margin: 0;
     position: relative;
@@ -128,7 +127,7 @@ export default {
 
       &::after {
           border-bottom: 1px solid var(--input-border-color);
-          bottom: baseline(2);
+          bottom: baseline(2,em);
           content: "";
           height: 1px;
           left: 0;

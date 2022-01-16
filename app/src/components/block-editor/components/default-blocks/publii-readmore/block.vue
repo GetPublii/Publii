@@ -75,14 +75,13 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../vendors/modularscale';
-@import '../../../assets/functions.scss';
-@import '../../../assets/variables.scss';
-@import '../../../assets/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+@import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
 
 .publii-block-readmore {
   caret-color: transparent;
-  margin: baseline(7) 0;
+  margin: baseline(7,em) 0;
   outline: none;
   position: relative;
   width: 100%;

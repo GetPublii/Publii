@@ -10,6 +10,7 @@
  */
 .post-editor-markdown {
     .CodeMirror {
+        font-size: var(--editor-font-size);
         height: auto;
         min-height: 300px;      
         border-bottom-left-radius: 4px;
@@ -20,8 +21,6 @@
         line-height: $line-height;
         padding: 0;
         z-index: 1;
-
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
     }
 
     .CodeMirror-scroll {
@@ -78,27 +77,27 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-header-1 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+        font-size: $h1;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-2 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+        font-size: $h2;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-3 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+        font-size: $h3;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-4 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+        font-size: $h4;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-5 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+        font-size: $h5;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-6 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+        font-size: $h6;
     }
 
     .CodeMirror .CodeMirror-code .cm-comment {

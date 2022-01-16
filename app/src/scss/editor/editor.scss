@@ -51,15 +51,14 @@ img {
  */
 
 html {
+    font-size: var(--editor-font-size);
     height: 100%;
     overflow-y: auto !important;
-
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
 }
 
 body {
     color: var(--text-primary-color);
-    font-family: var(--font-base);
+    font-family: var(--editor-font-family);
     font-weight: var(--font-weight-normal);
     line-height: $line-height;
 }
@@ -102,8 +101,8 @@ figure,
 pre,
 table,
 script {
-    margin-top: baseline(5);
-    margin-bottom: baseline(7);
+    margin-top: baseline(6);
+    margin-bottom: baseline(6);
 }
 
 h1,
@@ -113,35 +112,35 @@ h4,
 h5,
 h6 {
     color: var(--headings-color);
-    font-family: var(--font-base);
+    font-family: var(--editor-font-family);
     font-weight: var(--font-weight-bold);
     letter-spacing: var(--letter-spacing);
     line-height: 1.3;
-    margin-top: baseline(7);
+    margin-top: baseline(9);
 }
 
 h1 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+    font-size: $h1;
 }
 
 h2 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+    font-size: $h2;
 }
 
 h3 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+    font-size: $h3;
 }
 
 h4 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+    font-size: $h4;
 }
 
 h5 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+    font-size: $h5;
 }
 
 h6 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+    font-size: $h6;
 }
 
 h1,
@@ -166,7 +165,7 @@ blockquote {
     font-size: ms(1);
     margin-left: baseline(-22);
     margin-right: baseline(-22);
-    padding: baseline(14) 0 baseline(3);
+    padding: baseline(10) 0 baseline(3);
     position: relative;
     text-align: center;
 
@@ -174,7 +173,7 @@ blockquote {
         color: var(--color-primary);
         content: "“";
         font: normal 360%/0.9 var(--font-serif);
-        top: baseline(2);
+        top: baseline(0);
 
         @include centerXY(true, false);
     }

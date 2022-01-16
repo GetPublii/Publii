@@ -437,10 +437,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../vendors/modularscale';
-@import '../../../assets/functions.scss';
-@import '../../../assets/variables.scss';
-@import '../../../assets/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+@import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
 
 .publii-block-image {
   outline: none;
@@ -463,7 +462,7 @@ export default {
 
   & > figcaption {
     display: block;
-    padding: baseline(3) 0 0;
+    padding: baseline(3,em) 0 0;
   }
 
   &-empty-state {
@@ -510,7 +509,7 @@ export default {
 
   &-form {
     display: none;
-    padding: baseline(5) 0;
+    padding: baseline(5,em) 0;
 
     &.is-visible {
       display: block;

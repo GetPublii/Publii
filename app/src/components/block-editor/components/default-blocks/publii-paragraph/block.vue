@@ -455,7 +455,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/variables.scss';
+@import '../../../../../scss/variables.scss';
 
 .publii-block-paragraph {
   outline: none;

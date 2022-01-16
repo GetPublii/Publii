@@ -9,6 +9,8 @@ html {
     --font-weight-bold: 700;
     --letter-spacing: -0.03rem;    
     --topbar-height: 2.2rem;
+    --editor-font-size: 20px;
+    --editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     --editor-width: 42em; // 'em' value only
     --transition: all .2s ease-out;
 }
@@ -276,7 +278,7 @@ html[data-theme="dark"] {
         
     --input-bg: var(--neutral-55);
     --input-bg-light: var(--neutral-48);
-    --input-bg-lightest: var(--neutral-48);
+    --input-bg-lightest: var(--neutral-49);
     --input-border-color: var(--neutral-45);
     --input-border-focus: var(--color-50);
     --input-border-checked: rgba(16,137,255, .59);

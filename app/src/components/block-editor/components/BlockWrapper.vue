@@ -221,9 +221,8 @@ export default {
 
 <style lang="scss">
 @import '../vendors/modularscale';
-@import '../assets/functions.scss';
-@import '../assets/variables.scss';
-@import '../assets/mixins.scss';
+@import '../../../scss/variables.scss';
+@import '../../../scss/mixins.scss';
 
 .wrapper {
   border: 1px solid transparent;
@@ -257,7 +256,7 @@ export default {
 
   &.show-bulk-operations {
       background: var(--popup-bg);
-      margin-top: baseline(8);
+      margin-top: baseline(8,em);
       transition: all .25s ease-out;
 
     div {
@@ -274,7 +273,7 @@ export default {
   }
 
   & > div {
-    padding: baseline(4) 0;
+    padding: baseline(4,em) 0;
   }
 
   &.has-ui-opened {
@@ -302,7 +301,7 @@ export default {
       flex-direction: column-reverse;
 
       .publii-block-code-lang {
-          top: calc(#{baseline(6)} + 44px)!important;
+          top: calc(#{baseline(6,em)} + 44px)!important;
       }
       .publii-block-code > .prism-editor__line-numbers,
       .publii-block-html > .prism-editor__line-numbers {

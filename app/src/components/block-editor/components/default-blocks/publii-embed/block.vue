@@ -99,10 +99,9 @@ export default {
 </script>
 
 <style lang="scss" >
-@import '../../../vendors/modularscale';
-@import '../../../assets/functions.scss';
-@import '../../../assets/variables.scss';
-@import '../../../assets/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+@import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
 
 .publii-block-embed {
     background: var(--gray-1);
@@ -110,7 +109,7 @@ export default {
     color: var(--gray-2);
     display: none;
     font-size: ms(-1);
-    padding: baseline(6);
+    padding: baseline(6,em);
     outline: none;
     width: 100%;
 

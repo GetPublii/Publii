@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/variables.scss';
+@import '../../../scss/variables.scss';
 
 .block-advanced-config {
    background: var(--popup-bg);

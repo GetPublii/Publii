@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/variables.scss';
+@import '../../../../scss/variables.scss';
 
 .switcher {
   background: rgba(142, 146, 157, 0.45);
