@@ -236,6 +236,29 @@
                 </field>
             </fields-group>
 
+            <fields-group :title="$t('settings.optionsForEditors')">
+                <field
+                    id="editor-font-size"
+                    :label="$t('settings.editorFontSize')">
+                    <range-slider
+                        :min="18"
+                        :max="22"
+                        :step="1"
+                        v-model="editorFontSize"
+                        slot="field"></range-slider>
+                </field>
+
+                <field
+                    id="editor-font-family"
+                    :label="$t('settings.editorFontFamily')">
+                    <dropdown
+                        slot="field"
+                        id="editor-font-family"
+                        :items="editorFontFamilyItems"
+                        v-model="editorFontFamily"></dropdown>
+                </field>
+            </fields-group>
+
             <fields-group :title="$t('settings.optionsForDevelopers')">
                 <field
                     id="enable-advanced-preview"
@@ -303,7 +326,9 @@ export default {
                 preview: ''
             },
             unwatchLocationPreview: null,
-            unwatchBackupsLocation: null
+            unwatchBackupsLocation: null,
+            editorFontSize: 18,
+            editorFontFamily: 'sans-serif'
         };
     },
     computed: {
@@ -385,6 +410,12 @@ export default {
         },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
+        },
+        editorFontFamilyItems () {
+            return {
+                'sans-serif': this.$t('settings.editorFontFamilySansSerif'),
+                'serif': this.$t('settings.editorFontFamilySerif')
+            };
         }
     },
     mounted () {
@@ -405,6 +436,8 @@ export default {
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
+        this.editorFontSize = this.$store.state.app.config.editorFontSize;
+        this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.theme = this.getAppTheme();
 
         if (mainProcessAPI.getEnv().platformName === 'linux') {
@@ -464,7 +497,9 @@ export default {
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
                 authorsOrdering: this.authorsOrdering,
-                enableAdvancedPreview: this.enableAdvancedPreview
+                enableAdvancedPreview: this.enableAdvancedPreview,
+                editorFontFamily: this.editorFontFamily,
+                editorFontSize: this.editorFontSize
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

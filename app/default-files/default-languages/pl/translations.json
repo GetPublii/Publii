@@ -570,6 +570,10 @@
         "displayEmptyTags": "Wyświetlaj tagi bez wpisów",
         "displayEmptyTagsInfo": "Jeśli ta opcja jest włączona tagi bez przypisanych do nich wpisów nadal będa miały utworzone swoje podstrony i pokażą się na liście tagów.",
         "dontIndexThisPage": "Poproś wyszukiwarkę, aby nie indeksowała całej witryny.",
+        "editorFontFamily": "Krój pisma",
+        "editorFontFamilySansSerif": "Bezszeryfowy",
+        "editorFontFamilySerif": "Szeryfowy",
+        "editorFontSize": "Rozmiar tekstu (px)",
         "editors": "Edytory",
         "enableAdvancedPreview": "Włącz zaawansowany podgląd",
         "enableAMP": "Włącz AMP",
@@ -641,6 +645,7 @@
         "openLastUsedWebsite": "Otwórz ostatnio używaną witrynę",
         "openPopupWindowBy": "Otwórz wyskakujące okienko w",
         "optionsForDevelopers": "Opcje dla programistów",
+        "optionsForEditors": "Options for editors",
         "ordering": {
             "authorASC": "Po autorze (rosnąco)",
             "authorDESC": "Po autorze (malejąco)",

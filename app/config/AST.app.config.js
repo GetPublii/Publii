@@ -19,7 +19,9 @@ const AstAppConfig = {
     appTheme: 'system',
     language: 'en-gb',
     languageType: 'default',
-    enableAdvancedPreview: false
+    enableAdvancedPreview: false,
+    editorFontSize: 18,
+    editorFontFamily: 'sans-serif'
 };
 
 module.exports = AstAppConfig;

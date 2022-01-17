@@ -1,7 +1,8 @@
 <template>
     <div
         id="app"
-        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }">
+        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }"
+        :style="overridedCssVariables">
         <message />
         <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
         <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
@@ -67,6 +68,12 @@ export default {
         },
         useWideScrollbars () {
             return this.$store.state.app.config.wideScrollbars;
+        },
+        overridedCssVariables () {
+            return [
+                '--editor-font-size: ' + this.$store.state.app.config.editorFontSize + 'px', 
+                '--editor-font-family: ' + this.$store.state.app.config.editorFontFamily
+            ].join(';') + ';';
         }
     },
     async mounted () {

@@ -570,6 +570,10 @@
         "displayEmptyTags": "Display tags w/o posts",
         "displayEmptyTagsInfo": "If this option is enabled tags without posts assigned to them will still have their subpages created and appear on the tags list.",
         "dontIndexThisPage": "Ask the search engine not to crawl the whole website.",
+        "editorFontFamily": "Font family",
+        "editorFontFamilySansSerif": "Sans serif",
+        "editorFontFamilySerif": "Serif",
+        "editorFontSize": "Font size (px)",
         "editors": "Editors",
         "enableAdvancedPreview": "Enable advanced preview",
         "enableAMP": "Enable AMP",
@@ -641,6 +645,7 @@
         "openLastUsedWebsite": "Open the last used website",
         "openPopupWindowBy": "Open Popup window by",
         "optionsForDevelopers": "Options for developers",
+        "optionsForEditors": "Options for editors",
         "ordering": {
             "authorASC": "By author (ascending)",
             "authorDESC": "By author (descending)",
