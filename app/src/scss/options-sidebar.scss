@@ -127,6 +127,12 @@
 
         &:hover {
             color: var(--link-primary-color);
+
+            .options-sidebar {             
+                &-icon {
+                    fill: var(--color-primary);
+                }
+            }
         }
 
         &.is-open {
@@ -160,7 +166,7 @@
     }
 
     &-icon {
-        fill: currentColor;
+        fill: var(--icon-secondary-color);
         left: 0;
         height: 2.4rem;
         margin-right: 1.6rem;

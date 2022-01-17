@@ -45,8 +45,8 @@
           <icon
             v-if="!imageUploadInProgress"
             name="blank-image"
-            height="48"
-            width="68" />
+            height="66"
+            width="80" />
           <span v-if="!imageUploadInProgress">
             {{ $t('editor.dropToUploadYourPhotoOr') }}
           </span>
@@ -565,7 +565,7 @@ export default {
       width: 100%;
 
       svg {
-        fill: var(--icon-secondary-color);
+        fill: var(--icon-quaternary-color);
       }
 
       span {

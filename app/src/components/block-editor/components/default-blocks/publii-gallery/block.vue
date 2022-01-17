@@ -72,8 +72,8 @@
           <icon
             v-if="!imageUploadInProgress"
             name="blank-gallery"
-            height="50"
-            width="66" />
+            height="66"
+            width="125" />
           <span v-if="!imageUploadInProgress">
             {{ $t('editor.dropToUploadYourPhotosOr') }}
           </span>
@@ -353,9 +353,10 @@ export default {
 
     & > img {
       display: block;
-      height: auto;
+      height: 30vh;
       max-width: 100%;
-      width: auto;
+      object-fit: cover;
+      width: 100%;
     }
 
     &-delete {
@@ -459,7 +460,7 @@ export default {
       width: 100%;
 
       svg {
-        fill: var(--icon-secondary-color);
+        fill: var(--icon-quaternary-color);
       }
 
       span {

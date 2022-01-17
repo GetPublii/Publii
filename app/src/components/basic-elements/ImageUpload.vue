@@ -16,8 +16,8 @@
             <div class="upload-overlay">
                 <icon
                     name="blank-image"
-                    customWidth="64"
-                    customHeight="64" />
+                    customWidth="80"
+                    customHeight="66" />
 
                <div> {{ labelText }}</div>
                 <input
@@ -408,7 +408,7 @@ export default {
 
         svg {
             display: block;
-            fill: var(--icon-secondary-color);
+            fill: var(--icon-quaternary-color);
             margin: 0 auto 1.5rem;
 
         }

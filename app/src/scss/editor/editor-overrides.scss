@@ -559,7 +559,7 @@ body {
             &:hover,
             &--enabled,
             &--enabled:hover {
-                background-color: var(--input-border-color);
+                background-color: var(--gray-6);
                 color: var(--text-primary-color);
                 
                 svg {
