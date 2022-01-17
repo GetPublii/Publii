@@ -182,6 +182,8 @@
         "element": "Element",
         "emptyGalleryBlock": "Empty gallery block",
         "emptyImageBlock": "Empty image block",
+        "enterAltText": "Enter alternative text",
+        "enterCaption": "Enter caption",
         "enterUrlOrEmbedCode": "Enter URL or embed code...",
         "errorOccured": "An error occurred - please try again.",
         "gallery": "Gallery",

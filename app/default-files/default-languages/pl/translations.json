@@ -182,6 +182,8 @@
         "element": "Element",
         "emptyGalleryBlock": "Pusty blok galerii",
         "emptyImageBlock": "Pusty blok obrazu",
+        "enterAltText": "Podaj tekst alternatywny",
+        "enterCaption": "Podaj podpis zdjęcia",
         "enterUrlOrEmbedCode": "Podaj URL lub kod do osadzenia...",
         "errorOccured": "Wystąpił błąd - proszę spróbować ponownie.",
         "gallery": "Galeria",
