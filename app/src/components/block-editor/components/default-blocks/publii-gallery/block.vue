@@ -283,6 +283,7 @@ export default {
           this.fileSelectionCallback = false;
           this.imageUploadInProgress = false;
           this.imageUploader.value = '';
+          this.$parent.openPopup();
         }
       });
     },

@@ -230,6 +230,7 @@ export default {
           }
 
           this.imageUploadInProgress = false;
+          this.$parent.openPopup();
         });
       }
 
@@ -274,6 +275,7 @@ export default {
             this.content.image = data.baseImage.url;
             this.fileSelectionCallback = false;
             this.imageUploadInProgress = false;
+            this.$parent.openPopup();
           });
 
           imageUploader.value = '';
