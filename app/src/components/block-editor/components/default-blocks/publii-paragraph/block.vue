@@ -561,7 +561,7 @@ export default {
         align-items: center;
         animation: fadeInAddButton .25s ease-out forwards;
         background: transparent;
-        border: none;
+        border: 1px solid var(--color-primary);
         border-radius: 50%;
         cursor: pointer;
         display: flex;
@@ -584,11 +584,15 @@ export default {
         & > svg {
           fill: var(--color-primary);
           vertical-align:text-bottom;
-          transition: all .25s ease-out;
+          transition: var(--transition);
         }
 
         &:hover {
-          border: 1px solid var(--color-primary);
+          border: 1px solid var(--link-primary-color);
+
+          & > svg {
+             fill: var(--link-primary-color);
+           }
         }
       }
 

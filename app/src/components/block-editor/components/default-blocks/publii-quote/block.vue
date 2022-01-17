@@ -241,12 +241,22 @@ export default {
 
 <style lang="scss">
 @import '../../../../../scss/variables.scss';
+@import '../../../../../scss/mixins.scss';
+@import '../../../../../scss/vendor/modularscale';
+
 
 .publii-block-quote {
     outline: none;
 
   p {
     outline: none;
+  }
+
+  figcaption {
+    font-size: ms(-2) !important;
+    border-left: 2px solid var(--gray-3);
+    padding: baseline(2,em) 0 0 baseline(5,em);
+    text-align: left !important;
   }
 
   &-form {

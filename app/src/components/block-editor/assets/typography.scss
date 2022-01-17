@@ -81,20 +81,10 @@
         }
 
         blockquote {
+            border-left: 2px solid var(--gray-3);
             font-family: var(--font-serif);
-            font-size: ms(1);
-            padding: baseline(14,em) 1em baseline(3,em);
-            position: relative;
-            text-align: center;
-
-            &::before {
-                color: var(--color-primary);
-                content: "“";
-                font: normal 360%/0.9 var(--font-serif);
-                top: baseline(1,em);
-
-                @include centerXY(true, false);
-            }
+            font-style: italic;
+            padding: 0 0 0 baseline(5,em);
         }
 
         ul,
@@ -147,24 +137,28 @@
         }
         
         .msg {
-            border-left: 3px solid transparent;
+            border: 1px solid transparent;
             border-radius: 3px;
-            padding: baseline(2,em) 0 baseline(2,em) baseline(6,em);
+            padding: baseline(4,em);
 
             &--highlight {
-                border-color: rgba(var(--yellow), 1);        
+                background-color: rgba(var(--yellow), .1);
+                border-color: rgba(var(--yellow), .5);
             }
-
+        
             &--info {
-                border-color: rgba(var(--color-primary-rgb), 1);       
+                background-color: rgba(var(--color-primary-rgb), .1);
+                border-color: rgba(var(--color-primary-rgb), .5);
             }
-
+        
             &--success {
-                 border-color: rgba(var(--success-rgb), 1);       
+                background-color: rgba(var(--success-rgb), .1);
+                border-color: rgba(var(--success-rgb), .51);
             }
-
+        
             &--warning {
-                 border-color: rgba(var(--warning-rgb), 1);        
+                background-color: rgba(var(--warning-rgb), .1);
+                border-color: rgba(var(--warning-rgb), .5);
             }
         }
     }

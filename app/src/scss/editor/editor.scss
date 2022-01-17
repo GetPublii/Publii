@@ -87,22 +87,22 @@ ul,
 ol,
 dl,
 table,
+blockquote,
 hr {
-    margin-top: baseline(6);
+    margin-top: baseline(7);
 }
 
-blockquote,
 figure,
 .gallery {
-    margin-top: baseline(8);
-    margin-bottom: baseline(8);
+    margin-top: baseline(9);
+    margin-bottom: baseline(9);
 }
 
 pre,
 table,
 script {
-    margin-top: baseline(6);
-    margin-bottom: baseline(6);
+    margin-top: baseline(7);
+    margin-bottom: baseline(7);
 }
 
 h1,
@@ -116,7 +116,7 @@ h6 {
     font-weight: var(--font-weight-bold);
     letter-spacing: var(--letter-spacing);
     line-height: 1.3;
-    margin-top: baseline(9);
+    margin-top: baseline(10);
 }
 
 h1 {
@@ -161,22 +161,11 @@ strong {
 }
 
 blockquote {
+    border-left: 2px solid var(--gray-3);
     font-family: var(--font-serif);
-    font-size: ms(1);
-    margin-left: baseline(-22);
-    margin-right: baseline(-22);
-    padding: baseline(10) 0 baseline(3);
+    font-style: italic;
+    padding: 0 0 0 baseline(6);
     position: relative;
-    text-align: center;
-
-    &::before {
-        color: var(--color-primary);
-        content: "“";
-        font: normal 360%/0.9 var(--font-serif);
-        top: baseline(0);
-
-        @include centerXY(true, false);
-    }
 
     & > :nth-child(1) {
         margin-top: 0;
@@ -216,7 +205,7 @@ code {
 
 pre {
     background-color: var(--gray-1);
-    font-size: ms(-1);
+    font-size: ms(-2);
     padding: baseline(6);
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -579,24 +568,28 @@ img {
 }
 
 .msg {
-    border-left: 3px solid transparent;
+    border: 1px solid transparent;
     border-radius: 3px;
-    padding: 0 0 0 baseline(6);
+    padding: baseline(4);
 
     &--highlight {
-        border-color: var(--yellow);
+        background-color: rgba(var(--yellow), .1);
+        border-color: rgba(var(--yellow), .5);
     }
 
     &--info {
-        border-color: rgba(var(--color-primary-rgb), 1);
+        background-color: rgba(var(--color-primary-rgb), .1);
+        border-color: rgba(var(--color-primary-rgb), .5);
     }
 
     &--success {
-        border-color: rgba(var(--success-rgb), 1);
+        background-color: rgba(var(--success-rgb), .1);
+        border-color: rgba(var(--success-rgb), .51);
     }
 
     &--warning {
-        border-color: rgba(var(--warning-rgb), 1);
+        background-color: rgba(var(--warning-rgb), .1);
+        border-color: rgba(var(--warning-rgb), .5);
     }
 }
 

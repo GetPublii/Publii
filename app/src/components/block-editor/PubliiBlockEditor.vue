@@ -112,7 +112,7 @@ export default {
   color: var(--headings-color);
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size: 35px;
+  font-size: 40px;
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing);
   line-height: 1.2;
