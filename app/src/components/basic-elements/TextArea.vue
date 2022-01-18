@@ -141,7 +141,9 @@ export default {
                 setup: async function (editor) {
                     editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await self.$root.getCurrentAppTheme());
+                        let htmlElement = iframe.contentWindow.window.document.querySelector('html');
+                        htmlElement.setAttribute('data-theme', await self.$root.getCurrentAppTheme());
+                        htmlElement.setAttribute('style', self.$root.overridedCssVariables);
                     });
                 }
             });

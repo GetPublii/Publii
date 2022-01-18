@@ -95,7 +95,9 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.getCurrentAppTheme());
+            let htmlElement = iframe.contentWindow.window.document.querySelector('html');
+            htmlElement.setAttribute('data-theme', await window.app.getCurrentAppTheme());
+            htmlElement.setAttribute('style', window.app.overridedCssVariables());
 
             // Add inline editors
             this.addInlineEditor(customFormats);

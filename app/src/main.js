@@ -217,6 +217,14 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
         components: {
             'App': App
         },
+        computed: {
+            overridedCssVariables () {
+                return [
+                    '--editor-font-size: ' + this.$store.state.app.config.editorFontSize + 'px', 
+                    '--editor-font-family: ' + this.$store.state.app.config.editorFontFamily
+                ].join(';') + ';';
+            }
+        },
         data () {
             return {
                 skipThemeChangeEvents: false
@@ -249,7 +257,8 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 updateInlineEditor: (data) => this.$bus.$emit('update-inline-editor', data),
                 galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback),
                 getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
-                translate: (phraseKey) => this.$t(phraseKey)
+                translate: (phraseKey) => this.$t(phraseKey),
+                overridedCssVariables: () => this.overridedCssVariables
             };
 
             // Find issues with loading languages
