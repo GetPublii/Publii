@@ -1,6 +1,6 @@
 <template>
     <div
-        class="wrapper"
+        class="box"
         @click="selectDir">
         <text-input
             icon="folder"
@@ -93,7 +93,7 @@ export default {
 
 // @ToDo: move ".clear" to a separate component - ClearButton
 
-.wrapper {
+.box {
     position: relative;
 
     input {
