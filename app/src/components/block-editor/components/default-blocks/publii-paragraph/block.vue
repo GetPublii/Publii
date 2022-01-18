@@ -488,6 +488,7 @@ export default {
       color: var(--text-primary-color);
       display: none;
       flex-wrap: wrap;
+      font-family: var(--font-base);
       justify-content: center;
       height: 40px;
       left: 50%;

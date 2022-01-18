@@ -455,6 +455,7 @@ export default {
       align-items: center;
       display: flex;
       flex-wrap: wrap;
+      font-family: var(--font-base);
       justify-content: center;
       height: 234px;
       padding: 2rem;

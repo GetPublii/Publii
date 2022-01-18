@@ -195,6 +195,8 @@ export default {
 @import '../../../../scss/variables.scss';
 
 .wrapper-ui-top-menu {
+  font-family: var(--font-base);
+  
   svg {
     fill: var(--icon-tertiary-color);
   }
@@ -384,6 +386,7 @@ export default {
   color: var(--text-primary-color);
   display: flex;
   flex-wrap: wrap;
+  font-family: var(--font-base);
   font-size: 13px;
   font-weight: normal;
   justify-content: center;

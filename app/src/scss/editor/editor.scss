@@ -626,6 +626,7 @@ img {
             border-radius: var(--border-radius);
             color: var(--button-secondary-color);
             content: attr(data-translation);
+            font-family: var(--font-base);
             font-size: 15px;
             font-weight: var(--font-weight-semibold);
             left: 50%;
