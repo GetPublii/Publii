@@ -10,7 +10,7 @@ html {
     --letter-spacing: -0.03rem;    
     --topbar-height: 2.2rem;
     --editor-font-size: 20px;
-    --editor-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --editor-font-family: var(--font-base);
     --editor-width: 40em;
     --transition: all .2s ease-out;
 }

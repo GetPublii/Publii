@@ -16,7 +16,7 @@
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
         color: var(--text-primary-color);
-        font-family: var(--font-base);
+        font-family: var(--editor-font-family);
         font-weight: var(--font-weight-normal);
         line-height: $line-height;
         padding: 0;
@@ -71,6 +71,7 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-header {
+        font-family: var(--font-base);
         color: var(--headings-color);
         line-height: 1.3;
 

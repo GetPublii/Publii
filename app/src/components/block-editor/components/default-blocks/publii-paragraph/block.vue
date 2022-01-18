@@ -555,7 +555,7 @@ export default {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 500px;
+      width: var(--editor-width);
 
       &-add-button {
         align-items: center;

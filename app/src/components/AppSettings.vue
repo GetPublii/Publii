@@ -60,17 +60,7 @@
                         class="note">
                         {{ $t('settings.imageResizeEngineInfo') }}
                     </small>
-                </field>
-
-                <field
-                    id="close-editor-on-save"
-                    :label="$t('settings.closePostEditorOnSave')"
-                    :labelSeparated="false">
-                    <switcher
-                        slot="field"
-                        id="close-editor-on-save"
-                        v-model="closeEditorOnSave" />
-                </field>
+                </field>             
 
                 <field
                     id="always-save-search-state"
@@ -105,21 +95,6 @@
                         slot="field"
                         id="show-post-slugs"
                         v-model="showPostSlugs" />
-                </field>
-
-                <field
-                    id="open-devtools-in-main"
-                    :label="$t('settings.openDevtoolsInMainW')"
-                    :labelSeparated="false">
-                    <switcher
-                        slot="field" 
-                        id="open-devtools-in-main"
-                        v-model="openDevToolsInMainWindow" />
-                        <span
-                        slot="note"
-                        class="note">
-                        {{ $t('settings.requiresRestartingApp') }}
-                    </span>
                 </field>
 
                 <field
@@ -257,9 +232,34 @@
                         :items="editorFontFamilyItems"
                         v-model="editorFontFamily"></dropdown>
                 </field>
+
+                 <field
+                    id="close-editor-on-save"
+                    :label="$t('settings.closePostEditorOnSave')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="close-editor-on-save"
+                        v-model="closeEditorOnSave" />
+                </field>
             </fields-group>
 
             <fields-group :title="$t('settings.optionsForDevelopers')">
+                <field
+                    id="open-devtools-in-main"
+                    :label="$t('settings.openDevtoolsInMainW')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field" 
+                        id="open-devtools-in-main"
+                        v-model="openDevToolsInMainWindow" />
+                        <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.requiresRestartingApp') }}
+                    </span>
+                </field>
+
                 <field
                     id="enable-advanced-preview"
                     :label="$t('settings.enableAdvancedPreview')"
@@ -327,7 +327,7 @@ export default {
             },
             unwatchLocationPreview: null,
             unwatchBackupsLocation: null,
-            editorFontSize: 18,
+            editorFontSize: 19,
             editorFontFamily: 'sans-serif'
         };
     },
@@ -413,8 +413,8 @@ export default {
         },
         editorFontFamilyItems () {
             return {
-                'sans-serif': this.$t('settings.editorFontFamilySansSerif'),
-                'serif': this.$t('settings.editorFontFamilySerif')
+                'var(--font-base)': this.$t('settings.editorFontFamilySansSerif'),
+                'var(--font-serif)': this.$t('settings.editorFontFamilySerif')
             };
         }
     },
