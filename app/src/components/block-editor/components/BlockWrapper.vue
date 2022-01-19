@@ -619,8 +619,23 @@ export default {
         }
       }
 
+    &-delete {
+      &:hover {
+        svg {
+            fill: var(--white);
+          }
+          &::before {
+           background: var(--warning);
+          }        
+      }
+    }
+
     &-move {
       right: -90px;
+
+      svg {
+          vertical-align: middle;
+      }
 
       & + .wrapper-ui-bulk-move {
         right: -60px;

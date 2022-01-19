@@ -334,7 +334,7 @@ export default {
 .publii-block-gallery {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -1%;
+  margin: -1%;
   outline: none;
   position: relative;
 
@@ -380,17 +380,12 @@ export default {
 
       svg {
         fill: var(--white);
-        transition: var(--transition);
       }
 
       &:active,
       &:focus,
       &:hover {
-        background: var(--gray-6);
-
-        svg {
-           fill: var(--warning);
-        }
+        transform: scale(1.1);
       }
     }
 

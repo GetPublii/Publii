@@ -80,10 +80,9 @@ export default {
 @import '../scss/variables.scss';
 
 .plugins {
-     display: grid;
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
-    overflow: hidden;
     position: relative;
     user-select: none;
 

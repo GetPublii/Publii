@@ -5,7 +5,8 @@
         <div class="popup">
             <icon
                 name="blank-image"
-                size="xl" />
+                customWidth="80"
+                customHeight="66" />
 
             <h1>
                 {{ $t('tools.thumbnails.themeOrThumbnailsSettingsChanged') }}
@@ -174,7 +175,7 @@ export default {
     }
 
     svg {
-        fill: var(--icon-secondary-color);
+        fill: var(--icon-quaternary-color);
 
     }
 

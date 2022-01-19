@@ -82,7 +82,6 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
-    overflow: hidden;
     position: relative;
     user-select: none;
 

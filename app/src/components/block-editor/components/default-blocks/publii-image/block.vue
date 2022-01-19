@@ -490,28 +490,27 @@ export default {
     position: absolute;
     top: 20px;
     transition: var(--transition);
+    will-change: transform;
     width: 34px;
     z-index: 2;
 
     svg {
        fill: var(--white);
-       transition: var(--transition);
     }
 
     &:active,
     &:focus,
     &:hover {
-       background: var(--gray-6);
-
-       svg {
-          fill: var(--warning);
-       }
+       transform: scale(1.1);
     }
+  }
+
+  & + &-form {
+    padding: baseline(5,em) 0;
   }
 
   &-form {
     display: none;
-    padding: baseline(5,em) 0;
 
     &.is-visible {
       display: block;

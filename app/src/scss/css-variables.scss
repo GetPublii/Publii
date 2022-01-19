@@ -81,7 +81,7 @@ html[data-theme="default"] {
     --highlighted: #FFF8E1;
     --yellow: 255, 196, 0;
     --shadow: rgba(61, 70, 78, .25);
-    --box-shadow-small: 0 2px 6px rgba(0, 0, 0, 0.06);
+    --box-shadow-small: 0 0 1px rgba(0, 0, 0, .06), 0 2px 6px rgba(0, 0, 0, .03);
     --box-shadow-medium: 0 2px 6px rgba(0, 0, 0, 0.15);
         
     --overlay: rgba(0,0,0, .35);

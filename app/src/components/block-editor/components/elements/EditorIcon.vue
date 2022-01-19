@@ -79,7 +79,7 @@ export default {
         case 'enter': return 11;
         case 'down': return 10;
         case 'up': return 10;
-        case 'trash': return 11;
+        case 'trash': return 12;
         case 'open-trash': return 12;
         case 'gear': return 13;
         case 'duplicate': return 14;
