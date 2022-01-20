@@ -186,12 +186,12 @@ export default {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
             } else if (this.itemId === 0 && this.imageType === 'authorImages') {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+            } else if (this.imageType === 'pluginImages') {
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             } else if (this.itemId === 0) {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
             } else if (this.itemId) {
                 return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
-            } else if (this.imageType === 'pluginImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             }
 
             if (this.addMediaFolderPath) {
@@ -260,6 +260,7 @@ export default {
             } 
 
             mainProcessAPI.send('app-image-upload', uploadData);
+            console.log('DATA', uploadData);
 
             mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.isEmpty = false;

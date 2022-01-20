@@ -94,7 +94,8 @@
                     <image-upload
                         slot="field"
                         v-model="basic.logo"
-                        :addMediaFolderPath="true" />
+                        :addMediaFolderPath="true"
+                        imageType="optionImages" />
                 </field>
             </fields-group>
 
@@ -154,12 +155,14 @@
                                     v-model="custom[field.name]"
                                     slot="field"
                                     :anchor="field.anchor"
-                                    :addMediaFolderPath="true"></image-upload>
+                                    :addMediaFolderPath="true"
+                                    imageType="optionImages"></image-upload>
 
                                 <small-image-upload
                                     v-if="field.type === 'smallupload'"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
+                                    imageType="optionImages"
                                     slot="field"></small-image-upload>
 
                                 <radio-buttons

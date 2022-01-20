@@ -800,7 +800,8 @@
                             :label="$t('settings.fallbackImage')">
                             <image-upload
                                 slot="field"
-                                v-model="advanced.openGraphImage" />
+                                v-model="advanced.openGraphImage"
+                                imageType="optionImages" />
                         </field>
 
                         <field
@@ -905,7 +906,8 @@
                             :label="$t('settings.fallbackLogoImage')">
                             <image-upload
                                 slot="field"
-                                v-model="advanced.ampImage" />
+                                v-model="advanced.ampImage"
+                                imageType="optionImages" />
                             <small
                                 slot="note"
                                 class="note">

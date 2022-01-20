@@ -97,6 +97,7 @@
                                 id="author"
                                 ref="author-avatar"
                                 :onRemove="avatarRemoved"
+                                imageType="authorImages"
                                 v-model="authorData.avatar" />
                         </label>
 

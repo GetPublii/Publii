@@ -182,7 +182,8 @@
                         <image-upload
                             ref="featured-image"
                             :item-id="$parent.postID"
-                            v-model="$parent.postData.featuredImage.path" />
+                            v-model="$parent.postData.featuredImage.path"
+                            imageType="featuredImages" />
 
                         <div
                             v-if="$parent.postData.featuredImage.path"
