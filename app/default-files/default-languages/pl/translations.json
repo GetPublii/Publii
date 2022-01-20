@@ -1156,6 +1156,8 @@
         "saveAndRender": "Zapisz i renderuj",
         "saveAsDraft": "Zapisz jako szkic",
         "saveChanges": "Zapisz zmiany",
+        "saveDraft": "Zapisz szkic",
+        "saveDraftAndClose": "Zapisz szkic i zamknij",
         "search": "Szukaj...",
         "selectOption": "Wybierz opcję",
         "selectWebsite": "Wybierz witrynę",

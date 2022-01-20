@@ -1156,6 +1156,8 @@
         "saveAndRender": "Save & Render",
         "saveAsDraft": "Save as draft",
         "saveChanges": "Save Changes",
+        "saveDraft": "Save draft",
+        "saveDraftAndClose": "Save draft and close",
         "search": "Search...",
         "selectOption": "Select option",
         "selectWebsite": "Select a website",

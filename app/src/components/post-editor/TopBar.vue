@@ -59,13 +59,13 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: this.$t('ui.saveAndClose'),
+                    label: this.isDraft ? this.$t('ui.saveDraftAndClose') : this.$t('ui.saveAndClose'),
                     value: 'save-and-close',
                     isVisible: () => true,
                     onClick: this.dropdownSaveAndClose
                 },
                 {
-                    label: this.$t('ui.save'),
+                    label: this.$t('ui.saveAndClose') ? this.$t('ui.saveDraft') : this.$t('ui.save'),
                     value: 'save',
                     isVisible: () => true,
                     onClick: this.dropdownSave
