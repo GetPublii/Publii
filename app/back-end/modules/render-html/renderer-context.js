@@ -301,6 +301,7 @@ class RendererContext {
         this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode');
         this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode');
         this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode');
+        this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode');
         this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode');
         this.context.footerAmpCustomCode = this.getCustomHTMLCode('customFooterAmpCode');
         this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML);

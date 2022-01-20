@@ -103,6 +103,7 @@ const AstCurrentSiteConfig = {
         customHeadCode: '',
         customHeadAmpCode: '',
         customBodyCode: '',
+        customCommentsCode: '',
         customFooterCode: '',
         customFooterAmpCode: '',
         gdpr: {

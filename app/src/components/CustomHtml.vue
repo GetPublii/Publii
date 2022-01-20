@@ -77,6 +77,7 @@ export default {
             tabs: [
                 'Head',
                 'Body',
+                'Comments',
                 'Footer',
                 'AMP Head',
                 'AMP Footer'
@@ -145,6 +146,7 @@ export default {
             let customHtml = {
                 'custom-head-code': this.$store.state.currentSite.config.advanced.customHeadCode,
                 'custom-body-code': this.$store.state.currentSite.config.advanced.customBodyCode,
+                'custom-comments-code': this.$store.state.currentSite.config.advanced.customCommentsCode,
                 'custom-footer-code': this.$store.state.currentSite.config.advanced.customFooterCode,
                 'custom-head-amp-code': this.$store.state.currentSite.config.advanced.customHeadAmpCode,
                 'custom-footer-amp-code': this.$store.state.currentSite.config.advanced.customFooterAmpCode
