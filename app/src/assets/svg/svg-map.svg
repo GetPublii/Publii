@@ -442,5 +442,9 @@
          <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="6" y1="15" x2="12" y2="9"/>
          <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="18" y1="15" x2="12" y2="9"/>
     </symbol>
+
+    <symbol id="arrow-left" viewBox="0 0 24 24">
+       <path d="M10.21,12l4.64-4.65a.49.49,0,0,0-.7-.7l-5,5a.48.48,0,0,0,0,.7l5,5a.48.48,0,0,0,.7,0,.48.48,0,0,0,0-.7Z"/>
+    </symbol>
         
 </svg>

@@ -1084,6 +1084,7 @@
         "applyChanges": "Apply changes",
         "authors": "Authors",
         "backToTools": "Back to tools",
+        "backToPosts": "Posts",
         "basicInformation": "Basic information",
         "cancel": "Cancel",
         "cancelPostWarningMsg": "You will lose all unsaved changes - do you want to continue?",

@@ -340,7 +340,7 @@ export default {
       }
 
       &.multiselect__option--selected {
-        background: var(--input-bg-hover);
+        background: var(--gray-1);
         color: var(--text-primary-color);
 
         &:after {

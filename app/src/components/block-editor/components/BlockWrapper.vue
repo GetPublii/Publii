@@ -305,11 +305,11 @@ export default {
       }
       .publii-block-code > .prism-editor__line-numbers,
       .publii-block-html > .prism-editor__line-numbers {
-          background: var(--pre-bg) !important;
+          background: var(--pre-bg-hover) !important;
       }
       .publii-block-code > pre,
       .publii-block-html > pre {
-          background: var(--pre-bg) !important;
+          background: var(--pre-bg-hover) !important;
       }
       .publii-block-gallery-uploader-loader-overlay {
           height: 250px;
@@ -479,6 +479,14 @@ export default {
             transform: scale(1) translate(-50%, -50%);
           }
         }
+        &:disabled {
+            cursor: default;
+            opacity: .4;
+
+          &::before {
+              background: none;
+          }
+        }
       }
 
       &-button-move {
@@ -639,6 +647,15 @@ export default {
 
       & + .wrapper-ui-bulk-move {
         right: -60px;
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: .4;
+
+        &::before {
+           background: none;
+        }
       }
     }
 

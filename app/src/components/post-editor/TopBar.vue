@@ -1,10 +1,17 @@
 <template>
     <div class="post-editor-topbar">
         <p-button
+            id="post-back-to-posts-button"
+            type="clean-invert icon"
+            icon="arrow-left"
+            @click.native="cancelPost">
+            {{ $t('ui.backToPosts') }}
+        </p-button>
+
+        <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-preview-button"
-            type="outline icon"
-            icon="off-live-preview"
+            type="clean-invert"
             :disabled="!themeConfigured"
             :title="themeConfigured ? $t('post.configureThemeBeforeGenaratingPreview') : ''"
             @click.native="generatePostPreview">
@@ -19,12 +26,6 @@
                 ref="dropdown-button"
                 :items="dropdownItems"
                 :defaultValue="retrieveCurrentAction()" />
-
-            <p-button
-                type="outline"
-                @click.native="cancelPost">
-                {{ $t('ui.close') }}
-            </p-button>
 
             <p-button
                 icon="settings"
@@ -223,18 +224,14 @@ export default {
 
     &-actions {
         display: flex;
+        margin-left: auto;
 
         .button {
             text-align: center;
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: auto;
-            }
-
-            &:nth-child(3) {
-                margin-left: 1rem;
-                margin-right: -1.3rem; // button padding
+                margin-right: -1.7rem; // button padding
             }
         }
     }
@@ -244,9 +241,13 @@ export default {
     }
 
     #post-preview-button {
-        padding-left: 2.4rem;
-        text-align: center;
-        width: 122px;
+        padding-right: .625rem;
+    }
+
+    #post-back-to-posts-button {
+        margin-left: -2.1rem;
+        padding-left: 3.4rem;
+        padding-right: .625rem;
     }
 }
 
