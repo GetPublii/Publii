@@ -32,11 +32,18 @@
                 </p-button>
 
                 <p-button
-                    v-if="!regenerateIsDone"
+                    v-if="!regenerateIsDone && !regeneratingThumbnails"
                     @click.native="skip"
                     :disabled="regeneratingThumbnails"
                     type="medium no-border-radius half-width cancel-popup">
                     {{ $t('tools.thumbnails.skipRegeneration') }}
+                </p-button>
+
+                <p-button
+                    v-if="regeneratingThumbnails"
+                    @click.native="abortRegenerate"
+                    type="medium no-border-radius half-width cancel-popup">
+                    {{ $t('ui.cancel') }}
                 </p-button>
 
                 <p-button
@@ -101,7 +108,7 @@ export default {
 
             this.regeneratingThumbnails = true;
             this.progressIsStopped = false;
-            this.message = $t('tools.thumbnails.regeneratingThumbnails');
+            this.message = this.$t('tools.thumbnails.regeneratingThumbnails');
 
             setTimeout(() => {
                 mainProcessAPI.send('app-site-regenerate-thumbnails', {
@@ -146,6 +153,13 @@ export default {
             } else {
                 this.regenerate();
             }
+        },
+        abortRegenerate () {
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
+            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
+            mainProcessAPI.send('app-site-abort-regenerate-thumbnails', true);
+            this.skip();
         }
     },
     beforeDestroy: function() {
