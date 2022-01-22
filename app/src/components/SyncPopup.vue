@@ -9,7 +9,7 @@
         }">
         <div class="popup sync">
             <div
-                v-if="isInSync && noIssues && isManual"
+                v-if="isInSync && noIssues && !isMinimized"
                 class="sync-success">
 
                 <h1>{{ $t('sync.yourWebsiteIsInSync') }}</h1>
@@ -18,6 +18,29 @@
                     v-if="isManual"
                     class="description"
                     v-pure-html="$t('sync.websiteFilesPreparedInfo')">
+                </p>
+
+                <p
+                    v-if="isGithubPages"
+                    class="description">
+                    <strong>{{ $t('sync.note') }}</strong> 
+                    {{ $t('sync.githubSyncedPart1') }}<br>
+                    {{ $t('sync.githubSyncedPart2') }}
+                </p>
+
+                <p
+                    v-if="isGitlabPages"
+                    class="description">
+                    <strong>{{ $t('sync.note') }}</strong> 
+                    {{ $t('sync.gitlabSyncedPart1') }}<br>
+                    {{ $t('sync.gitlabSyncedPart2') }}
+                </p>
+
+                <p 
+                    v-if="!(isGithubPages || isGitlabPages || isManual)"
+                    class="description">
+                    {{ $t('sync.allFilesUploadedPart1') }}<br>
+                    {{ $t('sync.allFilesUploadedPart2') }}
                 </p>
 
                 <div class="progress-bars-wrapper">
@@ -35,6 +58,13 @@
                         type="primary medium quarter-width"
                         :onClick="showFolder">
                         {{ $t('sync.getWebsiteFiles') }}
+                    </p-button>
+
+                    <p-button
+                        v-if="!isManual"
+                        type="primary medium quarter-width"
+                        :onClick="openWebsite">
+                        {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
@@ -640,7 +670,7 @@ export default {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
 
-                if (this.isInSync && this.noIssues && !this.isManual) {
+                if (this.isInSync && this.noIssues && this.isMinimized) {
                     this.isVisible = false;
                 }
             });
