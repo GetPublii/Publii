@@ -437,13 +437,13 @@ export default {
                 let dependencyName = dependencies[i].field;
                 let dependencyValue = dependencies[i].value;
 
-                if (dependencyValue === "true" && this.settings[dependencyName] !== true) {
+                if (dependencyValue === "true" && this.settingsValues[dependencyName] !== true) {
                     return false;
                 } else if (dependencyValue === "true") {
                     continue;
                 }
 
-                if (dependencyValue === "false" && this.settings[dependencyName] !== false) {
+                if (dependencyValue === "false" && this.settingsValues[dependencyName] !== false) {
                     return false;
                 } else if (dependencyValue === "false") {
                     continue;
@@ -453,7 +453,7 @@ export default {
                     let values = dependencyValue.split(',');
 
                     for (let i = 0; i < values.length; i++) {
-                        if (this.settings[dependencyName] === values[i]) {
+                        if (this.settingsValues[dependencyName] === values[i]) {
                             continue;
                         }
                     }
@@ -461,7 +461,7 @@ export default {
                     return false;
                 }
 
-                if (dependencyValue !== this.settings[dependencyName]) {
+                if (dependencyValue !== this.settingsValues[dependencyName]) {
                     return false;
                 }
             }
