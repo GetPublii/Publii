@@ -12,14 +12,14 @@ function publiiFooterHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('publiiFooter', function (context) {
         let output  = '';
 
-        if (rendererInstance.siteConfig.advanced.gdpr.enabled) {
-            output += Gdpr.popupHtmlOutput(rendererInstance.siteConfig.advanced.gdpr, rendererInstance);
-            output += Gdpr.popupJsOutput(rendererInstance.siteConfig.advanced.gdpr);
-        }
-
         if (rendererInstance.plugins.hasInsertions('publiiFooter')) {
             output += "\n";
             output += rendererInstance.plugins.runInsertions('publiiFooter', rendererInstance);
+        }
+
+        if (rendererInstance.siteConfig.advanced.gdpr.enabled) {
+            output += Gdpr.popupHtmlOutput(rendererInstance.siteConfig.advanced.gdpr, rendererInstance);
+            output += Gdpr.popupJsOutput(rendererInstance.siteConfig.advanced.gdpr);
         }
 
         return new Handlebars.SafeString(output);
