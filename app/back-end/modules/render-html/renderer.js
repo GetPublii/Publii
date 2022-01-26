@@ -695,7 +695,7 @@ class Renderer {
             this.menuContext = ['frontpage'];
 
             try {
-                this.globalContext = this.createGlobalContext('index', [], false);
+                this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
 
                 output = compiledTemplate(context, {
                     data: this.globalContext
@@ -755,7 +755,7 @@ class Renderer {
                     isFirstPage: currentPage === 1,
                     isLastPage: currentPage === totalPages,
                     currentPage
-                });
+                }, false, false, context);
                 let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
                 if (offset === 0) {
@@ -861,7 +861,7 @@ class Renderer {
 
             inputFile = inputFile.replace('.hbs', '') + ampPrefix + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
             let postViewConfig = this.cachedItems.posts[postIDs[i]].postViewConfig;
-            this.globalContext = this.createGlobalContext('post', [], false, postSlugs[i], postViewConfig);
+            this.globalContext = this.createGlobalContext('post', [], false, postSlugs[i], postViewConfig, context);
             let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
             this.templateHelper.saveOutputPostFile(postSlugs[i], output);
@@ -929,7 +929,7 @@ class Renderer {
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
         let postConfig = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
-        this.globalContext = this.createGlobalContext('post', [], false, postSlug, postConfig);
+        this.globalContext = this.createGlobalContext('post', [], false, postSlug, postConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(postSlug + '.html', output);
     }
@@ -993,7 +993,7 @@ class Renderer {
         let contextGenerator = new RendererContextTags(this);
         let context = contextGenerator.getContext();
         this.menuContext = ['tags'];
-        this.globalContext = this.createGlobalContext('tags', [], false);
+        this.globalContext = this.createGlobalContext('tags', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputTagsListFile(output);
         console.timeEnd(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
@@ -1117,7 +1117,7 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                this.globalContext = this.createGlobalContext('tag', [], false, tagSlug);
+                this.globalContext = this.createGlobalContext('tag', [], false, tagSlug, false, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
                 this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
             } else {
@@ -1177,7 +1177,7 @@ class Renderer {
                         isFirstPage: currentPage === 1,
                         isLastPage: currentPage === totalPages,
                         currentPage
-                    }, tagSlug);
+                    }, tagSlug, false, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (offset === 0) {
@@ -1326,7 +1326,7 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                this.globalContext = this.createGlobalContext('author', [], false, authorUsername);
+                this.globalContext = this.createGlobalContext('author', [], false, authorUsername, false, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
                 this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
             } else {
@@ -1382,7 +1382,7 @@ class Renderer {
                         isFirstPage: currentPage === 1,
                         isLastPage: currentPage === totalPages,
                         currentPage
-                    }, authorUsername);
+                    }, authorUsername, false, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (offset === 0) {
@@ -1415,7 +1415,7 @@ class Renderer {
         let contextGenerator = new RendererContext404(this);
         let context = contextGenerator.getContext();
         this.menuContext = ['404'];
-        this.globalContext = this.createGlobalContext('404', [], false);
+        this.globalContext = this.createGlobalContext('404', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.errorPage, output);
         console.timeEnd("404");
@@ -1438,7 +1438,7 @@ class Renderer {
         let contextGenerator = new RendererContextSearch(this);
         let context = contextGenerator.getContext();
         this.menuContext = ['search'];
-        this.globalContext = this.createGlobalContext('search', [], false);
+        this.globalContext = this.createGlobalContext('search', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.searchPage, output);
         console.timeEnd("SEARCH");
@@ -1718,9 +1718,9 @@ class Renderer {
         console.timeEnd("COMMON DATA");
     }
 
-    createGlobalContext(context, additionalContexts = [], paginationData = false, itemSlug = false, itemConfig = false) {
+    createGlobalContext(context, additionalContexts = [], paginationData = false, itemSlug = false, itemConfig = false, itemContext = false) {
         let globalContextGenerator = new RendererContext(this);
-        return globalContextGenerator.getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig);
+        return globalContextGenerator.getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig, itemContext);
     }
 
     compileTemplate(inputFile) {

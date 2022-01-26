@@ -192,7 +192,7 @@ class RendererContext {
         return authors;
     }
 
-    setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig) {
+    setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig, itemContext) {
         let addIndexHtml = this.renderer.previewMode || this.siteConfig.advanced.urls.addIndex;
         let fullURL = normalizePath(this.siteConfig.domain);
         let searchUrl = fullURL + '/' + this.siteConfig.advanced.urls.searchPage;
@@ -298,13 +298,13 @@ class RendererContext {
         }
 
         this.renderer.globalContext = this.context;
-        this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode');
-        this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode');
-        this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode');
-        this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode');
-        this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode');
-        this.context.footerAmpCustomCode = this.getCustomHTMLCode('customFooterAmpCode');
-        this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML);
+        this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode', itemContext);
+        this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode', itemContext);
+        this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode', itemContext);
+        this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode', itemContext);
+        this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode', itemContext);
+        this.context.footerAmpCustomCode = this.getCustomHTMLCode('customFooterAmpCode', itemContext);
+        this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML, itemContext);
 
         // In AMP mode create special global @amp variable
         if(this.renderer.ampMode) {
@@ -377,18 +377,18 @@ class RendererContext {
         }
     }
 
-    getCustomHTMLCode (optionName) {
+    getCustomHTMLCode (optionName, context) {
         let baseCode = this.siteConfig.advanced[optionName] || '';
 
         if (this.renderer.plugins.hasInsertions(optionName)) {
             baseCode += "\n";
-            baseCode += this.renderer.plugins.runInsertions(optionName, this.renderer);
+            baseCode += this.renderer.plugins.runInsertions(optionName, this.renderer, context);
         }
 
         return baseCode;
     }
 
-    getCustomHTMLCodeObject (object) {
+    getCustomHTMLCodeObject (object, context) {
         if (!object) {
             return false;
         }
@@ -403,7 +403,7 @@ class RendererContext {
 
             if (this.renderer.plugins.hasInsertions('customHTML.' + key)) {
                 code += "\n";
-                code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer);
+                code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer, context);
             }
 
             object[key] = code;
@@ -412,8 +412,8 @@ class RendererContext {
         return object;
     }
 
-    getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig) {
-        this.setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig);
+    getGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig, itemContext) {
+        this.setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig, itemContext);
         return this.context;
     }
 
