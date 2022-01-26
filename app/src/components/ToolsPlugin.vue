@@ -32,6 +32,18 @@
                 <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
             </template>
 
+            <div
+                v-if="hasMessage"
+                :class="'msg msg-icon msg--' + messageInOptions.type">
+                <icon
+                    :name="messageInOptions.type"
+                    customWidth="28"
+                    customHeight="28" />
+                <div>
+                    {{ messageInOptions.text }}
+                </div>
+            </div>
+
             <template v-if="pluginHasConfig && pluginStandardOptionsVisible">
                 <fields-group
                     v-if="pluginSettingsDisplay === 'tabs'"
@@ -376,7 +388,9 @@ export default {
             settings: [],
             settingsValues: {},
             buttonsLocked: false,
+            hasMessage: false,
             hasPluginCustomOptions: false,
+            messageInOptions: null,
             pluginStandardOptionsVisible: true,
             pluginSettingsDisplay: 'fieldsets',
             pluginSettingsTabsLabel: ''
@@ -406,6 +420,8 @@ export default {
 
                 this.pluginName = result.pluginData.name;
                 this.hasPluginCustomOptions = !!result.pluginData.usePluginSettingsView;
+                this.hasMessage = !!result.pluginData.messageInOptions;
+                this.messageInOptions = result.pluginData.messageInOptions;
                 this.pluginSettingsDisplay = result.pluginData.settingsDisplay || 'fieldsets';
                 this.pluginSettingsTabsLabel = result.pluginData.tabsTitle || this.$t('toolsPlugin.tabsLabel');
 
