@@ -1909,7 +1909,7 @@ class Renderer {
         if (fs.existsSync(pluginConfigPath)) {
             try {
                 pluginSavedConfig = fs.readFileSync(pluginConfigPath, 'utf8');
-                pluginSavedConfig = JSON.parse(pluginConfig);
+                pluginSavedConfig = JSON.parse(pluginSavedConfig);
             } catch (e) {
                 pluginSavedConfig = {};
             }
@@ -1922,7 +1922,7 @@ class Renderer {
                 if (pluginSavedConfig && typeof pluginSavedConfig[field.name] !== 'undefined') {
                     return {
                         name: field.name, 
-                        value: savedConfig[field.name]
+                        value: pluginSavedConfig[field.name]
                     };
                 }
 
