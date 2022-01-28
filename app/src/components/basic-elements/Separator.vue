@@ -72,10 +72,24 @@ export default {
 
     &.medium {
         padding-top: 3rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.big {
         padding-top: 4rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.line > .separator-wrapper:before {

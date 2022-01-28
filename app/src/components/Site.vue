@@ -142,7 +142,7 @@ export default {
     .sidebar {
         bottom: 0;
         left: 0;
-        width: 32rem;
+        width: $app-sidebar;
     }
 
     .content {
@@ -151,7 +151,7 @@ export default {
         overflow: scroll;
         padding: 3rem 5rem 4rem;
         right: 0;
-        width: calc(100% - 32rem); // 32rem = sideabr width
+        width: calc(100% - $app-sidebar); 
 
         &.is-wide {
             width: 100%;

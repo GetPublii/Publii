@@ -102,7 +102,7 @@ export default {
         margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: 0.85rem 0.8rem;
+        padding: .825rem .6rem;
         transition: var(--transition);
 
         &:active,
@@ -128,7 +128,7 @@ export default {
     }
 
     &-item {
-        margin: 0 0 .4rem;
+        margin: 0 0 .2rem;
 
         &.is-active {
             a {

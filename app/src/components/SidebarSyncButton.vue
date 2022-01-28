@@ -211,9 +211,9 @@ export default {
 .sidebar {
     &-sync {
         bottom: 3rem;
-        left: 4rem;
+        left: $app-sidebar-margin;
         position: absolute;
-        right: 4rem;
+        right: $app-sidebar-margin;
 
         &-icon {
             fill: var(--white);
@@ -228,6 +228,7 @@ export default {
             margin-top: 1.2rem;
             opacity: var(--sidebar-link-opacity);
             text-align: center;
+            white-space: nowrap;
 
             &:hover {
                 color: var(--sidebar-link-color-hover);

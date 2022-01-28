@@ -93,8 +93,8 @@ body[data-os="linux"] {
 
         .CodeMirror-advanced-dialog {
             position: fixed;
-            width: calc(100% - 32rem - 1px);
-            left: 32rem;
+            width: calc(100% - $app-sidebar - 1px);
+            left: $app-sidebar;
         }
     }
 }
