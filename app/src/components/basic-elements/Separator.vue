@@ -115,4 +115,20 @@ export default {
         padding: 2.5rem 0 0 0;
     }
 }
+
+.field {
+    &:first-child {
+
+        .separator-wrapper {
+            
+            & > label {
+                padding-top: .5rem;
+            }
+
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
 </style>

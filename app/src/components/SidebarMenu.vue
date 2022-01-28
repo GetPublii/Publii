@@ -99,7 +99,7 @@ export default {
         font-size: 1.6rem;
         font-weight: var(---font-weight-semibold);
         line-height: 3.2rem;
-        margin: 0 0;
+        margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
         padding: 0.85rem 0.8rem;
@@ -128,6 +128,7 @@ export default {
     }
 
     &-item {
+        margin: 0 0 .4rem;
 
         &.is-active {
             a {
@@ -150,13 +151,4 @@ export default {
     }
 }
 
-@media (min-height: 1080px) {
-    .sidebar-menu {
-
-        &-item {
-             margin: 0 0 .4rem;
-
-        }
-    }
-}
 </style>

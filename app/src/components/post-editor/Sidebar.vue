@@ -1,9 +1,6 @@
 <template>
     <div :class="{ 'options-sidebar-container': true, 'post-editor-sidebar': true, 'is-visible': isVisible }" >
         <div class="options-sidebar">
-            <div class="post-editor-sidebar-header">
-                {{ $t('post.postSettings') }}
-            </div>
 
             <div class="options-sidebar-item">
                 <div

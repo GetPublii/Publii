@@ -99,6 +99,10 @@ label {
 
     &:first-child {
         margin-top: 0;
+
+        .separator {
+            padding-top: 0;
+        }
     }
 
     & > label {

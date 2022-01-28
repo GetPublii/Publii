@@ -34,7 +34,7 @@
 
             <div
                 v-if="hasMessage"
-                :class="'msg msg-icon msg--' + messageInOptions.type">
+                :class="'msg msg-icon msg-' + messageInOptions.type">
                 <icon
                     :name="messageInOptions.type"
                     customWidth="28"
@@ -584,6 +584,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 #plugin-settings-root {
     border: none;
@@ -595,5 +596,10 @@ export default {
     margin: 0 auto;
     max-width: $wrapper; 
     user-select: none;
+}
+
+.msg {
+    background: var(--bg-secondary);
+    margin-bottom: 3rem;
 }
 </style>
