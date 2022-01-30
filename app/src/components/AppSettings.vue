@@ -327,8 +327,8 @@ export default {
             },
             unwatchLocationPreview: null,
             unwatchBackupsLocation: null,
-            editorFontSize: 19,
-            editorFontFamily: 'sans-serif'
+            editorFontSize: 18,
+            editorFontFamily: 'serif'
         };
     },
     computed: {

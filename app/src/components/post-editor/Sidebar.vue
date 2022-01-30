@@ -741,6 +741,10 @@ export default {
             z-index: 1;
         }
 
+        .options-sidebar {
+            padding-top: 8rem;
+        }
+
         &-header {
             color: var(--gray-3);
             font-size: 1.2rem;
