@@ -345,7 +345,7 @@ export default {
             color: var(--headings-color);
             display: block;
             font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 4rem;
+            font-size: 3.6rem;
             font-weight: var(--font-weight-bold);
             letter-spacing: var(--letter-spacing);
             line-height: 1.2;
@@ -376,7 +376,7 @@ export default {
 @media (min-width: 1800px) {
     .post-editor-form #post-title {
         margin: 0 auto 2.6rem;
-        max-width: calc(100% - 880px);
+        max-width: calc(100vw - 880px);
         width: 100%;
     }
 }
