@@ -609,7 +609,7 @@ export default {
          border: 1px solid var(--gray-6);
          border-radius: 30px;
          font-size: 15px;
-         font-weight: 500;
+         font-weight: var(--font-weight-semibold);
          height: 58px;
          width: 58px;
 

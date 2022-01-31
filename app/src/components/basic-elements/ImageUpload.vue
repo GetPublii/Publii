@@ -299,7 +299,7 @@ export default {
         border-radius: 3px;
         color: var(--gray-3);
         display: block;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         font-weight: var(--font-weight-normal);
         line-height: 1.5;
         margin: 0 0 -40px 0;

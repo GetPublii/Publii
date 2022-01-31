@@ -333,7 +333,7 @@ export default {
     }
 
     &-medium {
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         height: 5.6rem;
         line-height: 5.5rem;
         padding: 0 2rem;
@@ -341,7 +341,7 @@ export default {
 
     &-small {
         font-size: 1.4rem;
-        font-weight: 400;
+        font-weight: var(--font-weight-normal);
         height: 3.8rem;
         line-height: 3.8rem;
         padding: 0 1.4rem;
@@ -463,7 +463,7 @@ export default {
     &-light {
         background: var(--bg-primary);
         color: var(--text-light-color);
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         padding-left: 3.8rem;
 
         & > svg {

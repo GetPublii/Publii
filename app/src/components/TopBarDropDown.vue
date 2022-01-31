@@ -101,7 +101,7 @@ export default {
         display: block;
         height: 5rem;
         order: 3;
-        padding: 0 1rem;
+        padding: 0 0 0 1.5rem;
         width: 35px;
 
         &:hover {
@@ -141,7 +141,7 @@ export default {
 
     &-app-settings {
         -webkit-app-region: no-drag; // Make the buttons clickable again
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
 
         & > svg {
             height: 2.4rem;

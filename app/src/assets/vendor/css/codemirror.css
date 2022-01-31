@@ -197,7 +197,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: var(--code-16);}
   z-index: 3;
 }
 .CodeMirror-gutter {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   white-space: normal;
   height: 100%;
   display: inline-block;

@@ -172,7 +172,7 @@ export default {
 
     &-view {
         background: var(--bg-primary);
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         height: 100%;
         left: 0;
         position: absolute;
@@ -182,7 +182,7 @@ export default {
 
     &-site-sidebar {
         bottom: 0;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         left: 0;
         position: absolute;
         top: var(--topbar-height);

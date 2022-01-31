@@ -30,8 +30,8 @@
     border: none;
     border-radius: .6rem;
     display: inline-block;
-    font-size: 1.6rem;
-    font-weight: 400;
+    font-size: $app-font-base;
+    font-weight: var(--font-weight-normal);
     left: 50%;  
     overflow: hidden;
     position: absolute;
@@ -43,7 +43,7 @@
 
 .message {
     color: var(--text-primary-color);
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
     margin: 0;
     padding: 4rem;
     position: relative;
@@ -57,7 +57,7 @@
 h1,
 h2 {
     font-size: 1.8rem;
-    font-weight: 500;
+    font-weight: var(--font-weight-semibold);
     margin: 0 0 7rem 0;
     text-align: center;
     text-transform: none;

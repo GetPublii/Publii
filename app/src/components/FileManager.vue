@@ -403,7 +403,7 @@ export default {
         .directory-link {
             color: var(--text-light-color);
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             transition: var(--transition);
 
             &:hover {

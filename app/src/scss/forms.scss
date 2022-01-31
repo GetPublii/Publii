@@ -26,7 +26,7 @@ select {
     border-radius: 3px;
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
-    font: 400 1.6rem/1.5 var(--font-base);
+    font: 400 #{$app-font-base}/1.5 var(--font-base);
     outline: none;
     padding: 1.2rem 1.8rem;
 
@@ -174,7 +174,7 @@ input[type="range"] {
         border-radius: 1.2rem;
         color: transparent;
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         height: 2rem;
         line-height: 1rem;
         padding: 0;
@@ -221,7 +221,7 @@ input[type="range"] {
             border-radius: var(--border-radius);
             color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             font-size: 1.5rem;
             padding: .5rem;
             text-align: center;
@@ -259,7 +259,7 @@ input[type="range"] {
 
 .multiselect__placeholder {
     color: var(--text-primary-color);
-    font-size: 16px;
+    font-size: $app-font-base;
     height: inherit;
     line-height: 47px;
     margin: 0;

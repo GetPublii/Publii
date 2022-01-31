@@ -134,7 +134,7 @@ export default {
 
         & > h3 {
              font-size: 1.5rem;
-             font-weight: 500;
+             font-weight: var(--font-weight-semibold);
              line-height: 1.4;
              margin: 1.2rem 0;
         }

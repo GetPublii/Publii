@@ -72,7 +72,7 @@ export default {
     padding-bottom: 6rem;
     position: absolute;
     top: 12.5rem;
-    width: calc(100% - 10rem);
+    width: calc(100% - 8rem);
 
     &.is-add-form-opened {
         top: 64.75rem;
@@ -107,17 +107,5 @@ export default {
             }
         }
     }*/
-}
-
-@media (max-height: 900px) {
-    .collection {
-         width: calc(100% - 8rem);
-    }
- }
-
-@media (max-width: 1400px) {
-   .collection {
-         width: calc(100% - 8rem);
-    }
 }
 </style>

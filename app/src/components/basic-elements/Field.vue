@@ -190,7 +190,7 @@ label {
         clear: both;
         color: var(--text-light-color);
         display: block;
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         font-style: italic;
         line-height: 1.4;        
         padding: .5rem 0 1rem 0;
@@ -258,7 +258,7 @@ label {
                 background: var(--bg-primary);
                 color: var(--color-primary);
                 font-size: 1.4rem;
-                font-weight: 500;
+                font-weight: var(--font-weight-semibold);
                 padding-right: .5rem;
                 position: absolute;
                 text-transform: uppercase;

@@ -370,7 +370,7 @@ export default {
     background: var(--popup-bg);
     border-radius: var(--border-radius);
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
-    font-size: 1.6rem;
+    font-size: $app-font-base;
     margin: 0;
     left: 50%;
     padding: 4.8rem 4.8rem 5.6rem 4.8rem;
@@ -403,7 +403,7 @@ export default {
 
         & > label {
             display: block;
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: 400;
             line-height: 1.4;
             margin-bottom: 1rem;

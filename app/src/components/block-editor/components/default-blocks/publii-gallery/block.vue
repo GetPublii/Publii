@@ -462,7 +462,7 @@ export default {
 
       span {
         display: block;
-        font-size: 16px;
+        font-size: $app-font-base;
         text-align: center;
         width: 100%;
       }
@@ -473,7 +473,7 @@ export default {
         border-radius: var(--border-radius);
         color: var(--button-secondary-color);
         cursor: pointer;
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         font-size: 15px;
         padding: .5rem 2rem;
         text-align: center;

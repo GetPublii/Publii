@@ -918,7 +918,7 @@ export default {
 }
 
 .filters {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     list-style-type: none;
     margin: -2.2rem 0 0 0;
     padding: 0;
@@ -977,7 +977,7 @@ export default {
                 cursor: pointer;
                 display: block;
                 font-size: 1.4rem;
-                font-weight: 500;
+                font-weight: var(--font-weight-semibold);
                 padding: .8rem 2.4rem;
                 white-space: nowrap;
 

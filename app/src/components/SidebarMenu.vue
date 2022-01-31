@@ -96,9 +96,9 @@ export default {
         border-radius: var(--border-radius);
         color: var(--sidebar-link-color);
         display: block;
-        font-size: 1.6rem;
-        font-weight: var(---font-weight-semibold);
-        line-height: 3.2rem;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-normal);
+        line-height: 2;
         margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;

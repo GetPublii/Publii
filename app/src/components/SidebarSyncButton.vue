@@ -252,10 +252,10 @@ export default {
             border-radius: var(--border-radius);
             color: var(--sidebar-sync-btn-color);
             display: flex;
-            font-size: 1.6rem;
-            font-weight: 500;
+            font-size: $app-font-base;
+            font-weight: var(--font-weight-semibold);
             justify-content: center;
-            padding: 1.4rem 2.1rem;
+            padding: 1.4rem 1rem;
             position: relative;
 
             // sync cloud icon
@@ -371,8 +371,10 @@ export default {
         border-radius: var(--border-radius);
         color: var(--sidebar-preview-btn-color) !important;
         display: block;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-semibold);
         margin-bottom: 1rem;
-        padding: 1.2rem 2.1rem;
+        padding: 1.2rem 1rem;
         text-align: center;
 
         & > span {

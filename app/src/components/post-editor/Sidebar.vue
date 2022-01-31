@@ -798,7 +798,7 @@ export default {
                 margin-bottom: 2rem;
 
                 dd {
-                    font-size: 1.6rem;
+                    font-size: $app-font-base;
                 }
 
                 small {
@@ -901,7 +901,7 @@ export default {
             color: var(--text-light-color);
             display: block;
             font-style: italic;
-            font-weight: var(---font-weight-normal);
+            font-weight: var(--font-weight-normal);
             line-height: 1.4;
             padding-top: .5rem;
 

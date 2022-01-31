@@ -221,7 +221,7 @@ export default {
                display: flex;
                flex-direction: column;
                justify-content: center;
-               font-weight: 500;
+               font-weight: var(--font-weight-semibold);
                height: 100%;
                padding: 4rem 1rem;
                position: relative;
@@ -282,7 +282,7 @@ export default {
 
     &-tab {
         h2 {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: 400;
             margin: 1rem 0 0;
             text-transform: none;

@@ -911,7 +911,7 @@ export default {
             visibility: hidden;
 
             .minimized-sync-in-progress {
-                max-width: 22rem;
+                max-width: 20rem;
             }
         }
 

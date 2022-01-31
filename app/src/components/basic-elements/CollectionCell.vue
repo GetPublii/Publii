@@ -100,7 +100,7 @@ export default {
         flex-wrap: wrap;
 
         .title {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
@@ -129,7 +129,7 @@ export default {
 
     &.names {
         .name {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: var(--font-weight-normal);
             margin: 0;
             text-transform: none;

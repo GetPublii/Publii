@@ -372,7 +372,7 @@ export default {
 
         &-section {
             border-bottom: 2px solid var(--gray-1);
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             margin: 0;
             padding: 3rem 0;
         }

@@ -163,7 +163,7 @@ export default {
 
         & > h3 {
              font-size: 1.5rem;
-             font-weight: 500;
+             font-weight: var(--font-weight-semibold);
              line-height: 1.4;
              margin: 1.2rem 0;
         }
@@ -173,7 +173,7 @@ export default {
         color: var(--text-light-color);
         display: block;
         font-size: 1.2rem;
-        font-weight: 400;
+        font-weight: var(--font-weight-normal);
         margin: 0 4rem 0 auto;
     }
 

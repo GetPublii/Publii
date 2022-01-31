@@ -275,7 +275,7 @@ export default {
 }
 
 .filters {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     list-style-type: none;
     margin: -2.2rem 0 0 0;
     padding: 0;
