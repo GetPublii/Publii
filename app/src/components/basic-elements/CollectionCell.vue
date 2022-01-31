@@ -156,7 +156,7 @@ export default {
         .modify-date {
             color: var(--text-light-color);
             font-size: 1.2rem;
-            margin: .2rem 0 0 0;
+            margin: 0;
         }
     }
 

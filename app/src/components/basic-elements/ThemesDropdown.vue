@@ -66,7 +66,7 @@ select {
     -webkit-appearance: none;
     max-width: 100%;
     min-width: 100px;
-    min-height: 48px;
+    min-height: 46px;
     position: relative;
     width: 100%;
 

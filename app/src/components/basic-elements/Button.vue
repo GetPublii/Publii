@@ -104,7 +104,7 @@ export default {
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-family: var(--font-base);
     font-weight: var(--font-weight-semibold);  
     height: 4.6rem;
@@ -248,7 +248,7 @@ export default {
         box-shadow: none;
         color: var(--link-primary-color);
         font: {
-           size: 1.5rem;
+           size: 1.4rem;
            weight: 400;
         }
 
@@ -267,7 +267,7 @@ export default {
         box-shadow: none;
         color: var(--link-primary-color-hover);
         font: {
-            size: 1.5rem;
+            size: 1.4rem;
             weight: 400;
         }
 
@@ -333,6 +333,7 @@ export default {
     }
 
     &-medium {
+        font-size: 1.5rem;
         font-weight: var(--font-weight-semibold);
         height: 5.6rem;
         line-height: 5.5rem;

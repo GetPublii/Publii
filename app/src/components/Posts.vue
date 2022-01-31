@@ -902,7 +902,7 @@ export default {
 
         a {
             order: 2;
-            margin: .25rem .5rem .25rem 0;
+            margin: .2rem .5rem 0 0;
 
             &.is-main-tag {
                 order: 1;
@@ -913,7 +913,7 @@ export default {
     .post-slug {
         color: var(--gray-4);
         font-size: 11px;
-        margin-top: 5px;
+        margin-top: .2rem;
     }
 }
 
@@ -941,7 +941,6 @@ export default {
 
         &.filter-active {
             color: var(--link-primary-color);
-            cursor: default;
         }
 
         &:hover {
