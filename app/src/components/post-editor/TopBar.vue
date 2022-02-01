@@ -240,14 +240,20 @@ export default {
         margin-left: auto;
     }
 
-    #post-preview-button {
-        padding-right: .625rem;
-    }
-
     #post-back-to-posts-button {
         margin-left: -2.1rem;
+        margin-right: .625rem;
         padding-left: 3.4rem;
         padding-right: .625rem;
+        position: relative;
+
+        &::after {
+            border-right: 1px solid var(--gray-2);
+            content: "";
+            height: 1.4rem;
+            right: -.9375rem;
+            @include centerXY(false, true);
+        }
     }
 }
 

@@ -72,10 +72,24 @@ export default {
 
     &.medium {
         padding-top: 3rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.big {
         padding-top: 4rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.line > .separator-wrapper:before {
@@ -93,7 +107,7 @@ export default {
         & > label {
             color: var(--headings-color);
             display: block;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 600;
             padding: 3.5rem 0 0;
 
@@ -113,6 +127,22 @@ export default {
 
     &.line > .note {
         padding: 2.5rem 0 0 0;
+    }
+}
+
+.field {
+    &:first-child {
+
+        .separator-wrapper {
+            
+            & > label {
+                padding-top: .5rem;
+            }
+
+            &::before {
+                display: none;
+            }
+        }
     }
 }
 </style>

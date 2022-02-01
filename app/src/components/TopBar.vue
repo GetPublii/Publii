@@ -26,7 +26,7 @@ export default {
 
 .topbar {
     background: var(--gray-1);
-    font-size: 1.6rem;
+    font-size: $app-font-base;
     height: var(--topbar-height);
     position: absolute;
     top: 0;

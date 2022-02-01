@@ -1,9 +1,6 @@
 <template>
     <div :class="{ 'options-sidebar-container': true, 'post-editor-sidebar': true, 'is-visible': isVisible }" >
         <div class="options-sidebar">
-            <div class="post-editor-sidebar-header">
-                {{ $t('post.postSettings') }}
-            </div>
 
             <div class="options-sidebar-item">
                 <div
@@ -744,6 +741,10 @@ export default {
             z-index: 1;
         }
 
+        .options-sidebar {
+            padding-top: 8rem;
+        }
+
         &-header {
             color: var(--gray-3);
             font-size: 1.2rem;
@@ -797,7 +798,7 @@ export default {
                 margin-bottom: 2rem;
 
                 dd {
-                    font-size: 1.6rem;
+                    font-size: $app-font-base;
                 }
 
                 small {
@@ -900,7 +901,7 @@ export default {
             color: var(--text-light-color);
             display: block;
             font-style: italic;
-            font-weight: var(---font-weight-normal);
+            font-weight: var(--font-weight-normal);
             line-height: 1.4;
             padding-top: .5rem;
 

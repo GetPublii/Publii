@@ -397,7 +397,7 @@ h1 {
             -webkit-appearance: none;
             max-width: 100%;
             min-width: 100px;
-            min-height: 48px;          
+            min-height: 46px;          
             margin-left: 10px;
             padding: 0 12px 0 18px;
             position: relative;

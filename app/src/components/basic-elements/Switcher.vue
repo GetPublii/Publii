@@ -84,7 +84,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .has-label {
-    font-size: 16px;
+    font-size: $app-font-base;
     margin-right: 10px;
 }
 

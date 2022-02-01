@@ -19,7 +19,7 @@ body {
     background-color: var(--bg-site);
     color: var(--text-primary-color);
     font: 400 1rem/1.5 var(--font-base);
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
     line-height: $line-height;
 }
 
@@ -78,7 +78,7 @@ h3 {
 
 h4 {
     color: var(--headings-color);
-    font-size: 1.6rem;
+    font-size: $app-font-base;
     font-weight: 600;
     margin: 0 0 1rem;
 }

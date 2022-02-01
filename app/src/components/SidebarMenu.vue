@@ -96,13 +96,13 @@ export default {
         border-radius: var(--border-radius);
         color: var(--sidebar-link-color);
         display: block;
-        font-size: 1.6rem;
-        font-weight: var(---font-weight-semibold);
-        line-height: 3.2rem;
-        margin: 0 0;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-normal);
+        line-height: 2;
+        margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: 0.85rem 0.8rem;
+        padding: .825rem .6rem;
         transition: var(--transition);
 
         &:active,
@@ -121,13 +121,14 @@ export default {
     svg {
         fill: var(--sidebar-link-icon);
         left: 1rem;
-        margin-right: 2.6rem;
+        margin-right: 2.4rem;
         position: relative;
         transition: var(--transition);
         top: .5rem;
     }
 
     &-item {
+        margin: 0 0 .2rem;
 
         &.is-active {
             a {
@@ -150,13 +151,4 @@ export default {
     }
 }
 
-@media (min-height: 1080px) {
-    .sidebar-menu {
-
-        &-item {
-             margin: 0 0 .4rem;
-
-        }
-    }
-}
 </style>

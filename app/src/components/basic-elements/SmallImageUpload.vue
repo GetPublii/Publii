@@ -189,7 +189,7 @@ export default {
             border-radius: var(--border-radius);
             color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             font-size: 1.5rem;
             padding: .6rem;
             text-align: center;

@@ -65,8 +65,8 @@
                 background: var(--color-primary);
                 border-radius: 3px;
                 color: var(--white);
-                font-size: 1.6rem;
-                font-weight: 500;
+                font-size: $app-font-base;
+                font-weight: var(--font-weight-semibold);
                 height: auto;
                 left: 50%;
                 line-height: 1.5;
@@ -311,7 +311,7 @@
             box-shadow: none;
             box-sizing: content-box;
             color: var(--icon-primary-color);
-            font: 400 1.6rem/1.3 var(--font-base);
+            font: 400 #{$app-font-base}/1.3 var(--font-base);
             margin-left: 15px;
             max-width: 150px !important;
             min-width: 125px;
@@ -376,7 +376,7 @@ body {
             background-color: var(--popup-bg);
             border: none;
             border-radius: .6rem;            
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: 400;
             min-width: 62rem;
             overflow: hidden;
@@ -395,7 +395,7 @@ body {
             &__title {
                 color: var(--text-primary-color);
                 font-size: 1.8rem;
-                font-weight: 500;
+                font-weight: var(--font-weight-semibold);
                 margin: 0 auto;
                 text-align: center;
                 text-transform: none;
@@ -504,7 +504,7 @@ body {
         .tox-toolbar-label {
             color: var(--label-color);
             font-size: 1.5rem;
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             line-height: 2.6;
         }
 
@@ -517,7 +517,7 @@ body {
             border-radius: 3px;
             box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
-            font: 400 1.6rem/1.5 var(--font-base);
+            font: 400 #{$app-font-base}/1.5 var(--font-base);
             outline: none;
             padding: 1.2rem 1.8rem;
 
@@ -758,7 +758,7 @@ body[data-os="win"] {
 }
 
 .tinymce-iframe {
-    font-size: 1.6rem;
+    font-size: $app-font-base;
     margin: 2rem auto;
     max-width: 1024px;
 }
@@ -834,7 +834,7 @@ body[data-os="win"] {
                 border-radius: 0 0 0 .6rem !important;
                 box-shadow: none !important;
                 color: var(--white) !important;
-                font-size: 1.6rem;
+                font-size: $app-font-base;
                 height: 5.6rem;
                 left: 0 !important;
                 line-height: 5.6rem;
@@ -846,7 +846,7 @@ body[data-os="win"] {
                 }
 
                 & > button {
-                    font-size: 1.6rem;
+                    font-size: $app-font-base;
                 }
 
                 &.tox-disabled > button {
@@ -889,7 +889,7 @@ body[data-os="win"] {
         box-shadow: inset 0 0 0 1px $color-8;
         box-sizing: border-box;
         color: var(--text-primary-color);
-        font: 400 1.6rem/1.5 var(--font-base);
+        font: 400 #{$app-font-base}/1.5 var(--font-base);
         height: 4.8rem;
         outline: none;
         padding: 1.2rem 1.8rem;

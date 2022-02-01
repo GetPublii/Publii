@@ -1570,7 +1570,7 @@ export default {
             &:hover {
                 background: var(--bg-primary);
                 border-color: var(--color-primary);
-                box-shadow: var(--box-shadow---box-shadow-medium);
+                box-shadow: var(--box-shadow-medium);
                 color: var(--color-primary);
                 cursor: pointer;
 

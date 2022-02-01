@@ -103,7 +103,7 @@ export default {
         border: 0;
         border-radius: 30px;
         box-shadow: none;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         height: 4.6rem;
         opacity: 0;
         padding: 0 5rem 0 6rem;

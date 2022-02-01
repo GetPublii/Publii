@@ -44,8 +44,8 @@ export default {
     -webkit-app-region: no-drag; // Make the buttons clickable again         
     cursor: pointer;
     display: block;
-    font-weight: 500;  
-    margin: 1rem -4rem .5rem;    
+    font-weight: var(--font-weight-semibold);  
+    margin: 1rem -#{$app-sidebar-margin} .5rem;    
     position: relative;
     order: 1;
 

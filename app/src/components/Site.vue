@@ -142,16 +142,16 @@ export default {
     .sidebar {
         bottom: 0;
         left: 0;
-        width: 32rem;
+        width: $app-sidebar;
     }
 
     .content {
         background: var(--bg-site);
         bottom: 0;
         overflow: scroll;
-        padding: 3rem 5rem 4rem;
+        padding: 3rem 4rem 4rem;
         right: 0;
-        width: calc(100% - 32rem); // 32rem = sideabr width
+        width: calc(100% - $app-sidebar); 
 
         &.is-wide {
             width: 100%;
@@ -168,18 +168,6 @@ export default {
     .v-leave-to {
         opacity: 0;
         position: absolute;
-    }
-}
-
-@media (max-height: 900px) {
-    .site .content {
-           padding: 3rem 4rem 4rem;
-    }
- }
-
-@media (max-width: 1400px) {
-    .site .content {
-           padding: 3rem 4rem 4rem;
     }
 }
 

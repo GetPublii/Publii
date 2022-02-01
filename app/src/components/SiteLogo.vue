@@ -164,8 +164,8 @@ export default {
 
     &-link {
         display: block;
-        font-size: 1.6rem;
-        font-weight: 500;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-semibold);
         margin: 0;
         overflow: hidden;
         position: relative;

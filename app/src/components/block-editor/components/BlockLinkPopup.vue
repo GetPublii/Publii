@@ -321,8 +321,8 @@ export default {
         border-bottom: 2px solid var(--gray-6);
         color: var(--label-color);
         cursor: pointer;
-        font-size: 16px;
-        font-weight: 500;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-semibold);
         padding: 12px 12px 20px;
         text-align: center;
         transition: all .24s ease-out;
@@ -346,7 +346,7 @@ export default {
       border: 1px solid var(--input-border-color);
       color: var(--text-primary-color);
       display: block;
-      font-size: 16px;
+      font-size: $app-font-base;
       margin: 32px 0 24px;
       padding: 14px;
       width: 100%;

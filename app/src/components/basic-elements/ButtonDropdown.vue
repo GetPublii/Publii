@@ -201,8 +201,8 @@ export default {
     color: var(--white);
     cursor: pointer;
     display: inline-flex;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 1.4rem;
+    font-weight: var(--font-weight-semibold);
     height: 4.6rem;
     line-height: 4.5rem;
     padding: 0;

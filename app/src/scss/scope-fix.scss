@@ -5,7 +5,7 @@
     .error-log {
         strong {
             color: var(--warning);
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: normal;
         }
 
@@ -55,7 +55,7 @@
         cursor: pointer;
         display: inline-block;
         float: left;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         font-weight: bold;
         margin-left: 0;
         margin-right: 5px;
@@ -183,7 +183,7 @@ body[data-os="linux"] {
 .popup-link-add {
     .field {
         label {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             padding: 0;
             text-align: left;
             vertical-align: middle;

@@ -131,7 +131,7 @@ export default {
         border-bottom: 1px solid var(--input-border-focus);        
         color: var(--text-primary-color);
         font-size: 18px;
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         width: 300px;
     }
     

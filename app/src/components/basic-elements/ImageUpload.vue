@@ -299,7 +299,7 @@ export default {
         border-radius: 3px;
         color: var(--gray-3);
         display: block;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         font-weight: var(--font-weight-normal);
         line-height: 1.5;
         margin: 0 0 -40px 0;
@@ -354,7 +354,7 @@ export default {
                 color: var(--button-secondary-color);
                 cursor: pointer;
                 display: inline-block;
-                font-size: 1.5rem;
+                font-size: 1.4rem;
                 font-weight: var(--font-weight-semibold);
                 left: 50%;
                 padding: .75rem 1.5rem;

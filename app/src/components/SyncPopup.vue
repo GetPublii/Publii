@@ -909,6 +909,10 @@ export default {
             position: initial;
             transform: none;
             visibility: hidden;
+
+            .minimized-sync-in-progress {
+                max-width: 20rem;
+            }
         }
 
         @keyframes minimized-popup {

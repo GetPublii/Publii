@@ -286,7 +286,7 @@ export default {
     &__placeholder {
       color: var(--text-light-color);
       display: block;
-      font-size: 16px;
+      font-size: $app-font-base;
       margin-bottom: 0;
       padding-top: 1px;
     }
