@@ -291,6 +291,7 @@ export default {
         background: var(--button-tertiary-bg);
         border-radius: 0 0 3px 3px;
         display: block;
+        font-size: 1.5rem;
         height: 5.6rem;
         line-height: 5.6rem;
         padding: 0 2rem;

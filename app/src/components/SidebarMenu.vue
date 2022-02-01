@@ -121,7 +121,7 @@ export default {
     svg {
         fill: var(--sidebar-link-icon);
         left: 1rem;
-        margin-right: 2.2rem;
+        margin-right: 2.4rem;
         position: relative;
         transition: var(--transition);
         top: .5rem;
