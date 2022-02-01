@@ -79,8 +79,8 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "devtron": "^1.4.0",
-    "electron": "^15.3.2",
-    "node-abi": "^3.5.0"
+    "devtron": "1.4.0",
+    "electron": "^15.3.6",
+    "node-abi": "3.5.0"
   }
 }
