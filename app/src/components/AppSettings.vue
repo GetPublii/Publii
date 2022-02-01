@@ -276,6 +276,23 @@
                 </field>
             </fields-group>
 
+            <fields-group :title="$t('settings.optionsForExperimentalFeatures')">
+                 <field
+                    id="experimental-feature-app-ui-languages"
+                    :label="$t('settings.experimentalFeatureAppUiLanguages')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-ui-languages"
+                        v-model="experimentalFeatureAppUiLanguages" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.experimentalFeatureAppUiLanguagesDesc') }}
+                    </small>
+                </field>
+            </fields-group>
+
             <p-footer>
                 <p-button
                     :onClick="checkBeforeSave"
@@ -328,7 +345,8 @@ export default {
             unwatchLocationPreview: null,
             unwatchBackupsLocation: null,
             editorFontSize: 18,
-            editorFontFamily: 'serif'
+            editorFontFamily: 'serif',
+            experimentalFeatureAppUiLanguages: false
         };
     },
     computed: {
@@ -438,6 +456,7 @@ export default {
         this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
+        this.experimentalFeatureAppUiLanguages = this.$store.state.app.config.experimentalFeatureAppUiLanguages;
         this.theme = this.getAppTheme();
 
         if (mainProcessAPI.getEnv().platformName === 'linux') {
@@ -499,7 +518,8 @@ export default {
                 authorsOrdering: this.authorsOrdering,
                 enableAdvancedPreview: this.enableAdvancedPreview,
                 editorFontFamily: this.editorFontFamily,
-                editorFontSize: this.editorFontSize
+                editorFontSize: this.editorFontSize,
+                experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages 
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

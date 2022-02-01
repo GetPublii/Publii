@@ -21,6 +21,7 @@
                 :title="$t('plugins.goToPluginsManager')"
                 path="/app-plugins" />
             <topbar-dropdown-item
+                v-if="$store.state.app.config.experimentalFeatureAppUiLanguages"
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />

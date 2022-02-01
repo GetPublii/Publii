@@ -596,6 +596,8 @@
         "excludedFiles": "Excluded files",
         "excludeFeaturedPosts": "Exclude featured posts",
         "excludeFilesFromSitemapInfo": "Type a comma-separated list of HTML files or catalogs to exclude from the sitemap.<br>For example: <strong>avoid-this-file.html,avoid-this-catalog-too</strong>.",
+        "experimentalFeatureAppUiLanguages": "Publii UI translations",
+        "experimentalFeatureAppUiLanguagesDesc": "This function allows you to manage Publii UI translations under section 'Languages' which is available under application menu (three dots menu).",
         "externalImages": "External images",
         "externalPage": "External page",
         "facebook": "Facebook",
@@ -646,6 +648,7 @@
         "openPopupWindowBy": "Open Popup window by",
         "optionsForDevelopers": "Options for developers",
         "optionsForEditors": "Options for editors",
+        "optionsForExperimentalFeatures": "Experimental features",
         "ordering": {
             "authorASC": "By author (ascending)",
             "authorDESC": "By author (descending)",

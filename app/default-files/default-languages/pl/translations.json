@@ -596,6 +596,8 @@
         "excludedFiles": "Wykluczone pliki",
         "excludeFeaturedPosts": "Wyklucz wyróżnione wpisy",
         "excludeFilesFromSitemapInfo": "Wpisz rozdzieloną przecinkami listę plików HTML lub katalogów, które mają być wykluczone z mapy witryny.<br>Na przykład: <strong>avoid-this-file.html,avoid-this-catalog-too</strong>.",
+        "experimentalFeatureAppUiLanguages": "Tłumaczenia interfejsu Publii",
+        "experimentalFeatureAppUiLanguagesDesc": "Ta funkcja umożliwia zarządzanie tłumaczeniami interfejsu Publii w sekcji 'Języki' dostępnej w menu aplikacji (trzy kropki).",
         "externalImages": "Zewnętrzne obrazy",
         "externalPage": "Strona zewnętrzna",
         "facebook": "Facebook",
@@ -646,6 +648,7 @@
         "openPopupWindowBy": "Otwórz wyskakujące okienko w",
         "optionsForDevelopers": "Opcje dla programistów",
         "optionsForEditors": "Options for editors",
+        "optionsForExperimentalFeatures": "Funkcje eksperymentalne",
         "ordering": {
             "authorASC": "Po autorze (rosnąco)",
             "authorDESC": "Po autorze (malejąco)",
