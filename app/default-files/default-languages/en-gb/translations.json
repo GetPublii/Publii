@@ -596,6 +596,7 @@
         "excludedFiles": "Excluded files",
         "excludeFeaturedPosts": "Exclude featured posts",
         "excludeFilesFromSitemapInfo": "Type a comma-separated list of HTML files or catalogs to exclude from the sitemap.<br>For example: <strong>avoid-this-file.html,avoid-this-catalog-too</strong>.",
+        "experimentalFeaturesWarning": "We're always looking for ways to improve our app. This section contains experimental features designed to extend the Publii functionality. We can't guarantee they will work properly; you can activate them at your own risk.",
         "experimentalFeatureAppUiLanguages": "Publii UI translations",
         "experimentalFeatureAppUiLanguagesDesc": "This function allows you to manage Publii UI translations under section 'Languages' which is available under application menu (three dots menu).",
         "externalImages": "External images",

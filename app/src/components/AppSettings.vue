@@ -277,6 +277,14 @@
             </fields-group>
 
             <fields-group :title="$t('settings.optionsForExperimentalFeatures')">
+                 <div
+                    class="msg msg-icon msg-info">
+                    <icon
+                        name="warning"
+                        customWidth="28"
+                        customHeight="28" />
+                    <div v-pure-html="$t('settings.experimentalFeaturesWarning')"></div>
+                </div>
                  <field
                     id="experimental-feature-app-ui-languages"
                     :label="$t('settings.experimentalFeatureAppUiLanguages')"
@@ -594,6 +602,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .settings {
     margin: 0 auto;

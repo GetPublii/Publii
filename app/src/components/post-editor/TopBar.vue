@@ -1,6 +1,7 @@
 <template>
     <div class="post-editor-topbar">
         <p-button
+            v-if="!sourceCodeEditorVisible"
             id="post-back-to-posts-button"
             type="clean-invert icon"
             icon="arrow-left"
@@ -37,16 +38,17 @@
             v-if="sourceCodeEditorVisible"
             class="post-editor-source-code-actions">
             <p-button
+                type="clean"
+                @click.native="sourceCodeCancel">
+                {{ $t('ui.goBack') }}
+            </p-button>
+
+            <p-button
                 type="primary"
                 @click.native="sourceCodeApply">
                 {{ $t('ui.applyChanges') }}
             </p-button>
 
-            <p-button
-                type="outline"
-                @click.native="sourceCodeCancel">
-                {{ $t('ui.cancel') }}
-            </p-button>
         </div>
     </div>
 </template>

@@ -194,9 +194,9 @@ export default {
 
     &-list {  
         list-style-type: decimal;
-        list-style-position: outside;
+        list-style-position: inside;
         margin: 0;
-        padding: 0 0 0 2rem;
+        padding: 0;
         user-select: text;
 
         &-container {
