@@ -242,7 +242,12 @@ export default {
         margin-left: auto;
     }
 
+    #post-preview-button {
+        background: var(--bg-primary);
+    }
+
     #post-back-to-posts-button {
+        background: var(--bg-primary);
         margin-left: -2.1rem;
         margin-right: .625rem;
         padding-left: 3.4rem;
