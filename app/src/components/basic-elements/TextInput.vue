@@ -5,7 +5,6 @@
         <icon
             v-if="icon"
             size="s"
-            primaryColor="color-8"
             :name="icon" />
 
         <input
@@ -211,6 +210,7 @@ export default {
     }
 
     svg {
+        fill: var(--icon-secondary-color);
         left: 2rem;
         position: absolute;
         top: 50%;

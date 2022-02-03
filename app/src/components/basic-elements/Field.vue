@@ -241,7 +241,7 @@ label {
         position: relative;
         width: 100%;
 
-        &.line > .separator-wrapper:before {
+        &.line > .separator-wrapper::before {
             border: 1px solid var(--gray-1);
             content: "";
             left: 0;

@@ -2264,6 +2264,7 @@ export default {
     .multiple-checkboxes {
         label {
             display: block;
+            margin-bottom: 1rem;
         }
     }
 }

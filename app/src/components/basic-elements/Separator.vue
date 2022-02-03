@@ -145,4 +145,21 @@ export default {
         }
     }
 }
+
+.site-settings .tab  {
+
+    .separator:first-child {
+
+        .separator-wrapper {
+            
+            & > label {
+                padding-top: .5rem;
+            }
+
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
 </style>
