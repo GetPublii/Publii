@@ -193,6 +193,11 @@ export default {
             .msg {
                 margin: 2rem 0;
             }
+
+            .separator:first-child {
+                padding-top: 0 !important;
+                
+            }
         }
     }
 }

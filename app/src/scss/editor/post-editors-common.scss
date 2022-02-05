@@ -27,10 +27,12 @@
     }
 
     #post-stats-button {
-        bottom: 2rem;
-        height: auto;
-        line-height: 1;
-        left: 1.8rem;
+        background: var(--bg-primary);
+        bottom: .4rem;
+        height: 4.6rem;        
+        left: 1.8rem;       
+        line-height: 4.5rem;
+        padding: 0 1.3rem 0 3.8rem;
         position: absolute;
         text-align: center;        
         z-index: 101;

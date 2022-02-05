@@ -97,10 +97,10 @@ export default {
         async initWysiwyg () {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
-            let secondToolbarStructure = "formatselect removeformat code undo redo";
+            let secondToolbarStructure = "formatselect removeformat undo redo code";
 
             if (customFormats.length) {
-                secondToolbarStructure = "styleselect formatselect removeformat code undo redo";
+                secondToolbarStructure = "styleselect formatselect removeformat undo redo code";
             }
 
             if (this.$store.state.wysiwygTranslation) {

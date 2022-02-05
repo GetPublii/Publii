@@ -53,7 +53,7 @@ export default {
         background: linear-gradient(transparent, var(--bg-site));
         bottom: 0;
         content: "";
-        height: 100px;
+        height: 4rem;
         left: 0;
         pointer-events: none;
         position: absolute;
@@ -69,7 +69,7 @@ export default {
     display: grid;
     grid-auto-rows: max-content;
     overflow: auto;
-    padding-bottom: 6rem;
+    padding-bottom: 3rem;
     position: absolute;
     top: 12.5rem;
     width: calc(100% - 8rem);

@@ -60,6 +60,7 @@ export default {
                 'button-success': types.indexOf('success') > -1,
                 'button-danger': types.indexOf('danger') > -1,
                 'button-error': types.indexOf('error') > -1,
+                'button-green': types.indexOf('green') > -1,
                 'button-outline': types.indexOf('outline') > -1,
                 'button-muted': types.indexOf('muted') > -1,
                 'button-cancel-popup': types.indexOf('cancel-popup') > -1,
@@ -209,6 +210,17 @@ export default {
         &.button-active {
             background: var(--button-red-bg-hover);
             color: var(--white);
+        }
+    }
+
+    &-green {
+        background: var(--success); 
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+             background: var(--success); 
         }
     }
 
@@ -442,7 +454,7 @@ export default {
             clear: both;
             display: block;
             height: 2rem;
-            margin: 1.1rem auto;
+            margin: 1.3rem auto;
             width: 2rem;
 
             &-white {

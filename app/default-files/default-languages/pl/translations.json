@@ -596,6 +596,7 @@
         "excludedFiles": "Wykluczone pliki",
         "excludeFeaturedPosts": "Wyklucz wyróżnione wpisy",
         "excludeFilesFromSitemapInfo": "Wpisz rozdzieloną przecinkami listę plików HTML lub katalogów, które mają być wykluczone z mapy witryny.<br>Na przykład: <strong>avoid-this-file.html,avoid-this-catalog-too</strong>.",
+        "experimentalFeaturesWarning": "Zawsze szukamy sposobów na ulepszenie naszej aplikacji. Ta sekcja zawiera eksperymentalne funkcje zaprojektowane w celu rozszerzenia funkcjonalności Publii. Nie możemy zagwarantować ich poprawnego działania; aktywujesz je na własne ryzyko.",
         "experimentalFeatureAppUiLanguages": "Tłumaczenia interfejsu Publii",
         "experimentalFeatureAppUiLanguagesDesc": "Ta funkcja umożliwia zarządzanie tłumaczeniami interfejsu Publii w sekcji 'Języki' dostępnej w menu aplikacji (trzy kropki).",
         "externalImages": "Zewnętrzne obrazy",

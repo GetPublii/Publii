@@ -62,7 +62,7 @@
 
                     <p-button
                         v-if="!isManual"
-                        type="primary medium quarter-width"
+                        type="primary medium green quarter-width"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
@@ -86,7 +86,7 @@
 
                 <div class="buttons">
                     <p-button
-                        type="primary medium  quarter-width"
+                        type="primary medium  green quarter-width"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
@@ -905,7 +905,7 @@ export default {
 
         .popup {
             animation: minimized-content .25s cubic-bezier(.17,.67,.13,1.05) .25s forwards;
-            margin-top: 1.6rem;
+            margin-top: 2.6rem;
             position: initial;
             transform: none;
             visibility: hidden;
