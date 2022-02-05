@@ -73,7 +73,7 @@
     "vue-i18n": "8.24.2",
     "vue-multiselect": "2.0.8",
     "vue-prism-editor": "0.6.1",
-    "vue-router": "3.0.6",
+    "vue-router": "^3.5.3",
     "vue-simplemde": "1.0.0",
     "vuedraggable": "2.24.3",
     "vuex": "3.1.1"
