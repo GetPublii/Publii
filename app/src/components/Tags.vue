@@ -377,7 +377,7 @@ export default {
         showPostsConnectedWithTag (name) {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'tag:' + name);
-            this.$router.push({ path: '/site/' + siteName + '/posts' });
+            this.$router.push('/site/' + siteName + '/posts');
         },
         ordering (field) {
             if (field !== this.orderBy) {

@@ -66,7 +66,7 @@ export default {
             window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             this.$bus.$emit('site-switched');
             this.$bus.$emit('sites-popup-hide');
-            this.$router.push({ path: `/site/${siteToDisplay}` });
+            this.$router.push(`/site/${siteToDisplay}`);
         },
         showWebsiteOnEnter (event, siteToDisplay) {
             if (event.key === 'Enter' && !event.isComposing && !document.body.classList.contains('has-popup-visible')) {
@@ -116,7 +116,7 @@ export default {
                     newSiteCatalog: clonedWebsiteData.siteCatalog
                 });
 
-                this.$router.push({ path: `/site/${clonedWebsiteData.siteCatalog}` });
+                this.$router.push(`/site/${clonedWebsiteData.siteCatalog}`);
                 window.localStorage.setItem('publii-last-opened-website', clonedWebsiteData.siteCatalog);
                 this.$bus.$emit('message-display', {
                     message: this.$t('site.cloneWebsiteSuccessMsg') + clonedWebsiteData.siteCatalog,
@@ -137,7 +137,7 @@ export default {
                 let sites = Object.keys(this.$store.state.sites);
 
                 if(sites.length > 0) {
-                    this.$router.push({ path: `/site/${sites[0]}` });
+                    this.$router.push(`/site/${sites[0]}`);
                     window.localStorage.setItem('publii-last-opened-website', sites[0]);
                     this.$bus.$emit('message-display', {
                         message: this.$t('site.deleteWebsiteSuccessMsg') + sites[0],
@@ -147,7 +147,7 @@ export default {
                     return;
                 }
 
-                this.$router.push({ path: `/site/!` });
+                this.$router.push(`/site/!`);
                 this.$bus.$emit('message-display', {
                     message: this.$t('site.deleteWebsiteCSuccessMsg'),
                     type: 'success',

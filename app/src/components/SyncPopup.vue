@@ -417,11 +417,7 @@ export default {
     methods: {
         goToServerSettings: function() {
             let siteName = this.$store.state.currentSite.config.name;
-
-            this.$router.push({
-                path: '/site/' + siteName + '/settings/server/'
-            });
-
+            this.$router.push('/site/' + siteName + '/settings/server/');
             this.close();
         },
         openWebsite: function() {

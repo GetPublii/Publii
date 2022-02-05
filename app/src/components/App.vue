@@ -137,7 +137,7 @@ export default {
                 window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             }
 
-            this.$router.push({ path: `/site/${siteToDisplay}` });
+            this.$router.push(`/site/${siteToDisplay}`);
         },
 
         // Check for helper click events for TopBar

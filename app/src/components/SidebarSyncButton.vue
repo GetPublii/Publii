@@ -183,9 +183,7 @@ export default {
             } else if (this.redirectTo === 'site-settings') {
                 let siteName = this.$store.state.currentSite.config.name;
 
-                this.$router.push({
-                    path: '/site/' + siteName + '/settings/server'
-                });
+                this.$router.push('/site/' + siteName + '/settings/server');
             }
         },
         checkDeploymentConfig() {
