@@ -21,10 +21,10 @@
     "remove-vendor-dist-dir": "rm -rf app/dist/vendor",
     "prepare-vendor-dist-dir": "if [ ! -d \"app/dist/vendor\" ]; then mkdir app/dist/vendor; fi && gulp prepare-editor-css",
     "copy-vendor-files": "cp -r app/src/helpers/vendor/tinymce app/dist/vendor/tinymce && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
-    "packager:win": "electron-builder build --win --x64",
-    "packager:mac": "electron-builder build --mac",
-    "packager:mac-m1": "electron-builder build --mac --arm64",
-    "packager:linux": "electron-builder build --linux"
+    "packager:win": "node_modules/.bin/electron-builder build --win --x64",
+    "packager:mac": "node_modules/.bin/electron-builder build --mac",
+    "packager:mac-m1": "node_modules/.bin/electron-builder build --mac --arm64",
+    "packager:linux": "node_modules/.bin/electron-builder build --linux"
   },
   "repository": {
     "url": "https://github.com/GetPublii/Publii/"
@@ -36,13 +36,14 @@
   "devDependencies": {
     "cross-env": "7.0.2",
     "css-loader": "0.28.7",
-    "electron": "15.3.6",
+    "electron": "17.0.0",
     "electron-builder": "22.14.5",
     "file-loader": "4.2.0",
     "glob": "7.1.6",
     "gulp": "4.0.2",
     "gulp-dart-sass": "1.0.2",
     "mocha": "8.1.0",
+    "node-abi": "^3.8.0",
     "node-loader": "1.0.1",
     "node-sass": "npm:sass@1.43.4",
     "sass-loader": "10.2.0",
@@ -54,9 +55,9 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "15.3.6",
+    "electronVersion": "17.0.0",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018-2021 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2022 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",
