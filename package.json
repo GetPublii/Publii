@@ -45,7 +45,7 @@
     "gulp-sass": "^4.1.0",
     "mocha": "^8.1.0",
     "node-loader": "^1.0.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^9.0.2",
     "vue-loader": "^15.9.3",
     "vue-style-loader": "^4.1.2",
