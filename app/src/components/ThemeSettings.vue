@@ -21,7 +21,7 @@
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
                     :previewIcon="true"
-                    defaultValue="full-site-render" />
+                    defaultValue="full-site-preview" />
             </p-header>
 
             <fields-group :title="$t('settings.basicSettings')">
@@ -330,7 +330,7 @@
                     localStorageKey="publii-preview-mode"
                     :previewIcon="true"
                     :isReversed="true"
-                    defaultValue="full-site-render" />
+                    defaultValue="full-site-preview" />
 
                 <p-button
                     @click.native="save"

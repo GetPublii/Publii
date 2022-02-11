@@ -24,7 +24,7 @@
                 :disabled="!siteHasTheme || buttonsLocked"
                 :previewIcon="true"
                 localStorageKey="publii-preview-mode"
-                defaultValue="full-site-render" />
+                defaultValue="full-site-preview" />
         </p-header>
 
         <fields-group>
