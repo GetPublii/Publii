@@ -719,7 +719,7 @@
         "showOnlyFeaturedPosts": "Pokaż tylko wyróżnione wpisy",
         "showPostSlugsOnTheListing": "Pokaż slug wpisu na liście",
         "sitemap": "Mapa witryny",
-        "sitemapLinkInfo": "Mapę XML można znaleźć tutaj: <a :href=\"sitemapLink\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
+        "sitemapLinkInfo": "Mapę XML można znaleźć tutaj: <a href=\"{sitemapLink}\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
         "siteSettings": "Ustawienia strony",
         "siteSettingsSaveDuplicateNameErrorMessage": "Podana nazwa witryny jest używana. Podaj inną nazwę.",
         "siteSettingsSaveEmptyNameErrorMessage": "Nazwa witryny nie może być pusta. Podaj inną nazwę.",

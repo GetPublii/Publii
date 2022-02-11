@@ -719,7 +719,7 @@
         "showOnlyFeaturedPosts": "Show only featured posts",
         "showPostSlugsOnTheListing": "Show post slugs on the listing",
         "sitemap": "Sitemap",
-        "sitemapLinkInfo": "You can find the XML sitemap here: <a :href=\"sitemapLink\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
+        "sitemapLinkInfo": "You can find the XML sitemap here: <a href=\"{sitemapLink}\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
         "siteSettings": "Site settings",
         "siteSettingsSaveDuplicateNameErrorMessage": "Provided site name is in use. Please try another site name.",
         "siteSettingsSaveEmptyNameErrorMessage": "Site name cannot be empty. Please enter a site name.",

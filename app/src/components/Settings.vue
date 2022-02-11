@@ -733,7 +733,7 @@
                                 v-if="sitemapLink"
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.sitemapLinkInfo')">
+                                v-pure-html="$t('settings.sitemapLinkInfo', { sitemapLink: sitemapLink })">
                             </small>
                         </field>
 
@@ -1765,11 +1765,11 @@ export default {
             let sitemapLink = false;
             let syncDate = this.$store.state.currentSite.config.syncDate;
 
-            if(this.$store.state.currentSite.config.domain && typeof syncDate !== 'undefined') {
+            if (this.$store.state.currentSite.config.domain && typeof syncDate !== 'undefined') {
                 sitemapLink = this.$store.state.currentSite.config.domain + '/sitemap.xml';
             }
 
-            return sitemapLink
+            return sitemapLink;
         },
         postPages () {
             return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
