@@ -19,7 +19,7 @@
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
                     :previewIcon="true"
-                    defaultValue="full-site" />
+                    defaultValue="full-site-render" />
             </p-header>
 
             <fields-group :title="$t('settings.basicSettings')">
@@ -1595,7 +1595,7 @@
                     localStorageKey="publii-preview-mode"
                     :previewIcon="true"
                     :isReversed="true"
-                    defaultValue="full-site" />
+                    defaultValue="full-site-render" />
 
                 <p-button
                     @click.native="save(false)"

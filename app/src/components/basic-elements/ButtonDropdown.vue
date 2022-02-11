@@ -136,15 +136,17 @@ export default {
         };
     },
     mounted () {
-        this.setValue(this.defaultValue);
-
         if (this.localStorageKey) {
             let retrievedValue = localStorage.getItem(this.localStorageKey);
             let values = this.filteredItems.map(item => item.value);
 
             if (retrievedValue && values.indexOf(retrievedValue) > -1) {
                 this.setValue(retrievedValue);
+            } else {
+                this.setValue(this.defaultValue);
             }
+        } else {
+            this.setValue(this.defaultValue);
         }
 
         this.$bus.$on('document-body-clicked', this.hideDropdown);
