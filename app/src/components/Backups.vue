@@ -14,7 +14,8 @@
             <p-button
                 :onClick="createBackup"
                 slot="buttons"
-                :type="addBackupButtonType"
+                :type="operationInProgress ? 'disabled preloader' : 'primary icon'"
+                :disabled="operationInProgress"
                 icon="plus">
                 {{ $t('file.createBackup') }}
             </p-button>
@@ -31,11 +32,10 @@
             <p-button
                 slot="button"
                 icon="plus"
-                type="icon"
+                :type="operationInProgress ? 'disabled preloader' : 'icon'"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">{{ $t('file.createBackup') }}</template>
-                <template v-if="operationInProgress">{{ $t('file.creatingBackup') }}&hellip;</template>
+                {{ $t('file.createBackup') }}
             </p-button>
         </empty-state>
 
@@ -108,14 +108,15 @@
 
                 <collection-cell class="col-buttons">
                     <p-button
-                        :type="renameButtonType"
+                        :type="operationInProgress ? 'disabled outline small' : 'outline small'"
                         :onClick="renameFile.bind(this, item.name)">
                         {{ $t('file.rename') }}
                     </p-button>
 
                     <p-button
-                        :type="restoreButtonType"
-                        :onClick="restoreFile.bind(this, item.name)">
+                        :type="operationInProgress ? 'disabled secondary small' : 'secondary small'"
+                        :onClick="restoreFile.bind(this, item.name)"
+                        :disabled="operationInProgress">
                         {{ $t('file.restore') }}
                     </p-button>
                 </collection-cell>
@@ -145,27 +146,6 @@ export default {
         };
     },
     computed: {
-        addBackupButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled preloader';
-            }
-
-            return 'primary icon';
-        },
-        renameButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled outline small';
-            }
-
-            return 'outline small';
-        },
-        restoreButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled secondary small';
-            }
-
-            return 'secondary small';
-        },
         noBackups: function() {
             return this.items.length === 0;
         }
@@ -426,4 +406,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.spinner {
+
+}
 </style>
