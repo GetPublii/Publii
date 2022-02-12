@@ -5,6 +5,7 @@
                 v-for="(siteName, key) in sites"
                 :site="siteName"
                 :key="key"
+                :duplicateInProgress="siteDuplicateInProgress"
                 tabindex="1">
             </sites-list-item>
 
@@ -24,7 +25,8 @@ export default {
     name: 'sites-list',
     data: function() {
         return {
-            filterValue: ''
+            filterValue: '',
+            siteDuplicateInProgress: false
         };
     },
     computed: {
@@ -44,11 +46,13 @@ export default {
             });
         }
     },
-    mounted: function() {
-        let self = this;
+    mounted () {
+        this.$bus.$on('sites-list-filtered', data => {
+            this.filterValue = data;
+        });
 
-        this.$bus.$on('sites-list-filtered', function(data) {
-            self.filterValue = data;
+        this.$bus.$on('sites-list-duplicate-in-progress', (inProgress) => {
+            this.siteDuplicateInProgress = inProgress;
         });
     },
     components: {

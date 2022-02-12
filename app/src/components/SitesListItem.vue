@@ -16,10 +16,14 @@
             {{ displayName }}
         </strong>
 
-        <div class="single-site-actions">
+        <div 
+            :class="{
+                'single-site-actions': true, 
+                'single-site-actions-disabled': duplicateInProgress 
+            }">
             <a
                 href="#"
-                class="single-site-actions-btn"
+                :class="{ 'single-site-actions-btn': true, 'is-duplicating': isDuplicating }"
                 :title="$t('site.duplicateWebsite')"
                 tabindex="-1"
                 @click.stop.prevent="askForClone">
@@ -43,12 +47,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
     name: 'sites-list-item',
     props: [
-        'site'
+        'site',
+        'duplicateInProgress'
     ],
     computed: {
         displayName: function() {
@@ -60,6 +63,11 @@ export default {
         siteLogoColor: function() {
             return this.$store.state.sites[this.site].logo.color;
         }
+    },
+    data () {
+        return {
+            isDuplicating: false
+        };
     },
     methods: {
         showWebsite (siteToDisplay) {
@@ -104,12 +112,18 @@ export default {
                 return;
             }
 
+            this.$bus.$emit('sites-list-duplicate-in-progress', true);
+            this.isDuplicating = true;
+
             mainProcessAPI.send('app-site-clone', {
                 catalogName: this.site,
                 siteName: newName
             });
 
             mainProcessAPI.receiveOnce('app-site-cloned', (clonedWebsiteData) => {
+                this.$bus.$emit('sites-list-duplicate-in-progress', false);
+                this.isDuplicating = false;
+
                 this.$store.commit('cloneWebsite', {
                     clonedWebsiteCatalog: this.site,
                     newSiteName: clonedWebsiteData.siteName,
@@ -193,6 +207,11 @@ export default {
     &-actions {
         display: flex;
         margin-left: auto;
+
+        &-disabled {
+            opacity: .75;
+            pointer-events: none;
+        }
 
         &-btn {
             background: var(--input-bg-lightest);
