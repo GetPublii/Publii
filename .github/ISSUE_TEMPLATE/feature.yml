@@ -12,6 +12,5 @@ body:
     attributes:
       label: Feature Description
       description: How should this feature look like?
-      placeholder: Location in the software, usage, output ...
     validations:
       required: true
