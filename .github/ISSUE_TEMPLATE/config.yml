@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Check the docs
+    url: https://getpublii.com/docs/
+    about: 'This repository is for reporting bugs and proposing new features. If you need help getting started with Publii, check out the docs!'
+  - name: Visit the community forum
+    url: https://forum.getpublii.com/
+    about: 'For questions about Publii functionality, themes, plugins, or other general queries, please contact our development team via the community forum.'
