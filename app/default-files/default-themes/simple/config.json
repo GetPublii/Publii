@@ -955,15 +955,201 @@
             "type": "checkbox"
         },
 
+        {       
+            "name": "commentSelectServer",
+            "label": "Server for comments",
+            "group": "Comments",           
+            "note": "Select a server for your website comments, the use of \"Graphcomment\" is recommended because it has more privacy.", 
+            "value": "graphcomment",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Graphcomment",
+                    "value": "graphcomment"
+                },
+                {
+                    "label": "Disqus",
+                    "value": "disqus"
+                }                
+            ]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Disqus configuration",
+            "group": "Comments",
+            "size": "big",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "disqus"
+            }]
+        },
         {
             "name": "commentDisqusShortname",
-            "label": "Disqus shortname",
+            "label": "Shortname",
             "group": "Comments",
             "placeholder": "Please enter your Disqus shortname",
-            "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
+            "note": "A shortname is the unique identifier assigned to a Disqus site.<br/>Please visit <a href=\"https://help.disqus.com/\" target=\"_blank\" rel=\"nofollow noopener\">help.disqus.com</a> to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
             "value": "",
-            "type": "text"
+            "type": "text",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "disqus"
+            }]
         },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Graphcomment configuration",
+            "group": "Comments",
+            "size": "big",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentShortname",
+            "label": "Shortname",
+            "group": "Comments",
+            "placeholder": "Please enter your Graphcomment shortname",
+            "note": "A shortname is the unique identifier assigned to a Graphcomment site.<br/>Please visit <a href=\"https://support.graphcomment.com/\" target=\"_blank\" rel=\"nofollow noopener\">support.graphcomment.com</a> to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {       
+            "name": "commentGraphcommentTheme",
+            "label": "Theme",
+            "group": "Comments",           
+            "note": "Select a theme for Graphcomment", 
+            "value": "universal",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Universal",
+                    "value": "universal"
+                },
+                {
+                    "label": "Sidebar",
+                    "value": "sidebar"
+                }
+            ],
+            "dependencies": [{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Theme configuration",
+            "group": "Comments",
+            "size": "big",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },{
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentWidth",
+            "label": "Panel Width",
+            "group": "Comments",
+            "value": 480,
+            "type": "number",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentText",
+            "label": "Button label",
+            "group": "Comments",
+            "value": "",
+            "type": "text",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentBackgroundColor",
+            "label": "Button background color",
+            "group": "Comments",
+            "value": "#F35B5B",
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentTextColor",
+            "label": "Button text color",
+            "group": "Comments",
+            "value": "#FFFFFF",
+            "type": "colorpicker",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentVisible",
+            "group": "Comments",
+            "label": "Open with page load",
+            "note": "If this option is activated, the panel will open automatically.",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        {
+            "name": "commentGraphcommentBubble",
+            "group": "Comments",
+            "label": "Show Icon",
+            "note": "Display an icon for opening the panel at the bottom right of the page.",
+            "value": false,
+            "type": "checkbox",
+            "dependencies": [{
+                "field": "commentGraphcommentTheme",
+                "value": "sidebar"
+            },
+            {
+                "field": "commentSelectServer",
+                "value": "graphcomment"
+            }]
+        },
+        
         {
             "name": "backToTopButton",
             "group": "Footer",
