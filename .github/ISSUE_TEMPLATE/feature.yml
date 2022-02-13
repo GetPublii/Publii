@@ -1,0 +1,17 @@
+name: Feature Request
+description: Propose a new feature for Publii
+title: "[Feature Request]: "
+labels: [feature request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a feature for Publii!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: How should this feature look like?
+      placeholder: Location in the software, usage, output ...
+    validations:
+      required: true
