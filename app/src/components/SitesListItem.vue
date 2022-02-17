@@ -220,8 +220,9 @@ export default {
             display: inline-block;
             height: 3rem;
             margin: 0 2px;
-            text-align: center;
             opacity: 0;
+            position: relative;
+            text-align: center;
             width: 3rem;
 
             &:active,
@@ -257,6 +258,35 @@ export default {
                    }
                 }
             }
+
+            &.is-duplicating {
+
+                &::after { 
+                   animation: spin .9s infinite linear;
+                   border-top: 2px solid rgba(var(--color-primary-rgb), .2);
+                   border-right: 2px solid rgba(var(--color-primary-rgb), .2);
+                   border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+                   border-left: 2px solid var(--color-primary);
+                   border-radius: 50%;
+                   content: "";
+                   display: block;
+                   height: 2.5rem;
+                   width: 2.5rem;
+                   @include centerXY(true, true);
+
+                    @at-root {
+                        @keyframes spin {
+                            100% {
+                                transform: translate(-50%, -50%) rotate(360deg);
+                            }
+                        }
+                    }
+                }
+
+                svg {
+                    opacity: 0;
+                }
+            }
         }
     }
 
@@ -284,8 +314,7 @@ export default {
     }
 
     &-name {
-        display: block;
-      
+        display: block;    
         font-weight: var(--font-weight-semibold);
         line-height: 3.6rem;
         margin: 0;

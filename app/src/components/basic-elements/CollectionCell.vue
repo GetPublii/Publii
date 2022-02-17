@@ -163,6 +163,16 @@ export default {
     &-buttons {
         display:  flex !important;
     }
+
+    &.authors {
+        a {
+            overflow: hidden;
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+             max-width: 15rem;
+        }
+    }
 }
 
 .item {
@@ -203,4 +213,15 @@ body[data-os="win"] {
         }
     }
 }
+
+/*
+ * Responsive improvements
+ */
+
+@media (min-width: 1920px) {
+    .col.authors a {
+        max-width: 100%;
+    }
+}
+
 </style>

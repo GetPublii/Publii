@@ -103,6 +103,7 @@ html[data-theme="default"] {
     --input-border-color: var(--neutral-15);
     --input-border-focus: var(--color-55);
     --input-border-checked: var(--color-20);
+    --input-data-time-popup: light;
         
     --button-bg: var(--color-55);
     --button-bg-hover: var(--color-60);  
@@ -285,7 +286,8 @@ html[data-theme="dark"] {
     --input-border-color: var(--neutral-45);
     --input-border-focus: var(--color-50);
     --input-border-checked: rgba(16,137,255, .59);
-        
+    --input-data-time-popup: dark;
+  
     --button-bg: var(--color-50);
     --button-bg-hover: var(--color-55); 
     --button-secondary-bg: var(--color-75); 

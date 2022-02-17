@@ -119,48 +119,56 @@ export default {
 }
 
 .post-date-picker {
-    display: block;
-    font-size: 2.6rem;
+    display: flex;
+    justify-content: space-between;
     margin-top: -1rem;
     text-align: center;
     white-space: nowrap;
 
-    select {
-        -webkit-appearance: none;
-        background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat 100% 50%;
-        background-size: 8px;
+    input[type="date"],
+    input[type="time"] {
+        background: none;
+        border-radius: 3px;
         border: none;
-        box-shadow: none;
-        color: var(--text-primary-color);
-        font-size: 2.6rem;
-        height: 4.8rem;
-        min-width: 70px;
-        margin-right: 1rem;
-        padding: 0;
-        position: relative;
-    }
+        box-shadow: inset 0 0 0 1px var(--input-border-color);
+        color: var(--text-primary-color); 
+        color-scheme: var(--input-data-time-popup);
+        font-size: 2.1rem;
+        font-weight: var(--font-weight-normal);
+        min-height: 46px;
+        min-width: 48%;
+        padding: .45rem 1.2rem;
 
-    .post-date-editor-day,
-    .post-date-editor-hours,
-    .post-date-editor-minutes {
-        min-width: 50px;
-    }
+        &:focus {
+          box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+        }
 
-    .post-date-editor-minutes {
-        margin-left: 1.8rem;
-    }
+        &::-webkit-datetime-edit-fields-wrapper {
+            background: transparent; 
+        }
 
-    .post-date-editor-year {
-        background-color: transparent;
-        box-shadow: none;
-        font-size: 2.6rem;
-        margin-right: 3rem;
-        padding: 0;
-        width: 80px;
-    }
+        &::-webkit-datetime-edit-text {
+            color: var(--text-primary-color); 
+            padding: 0 .2em;
+        }
 
-    .post-date-editor-ampm {
-        min-width: 60px;
+        &::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+
+        &::-webkit-datetime-edit-month-field,
+        &::-webkit-datetime-edit-day-field,
+        &::-webkit-datetime-edit-year-field,
+        &::-webkit-datetime-edit-hour-field,
+        &::-webkit-datetime-edit-minute-field { 
+            cursor: text; 
+        }
+
+        &::-webkit-calendar-picker-indicator {
+            background-size: 22px;
+            background-position-y: 50%;
+              
+        }
     }
 }
 </style>
