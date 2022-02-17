@@ -295,6 +295,7 @@ class Renderer {
         this.preparePreview('post');
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
@@ -314,6 +315,7 @@ class Renderer {
 
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
@@ -344,6 +346,7 @@ class Renderer {
         }
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
@@ -374,6 +377,7 @@ class Renderer {
         }
 
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
@@ -1668,6 +1672,7 @@ class Renderer {
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
         await FilesHelper.removeEmptyDirectories(this.outputDir);

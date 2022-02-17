@@ -100,6 +100,57 @@ class Files {
     }
 
     /**
+     * Copy dynamic assets files
+     *
+     * @param themeDir
+     * @param outputDir
+     * @param themeConfig
+     */
+     static copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
+        if (!themeConfig.files.dynamicAssetsPath) {
+            return;
+        }
+
+        let dynamicAssetsPath = path.join(themeDir, themeConfig.files.dynamicAssetsPath);
+        let outputPath = path.join(outputDir, themeConfig.files.dynamicAssetsPath);
+
+        // Create the dynamic assets directory or clean up it
+        fs.emptyDirSync(outputPath);
+
+        // Create list of files to copy
+        let filesToCopy = [];
+        let filesMappingPath = path.join(themeDir, 'dynamic-assets-mapping.js');
+
+        if (fs.existsSync(filesMappingPath)) {
+            filesToCopy = UtilsHelper.requireWithNoCache(filesMappingPath, themeConfig);
+        }
+
+        // Copy each directory and file from the assets catalog
+        list([dynamicAssetsPath], {
+            recurse: true,
+            flatten: true
+        }).then(files => {
+            files.filter(item => {
+                let filename = item.path.replace(dynamicAssetsPath, '');
+                return filesToCopy.indexOf(filename) > -1
+            }).forEach(item => {
+                if (item.mode.dir === false) {
+                    let filePath = normalizePath(item.path);
+                    let destinationPath = filePath.replace(
+                        normalizePath(dynamicAssetsPath),
+                        normalizePath(outputPath)
+                    );
+
+                    fs.copySync(
+                        filePath,
+                        destinationPath
+                    );
+                }
+            });
+        });
+    }
+
+    /**
      * Copy media files from the input dir to the output dir
      *
      * @param inputDir
