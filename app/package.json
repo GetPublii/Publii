@@ -50,6 +50,7 @@
     "image-size": "1.0.1",
     "isbinaryfile": "3.0.2",
     "jimp": "0.16.1",
+    "js-beautify": "1.14.0",
     "keytar": "7.8.0",
     "ls-all": "1.1.0",
     "marked": "0.7.0",

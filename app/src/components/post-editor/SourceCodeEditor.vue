@@ -31,6 +31,10 @@ export default {
                 this.$refs.codemirror.editor.setValue(content);
                 this.$refs.codemirror.editor.refresh();
                 this.$refs.codemirror.editor.focus();
+
+                if (this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode) {
+                    this.$bus.$emit('source-code-editor-beautify-code');
+                }
             }, 500);
         },
         applyChanges () {

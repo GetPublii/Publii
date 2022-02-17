@@ -22,7 +22,8 @@ const AstAppConfig = {
     enableAdvancedPreview: false,
     editorFontSize: 18,
     editorFontFamily: 'sans-serif',
-    experimentalFeatureAppUiLanguages: false
+    experimentalFeatureAppUiLanguages: false,
+    experimentalFeatureAppAutoBeautifySourceCode: false
 };
 
 module.exports = AstAppConfig;

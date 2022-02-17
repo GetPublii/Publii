@@ -1,6 +1,14 @@
 <template>
     <div class="post-editor-topbar">
         <p-button
+            v-if="sourceCodeEditorVisible"
+            type="outline icon"
+            icon="edit"
+            @click.native="$bus.$emit('source-code-editor-beautify-code')">
+            {{ $t('ui.beautifyCode') }}
+        </p-button>
+
+        <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-back-to-posts-button"
             type="clean-invert icon"

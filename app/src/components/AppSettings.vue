@@ -285,7 +285,7 @@
                         customHeight="28" />
                     <div v-pure-html="$t('settings.experimentalFeaturesWarning')"></div>
                 </div>
-                 <field
+                <field
                     id="experimental-feature-app-ui-languages"
                     :label="$t('settings.experimentalFeatureAppUiLanguages')"
                     :labelSeparated="false">
@@ -297,6 +297,20 @@
                         slot="note"
                         class="note">
                         {{ $t('settings.experimentalFeatureAppUiLanguagesDesc') }}
+                    </small>
+                </field>
+                <field
+                    id="experimental-feature-app-ui-languages"
+                    :label="$t('settings.experimentalFeatureAppAutoBeautifySourceCode')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-ui-languages"
+                        v-model="experimentalFeatureAppAutoBeautifySourceCode" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.experimentalFeatureAppAutoBeautifySourceCodeDesc') }}
                     </small>
                 </field>
             </fields-group>
@@ -354,7 +368,8 @@ export default {
             unwatchBackupsLocation: null,
             editorFontSize: 18,
             editorFontFamily: 'serif',
-            experimentalFeatureAppUiLanguages: false
+            experimentalFeatureAppUiLanguages: false,
+            experimentalFeatureAppAutoBeautifySourceCode: false
         };
     },
     computed: {
@@ -465,6 +480,7 @@ export default {
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppUiLanguages = this.$store.state.app.config.experimentalFeatureAppUiLanguages;
+        this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.theme = this.getAppTheme();
 
         if (mainProcessAPI.getEnv().platformName === 'linux') {
@@ -527,7 +543,8 @@ export default {
                 enableAdvancedPreview: this.enableAdvancedPreview,
                 editorFontFamily: this.editorFontFamily,
                 editorFontSize: this.editorFontSize,
-                experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages 
+                experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages,
+                experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));

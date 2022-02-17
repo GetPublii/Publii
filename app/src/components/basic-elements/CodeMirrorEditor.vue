@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import beautify from 'js-beautify';
 import CodeMirror from 'codemirror';
 import cssMode from '../../assets/vendor/js/codemirror/css.js';
 import xmlMode from '../../assets/vendor/js/codemirror/xml.js';
@@ -51,9 +52,11 @@ export default {
         setTimeout(() => {
             this.initEditor();
         }, 0);
+
+        this.$bus.$on('source-code-editor-beautify-code', this.beautifyCode);
     },
     methods: {
-        initEditor: function() {
+        initEditor () {
             this.editor = CodeMirror.fromTextArea(
                 this.$refs['textarea'],
                 {
@@ -73,7 +76,16 @@ export default {
             );
 
             this.$bus.$emit(this.editorLoadedEventName, true);
+        },
+        beautifyCode () {
+            let editorContent = this.editor.getValue();
+            editorContent = beautify.html(editorContent, { indent_with_tabs: true });
+            this.editor.setValue(editorContent);
+            this.editor.refresh();
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('source-code-editor-beautify-code', this.beautifyCode);
     }
 }
 </script>
