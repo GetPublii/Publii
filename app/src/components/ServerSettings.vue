@@ -205,7 +205,7 @@
                         {{ $t('sync.deploymentSettingFileProtocolNote') }}
                     </small>
                     <small
-                        v-if="!deploymentSettings.relativeUrls && (httpProtocolSelected === 'dat' || httpProtocolSelected === 'hyper' || httpProtocolSelected === 'ipfs')"
+                        v-if="!deploymentSettings.relativeUrls && (['dat', 'hyper', 'ipfs', 'dweb'].indexOf(httpProtocolSelected) > -1)"
                         class="note"
                         slot="note"
                         v-pure-html="$t('sync.deploymentSettingDatHyperIpfsProtocolNote')">
@@ -1009,6 +1009,7 @@ export default {
                 'dat': 'dat://',
                 'hyper': 'hyper://',
                 'ipfs': 'ipfs://',
+                'dweb': 'dweb://',
                 '//': '//'
             },
             httpProtocolSelected: '',

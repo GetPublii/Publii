@@ -49,6 +49,7 @@ export default {
         link.indexOf('://') === -1 &&
         link.indexOf('dat://') === -1 &&
         link.indexOf('ipfs://') === -1 &&
+        link.indexOf('dweb://') === -1 &&
         link.indexOf('//') !== 0 &&
         link.indexOf('#') !== 0
       ) {

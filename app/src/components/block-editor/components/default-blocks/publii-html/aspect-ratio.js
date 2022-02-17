@@ -56,7 +56,8 @@ function addAspectRatio (code) {
         src.indexOf('https://') === 0 ||
         src.indexOf('//') === 0 ||
         src.indexOf('dat://') === 0 ||
-        src.indexOf('ipfs://') === 0
+        src.indexOf('ipfs://') === 0 || 
+        src.indexOf('dweb://') === 0
       )
     ) {
       outputAttrs.push('src="' + src + '"')
