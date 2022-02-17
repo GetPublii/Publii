@@ -540,6 +540,7 @@
         "byIDDescending": "Według ID malejąco",
         "cannotAddIndexHTMLInURLsInfo": "Włącz tę opcję jeśli nie możesz domyślnie włączyć ładowania plików index.html kiedy katalog na Twoim serwerze jest otwarty.",
         "cardTypes": "Typy kart:",
+        "changeSitesLocationWithoutCopyingFiles": "Zmień lokalizację stron bez przenoszenia istniejących stron do nowego katalogu",
         "closePostEditorOnSave": "Zamknij edytor wpisów po zapisie",
         "codeEditor": "Edytor kodu (CodeMirror)",
         "colorTheme": "Motyw kolorystyczny",

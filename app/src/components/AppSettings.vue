@@ -118,6 +118,12 @@
                         v-model="locations.sites"
                         :readonly="syncInProgress"
                         slot="field" />
+                    <switcher
+                        v-if="originalSitesLocation !== locations.sites"
+                        slot="field"
+                        id="close-editor-on-save"
+                        v-model="changeSitesLocationWithoutCopying"
+                        :label="$t('settings.changeSitesLocationWithoutCopyingFiles')" />
                     <small
                         v-if="syncInProgress"
                         slot="note"
@@ -369,7 +375,8 @@ export default {
             editorFontSize: 18,
             editorFontFamily: 'serif',
             experimentalFeatureAppUiLanguages: false,
-            experimentalFeatureAppAutoBeautifySourceCode: false
+            experimentalFeatureAppAutoBeautifySourceCode: false,
+            changeSitesLocationWithoutCopying: false
         };
     },
     computed: {
@@ -509,15 +516,17 @@ export default {
         },
         checkBeforeSave () {
             if (this.originalSitesLocation !== this.locations.sites) {
-                this.$bus.$emit('confirm-display', {
-                    hasInput: false,
-                    message: this.$t('settings.sitesLocationChangedConfirmMsg'),
-                    okClick: this.save,
-                    okLabel: this.$t('ui.ok'),
-                    cancelLabel: this.$t('ui.cancel')
-                });
+                if (!this.changeSitesLocationWithoutCopying) {
+                    this.$bus.$emit('confirm-display', {
+                        hasInput: false,
+                        message: this.$t('settings.sitesLocationChangedConfirmMsg'),
+                        okClick: this.save,
+                        okLabel: this.$t('ui.ok'),
+                        cancelLabel: this.$t('ui.cancel')
+                    });
 
-                return;
+                    return;
+                }
             }
 
             this.save();
@@ -544,7 +553,8 @@ export default {
                 editorFontFamily: this.editorFontFamily,
                 editorFontSize: this.editorFontSize,
                 experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages,
-                experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode
+                experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
+                changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
@@ -553,7 +563,7 @@ export default {
             mainProcessAPI.send('app-config-save', newSettings);
 
             mainProcessAPI.receiveOnce('app-config-saved', (data) => {
-                if(data.status === true && data.sites) {
+                if (data.status === true && data.sites) {
                     this.$store.commit('setSites', data.sites);
                 }
 

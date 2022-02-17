@@ -27,14 +27,14 @@ class AppEvents {
          * Save app config
          */
         ipcMain.on('app-config-save', function (event, config) {
-            if(config.sitesLocation === '') {
+            if (config.sitesLocation === '') {
                 config.sitesLocation = appInstance.dirPaths.sites;
             }
 
-            if(config.sitesLocation !== appInstance.appConfig.sitesLocation) {
+            if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
                 let result = true;
 
-                if(appInstance.appConfig.sitesLocation) {
+                if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
                     
                     if (appInstance.db) {
@@ -42,15 +42,22 @@ class AppEvents {
                     }
 
                     setTimeout(() => {
-                        result = appFilesHelper.relocateSites(
-                            appInstance.appConfig.sitesLocation,
-                            config.sitesLocation,
-                            event
-                        );
-
-                        if(result) {
+                        if (config.changeSitesLocationWithoutCopying) {
                             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
                             appInstance.appConfig = config;
+                            appInstance.sitesDir = config.sitesLocation;
+                        } else {
+                            result = appFilesHelper.relocateSites(
+                                appInstance.appConfig.sitesLocation,
+                                config.sitesLocation,
+                                event
+                            );
+
+                            if (result) {
+                                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
+                                appInstance.appConfig = config;
+                                appInstance.sitesDir = config.sitesLocation;
+                            }
                         }
         
                         appInstance.loadSites();
