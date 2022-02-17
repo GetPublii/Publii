@@ -53,8 +53,15 @@ class Files {
             recurse: true,
             flatten: true
         }).then(files => {
+            let dynamicAssetsPath = path.join(assetsPath, 'dynamic');
+            
             files.filter(item => {
                 let filename = path.parse(item.path).base;
+
+                if (item.path.indexOf(dynamicAssetsPath) > -1) {
+                    return false;
+                }
+
                 return themeConfig.files.ignoreAssets.indexOf(filename) === -1
             }).forEach(item => {
                 if(item.mode.dir === false) {
@@ -107,12 +114,12 @@ class Files {
      * @param themeConfig
      */
      static copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
-        if (!themeConfig.files.dynamicAssetsPath) {
+        if (!themeConfig.files.useDynamicAssets) {
             return;
         }
 
-        let dynamicAssetsPath = path.join(themeDir, themeConfig.files.dynamicAssetsPath);
-        let outputPath = path.join(outputDir, themeConfig.files.dynamicAssetsPath);
+        let dynamicAssetsPath = path.join(themeDir, themeConfig.files.assetsPath, 'dynamic');
+        let outputPath = path.join(outputDir, themeConfig.files.assetsPath, 'dynamic');
 
         // Create the dynamic assets directory or clean up it
         fs.emptyDirSync(outputPath);
