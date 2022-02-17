@@ -2,6 +2,7 @@
  * Module which loads all Handlebar's helpers
  */
 module.exports = {
+    assetHelper: require('./asset.js').assetHelper,
     CSSHelper: require('./css.js'),
     fontHelper: require('./font.js').fontHelper,
     dateHelper: require('./date.js'),
