@@ -540,7 +540,7 @@
         "byIDDescending": "By ID descending",
         "cannotAddIndexHTMLInURLsInfo": "Enable this option if you cannot enable loading index.html files by default when a folder on your server is opened.",
         "cardTypes": "Card types:",
-        "changeSitesLocationWithoutCopyingFiles": "Change sites location without moving existins sites to the new catalog",
+        "changeSitesLocationWithoutCopyingFiles": "Change sites location without moving existing sites to the new catalog",
         "closePostEditorOnSave": "Close post editor on save",
         "codeEditor": "Code editor (CodeMirror)",
         "colorTheme": "Color theme",
