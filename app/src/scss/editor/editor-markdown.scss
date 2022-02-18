@@ -2,13 +2,13 @@
 @import '../variables';
 @import '../mixins';
 
-/**
- * simplemde v1.11.2
- * Copyright Next Step Webs, Inc.
- * @link https://github.com/NextStepWebs/simplemde-markdown-editor
- * @license MIT
- */
 .post-editor-markdown {
+    /**
+     * simplemde v1.11.2
+     * Copyright Next Step Webs, Inc.
+     * @link https://github.com/sparksuite/simplemde-markdown-editor
+     * @license MIT
+     */
     .CodeMirror {
         font-size: var(--editor-font-size);
         height: auto;
@@ -105,8 +105,6 @@
         background: var(--highlighted);
         border-radius: 2px;
     }
-
-    .CodeMirror .CodeMirror-code .cm-link {}
 
     .CodeMirror .CodeMirror-code .cm-url {
         border-bottom: 2px solid rgba(var(--yellow), 1);

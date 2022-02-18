@@ -20,9 +20,10 @@
                         @keydown="detectEnterInTitle"
                         @keyup="updateTitle" />
 
-                    <vue-simplemde
+                    <vue-easymde
                         ref="markdownEditor"
                         v-model="postData.text"
+                        name="markdown-editor"
                         :configs="editorConfig" />
 
                     <input
@@ -56,7 +57,7 @@
 
 <script>
 import Vue from 'vue';
-import VueSimplemde from 'vue-simplemde'
+import VueEasyMde from './post-editor/EasyMde';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -84,7 +85,7 @@ export default {
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
         'help-panel-markdown': HelpPanelMarkdown,
-        'vue-simplemde': VueSimplemde
+        'vue-easymde': VueEasyMde
     },
     data () {
         return {
@@ -143,8 +144,8 @@ export default {
         isEdit () {
             return !!this.postID;
         },
-        simplemde () {
-            return this.$refs.markdownEditor.simplemde;
+        easymde () {
+            return this.$refs.markdownEditor.easymde;
         }
     },
     mounted () {
@@ -170,17 +171,19 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.simplemde.codemirror.on('change', this.detectDataLoss);
-        window.prompt = this.linkPopupHandler;
-        this.$refs.linkPopup.setSimpleMdeInstance(this.simplemde);
-        inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
-        this.$refs['post-title'].focus();
+        Vue.nextTick(() => {
+            this.easymde.codemirror.on('change', this.detectDataLoss);
+            window.prompt = this.linkPopupHandler;
+            this.$refs.linkPopup.setEasyMdeInstance(this.easymde);
+            inlineAttachment.editors.codemirror4.attach(this.easymde.codemirror, {});
+            this.$refs['post-title'].focus();
+        });
     },
     methods: {
         detectEnterInTitle (event) {
             if (event.code === 'Enter' && !event.isComposing) {
                 event.preventDefault();
-                this.simplemde.codemirror.focus();
+                this.easymde.codemirror.focus();
             }
         },
         updateTitle () {
@@ -294,10 +297,10 @@ export default {
             }
 
             this.$bus.$emit('post-editor-possible-data-loss');
-            this.simplemde.codemirror.off('change', this.detectDataLoss);
+            this.easymde.codemirror.off('change', this.detectDataLoss);
         },
         linkPopupHandler (e) {
-            let selectedText = this.simplemde.codemirror.getSelections();
+            let selectedText = this.easymde.codemirror.getSelections();
 
             if (selectedText && selectedText.length) {
                 selectedText = selectedText[0];
@@ -382,7 +385,7 @@ export default {
                 }
             }
 
-            .vue-simplemde {
+            .vue-easymde {
                 position: relative;
                 z-index: 1000;
 

@@ -36,6 +36,7 @@
     "count-files": "2.6.2",
     "delete-empty": "3.0.0",
     "dompurify": "2.3.5",
+    "easymde": "^2.16.1",
     "electron-devtools-installer": "3.2.0",
     "fast-memoize": "2.5.2",
     "fast-xml-parser": "3.19.0",
@@ -75,7 +76,6 @@
     "vue-multiselect": "2.0.8",
     "vue-prism-editor": "0.6.1",
     "vue-router": "3.5.3",
-    "vue-simplemde": "^1.0.0",
     "vuedraggable": "2.24.3",
     "vuex": "3.1.1"
   },

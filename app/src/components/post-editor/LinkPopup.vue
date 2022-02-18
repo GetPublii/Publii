@@ -178,7 +178,7 @@ export default {
         return {
             postID: 0,
             isVisible: false,
-            simplemdeInstance: null,
+            easymdeInstance: null,
             type: 'post',
             post: null,
             tag: null,
@@ -421,7 +421,7 @@ export default {
         },
         addLinkMarkdown (response) {
             if (response) {
-                this.simplemdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);
+                this.easymdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);
             }
         },
         addLinkHTML (response) {
@@ -469,8 +469,8 @@ export default {
                 tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
             }
         },
-        setSimpleMdeInstance (instance) {
-            this.simplemdeInstance = instance;
+        setEasyMdeInstance (instance) {
+            this.easymdeInstance = instance;
         },
         loadFiles () {
             mainProcessAPI.send('app-file-manager-list', {
