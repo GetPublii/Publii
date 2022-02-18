@@ -156,6 +156,7 @@ export default {
         background: var(--popup-bg);
         box-shadow: var(--box-shadow-medium);
         border-radius: var(--border-radius);
+        cursor: default;
         font-size: 1.5rem;
         list-style-type: none;
         padding: 2rem 0;
