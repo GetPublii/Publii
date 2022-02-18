@@ -113,4 +113,9 @@ export default {
     text-align: center;
     top: 1px;
 }
+
+#author-select {
+    margin-top: -1rem;
+}
+
 </style>
