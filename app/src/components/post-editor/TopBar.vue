@@ -1,13 +1,10 @@
 <template>
     <div class="post-editor-topbar">
-        <p-button
-            v-if="sourceCodeEditorVisible"
-            type="outline icon"
-            icon="edit"
-            @click.native="$bus.$emit('source-code-editor-beautify-code')">
-            {{ $t('ui.beautifyCode') }}
-        </p-button>
 
+        <label v-if="sourceCodeEditorVisible">
+            {{ $t('editor.sourceCode') }}
+        </label>
+        
         <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-back-to-posts-button"
@@ -49,6 +46,14 @@
                 type="clean"
                 @click.native="sourceCodeCancel">
                 {{ $t('ui.goBack') }}
+            </p-button>
+
+            <p-button
+                v-if="sourceCodeEditorVisible"
+                type="secondary icon"
+                icon="source-code"
+                @click.native="$bus.$emit('source-code-editor-beautify-code')">
+                {{ $t('ui.beautifyCode') }}
             </p-button>
 
             <p-button
@@ -221,7 +226,7 @@ export default {
     &-topbar {
         align-items: center;
         background: transparent;
-        font-size: 2.4rem;
+        font-size: 1.4rem;
         display: flex;
         height: 5.6rem;
         justify-content: space-between;

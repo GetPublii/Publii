@@ -121,7 +121,7 @@
                     <switcher
                         v-if="originalSitesLocation !== locations.sites"
                         slot="field"
-                        id="close-editor-on-save"
+                        id="site-location-switcher"
                         v-model="changeSitesLocationWithoutCopying"
                         :label="$t('settings.changeSitesLocationWithoutCopyingFiles')" />
                     <small
@@ -641,5 +641,10 @@ export default {
         margin: 0 auto;
         max-width: $wrapper;
     }
+}
+
+#site-location-switcher {
+    margin: 1.5rem 0 1rem;
+    display: block;
 }
 </style>
