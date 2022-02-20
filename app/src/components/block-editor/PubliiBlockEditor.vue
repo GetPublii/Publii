@@ -7,7 +7,7 @@
       contenteditable="true"
       @paste.prevent="pasteTitle"
       @keydown="detectEnterInTitle"
-      @keyup="updateTitle"
+      @input="updateTitle"
       :data-translation="$t('post.addPostTitle')"></div>
 
     <block-editor

@@ -18,7 +18,7 @@
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
-                        @keyup="updateTitle" />
+                        @input="updateTitle" />
 
                     <vue-easymde
                         ref="markdownEditor"
