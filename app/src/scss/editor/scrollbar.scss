@@ -40,3 +40,13 @@
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+.use-wide-scrollbars {
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar:horizontal {
+        height: 12px;
+    }
+}

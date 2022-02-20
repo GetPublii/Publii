@@ -72,6 +72,10 @@ class EditorBridge {
             // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
 
+            if (document.getElementById('app').classList.contains('use-wide-scrollbars')) {
+                iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
+            }
+
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
