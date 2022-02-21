@@ -1,6 +1,8 @@
 <template>
     <div :class="cssClasses" :id="anchor">
-        <div class="separator-wrapper">
+        <div 
+        class="separator-wrapper"
+        :class="{ 'has-label': label }">
             <label v-if="label">{{ label }}</label>
         </div>
 
@@ -92,15 +94,6 @@ export default {
         }
     }
 
-    &.line > .separator-wrapper:before {
-        border-top: 4px solid var(--bg-site);
-        content: "";
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-    }
-
     & > .separator-wrapper {
         position: relative;
 
@@ -122,11 +115,27 @@ export default {
         font-style: italic;
         line-height: 1.4;
         opacity: .75;
-        // padding: .5rem 0 1rem 0;
     }
 
-    &.line > .note {
-        padding: 2.5rem 0 0 0;
+    &.line {
+        & > .separator-wrapper:before {
+            border-top: 4px solid var(--bg-site);
+            content: "";
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        & > .note {
+           padding: 2.5rem 0 0 0;
+        }
+
+        & > .has-label {
+            & + .note {
+               padding: 1rem 0 0;
+            }
+        }
     }
 }
 
