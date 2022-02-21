@@ -66,6 +66,13 @@ export default {
     &.medium,
     &.big {
         padding-bottom: 2rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.small {
@@ -74,24 +81,10 @@ export default {
 
     &.medium {
         padding-top: 3rem;
-
-        & > .separator-wrapper {
-
-            & > label {
-               margin-bottom: -2rem;
-            }
-        }
     }
 
     &.big {
         padding-top: 4rem;
-
-        & > .separator-wrapper {
-
-            & > label {
-               margin-bottom: -2rem;
-            }
-        }
     }
 
     & > .separator-wrapper {
