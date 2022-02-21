@@ -123,12 +123,6 @@ export default {
         & > .note {
            padding: 2.5rem 0 0 0;
         }
-
-        & > .has-label {
-            & + .note {
-               padding: 1rem 0 0;
-            }
-        }
     }
 }
 
