@@ -385,7 +385,7 @@ class RendererContext {
             baseCode += this.renderer.plugins.runInsertions(optionName, this.renderer, context);
         }
 
-        return baseCode;
+        return baseCode.trim();
     }
 
     getCustomHTMLCodeObject (object, context) {
@@ -406,7 +406,7 @@ class RendererContext {
                 code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer, context);
             }
 
-            object[key] = code;
+            object[key] = code.trim();
         }
 
         return object;
