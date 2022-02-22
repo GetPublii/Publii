@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.3.1.0",
+    "version": "2.4.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -83,7 +83,7 @@
             "type": "separator",
             "label": "Front page",
             "group": "Layout",
-            "size": "big"
+            "size": "small"
         },
         {
             "name": "frontSource",
@@ -628,54 +628,431 @@
             "type": "separator",
             "label": "Main font settings",
             "group": "Fonts",
+            "note": "To see a list of all available fonts, and learn about their specifications, such as typeface and the full range of weights, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
             "size": "small"
-        },        
+        },    
         {
-            "name": "fontFamily",
-            "label": "Font family",
+            "name": "fontBody",
+            "label": "Body font",
             "group": "Fonts",
-            "note": "The 'OS Default Font' option will use the native system fonts of the browser your site visitors are using, providing a boost to speed and performance.<p><strong>Please note:</strong> when using Google Fonts, the IP address of your website visitors will be sent to Google to allow the correct fonts to be downloaded to their browser. The Google Fonts API limits the collection, storage and use of end-user data only to what is needed to deliver the fonts efficiently.</p>",
-            "value": "font-pair-0",
+            "value": "system-ui",
             "type": "select",
             "options": [
                 {
-                    "label": "OS Default Font + OS Default Font",
-                    "value": "font-pair-0"
+                    "label": "OS Default Font",
+                    "value": "system-ui"
                 },
                 {
-                    "label": "PT Serif + OS Default Font",
-                    "value": "font-pair-1"
+                    "label": "Andada Pro",
+                    "value": "andadapro"
                 },
                 {
-                    "label": "Lora + OS Default Font",
-                    "value": "font-pair-2"
+                    "label": "Antonio",
+                    "value": "antonio"
                 },
                 {
-                    "label": "Playfair Display + OS Default Font",
-                    "value": "font-pair-3"
+                    "label": "Archivo Narrow",
+                    "value": "archivonarrow"
                 },
                 {
-                    "label": "Rubik + OS Default Font",
-                    "value": "font-pair-4"
+                    "label": "Asap",
+                    "value": "asap"
                 },
                 {
-                    "label": "Ubuntu + OS Default Font",
-                    "value": "font-pair-5"
+                    "label": "Besley",
+                    "value": "besley"
                 },
                 {
-                    "label": "Open Sans + Roboto",
-                    "value": "font-pair-6"
+                    "label": "Big Shoulders Display",
+                    "value": "bigshouldersdisplay"
                 },
                 {
-                    "label": "Roboto Condensed + OS Default Font",
-                    "value": "font-pair-7"
+                    "label": "Bitter",
+                    "value": "bitter"
                 },
                 {
-                    "label": "Cairo + Maitree",
-                    "value": "font-pair-8"
+                    "label": "Brygada 1918",
+                    "value": "brygada1918"
+                },
+                {
+                    "label": "Cairo",
+                    "value": "cairo"
+                },
+                {
+                    "label": "Comfortaa",
+                    "value": "comfortaa"
+                },
+                {
+                    "label": "Dancing Script",
+                    "value": "dancingscript"
+                },
+                {
+                    "label": "Domine",
+                    "value": "domine"
+                },
+                {
+                    "label": "Dosis",
+                    "value": "dosis"
+                },
+                {
+                    "label": "Exo",
+                    "value": "exo"
+                },
+                {
+                    "label": "Faustina",
+                    "value": "faustina"
+                },
+                {
+                    "label": "Glory",
+                    "value": "glory"
+                },
+                {
+                    "label": "Gluten",
+                    "value": "gluten"
+                },
+                {
+                    "label": "Heebo",
+                    "value": "heebo"
+                },
+                {
+                    "label": "JetBrains Mono",
+                    "value": "jetbrainsmono"
+                },
+                {
+                    "label": "Jura",
+                    "value": "jura"
+                },
+                {
+                    "label": "Karla",
+                    "value": "karla"
+                },
+                {
+                    "label": "Kreon",
+                    "value": "kreon"
+                },
+                {
+                    "label": "Lemonada",
+                    "value": "lemonada"
+                },
+                {
+                    "label": "Libre Franklin",
+                    "value": "librefranklin"
+                },
+                {
+                    "label": "Lora",
+                    "value": "lora"
+                },
+                {
+                    "label": "Manuale",
+                    "value": "manuale"
+                },
+                {
+                    "label": "Manrope",
+                    "value": "manrope"
+                },
+                {
+                    "label": "Merriweather Sans",
+                    "value": "merriweathersans"
+                },
+                {
+                    "label": "Montserrat",
+                    "value": "montserrat"
+                },
+                {
+                    "label": "Nunito",
+                    "value": "nunito"
+                },
+                {
+                    "label": "Oswald",
+                    "value": "oswald"
+                },
+                {
+                    "label": "Petrona",
+                    "value": "petrona"
+                },
+                {
+                    "label": "Playfair Display",
+                    "value": "playfairdisplay"
+                },
+                {
+                    "label": "Public Sans",
+                    "value": "publicsans"
+                },
+                {
+                    "label": "Quicksand",
+                    "value": "quicksand"
+                },
+                {
+                    "label": "Raleway",
+                    "value": "raleway"
+                },
+                {
+                    "label": "Red Hat Mono",
+                    "value": "redhatmono"
+                },
+                {
+                    "label": "Roboto Slab",
+                    "value": "robotoslab"
+                },
+                {
+                    "label": "Rubik",
+                    "value": "rubik"
+                },
+                {
+                    "label": "Ruda",
+                    "value": "ruda"
+                },
+                {
+                    "label": "Source Code Pro",
+                    "value": "sourcecodepro"
+                },
+                {
+                    "label": "Spartan",
+                    "value": "spartan"
+                },
+                {
+                    "label": "Urbanist",
+                    "value": "urbanist"
+                },
+                {
+                    "label": "Yanone Kaffeesatz",
+                    "value": "yanonekaffeesatz"
                 }
             ]
-        },
+        },  
+
+        {
+            "name": "fontHeadings",
+            "label": "Headings font (H1-H6)",
+            "group": "Fonts",
+            "value": "system-ui",
+            "type": "select",
+            "options": [
+                {
+                    "label": "OS Default Font",
+                    "value": "system-ui"
+                },
+                {
+                    "label": "Andada Pro",
+                    "value": "andadapro"
+                },
+                {
+                    "label": "Antonio",
+                    "value": "antonio"
+                },
+                {
+                    "label": "Archivo Narrow",
+                    "value": "archivonarrow"
+                },
+                {
+                    "label": "Asap",
+                    "value": "asap"
+                },
+                {
+                    "label": "Besley",
+                    "value": "besley"
+                },
+                {
+                    "label": "Big Shoulders Display",
+                    "value": "bigshouldersdisplay"
+                },
+                {
+                    "label": "Bitter",
+                    "value": "bitter"
+                },
+                {
+                    "label": "Brygada 1918",
+                    "value": "brygada1918"
+                },
+                {
+                    "label": "Cairo",
+                    "value": "cairo"
+                },
+                {
+                    "label": "Comfortaa",
+                    "value": "comfortaa"
+                },
+                {
+                    "label": "Dancing Script",
+                    "value": "dancingscript"
+                },
+                {
+                    "label": "Domine",
+                    "value": "domine"
+                },
+                {
+                    "label": "Dosis",
+                    "value": "dosis"
+                },
+                {
+                    "label": "Exo",
+                    "value": "exo"
+                },
+                {
+                    "label": "Faustina",
+                    "value": "faustina"
+                },
+                {
+                    "label": "Glory",
+                    "value": "glory"
+                },
+                {
+                    "label": "Gluten",
+                    "value": "gluten"
+                },
+                {
+                    "label": "Heebo",
+                    "value": "heebo"
+                },
+                {
+                    "label": "JetBrains Mono",
+                    "value": "jetbrainsmono"
+                },
+                {
+                    "label": "Jura",
+                    "value": "jura"
+                },
+                {
+                    "label": "Karla",
+                    "value": "karla"
+                },
+                {
+                    "label": "Kreon",
+                    "value": "kreon"
+                },
+                {
+                    "label": "Lemonada",
+                    "value": "lemonada"
+                },
+                {
+                    "label": "Libre Franklin",
+                    "value": "librefranklin"
+                },
+                {
+                    "label": "Lora",
+                    "value": "lora"
+                },
+                {
+                    "label": "Manuale",
+                    "value": "manuale"
+                },
+                {
+                    "label": "Manrope",
+                    "value": "manrope"
+                },
+                {
+                    "label": "Merriweather Sans",
+                    "value": "merriweathersans"
+                },
+                {
+                    "label": "Montserrat",
+                    "value": "montserrat"
+                },
+                {
+                    "label": "Nunito",
+                    "value": "nunito"
+                },
+                {
+                    "label": "Oswald",
+                    "value": "oswald"
+                },
+                {
+                    "label": "Petrona",
+                    "value": "petrona"
+                },
+                {
+                    "label": "Playfair Display",
+                    "value": "playfairdisplay"
+                },
+                {
+                    "label": "Public Sans",
+                    "value": "publicsans"
+                },
+                {
+                    "label": "Quicksand",
+                    "value": "quicksand"
+                },
+                {
+                    "label": "Raleway",
+                    "value": "raleway"
+                },
+                {
+                    "label": "Red Hat Mono",
+                    "value": "redhatmono"
+                },
+                {
+                    "label": "Roboto Slab",
+                    "value": "robotoslab"
+                },
+                {
+                    "label": "Rubik",
+                    "value": "rubik"
+                },
+                {
+                    "label": "Ruda",
+                    "value": "ruda"
+                },
+                {
+                    "label": "Source Code Pro",
+                    "value": "sourcecodepro"
+                },
+                {
+                    "label": "Spartan",
+                    "value": "spartan"
+                },
+                {
+                    "label": "Urbanist",
+                    "value": "urbanist"
+                },
+                {
+                    "label": "Yanone Kaffeesatz",
+                    "value": "yanonekaffeesatz"
+                }
+            ]
+        }, 
+        {
+            "name": "fontMenu",
+            "label": "Menu font",
+            "group": "Fonts",
+            "value": "var(--body-font)",
+            "type": "select",
+            "options": [
+                {
+                    "label": "OS Default Font",
+                    "value": "system-ui"
+                },
+                {
+                    "label": "Select the font used for the Body",
+                    "value": "var(--body-font)"
+                },
+                {
+                    "label": "Select the font used for the Headings",
+                    "value": "var(--heading-font)"
+                }
+            ]
+        }, 
+        {
+            "name": "fontLogo",
+            "label": "Logo font",
+            "group": "Fonts",
+            "value": "var(--body-font)",
+            "type": "select",
+            "options": [
+                {
+                    "label": "OS Default Font",
+                    "value": "system-ui"
+                },
+                {
+                    "label": "Select the font used for the Body",
+                    "value": "var(--body-font)"
+                },
+                {
+                    "label": "Select the font used for the Headings",
+                    "value": "var(--heading-font)"
+                }
+            ]
+        }, 
+        
         {
             "name": "separator",
             "type": "separator",
@@ -696,7 +1073,7 @@
         },
         {
             "name": "maxFontSize",
-            "label": "Maximum font size",
+            "label": "Maximum font sum",
             "group": "Fonts",
             "note": "The font-size of the root element in REM unit",
             "value": "1.2",
@@ -704,86 +1081,41 @@
             "min": 1,
             "max": 3,
             "step": 0.05
-        },  
+        },   
         {
             "name": "separator",
             "type": "separator",
             "label": "",
             "group": "Fonts",
-            "size": "big"
+            "note": "Note that not all fonts support the full range of weights; instead, they will typically support a standard range between 400 and 700. To see the exact range available for the selected body font, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
+            "size": "small"
         },
         {
-            "name": "fontNormalWeight",
+            "name": "fontBodyWeight",
             "label": "Normal font weight",
             "group": "Fonts",            
             "value": "400",
-            "type": "select",
-            "options": [
-                {
-                    "label": "300",
-                    "value": "300"
-                },
-                {
-                    "label": "400",
-                    "value": "400"
-                },
-                {
-                    "label": "500",
-                    "value": "500"
-                },
-                {
-                    "label": "600",
-                    "value": "600"
-                },
-                {
-                    "label": "700",
-                    "value": "700"
-                },
-                {
-                    "label": "900",
-                    "value": "900"
-                }
-            ]
+            "type": "range",
+            "min": 100,
+            "max": 900,
+            "step": 1
         },
         {
             "name": "fontBoldWeight",
             "label": "Bold font weight",
             "group": "Fonts",            
-            "value": "600",
-            "type": "select",
-            "options": [
-                {
-                    "label": "300",
-                    "value": "300"
-                },
-                {
-                    "label": "400",
-                    "value": "400"
-                },
-                {
-                    "label": "500",
-                    "value": "500"
-                },
-                {
-                    "label": "600",
-                    "value": "600"
-                },
-                {
-                    "label": "700",
-                    "value": "700"
-                },
-                {
-                    "label": "900",
-                    "value": "900"
-                }
-            ]
+            "value": "700",
+            "type": "range",
+            "min": 100,
+            "max": 900,
+            "step": 1
         },
         {
             "name": "separator",
             "type": "separator",
             "label": "",
             "group": "Fonts",
-            "size": "big"
+            "size": "small"
         },
         {
             "name": "lineHeight",
@@ -806,35 +1138,12 @@
         {
             "name": "fontHeadignsWeight",
             "label": "H1-H6 font weight",
-            "group": "Fonts",            
+            "group": "Fonts",         
             "value": "700",
-            "type": "select",
-            "options": [
-                {
-                    "label": "300",
-                    "value": "300"
-                },
-                {
-                    "label": "400",
-                    "value": "400"
-                },
-                {
-                    "label": "500",
-                    "value": "500"
-                },
-                {
-                    "label": "600",
-                    "value": "600"
-                },
-                {
-                    "label": "700",
-                    "value": "700"
-                },
-                {
-                    "label": "900",
-                    "value": "900"
-                }
-            ]
+            "type": "range",
+            "min": 100,
+            "max": 900,
+            "step": 1
         },
         {
             "name": "fontHeadingsTransform",
@@ -863,7 +1172,7 @@
         },
 
         {
-            "name": "search",
+            "name": "createSearchPage",
             "label": "Search",
             "group": "Search",
             "value": false,
@@ -877,7 +1186,7 @@
             "value": "",
             "type": "text",
             "dependencies": [{
-                "field": "search",
+                "field": "createSearchPage",
                 "value": "true"
             }]
         },
@@ -889,7 +1198,7 @@
             "value": "q",
             "type": "text",
             "dependencies": [{
-                "field": "search",
+                "field": "createSearchPage",
                 "value": "true"
             }]
         },
@@ -953,16 +1262,6 @@
             "label": "WhatsApp",
             "value": false,
             "type": "checkbox"
-        },
-
-        {
-            "name": "commentDisqusShortname",
-            "label": "Disqus shortname",
-            "group": "Comments",
-            "placeholder": "Please enter your Disqus shortname",
-            "note": "A shortname is the unique identifier assigned to a Disqus site. Please visit https://help.disqus.com/ to find more details. <br /><br /><span style=\"background: #fff8d4\">Do not forget to enable comments under Post Options tab.</span>",
-            "value": "",
-            "type": "text"
         },
         {
             "name": "backToTopButton",
@@ -1081,7 +1380,7 @@
             "name": "copyrightText",
             "label": "Copyright text",
             "group": "Footer",
-            "value": "Powered by <a href=\"https://getpublii.com\" target=\"_blank\" rel=\"nofollow noopener\">Publii</a>",
+            "value": "Powered by Publii",
             "type": "wysiwyg"
         },
         {
@@ -1523,10 +1822,11 @@
     "files": {
         "ignoreAssets": ["scss", ".DS_Store"],
         "assetsPath": "assets",
+        "useDynamicAssets": true,
         "partialsPath": "partials",
         "responsiveImages": {
             "contentImages": {
-                "sizes": "(max-width: 48em) 100vw, 768px",
+                "sizes": "100vw",
                 "dimensions": {
                     "xs": {
                         "width": 300,
@@ -1596,7 +1896,7 @@
             },
 
             "tagImages": {
-                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "sizes": "100vw",
                 "dimensions": {
                     "xs": {
                         "width": 300,
@@ -1626,7 +1926,7 @@
             },
 
             "authorImages": {
-                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "sizes": "100vw",
                 "dimensions": {
                     "xs": {
                         "width": 300,
@@ -1656,7 +1956,7 @@
             },
 
             "optionImages": {
-                "sizes": "(max-width: 1600px) 100vw, 1600px",
+                "sizes": "100vw",
                 "dimensions": {
                     "xs": {
                         "width": 300,

@@ -1,11 +1,6 @@
 {
     "partials": {
-        
-        "disqus": {
-            "noscript1": "Please enable JavaScript to view the",
-            "noscript2": "comments powered by Disqus."
-        },
-        
+
         "menu": {
             "label": "Menu"
         },
