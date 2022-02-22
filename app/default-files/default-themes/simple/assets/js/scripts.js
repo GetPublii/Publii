@@ -540,7 +540,7 @@ if (searchButton) {
 var backtotop = document.getElementById("js-back-to-top");
 window.addEventListener('scroll', function (e) {
 	y = window.scrollY;
-	if (y > 200) {
+	if (y > 400) {
 		backtotop.classList.add("is-visible");
 	} else {
 		backtotop.classList.remove("is-visible");
