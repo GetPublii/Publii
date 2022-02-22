@@ -126,7 +126,9 @@ class PreviewEvents {
                     let errorTitle = 'core.rendering.renderingProcessCrashed';
 
                     if (data.result && data.result[0] && data.result[0].message) {
-                        errorTitle = 'core.rendering.renderingProcessFiled';
+                        errorTitle = {
+                            translation: 'core.rendering.renderingProcessFiled'
+                        };
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }
 
