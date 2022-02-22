@@ -26,6 +26,14 @@
                     icon="settings">
                     {{ $t('ui.goToPluginStandardOptions') }}
                 </p-button>
+
+                <p-button
+                    v-if="pluginStandardOptionsVisible"
+                    @click.native="saveSettings"
+                    slot="buttons"
+                    :disabled="buttonsLocked">
+                    {{ $t('settings.saveSettings') }}
+                </p-button>
             </p-header>
 
             <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
