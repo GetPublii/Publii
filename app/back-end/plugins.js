@@ -131,7 +131,7 @@ class Plugins {
     }
 
     /*
-     * Remove specific language from the app directory
+     * Remove specific plugin from the app directory
      */
     removePlugin (directory) {
         fs.removeSync(path.join(this.pluginsPath, directory));

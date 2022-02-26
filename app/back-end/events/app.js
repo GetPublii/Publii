@@ -171,12 +171,7 @@ class AppEvents {
                     let zipPath = path.join(themesLoader.themesPath, '__TEMP__');
                     fs.mkdirSync(zipPath);
 
-                    let stream = fs.createReadStream(config.sourcePath)
-                                 .pipe(unzip.Extract({
-                                    path: zipPath
-                                 }));
-
-                    stream.on('finish', function() {
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
                         let dirs = fs.readdirSync(zipPath).filter(function(file) {
                             if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
                                 return false;
@@ -257,12 +252,7 @@ class AppEvents {
                     let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
                     fs.mkdirSync(zipPath);
 
-                    let stream = fs.createReadStream(config.sourcePath)
-                                 .pipe(unzip.Extract({
-                                    path: zipPath
-                                 }));
-
-                    stream.on('finish', function() {
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
                         let dirs = fs.readdirSync(zipPath).filter(function(file) {
                             if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
                                 return false;
@@ -343,12 +333,7 @@ class AppEvents {
                     let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
                     fs.mkdirSync(zipPath);
 
-                    let stream = fs.createReadStream(config.sourcePath)
-                                 .pipe(unzip.Extract({
-                                    path: zipPath
-                                 }));
-
-                    stream.on('finish', function() {
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
                         let dirs = fs.readdirSync(zipPath).filter(function(file) {
                             if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
                                 return false;
