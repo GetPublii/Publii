@@ -4,7 +4,7 @@
         class="overlay">
         <div class="popup">
             <p class="message">
-                Change post author:
+                {{ $t('author.changePostAuthor') }}:
             </p>
 
             <dropdown
@@ -16,13 +16,13 @@
                 <p-button
                     type="medium no-border-radius half-width"
                     @click.native="changeAuthor">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button
                     type="medium no-border-radius half-width cancel-popup"
                     @click.native="cancel">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -95,16 +95,15 @@ export default {
     z-index: 100005;
 }
 
-.popup {  
+.popup {
     max-width: 48rem;
-    min-width: 48rem;  
-    padding: 4rem;   
+    min-width: 48rem;
+    padding: 4rem;
 }
 
 .message {
-    color: var(--gray-4);
-    font-size: 1.8rem;   
-    padding: 0 0 4rem 0;   
+    font-size: 1.8rem;
+    padding: 0 0 4rem 0;
 }
 
 .buttons {
@@ -114,4 +113,9 @@ export default {
     text-align: center;
     top: 1px;
 }
+
+#author-select {
+    margin-top: -1rem;
+}
+
 </style>

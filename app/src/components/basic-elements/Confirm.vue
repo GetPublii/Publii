@@ -45,9 +45,9 @@ export default {
             textCentered: false,
             okClick: () => false,
             cancelClick: () => false,
-            okLabel: 'OK',
+            okLabel: this.$t('ui.ok'),
             isDanger: false,
-            cancelLabel: 'Cancel',
+            cancelLabel: this.$t('ui.cancel'),
             defaultText: ''
         };
     },
@@ -69,11 +69,11 @@ export default {
                 this.textCentered = config.textCentered || false;
                 this.hasInput = config.hasInput || false;
                 this.inputIsPassword = config.inputIsPassword || false;
-                this.okLabel = config.okLabel || "OK";
-                this.cancelLabel = config.cancelLabel || "Cancel";
-                this.defaultText = config.defaultText || "";   
-                this.isDanger = config.isDanger || false;             
-                
+                this.okLabel = config.okLabel || this.$t('ui.ok');
+                this.cancelLabel = config.cancelLabel || this.$t('ui.cancel');
+                this.defaultText = config.defaultText || "";
+                this.isDanger = config.isDanger || false;
+
                 if(config.okClick) {
                     this.okClick = config.okClick;
                 } else {
@@ -88,13 +88,12 @@ export default {
 
                 setTimeout(() => {
                     if (config.hasInput) {
-                        console.log(this.$refs);
                         this.$refs.input.$el.querySelector('input').focus();
                     }
                 }, 100);
             }, 0);
         });
-        
+
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
@@ -142,14 +141,14 @@ export default {
     z-index: 100005;
 }
 
-.popup {   
+.popup {
     max-width: 60rem;
-    min-width: 60rem;    
-    padding: 4rem;   
+    min-width: 60rem;
+    padding: 4rem;
 }
 
 .message {
-    padding: 0;   
+    padding: 0;
 
     & + * {
         margin-top: 2rem;

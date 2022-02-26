@@ -18,13 +18,13 @@
                 <p-button
                     type="medium danger no-border-radius half-width"
                     :onClick="copyToClipboard">
-                    Copy to clipboard
+                    {{ $t('ui.copyToClipboard') }}
                 </p-button>
 
                 <p-button
                     type="medium no-border-radius half-width cancel-popup"
                     :onClick="close">
-                    Close
+                    {{ $t('ui.close') }}
                 </p-button>
             </div>
         </div>
@@ -68,8 +68,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {   
-    padding: 4rem;   
+.popup {
+    padding: 4rem;
     width: 60rem;
 
     .error-log {
@@ -89,8 +89,8 @@ textarea {
     width: 1px;
 }
 
-.message { 
-    padding: 0 0 4rem 0;   
+.message {
+    padding: 0 0 4rem 0;
 }
 
 .buttons {

@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 import Utils from './../../helpers/utils.js';
 
 export default {
@@ -118,9 +117,9 @@ export default {
                 let urlToOpen = Utils.getValidUrl(link[1]);
 
                 if (urlToOpen) {
-                    shell.openExternal(urlToOpen);
+                    mainProcessAPI.shellOpenExternal(urlToOpen);
                 } else {
-                    alert('Sorry! This link seems to be invalid.');
+                    alert(this.$t('link.linkInvalidMsg'));
                 }
             }
         },
@@ -152,11 +151,11 @@ export default {
                 if(url && url[1] && url[1].indexOf('#INTERNAL_LINK#') === -1) {
                     previewButton.css('opacity', 1);
                     previewButton.css('cursor', 'pointer');
-                    previewButton.attr('title', 'Preview this link in browser');
+                    previewButton.attr('title', this.$t('link.previewLinkInBrowser'));
                 } else {
                     previewButton.css('opacity', .25);
                     previewButton.css('cursor', 'not-allowed');
-                    previewButton.attr('title', 'You can preview only external links in the post editor');
+                    previewButton.attr('title', this.$t('link.previewOnlyExternalLinksMsg'));
                 }
             } else {
                 $('#link-toolbar').css('display', 'none');

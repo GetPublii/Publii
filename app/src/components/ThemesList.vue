@@ -11,13 +11,13 @@
         <div
             class="add-more-theme">
                 <a href="https://marketplace.getpublii.com/" target="_blank" rel="noopener noreferrer">
-                    <icon                   
+                    <icon
                         customWidth="50"
                         customHeight="46"
                         properties="not-clickable"
                         name="add" />
-                
-                    <h3>Get more themes</h3>  
+
+                    <h3>{{ $t('theme.getMoreThemes') }}</h3>
                 </a>
         </div>
 
@@ -30,13 +30,12 @@
             v-if="themeIsOver"
             :hasBorder="true"
             :isBlue="true">
-            <div>Drop your theme here</div>
+            <div>{{ $t('theme.dropYourThemeHere') }}</div>
         </overlay>
     </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import ThemesListItem from './ThemesListItem';
 
 export default {
@@ -66,11 +65,11 @@ export default {
         uploadTheme (e) {
             this.themeIsOver = false;
 
-            ipcRenderer.send('app-theme-upload', {
+            mainProcessAPI.send('app-theme-upload', {
                 sourcePath: e.dataTransfer.files[0].path
             });
 
-            ipcRenderer.once('app-theme-uploaded', this.$parent.uploadedTheme);
+            mainProcessAPI.receiveOnce('app-theme-uploaded', this.$parent.uploadedTheme);
         }
     }
 }
@@ -82,8 +81,7 @@ export default {
 .themes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 5rem 3rem; 
-    overflow: hidden;
+    gap: 3rem;
     position: relative;
     user-select: none;
 
@@ -94,46 +92,48 @@ export default {
     }
 }
 
-.add-more-theme {   
-    background: var(--gray-1);   
-    border: 1px solid transparent;  
-    border-radius: 4px;
-    margin: 0;   
+.add-more-theme {
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);      
+    height: 100%;
     transition: var(--transition);
-    
+    text-align: center;
+
     &:hover {
          background: var(--bg-primary);
-         border-color: var(--secondary-color);
+         border-color: var(--color-primary);
          box-shadow: 0 0 26px rgba(black, .07);
-        
+
          svg {
-             fill: var(--primary-color);
+             fill: var(--color-primary);
          }
-        
+
          h3 {
-             color: var(--primary-color);
+             color: var(--color-primary);
          }
     }
-    
-    & > a {  
+
+    & > a {
          align-items: center;
          display: flex;
          flex-direction: column;
          height: 100%;
-         justify-content: center;        
+         justify-content: center;
          width: 100%;
     }
-    
+
     h3 {
          color: var(--text-primary-color);
-         font-size: 1.6rem; 
-         font-weight: 500; 
-         margin-bottom: 0;    
+         font-size: $app-font-base;
+         font-weight: var(--font-weight-semibold);
+         margin-bottom: 0;
          transition: inherit;
     }
-    
+
     svg {
-         fill: var(--gray-5);   
+         fill: var(--icon-primary-color);
          transition: inherit;
     }
 }

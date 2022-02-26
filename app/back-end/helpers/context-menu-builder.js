@@ -1,9 +1,11 @@
-const { remote, shell } = require('electron');
-const { Menu, MenuItem } = remote;
-
+const electron = require('electron');
+const shell = electron.shell;
+const Menu = electron.Menu;
+const MenuItem = electron.MenuItem;
 module.exports = class ContextMenuBuilder {
-    constructor () {
+    constructor (webContents) {
         this.menu = null;
+        this.target = webContents;
         this.translations = {
             cut: 'Cut',
             copy: 'Copy',
@@ -28,7 +30,7 @@ module.exports = class ContextMenuBuilder {
 
     async buildMenuForElement(info) {
         if (info.isEditable || (info.inputFieldType && info.inputFieldType !== 'none')) {
-        return await this.buildMenuForTextInput(info);
+            return await this.buildMenuForTextInput(info);
         }
     }
 
@@ -45,25 +47,23 @@ module.exports = class ContextMenuBuilder {
     }
 
     async addSpellingItems(menu, menuInfo) {
-        let target = remote.getCurrentWebContents();
-        
         if (!menuInfo.misspelledWord || menuInfo.misspelledWord.length === 0) {
-        return menu;
+            return menu;
         }
 
         let corrections = menuInfo.dictionarySuggestions;
 
         if (corrections && corrections.length) {
-        corrections.forEach((correction) => {
-            let item = new MenuItem({
-            label: correction,
-            click: () => target.replaceMisspelling(correction)
+            corrections.forEach((correction) => {
+                let item = new MenuItem({
+                    label: correction,
+                    click: () => this.target.replaceMisspelling(correction)
+                });
+
+                menu.append(item);
             });
 
-            menu.append(item);
-        });
-
-        this.addSeparator(menu);
+            this.addSeparator(menu);
         }
 
         return menu;
@@ -88,40 +88,34 @@ module.exports = class ContextMenuBuilder {
         return menu;
     }
 
-    addCut(menu, menuInfo) {
-        let target = remote.getCurrentWebContents();
-        
+    addCut(menu, menuInfo) {        
         menu.append(new MenuItem({
-        label: this.translations.cut,
-        accelerator: 'CommandOrControl+X',
-        enabled: menuInfo.editFlags.canCut,
-        click: () => target.cut()
+            label: this.translations.cut,
+            accelerator: 'CommandOrControl+X',
+            enabled: menuInfo.editFlags.canCut,
+            click: () => this.target.cut()
         }));
 
         return menu;
     }
 
     addCopy(menu, menuInfo) {
-        let target = remote.getCurrentWebContents();
-        
         menu.append(new MenuItem({
-        label: this.translations.copy,
-        accelerator: 'CommandOrControl+C',
-        enabled: menuInfo.editFlags.canCopy,
-        click: () => target.copy()
+            label: this.translations.copy,
+            accelerator: 'CommandOrControl+C',
+            enabled: menuInfo.editFlags.canCopy,
+            click: () => this.target.copy()
         }));
 
         return menu;
     }
 
     addPaste(menu, menuInfo) {
-        let target = remote.getCurrentWebContents();
-        
         menu.append(new MenuItem({
-        label: this.translations.paste,
-        accelerator: 'CommandOrControl+V',
-        enabled: menuInfo.editFlags.canPaste,
-        click: () => target.paste()
+            label: this.translations.paste,
+            accelerator: 'CommandOrControl+V',
+            enabled: menuInfo.editFlags.canPaste,
+            click: () => this.target.paste()
         }));
 
         return menu;

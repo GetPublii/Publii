@@ -1,10 +1,14 @@
 <template>
-    <div 
-        class="tabs"
+    <div
+        :class="{
+            'tabs': true,
+            'tabs-horizontal': isHorizontal
+        }"
         @click="detectInternalNavigation">
         <ul>
             <li
                 v-for="(item, index) in items"
+                :key="index"
                 :class="{ 'active': item === activeItem}"
                 @click="toggle(item)">
                 {{ item }}
@@ -14,6 +18,7 @@
         <div class="content">
             <div
                 v-for="(item, index) in items"
+                :key="index"
                 :class="{ 'tab': true, 'active': item === activeItem}">
                 <slot :name="'tab-' + index"></slot>
             </div>
@@ -36,6 +41,10 @@ export default {
         onToggle: {
             default: () => false,
             type: Function
+        },
+        isHorizontal: {
+            defalt: false,
+            type: Boolean
         }
     },
     data () {
@@ -92,40 +101,74 @@ export default {
 
     @include clearfix;
 
-    & > ul {        
+    &.tabs-horizontal {
+        flex-direction: column;
+
+        & > ul {
+            border-bottom: 2px solid var(--input-border-color);
+            text-align: left;
+            width: 100%;
+
+            & > li {
+                color: var(--text-light-color);
+                display: inline-block;
+                margin: 0 2rem;
+                padding: 0 0 1.7rem 0;
+                top: 2px;
+                width: auto;
+
+                &.active {
+                    background: none!important;
+                    border-bottom: 2px solid var(--button-tertiary-bg);
+                    border-radius: 0;
+                    color: var(--tab-color);
+                }
+
+                &:hover {
+                    background: none;
+                    border-radius: 0;
+                    color: var(--tab-color);
+                }
+
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+
+        & > .content {
+            border: none;
+            margin-top: 3rem;
+            padding-left: 0;
+            width: 100%;
+        }
+    }
+
+    & > ul {
         list-style-type: none;
         margin: 0;
         padding: 0;
         user-select: none;
         width: 18rem;
 
-        & > li {           
+        & > li {
+            border-radius: var(--border-radius);
             color: var(--tab-color);
             cursor: pointer;
             padding: 0.8rem 1.2rem;
             position: relative;
+            transition: var(--transition);
             width: 100%;
 
             &.active {
                 background: var(--tab-active-bg)!important;
-                border-radius: 3px;
-                color: var(--tab-active-color);
+                border-radius: var(--border-radius);
+                color: var(--tab-active-color) !important;
                 transition: all .125s ease-out;
-
-                &:after {
-                   background: var(--bg-primary);
-                    content: "";
-                    height: 100%;
-                    position: absolute;
-                    right: -1px;
-                    top: 0;
-                    width: 1px;
-                }
             }
 
             &:hover {
-                background: var(--tab-hover-color);
-                border-radius: 3px;
+                color: var(--tab-color-hover);
             }
 
             &:last-child {
@@ -135,7 +178,7 @@ export default {
     }
 
     & > .content {
-        border-left: 1px solid var(--input-border-color);
+        border-left: 5px solid var(--bg-site);
         margin-left: auto;
         padding-left: 4rem;
         width: calc( 100% - 22rem);
@@ -144,11 +187,16 @@ export default {
             display: none;
 
             &.active {
-                display: block;            
+                display: block;
             }
 
             .msg {
                 margin: 2rem 0;
+            }
+
+            .separator:first-child {
+                padding-top: 0 !important;
+                
             }
         }
     }
@@ -158,11 +206,11 @@ export default {
  * Responsive improvements
  */
 @media (max-height: 900px) {
-    
+
     .tabs > ul {
         width: 15rem;
     }
-    
+
     .tabs > ul > li {
         font-size: 1.5rem;
     }
@@ -174,11 +222,11 @@ export default {
 }
 
 @media (max-width: 1400px) {
-    
+
     .tabs > ul {
         width: 15rem;
     }
-    
+
     .tabs > ul > li {
         font-size: 1.5rem;
     }

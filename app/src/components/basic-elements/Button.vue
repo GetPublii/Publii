@@ -56,9 +56,11 @@ export default {
             return {
                 'button': true,
                 'button-primary': types.indexOf('primary') > -1,
+                'button-secondary': types.indexOf('secondary') > -1,
                 'button-success': types.indexOf('success') > -1,
                 'button-danger': types.indexOf('danger') > -1,
                 'button-error': types.indexOf('error') > -1,
+                'button-green': types.indexOf('green') > -1,
                 'button-outline': types.indexOf('outline') > -1,
                 'button-muted': types.indexOf('muted') > -1,
                 'button-cancel-popup': types.indexOf('cancel-popup') > -1,
@@ -80,6 +82,8 @@ export default {
                 'button-active': types.indexOf('active') > -1,
                 'button-delete': types.indexOf('delete') > -1,
                 'button-clean': types.indexOf('clean') > -1,
+                'button-clean-invert': types.indexOf('clean-invert') > -1,
+                'button-back': types.indexOf('back') > -1,
             }
         }
     }
@@ -96,18 +100,16 @@ export default {
 .button {
     background: var(--button-bg);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    font: {
-        size: 1.5rem;
-        family: $secondary-font;
-        weight: 500;
-    }
-    height: 4.2rem;
-    line-height: 4.1rem;
+    font-size: 1.4rem;
+    font-family: var(--font-base);
+    font-weight: var(--font-weight-semibold);  
+    height: 4.6rem;
+    line-height: 4.5rem;
     padding: 0 1.3rem;
     position: relative;
     transition: var(--transition);
@@ -122,34 +124,65 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-hover-bg);
+        background: var(--button-bg-hover);
         color: var(--white);
+    }
+
+    & > svg {
+        display: inline-block;
+        fill: var(--white);
+        left: 1.8rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     &-link {
        background: var(--bg-primary);
-        color: var(--primary-color);
+        color: var(--color-primary);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
             background: var(--gray-1);
-            color: var(--primary-color);
+            color: var(--color-primary);
         }
     }
 
     &-primary,
     &-success {
-        background: var(--button-green-bg);
+        background: var(--button-tertiary-bg);
+        color: var(--white);
 
         &:active,
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-green-hover-bg);
+            background: var(--button-tertiary-bg-hover);
             color: var(--white);
         }
+    }
+
+    &-secondary {
+        background: var(--button-secondary-bg);
+        color: var(--button-secondary-color);
+
+        & > svg {
+           fill: var(--button-secondary-color);
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: var(--button-secondary-bg-hover);
+            color: var(--button-secondary-color-hover);
+
+            & > svg {
+                fill: var(--button-secondary-color-hover);
+            }
+        }  
     }
 
     &-cancel-popup {
@@ -162,7 +195,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--popup-btn-cancel-hover-bg);
+            background: var(--popup-btn-cancel-bg-hover);
             color: var(--popup-btn-cancel-hover-color);
         }
     }
@@ -175,8 +208,19 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-red-hover-bg);
+            background: var(--button-red-bg-hover);
             color: var(--white);
+        }
+    }
+
+    &-green {
+        background: var(--success); 
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+             background: var(--success); 
         }
     }
 
@@ -187,7 +231,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--primary-color);
+            background: var(--color-primary);
             color: var(--white);
         }
     }
@@ -210,13 +254,13 @@ export default {
             }
         }
     }
-    
-     &-clean {
+
+    &-clean {
         background: transparent;
         box-shadow: none;
-        color: var(--link-primary-color);        
+        color: var(--link-primary-color);
         font: {
-           size: 1.5rem;           
+           size: 1.4rem;
            weight: 400;
         }
 
@@ -226,23 +270,40 @@ export default {
         &.button-active {
             background: transparent;
             box-shadow: none;
-            color: var(--link-primary-hover-color);
+            color: var(--link-primary-color-hover);
         }
     }
 
-    & > svg {
-        display: inline-block;
-        fill: var(--white);
-        left: 1.8rem;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+    &-clean-invert {
+        background: transparent;
+        box-shadow: none;
+        color: var(--link-primary-color-hover);
+        font: {
+            size: 1.4rem;
+            weight: 400;
+        }
+
+        &:active,
+        &:focus,
+        &:hover,
+        &.button-active {
+            background: transparent;
+            box-shadow: none;
+            color: var(--link-primary-color);
+        }
+    }
+
+    &-back {
+        & + .button {
+            margin-left: 2rem !important;
+        }
     }
 
     &-bottom {
-        background: var(--button-green-bg);
+        background: var(--button-tertiary-bg);
         border-radius: 0 0 3px 3px;
         display: block;
+        font-size: 1.5rem;
         height: 5.6rem;
         line-height: 5.6rem;
         padding: 0 2rem;
@@ -253,7 +314,7 @@ export default {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-green-hover-bg);
+            background: var(--button-tertiary-bg-hover);
         }
 
         & > svg {
@@ -274,7 +335,7 @@ export default {
             &:hover,
             &.button-active {
                 background: transparent;
-                box-shadow: inset 0 0 0 2px darken($color-8, 20%);
+                box-shadow: inset 0 0 0 2px var(--gray-3);
                 color: var(--text-primary-color);
 
                 &:disabled {
@@ -285,7 +346,8 @@ export default {
     }
 
     &-medium {
-        font-weight: 500;
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-semibold);
         height: 5.6rem;
         line-height: 5.5rem;
         padding: 0 2rem;
@@ -293,13 +355,13 @@ export default {
 
     &-small {
         font-size: 1.4rem;
-        font-weight: 400;
+        font-weight: var(--font-weight-normal);
         height: 3.8rem;
-        line-height: 3.9rem;
+        line-height: 3.8rem;
         padding: 0 1.4rem;
     }
-    
-    &-quarter-width {       
+
+    &-quarter-width {
         width: 25%;
     }
 
@@ -322,11 +384,11 @@ export default {
         padding-right: 1.3rem;
 
         & > svg {
-            left: 1.4rem;
+            left: 1.2rem;
         }
 
         &.button-small {
-            padding-left: 4.2rem;
+            padding-left: 3.8rem;
 
             & > svg {
                 height: 16px;
@@ -339,20 +401,21 @@ export default {
                 fill: var(--icon-primary-color);
                 transition: var(--transition);
             }
-            
+
             &:active,
             &:focus,
             &:hover {
-                
+
                & > svg {
                 fill: var(--icon-tertiary-color);
-               } 
+               }
             }
         }
-        
-        &.button-clean {
+
+        &.button-clean,
+        &.button-clean-invert {
             & > svg {
-                fill: var(--icon-primary-color);
+                fill: currentColor;
             }
         }
 
@@ -371,7 +434,7 @@ export default {
             width: 48px;
 
              & > svg {
-                fill: var(--primary-color);
+                fill: var(--color-primary);
             }
         }
 
@@ -391,15 +454,15 @@ export default {
             clear: both;
             display: block;
             height: 2rem;
-            margin: 1.1rem auto;
+            margin: 1.3rem auto;
             width: 2rem;
 
             &-white {
                 border-color: rgba(255, 255, 255, .5);
                 border-top-color: rgba(255, 255, 255, 1);
-            }           
+            }
         }
-        
+
         & > svg {
             display: none;
         }
@@ -414,7 +477,7 @@ export default {
     &-light {
         background: var(--bg-primary);
         color: var(--text-light-color);
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         padding-left: 3.8rem;
 
         & > svg {
@@ -432,20 +495,12 @@ export default {
             & > svg {
                 fill: var(--icon-tertiary-color);
             }
-        }  
-
-        &.button-delete {
-            color: var(--button-red-bg);
-            
-            & > svg {
-                fill: var(--button-red-bg);
-            }
-        }    
+        }
     }
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: var(--popup-btn-cancel-hover-bg);
+        background-color: var(--popup-btn-cancel-bg-hover);
         border-color: var(--input-border-color);
         color: var(--popup-btn-cancel-color);
         cursor: not-allowed;

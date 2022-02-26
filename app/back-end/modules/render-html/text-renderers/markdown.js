@@ -2,7 +2,7 @@ const marked = require('marked');
 
 class MarkdownToHtml {
     static parse (inputText) {
-        // Added support for image sizes - based on: https://github.com/markedjs/marked/issues/1279#issuecomment-392852986
+        // Added support for image sizes - based on: https://github.com/markedjs/marked/issues/1279#issuecomment-1000908564
         let imageSizeLink = /^!?\[((?:\[[^\[\]]*\]|\\[\[\]]?|`[^`]*`|[^\[\]\\])*?)\]\(\s*(<(?:\\[<>]?|[^\s<>\\])*>|(?:\\[()]?|\([^\s\x00-\x1f()\\]*\)|[^\s\x00-\x1f()\\])*?(?:\s+=(?:[\w%]+)?x(?:[\w%]+)?)?)(?:\s+("(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)))?\s*\)/;
         marked.Lexer.rules.inline.normal.link = imageSizeLink;
         marked.Lexer.rules.inline.gfm.link = imageSizeLink;
@@ -32,7 +32,7 @@ class MarkdownToHtml {
             renderer: overridedRenderer
         });
 
-        let outputText = marked(inputText);
+        let outputText = marked.parse(inputText);
         return outputText;
     }
 }

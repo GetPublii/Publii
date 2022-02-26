@@ -1,9 +1,9 @@
 <template>
     <div class="overlay" v-if="isVisible">
         <div class="popup">
-            <h1>Rendering ...</h1>
+            <h1>{{ $t('rendering.rendering') }}</h1>
             <p class="popup-info">
-                Please wait while the rendering process is completed.
+                {{ $t('rendering.renderingPleaseWait') }}
             </p>
 
             <progress-bar
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -46,6 +45,11 @@ export default {
             this.isHomepagePreview = false;
             this.isTagPreview = false;
             this.isAuthorPreview = false;
+            this.showPreview = true;
+
+            if (config && typeof config.showPreview !== 'undefined') {
+                this.showPreview = config.showPreview;
+            }
 
             if (config && config.homepageOnly) {
                 this.isHomepagePreview = true;
@@ -64,14 +68,14 @@ export default {
             }
         });
 
-        ipcRenderer.on('app-rendering-progress', this.renderingProgress);
+        mainProcessAPI.receive('app-rendering-progress', this.renderingProgress);
     },
     methods: {
         runRenderingPreview (itemConfig = false, mode = false) {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You have to select a theme before trying to create a preview of your website. Please go to the website settings and select a theme.',
-                    okLabel: 'Go to settings',
+                    message: this.$t('rendering.selectThemeBeforeCreatingPreviewMsg'),
+                    okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         let siteName = this.$route.params.name;
                         this.$route.push('/site/' + siteName + '/settings/');
@@ -84,7 +88,8 @@ export default {
             let renderConfig = {
                 "site": this.$store.state.currentSite.config.name,
                 "theme": this.$store.state.currentSite.config.theme,
-                "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
+                "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled,
+                "showPreview": this.showPreview
             };
 
             if (mode === 'post' && itemConfig) {
@@ -102,15 +107,10 @@ export default {
                 renderConfig.itemID = itemConfig.itemID;
             }
 
-            ipcRenderer.send('app-preview-render', renderConfig);
+            mainProcessAPI.send('app-preview-render', renderConfig);
 
-            ipcRenderer.once('app-preview-rendered', (event, data) => {
-                if(data.status === true) {
-                    ipcRenderer.send('app-preview-show', {
-                        "site": this.$store.state.currentSite.config.name,
-                        "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled
-                    });
-
+            mainProcessAPI.receiveOnce('app-preview-rendered', (data) => {
+                if (data.status === true) {
                     if (mode === 'post' || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
                             this.isVisible = false;
@@ -118,15 +118,15 @@ export default {
                     }
                 } else {
                     this.$bus.$emit('alert-display', {
-                        message: 'An error occured during creating the preview.'
+                        message: this.$t('rendering.errorDuringPreviewCreatinMsg')
                     });
                 }
             });
 
-            ipcRenderer.removeListener('app-preview-render-error', this.renderError);
-            ipcRenderer.once('app-preview-render-error', this.renderError);
+            mainProcessAPI.stopReceive('app-preview-render-error', this.renderError);
+            mainProcessAPI.receiveOnce('app-preview-render-error', this.renderError);
         },
-        renderingProgress: function(event, data) {
+        renderingProgress: function(data) {
             this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
             this.progress = data.progress;
 
@@ -140,7 +140,15 @@ export default {
                 }, 500);
             }
         },
-        renderError(event, data) {
+        renderError(data) {
+            if (data.message[0].message.translation) {
+                data.message[0].message = this.$t(data.message[0].message.translation);
+            }
+
+            if (data.message[0].desc.translation) {
+                data.message[0].desc = this.$t(data.message[0].desc.translation);
+            }
+
             let errorsHTML = Utils.generateErrorLog(data.message);
             let errorsText = Utils.generateErrorLog(data.message, true);
 
@@ -157,8 +165,8 @@ export default {
     },
     beforeDestroy: function() {
         this.$bus.$off('rendering-popup-display');
-        ipcRenderer.removeAllListeners('app-preview-render-error');
-        ipcRenderer.removeAllListeners('app-rendering-progress');
+        mainProcessAPI.stopReceiveAll('app-preview-render-error');
+        mainProcessAPI.stopReceiveAll('app-rendering-progress');
     }
 }
 </script>
@@ -167,8 +175,8 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {  
-    padding: 4rem 4rem 1rem 4rem;   
+.popup {
+    padding: 4rem 4rem 1rem 4rem;
     width: 60rem;
 
     &-info {

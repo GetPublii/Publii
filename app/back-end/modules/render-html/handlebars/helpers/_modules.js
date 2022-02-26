@@ -2,6 +2,7 @@
  * Module which loads all Handlebar's helpers
  */
 module.exports = {
+    assetHelper: require('./asset.js').assetHelper,
     CSSHelper: require('./css.js'),
     fontHelper: require('./font.js').fontHelper,
     dateHelper: require('./date.js'),
@@ -47,5 +48,7 @@ module.exports = {
     concatenate: require('./concatenate.js'),
     contains: require('./contains.js'),
     join: require('./join.js'),
-    lazyloadHelper: require('./lazyload.js')
+    lazyloadHelper: require('./lazyload.js'),
+    getAuthorHelper: require('./get-author.js'),
+    getAuthorsHelper: require('./get-authors.js')
 };

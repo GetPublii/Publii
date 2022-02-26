@@ -4,9 +4,10 @@
 
 var generateOverride = function (params) {
     let output = '';
-    
+
     if (params.minFontSize !== '1.1' || params.maxFontSize !== '1.2') {
         output += `
+      
         html {
           font-size: ${params.minFontSize}rem;
         }

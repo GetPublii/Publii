@@ -1,11 +1,10 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="cssClasses">
         <icon
             v-if="icon"
             size="s"
-            primaryColor="color-8"
             :name="icon" />
 
         <input
@@ -29,14 +28,14 @@
             v-if="type === 'password' && fieldType === 'password'"
             class="password-show"
             @click="showPassword">
-            Show password
+            {{ $t('settings.password.showPassword') }}
         </span>
 
         <span
             v-if="type === 'password' && fieldType === 'text'"
             class="password-hide"
             @click="hidePassword">
-            Hide password
+            {{ $t('settings.password.hidePassword') }}
         </span>
 
         <char-counter
@@ -211,6 +210,7 @@ export default {
     }
 
     svg {
+        fill: var(--icon-secondary-color);
         left: 2rem;
         position: absolute;
         top: 50%;
@@ -225,7 +225,7 @@ export default {
         box-shadow: inset 0 0 0 1px var(--input-border-color);
         color: var(--text-primary-color);
         display: inline-block;
-        font: 400 1.6rem/1.5 $secondary-font;
+        font: 400 #{$app-font-base}/1.5 var(--font-base);
         outline: none;
         padding: 12px 18px;
         width: 100%;
@@ -282,7 +282,7 @@ export default {
 
     .password-show,
     .password-hide {
-        color: var(--primary-color);
+        color: var(--link-primary-color);
         cursor: pointer;
         font-size: 1.4rem;
         position: absolute;

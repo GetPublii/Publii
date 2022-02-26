@@ -1,14 +1,14 @@
 <template>
-    <div 
+    <div
         :key="'tag-view-' + tagData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
-        class="options-sidebar-wrapper">
+        class="options-sidebar-container">
         <div class="options-sidebar">
             <h2>
-                <template v-if="tagData.id">Edit tag</template>
-                <template v-if="!tagData.id">Add new tag</template>
+                <template v-if="tagData.id">{{ $t('tag.editTag') }}</template>
+                <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
             </h2>
-            
+
             <span
                 class="options-sidebar-close"
                 name="sidebar-close"
@@ -16,27 +16,27 @@
                 &times;
             </span>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'basic' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
                     @click="openItem('basic')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="tag-settings-label">Basic information</span>
+                    <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     style="max-height: none;"
                     ref="basic-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="basic-content">
                         <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>Name:</span>
+                            <span>{{ $t('ui.name') }}:</span>
                             <input
                                 v-model="tagData.name"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -45,24 +45,24 @@
                         </label>
 
                         <label>
-                            <span>Description:</span>
+                            <span>{{ $t('ui.description') }}:</span>
                             <text-area
                                 v-model="tagData.description"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :rows="4"></text-area>
                         </label>
 
-                        <label class="tag-settings-hidden">                          
+                        <label class="tag-settings-hidden">
                             <switcher
                                 :key="'is-hidden-tag-' + tagData.id"
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span title="Tag will not appear in any generated tag list such as post or tag/s pages.">
-                                Hide tag
+                            <span :title="$t('tag.tagWillNotAppearInGgeneratedTagLists')">
+                                {{ $t('tag.hideTag') }}
                             </span>
                             <icon
-                                    title="Hide Post"
+                                    :title="$t('post.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
@@ -72,31 +72,31 @@
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'image' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
                     @click="openItem('image')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="tag-settings-label">Featured image</span>
+                    <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="image-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="image-content">
-                        <div 
+                        <div
                             v-if="!currentThemeHasSupportForTagImages"
                             slot="note"
-                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />       
-                            <p>Your theme does not support featured images for tags.</p>
+                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
+                            <p>{{ $t('tag.noSupportFoFeaturedImagesForTags') }}</p>
                         </div>
-                        <label>                          
+                        <label>
                             <image-upload
                                 slot="field"
                                 type="small"
@@ -112,21 +112,21 @@
                             <div
                                 v-if="hasFeaturedImage"
                                 class="image-uploader-settings-form">
-                                <label>Alternative text
+                                <label>{{ $t('ui.alternativeText') }}
                                     <text-input
                                         ref="featured-image-alt"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageAlt" />
                                 </label>
 
-                                <label>Caption
+                                <label>{{ $t('ui.caption') }}
                                     <text-input
                                         ref="featured-image-caption"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         v-model="tagData.additionalData.featuredImageCaption" />
                                 </label>
 
-                                <label>Credits
+                                <label>{{ $t('ui.credits') }}
                                     <text-input
                                         ref="featured-image-credits"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -138,26 +138,26 @@
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'seo' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
                     @click="openItem('seo')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-seo"/>
 
-                    <span class="tag-settings-label">SEO</span>
+                    <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="seo-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="seo-content">
                         <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>Slug:</span>
+                            <span>{{ $t('ui.slug') }}:</span>
                             <input
                                 v-model="tagData.slug"
                                 @keyup="cleanError('slug')"
@@ -166,7 +166,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Page Title:</span>
+                            <span>{{ $t('ui.pageTitle') }}:</span>
                             <text-input
                                 v-model="tagData.additionalData.metaTitle"
                                 type="text"
@@ -179,7 +179,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Meta Description</span>
+                            <span>{{ $t('ui.metaDescription') }}:</span>
                             <text-area
                                 v-model="tagData.additionalData.metaDescription"
                                 :placeholder="metaFieldAttrs"
@@ -191,7 +191,7 @@
                         </label>
 
                         <label>
-                            Meta robots index:
+                            {{ $t('ui.metaRobotsIndex') }}:
                             <dropdown
                                 v-if="!tagData.additionalData.canonicalUrl"
                                 id="tag-meta-robots"
@@ -199,42 +199,42 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
                             </div>
                         </label>
 
                         <label>
-                            Canonical URL:
+                            {{ $t('ui.canonicalURL') }}:
                             <input
                                 type="text"
                                 v-model="tagData.additionalData.canonicalUrl"
                                 spellcheck="false"
-                                placeholder="Leave blank to use a default tag page URL" />
+                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
                         </label>
                     </div>
                 </div>
             </div>
 
-            <div class="tag-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'tag-settings-header': true, 'is-open': openedItem === 'other' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
                     @click="openItem('other')">
                     <icon
-                        class="tag-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="tag-settings-label">Other options</span>
+                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
                     class="tag-settings"
                     ref="other-content-wrapper">
-                    <div 
+                    <div
                         class="tag-settings-content"
                         ref="other-content">
                         <label>
-                            <span>Custom template:</span>
+                            <span>{{ $t('ui.customTemplate') }}:</span>
                             <dropdown
                                 v-if="currentThemeHasTagTemplates"
                                 ref="template"
@@ -247,7 +247,7 @@
                                 slot="field"
                                 id="template"
                                 :spellcheck="false"
-                                placeholder="Not available in your theme"
+                                :placeholder="$t('ui.notAvailableInYourTheme')"
                                 :disabled="true"
                                 :readonly="true" />
                         </label>
@@ -259,16 +259,16 @@
                 <p-button
                     type="secondary"
                     @click.native="save(false)">
-                    <template v-if="tagData.id">Save Changes</template>
-                    <template v-if="!tagData.id">Add new tag</template>
+                    <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
+                    <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
                 </p-button>
 
                 <p-button
                     :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
-                    type="primary" 
-                    class="tag-settings-preview-button"
+                    type="primary"
+                    class="options-sidebar-preview-button"
                     @click.native="saveAndPreview">
-                    Save &amp; Preview
+                    {{ $t('ui.saveAndPreview') }}
                     <span>
                         <icon
                             size="s"
@@ -279,22 +279,20 @@
                 <p-button
                     @click.native="close"
                     type="outline">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
 
-            <small 
+            <small
                 v-if="!currentThemeHasSupportForTagPages"
                 class="note">
-                The "Save &amp; Preview" option is not available due to lack of support for tag pages in your theme.
+                {{ $t('tag.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
             </small>
         </div>
     </div>
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main.js');
 import Vue from 'vue';
 
 export default {
@@ -336,10 +334,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
         },
         metaFieldAttrs: function() {
-            let text = 'Leave it blank to use a default page title';
+            let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
 
             if(!this.metaOptionsActive) {
-                text = 'To use this option, first enable indexing of tag pages in SEO settings.';
+                text = this.$t('tag.toUseThisOptionEnableIndexingTagPages');
             }
 
             return text;
@@ -362,11 +360,11 @@ export default {
         },
         metaRobotsOptions () {
             return {
-                '': 'Use site global settings',
-                'index, follow': 'index, follow',
-                'index, nofollow': 'index, nofollow',
-                'noindex, follow': 'noindex, follow',
-                'noindex, nofollow': 'noindex, nofollow'
+                '': this.$t('settings.useSiteGlobalSettings'),
+                'index, follow': this.$t('ui.indexFollow'),
+                'index, nofollow': this.$t('ui.indexNofollow'),
+                'noindex, follow': this.$t('ui.noindexFollow'),
+                'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
         }
     },
@@ -379,7 +377,7 @@ export default {
                     params.additionalData = {};
                 }
             } catch (e) {
-                console.warn('An error occurred during parsing tag data for ID: ' + params.id);
+                console.warn(this.$t('tag.tagDataParsingErrorMessage') + params.id);
                 params.additionalData = {};
             }
 
@@ -408,11 +406,11 @@ export default {
         });
     },
     methods: {
-        save (showPreview = false) {
+        async save (showPreview = false) {
             if (this.tagData.slug.trim() === '' && this.tagData.name.trim() !== '') {
-                this.tagData.slug = mainProcess.slug(this.tagData.name);
+                this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.name);
             } else {
-                this.tagData.slug = mainProcess.slug(this.tagData.slug);
+                this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.slug);
             }
 
             if (!this.validate()) {
@@ -424,8 +422,8 @@ export default {
 
             this.saveData(tagData, showPreview);
         },
-        saveAndPreview () {
-            this.save(true);
+        async saveAndPreview () {
+            await this.save(true);
         },
         validate () {
             this.errors = [];
@@ -440,7 +438,7 @@ export default {
 
             if (this.errors.length) {
                 this.$bus.$emit('message-display', {
-                    message: 'Please fill all required fields',
+                    message: this.$t('ui.pleaseFillAllRequiredFields'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -456,16 +454,16 @@ export default {
             }
         },
         saveData(tagData, showPreview = false) {
-            ipcRenderer.send('app-tag-save', tagData);
+            mainProcessAPI.send('app-tag-save', tagData);
 
-            ipcRenderer.once('app-tag-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-tag-saved', (data) => {
                 if (data.status !== false) {
                     if(this.tagData.id === 0) {
                         let newlyAddedTag = JSON.parse(JSON.stringify(data.tags.filter(tag => tag.id === data.tagID)[0]));
                         this.showMessage(data.message);
 
                         Vue.nextTick(() => {
-                            this.$bus.$emit('show-tag-item-editor', newlyAddedTag, this.openedItem);    
+                            this.$bus.$emit('show-tag-item-editor', newlyAddedTag, this.openedItem);
                         });
                     } else {
                         if (!showPreview) {
@@ -492,7 +490,7 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-tag-item-editor');
-            ipcRenderer.send('app-tag-cancel', {
+            mainProcessAPI.send('app-tag-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.tagData.id,
                 additionalData: {
@@ -502,13 +500,13 @@ export default {
         },
         showMessage(message) {
             let messageConfig = {
-                message: 'New tag has been created',
+                message: this.$t('tag.newTagHasBeenCreated'),
                 type: 'success',
                 lifeTime: 3
             };
 
             if (this.tagData.id > 0) {
-                messageConfig.message = 'Tag has been edited';
+                messageConfig.message = this.$t('tag.tagHasBeenEdited');
             }
 
             if(message !== 'success' && message !== 'tag-added') {
@@ -517,16 +515,16 @@ export default {
 
             if(message === 'tag-duplicate-name') {
                 this.errors.push('name');
-                messageConfig.message = 'Provided tag name is in use. Please try other tag name.';
+                messageConfig.message = this.$t('tag.tagNameInUseErrorMessage');
             } else if(message === 'tag-duplicate-slug') {
                 this.errors.push('slug');
-                messageConfig.message = 'Provided tag name in a similar form (case insensitive) is in use. Please try other tag name.';
+                messageConfig.message = this.$t('tag.tagNameSimilarInUseErrorMessage');
             } else if(message === 'tag-empty-name') {
                 this.errors.push('name');
-                messageConfig.message = 'Tag name cannot be empty. Please try other name.';
+                messageConfig.message = this.$t('tag.tagNameCannotBeEmptyErrorMessage');
             } else if(message === 'tag-restricted-slug') {
                 this.errors.push('slug');
-                messageConfig.message = 'Selected tag name/slug is not allowed.';
+                messageConfig.message = this.$t('tag.tagNameNotAllowedErrorMessage');
             }
 
             this.$bus.$emit('message-display', messageConfig);
@@ -598,111 +596,6 @@ export default {
         }
     }
 
-    &-wrapper {
-        &:first-of-type {
-            .tag-settings-header {
-                border-top: none;
-            }
-        }
-    }
-
-    &-header {
-        align-items: center;               
-        border-top: 1px solid var(--input-border-color);     
-        color: var(--link-tertiary-color);
-        cursor: pointer;
-        display: flex;
-        height: 6.4rem;
-        margin-left: 0;
-        margin-top: -1px;
-        padding: 0;
-        position: relative;
-        transition: var(--transition);
-        user-select: none;
-        width: 100%;
-
-        &:hover {
-            color: var(--link-tertiary-hover-color);                    
-        }
-
-        &.is-open {
-            .tag-settings {
-                &-label {
-                    left: -3.6rem;
-                }
-
-                &-icon {
-                    left: -1.6rem;
-                    position: relative;
-                    opacity: 0;
-                }
-            }
-        }
-    }
-
-    &-label {                
-        font-weight: 600;
-        left: 0;
-        position: relative;
-        transition: left .25s ease-out, color .0s ease-out;
-        width: calc(100% - 5.8rem);
-
-        &-warning {
-            color: var(--warning);
-            font-size: 1.2rem;
-            margin-left: 1rem;
-        }
-    }
-
-    &-icon {
-        fill: var(--primary-color); 
-        left: 0;
-        height: 2.4rem;
-        margin-right: 1.6rem;
-        opacity: 1;
-        position: relative;
-        transition: var(--transition);
-        width: 2.4rem;
-    }
-
-    &-preview-button {
-        display: inline-flex; 
-
-        & > span {
-            align-self: center;
-            display: flex; 
-            margin-left: 1rem;
-        }
-    }
-
-    label {
-        color: var(--label-color);
-        display: block;
-        font-size: 1.5rem;
-        font-weight: 500;
-        line-height: 2.6;
-        margin-bottom: 1.2rem;
-
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            background-color: var(--input-bg);
-            width: 100%;
-        }
-
-        textarea {
-            height: 100px;
-        }
-
-        &.with-char-counter {
-            .note {
-                margin-top: -3rem;
-                width: 70%;
-            }
-        }
-    } 
-
     &-hidden {
         font-weight: var(--font-weight-normal) !important;
         line-height: 1.8 !important;
@@ -713,7 +606,7 @@ export default {
             position: relative;
             top: .1rem;
         }
-    }           
+    }
 }
 
 .note {

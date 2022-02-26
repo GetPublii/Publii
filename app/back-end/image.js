@@ -37,6 +37,8 @@ class Image extends Model {
         this.path = imageData.path;
         // Image Type
         this.imageType = 'contentImages';
+        // Plugin dir
+        this.pluginDir = imageData.pluginDir;
 
         if (imageData.imageType) {
             this.imageType = imageData.imageType;
@@ -99,7 +101,9 @@ class Image extends Model {
         let galleryDirPath = '';
         let responsiveDirPath = '';
 
-        if (this.id === 'website') {
+        if (this.imageType === 'pluginImages') {
+            dirPath = path.join(this.siteDir, 'input', 'media', 'plugins', this.pluginDir); 
+        } else if (this.id === 'website') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'website');
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'website', 'responsive');
         } else if (this.imageType === 'tagImages' && this.id) {
@@ -120,7 +124,10 @@ class Image extends Model {
         // If dir not exists - create it
         if (!Utils.dirExists(dirPath)) {
             fs.mkdirSync(dirPath);
-            fs.mkdirSync(responsiveDirPath);
+
+            if (responsiveDirPath !== '') {
+                fs.mkdirSync(responsiveDirPath);
+            }
         }
 
         // If gallery directory not exist - create it
@@ -129,7 +136,7 @@ class Image extends Model {
         }
 
         // If responsive directory not exist - create it
-        if (!Utils.dirExists(responsiveDirPath)) {
+        if (responsiveDirPath !== '' && !Utils.dirExists(responsiveDirPath)) {
             fs.mkdirSync(responsiveDirPath);
         }
 
@@ -203,6 +210,10 @@ class Image extends Model {
             width: false, 
             height: false
         };
+
+        if (imageType === 'pluginImages') {
+            return [];
+        }
 
         if (!siteConfig.advanced.responsiveImages && imageType !== 'galleryImages') {
             return ['NO-RESPONSIVE-IMAGES'];

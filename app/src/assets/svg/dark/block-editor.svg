@@ -15,7 +15,7 @@
         }
 
         .st2 {
-            fill: #202128;
+            fill: #191a1f;
             stroke: #3e3f4c;
             stroke-width: 3;
             stroke-linecap: round;
@@ -31,13 +31,13 @@
         }
 
         .st5 {
-            fill: #202128;
+            fill: #191a1f;
         }
 
     </style>
     <linearGradient id="background_1_" gradientUnits="userSpaceOnUse" x1="9.6225" y1="224.2177" x2="640.5616" y2="224.2177">
-        <stop offset="0" style="stop-color:#23252c" />
-        <stop offset="1" style="stop-color:#2b2c35" />
+        <stop offset="0" style="stop-color:#191a1f" />
+        <stop offset="1" style="stop-color:#202128" />
     </linearGradient>
     <path id="background" class="st0" d="M640.46,136.41c-0.07-0.87-0.16-1.72-0.29-2.56c-0.26-1.66-0.65-3.3-1.17-4.9
 	c-1.07-3.23-2.6-6.29-4.56-9.08c-3.98-5.76-9.81-11.01-16.68-15.81c-4.86-3.4-10.23-6.6-15.87-9.59l-142.38,37.1L587.3,87.44

@@ -2,21 +2,22 @@
     <section class="content backups">
         <p-header
             v-if="!noBackups"
-            title="Backups">
+            :title="$t('file.backups')">
 
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="outline">
-                Back to tools
+                type="clean back">
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
                 :onClick="createBackup"
                 slot="buttons"
-                :type="addBackupButtonType"
+                :type="operationInProgress ? 'disabled preloader' : 'primary icon'"
+                :disabled="operationInProgress"
                 icon="plus">
-                Create backup
+                {{ $t('file.createBackup') }}
             </p-button>
 
         </p-header>
@@ -26,42 +27,43 @@
             imageName="backups.svg"
             imageWidth="344"
             imageHeight="286"
-            title="No backups available"
-            description="You don't have any backups, yet. Let's create the first one!">
+            :title="$t('file.noBackupsAvailable')"
+            :description="$t('file.createFirstBackupMsg')">
             <p-button
                 slot="button"
                 icon="plus"
-                type="icon"
+                :type="operationInProgress ? 'disabled preloader' : 'icon'"
                 :onClick="createBackup"
                 :disabled="operationInProgress">
-                <template v-if="!operationInProgress">Create backup</template>
-                <template v-if="operationInProgress">Creating backup&hellip;</template>
+                {{ $t('file.createBackup') }}
             </p-button>
         </empty-state>
 
-        <collection v-if="!noBackups">
+        <collection
+            v-if="!noBackups"
+            :itemsCount="5">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 485px)">
-                    Filename
+                <collection-cell>
+                    {{ $t('file.filename') }}
                 </collection-cell>
 
-                <collection-cell width="100px">
-                    File Size
+                <collection-cell min-width="120px">
+                    {{ $t('file.fileSize') }}
                 </collection-cell>
 
-                <collection-cell width="175px">
-                    Creation date
+                <collection-cell min-width="160px">
+                    {{ $t('file.creationDate') }}
                 </collection-cell>
 
-                <collection-cell width="170px">
-                    Operations
+                <collection-cell min-width="150px">
+                    {{ $t('file.operations') }}
                 </collection-cell>
 
                 <div
@@ -71,7 +73,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -80,7 +82,7 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :id="item.name"
                         :value="item.id"
@@ -88,7 +90,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 485px)">
+                <collection-cell>
                     <a
                         :href="item.url"
                         @click.prevent.stop="showFileInFolder(item.url)">
@@ -96,25 +98,26 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell width="100px">
+                <collection-cell>
                     {{ item.size }}
                 </collection-cell>
 
-                <collection-cell width="175px">
+                <collection-cell>
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell width="170px">
+                <collection-cell class="col-buttons">
                     <p-button
-                        :type="renameButtonType"
+                        :type="operationInProgress ? 'disabled outline small' : 'outline small'"
                         :onClick="renameFile.bind(this, item.name)">
-                        Rename
+                        {{ $t('file.rename') }}
                     </p-button>
 
                     <p-button
-                        :type="restoreButtonType"
-                        :onClick="restoreFile.bind(this, item.name)">
-                        Restore
+                        :type="operationInProgress ? 'disabled secondary small' : 'secondary small'"
+                        :onClick="restoreFile.bind(this, item.name)"
+                        :disabled="operationInProgress">
+                        {{ $t('file.restore') }}
                     </p-button>
                 </collection-cell>
             </collection-row>
@@ -123,7 +126,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -144,37 +146,16 @@ export default {
         };
     },
     computed: {
-        addBackupButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled preloader';
-            }
-
-            return 'primary icon';
-        },
-        renameButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled outline small';
-            }
-
-            return 'outline small';
-        },
-        restoreButtonType: function() {
-            if(this.operationInProgress) {
-                return 'disabled secondary small';
-            }
-
-            return 'secondary small';
-        },
         noBackups: function() {
             return this.items.length === 0;
         }
     },
     mounted: function() {
-        ipcRenderer.send('app-backups-list-load', {
-            "site": this.$store.state.currentSite.config.name
+        mainProcessAPI.send('app-backups-list-load', {
+            site: this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-backups-list-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-backups-list-loaded', (data) => {
             if (data.status) {
                 this.isLoading = false;
                 this.items = data.backups;
@@ -187,7 +168,7 @@ export default {
         },
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove the selected backups? This action cannot be undone.',
+                message: this.$t('file.deletBackupsConfirmMsg'),
                 okClick: this.deleteSelected
             });
         },
@@ -196,24 +177,24 @@ export default {
                 return document.querySelector('input[value="' + id + '"]').getAttribute('id');
             });
 
-            ipcRenderer.send('app-backup-remove', {
+            mainProcessAPI.send('app-backup-remove', {
                 site: this.$store.state.currentSite.config.name,
                 backupsNames: backupsToRemove
             });
 
-            ipcRenderer.once('app-backup-removed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-removed', (data) => {
                 this.items = data.backups;
                 this.selectedItems = [];
 
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred during selected backup file removal. Please try again.',
+                        message: this.$t('file.deletBackupsErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'Selected backups have been removed',
+                        message: this.$t('file.deletBackupsSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -221,7 +202,7 @@ export default {
             });
         },
         showFileInFolder: function(url) {
-            shell.showItemInFolder(url);
+            mainProcessAPI.shellShowItemInFolder(url);
         },
         renameFile: function(originalName) {
             let oldFilename = originalName.substr(0, originalName.length - 4);
@@ -229,10 +210,10 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Please specify a new backup filename:',
+                message: this.$t('file.renameBackupConfrimMsg'),
                 okClick: this.rename,
-                okLabel: 'Rename file',
-                cancelLabel: 'Cancel',
+                okLabel: this.$t('file.renameBackupConfrimLabel'),
+                cancelLabel: this.$t('ui.cancel'),
                 defaultText: oldFilename
             });
         },
@@ -245,7 +226,7 @@ export default {
 
             if(newFilename.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'The backup filename cannot be empty. Please try again.',
+                    message: this.$t('file.renameBackupNameEmptyMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -255,7 +236,7 @@ export default {
 
             if(this.fileToRename === newFilename) {
                 this.$bus.$emit('message-display', {
-                    message: 'The specified name is the same as the old name. Please try again.',
+                    message: this.$t('file.renameBackupSameNameMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -265,7 +246,7 @@ export default {
 
             if(this.filenameIsInUse(newFilename)) {
                 this.$bus.$emit('message-display', {
-                    message: 'The specified name is used by other backup file. Please try again.',
+                    message: this.$t('file.renameBackupNameInUseMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -273,22 +254,22 @@ export default {
                 return;
             }
 
-            ipcRenderer.send('app-backup-rename', {
+            mainProcessAPI.send('app-backup-rename', {
                 site: this.$store.state.currentSite.config.name,
                 oldBackupName: this.fileToRename,
                 newBackupName: newFilename
             });
 
-            ipcRenderer.once('app-backup-renamed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-renamed', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred while renaming the selected backup file. Please try again.',
+                        message: this.$t('file.renameBackupErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The backup has been sucessfully renamed.',
+                        message: this.$t('file.renameBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
@@ -313,10 +294,10 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: 'Select a name for your backup - filename can contain only alphanumeric characters, dashes and underscores:',
+                message: this.$t('file.createBackupConfirmMsg'),
                 okClick: this.create,
-                okLabel: 'Create backup',
-                cancelLabel: 'Cancel',
+                okLabel: this.$t('file.createBackup'),
+                cancelLabel: this.$t('ui.cancel'),
                 defaultText: defaultFilename
             });
         },
@@ -329,7 +310,7 @@ export default {
 
             if (filename.trim() === '') {
                 this.$bus.$emit('message-display', {
-                    message: 'Provided filename cannot be empty. Please try again with a different name.',
+                    message: this.$t('file.createBackupNameEmptyMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -339,7 +320,7 @@ export default {
 
             if (this.filenameIsInUse(filename)) {
                 this.$bus.$emit('message-display', {
-                    message: 'Provided filename (<strong>' + filename + '</strong>) is used by an existing backup. Please try again with a different name.',
+                    message: this.$t('file.createBackupNameInUseMsg', filename),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -349,23 +330,23 @@ export default {
 
             this.operationInProgress = true;
 
-            ipcRenderer.send('app-backup-create', {
+            mainProcessAPI.send('app-backup-create', {
                 site: this.$store.state.currentSite.config.name,
                 filename: filename
             });
 
-            ipcRenderer.once('app-backup-created', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-created', (data) => {
                 if (data.status) {
                     this.items = data.backups;
 
                     this.$bus.$emit('message-display', {
-                        message: 'Backup has been created.',
+                        message: this.$t('file.createBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred during backup creation. Please try again.',
+                        message: this.$t('file.createBackupErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
@@ -378,39 +359,39 @@ export default {
             this.fileToRestore = fileName;
 
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to restore the selected backup? Existing files will be overwritten.',
+                message: this.$t('file.restoreBackupConfrimMsg'),
                 okClick: this.restore,
-                okLabel: 'Restore backup',
-                cancelLabel: 'Cancel'
+                okLabel: this.$t('file.restoreBackupConfrimLabel'),
+                cancelLabel: this.$t('ui.cancel'),
             });
         },
         restore: function() {
             this.operationInProgress = true;
 
-            ipcRenderer.send('app-backup-restore', {
+            mainProcessAPI.send('app-backup-restore', {
                 site: this.$store.state.currentSite.config.name,
                 backupName: this.fileToRestore
             });
 
-            ipcRenderer.once('app-backup-restored', (event, data) => {
+            mainProcessAPI.receiveOnce('app-backup-restored', (data) => {
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occurred while restoring the selected backup file: ' + data.error,
+                        message: this.$t('file.restoreBackupErrorMsg') + ' ' + this.$t(data.error),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'The website has been successfully restored.',
+                        message: this.$t('file.restoreBackupSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
 
-                    ipcRenderer.send('app-site-reload', {
+                    mainProcessAPI.send('app-site-reload', {
                         siteName: this.$store.state.currentSite.config.name
                     });
 
-                    ipcRenderer.once('app-site-reloaded', (event, result) => {
+                    mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                         this.$store.commit('setSiteConfig', result);
                         this.$store.commit('switchSite', result.data);
                     });

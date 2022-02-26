@@ -14,17 +14,66 @@ export default {
 @import '../../scss/variables.scss';
 
 .header {
-    align-items: center;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-light-color);
-    display: flex;
-    overflow-y: scroll; 
-    position: relative;
-    user-select: none;
+    display: contents;
 
     .tools {
-        left: 3rem;
-        position: absolute;
+        background: var(--bg-site);
+        display: flex;
+        gap: .75rem;
+        margin-left: 5rem;
+        min-width: 200px;
+        padding: .825rem 0;
+        position: fixed;
+        z-index: 5;
+
+        .button {
+            background: none;
+            position: relative;
+            z-index: 0;
+
+            &::before {
+                content: "";
+                background: var(--popup-bg);  
+                border-radius: var(--border-radius);
+                display: block;
+                left: -2px;
+                opacity: 0;
+                position: absolute;
+                right: 0;
+                height: 100%;
+                top: 0;
+                transition: all .15s cubic-bezier(0.4,0.0,0.2,1);
+                transform: scale(.5);
+                width: calc(100% + 2px);
+                z-index: -1;
+            }
+            
+            & + .button {
+               margin: 0;
+               position: relative;
+            }
+
+            &:hover {
+                background: none;
+
+                &::before {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            &.button-active {
+                 background: var(--popup-bg);  
+            }
+        }
+    }
+
+    .col {
+        background: var(--bg-site);
+        color: var(--headings-color);
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 }
 
@@ -34,21 +83,15 @@ export default {
             .button {
                 &-small {
                     font-size: 1.3rem;
-                    height: 3rem;
-                    line-height: 3.1rem;
                     padding: 0 .75rem;
 
                     &.button-icon {
-                        padding-left: 3.65rem;
+                        padding-left: 3.6rem;
 
                         & > svg {
                             display: none;
                         }
                     }
-                }
-
-                & + .button {
-                    margin-left: .2rem;
                 }
             }
         }

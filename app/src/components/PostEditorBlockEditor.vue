@@ -6,37 +6,31 @@
         <div class="post-editor-wrapper">
             <div class="post-editor-form">
                 <div>
-                    <webview 
-                        :src="editorHtmlPath" 
-                        nodeintegration
-                        :webpreferences="$store.state.currentSite.config.spellchecking ? 'spellcheck' : ''"
-                        :preload="editorPreloadPath"></webview>
-                    <textarea id="post-editor"></textarea>
+                    <publii-block-editor />
                 </div>
             </div>
 
             <p-button
                 id="post-help-button"
-                type="clean icon small"
+                type="clean-invert icon small"
                 icon="help"
-                title="Help"
+                :title="$t('ui.help')"
                 @click.native="toggleHelp">
-                <template v-if="!helpPanelOpen">View Help</template>
-                <template v-else>Hide Help</template>
+                <template v-if="!helpPanelOpen">{{ $t('editor.viewHelp') }}</template>
+                <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
             <author-popup />
             <date-popup />
             <help-panel-block-editor :isOpen="helpPanelOpen" />
-            <search-popup />
+            <!--<search-popup />-->
         </div>
     </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer, remote } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -44,11 +38,10 @@ import HelpPanelBlockEditor from './post-editor/HelpPanelBlockEditor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
 import PostHelper from './post-editor/PostHelper';
-import SearchPopup from './post-editor/SearchPopup';
+// import SearchPopup from './post-editor/SearchPopup';
 import Utils from './../helpers/utils';
-import path from 'path';
-import url from 'url';
 import PostEditorsCommon from './mixins/PostEditorsCommon';
+import PubliiBlockEditor from './block-editor/PubliiBlockEditor';
 
 export default {
     name: 'post-editor-block-editor',
@@ -62,8 +55,9 @@ export default {
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
-        'search-popup': SearchPopup,
-        'help-panel-block-editor': HelpPanelBlockEditor
+        // 'search-popup': SearchPopup,
+        'help-panel-block-editor': HelpPanelBlockEditor,
+        'publii-block-editor': PubliiBlockEditor
     },
     data () {
         return {
@@ -118,30 +112,53 @@ export default {
     computed: {
         isEdit () {
             return !!this.postID;
-        },
-        editorHtmlPath () {
-            return url.format({
-                pathname: path.join(window.__dirname, '/../node_modules/publii-block-editor/dist/index.html'),
-                protocol: 'file',
-                slashes: true
-            });
-        },
-        editorPreloadPath () {
-            return url.format({
-                pathname: path.join(window.__dirname, '/editor-webview-preload.js'),
-                protocol: 'file',
-                slashes: true
-            });
         }
     },
     mounted () {
-        if (this.$store.state.app.config.spellchecking) {
-            ipcRenderer.send('publii-set-spellchecker-language', this.$store.state.currentSite.config.language);
+        this.$bus.$on('date-changed', this.setCreationDate);
+        this.$bus.$on('post-editor-possible-data-loss', this.setPossibleDataLoss);
+        this.$bus.$on('block-editor-title-updated', this.updateTitle);
+        this.$bus.$on('block-editor-content-updated', this.setPossibleDataLoss);
+        this.$bus.$on('block-editor-post-saved', this.editorPostSaved);
+
+        if (this.isEdit) {
+            this.newPost = false;
+            this.loadPostData();
         } else {
-            ipcRenderer.send('publii-set-spellchecker-language', '');
+            this.setDataLossWatcher();
         }
 
-        this.$bus.$on('date-changed', (timestamp) => {
+        setTimeout(async () => {
+            this.$bus.$emit('block-editor-set-post-id', this.postID);
+            
+            mainProcessAPI.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                this.filesList = data.map(file => file.name);
+
+                mainProcessAPI.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'media/files'
+                }); 
+
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+
+                    this.$bus.$emit('block-editor-set-current-site-data', {
+                        tags: this.$store.state.currentSite.tags,
+                        posts: this.$store.state.currentSite.posts,
+                        authors: this.$store.state.currentSite.authors,
+                        files: this.filesList
+                    });
+                });
+            });
+        }, 0);
+    },
+    methods: {
+        setCreationDate (timestamp) {
             let format = 'MMM DD, YYYY  HH:mm';
 
             if (this.$store.state.app.config.timeFormat == 12) {
@@ -150,97 +167,21 @@ export default {
 
             this.postData.creationDate.timestamp = timestamp;
             this.postData.creationDate.text = this.$moment(this.postData.creationDate.timestamp).format(format);
-        });
-
-        this.$bus.$on('post-editor-possible-data-loss', () => {
-            this.possibleDataLoss = true;
-        });
-
-        this.webview = document.querySelector('webview');
-        this.initCommunicationWithEditor();
-
-        this.webview.addEventListener('dom-ready', () => {
-            // this.webview.openDevTools();
-            if (this.isEdit) {
-                this.newPost = false;
-                this.loadPostData();
-            } else {
-                this.setDataLossWatcher();
-            }
-
-            setTimeout(() => {
-                this.webview.send('set-app-theme', this.$root.getCurrentAppTheme());
-                this.webview.send('set-post-id', this.postID);
-                this.webview.send('set-site-name', this.$store.state.currentSite.config.name);
-                
-                ipcRenderer.send('app-file-manager-list', {
-                    siteName: this.$store.state.currentSite.config.name,
-                    dirPath: 'root-files'
-                });
-
-                ipcRenderer.once('app-file-manager-listed', (event, data) => {
-                    this.filesList = data.map(file => file.name);
-
-                    ipcRenderer.send('app-file-manager-list', {
-                        siteName: this.$store.state.currentSite.config.name,
-                        dirPath: 'media/files'
-                    }); 
-
-                    ipcRenderer.once('app-file-manager-listed', (event, data) => {
-                        this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
-
-                        this.webview.send('set-current-site-data', {
-                            tags: this.$store.state.currentSite.tags,
-                            posts: this.$store.state.currentSite.posts,
-                            authors: this.$store.state.currentSite.authors,
-                            files: this.filesList
-                        });
-                    });
-                });
-            }, 0);
-
-            remote.webContents.fromId(this.webview.getWebContentsId()).on('before-input-event', (event, input) => {
-                if (input.key === 'f' && (input.meta || input.control)) {
-                    this.$bus.$emit('app-show-search-form');  
-                } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
-                    this.webview.send('block-editor-undo');
-                } else if (
-                    (input.key === 'z' && (input.meta || input.control) && input.shift) || 
-                    (input.key === 'y' && (input.meta || input.control) && !input.shift)
-                ) {
-                    this.webview.send('block-editor-redo');
-                }
-            });
-        });
-    },
-    methods: {
-        initCommunicationWithEditor () {
-            this.webview.addEventListener('ipc-message', this.editorOnIpcMessage);
         },
-        editorOnIpcMessage(event) {
-            const {args, channel} = event;
+        setPossibleDataLoss () {
+            this.possibleDataLoss = true;
+        },
+        async editorPostSaved () {
+            let postData = await PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
 
-            if (channel === 'editor-title-updated') {
-                this.updateTitle(args[0]);
-            }
-
-            if (channel === 'editor-content-updated') {
-                this.$bus.$emit('post-editor-possible-data-loss');
-            }
-
-            if (channel === 'editor-post-saved') {
-                document.querySelector('#post-editor').value = args[0];
-                let postData = PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
-
-                if (!this.saveAction.preview) {
-                    this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
-                } else {
-                    this.$bus.$emit('rendering-popup-display', {
-                        itemID: this.postID,
-                        postData: postData,
-                        postOnly: true
-                    });
-                }
+            if (!this.saveAction.preview) {
+                this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
+            } else {
+                this.$bus.$emit('rendering-popup-display', {
+                    itemID: this.postID,
+                    postData: postData,
+                    postOnly: true
+                });
             }
         },
         updateTitle (newTitle) {
@@ -249,18 +190,18 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            ipcRenderer.send('app-post-load', {
+            mainProcessAPI.send('app-post-load', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            ipcRenderer.once('app-post-loaded', (event, data) => {
-                if(data !== false && this.postID !== 0) {
+            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
+                if (data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
-                    this.webview.send('set-post-text', this.postData.text);
-                    this.webview.send('set-post-title', this.postData.title);
+                    this.$bus.$emit('block-editor-set-post-text', this.postData.text);
+                    this.$bus.$emit('block-editor-set-post-title', this.postData.title);
                 }
 
                 setTimeout(() => {
@@ -278,7 +219,7 @@ export default {
         savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
@@ -287,14 +228,14 @@ export default {
             this.saveAction.status = newPostStatus;
             this.saveAction.preview = preview;
             this.saveAction.closeEditor = closeEditor;
-            this.webview.send('post-save');
+            this.$bus.$emit('block-editor-post-save');
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-post-save', postData);
+            mainProcessAPI.send('app-post-save', postData);
 
             // Post save
-            ipcRenderer.once('app-post-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
@@ -302,7 +243,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -313,19 +254,19 @@ export default {
                 this.closeEditor();
                 return;
             } else {
-                this.webview.send('set-post-id', this.postID);
+                this.$bus.$emit('block-editor-set-post-id', this.postID);
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -347,9 +288,11 @@ export default {
             this.unwatchDataLoss();
         }
 
-        this.webview.removeEventListener('ipc-message', this.editorOnIpcMessage);
-        this.$bus.$off('date-changed');
-        this.$bus.$off('post-editor-possible-data-loss');
+        this.$bus.$off('date-changed', this.setCreationDate);
+        this.$bus.$off('post-editor-possible-data-loss', this.setPossibleDataLoss);
+        this.$bus.$off('block-editor-title-updated', this.updateTitle);
+        this.$bus.$off('block-editor-content-updated', this.setPossibleDataLoss);
+        this.$bus.$off('block-editor-post-saved', this.editorPostSaved);
     }
 };
 </script>
@@ -358,6 +301,17 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
+   
+#publii-block-editor {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#post-editor-fake-image-uploader,
+#post-editor-fake-multiple-images-uploader {
+    display: none;
+}
 
 .post-editor {
     overflow-x: hidden;
@@ -376,14 +330,6 @@ export default {
 
         & > div {
             padding: 9rem 4rem 3rem 4rem;
-
-            & > webview {
-                bottom: 0;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 8rem;
-            }
         }
     }
 
@@ -396,7 +342,7 @@ export default {
     bottom: 20px;
     position: absolute;
     right: 20px;
-    z-index: 100;
+    z-index: 99991;
 }
 
 body[data-os="win"] {

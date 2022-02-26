@@ -62,16 +62,16 @@ export default {
     }
 
     &.is-blue {
-        border: 3px solid var(--primary-color);
-        background: rgba(var(--primary-color-rgb), .17);
+        border: 3px solid var(--color-primary);
+        background: rgba(var(--color-primary-rgb), .17);
         
         & > div {
             box-shadow: 0 0 3px rgba(black, .2);
-            background: var(--primary-color);
+            background: var(--color-primary);
             border-radius: 3px;
             color: var(--white);
-            font-size: 1.6rem;
-            font-weight: 500;
+            font-size: $app-font-base;
+            font-weight: var(--font-weight-semibold);
             height: auto;
             left: 50%;
             line-height: 1.5;                

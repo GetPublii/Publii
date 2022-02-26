@@ -113,17 +113,9 @@ export default {
 
 select {
     -webkit-appearance: none;
-    background-color: var(--input-bg);
-    border: none;
-    border-radius: 3px;
-    box-shadow: inset 0 0 0 1px var(--input-border-color);
-    color: var(--text-primary-color);
-    font: 400 1.6rem/1.5 $secondary-font;
     max-width: 100%;
     min-width: 100px;
-    min-height: 48px;
-    outline: none;
-    padding: 0 12px 0 18px;
+    min-height: 46px;
     position: relative;
     width: 100%;
 
@@ -135,10 +127,6 @@ select {
         &:focus {
             box-shadow: none;
         }
-    }
-
-    &:focus {
-        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
     }
 
     &[disabled],

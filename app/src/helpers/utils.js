@@ -187,7 +187,7 @@ class Utils {
         }
 
         let url;
-        let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:'];
+        let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:', 'dweb:'];
 
         try {
             url = new URL(urlToCheck);

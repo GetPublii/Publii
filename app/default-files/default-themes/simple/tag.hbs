@@ -69,10 +69,12 @@
                         {{#if @config.custom.tagAvatar}}
                            {{#if avatar}}
                               <img
-                                 src="{{avatar}}"
+                                 src="{{avatarImage.url}}" 
                                  {{ lazyload "lazy" }}
+                                 height="{{avatarImage.height}}"
+                                 width="{{avatarImage.width}}"      
                                  class="post__author-thumb"
-                                 alt="{{name}}">
+                                 alt="{{avatarImage.alt}}">
                            {{/if}}
                         {{/if}}
                         {{#if @config.custom.tagAuthor}}

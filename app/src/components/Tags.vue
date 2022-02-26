@@ -1,11 +1,11 @@
 <template>
-    <section :class="{ 'content': true, 'no-scroll': editorVisible }">
+    <section :class="{ 'content': true, 'tags-list-view': true, 'no-scroll': editorVisible }">
         <p-header
             v-if="!showEmptyState"
-            title="Tags">
+            :title="$t('ui.tags')">
             <header-search
                 slot="search"
-                placeholder="Filter or search tags..."
+                :placeholder="$t('tag.filterOrSearchTags')"
                 onChangeEventName="tags-filter-value-changed" />
 
             <p-button
@@ -13,59 +13,60 @@
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                Add new tag
+                {{ $t('tag.addNewTag') }}
             </p-button>
         </p-header>
 
         <collection
-            v-if="!emptySearchResults && hasTags">
+            v-if="!emptySearchResults && hasTags"
+            :itemsCount="4">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, false)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
-                    <span 
+                <collection-cell>
+                    <span
                         class="col-sortable-title"
                         @click="ordering('name')">
                         <template v-if="orderBy === 'name'">
-                            <strong>Name</strong>
+                            <strong>{{ $t('ui.name') }}</strong>
                         </template>
-                        <template v-else>Name</template>
+                        <template v-else>{{ $t('ui.name') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'name' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     justifyContent="center"
                     textAlign="center"
-                    width="100px">
-                    <span 
+                    min-width="100px">
+                    <span
                         class="col-sortable-title"
                         @click="ordering('postsCounter')">
                         <template v-if="orderBy === 'postsCounter'">
-                            <strong>Posts</strong>
+                            <strong>{{ $t('ui.posts') }}</strong>
                         </template>
-                        <template v-else>Posts</template>
+                        <template v-else>{{ $t('ui.posts') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell width="40px">
+                <collection-cell min-width="40px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
                         <template v-if="orderBy === 'id'">
-                            <strong>ID</strong>
+                            <strong>{{ $t('ui.id') }}</strong>
                         </template>
-                        <template v-else>ID</template>
+                        <template v-else>{{ $t('ui.id') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
@@ -79,7 +80,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
 
                     <p-button
@@ -87,7 +88,7 @@
                         icon="hidden-post"
                         type="small light icon"
                         :onClick="bulkHide">
-                        Hide
+                        {{ $t('ui.hide') }}
                     </p-button>
 
                     <p-button
@@ -95,7 +96,7 @@
                         icon="hidden-post"
                         type="small light icon"
                         :onClick="bulkUnhide">
-                        Unhide
+                        {{ $t('ui.unhide') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -104,32 +105,31 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
+                <collection-cell>
                     <a
                         href="#"
                         @click.prevent.stop="editTag(item)">
-                        {{ item.name }} 
+                        {{ item.name }}
 
                         <icon
                             v-if="item.isHidden"
                             size="xs"
                             name="hidden-post"
                             primaryColor="color-7"
-                            title="This tag is hidden" />
+                            :title="$t('tag.thisTagIsHidden')" />
                     </a>
                 </collection-cell>
 
-                <collection-cell 
+                <collection-cell
                     justifyContent="center"
-                    textAlign="center"
-                    width="100px">
+                    textAlign="center">
                     <a
                         @click.prevent.stop="showPostsConnectedWithTag(item.name)"
                         href="#">
@@ -137,8 +137,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell                    
-                    width="40px">
+                <collection-cell>
                     {{ item.id }}
                 </collection-cell>
             </collection-row>
@@ -146,26 +145,26 @@
 
         <empty-state
             v-if="emptySearchResults"
-            description="There are no tags matching your criteria."></empty-state>
+            :description="$t('tag.noTagsMatchingYourCriteria')"></empty-state>
 
         <empty-state
             v-if="showEmptyState"
             imageName="tags.svg"
             imageWidth="344"
             imageHeight="286"
-            title="No tags available"
-            description="You don't have any tag, yet. Let's create the first one!">
+            :title="$t('tag.noTagsAvailable')"
+            :description="$t('tag.createFirstTag')">
             <p-button
                 slot="button"
                 icon="add-site-mono"
                 type="icon"
                 :onClick="addTag">
-                Add new tag
+                {{ $t('tag.addNewTag') }}
             </p-button>
         </empty-state>
 
         <transition>
-            <tag-form 
+            <tag-form
                 v-if="editorVisible"
                 :form-animation="formAnimation" />
         </transition>
@@ -173,7 +172,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import TagForm from './TagForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -210,7 +208,11 @@ export default {
         items: function() {
             return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
                 if (item.additionalData) {
-                    item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                    if (typeof item.additionalData === 'string') {
+                        item.isHidden = item.additionalData.indexOf('"isHidden":true') > -1;
+                    } else {
+                        item.isHidden = item.additionalData.isHidden;
+                    }
                 }
 
                 return item;
@@ -232,7 +234,7 @@ export default {
                 return false;
             }
 
-            let notHiddenTags = selectedTags.filter(item => (item.additionalData && item.additionalData.indexOf('"isHidden":false') > -1) || (item.additionalData && item.additionalData.indexOf('"isHidden"') === -1));
+            let notHiddenTags = selectedTags.filter(item => !item.isHidden);
             return !!notHiddenTags.length;
         },
         selectedTagsAreHidden () {
@@ -242,16 +244,16 @@ export default {
                 return false;
             }
 
-            let hiddenTags = selectedTags.filter(item => item.additionalData.indexOf('"isHidden":true') > -1);
+            let hiddenTags = selectedTags.filter(item => item.isHidden);
             return !!hiddenTags.length;
         }
     },
     beforeMount () {
-        ipcRenderer.send('app-tags-load', {
+        mainProcessAPI.send('app-tags-load', {
             "site": this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-tags-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-tags-loaded', (data) => {
             this.$store.commit('setTags', data.tags);
             this.$store.commit('setPostsTags', data.postsTags);
         });
@@ -265,6 +267,10 @@ export default {
         });
 
         this.$bus.$on('hide-tag-item-editor', () => {
+            if (document.querySelector('.tags-list-view .item.is-edited')) {
+                document.querySelector('.tags-list-view .item.is-edited').classList.remove('is-edited');
+            }
+            
             this.editorVisible = false;
         });
 
@@ -299,6 +305,11 @@ export default {
             this.editorVisible = true;
         },
         editTag (item) {
+            if (document.querySelector('.tags-list-view .item.is-edited')) {
+                document.querySelector('.tags-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
+            document.querySelector('.tags-list-view .item input[value="' + parseInt(item.id, 10) + '"]').parentNode.parentNode.classList.add('is-edited');
             this.editorVisible = true;
 
             setTimeout(() => {
@@ -307,7 +318,7 @@ export default {
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected tags?',
+                message: this.$t('tag.removeTagMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -326,20 +337,20 @@ export default {
                 inverse: inverse
             });
 
-            ipcRenderer.send('app-tags-status-change', {
+            mainProcessAPI.send('app-tags-status-change', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToChange,
                 "status": status,
                 "inverse": inverse
             });
 
-            ipcRenderer.once('app-tags-status-changed', () => {
+            mainProcessAPI.receiveOnce('app-tags-status-changed', () => {
                 this.selectedItems = [];
                 this.$forceUpdate();
             });
 
             this.$bus.$emit('message-display', {
-                message: 'Status of the selected tags has been changed',
+                message: this.$t('tag.tagStatusChangeSuccessMessage'),
                 type: 'success',
                 lifeTime: 3
             });
@@ -347,17 +358,17 @@ export default {
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
 
-            ipcRenderer.send('app-tag-delete', {
+            mainProcessAPI.send('app-tag-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
             });
 
-            ipcRenderer.once('app-tag-deleted', () => {
+            mainProcessAPI.receiveOnce('app-tag-deleted', () => {
                 this.$store.commit('removeTags', itemsToRemove);
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected tags have been removed',
+                    message: this.$t('tag.removeTagSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -366,7 +377,7 @@ export default {
         showPostsConnectedWithTag (name) {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'tag:' + name);
-            this.$router.push({ path: '/site/' + siteName + '/posts' });
+            this.$router.push('/site/' + siteName + '/posts');
         },
         ordering (field) {
             if (field !== this.orderBy) {
@@ -421,7 +432,7 @@ export default {
              }
         }
     }
-    
+
     .order-ascending,
     .order-descending {
         margin-left: 3px;
@@ -442,14 +453,14 @@ export default {
              text-align: center;
              top: 50%;
              transform: translateY(-50%);
-             width: 8px;              
+             width: 8px;
         }
     }
 
     .order-descending {
         &:after {
-            border-top-color: transparent; 
-            border-bottom: solid 5px var(--icon-secondary-color);                      
+            border-top-color: transparent;
+            border-bottom: solid 5px var(--icon-secondary-color);
         }
     }
 }

@@ -1,4 +1,5 @@
 <template>
+<div>
     <v-select
         ref="dropdown"
         :options="authors"
@@ -10,6 +11,7 @@
         :multiple="mutliple"
         :id="anchor"
         :placeholder="placeholder"></v-select>
+</div>
 </template>
 
 <script>
@@ -20,14 +22,10 @@ export default {
             type: Boolean,
             default: false
         },
-        placeholder: {
-            type: String,
-            default: 'Select author'
-        },
         value: {},
         anchor: {
+            type: String,
             default: '',
-            type: String
         }
     },
     data () {
@@ -38,6 +36,9 @@ export default {
     computed: {
         authors () {
             return [''].concat(this.$store.state.currentSite.authors.map(author => author.id));
+        },
+        placeholder () {
+            return this.$t('author.selectAuthor');
         }
     },
     watch: {
@@ -73,7 +74,7 @@ export default {
 .multiselect__tags {
     min-height: 49px;
 }
-    
+
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }

@@ -1,18 +1,20 @@
 <template>
     <section class="settings site-settings-app">
         <div class="settings-wrapper">
-            <p-header title="Themes">
+            <p-header :title="$t('theme.themes')">
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
 
                 <p-button
                     :onClick="installTheme"
-                    slot="buttons">
-                    Install theme
+                    slot="buttons" 
+                    type="icon"
+                    icon="upload-file">
+                    {{ $t('theme.installTheme') }}
                 </p-button>
             </p-header>
 
@@ -24,8 +26,6 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -58,22 +58,22 @@ export default {
                 }
             }
         },
-        installTheme () {
-            mainProcess.selectFile('file-select');
+        async installTheme () {
+            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
 
-            ipcRenderer.once('app-file-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
 
-                ipcRenderer.send('app-theme-upload', {
+                mainProcessAPI.send('app-theme-upload', {
                     sourcePath: data.path.filePaths[0]
                 });
 
-                ipcRenderer.once('app-theme-uploaded', this.uploadedTheme);
+                mainProcessAPI.receiveOnce('app-theme-uploaded', this.uploadedTheme);
             });
         },
-        uploadedTheme (event, data) {
+        uploadedTheme (data) {
             this.$store.commit('replaceAppThemes', data.themes);
             this.$store.commit('updateSiteThemes');
 
@@ -84,11 +84,11 @@ export default {
             };
 
             if(data.status === 'added') {
-                messageConfig.message = 'Theme has been successfully added.';
+                messageConfig.message = this.$t('theme.addThemeSuccessMessage');
             } else if(data.status === 'updated') {
-                messageConfig.message = 'Theme has been successfully updated.';
+                messageConfig.message = this.$t('theme.updateThemeSuccessMessage');
             } else if(data.status === 'wrong-format') {
-                messageConfig.message = 'The uploaded files are incorrect. Please upload theme directory or theme ZIP file.';
+                messageConfig.message = this.$t('theme.uploadThemeErrorMessage');
                 messageConfig.type = 'warning';
             }
 
@@ -102,7 +102,7 @@ export default {
 @import '../scss/variables.scss';
 
 .settings {
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     width: 100%;
 
     &-wrapper {

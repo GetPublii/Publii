@@ -1,4 +1,6 @@
-$color-1: #42a5f5;
+@use "sass:math";
+
+$color-1: #2a99f4;
 $color-4: #2a2e30;
 $color-8: #dddddd;
 
@@ -7,45 +9,20 @@ $color-helper-7: #1e2128;
 $color-helper-8: #e5e6e8;
 
 /*
- * Logo color sets
- */
-
-$logo-colors: (
-    bg1: #68CBF6, color1: #fff,
-    bg2: #348FD6, color2: #fff,
-    bg3: #46D6DB, color3: #fff,
-    bg4: #8ED892, color4: #fff,
-    bg5: #FEC32D, color5: #fff,
-    bg6: #FD9F28, color6: #fff,
-    bg7: #FD8A6A, color7: #fff,
-    bg8: #FD82AB, color8: #fff,
-    bg9: #95BDF8, color9: #fff,
-    bg10: #B49AE6, color10: #fff,
-    bg11: #DC7EED, color11: #fff,
-    bg12: #B0BEC5, color12: #fff,
-    bg13: #717E88, color13: #fff,
-    bg14: #38474F, color14: #fff,
-    bg15: #B6A6A0, color15: #fff,
-    bg16: #8C6E64, color16: #fff
-);
-
-/*
- * fonts
- */
-$primary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-$secondary-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-
-/*
  * Others
  */
 
-$wrapper: 960px;
+$wrapper: 960px; // app pages view
 $spacing: 0.25rem; // ($baseline / 6.4)
+$options-sidebar-width: 50rem; 
+$app-sidebar: 28rem;
+$app-sidebar-margin: 3rem;
+$app-font-base: 1.5rem;
 
 // Modular scale
 
 $modularscale: (
-  base: 1em,
+  base: 1em, // 'em' only
   ratio: 1.125 //$major-second 
 ); 
 
@@ -56,36 +33,12 @@ $maxScreen: 100rem;
 
 // Baseline
 $line-height: 1.6;
-$baseline: 1.6rem / 7; 
-
+$baseline: math.div(1.6, 7); 
 
 // Font size map
-$font: ( 
-	min: 1em,
-	max: 1.15em 
-);
-
-$h1: ( 
-	min: (ms(5)), 
-	max: (ms(6))
-); 
-$h2: ( 
-	min: (ms(3)),
-	max: (ms(4))
-);
-$h3: ( 
-	min: (ms(2)),
-	max: (ms(3))
-);
-$h4: ( 
-	min: (ms(1)),
-	max: (ms(2))
-);
-$h5: ( 
-	min: (ms(0)),
-	max: (ms(1))
-);
-$h6: ( 
-	min: (ms(0)),
-	max: (ms(0)) 
-);
+$h1: ms(5);
+$h2: ms(4);
+$h3: ms(3);
+$h4: ms(2);
+$h5: ms(1);
+$h6: ms(0);

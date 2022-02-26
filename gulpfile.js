@@ -4,7 +4,7 @@
  * Necessary plugins
  */
 const gulp = require('gulp');
-const sass = require('gulp-sass');
+const sass = require('gulp-dart-sass');
 const exec = require('child_process').exec;
 const fs = require('fs');
 
@@ -22,27 +22,24 @@ const paths = {
 /*
  * Parse SASS into CSS
  */
-gulp.task('prepare-editor-css', function() {
-    gulp.src(paths.sass + 'editor.scss')
+gulp.task('prepare-editor-css', gulp.series(
+    () => gulp.src(paths.sass + 'editor.scss')
         .pipe(sass())
-        .pipe(gulp.dest(paths['css']));
-
-    gulp.src(paths.sass + 'editor-options.scss')
+        .pipe(gulp.dest(paths['css'])), 
+    () => gulp.src(paths.sass + 'editor-options.scss')
         .pipe(sass())
-        .pipe(gulp.dest(paths['css']));
-});
+        .pipe(gulp.dest(paths['css']))
+));
 
 /*
  * Build
  */
-gulp.task('build', function() {
+function updateBuildNumber (cb) {
     let buildData = JSON.parse(fs.readFileSync('app/back-end/builddata.json'));
     buildData.build += 1;
     buildData = JSON.stringify(buildData);
     fs.writeFileSync('app/back-end/builddata.json', buildData);
+    cb();
+}
 
-    exec('"./node_modules/.bin/electron" app/', function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-    });
-});
+gulp.task('build', gulp.series(updateBuildNumber));

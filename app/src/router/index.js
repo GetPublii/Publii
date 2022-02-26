@@ -15,6 +15,7 @@ const Tags = () => import('../components/Tags');
 const Menus = () => import('../components/Menus');
 const Authors = () => import('../components/Authors');
 const Tools = () => import('../components/Tools');
+const ToolsPlugin = () => import('../components/ToolsPlugin');
 const LogViewer = () => import('../components/LogViewer');
 const RegenerateThumbnails = () => import('../components/RegenerateThumbnails');
 const WPImport = () => import('../components/WPImport');
@@ -25,6 +26,8 @@ const FileManager = () => import('../components/FileManager');
 const ServerSettings = () => import('../components/ServerSettings');
 const Settings = () => import('../components/Settings');
 const AppThemes = () => import('../components/AppThemes');
+const AppLanguages = () => import('../components/AppLanguages');
+const AppPlugins = () => import('../components/AppPlugins');
 const ThemeSettings = () => import('../components/ThemeSettings');
 
 // Avoid NavigationDuplicated errors
@@ -138,6 +141,10 @@ export default new Router({
                 {
                     path: 'tools/file-manager',
                     component: FileManager
+                },
+                {
+                    path: 'tools/plugins/:pluginname',
+                    component: ToolsPlugin
                 }
             ]
         },
@@ -150,6 +157,16 @@ export default new Router({
             path: '/app-themes',
             name: 'AppThemes',
             component: AppThemes
+        },
+        {
+            path: '/app-plugins',
+            name: 'AppPlugins',
+            component: AppPlugins
+        },
+        {
+            path: '/app-languages',
+            name: 'AppLanguages',
+            component: AppLanguages
         },
         {
             path: '/site/:name/posts/editor/blockeditor/:post_id?',

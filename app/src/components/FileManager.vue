@@ -1,26 +1,26 @@
 <template>
     <section class="content file-manager">
         <p-header
-            title="Files">
+            :title="$t('file.files')">
             <header-search
                 slot="search"
                 ref="search"
-                placeholder="Filter or search files..."
+                :placeholder="$t('file.filterOrSearchFiles')"
                 onChangeEventName="files-filter-value-changed" />
 
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="outline">
-                Back to tools
+                type="clean back">
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
                 :onClick="addNewFile"
                 slot="buttons"
-                type="primary icon"
+                type="secondary icon"
                 icon="plus">
-                Add new file
+                {{ $t('file.addNewFile') }}
             </p-button>
 
             <p-button
@@ -28,7 +28,7 @@
                 slot="buttons"
                 type="icon"
                 icon="upload-file">
-                Upload files
+                {{ $t('file.uploadFiles') }}
             </p-button>
         </p-header>
 
@@ -42,7 +42,7 @@
                     customHeight="16"
                     :primaryColor="isRoot ? 'color-1' : 'color-7'" />
 
-                root directory
+                {{ $t('file.rootDirectory') }}
             </a>
 
             <a
@@ -54,33 +54,35 @@
                     customHeight="16"
                     :primaryColor="isMedia ? 'color-1' : 'color-7'" />
 
-                media/files
+                {{ $t('file.mediaFiles') }}
             </a>
         </div>
 
-        <collection v-if="!emptySearchResults && hasFiles">
+        <collection
+            v-if="!emptySearchResults && hasFiles"
+            :itemsCount="5">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, true)" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 590px)">
-                    Filename
+                <collection-cell>
+                    {{ $t('file.filename') }}
                 </collection-cell>
 
-                <collection-cell width="150px">
-                    File size
+                <collection-cell min-width="100px">
+                    {{ $t('file.fileSize') }}
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Creation date
+                <collection-cell min-width="130px">
+                    {{ $t('file.creationDate') }}
                 </collection-cell>
 
-                <collection-cell width="200px">
-                    Last modified
+                <collection-cell min-width="200px">
+                    {{ $t('ui.lastModified') }}
                 </collection-cell>
 
                 <div
@@ -88,9 +90,9 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small danger icon"
+                        type="small danger icon light"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -99,7 +101,7 @@
                 v-for="(item, index) in filteredFiles"
                 slot="content"
                 :key="index">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         :value="item.name"
                         :checked="isChecked(index)"
@@ -107,8 +109,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="titles"
-                    width="calc(100% - 590px)">
+                    type="titles">
                     <a
                         :href="item.name"
                         class="file-link"
@@ -126,15 +127,15 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell width="150px">
+                <collection-cell>
                     {{ item.size }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell>
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell width="200px">
+                <collection-cell>
                     {{ item.modifiedAt }}
                 </collection-cell>
             </collection-row>
@@ -142,23 +143,21 @@
 
         <empty-state
             v-if="hasFiles && emptySearchResults"
-            description="There are no files matching your criteria."></empty-state>
+            :description="$t('file.noFileMatchingCriteriaInfo')"></empty-state>
 
         <empty-state
             v-if="!hasFiles && isRoot"
-            description="There are no files in the root directory..."></empty-state>
+            :description="$t('file.noFileInRootDirInfo')"></empty-state>
 
         <empty-state
             v-if="!hasFiles && isMedia"
-            description="There are no files in the media/files directory..."></empty-state>
+            :description="$t('file.noFileInMediaFilesDirInfo')"></empty-state>
     </section>
 </template>
 
 <script>
-import { ipcRenderer, shell, remote } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
-const mainProcess = remote.require('./main');
 
 export default {
     name: 'file-manager',
@@ -166,7 +165,7 @@ export default {
         BackToTools,
         CollectionCheckboxes
     ],
-    data: function() {
+    data () {
         return {
             filterValue: '',
             items: [],
@@ -177,19 +176,19 @@ export default {
         };
     },
     computed: {
-        hasFiles: function() {
+        hasFiles () {
             return !!this.items.length;
         },
-        emptySearchResults: function() {
+        emptySearchResults () {
             return this.filterValue !== '' && !this.items.length;
         },
-        isRoot: function() {
+        isRoot () {
             return this.dirPath === 'root-files';
         },
-        isMedia: function() {
+        isMedia () {
             return this.dirPath !== 'root-files';
         },
-        filteredFiles: function() {
+        filteredFiles () {
             return this.items.filter(file => {
                 if(this.filterValue.trim() === '') {
                     return true;
@@ -199,12 +198,12 @@ export default {
             });
         }
     },
-    mounted: function() {
+    mounted () {
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
-        ipcRenderer.on('app-files-selected', (event, data) => {
+        mainProcessAPI.receive('app-files-selected', (data) => {
             if (data.paths !== undefined && data.paths.filePaths.length) {
                 this.uploadFile(data.paths.filePaths);
             }
@@ -212,19 +211,19 @@ export default {
 
         this.loadFiles();
     },
-    beforeDestroy: function() {
-        ipcRenderer.removeAllListeners('app-files-selected');
+    beforeDestroy () {
+        mainProcessAPI.stopReceiveAll('app-files-selected');
     },
     methods: {
-        loadFiles: function() {
+        loadFiles () {
             this.isLoading = true;
 
-            ipcRenderer.send('app-file-manager-list', {
+            mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath
             });
 
-            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                 this.items = data.map(file => {
                     file.size = this.formatBytes(file.size, 2);
                     file.createdAt = this.getFormatedDate(file.createdAt);
@@ -236,31 +235,31 @@ export default {
                 this.isLoading = false;
             });
         },
-        getFormatedDate: function(timestamp) {
+        getFormatedDate (timestamp) {
             if(this.$store.state.app.config.timeFormat == 12) {
                 return this.$moment(timestamp).format('MMM DD, YYYY  hh:mm a');
             } else {
                 return this.$moment(timestamp).format('MMM DD, YYYY  HH:mm');
             }
         },
-        bulkDelete: function() {
+        bulkDelete () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected files? It cannot be undone.',
+                message: this.$t('file.removeFilesConfirmMsg'),
                 okClick: this.deleteSelected
             });
         },
-        deleteSelected: function() {
-            ipcRenderer.send('app-file-manager-delete', {
+        deleteSelected () {
+            mainProcessAPI.send('app-file-manager-delete', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 filesToDelete: this.getSelectedFiles()
             });
 
-            ipcRenderer.once('app-file-manager-deleted', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-deleted', (data) => {
                 this.loadFiles();
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected files have been removed',
+                    message: this.$t('file.removeFilesSuccessMsg'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -268,7 +267,7 @@ export default {
                 this.selectedItems = [];
             });
         },
-        formatBytes: function(bytes, decimals) {
+        formatBytes (bytes, decimals) {
             if(bytes == 0) {
                 return '0 bytes';
             }
@@ -280,17 +279,17 @@ export default {
 
             return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         },
-        openFile: function(e, filePath) {
+        openFile (e, filePath) {
             e.preventDefault();
             // Uncomment this when file editor will be ready
             // if(item.attr('data-is-binary') === 'true') {
-                shell.openPath(filePath);
+                mainProcessAPI.shellOpenPath(filePath);
             // } else {
             //    console.log('OPENING: ' + item.attr('href'));
             // }
 
         },
-        changeDirectory: function(dirPath) {
+        changeDirectory (dirPath) {
             if(this.dirPath === dirPath) {
                 return;
             }
@@ -301,28 +300,28 @@ export default {
             this.$refs.search.value = '';
             this.$refs.search.updateValue();
         },
-        addNewFile: function() {
+        addNewFile () {
             this.$bus.$emit('confirm-display', {
-                message: 'Please provide name for a new file',
+                message: this.$t('file.provideNameForNewFile'),
                 hasInput: true,
                 okClick: this.addFile
             });
         },
-        addFile: function(fileName) {
+        addFile (fileName) {
             if(fileName === false) {
                 return;
             }
 
-            ipcRenderer.send('app-file-manager-create', {
+            mainProcessAPI.send('app-file-manager-create', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 fileToSave: fileName
             });
 
-            ipcRenderer.once('app-file-manager-created', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-created', (data) => {
                 if(data === false) {
                     this.$bus.$emit('alert-display', {
-                        message: 'The selected filename is in use. Please try to use a different filename.'
+                        message: this.$t('file.selectedFilenameInUseMsg'),
                     });
 
                     return;
@@ -331,14 +330,14 @@ export default {
                 this.loadFiles();
             });
         },
-        uploadFiles: function() {
-            mainProcess.selectFiles(false);
+        async uploadFiles () {
+            await mainProcessAPI.invoke('app-main-process-select-files', false);
         },
-        uploadFile: function(queue) {
+        uploadFile (queue) {
             if(!queue.length) {
                 if(this.existingItems.length) {
                     this.$bus.$emit('alert-display', {
-                        'message': 'The following files exists in the selected directory so it cannot be copied: ' + this.existingItems.join(', ')
+                        'message': this.$t('file.selectedFileExsistsMsg') + this.existingItems.join(', ')
                     });
 
                     this.existingFiles = [];
@@ -351,13 +350,13 @@ export default {
 
             let fileToMove = queue.pop();
 
-            ipcRenderer.send('app-file-manager-upload', {
+            mainProcessAPI.send('app-file-manager-upload', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: this.dirPath,
                 fileToMove: fileToMove
             });
 
-            ipcRenderer.once('app-file-manager-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-uploaded', (data) => {
                 if(data === false) {
                     let fileName = fileToMove.split('/').pop();
                     this.existingItems.push(fileName);
@@ -366,7 +365,7 @@ export default {
                 this.uploadFile(queue);
             });
         },
-        filenameIsInUse(filename) {
+        filenameIsInUse (filename) {
             for(let file of this.items) {
                 if(filename === file.name) {
                     return true;
@@ -404,9 +403,9 @@ export default {
         .directory-link {
             color: var(--text-light-color);
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             transition: var(--transition);
-            
+
             &:hover {
                 color: var(--link-primary-color);
             }
@@ -416,7 +415,7 @@ export default {
             }
 
             &.is-active {
-                color: var(--primary-color);
+                color: var(--link-primary-color);
             }
         }
     }

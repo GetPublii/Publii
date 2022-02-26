@@ -3,19 +3,19 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 662 572" style="enable-background:new 0 0 662 572;" xml:space="preserve">
     <style type="text/css">
         .st0 {
-            fill: #FFFFFF;
-            stroke: #DEEDFC;
+            fill: #fff;
+            stroke: #d7d8dc;
             stroke-width: 3;
             stroke-linecap: round;
             stroke-miterlimit: 10;
         }
 
         .st1 {
-            fill: #5CA4EF;
+            fill: #0d8bf2;
         }
 
         .st2 {
-            fill: #DFE8F7;
+            fill: #d7d8dc;
         }
 
     </style>

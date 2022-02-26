@@ -765,6 +765,7 @@ textarea {
 .logo {
   color: var(--logo-color) !important;
   font-size: 1.2136296308rem;
+  font-family: var(--logo-font);
   font-weight: var(--font-weight-normal);
   margin-right: auto;
 }
@@ -1663,6 +1664,13 @@ textarea {
 .post__entry > :nth-child(1) {
   margin-top: 0;
 }
+.post__entry a:not(.btn):not([type=button]):not([type=submit]):not(button):not(.post__toc a):not(.gallery__item a) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  -webkit-text-decoration-skip: ink;
+          text-decoration-skip-ink: auto;
+}
 .post__avatar-thumbs {
   border-radius: 50%;
   height: 4.5333333333rem;
@@ -2014,10 +2022,6 @@ textarea {
   }
 }
 
-#disqus_thread {
-  margin-top: 1.7rem;
-}
-
 .align-left {
   text-align: left;
 }
@@ -2158,12 +2162,9 @@ textarea {
   margin: 0;
   width: 23px;
 }
-.footer__bttop--show {
+.footer__bttop.is-visible {
   visibility: visible;
   opacity: 1;
-}
-.footer__bttop--fade-out {
-  opacity: 0.6;
 }
 
 .gallery {

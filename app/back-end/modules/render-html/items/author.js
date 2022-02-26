@@ -32,6 +32,7 @@ class AuthorItem {
      */
     prepareData() {
         let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex ? 'index.html' : '';
+        let authorConfig = this.author.config ? JSON.parse(this.author.config) : {};
 
         this.authorData = {
             id: this.authorID,
@@ -45,7 +46,8 @@ class AuthorItem {
             postsNumber: 0,
             url: '',
             featuredImage: {},
-            config: this.author.config ? JSON.parse(this.author.config) : {},
+            config: authorConfig,
+            template: authorConfig.template ? authorConfig.template : ''
         };
 
         if (this.renderer.cachedItems.featuredImages.authors[this.authorData.id]) {
@@ -89,6 +91,10 @@ class AuthorItem {
      * Stores tag data in the cached items of renderer
      */
     storeData() {
+        if (this.renderer.plugins.hasModifiers('authorItemData')) {
+            this.authorData = this.renderer.plugins.runModifiers('authorItemData', this.renderer, this.authorData); 
+        }
+
         // Store tag data without references
         this.renderer.cachedItems.authors[this.authorID] = JSON.parse(JSON.stringify(this.authorData));
     }

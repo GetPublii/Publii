@@ -69,7 +69,9 @@ class GitlabPages {
                 if (projects[0].name !== repository) {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'Selected repository does not exist'
+                        message: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
                     });
 
                     return;
@@ -78,7 +80,9 @@ class GitlabPages {
                 if(!projectID) {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'Selected repository does not exist'
+                        message: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
                     });
 
                     return;
@@ -88,7 +92,9 @@ class GitlabPages {
                     if(!branch) {
                         this.waitForTimeout = false;
                         app.mainWindow.webContents.send('app-deploy-test-error', {
-                            message: 'Selected branch does not exist'
+                            message: {
+                                translation: 'core.server.branchDoesNotExist'
+                            }
                         });
 
                         return;
@@ -99,26 +105,34 @@ class GitlabPages {
                 }).catch(err => {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
-                        message: 'Selected branch does not exist'
+                        message: {
+                            translation: 'core.server.branchDoesNotExist'
+                        }
                     });
                 });
             }).catch(err => {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Selected repository does not exist'
+                    message: {
+                        translation: 'core.server.repositoryDoesNotExist'
+                    }
                 });
             });
         }).catch(err => {
             this.waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: 'Provided token or server address is invalid'
+                message: {
+                    translation: 'core.server.tokenOrServerAddressInvalid'
+                }
             });
         });
 
         setTimeout(function() {
             if(this.waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Request timeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
 
                 this.waitForTimeout = false;
@@ -473,7 +487,7 @@ class GitlabPages {
     makeCommit (operations, nextOperationCallback, commitMessage = 'Publii - deployment') {
         this.client.Commits.create(this.projectID, this.branch, commitMessage, operations).then(res => {
             return nextOperationCallback();
-        }).catch(err => {          
+        }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] (!) COMMIT ERROR: ${JSON.stringify(err)}`);
             process.send({
                 type: 'web-contents',

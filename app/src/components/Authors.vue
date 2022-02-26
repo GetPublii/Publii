@@ -1,9 +1,9 @@
 <template>
-    <section :class="{ 'content': true, 'authors': true, 'no-scroll': editorVisible }">
-        <p-header title="Authors">
+    <section :class="{ 'content': true, 'authors': true, 'authors-list-view': true, 'no-scroll': editorVisible }">
+        <p-header :title="$t('ui.authors')">
             <header-search
                 slot="search"
-                placeholder="Filter or search authors..."
+                :placeholder="$t('author.filterOrSearchAuthors')"
                 onChangeEventName="authors-filter-value-changed" />
 
             <p-button
@@ -11,27 +11,29 @@
                 slot="buttons"
                 type="primary icon"
                 icon="add-site-mono">
-                Add new author
+                {{ $t('author.addNewAuthor') }}
             </p-button>
         </p-header>
 
-        <collection v-if="!emptySearchResults">
+        <collection
+            v-if="!emptySearchResults"
+            :itemsCount="4">
             <collection-header slot="header">
-                <collection-cell width="40px">
+                <collection-cell>
                     <checkbox
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
-                    <span 
+                <collection-cell>
+                    <span
                         class="col-sortable-title"
                         @click="ordering('name')">
                         <template v-if="orderBy === 'name'">
-                            <strong>Name</strong>
+                            <strong>{{ $t('ui.name') }}</strong>
                         </template>
-                        <template v-else>Name</template>
+                        <template v-else>{{ $t('ui.name') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'name' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'name' && order === 'DESC'"></span>
@@ -41,28 +43,28 @@
                 <collection-cell 
                     justifyContent="center"
                     textAlign="center"
-                    width="100px">
+                    min-width="100px">
                     <span
                         class="col-sortable-title"
                         @click="ordering('postsCounter')">
                         <template v-if="orderBy === 'postsCounter'">
-                            <strong>Posts</strong>
+                            <strong>{{ $t('ui.posts') }}</strong>
                         </template>
-                        <template v-else>Posts</template>
+                        <template v-else>{{ $t('ui.posts') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'postsCounter' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'postsCounter' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
 
-                <collection-cell width="40px">
-                    <span 
+                <collection-cell min-width="40px">
+                    <span
                         class="col-sortable-title"
                         @click="ordering('id')">
                         <template v-if="orderBy === 'id'">
-                            <strong>ID</strong>
+                            <strong>{{ $t('ui.id') }}</strong>
                         </template>
-                        <template v-else>ID</template>
+                        <template v-else>{{ $t('ui.id') }}</template>
 
                         <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
@@ -76,7 +78,7 @@
                         icon="trash"
                         type="small light icon"
                         :onClick="bulkDelete">
-                        Delete
+                        {{ $t('ui.delete') }}
                     </p-button>
                 </div>
             </collection-header>
@@ -84,8 +86,9 @@
             <collection-row
                 v-for="(item, index) in items"
                 slot="content"
-                :key="index">
-                <collection-cell width="40px">
+                :key="index"
+                :cssClasses="item.id === 1 ? 'is-main-author' : ''">
+                <collection-cell>
                     <checkbox
                         v-if="item.id !== 1"
                         :value="item.id"
@@ -95,15 +98,14 @@
                     <span
                         v-if="item.id === 1"
                         class="main-author-icon"
-                        title="This is a main author of this website. It cannot be removed.">
+                        :title="$t('author.mainAuthorCannotBeRemoved')">
                         <icon
-                            size="xs"
-                            name="padlock"
-                            primaryColor="color-3" />
+                            size="s"
+                            name="padlock" />
                     </span>
                 </collection-cell>
 
-                <collection-cell width="calc(100% - 180px)">
+                <collection-cell>
                     <a
                         href="#"
                         @click.prevent.stop="editAuthor(item)">
@@ -112,15 +114,14 @@
                         <em
                             v-if="item.id === 1"
                             class="is-main-author">
-                            (Main author)
+                            ({{ $t('author.mainAuthor') }})
                         </em>
                     </a>
                 </collection-cell>
 
                 <collection-cell
                     justifyContent="center"
-                    textAlign="center"
-                    width="100px">
+                    textAlign="center">
                     <a
                         @click.prevent.stop="showPostsConnectedWithAuthor(item.name)"
                         href="#">
@@ -128,27 +129,25 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell 
-                    width="40px">
+                <collection-cell>
                     {{ item.id }}
                 </collection-cell>
             </collection-row>
         </collection>
 
         <transition>
-            <author-form 
+            <author-form
                 v-if="editorVisible"
                 :form-animation="formAnimation" />
         </transition>
 
         <empty-state
             v-if="emptySearchResults"
-            description="There are no authors matching your criteria."></empty-state>
+            :description="$t('author.noAuthorsMatchingYourCriteria')"></empty-state>
     </section>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import AuthorForm from './AuthorForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
@@ -190,11 +189,11 @@ export default {
         }
     },
     beforeMount () {
-        ipcRenderer.send('app-authors-load', {
+        mainProcessAPI.send('app-authors-load', {
             "site": this.$store.state.currentSite.config.name
         });
 
-        ipcRenderer.once('app-authors-loaded', (event, data) => {
+        mainProcessAPI.receiveOnce('app-authors-loaded', (data) => {
             this.$store.commit('setAuthors', data.authors);
             this.$store.commit('setPostsAuthors', data.postsAuthors);
         });
@@ -208,6 +207,10 @@ export default {
         });
 
         this.$bus.$on('hide-author-item-editor', () => {
+            if (document.querySelector('.authors-list-view .item.is-edited')) {
+                document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
             this.editorVisible = false;
         });
 
@@ -247,6 +250,18 @@ export default {
             this.editorVisible = true;
         },
         editAuthor (item) {
+            if (document.querySelector('.authors-list-view .item.is-edited')) {
+                document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
+            }
+
+            let input = document.querySelector('.authors-list-view .item input[value="' + parseInt(item.id, 10) + '"]');
+            
+            if (input) {
+                input.parentNode.parentNode.classList.add('is-edited');
+            } else {
+                document.querySelector('.authors-list-view .item.is-main-author').classList.add('is-edited');
+            }
+
             this.editorVisible = true;
 
             setTimeout(() => {
@@ -255,7 +270,7 @@ export default {
         },
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected authors?',
+                message: this.$t('author.removeAuthorsMessage'),
                 okClick: this.deleteSelected
             });
         },
@@ -265,23 +280,23 @@ export default {
 
             if(itemsToRemove.length === 0) {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot remove the main author.'
+                    message: this.$t('author.cannotRemoveMainAuthor')
                 });
 
                 return;
             }
 
-            ipcRenderer.send('app-author-delete', {
+            mainProcessAPI.send('app-author-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
             });
 
-            ipcRenderer.once('app-author-deleted', () => {
+            mainProcessAPI.receiveOnce('app-author-deleted', () => {
                 this.$store.commit('removeAuthors', itemsToRemove);
                 this.selectedItems = [];
 
                 this.$bus.$emit('message-display', {
-                    message: 'Selected authors have been removed',
+                    message: this.$t('author.removeAuthorsSuccessMessage'),
                     type: 'success',
                     lifeTime: 3
                 });
@@ -290,7 +305,7 @@ export default {
         showPostsConnectedWithAuthor: function(name) {
             let siteName = this.$store.state.currentSite.config.name;
             localStorage.setItem('publii-posts-search-value', 'author:' + name);
-            this.$router.push({ path: '/site/' + siteName + '/posts' });
+            this.$router.push('/site/' + siteName + '/posts');
         },
         ordering (field) {
             if (field !== this.orderBy) {
@@ -336,7 +351,7 @@ export default {
     }
 
     .is-main-author {
-        color: var(--gray-4);
+        color: var(--text-light-color);
     }
 
     .main-author-icon {
@@ -375,14 +390,14 @@ export default {
              text-align: center;
              top: 50%;
              transform: translateY(-50%);
-             width: 8px;       
+             width: 8px;
         }
     }
 
     .order-descending {
         &:after {
-            border-top-color: transparent; 
-            border-bottom: solid 5px var(--icon-secondary-color);                     
+            border-top-color: transparent;
+            border-bottom: solid 5px var(--icon-secondary-color);
         }
     }
 }

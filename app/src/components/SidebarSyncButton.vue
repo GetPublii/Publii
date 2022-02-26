@@ -1,6 +1,6 @@
 <template>
-    <div 
-        :class="{ 
+    <div
+        :class="{
             'sidebar-sync': true,
             'sidebar-sync-in-progress': syncInProgress
         }">
@@ -9,7 +9,7 @@
             class="sidebar-preview-link"
             @click="renderPreview"
         >
-            Preview your changes
+            {{ $t('sync.previewChanges') }}
         </a>
 
         <a
@@ -20,31 +20,30 @@
             <span v-pure-html="icon" class="sidebar-sync-link-icon"></span>
             <span>{{ status }}</span>
         </a>
-        <a 
+        <a
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
             target="_blank"
             class="sidebar-sync-date">
-            
+
                 <template v-if="!hasManualDeploy">
-                    Last sync: <span>{{ syncDate }}</span>
+                    {{ $t('sync.lastSync') }}: <span>{{ syncDate }}</span>
                     <icon
                         size="xs"
                         name="external-link"/>
                 </template>
                 <template v-if="hasManualDeploy">
-                    Last rendered: <span>{{ syncDate }}</span>
+                    {{ $t('sync.lastRendered') }}: <span>{{ syncDate }}</span>
                     <icon
                         size="xs"
                         name="external-link"/>
                 </template>
-           
+
         </a>
     </div>
 </template>
 
 <script>
-import fs from 'fs';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
@@ -68,44 +67,44 @@ export default {
                 if(!this.checkDeploymentConfig()) {
                     this.redirectTo = 'site-settings';
                     this.icon = SidebarIcons.NO_CONFIG;
-                    return 'Provide access data';
+                    return this.$t('sync.provideAccessData');
                 }
 
                 switch(status) {
                     case 'preparing':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.PREPARING;
-                        return 'Preparing files';
+                        return this.$t('sync.preparingFiles');
                     case 'prepared':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.PREPARED;
-                        return 'Prepared to upload';
+                        return this.$t('sync.preparedToUpload');
                     case 'not-prepared':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.NOT_PREPARED;
-                        return 'Preparation error';
+                        return this.$t('sync.preparationError');
                     case 'syncing':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.SYNCING;
-                        return 'Sync in progress';
+                        return this.$t('sync.syncInProgress');
                     case 'synced':
                     case 'not-synced':
                         this.redirectTo = 'sync';
                         this.icon = SidebarIcons.NOT_SYNCED;
-                        return 'Sync your website';
+                        return this.$t('sync.syncYourWebsite');
                 }
             } else if(!this.checkDeploymentConfig()) {
                 this.redirectTo = 'site-settings';
                 this.icon = SidebarIcons.PROVIDE_ACCESS;
-                return 'Configure Server';
+                return this.$t('sync.configureServer');
             } else {
                 this.redirectTo = 'sync';
                 this.icon = SidebarIcons.SYNC;
-                return 'Sync your website';
+                return this.$t('sync.syncYourWebsite');
             }
 
             this.redirectTo = 'sync';
-            return 'Site is in sync';
+            return this.$t('sync.siteIsInSync');
         },
         hasSyncDate: function() {
             if(!this.$store.state.currentSite.config) {
@@ -126,7 +125,7 @@ export default {
         hasManualDeploy () {
             return this.$store.state.currentSite.config.deployment.protocol === 'manual';
         },
-        websiteUrl () { 
+        websiteUrl () {
             return this.$store.state.currentSite.config.domain;
         },
         syncInProgress () {
@@ -139,8 +138,8 @@ export default {
                 let siteName = this.$store.state.currentSite.config.name;
 
                 this.$bus.$emit('confirm-display', {
-                    message: 'You haven\'t selected any theme. Please go to the Settings and select the theme first.',
-                    okLabel: 'Go to settings',
+                    message: this.$t('sync.youHaventSelectedAnyThemeInfo'),
+                    okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         this.$router.push(`/site/${siteName}/settings/`);
                     }
@@ -148,10 +147,10 @@ export default {
                 return;
             }
 
-            if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+            if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                    okLabel: 'Go to app settings',
+                    message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                    okLabel: this.$t('sync.goToAppSettings'),
                     okClick: () => {
                         this.$router.push(`/app-settings/`);
                     }
@@ -171,8 +170,8 @@ export default {
                     let siteName = this.$store.state.currentSite.config.name;
 
                     this.$bus.$emit('confirm-display', {
-                        message: 'You haven\'t selected any theme. Please go to the Settings and select the theme first.',
-                        okLabel: 'Go to settings',
+                        message: this.$t('sync.youHaventSelectedAnyThemeInfo'),
+                        okLabel: this.$t('sync.goToSettings'),
                         okClick: () => {
                             this.$router.push(`/site/${siteName}/settings/`);
                         }
@@ -184,9 +183,7 @@ export default {
             } else if (this.redirectTo === 'site-settings') {
                 let siteName = this.$store.state.currentSite.config.name;
 
-                this.$router.push({
-                    path: '/site/' + siteName + '/settings/server'
-                });
+                this.$router.push('/site/' + siteName + '/settings/server');
             }
         },
         checkDeploymentConfig() {
@@ -212,12 +209,12 @@ export default {
 .sidebar {
     &-sync {
         bottom: 3rem;
-        left: 4rem;
+        left: $app-sidebar-margin;
         position: absolute;
-        right: 4rem;
+        right: $app-sidebar-margin;
 
         &-icon {
-            fill: var(--white);           
+            fill: var(--white);
         }
 
         &-date {
@@ -229,9 +226,10 @@ export default {
             margin-top: 1.2rem;
             opacity: var(--sidebar-link-opacity);
             text-align: center;
+            white-space: nowrap;
 
             &:hover {
-                color: var(--sidebar-link-hover-color);
+                color: var(--sidebar-link-color-hover);
                 opacity: 1;
             }
 
@@ -249,18 +247,18 @@ export default {
         &-link {
             align-items: center;
             background: var(--sidebar-sync-btn-bg);
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             color: var(--sidebar-sync-btn-color);
             display: flex;
-            font-size: 1.6rem;
-            font-weight: 500;
+            font-size: $app-font-base;
+            font-weight: var(--font-weight-semibold);
             justify-content: center;
-            padding: 1.4rem 2.4rem;
-            position: relative;  
-            
+            padding: 1.4rem 1rem;
+            position: relative;
+
             // sync cloud icon
             .sidebar-sync-icon {
-                height: 2.2rem;  
+                height: 2.2rem;
                 display: inherit;
                 width: 3rem;
 
@@ -270,7 +268,7 @@ export default {
                 }
 
                 polygon {
-                    fill: var(--primary-color);
+                    fill: var(--color-primary);
                     transition: var(--transition);
                 }
             }
@@ -294,15 +292,15 @@ export default {
             //         }
             //     }
             // }
-            
+
             // interjection mark icon
             .sidebar-interjection-icon {
                 display: block;
-                height: 2.3rem;                
+                height: 2.3rem;
                 width: 2.4rem;
 
                 path {
-                    fill: var(--white);                   
+                    fill: var(--white);
                 }
             }
 
@@ -316,10 +314,10 @@ export default {
                     fill: $color-helper-6;
                 }
             }
-            
-            &-icon {               
+
+            &-icon {
                 display: block;
-                height: 100%;  
+                height: 100%;
                 margin-right: 1.2rem;
                 width: auto;
             }
@@ -332,12 +330,12 @@ export default {
         &-syncing {}
         &-not-prepared,
         &-noftp {}
-        
-        &-preparing { 
-            display: block;              
-            height: 2.1rem;           
+
+        &-preparing {
+            display: block;
+            height: 2.1rem;
             width: 2.1rem;
-            
+
             & > span {
                 animation: spin .9s infinite linear;
                 border-top: 2px solid rgba(255,255,255, .2);
@@ -345,14 +343,14 @@ export default {
                 border-bottom: 2px solid rgba(255,255,255, .2);
                 border-left: 2px solid var(--white);
                 border-radius: 50%;
-                display: inline-block;   
+                display: inline-block;
                 height: 2.1rem;
-                width: 2.1rem;                 
-                
+                width: 2.1rem;
+
                 &::after {
                     border-radius: 50%;
                     content: "";
-                    display: block;                                      
+                    display: block;
                 }
             }
         }
@@ -360,19 +358,21 @@ export default {
         &-in-progress {
             .sidebar-sync-link, .sidebar-sync-date, .sidebar-preview-website {
                opacity: 0;
-               transition: .35s cubic-bezier(.17,.67,.13,1.05) .35s all;     
-               visibility: hidden; 
+               transition: .35s cubic-bezier(.17,.67,.13,1.05) .35s all;
+               visibility: hidden;
             }
         }
     }
 
     &-preview-link {
         border: 2px solid var(--sidebar-preview-btn-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--sidebar-preview-btn-color) !important;
         display: block;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-semibold);
         margin-bottom: 1rem;
-        padding: 1.2rem 2.4rem;
+        padding: 1.2rem 1rem;
         text-align: center;
 
         & > span {
@@ -381,8 +381,8 @@ export default {
         }
 
         &:hover {
-            border-color: var(--sidebar-preview-btn-border-hover-color) !important;
-            color: var(--sidebar-preview-btn-hover-color) !important;
+            border-color: var(--sidebar-preview-btn-border-color-hover) !important;
+            color: var(--sidebar-preview-btn-color-hover) !important;
         }
 
         &.is-disabled {
@@ -401,7 +401,7 @@ export default {
 
         .progress-wrapper {
             min-height: 50px;
-            padding: 0;           
+            padding: 0;
         }
 
         .progress {
@@ -412,13 +412,13 @@ export default {
                 height: 4px;
             }
         }
-    }   
+    }
 
     &-error {
          font-size: 1.3rem;
     }
 
-    
+
 }
 
 @keyframes pulse {

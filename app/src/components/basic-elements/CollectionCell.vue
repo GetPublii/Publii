@@ -10,6 +10,10 @@
 export default {
     name: 'collectioncell',
     props: {
+        minWidth: {
+            default: 'auto',
+            type: String
+        },
         width: {
             default: 'auto',
             type: String
@@ -42,6 +46,7 @@ export default {
         cellStyle: function() {
             let styles = [
                 'width: ' + this.width,
+                'min-width: ' + this.minWidth,
                 'text-align: ' + this.textAlign,
                 'justify-content: ' + this.justifyContent
             ];
@@ -56,9 +61,29 @@ export default {
 @import '../../scss/variables.scss';
 
 .col {
+    align-items: center;
+    background: var(--collection-bg);
+    box-sizing: content-box;
+    border-bottom: 1px solid var(--border-light-color);
+    display: grid;
     font-weight: var(--font-weight-normal);
-    padding: 1.6rem 0;
+    justify-content: left;
+    padding: 1.5rem 2rem 1.5rem 2rem;
     text-align: left;
+
+    &:first-child {
+        padding-right: 0;
+    }
+
+    a {
+        color: var(--link-invert-color);
+
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-invert-color-hover);
+        }
+    }
 
     &.checkbox {
         .featured-icon {
@@ -72,11 +97,14 @@ export default {
     }
 
     &.titles {
+        flex-wrap: wrap;
+
         .title {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
+            width: 100%;
         }
 
         .tag {
@@ -96,11 +124,12 @@ export default {
             position: relative;
             top: .1rem;
         }
+        
     }
 
     &.names {
         .name {
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: var(--font-weight-normal);
             margin: 0;
             text-transform: none;
@@ -112,9 +141,12 @@ export default {
     }
 
     &.publish-dates {
+        flex-wrap: wrap;
+
         .publish-date,
         .modify-date {
             display: block;
+            width: 100%;
         }
 
         .publish-date {
@@ -124,12 +156,37 @@ export default {
         .modify-date {
             color: var(--text-light-color);
             font-size: 1.2rem;
-            margin: .2rem 0 0 0;
+            margin: 0;
+        }
+    }
+
+    &-buttons {
+        display:  flex !important;
+    }
+
+    &.authors {
+        a {
+            overflow: hidden;
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+             max-width: 15rem;
         }
     }
 }
 
 .item {
+    &:hover,
+    &.is-edited {
+        .col {
+           background: var(--collection-bg-hover);
+
+           &:first-child {
+               box-shadow: inset 3px 0 0 var(--color-primary);
+           }
+        }
+    }
+
     &[data-is-draft="true"] {
         .title,
         .tags,
@@ -156,4 +213,15 @@ body[data-os="win"] {
         }
     }
 }
+
+/*
+ * Responsive improvements
+ */
+
+@media (min-width: 1920px) {
+    .col.authors a {
+        max-width: 100%;
+    }
+}
+
 </style>

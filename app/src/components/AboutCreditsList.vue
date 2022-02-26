@@ -5,13 +5,13 @@
         <template v-for="(licenseData, index) in licensesData">
             <dt class="credits-item">
                 {{ licenseData.name }}
-                
+
                 <a
                     v-if="licenseData.target !== '_blank'"
                     class="credits-toggle"
                     @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
                     :href="licenseData.href">
-                    License 
+                    {{ $t('publii.license') }}
                 </a>
 
                 <a
@@ -19,15 +19,15 @@
                     class="credits-toggle"
                     :href="licenseData.href"
                     target="_blank">
-                    License 
+                    {{ $t('publii.license') }}
                 </a>
 
                 <a
                     v-if="licenseData.homepage"
                     :href="licenseData.homepage"
-                    target="_blank" 
+                    target="_blank"
                     rel="noopener noreferrer">
-                    Homepage
+                    {{ $t('publii.homepage') }}
                 </a>
             </dt>
 
@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import { remote, ipcRenderer } from 'electron';
-
 export default {
     name: 'about-credits-list',
     props: [
@@ -66,6 +64,11 @@ export default {
             return licensesData;
         }
     },
+    mounted () {
+        (async () => {
+            this.appDirPath = await mainProcessAPI.invoke('app-credits-list:get-app-path');
+        });
+    },
     methods: {
         itemClicked: function(e, id, licenseUrl) {
             if(e.target.getAttribute('href') === '#') {
@@ -79,11 +82,15 @@ export default {
             }
         },
         loadLicense: function(link, licenseUrl) {
-            ipcRenderer.send('app-license-load', {
+            mainProcessAPI.send('app-license-load', {
                 url: licenseUrl
             });
 
-            ipcRenderer.once('app-license-loaded', function(event, licenseText) {
+            mainProcessAPI.receiveOnce('app-license-loaded', function(licenseText) {
+                if (licenseText.translation) {
+                    licenseText = this.$t(licenseText);
+                }
+
                 link.parentNode.nextElementSibling.querySelector('pre').innerText = licenseText;
             });
         },
@@ -135,7 +142,7 @@ export default {
 
 .credits {
     &-list {
-        margin-top: 2rem;
+        margin-top: 0;
     }
 
     &-item {
@@ -143,15 +150,15 @@ export default {
         padding: 1.4rem 0;
 
         & > a {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             float: right;
             font-size: 1.4rem;
             margin-left: 5rem;
-            
+
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-color-hover);
             }
         }
 

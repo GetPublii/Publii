@@ -2,30 +2,34 @@
 @import '../variables';
 @import '../mixins';
 
-/**
- * simplemde v1.11.2
- * Copyright Next Step Webs, Inc.
- * @link https://github.com/NextStepWebs/simplemde-markdown-editor
- * @license MIT
- */
 .post-editor-markdown {
+    /**
+     * simplemde v1.11.2
+     * Copyright Next Step Webs, Inc.
+     * @link https://github.com/sparksuite/simplemde-markdown-editor
+     * @license MIT
+     */
     .CodeMirror {
+        font-size: var(--editor-font-size);
         height: auto;
         min-height: 300px;      
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
-        color: var(--text-editor-body-color);
-        font-family: var(--font-base);
+        color: var(--text-primary-color);
+        font-family: var(--editor-font-family);
         font-weight: var(--font-weight-normal);
         line-height: $line-height;
         padding: 0;
         z-index: 1;
-
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
     }
 
     .CodeMirror-scroll {
-        min-height: 300px
+        min-height: 300px;
+        overflow: unset !important;
+    }
+
+    .CodeMirror-sizer {
+        border-right: none;
     }
 
     .CodeMirror-fullscreen {
@@ -53,7 +57,7 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-string {
-        color: var(--primary-color);
+        color: var(--color-primary);
     }
 
     .CodeMirror .CodeMirror-selected {
@@ -67,41 +71,40 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-header {
+        font-family: var(--font-base);
         color: var(--headings-color);
         line-height: 1.3;
 
     }
 
     .CodeMirror .CodeMirror-code .cm-header-1 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+        font-size: $h1;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-2 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+        font-size: $h2;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-3 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+        font-size: $h3;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-4 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+        font-size: $h4;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-5 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+        font-size: $h5;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-6 {
-        @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+        font-size: $h6;
     }
 
     .CodeMirror .CodeMirror-code .cm-comment {
         background: var(--highlighted);
         border-radius: 2px;
     }
-
-    .CodeMirror .CodeMirror-code .cm-link {}
 
     .CodeMirror .CodeMirror-code .cm-url {
         border-bottom: 2px solid rgba(var(--yellow), 1);

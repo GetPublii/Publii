@@ -41,36 +41,22 @@
 </template>
 
 <script>
-import { remote } from 'electron';
-
 export default {
     name: 'topbar-appbar',
     methods: {
         appMinimize: function() {
-            if(remote.BrowserWindow.getFocusedWindow()) {
-                remote.BrowserWindow.getFocusedWindow().minimize();
-            }
+            mainProcessAPI.invoke('app-window:minimize');
         },
         appMaximize: function() {
-            if(remote.BrowserWindow.getFocusedWindow()) {
-                remote.BrowserWindow.getFocusedWindow().maximize();
-            }
-
+            mainProcessAPI.invoke('app-window:maximize');
             this.$store.commit('setWindowState', true);
         },
         appUnmaximize: function() {
-            if(remote.BrowserWindow.getFocusedWindow()) {
-                remote.BrowserWindow.getFocusedWindow().unmaximize();
-            }
-
+            mainProcessAPI.invoke('app-window:unmaximize');
             this.$store.commit('setWindowState', false);
         },
         appClose: function() {
-            let allWindows = remote.BrowserWindow.getAllWindows();
-
-            for(let i = 0; i < allWindows.length; i++) {
-                allWindows[i].close();
-            }
+            mainProcessAPI.invoke('app-window:close');
         }
     }
 }
@@ -82,7 +68,7 @@ export default {
 .appbar {
     -webkit-app-region: drag; // necessary for making window draggable
     -webkit-user-select: none; // remove conflict with the text selection
-    background: var(--border-light-color);
+    background: var(--top-app-bar);
     height: var(--topbar-height);
     padding: 0;
     position: relative;

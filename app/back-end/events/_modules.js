@@ -19,5 +19,7 @@ module.exports = {
     AuthorEvents: require('./author.js'),
     AuthorsEvents: require('./authors.js'),
     ImportEvents: require('./import.js'),
-    FileManagerEvents: require('./file-manager.js')
+    FileManagerEvents: require('./file-manager.js'),
+    PluginEvents: require('./plugin.js'),
+    PluginsApiEvents: require('./plugins-api.js')
 };

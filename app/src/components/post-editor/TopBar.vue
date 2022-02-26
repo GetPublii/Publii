@@ -1,36 +1,41 @@
 <template>
     <div class="post-editor-topbar">
+
+        <label v-if="sourceCodeEditorVisible">
+            {{ $t('editor.sourceCode') }}
+        </label>
+        
+        <p-button
+            v-if="!sourceCodeEditorVisible"
+            id="post-back-to-posts-button"
+            type="clean-invert icon"
+            icon="arrow-left"
+            @click.native="cancelPost">
+            {{ $t('ui.backToPosts') }}
+        </p-button>
+
         <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-preview-button"
-            type="outline icon"
-            icon="off-live-preview"
+            type="clean-invert"
             :disabled="!themeConfigured"
-            :title="themeConfigured ? 'You have to configure theme for this website before generating preview of this post.' : ''"
+            :title="themeConfigured ? $t('post.configureThemeBeforeGenaratingPreview') : ''"
             @click.native="generatePostPreview">
-            Preview
+            {{ $t('ui.preview') }}
         </p-button>
 
         <div
             v-if="!sourceCodeEditorVisible"
             class="post-editor-actions">
-            
+
             <btn-dropdown
                 ref="dropdown-button"
                 :items="dropdownItems"
-                :min-width="184"
                 :defaultValue="retrieveCurrentAction()" />
 
             <p-button
-                type="outline"
-                @click.native="cancelPost">
-                Back to posts
-            </p-button>
-
-            <p-button 
                 icon="settings"
-
-                :type="$parent.sidebarVisible ? 'outline icon only-icon-color' : 'outline icon only-icon'"
+                :type="$parent.sidebarVisible ? 'clean clean-invert icon only-icon-color' : 'clean clean-invert icon only-icon'"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
@@ -38,23 +43,31 @@
             v-if="sourceCodeEditorVisible"
             class="post-editor-source-code-actions">
             <p-button
-                type="primary"
-                @click.native="sourceCodeApply">
-                Apply changes
+                type="clean"
+                @click.native="sourceCodeCancel">
+                {{ $t('ui.goBack') }}
             </p-button>
 
             <p-button
-                type="outline"
-                @click.native="sourceCodeCancel">
-                Cancel
+                v-if="sourceCodeEditorVisible"
+                type="secondary icon"
+                icon="source-code"
+                @click.native="$bus.$emit('source-code-editor-beautify-code')">
+                {{ $t('ui.beautifyCode') }}
             </p-button>
+
+            <p-button
+                type="primary"
+                @click.native="sourceCodeApply">
+                {{ $t('ui.applyChanges') }}
+            </p-button>
+
         </div>
     </div>
 </template>
 
 <script>
 import PostHelper from './PostHelper';
-import { ipcRenderer } from 'electron';
 
 export default {
     name: 'post-editor-top-bar',
@@ -62,25 +75,25 @@ export default {
         dropdownItems () {
             return [
                 {
-                    label: 'Save and close',
+                    label: this.isDraft ? this.$t('ui.saveDraftAndClose') : this.$t('ui.saveAndClose'),
                     value: 'save-and-close',
                     isVisible: () => true,
                     onClick: this.dropdownSaveAndClose
                 },
                 {
-                    label: 'Save',
+                    label: this.isDraft ? this.$t('ui.saveDraft') : this.$t('ui.save'),
                     value: 'save',
                     isVisible: () => true,
                     onClick: this.dropdownSave
                 },
                 {
-                    label: 'Save as draft',
+                    label: this.$t('ui.saveAsDraft'),
                     value: 'save-as-draft',
                     isVisible: () => !this.isDraft,
                     onClick: this.dropdownSaveAsDraft
                 },
                 {
-                    label: this.$store.state.app.config.closeEditorOnSave ? 'Publish and close' : 'Publish post',
+                    label: this.$store.state.app.config.closeEditorOnSave ? this.$t('ui.publishAndClose') : this.$t('ui.publishPost'),
                     value: 'publish-post',
                     isVisible: () => this.isDraft,
                     onClick: this.dropdownPublish
@@ -159,7 +172,7 @@ export default {
             }
 
             this.$bus.$emit('confirm-display', {
-                message: 'You will lose all unsaved changes - do you want to continue?',
+                message: this.$t('ui.cancelPostWarningMsg'),
                 okClick: this.cleanUpPost
             });
         },
@@ -172,7 +185,7 @@ export default {
             preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
             preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
             // Send an event which will remove unused images from the post editor
-            ipcRenderer.send('app-post-cancel', {
+            mainProcessAPI.send('app-post-cancel', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.$parent.postID,
                 'text': preparedText,
@@ -213,7 +226,7 @@ export default {
     &-topbar {
         align-items: center;
         background: transparent;
-        font-size: 2.4rem;
+        font-size: 1.4rem;
         display: flex;
         height: 5.6rem;
         justify-content: space-between;
@@ -226,29 +239,41 @@ export default {
 
     &-actions {
         display: flex;
+        margin-left: auto;
 
         .button {
             text-align: center;
 
             &:nth-child(2) {
                 margin-left: 1rem;
-                width: 120px;
-            }
-
-            &:nth-child(3) {
-                margin-left: 1rem;
+                margin-right: -1.7rem; // button padding
             }
         }
     }
 
     &-source-code-actions {
-        margin-left: auto;        
+        margin-left: auto;
     }
 
     #post-preview-button {
-        padding-left: 2.4rem;
-        text-align: center;
-        width: 122px;
+        background: var(--bg-primary);
+    }
+
+    #post-back-to-posts-button {
+        background: var(--bg-primary);
+        margin-left: -2.1rem;
+        margin-right: .625rem;
+        padding-left: 3.4rem;
+        padding-right: .625rem;
+        position: relative;
+
+        &::after {
+            border-right: 1px solid var(--gray-2);
+            content: "";
+            height: 1.4rem;
+            right: -.9375rem;
+            @include centerXY(false, true);
+        }
     }
 }
 

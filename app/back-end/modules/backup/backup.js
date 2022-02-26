@@ -3,13 +3,12 @@
  */
 
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const Utils = require('./../../helpers/utils.js');
 const moment = require('moment');
 const archiver = require('archiver');
-const tar = require('tar');
-const trash = require('trash');
+const tar = require('tar-fs');
+const { shell } = require('electron');
 
 class Backup {
     /**
@@ -86,7 +85,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-create-error',
                     status: false,
-                    error: 'Backup location does not exists'
+                    error: 'core.backup.locationDoesNotExists'
                 });
 
                 return;
@@ -138,7 +137,7 @@ class Backup {
         process.send({
             type: 'app-backup-create-error',
             status: false,
-            error: 'Backups location not exists'
+            error: 'core.backup.locationDoesNotExists'
         });
     }
 
@@ -162,21 +161,9 @@ class Backup {
             }
 
             try {
-                if (
-                    os.platform() !== 'linux' && (
-                        os.platform() !== 'darwin' || (
-                            os.platform() === 'darwin' &&
-                            parseInt(os.release().split('.')[0], 10) >= 16
-                        )
-                    )
-                ) {
-                    await (async () => {
-                        await trash(backupFilePath);
-                    })();
-                } else {
-                    fs.unlinkSync(backupFilePath);
-                }
+                await shell.trashItem(backupFilePath);
             } catch (e) {
+                console.log('ERR:', e);
                 return Promise.resolve({
                     status: false,
                     backups: Backup.loadList(siteName, backupsDir)
@@ -242,7 +229,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'Backup file does not exists'
+                error: 'core.backup.fileDoesNotExists'
             });
 
             return;
@@ -252,7 +239,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'Destination directory does not exists'
+                error: 'core.backup.destinationDirectoryDoesNotExists'
             });
 
             return;
@@ -265,7 +252,7 @@ class Backup {
                 process.send({
                     type: 'app-backup-restore-error',
                     status: false,
-                    error: 'Temporary directory does not exists'
+                    error: 'core.backup.temporaryDirectoryDoesNotExists'
                 });
 
                 return;
@@ -275,69 +262,54 @@ class Backup {
         // Empty the temp directory before extracting the backups content
         fs.emptyDirSync(tempDir);
 
-        let extractor = tar.Extract({
-            path: tempDir
-        })
+        fs.createReadStream(backupFilePath)
             .on('error', function(err) {
                 process.send({
                     type: 'app-backup-restore-error',
                     status: false,
-                    error: 'An error during the file save process'
+                    error: 'core.backup.errorDuringReadingBackupFile'
                 });
 
                 setTimeout(function () {
                     process.exit();
                 }, 1000);
             })
-            .on('end', function() {
+            .pipe(tar.extract(tempDir, {
+                finish: () => {
                 // Verify the backup
                 let backupTest = Backup.verify(tempDir, siteName);
-
+    
                 if(!backupTest) {
                     setTimeout(function () {
                         process.exit();
                     }, 1000);
-
+    
                     return;
                 }
-
+    
                 // Close DB connection and remove site dir contents
                 process.send({
                     type: 'app-backup-restore-close-db',
                     status: true
                 });
-
+    
                 fs.emptyDirSync(destinationPath);
-
+    
                 // Move files from the temp dir to the site dir
                 let backupContents = fs.readdirSync(tempDir);
-
+    
                 for(let content of backupContents) {
                     fs.moveSync(
                         path.join(tempDir, content),
                         path.join(destinationPath, content)
                     );
                 }
-
+    
                 process.send({
                     type: 'app-backup-restore-success',
                     status: true
                 });
-            });
-
-        fs.createReadStream(backupFilePath)
-            .on('error', function(err) {
-                process.send({
-                    type: 'app-backup-restore-error',
-                    status: false,
-                    error: 'An error occurred during reading of backup file'
-                });
-
-                setTimeout(function () {
-                    process.exit();
-                }, 1000);
-            })
-            .pipe(extractor);
+            }}));
     }
 
     /**
@@ -378,7 +350,7 @@ class Backup {
             process.send({
                 type: 'app-backup-restore-error',
                 status: false,
-                error: 'The backup file is corrupted - aborting the restore process.'
+                error: 'core.backup.fileIsCorrupted'
             });
 
             return false;

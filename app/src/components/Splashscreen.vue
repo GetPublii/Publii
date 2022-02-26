@@ -13,18 +13,17 @@
                 v-if="!licenseAccepted"
                 class="license">
                 <p>
-                    This software is licensed under GNU GPL version 3.<br>
-                    By clicking "Accept" you are agree to the
+                    <span v-pure-html="$t('publii.publiiLicenseAgreementInfo')"></span>
                     <a
                         href="#"
                         @click="showLicense">
-                        Publii License Agreement.
+                        {{ $t('publii.publiiLicenseAgreement') }}
                     </a>
                 </p>
 
                 <p-button
                     :onClick="acceptLicense">
-                    Accept
+                    {{ $t('publii.accept') }}
                 </p-button>
             </div>
         </div>
@@ -32,8 +31,6 @@
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
-
 export default {
     name: 'splashscreen',
     computed: {
@@ -48,18 +45,18 @@ export default {
         }
     },
     beforeDestroy: function() {
-        ipcRenderer.removeAllListeners('app-license-accepted');
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
         showLicense: function(e) {
             e.preventDefault();
-            shell.openExternal('https://getpublii.com/license.html');
+            mainProcessAPI.shellOpenExternal('https://getpublii.com/license.html');
         },
         acceptLicense: function() {
             let self = this;
 
-            ipcRenderer.send('app-license-accept', true);
-            ipcRenderer.once('app-license-accepted', function(event, data) {
+            mainProcessAPI.send('app-license-accept', true);
+            mainProcessAPI.receiveOnce('app-license-accepted', function(data) {
                 self.$bus.$emit('license-accepted');
             });
         }

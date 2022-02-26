@@ -1,35 +1,35 @@
 <template>
     <section class="settings site-settings-app">
         <div class="settings-wrapper">
-            <p-header title="App Settings">
+            <p-header :title="$t('settings.appSettings')">
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
 
                 <p-button
                     :onClick="checkBeforeSave"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-header>
 
-            <fields-group title="Basic Settings">
+            <fields-group :title="$t('settings.basicSettings')">
                 <field
                     id="theme"
-                    label="Color theme">
+                    :label="$t('settings.colorTheme')">
                     <dropdown
                         slot="field"
                         id="start"
                         v-model="theme"
                         :items="availableColorSchemes"></dropdown>
                 </field>
-                
+
                 <field
                     id="start"
-                    label="Load at start:">
+                    :label="$t('settings.loadAtStart')">
                     <dropdown
                         slot="field"
                         id="start"
@@ -39,7 +39,7 @@
 
                 <field
                     id="time-format"
-                    label="Time format:">
+                    :label="$t('settings.timeFormat')">
                     <dropdown
                         slot="field"
                         id="time-format"
@@ -49,7 +49,7 @@
 
                 <field
                     id="images-resize-engine"
-                    label="Images resize engine:">
+                    :label="$t('settings.imagesResizeEngine')">
                     <dropdown
                         slot="field"
                         id="images-resize-engine"
@@ -58,23 +58,13 @@
                     <small
                         slot="note"
                         class="note">
-                        The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.
+                        {{ $t('settings.imageResizeEngineInfo') }}
                     </small>
-                </field>
-
-                <field
-                    id="close-editor-on-save"
-                    label="Close post editor on save"
-                    :labelSeparated="false">
-                    <switcher
-                        slot="field"
-                        id="close-editor-on-save"
-                        v-model="closeEditorOnSave" />
-                </field>
+                </field>             
 
                 <field
                     id="always-save-search-state"
-                    label="Always save search state"
+                    :label="$t('settings.alwaysSaveSearchState')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -83,13 +73,13 @@
                     <span
                         slot="note"
                         class="note">
-                        When enabled, Publii will save the current search results even when creating a new post, allowing you to return to the listing. By default, Publii only saves search results when opening a post to edit.
+                        {{ $t('settings.saveSearchStateInfo') }}
                     </span>
                 </field>
 
                 <field
                     id="show-modification-date-as-column"
-                    label="Show modification date as column"
+                    :label="$t('settings.showModificationDateAsColumn')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -99,7 +89,7 @@
 
                 <field
                     id="show-post-slugs"
-                    label="Show post slugs on the listing"
+                    :label="$t('settings.showPostSlugsOnTheListing')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -108,18 +98,8 @@
                 </field>
 
                 <field
-                    id="open-devtools-in-main"
-                    label="Open DevTools automatically in the Main Window"
-                    :labelSeparated="false">
-                    <switcher
-                        slot="field"
-                        id="open-devtools-in-main"
-                        v-model="openDevToolsInMainWindow" />
-                </field>
-
-                <field
                     id="wide-scrollbars"
-                    label="Use wider scrollbars"
+                    :label="$t('settings.usewideScrollbars')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -128,36 +108,42 @@
                 </field>
             </fields-group>
 
-            <fields-group title="Files location">
+            <fields-group :title="$t('settings.filesLocation')">
                 <field
                     id="sites-location"
-                    label="Sites location">
+                    :label="$t('settings.sitesLocation')">
                     <dir-select
                         id="sites-location"
-                        placeholder="Leave blank to use default sites directory"
+                        :placeholder="$t('settings.leaveBlankToUseDefaultSitesDir')"
                         v-model="locations.sites"
                         :readonly="syncInProgress"
                         slot="field" />
+                    <switcher
+                        v-if="originalSitesLocation !== locations.sites"
+                        slot="field"
+                        id="site-location-switcher"
+                        v-model="changeSitesLocationWithoutCopying"
+                        :label="$t('settings.changeSitesLocationWithoutCopyingFiles')" />
                     <small
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.sites !== '' && !checkSitesCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
 
                 <field
                     id="backups-location"
-                    label="Backup location">
+                    :label="$t('settings.backupLocation')">
                     <dir-select
                         id="backups-location"
-                        placeholder="Leave blank to use default backups directory"
+                        :placeholder="$t('settings.leaveBlankForDefaultBackupsDir')"
                         v-model="locations.backups"
                         :readonly="syncInProgress"
                         slot="field" />
@@ -165,22 +151,22 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.backups !== '' && !checkBackupsCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
 
                 <field
                     id="preview-location"
-                    label="Preview location">
+                    :label="$t('settings.previewLocation')">
                     <dir-select
                         id="preview-location"
-                        placeholder="Leave blank to use default preview directory"
+                        :placeholder="$t('settings.leaveBlankForDefaultPreviewDirectory')"
                         v-model="locations.preview"
                         :readonly="syncInProgress"
                         slot="field" />
@@ -188,21 +174,21 @@
                         v-if="syncInProgress"
                         slot="note"
                         class="note">
-                        During sync process you cannot change files location.
+                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
                         v-if="locations.preview !== '' && !checkPreviewCatalog"
                         slot="note"
                         class="note is-invalid">
-                        Selected directory does not exist.
+                        {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
             </fields-group>
 
-            <fields-group title="Default ordering on lists">
+            <fields-group :title="$t('settings.defaultOrderingOnLists')">
                 <field
                     id="posts-ordering"
-                    label="Default posts ordering:">
+                    :label="$t('settings.defaultPostsOrdering')">
                     <dropdown
                         slot="field"
                         id="posts-ordering"
@@ -212,7 +198,7 @@
 
                 <field
                     id="tags-ordering"
-                    label="Default tags ordering:">
+                    :label="$t('settings.defaultTagsOrdering')">
                     <dropdown
                         slot="field"
                         id="tags-ordering"
@@ -222,7 +208,7 @@
 
                 <field
                     id="authors-ordering"
-                    label="Default authors ordering:">
+                    :label="$t('settings.defaultAuthorsOrdering')">
                     <dropdown
                         slot="field"
                         id="authors-ordering"
@@ -231,11 +217,115 @@
                 </field>
             </fields-group>
 
+            <fields-group :title="$t('settings.optionsForEditors')">
+                <field
+                    id="editor-font-size"
+                    :label="$t('settings.editorFontSize')">
+                    <range-slider
+                        :min="18"
+                        :max="22"
+                        :step="1"
+                        v-model="editorFontSize"
+                        slot="field"></range-slider>
+                </field>
+
+                <field
+                    id="editor-font-family"
+                    :label="$t('settings.editorFontFamily')">
+                    <dropdown
+                        slot="field"
+                        id="editor-font-family"
+                        :items="editorFontFamilyItems"
+                        v-model="editorFontFamily"></dropdown>
+                </field>
+
+                 <field
+                    id="close-editor-on-save"
+                    :label="$t('settings.closePostEditorOnSave')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="close-editor-on-save"
+                        v-model="closeEditorOnSave" />
+                </field>
+            </fields-group>
+
+            <fields-group :title="$t('settings.optionsForDevelopers')">
+                <field
+                    id="open-devtools-in-main"
+                    :label="$t('settings.openDevtoolsInMainW')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field" 
+                        id="open-devtools-in-main"
+                        v-model="openDevToolsInMainWindow" />
+                        <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.requiresRestartingApp') }}
+                    </span>
+                </field>
+
+                <field
+                    id="enable-advanced-preview"
+                    :label="$t('settings.enableAdvancedPreview')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="enable-advanced-preview"
+                        v-model="enableAdvancedPreview" />
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.advancedPreviewDesc') }}
+                    </small>
+                </field>
+            </fields-group>
+
+            <fields-group :title="$t('settings.optionsForExperimentalFeatures')">
+                 <div
+                    class="msg msg-icon msg-info">
+                    <icon
+                        name="warning"
+                        customWidth="28"
+                        customHeight="28" />
+                    <div v-pure-html="$t('settings.experimentalFeaturesWarning')"></div>
+                </div>
+                <field
+                    id="experimental-feature-app-ui-languages"
+                    :label="$t('settings.experimentalFeatureAppUiLanguages')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-ui-languages"
+                        v-model="experimentalFeatureAppUiLanguages" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.experimentalFeatureAppUiLanguagesDesc') }}
+                    </small>
+                </field>
+                <field
+                    id="experimental-feature-app-ui-languages"
+                    :label="$t('settings.experimentalFeatureAppAutoBeautifySourceCode')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-ui-languages"
+                        v-model="experimentalFeatureAppAutoBeautifySourceCode" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.experimentalFeatureAppAutoBeautifySourceCodeDesc') }}
+                    </small>
+                </field>
+            </fields-group>
+
             <p-footer>
                 <p-button
                     :onClick="checkBeforeSave"
                     slot="buttons">
-                    Save Settings
+                    {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-footer>
         </div>
@@ -243,8 +333,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import Vue from 'vue';
@@ -257,7 +345,7 @@ export default {
     data () {
         let imageResizeEngine = 'sharp';
 
-        if (process.platform === 'linux') {
+        if (mainProcessAPI.getEnv().platformName === 'linux') {
             imageResizeEngine = 'jimp';
         }
 
@@ -276,13 +364,19 @@ export default {
             authorsOrdering: 'id DESC',
             originalSitesLocation: '',
             theme: 'default',
+            enableAdvancedPreview: false,
             locations: {
                 sites: '',
                 backups: '',
                 preview: ''
             },
             unwatchLocationPreview: null,
-            unwatchBackupsLocation: null
+            unwatchBackupsLocation: null,
+            editorFontSize: 18,
+            editorFontFamily: 'serif',
+            experimentalFeatureAppUiLanguages: false,
+            experimentalFeatureAppAutoBeautifySourceCode: false,
+            changeSitesLocationWithoutCopying: false
         };
     },
     computed: {
@@ -290,15 +384,15 @@ export default {
             let websites = this.$store.getters.siteDisplayNames;
 
             return {
-                '': 'Open the last used website',
+                '': this.$t('settings.openLastUsedWebsite'),
                 ...websites
             };
         },
         availableColorSchemes () {
             return {
-                'system': 'Use system colors',
-                'default': 'Light mode',
-                'dark': 'Dark mode'
+                'system': this.$t('settings.systemColors'),
+                'default': this.$t('settings.lightMode'),
+                'dark': this.$t('settings.darkMode')
             };
         },
         timeFormats () {
@@ -308,7 +402,7 @@ export default {
             };
         },
         imageResizeEngines () {
-            if (process.platform === 'linux') {
+            if (mainProcessAPI.getEnv().platformName === 'linux') {
                 return {
                     'jimp': 'Jimp'
                 };
@@ -321,49 +415,55 @@ export default {
         },
         orderingPostItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'title DESC': 'By title (descending)',
-                'title ASC': 'By title (ascending)',
-                'created DESC': 'By created date (descending)',
-                'created ASC': 'By created date (ascending)',
-                'modified DESC': 'By modified date (descending)',
-                'modified ASC': 'By modified date (ascending)',
-                'author DESC': 'By author (descending)',
-                'author ASC': 'By author (ascending)',
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'title DESC': this.$t('settings.ordering.titleDESC'),
+                'title ASC': this.$t('settings.ordering.titleASC'),
+                'created DESC': this.$t('settings.ordering.createdDESC'),
+                'created ASC': this.$t('settings.ordering.createdASC'),
+                'modified DESC': this.$t('settings.ordering.modifiedDESC'),
+                'modified ASC': this.$t('settings.ordering.modifiedASC'),
+                'author DESC': this.$t('settings.ordering.authorDESC'),
+                'author ASC': this.$t('settings.ordering.authorASC')
             };
         },
         orderingTagItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'name DESC': 'By name (descending)',
-                'name ASC': 'By name (ascending)',
-                'postsCounter DESC': 'By posts count (descending)',
-                'postsCounter ASC': 'By posts count (ascending)'
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'name DESC': this.$t('settings.ordering.nameDESC'),
+                'name ASC': this.$t('settings.ordering.nameASC'),
+                'postsCounter DESC': this.$t('settings.ordering.postsCounterDESC'),
+                'postsCounter ASC': this.$t('settings.ordering.postsCounterASC')
             };
         },
         orderingAuthorItems () {
             return {
-                'id DESC': 'By ID (descending)',
-                'id ASC': 'By ID (ascending)',
-                'name DESC': 'By name (descending)',
-                'name ASC': 'By name (ascending)',
-                'postsCounter DESC': 'By posts count (descending)',
-                'postsCounter ASC': 'By posts count (ascending)'
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'name DESC': this.$t('settings.ordering.nameDESC'),
+                'name ASC': this.$t('settings.ordering.nameASC'),
+                'postsCounter DESC': this.$t('settings.ordering.postsCounterDESC'),
+                'postsCounter ASC': this.$t('settings.ordering.postsCounterASC')
             };
         },
         checkSitesCatalog () {
-            return fs.existsSync(this.locations.sites);
+            return mainProcessAPI.existsSync(this.locations.sites);
         },
         checkBackupsCatalog () {
-            return fs.existsSync(this.locations.backups);
+            return mainProcessAPI.existsSync(this.locations.backups);
         },
         checkPreviewCatalog () {
-            return fs.existsSync(this.locations.preview);
+            return mainProcessAPI.existsSync(this.locations.preview);
         },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
+        },
+        editorFontFamilyItems () {
+            return {
+                'var(--font-base)': this.$t('settings.editorFontFamilySansSerif'),
+                'var(--font-serif)': this.$t('settings.editorFontFamilySerif')
+            };
         }
     },
     mounted () {
@@ -383,9 +483,14 @@ export default {
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
+        this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
+        this.editorFontSize = this.$store.state.app.config.editorFontSize;
+        this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
+        this.experimentalFeatureAppUiLanguages = this.$store.state.app.config.experimentalFeatureAppUiLanguages;
+        this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.theme = this.getAppTheme();
 
-        if (process.platform === 'linux') {
+        if (mainProcessAPI.getEnv().platformName === 'linux') {
             this.imageResizeEnginesSelected = 'jimp';
         }
 
@@ -411,17 +516,19 @@ export default {
         },
         checkBeforeSave () {
             if (this.originalSitesLocation !== this.locations.sites) {
-                this.$bus.$emit('confirm-display', {
-                    hasInput: false,
-                    message: 'The sites location has been changed. The new destination folder will be cleared up before moving there your sites files. Do you want to continue?',
-                    okClick: this.save,
-                    okLabel: 'OK',
-                    cancelLabel: 'Cancel'
-                });
+                if (!this.changeSitesLocationWithoutCopying) {
+                    this.$bus.$emit('confirm-display', {
+                        hasInput: false,
+                        message: this.$t('settings.sitesLocationChangedConfirmMsg'),
+                        okClick: this.save,
+                        okLabel: this.$t('ui.ok'),
+                        cancelLabel: this.$t('ui.cancel')
+                    });
 
-                return;
+                    return;
+                }
             }
-            
+
             this.save();
         },
         save () {
@@ -441,16 +548,22 @@ export default {
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
-                authorsOrdering: this.authorsOrdering
+                authorsOrdering: this.authorsOrdering,
+                enableAdvancedPreview: this.enableAdvancedPreview,
+                editorFontFamily: this.editorFontFamily,
+                editorFontSize: this.editorFontSize,
+                experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages,
+                experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
+                changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };
 
             let appConfigCopy = JSON.parse(JSON.stringify(this.$store.state.app.config));
             newSettings = Utils.deepMerge(appConfigCopy, newSettings);
 
-            ipcRenderer.send('app-config-save', newSettings);
+            mainProcessAPI.send('app-config-save', newSettings);
 
-            ipcRenderer.once('app-config-saved', (event, data) => {
-                if(data.status === true && data.sites) {
+            mainProcessAPI.receiveOnce('app-config-saved', (data) => {
+                if (data.status === true && data.sites) {
                     this.$store.commit('setSites', data.sites);
                 }
 
@@ -462,17 +575,17 @@ export default {
         saved (newSettings, data) {
             this.$store.commit('setSiteDir', newSettings.sitesLocation);
             this.$store.commit('setAppConfig', newSettings);
-            ipcRenderer.send('app-backup-set-location', newSettings.backupsLocation);
+            mainProcessAPI.send('app-backup-set-location', newSettings.backupsLocation);
 
             if (data.status === true) {
                 this.$bus.$emit('message-display', {
-                    message: 'App settings has been successfully saved.',
+                    message: this.$t('settings.appSettingsSavedMsg'),
                     type: 'success',
                     lifeTime: 3
                 });
             } else {
                 this.$bus.$emit('message-display', {
-                    message: 'An error occurred during saving the App Settings. Please try again.',
+                    message: this.$t('settings.appSettingsSaveErrorMsg'),
                     type: 'warning',
                     lifeTime: 3
                 });
@@ -493,8 +606,8 @@ export default {
         detectPreviewLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The preview storage location has been changed. Note that existing files in this folder will be deleted when a preview of your website is created',
-                    okLabel: 'OK, I understand',
+                    message: this.$t('settings.previewLocationChangedConfirmMsg'),
+                    okLabel: this.$t('ui.iUnderstand'),
                 });
 
                 this.unwatchLocationPreview();
@@ -503,8 +616,8 @@ export default {
         detectBackupLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
-                    message: 'The backups storage location has been changed. All new backups will be stored in this directory. If you require access to earlier backups, they may be moved manually to the new directory.',
-                    okLabel: 'OK, I understand',
+                    message: this.$t('settings.backupLocationChangedConfirmMsg'),
+                    okLabel: this.$t('ui.iUnderstand'),
                 });
 
                 this.unwatchBackupsLocation();
@@ -516,10 +629,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+@import '../scss/notifications.scss';
 
 .settings {
     margin: 0 auto;
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     user-select: none;
     width: 100%;
 
@@ -527,5 +641,10 @@ export default {
         margin: 0 auto;
         max-width: $wrapper;
     }
+}
+
+#site-location-switcher {
+    margin: 1.5rem 0 1rem;
+    display: block;
 }
 </style>

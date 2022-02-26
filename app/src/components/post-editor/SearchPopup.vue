@@ -30,13 +30,10 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-
 export default {
     name: 'search-popup',
     data () {
         return {
-            webviewContents: null,
             searchPhrase: '',
             isVisible: false,
             currentResultIndex: 0,
@@ -46,25 +43,23 @@ export default {
     watch: {
         searchPhrase (newValue) {
             if (this.isVisible && newValue.trim() !== '') {
-                this.webviewContents.findInPage(newValue);
+                mainProcessAPI.invoke('app-main-webview-search-find-in-page', newValue);
             } else {
                 this.resultsCount = 0;
                 this.currentResultIndex = 0;
-                this.webviewContents.stopFindInPage('clearSelection');
+                mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page');
             }
         }
     },
     mounted () {
-        document.querySelector('webview').addEventListener('dom-ready', () => {
-            this.webviewContents = remote.webContents.fromId(document.querySelector('webview').getWebContentsId());
-
+        /*document.querySelector('webview').addEventListener('dom-ready', () => {
             document.querySelector('webview').addEventListener('found-in-page', e => {
                 this.currentResultIndex = e.result.activeMatchOrdinal;
                 this.resultsCount = e.result.matches;
             });
-        });
+        });*/
 
-        ipcRenderer.on('app-show-search-form', this.showSearch);
+        mainProcessAPI.receive('app-show-search-form', this.showSearch);
         this.$bus.$on('app-show-search-form', this.showSearch);
     },
     methods: {
@@ -73,14 +68,14 @@ export default {
                 return;
             }
 
-            this.webviewContents.findInPage(this.searchPhrase);
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.searchPhrase);
         },
         getPrevResult () {
             if (this.resultsCount === 0) {
                 return;
             }
 
-            this.webviewContents.findInPage(this.searchPhrase, {
+            mainProcessAPI.invoke('app-main-webview-search-find-in-page', this.searchPhrase, {
                 forward: false
             });
         },
@@ -89,7 +84,7 @@ export default {
             this.$refs['search-phrase-input'].focus();
         },
         finishSearch () {
-            this.webviewContents.stopFindInPage('clearSelection');
+            mainProcessAPI.invoke('app-main-webview-search-stop-find-in-page');
             this.isVisible = false;
         },
         doKeyboardNavigation (e) {
@@ -99,7 +94,7 @@ export default {
         }
     },
     beforeDestroy () {
-        ipcRenderer.removeAllListeners('app-show-search-form');
+        mainProcessAPI.stopReceiveAll('app-show-search-form');
         this.$bus.$off('app-show-search-form', this.showSearch);
     }
 };
@@ -136,7 +131,7 @@ export default {
         border-bottom: 1px solid var(--input-border-focus);        
         color: var(--text-primary-color);
         font-size: 18px;
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         width: 300px;
     }
     

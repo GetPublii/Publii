@@ -11,8 +11,8 @@ const Image = require('./image.js');
 const UtilsHelper = require('./helpers/utils');
 const childProcess = require('child_process');
 const slug = require('./helpers/slug');
-const trash = require('trash');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+const { shell } = require('electron');
 
 class Site {
     constructor(appInstance, config, maintenanceMode = false) {
@@ -68,6 +68,7 @@ class Site {
         // Create also other dirs
         fs.mkdirSync(path.join(this.siteDir, 'input'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'config'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'config', 'plugins'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'root-files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'temp'));
@@ -76,6 +77,7 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'authors'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'plugins'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'themes'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'languages'));
         fs.mkdirSync(path.join(this.siteDir, 'output'));
@@ -138,7 +140,7 @@ class Site {
         let db = new sqlite(dbPath);
         let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, @name, @slug, '', '{}', '{}')`);
         sqlQuery.run({
-            name: authorName, 
+            name: authorName,
             slug: slug(authorName).toLowerCase()
         });
         db.close();
@@ -150,7 +152,7 @@ class Site {
     regenerateThumbnailsIsRequired(sender) {
         let themesHelper = new Themes(this.application, { site: this.name });
         let themeName = themesHelper.currentTheme();
-    
+
         // If there is no theme selected
         if(themeName === 'not selected') {
             sender.send('app-site-regenerate-thumbnails-required-status', {
@@ -225,7 +227,9 @@ class Site {
         // If there is no theme selected - abort
         if(themeName === 'not selected') {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "No theme selected"
+                message: {
+                    translation: 'core.site.noThemeSelected'
+                }
             });
 
             return;
@@ -236,7 +240,9 @@ class Site {
 
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "There is no configuration for responsive images"
+                message: {
+                    translation: 'core.site.noConfigurationForResponsiveImages'
+                }
             });
 
             return;
@@ -287,7 +293,9 @@ class Site {
         // If there is no posts - abort
         if(numberOfImagesToRegenerate === 0) {
             sender.send('app-site-regenerate-thumbnails-error', {
-                message: "There is no images to regenerate"
+                message: {
+                    translation: 'core.site.noImagesToRegenerate'
+                }
             });
 
             return;
@@ -428,21 +436,8 @@ class Site {
             appInstance.db.close();
         }
 
-        setTimeout(() => {
-            if (
-                os.platform() !== 'linux' && (
-                    os.platform() !== 'darwin' || (
-                        os.platform() === 'darwin' &&
-                        parseInt(os.release().split('.')[0], 10) >= 16
-                    )
-                )
-            ) {
-                (async () => {
-                    await trash(sitePath);
-                })();
-            } else {
-                fs.removeSync(sitePath);
-            }
+        setTimeout(async () => {
+            await shell.trashItem(sitePath);
         }, 500);
     }
 
@@ -468,13 +463,13 @@ class Site {
     }
 
     /**
-     * 
+     *
      * Find first free name
-     * 
+     *
      * e.g. XYZ -> XYZ copy
      * e.g. XYZ copy -> XYZ copy copy
-     * 
-     * @param {string} name 
+     *
+     * @param {string} name
      */
     static findFreeName (name, basePath) {
         let baseName = name;
@@ -491,9 +486,9 @@ class Site {
 
     /**
      * Update site.config.json to use a new name of the website
-     * 
-     * @param {string} sitePath 
-     * @param {string} newNameSlug 
+     *
+     * @param {string} sitePath
+     * @param {string} newNameSlug
      */
     static updateNameAndUUIDInSiteConfig (sitePath, newSiteSlug, newSiteName) {
         let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
@@ -548,6 +543,8 @@ class Site {
      * - input/media/files directory
      * - input/media/tags directory
      * - input/media/authors directory
+     * - input/config/plugins directory
+     * - input/config/site.plugins.json file
      *
      * Moves .htaccess, robots.txt and _redirects files to root-files directory
      *
@@ -559,6 +556,8 @@ class Site {
         let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
         let authorImagesPath = path.join(siteBasePath, 'media', 'authors');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
+        let pluginsPath = path.join(siteBasePath, 'config', 'plugins');
+        let pluginsConfigPath = path.join(siteBasePath, 'config', 'site.plugins.json');
 
         if(!UtilsHelper.dirExists(rootFilesPath)) {
             fs.mkdirSync(rootFilesPath);
@@ -576,6 +575,15 @@ class Site {
             fs.mkdirSync(authorImagesPath);
         }
 
+        if(!UtilsHelper.dirExists(pluginsPath)) {
+            fs.mkdirSync(pluginsPath);
+        }
+
+        // Create site.plugins.json if not exists
+        if (!UtilsHelper.fileExists(pluginsConfigPath)) {
+            fs.writeFileSync(pluginsConfigPath, '{}');
+        }
+
         // Move files - if exists to new root-files directory
         let filesToMove = {
             'robots.txt': path.join(siteBasePath, 'config', 'robots.txt'),
@@ -585,14 +593,14 @@ class Site {
 
         let fileNames = Object.keys(filesToMove);
 
-        for(let i = 0; i < fileNames.length; i++) {
+        for (let i = 0; i < fileNames.length; i++) {
             let fileName = fileNames[i];
 
             if(!UtilsHelper.dirExists(rootFilesPath)) {
                 break;
             }
 
-            if(UtilsHelper.fileExists(filesToMove[fileName])) {
+            if (UtilsHelper.fileExists(filesToMove[fileName])) {
                 let destinationPath = path.join(siteBasePath, 'root-files', fileName);
                 fs.moveSync(filesToMove[fileName], destinationPath);
             }

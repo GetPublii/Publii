@@ -64,7 +64,7 @@ function regenerateImages(mediaPath, catalog) {
  * @param fullPath
  * @param catalog
  */
-function regenerateImage (images, fullPath, catalog) {    
+function regenerateImage (images, fullPath, catalog) {
     if (!images.length) {
         return;
     }
@@ -84,7 +84,11 @@ function regenerateImage (images, fullPath, catalog) {
         process.send({
             type: 'progress',
             value: 100,
-            files: ['The responsive images are disabled under site settings - all responsive images has been removed.']
+            files: [
+                {
+                    translation: 'core.images.responsiveImagesDisabled'
+                }
+            ]
         });
 
         finishProcess();
@@ -176,11 +180,11 @@ function getImageType(context, image, catalog) {
     let imageType = 'contentImages';
     let featuredImage = false;
     let preparedCatalog = catalog.replace('posts/', '');
-    
+
     if (context.postImagesRef && context.postImagesRef[0]) {
         featuredImage = context.postImagesRef.filter(xref => xref.post_id == preparedCatalog);
     }
-    
+
     if (featuredImage && featuredImage[0] && featuredImage[0].post_id && image === featuredImage[0].url) {
         console.log('(i) Featured image detected (' + image + ')', preparedCatalog);
         imageType = 'featuredImages';

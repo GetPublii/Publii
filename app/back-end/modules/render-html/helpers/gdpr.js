@@ -295,7 +295,9 @@ class Gdpr {
                             for (var j = 0; j < scripts.length; j++) {
                                 addScript(scripts[j].src, scripts[j].text);
                             }
-
+                            
+                            var groupEvent = new Event('publii-cookie-banner-unblock-' + groupName);
+                            document.body.dispatchEvent(groupEvent);
                             allowedGroups.push(groupName);
                         }
                     }
@@ -323,6 +325,9 @@ class Gdpr {
                             for (var j = 0; j < scripts.length; j++) {
                                 addScript(scripts[j].src, scripts[j].text);
                             }
+
+                            var groupEvent = new Event('publii-cookie-banner-unblock-' + allowedGroup);
+                            document.body.dispatchEvent(groupEvent);
                         }
                     }
                 } else {
@@ -349,6 +354,9 @@ class Gdpr {
                             for (var j = 0; j < scripts.length; j++) {
                                 addScript(scripts[j].src, scripts[j].text);
                             }
+
+                            var groupEvent = new Event('publii-cookie-banner-unblock-' + allowedGroups[i]);
+                            document.body.dispatchEvent(groupEvent);
                         }
                     }
                 }

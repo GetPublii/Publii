@@ -257,7 +257,13 @@ class WxrParser {
 
         process.send({
             type: 'progress',
-            message: 'Importing authors (' + (index + 1) + ' / ' + totalNumber + ')'
+            message: {
+                translation: 'core.wpImport.authorsProgressInfo',
+                translationVars: {
+                    progress: (index + 1),
+                    total: totalNumber
+                }
+            }
         });
 
         console.log('-> Imported author (' + (index + 1) + ' / ' + totalNumber + '): ' + authorUsername);
@@ -342,7 +348,13 @@ class WxrParser {
 
         process.send({
             type: 'progress',
-            message: 'Importing tags (' + (index + 1) + ' / ' + totalNumber + ')'
+            message: {
+                translation: 'core.wpImport.tagsProgressInfo',
+                translationVars: {
+                    progress: (index + 1),
+                    total: totalNumber
+                }
+            }
         });
 
         console.log('-> Imported tag (' + (index + 1) + ' / ' + totalNumber + '): ' + itemName);
@@ -451,7 +463,13 @@ class WxrParser {
 
             process.send({
                 type: 'progress',
-                message: 'Importing posts (' + (i+1) + ' / ' + posts.length + ')'
+                message: {
+                    translation: 'core.wpImport.postsProgressInfo',
+                    translationVars: {
+                        progress: (i + 1),
+                        total: posts.length
+                    }
+                }
             });
 
             console.log('-> Imported post (' + (i+1) + ' / ' + posts.length + '): ' + postTitle);
@@ -588,7 +606,13 @@ class WxrParser {
 
                 process.send({
                     type: 'progress',
-                    message: 'Downloading images (' + this.downloadImagesProgress + ' / ' + this.totalImages + ')'
+                    message: {
+                        translation: 'core.wpImport.imagesProgressInfo',
+                        translationVars: {
+                            progress: this.downloadImagesProgress,
+                            total: this.totalImages
+                        }
+                    }
                 });
 
                 console.log('-> Downloaded image: ' + filename);
@@ -601,7 +625,12 @@ class WxrParser {
 
                 process.send({
                     type: 'progress',
-                    message: 'An error occurred during downloading the image: ' + image
+                    message: {
+                        translation: 'core.wpImport.imageDownloadError',
+                        translationVars: {
+                            image: image
+                        }
+                    }
                 });
 
                 console.log('(!) An error occurred during downloading the image: ' + image);

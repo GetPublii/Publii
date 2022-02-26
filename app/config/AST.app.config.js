@@ -16,7 +16,14 @@ const AstAppConfig = {
     postsOrdering: 'id DESC',
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
-    appTheme: 'system'
+    appTheme: 'system',
+    language: 'en-gb',
+    languageType: 'default',
+    enableAdvancedPreview: false,
+    editorFontSize: 18,
+    editorFontFamily: 'sans-serif',
+    experimentalFeatureAppUiLanguages: false,
+    experimentalFeatureAppAutoBeautifySourceCode: false
 };
 
 module.exports = AstAppConfig;

@@ -99,6 +99,10 @@ label {
 
     &:first-child {
         margin-top: 0;
+
+        .separator {
+            padding-top: 0;
+        }
     }
 
     & > label {
@@ -186,7 +190,7 @@ label {
         clear: both;
         color: var(--text-light-color);
         display: block;
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         font-style: italic;
         line-height: 1.4;        
         padding: .5rem 0 1rem 0;
@@ -204,12 +208,12 @@ label {
         }
         
         a {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-color-hover);
             }
         }
     }
@@ -237,7 +241,7 @@ label {
         position: relative;
         width: 100%;
 
-        &.line > .separator-wrapper:before {
+        &.line > .separator-wrapper::before {
             border: 1px solid var(--gray-1);
             content: "";
             left: 0;
@@ -252,9 +256,9 @@ label {
 
             & > label {
                 background: var(--bg-primary);
-                color: var(--primary-color);
+                color: var(--color-primary);
                 font-size: 1.4rem;
-                font-weight: 500;
+                font-weight: var(--font-weight-semibold);
                 padding-right: .5rem;
                 position: absolute;
                 text-transform: uppercase;

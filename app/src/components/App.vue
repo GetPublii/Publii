@@ -1,7 +1,8 @@
 <template>
     <div
         id="app"
-        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }">
+        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }"
+        :style="$root.overridedCssVariables">
         <message />
         <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
         <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
@@ -16,12 +17,10 @@
         <error-popup />
         <sites-popup />
         <sync-popup />
-        <subscription-popup />
     </div>
 </template>
 
 <script>
-import { remote } from 'electron';
 import { mapGetters } from 'vuex';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
@@ -32,9 +31,6 @@ import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
-import SubscriptionPopup from './SubscriptionPopup';
-const mainProcess = remote.require('./main');
-const Menu = remote.Menu;
 
 export default {
     name: 'app',
@@ -50,8 +46,7 @@ export default {
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
         'sites-popup': SitesPopup,
-        'sync-popup': SyncPopup,
-        'subscription-popup': SubscriptionPopup
+        'sync-popup': SyncPopup
     },
     computed: {
         ...mapGetters([
@@ -75,12 +70,11 @@ export default {
             return this.$store.state.app.config.wideScrollbars;
         }
     },
-    mounted: function() {
+    async mounted () {
         // Setup app
         this.disableDragNDrop();
-        this.setEnvironmentInfo();
+        await this.setEnvironmentInfo();
         this.setState();
-        this.setupMenu();
         this.integrateTopBar();
 
         // Display initial screen after 2sec
@@ -90,96 +84,30 @@ export default {
 
         this.$bus.$on('license-accepted', this.showInitialScreen);
     },
-    beforeDestroy: function() {
+    beforeDestroy () {
         this.$bus.$off('license-accepted');
-        ipcRenderer.removeAllListeners('app-license-accepted');
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
         // Block drag'n'drop redirects
-        disableDragNDrop: function() {
+        disableDragNDrop () {
             document.addEventListener('dragover', event => event.preventDefault());
             document.addEventListener('drop', event => event.preventDefault());
         },
 
         // Add to <body> additional informations
-        setEnvironmentInfo: function() {
-            document.body.setAttribute('data-node-version', process.versions.node);
-            document.body.setAttribute('data-chrome-version', process.versions.chrome);
-            document.body.setAttribute('data-electron-version', process.versions.electron);
-            document.body.setAttribute('data-os', process.platform === 'darwin' ? 'osx' : process.platform === 'linux' ? 'linux' : 'win');
-            document.documentElement.setAttribute('data-is-osx-11-or-higher', mainProcess.isOSX11orHigher());
-            document.body.setAttribute('data-env', process.env.NODE_ENV);
+        async setEnvironmentInfo () {
+            document.body.setAttribute('data-node-version', mainProcessAPI.getEnv().nodeVersion);
+            document.body.setAttribute('data-chrome-version', mainProcessAPI.getEnv().chromeVersion);
+            document.body.setAttribute('data-electron-version', mainProcessAPI.getEnv().electronVersion);
+            document.body.setAttribute('data-os', mainProcessAPI.getEnv().platformName === 'darwin' ? 'osx' : mainProcessAPI.getEnv().platformName === 'linux' ? 'linux' : 'win');
+            document.documentElement.setAttribute('data-is-osx-11-or-higher', await mainProcessAPI.invoke('app-main-process-is-osx11-or-higher'));
+            document.body.setAttribute('data-env', mainProcessAPI.getEnv().name);
         },
 
         // Set initial application state tree
-        setState: function() {
+        setState () {
             this.$store.commit('init', this.initialData);
-        },
-
-        // Disable refresh shortcuts and Dev Tools shortcuts
-        setupMenu: function() {
-            if (process.env.NODE_ENV === 'development') {
-                return;
-            }
-
-            if (process.platform === 'linux') {
-                Menu.setApplicationMenu(null);
-                return;
-            }
-
-            const template = [{
-                label: "Publii",
-                submenu: [{
-                    label: "About Application",
-                    selector: "orderFrontStandardAboutPanel:"
-                }, {
-                    type: "separator"
-                }, {
-                    label: "Quit",
-                    accelerator: "CmdOrCtrl+Q",
-                    click: () => { mainProcess.quitApp() }
-                }]
-            }, {
-                label: "Edit",
-                submenu: [
-                    {
-                        label: "Undo",
-                        accelerator: "CmdOrCtrl+Z",
-                        selector: "undo:"
-                    },
-                    {
-                        label: "Redo",
-                        accelerator: "Shift+CmdOrCtrl+Z",
-                        selector: "redo:"
-                    },
-                    {
-                        type: "separator"
-                    },
-                    {
-                        label: "Cut",
-                        accelerator: "CmdOrCtrl+X",
-                        selector: "cut:"
-                    },
-                    {
-                        label: "Copy",
-                        accelerator: "CmdOrCtrl+C",
-                        selector: "copy:"
-                    },
-                    {
-                        label: "Paste",
-                        accelerator: "CmdOrCtrl+V",
-                        selector: "paste:"
-                    },
-                    {
-                        label: "Select All",
-                        accelerator: "CmdOrCtrl+A",
-                        selector: "selectAll:"
-                    }
-                ]
-            }];
-
-            const menu = Menu.buildFromTemplate(template);
-            Menu.setApplicationMenu(menu);
         },
 
         // Show site screen when there is only one website
@@ -209,7 +137,7 @@ export default {
                 window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             }
 
-            this.$router.push({ path: `/site/${siteToDisplay}` });
+            this.$router.push(`/site/${siteToDisplay}`);
         },
 
         // Check for helper click events for TopBar
@@ -244,7 +172,7 @@ export default {
 
     &-view {
         background: var(--bg-primary);
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         height: 100%;
         left: 0;
         position: absolute;
@@ -254,7 +182,7 @@ export default {
 
     &-site-sidebar {
         bottom: 0;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         left: 0;
         position: absolute;
         top: var(--topbar-height);
@@ -265,6 +193,7 @@ export default {
 
 #app {
     & > .topbar + section {
+        background: var(--bg-site);
         height: calc(100vh - var(--topbar-height));
         margin-top: var(--topbar-height);
         width: 100%;
@@ -329,7 +258,7 @@ body[data-os="linux"] {
 @media (max-width: 1400px) {
     .app {
         &-site-sidebar {        
-            width: 32rem;
+            width: $app-sidebar;
         }
     }
 }

@@ -27,16 +27,18 @@ class TagItem {
      */
     prepareData() {
         let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex;
-        
+        let tagAdditionalData = this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {};
+
         this.tagData = {
             id: this.tag.id,
             name: this.tag.name,
             slug: this.tag.slug,
             description: this.tag.description,
-            additionalData: this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {},
+            additionalData: tagAdditionalData,
             featuredImage: {},
             postsNumber: this.getPostsNumber(),
-            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml)
+            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml),
+            template: tagAdditionalData.template ? tagAdditionalData.template : '' 
         };
 
         if (this.renderer.cachedItems.featuredImages.tags[this.tagData.id]) {
@@ -48,6 +50,10 @@ class TagItem {
      * Stores tag data in the cached items of renderer
      */
     storeData() {
+        if (this.renderer.plugins.hasModifiers('tagItemData')) {
+            this.tagData = this.renderer.plugins.runModifiers('tagItemData', this.renderer, this.tagData); 
+        }
+
         // Store tag data without references
         this.renderer.cachedItems.tags[this.tagID] = JSON.parse(JSON.stringify(this.tagData));
     }

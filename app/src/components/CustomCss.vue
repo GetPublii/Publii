@@ -1,12 +1,12 @@
 <template>
     <section class="content tools-custom-css">
-        <p-header title="Custom CSS">
+        <p-header :title="$t('tools.css.customCSS')">
             <p-button
                 @click.native="goBack"
                 slot="buttons"
-                type="outline"
+                type="clean back"
                 :disabled="buttonsLocked">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
@@ -14,7 +14,7 @@
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
-                Save Changes
+                {{ $t('ui.saveChanges') }}
             </p-button>
 
             <btn-dropdown
@@ -24,20 +24,20 @@
                 :disabled="!siteHasTheme || buttonsLocked"
                 :previewIcon="true"
                 localStorageKey="publii-preview-mode"
-                defaultValue="full-site" />
+                defaultValue="full-site-preview" />
         </p-header>
 
         <ul class="filters">
             <li
                 :class="filterCssClasses('normal')"
                 @click="setFilter('normal')">
-                Normal
+                {{ $t('tools.css.normal') }}
             </li>
 
             <li
                 :class="filterCssClasses('amp')"
                 @click="setFilter('amp')">
-                AMP
+                {{ $t('ui.AMP') }}
             </li>
         </ul>
 
@@ -61,22 +61,20 @@
 
         <small class="editor-note">
             <span>
-                Find:
-                <template v-if="!isMac">Ctrl + F</template>
-                <template v-if="isMac">Cmd + F</template>
+                {{ $t('tools.find') }}
+                <template v-if="!isMac">{{ $t('tools.findShortcut') }}</template>
+                <template v-if="isMac">{{ $t('tools.findShortcutMac') }}</template>
             </span>
             <span>
-                Find and replace:
-                <template v-if="!isMac">Ctrl + Alt + F</template>
-                <template v-if="isMac">Cmd + Alt + F</template>
+                {{ $t('tools.findAndReplace') }}
+                <template v-if="!isMac">{{ $t('tools.findAndReplaceShortcut') }}</template>
+                <template v-if="isMac">{{ $t('tools.findAndReplaceShortcutMac') }}</template>
             </span>
         </small>
     </section>
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 
 export default {
@@ -100,11 +98,11 @@ export default {
             buttonsLocked: false,
             filterValue: 'normal',
             editorValueNormal: `/*
- * Put your custom CSS code here
+ * ${this.$t('tools.css.putCustomCSSComment')}
  */`,
             editorValueAmp: `/*
- * Put your custom CSS code here (it will be used only in the AMP mode)
- */`,       
+ * ${this.$t('tools.css.putCustomCSSAMPComment')}
+ */`,
         };
     },
     computed: {
@@ -112,27 +110,43 @@ export default {
             return !!this.$store.state.currentSite.config.theme;
         },
         isMac: function () {
-            return window.process.platform === 'darwin';
+            return mainProcessAPI.getEnv().platformName === 'darwin';
         },
         dropdownItems () {
             return [
                 {
-                    label: 'Render full website',
-                    activeLabel: 'Save & Preview',
-                    value: 'full-site',
-                    icon: 'full-preview-monitor',
+                    label: this.$t('ui.previewFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'full-site-preview',
                     isVisible: () => true,
+                    icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render front page only',
-                    activeLabel: 'Save & Preview',
-                    value: 'homepage',
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'homepage-preview',
                     icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-preview',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
                 }
-            ]
+            ];
         }
     },
     mounted: function() {
@@ -142,11 +156,11 @@ export default {
     },
     methods: {
         initEditor: function() {
-            ipcRenderer.send('app-site-css-load', {
+            mainProcessAPI.send('app-site-css-load', {
                 site: this.$store.state.currentSite.config.name
             });
 
-            ipcRenderer.once('app-site-css-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-css-loaded', (data) => {
                 if (data.normal !== false) {
                     this.editorValueNormal = data.normal;
                 }
@@ -161,11 +175,11 @@ export default {
                 this.$refs.codemirrorAmp.editor.refresh();
             });
         },
-        save (showPreview = false, renderingType = false) {
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             this.$refs.codemirrorNormal.editor.save();
             this.$refs.codemirrorAmp.editor.save();
 
-            ipcRenderer.send('app-site-css-save', {
+            mainProcessAPI.send('app-site-css-save', {
                 site: this.$store.state.currentSite.config.name,
                 code: {
                     normal: document.getElementById('custom-css-editor-normal').value,
@@ -173,34 +187,36 @@ export default {
                 }
             });
 
-            ipcRenderer.once('app-site-css-saved', (event, data) => {
-                this.saved (showPreview, renderingType);
+            mainProcessAPI.receiveOnce('app-site-css-saved', (data) => {
+                this.saved(showPreview, renderingType, renderFiles);
             });
-        },
-        saveAndPreview () {
-            this.save(true);
         },
         saveAndPreview (renderingType = false) {
             this.$bus.$emit('theme-settings-before-save');
 
             setTimeout(() => {
-                this.save(true, renderingType);
+                this.save(true, renderingType, false);
             }, 500);
         },
-        saved (showPreview, renderingType = false) {
-            console.log('SP', showPreview);
+        saveAndRender (renderingType = false) {
+            this.$bus.$emit('theme-settings-before-save');
 
+            setTimeout(() => {
+                this.save(true, renderingType, true);
+            }, 500);
+        },
+        saved (showPreview, renderingType = false, renderFiles = false) {
             this.$bus.$emit('message-display', {
-                message: 'Custom CSS has been successfully saved.',
+                message: this.$t('tools.css.customCSSSaveSuccessMsg'),
                 type: 'success',
                 lifeTime: 3
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                        okLabel: 'Go to app settings',
+                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                        okLabel: this.$t('sync.goToAppSettings'),
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -210,10 +226,13 @@ export default {
 
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
-                        homepageOnly: true
+                        homepageOnly: true,
+                        showPreview: !renderFiles
                     });
                 } else {
-                    this.$bus.$emit('rendering-popup-display');
+                    this.$bus.$emit('rendering-popup-display', {
+                        showPreview: !renderFiles
+                    });
                 }
             }
         },
@@ -256,9 +275,9 @@ export default {
 }
 
 .filters {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     list-style-type: none;
-    margin: -2rem 0 0 0;
+    margin: -2.2rem 0 0 0;
     padding: 0;
     position: relative;
     user-select: none;

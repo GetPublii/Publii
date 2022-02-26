@@ -5,13 +5,14 @@
                 v-for="(siteName, key) in sites"
                 :site="siteName"
                 :key="key"
+                :duplicateInProgress="siteDuplicateInProgress"
                 tabindex="1">
             </sites-list-item>
 
             <li
                 v-if="!sites.length"
                 class="empty-state">
-                Website not found&hellip;
+                {{ $t('site.websiteNotFound') }}&hellip;
             </li>
         </ul>
     </div>
@@ -24,7 +25,8 @@ export default {
     name: 'sites-list',
     data: function() {
         return {
-            filterValue: ''
+            filterValue: '',
+            siteDuplicateInProgress: false
         };
     },
     computed: {
@@ -44,11 +46,13 @@ export default {
             });
         }
     },
-    mounted: function() {
-        let self = this;
+    mounted () {
+        this.$bus.$on('sites-list-filtered', data => {
+            this.filterValue = data;
+        });
 
-        this.$bus.$on('sites-list-filtered', function(data) {
-            self.filterValue = data;
+        this.$bus.$on('sites-list-duplicate-in-progress', (inProgress) => {
+            this.siteDuplicateInProgress = inProgress;
         });
     },
     components: {
@@ -70,8 +74,8 @@ export default {
         margin: 0.5rem 0 0;
         padding: 0 2rem;
         text-align: center;
-        
-        &-wrapper {           
+
+        &-wrapper {
             margin-top: 1rem;
             max-height: calc(100vh - 24rem);
             overflow-y: auto;

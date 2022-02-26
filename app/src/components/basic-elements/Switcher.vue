@@ -84,7 +84,7 @@ export default {
 @import '../../scss/variables.scss';
 
 .has-label {
-    font-size: 16px;
+    font-size: $app-font-base;
     margin-right: 10px;
 }
 
@@ -123,7 +123,7 @@ export default {
     }
 
     &.is-checked {
-        background: rgba(66, 165, 245, 0.45);
+        background: var(--input-border-checked);
 
         &:after {
             left: 14px;

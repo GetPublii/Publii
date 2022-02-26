@@ -16,9 +16,10 @@ html {
 }
 
 body {
+    background-color: var(--bg-site);
     color: var(--text-primary-color);
-    font: 400 1rem/1.5 $secondary-font;
-    -webkit-font-smoothing: antialiased;
+    font: 400 1rem/1.5 var(--font-base);
+    -webkit-font-smoothing: subpixel-antialiased;
     line-height: $line-height;
 }
 
@@ -35,7 +36,7 @@ a {
     &:active,
     &:focus,
     &:hover {
-        color: var(--link-primary-hover-color);
+        color: var(--link-primary-color-hover);
     }
 
     svg {
@@ -48,21 +49,38 @@ a {
 }
 
 h1,
-h2 {
-    font-family: $secondary-font;
+h2,
+h3,
+h4 {
+    font-family: var(--font-base);
 }
 
 h1 {
     color: var(--headings-color);
-    font-size: 2.2rem;
-    font-weight: 500;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
 }
 
 h2 {
-    font-weight: 500;
     color: var(--headings-color);
+    font-weight: var(--font-weight-semibold);
     text-transform: uppercase;
     margin: 0 0 2rem;
+}
+
+h3 {
+    color: var(--headings-color);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 2rem;
+}
+
+h4 {
+    color: var(--headings-color);
+    font-size: $app-font-base;
+    font-weight: 600;
+    margin: 0 0 1rem;
 }
 
 b {

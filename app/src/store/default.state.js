@@ -24,6 +24,12 @@ export default {
     // Data about installed themes and their location
     themes: [],
     themesPath: '',
+    languages: [],
+    languagesPath: '',
+    languagesDefaultPath: '',
+    plugins: [],
+    pluginsPath: '',
+    wysiwygTranslation: {},
     dirs: {},
     // Data about available sites
     sites: [],

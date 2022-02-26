@@ -69,10 +69,12 @@
                         {{#author}}
                            {{#if avatar}}
                               <img 
-                                   src="{{avatar}}" 
-                                   {{ lazyload "eager" }} 
-                                   alt="{{name}}" 
-                                   class="post__author-thumb">
+                                 src="{{avatarImage.url}}" 
+                                 {{ lazyload "eager" }}
+                                 height="{{avatarImage.height}}"
+                                 width="{{avatarImage.width}}"
+                                 class="post__author-thumb" 
+                                 alt="{{avatarImage.alt}}">
                            {{/if}}
                            <a href="{{url}}" class="feed__author invert">{{name}}</a>
                         {{/author}}
@@ -123,12 +125,14 @@
                {{#if @config.post.displayAuthorBio}}
                   <div class="post__bio bio">
                      {{#author}}
-                        {{#if avatar}}                            
-                          <img 
-                               class="bio__avatar"
-                               src="{{avatar}}" 
-                               {{ lazyload "lazy" }} 
-                               alt="{{name}}">                           
+                        {{#if avatar}}                          
+                           <img 
+                              src="{{avatarImage.url}}" 
+                              {{ lazyload "lazy" }}
+                              height="{{avatarImage.height}}"
+                              width="{{avatarImage.width}}" 
+                              class="bio__avatar" 
+                              alt="{{avatarImage.alt}}">                          
                         {{/if}}
                         <div class="bio__info">
                            <h3 class="bio__name">
@@ -212,10 +216,7 @@
       {{#if @config.post.displayComments}}
          <div class="post__comments">
             <div class="wrapper">
-               <h2 class="h5">
-                  {{ translate 'post.comments' }}
-               </h2>
-               {{> disqus}}
+               {{{@commentsCustomCode}}}
             </div>
          </div>
       {{/if}}

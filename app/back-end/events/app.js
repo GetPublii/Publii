@@ -2,6 +2,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Themes = require('../themes.js');
+const Languages = require('../languages.js');
+const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
 const unzip = require("unzipper");
 
@@ -25,14 +27,14 @@ class AppEvents {
          * Save app config
          */
         ipcMain.on('app-config-save', function (event, config) {
-            if(config.sitesLocation === '') {
+            if (config.sitesLocation === '') {
                 config.sitesLocation = appInstance.dirPaths.sites;
             }
 
-            if(config.sitesLocation !== appInstance.appConfig.sitesLocation) {
+            if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
                 let result = true;
 
-                if(appInstance.appConfig.sitesLocation) {
+                if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
                     
                     if (appInstance.db) {
@@ -40,15 +42,22 @@ class AppEvents {
                     }
 
                     setTimeout(() => {
-                        result = appFilesHelper.relocateSites(
-                            appInstance.appConfig.sitesLocation,
-                            config.sitesLocation,
-                            event
-                        );
-
-                        if(result) {
+                        if (config.changeSitesLocationWithoutCopying) {
                             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
                             appInstance.appConfig = config;
+                            appInstance.sitesDir = config.sitesLocation;
+                        } else {
+                            result = appFilesHelper.relocateSites(
+                                appInstance.appConfig.sitesLocation,
+                                config.sitesLocation,
+                                event
+                            );
+
+                            if (result) {
+                                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
+                                appInstance.appConfig = config;
+                                appInstance.sitesDir = config.sitesLocation;
+                            }
                         }
         
                         appInstance.loadSites();
@@ -109,6 +118,46 @@ class AppEvents {
         });
 
         /*
+         * Delete language
+         */
+        ipcMain.on('app-language-delete', function(event, config) {
+            let languagesLoader = new Languages(appInstance);
+
+            if(config.directory !== '') {
+                languagesLoader.removeLanguage(config.directory);
+
+                appInstance.languages = appInstance.languages.filter(function (language) {
+                    return language.name !== config.name;
+                });
+
+                event.sender.send('app-language-deleted', {
+                    status: true,
+                    languages: appInstance.languages
+                });
+            }
+        });
+
+        /*
+         * Delete plugin
+         */
+        ipcMain.on('app-plugin-delete', function(event, config) {
+            let pluginsLoader = new Plugins(appInstance);
+
+            if(config.directory !== '') {
+                pluginsLoader.removePlugin(config.directory);
+
+                appInstance.plugins = appInstance.plugins.filter(function (plugin) {
+                    return plugin.name !== config.name;
+                });
+
+                event.sender.send('app-plugin-deleted', {
+                    status: true,
+                    plugins: appInstance.plugins
+                });
+            }
+        });
+
+        /*
          * Add new theme
          */
         ipcMain.on('app-theme-upload', function(event, config) {
@@ -122,12 +171,7 @@ class AppEvents {
                     let zipPath = path.join(themesLoader.themesPath, '__TEMP__');
                     fs.mkdirSync(zipPath);
 
-                    let stream = fs.createReadStream(config.sourcePath)
-                                 .pipe(unzip.Extract({
-                                    path: zipPath
-                                 }));
-
-                    stream.on('finish', function() {
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
                         let dirs = fs.readdirSync(zipPath).filter(function(file) {
                             if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
                                 return false;
@@ -191,6 +235,168 @@ class AppEvents {
             event.sender.send('app-theme-uploaded', {
                 status: status,
                 themes: appInstance.themes
+            });
+        });
+
+        /*
+         * Add new language
+         */
+        ipcMain.on('app-language-upload', function(event, config) {
+            let languagesLoader = new Languages(appInstance);
+            let newLanguageDir = path.parse(config.sourcePath).name;
+            let extension = path.parse(config.sourcePath).ext;
+            let status = '';
+
+            if(extension === '.zip' || extension === '') {
+                if(extension === '.zip') {
+                    let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
+                    fs.mkdirSync(zipPath);
+
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
+                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                                return false;
+                            }
+
+                            return fs.statSync(path.join(zipPath, file)).isDirectory();
+                        });
+
+                        if (dirs.length !== 1) {
+                            event.sender.send('app-language-uploaded', {
+                                status: 'wrong-format',
+                                languages: appInstance.languages
+                            });
+
+                            fs.removeSync(zipPath);
+
+                            return;
+                        }
+
+                        newLanguageDir = dirs[0];
+
+                        let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
+
+                        try {
+                            fs.statSync(directoryPath);
+                            status = 'updated';
+                            fs.removeSync(directoryPath);
+                        } catch (e) {
+                            status = 'added';
+                        }
+
+                        fs.copySync(path.join(zipPath, newLanguageDir), directoryPath);
+                        fs.removeSync(zipPath);
+                        appInstance.languages = languagesLoader.loadLanguages();
+
+                        event.sender.send('app-language-uploaded', {
+                            status: status,
+                            languages: appInstance.languages
+                        });
+                    });
+
+                    return;
+                } else {
+                    let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(config.sourcePath, directoryPath);
+                    appInstance.languages = languagesLoader.loadLanguages();
+                }
+            } else {
+                status = 'wrong-format';
+            }
+
+            event.sender.send('app-language-uploaded', {
+                status: status,
+                languages: appInstance.languages
+            });
+        });
+
+        /*
+         * Add new plugin
+         */
+        ipcMain.on('app-plugin-upload', function(event, config) {
+            let pluginsLoader = new Plugins(appInstance);
+            let newPluginDir = path.parse(config.sourcePath).name;
+            let extension = path.parse(config.sourcePath).ext;
+            let status = '';
+
+            if(extension === '.zip' || extension === '') {
+                if(extension === '.zip') {
+                    let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
+                    fs.mkdirSync(zipPath);
+
+                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
+                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                                return false;
+                            }
+
+                            return fs.statSync(path.join(zipPath, file)).isDirectory();
+                        });
+
+                        if (dirs.length !== 1) {
+                            event.sender.send('app-plugin-uploaded', {
+                                status: 'wrong-format',
+                                plugins: appInstance.plugins
+                            });
+
+                            fs.removeSync(zipPath);
+
+                            return;
+                        }
+
+                        newPluginDir = dirs[0];
+
+                        let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
+
+                        try {
+                            fs.statSync(directoryPath);
+                            status = 'updated';
+                            fs.removeSync(directoryPath);
+                        } catch (e) {
+                            status = 'added';
+                        }
+
+                        fs.copySync(path.join(zipPath, newPluginDir), directoryPath);
+                        fs.removeSync(zipPath);
+                        appInstance.plugins = pluginsLoader.loadPlugins();
+
+                        event.sender.send('app-plugin-uploaded', {
+                            status: status,
+                            plugins: appInstance.plugins
+                        });
+                    });
+
+                    return;
+                } else {
+                    let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(config.sourcePath, directoryPath);
+                    appInstance.plugins = pluginsLoader.loadPlugins();
+                }
+            } else {
+                status = 'wrong-format';
+            }
+
+            event.sender.send('app-plugin-uploaded', {
+                status: status,
+                plugins: appInstance.plugins
             });
         });
 

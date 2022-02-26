@@ -54,12 +54,12 @@ class ContentHelper {
 
         // Remove TOC plugin ID attributes when TOC does not exist
         if (preparedText.indexOf('class="post__toc') === -1) {
-           preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, ''); 
+           preparedText = preparedText.replace(/\sid="mcetoc_[a-z0-9]*?"/gmi, '');
         }
 
         // Reduce download="download" to download
         preparedText = preparedText.replace(/download="download"/gmi, 'download');
-    
+
         // Remove contenteditable attributes
         preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
 
@@ -107,7 +107,7 @@ class ContentHelper {
             if (matches.indexOf('data-responsive="false"') > -1) {
                 return matches;
             }
-            
+
             return '<div class="post__iframe">' + matches + '</div>';
         });
 
@@ -125,9 +125,9 @@ class ContentHelper {
 
     /**
      * Parse text using a editor-specific parser
-     * 
-     * @param {*} inputText 
-     * @param {*} editor 
+     *
+     * @param {*} inputText
+     * @param {*} editor
      */
     static parseText (inputText, editor = 'tinymce') {
         if (editor === 'tinymce') {
@@ -146,7 +146,7 @@ class ContentHelper {
 
     /**
      * Prepares markdown code to display
-     * @param input 
+     * @param input
      */
     static prepareMarkdown (input) {
         input = input.replace(/\-\-\-READMORE\-\-\-/gmi, '<hr id="read-more" />');
@@ -162,10 +162,10 @@ class ContentHelper {
      */
     static prepareExcerpt(length, text) {
         // Detect readmore
-        let readmoreMatches = text.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+        let readmoreMatches = text.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
 
         if(readmoreMatches && readmoreMatches.length) {
-            text = text.split(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+            text = text.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
             text = text[0];
             return text;
         }
@@ -183,6 +183,7 @@ class ContentHelper {
         text = text.replace(/<(?:.|\s)*?>/g, ''); // Remove HTML tags
         text = text.replace(/\s{2,}/g, ' '); // Shrink multiple spaces into one space
         text = text.split(' '); // Create an array of words
+        text = text.filter(word => !!word);
         let textLength = text.length;
         text = text.slice(0, parseInt(length, 10)); // Select first X elements
         text = text.join(' ');  // Merge the text with spaces and return
@@ -366,7 +367,7 @@ class ContentHelper {
      */
     static _isImage(url) {
         if (
-            process.platform === 'linux' && 
+            process.platform === 'linux' &&
             url.toLowerCase().indexOf('.jpg') === -1 &&
             url.toLowerCase().indexOf('.jpeg') === -1 &&
             url.toLowerCase().indexOf('.png') === -1
@@ -375,7 +376,7 @@ class ContentHelper {
         } else if (
             url.toLowerCase().indexOf('.jpg') === -1 &&
             url.toLowerCase().indexOf('.jpeg') === -1 &&
-            url.toLowerCase().indexOf('.png') === -1 && 
+            url.toLowerCase().indexOf('.png') === -1 &&
             url.toLowerCase().indexOf('.webp') === -1
         ) {
             return false;
@@ -396,8 +397,8 @@ class ContentHelper {
      */
     static _addResponsiveAttributes(matches, url, themeConfig, domain) {
         if (
-            url.indexOf('media/posts') === -1 && 
-            url.indexOf('media\posts') === -1 && 
+            url.indexOf('media/posts') === -1 &&
+            url.indexOf('media\posts') === -1 &&
             url.indexOf('media/website') === -1 &&
             url.indexOf('media\website') === -1
         ) {
@@ -412,7 +413,7 @@ class ContentHelper {
                     process.platform !== 'linux' &&
                     url.toLowerCase().indexOf('.jpg') === -1 &&
                     url.toLowerCase().indexOf('.jpeg') === -1 &&
-                    url.toLowerCase().indexOf('.png') === -1 && 
+                    url.toLowerCase().indexOf('.png') === -1 &&
                     url.toLowerCase().indexOf('.webp') === -1
                 ) || (
                     process.platform === 'linux' &&

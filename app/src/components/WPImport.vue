@@ -1,157 +1,158 @@
 <template>
-    <section class="content wp-import">
-        <p-header title="WP importer">
-            <p-button
-                :onClick="goBack"
-                slot="buttons"
-                type="outline">
-                Back to tools
-            </p-button>
-        </p-header>
+    <section class="content">
+        <div class="wp-import">
+            <p-header :title="$t('tools.wpImport.wpImporter')">
+                <p-button
+                    :onClick="goBack"
+                    slot="buttons"
+                    type="clean back">
+                    {{ $t('ui.backToTools') }}
+                </p-button>
+            </p-header>
 
-        <fields-group>
-            <field
-                id="wxr-file"
-                label="Please select WXR file:"
-                :labelFullWidth="true">
-                <file-select
+            <fields-group>
+                <field
                     id="wxr-file"
-                    placeholder="Select a WXR file to import"
-                    value=""
-                    ref="wxr-file"
-                    :disabled="uploadDisabled"
-                    :onChange="selectedFileChanged"
-                    slot="field" />
-            </field>
+                    :label="$t('tools.wpImport.selectWXRFileLabel')"
+                    :labelFullWidth="true">
+                    <file-select
+                        id="wxr-file"
+                        :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
+                        value=""
+                        ref="wxr-file"
+                        :disabled="uploadDisabled"
+                        :onChange="selectedFileChanged"
+                        slot="field" />
+                </field>
 
-            <div
-                v-if="checkingFile"
-                class="import-check-results">
-                Checking the selected WXR file&hellip;
-            </div>
+                <div
+                    v-if="checkingFile"
+                    class="import-check-results">
+                    {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
+                </div>
 
-            <div
-                v-if="errorMessage"
-                class="import-check-results is-error">
-                {{ errorMessage }}
-            </div>
+                <div
+                    v-if="errorMessage"
+                    class="import-check-results is-error">
+                    {{ errorMessage }}
+                </div>
 
-            <small 
-                v-if="!stats"
-                class="note">
-                Posts will be imported as compatible with the WYSIWYG editor.
-            </small>
+                <small
+                    v-if="!stats"
+                    class="note">
+                    {{ $t('tools.wpImport.importNote') }}
+                </small>
 
-            <wp-import-stats
-                v-if="stats"
-                :stats="stats" />
+                <wp-import-stats
+                    v-if="stats"
+                    :stats="stats" />
 
-            <div
-                v-if="configVisible"
-                :class="importConfigCssClasses">
-                <div class="import-config-section">
-                    <strong>Import selected types of posts:</strong>
+                <div
+                    v-if="configVisible"
+                    :class="importConfigCssClasses">
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.importSelectedTypesOfPosts') }}</strong>
 
-                    <field
-                        id="import-cpt-post"
-                        label="posts"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="import-cpt-post"
-                            ref="import-cpt-post"
-                            :checked="true" />
-                    </field>
+                            :label="$t('post.posts')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="import-cpt-post"
+                                ref="import-cpt-post"
+                                :checked="true" />
+                        </field>
 
-                    <field
-                        id="import-cpt-page"
-                        label="pages"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="import-cpt-page"
-                            ref="import-cpt-page"
-                            :checked="true" />
-                    </field>
+                            :label="$t('tools.wpImport.pages')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="import-cpt-page"
+                                ref="import-cpt-page"
+                                :checked="true" />
+                        </field>
 
-                    <field
-                        v-for="(cpt, index) in customPostTypes"
-                        :id="'import-cpt-' + cpt"
-                        :label="cpt"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        :key="index"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
+                            v-for="(cpt, index) in customPostTypes"
                             :id="'import-cpt-' + cpt"
-                            :ref="'import-cpt-' + cpt"
-                            :checked="true" />
-                    </field>
-                </div>
+                            :label="cpt"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            :key="index"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                :id="'import-cpt-' + cpt"
+                                :ref="'import-cpt-' + cpt"
+                                :checked="true" />
+                        </field>
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>Used taxonomy for posts:</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.usedTaxonomyForPosts') }}</strong>
 
-                    <radio-buttons
-                        name="taxonomy"
-                        :items="radioTaxonomyItems"
-                        selected="tags"
-                        ref="taxonomy" />
-                </div>
+                        <radio-buttons
+                            name="taxonomy"
+                            :items="radioTaxonomyItems"
+                            selected="tags"
+                            ref="taxonomy" />
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>Post authors:</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.postAuthors') }}</strong>
 
-                    <radio-buttons
-                        name="authors"
-                        :items="radioAuthorItems"
-                        selected="publii-author"
-                        ref="authors" />
-                </div>
+                        <radio-buttons
+                            name="authors"
+                            :items="radioAuthorItems"
+                            selected="publii-author"
+                            ref="authors" />
+                    </div>
 
-                <div class="import-config-section">
-                    <strong>Content formatting:</strong>
+                    <div class="import-config-section">
+                        <strong>{{ $t('tools.wpImport.contentFormatting') }}</strong>
 
-                    <field
-                        id="use-autop"
-                        label="Add <p> and <br> tags to the post content automatically"
-                        :labelSeparated="false"
-                        :noLabelSpace="true"
-                        spacing="small">
-                        <switcher
-                            slot="field"
+                        <field
                             id="use-autop"
-                            ref="use-autop"
-                            :checked="true" />
-                    </field>
+                            :label="$t('tools.wpImport.addTagsToContentAutomaticallty')"
+                            :labelSeparated="false"
+                            :noLabelSpace="true"
+                            spacing="small">
+                            <switcher
+                                slot="field"
+                                id="use-autop"
+                                ref="use-autop"
+                                :checked="true" />
+                        </field>
+                    </div>
                 </div>
-            </div>
 
-            <p-button
-                v-if="configVisible"
-                :onClick="importFile"
-                :disabled="importInProgress"
-                type="primary">
-                <template v-if="!importInProgress">Import data</template>
-                <template v-if="importInProgress">Importing data&hellip;</template>
-            </p-button>
+                <p-button
+                    v-if="configVisible"
+                    :onClick="importFile"
+                    :disabled="importInProgress"
+                    type="primary">
+                    <template v-if="!importInProgress">{{ $t('tools.wpImport.importData') }}</template>
+                    <template v-if="importInProgress">{{ $t('tools.wpImport.importingData') }}&hellip;</template>
+                </p-button>
 
-            <span
-                v-if="configVisible && progressInfo"
-                id="import-progress">
-                {{ progressInfo }}
-            </span>
-        </fields-group>
+                <span
+                    v-if="configVisible && progressInfo"
+                    id="import-progress">
+                    {{ progressInfo }}
+                </span>
+            </fields-group>
+        </div>
     </section>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import BackToTools from './mixins/BackToTools.js';
 import WPImportStats from './WPImportStats';
 
@@ -177,21 +178,21 @@ export default {
             radioAuthorItems: [
                 {
                     value: "publii-author",
-                    label: "Use main Publii main author"
+                    label: this.$t('tools.wpImport.useMainAuthor')
                 },
                 {
                     value: "wp-authors",
-                    label: "Import authors"
+                    label: this.$t('tools.wpImport.importAuthors')
                 }
             ],
             radioTaxonomyItems: [
                 {
                     value: "tags",
-                    label: "Tags"
+                    label: this.$t('ui.tags')
                 },
                 {
                     value: "categories",
-                    label: "Categories"
+                    label: this.$t('tools.wpImport.categories')
                 }
             ]
         };
@@ -215,23 +216,27 @@ export default {
             this.fileSelected();
         },
         fileSelected: function() {
-            ipcRenderer.send('app-wxr-check', {
+            mainProcessAPI.send('app-wxr-check', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath
             });
 
             this.uploadDisabled = true;
             this.checkingFile = true;
-            ipcRenderer.once('app-wxr-checked', (event, data) => {
-                this.checkFile(event, data);
+            mainProcessAPI.receiveOnce('app-wxr-checked', (data) => {
+                this.checkFile(data);
             });
         },
-        checkFile: function(event, data) {
+        checkFile: function(data) {
             this.uploadDisabled = false;
             this.checkingFile = false;
 
             if(data.status === 'error') {
-                this.errorMessage = data.message;
+                if (data.message.translation) {
+                    this.errorMessage = this.$t(data.message.translation, data.message.translationVars);
+                } else {
+                    this.errorMessage = data.message;
+                }
             }
 
             if(data.status === 'success') {
@@ -261,7 +266,7 @@ export default {
                 }
             }
 
-            ipcRenderer.send('app-wxr-import', {
+            mainProcessAPI.send('app-wxr-import', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath,
                 importAuthors: this.$refs['authors'].content,
@@ -271,22 +276,22 @@ export default {
             });
 
             this.bindedFileImported = this.fileImported.bind(this);
-            ipcRenderer.once('app-wxr-imported', this.bindedFileImported);
+            mainProcessAPI.receiveOnce('app-wxr-imported', this.bindedFileImported);
 
             this.bindedFileImportProgress = this.fileImportProgress.bind(this);
-            ipcRenderer.on('app-wxr-import-progress', this.bindedFileImportProgress);
+            mainProcessAPI.receive('app-wxr-import-progress', this.bindedFileImportProgress);
         },
-        fileImportProgress(event, data) {
-            this.progressInfo = data.message;
+        fileImportProgress(data) {
+            this.progressInfo = this.$t(data.message.translation, data.message.translationVars);
         },
-        fileImported: function(event, data) {
+        fileImported: function(data) {
             let siteName = this.$store.state.currentSite.config.name;
             this.importInProgress = false;
 
             this.$bus.$emit('confirm-display', {
-                message: 'Your WordPress data has been imported. Thumbnails regeneration can be necessary if you have selected a theme before.',
-                okLabel: 'Go to tools',
-                cancelLabel: 'OK',
+                message: this.$t('tools.wpImport.wpImportGoToRegenerateMsg'),
+                okLabel: this.$t('tools.goToTools'),
+                cancelLabel: this.$t('ui.ok'),
                 okClick: () => {
                     let currentSite = this.$route.params.name;
                     this.$router.push(this.$route.path.replace('wp-importer', 'regenerate-thumbnails'));
@@ -295,11 +300,11 @@ export default {
 
             this.resetState();
 
-            ipcRenderer.send('app-site-reload', {
+            mainProcessAPI.send('app-site-reload', {
                 siteName: siteName
             });
 
-            ipcRenderer.once('app-site-reloaded', (event, result) => {
+            mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                 this.$store.commit('setSiteConfig', result);
                 this.$store.commit('switchSite', result.data);
             });
@@ -318,11 +323,11 @@ export default {
     },
     beforeDestroy: function() {
         if(this.bindedFileImported) {
-            ipcRenderer.removeListener('app-wxr-imported', this.bindedFileImported);
+            mainProcessAPI.stopReceive('app-wxr-imported', this.bindedFileImported);
         }
 
         if(this.bindedFileImportProgress) {
-            ipcRenderer.removeListener('app-wxr-import-progress', this.bindedFileImportProgress);
+            mainProcessAPI.stopReceive('app-wxr-import-progress', this.bindedFileImportProgress);
         }
     }
 }
@@ -332,6 +337,10 @@ export default {
 @import '../scss/variables.scss';
 
 .wp-import {
+    margin: 0 auto;
+    max-width: $wrapper;
+    user-select: none;
+
     p {
         margin-top: 0;
     }
@@ -363,7 +372,7 @@ export default {
 
         &-section {
             border-bottom: 2px solid var(--gray-1);
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             margin: 0;
             padding: 3rem 0;
         }

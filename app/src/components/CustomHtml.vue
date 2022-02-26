@@ -1,12 +1,12 @@
 <template>
     <section class="content tools-custom-html">
-        <p-header title="Custom HTML">
+        <p-header :title="$t('tools.customHTML')">
             <p-button
                 @click.native="goBack"
                 slot="buttons"
-                type="outline"
+                type="clean back"
                 :disabled="buttonsLocked">
-                Back to tools
+                {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
@@ -14,7 +14,7 @@
                 slot="buttons"
                 type="secondary"
                 :disabled="buttonsLocked">
-                Save Changes
+                {{ $t('ui.saveChanges') }}
             </p-button>
 
             <btn-dropdown
@@ -24,7 +24,7 @@
                 :disabled="!siteHasTheme || buttonsLocked"
                 :previewIcon="true"
                 localStorageKey="publii-preview-mode"
-                defaultValue="full-site" />
+                defaultValue="full-site-preview" />
         </p-header>
 
         <fields-group>
@@ -47,14 +47,14 @@
                     :slot="'tab-' + index"
                     :key="'note-' + editor">
                     <span>
-                        Find:
-                        <template v-if="!isMac">Ctrl + F</template>
-                        <template v-if="isMac">Cmd + F</template>
+                        {{ $t('tools.find') }}
+                        <template v-if="!isMac">{{ $t('tools.findShortcut') }}</template>
+                        <template v-if="isMac">{{ $t('tools.findShortcutMac') }}</template>
                     </span>
                     <span>
-                        Find and replace:
-                        <template v-if="!isMac">Ctrl + Alt + F</template>
-                        <template v-if="isMac">Cmd + Alt + F</template>
+                        {{ $t('tools.findAndReplace') }}
+                        <template v-if="!isMac">{{ $t('tools.findAndReplaceShortcut') }}</template>
+                        <template v-if="isMac">{{ $t('tools.findAndReplaceShortcutMac') }}</template>
                     </span>
                 </small>
             </tabs>
@@ -63,8 +63,6 @@
 </template>
 
 <script>
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
 import Utils from '../helpers/utils.js';
 import BackToTools from './mixins/BackToTools.js';
 
@@ -79,6 +77,7 @@ export default {
             tabs: [
                 'Head',
                 'Body',
+                'Comments',
                 'Footer',
                 'AMP Head',
                 'AMP Footer'
@@ -92,27 +91,43 @@ export default {
             return !!this.$store.state.currentSite.config.theme;
         },
         isMac: function () {
-            return window.process.platform === 'darwin';
+            return mainProcessAPI.getEnv().platformName === 'darwin';
         },
         dropdownItems () {
             return [
                 {
-                    label: 'Render full website',
-                    activeLabel: 'Save & Preview',
-                    value: 'full-site',
-                    icon: 'full-preview-monitor',
+                    label: this.$t('ui.previewFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'full-site-preview',
                     isVisible: () => true,
+                    icon: 'full-preview-monitor',
                     onClick: this.saveAndPreview.bind(this, 'full-site')
                 },
                 {
-                    label: 'Render front page only',
-                    activeLabel: 'Save & Preview',
-                    value: 'homepage',
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'homepage-preview',
                     icon: 'quick-preview',
                     isVisible: () => true,
                     onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-preview',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
                 }
-            ]
+            ];
         }
     },
     mounted: function() {
@@ -131,6 +146,7 @@ export default {
             let customHtml = {
                 'custom-head-code': this.$store.state.currentSite.config.advanced.customHeadCode,
                 'custom-body-code': this.$store.state.currentSite.config.advanced.customBodyCode,
+                'custom-comments-code': this.$store.state.currentSite.config.advanced.customCommentsCode,
                 'custom-footer-code': this.$store.state.currentSite.config.advanced.customFooterCode,
                 'custom-head-amp-code': this.$store.state.currentSite.config.advanced.customHeadAmpCode,
                 'custom-footer-amp-code': this.$store.state.currentSite.config.advanced.customFooterAmpCode
@@ -183,7 +199,7 @@ export default {
                 }
             }, 0);
         },
-        save (showPreview = false, renderingType = false) {
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             let customCodeEditors = document.querySelectorAll('.tools-custom-html textarea');
 
             for(let editor of Object.keys(this.editors)) {
@@ -223,15 +239,15 @@ export default {
             newSettings = Utils.deepMerge(currentSiteConfigCopy, newSettings);
 
             // Send request to the back-end
-            ipcRenderer.send('app-site-config-save', {
+            mainProcessAPI.send('app-site-config-save', {
                 site: this.$store.state.currentSite.config.name,
                 settings: newSettings
             });
 
             // Settings saved
-            ipcRenderer.once('app-site-config-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
-                    this.saved (newSettings, showPreview, renderingType);
+                    this.saved (newSettings, showPreview, renderingType, renderFiles);
 
                     if(data.newThemeConfig) {
                         this.$store.commit('refreshSiteThemeConfig', data);
@@ -240,26 +256,29 @@ export default {
 
                 if(data.message === 'success-save') {
                     this.$bus.$emit('message-display', {
-                        message: 'Site settings has been successfully saved.',
+                        message: this.$t('site.siteSettingsSaveSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });
                 }
 
-                ipcRenderer.send('app-site-reload', {
+                mainProcessAPI.send('app-site-reload', {
                     siteName: this.$store.state.currentSite.config.name
                 });
 
-                ipcRenderer.once('app-site-reloaded', (event, result) => {
+                mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
                 });
             });
         },
         saveAndPreview (renderingType = false) {
-            this.save(true, renderingType);
+            this.save(true, renderingType, false);
         },
-        saved (newSettings, showPreview, renderingType = false) {
+        saveAndRender (renderingType = false) {
+            this.save(true, renderingType, true);
+        },
+        saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
             let siteName = this.$store.state.currentSite.config.name;
 
             this.$store.commit('refreshSiteConfig', {
@@ -268,10 +287,10 @@ export default {
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !fs.existsSync(this.$store.state.app.config.previewLocation)) {
+                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
                     this.$bus.$emit('confirm-display', {
-                        message: 'The preview catalog does not exist. Please go to the App Settings and select the correct preview directory first.',
-                        okLabel: 'Go to app settings',
+                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                        okLabel: this.$t('sync.goToAppSettings'),
                         okClick: () => {
                             this.$router.push(`/app-settings/`);
                         }
@@ -281,10 +300,13 @@ export default {
 
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
-                        homepageOnly: true
+                        homepageOnly: true,
+                        showPreview: !renderFiles
                     });
                 } else {
-                    this.$bus.$emit('rendering-popup-display');
+                    this.$bus.$emit('rendering-popup-display', {
+                        showPreview: !renderFiles
+                    });
                 }
             }
         }

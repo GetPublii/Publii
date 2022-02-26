@@ -18,7 +18,7 @@
 
 html,
 body {
-    font-family: $primary-font;
+    font-family: var(--font-base);
 }
 
 body,
@@ -58,20 +58,19 @@ img {
  */
 
 html {
+    background: var(--bg-primary);
+    font-size: 15px;
     height: 100%;
     overflow-y: auto !important;
-
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($font, min), map-get($font, max));
 }
 
 body#tinymce {
-    background: var(--bg-primary);
-    color: var(--text-editor-body-color);
+    color: var(--text-primary-color);
     -webkit-font-smoothing: antialiased;
+    font-family: var(--font-base);
     font-size: inherit;
     line-height: 1.6;
     padding: 1.8rem 1rem 0 1rem;
-    max-width: 40rem;
 
     & > :nth-child(1) {
         margin-top: 0;
@@ -79,7 +78,7 @@ body#tinymce {
 }
 
 a:not(.btn) {
-    @include links (var(--link-primary-color), var(--link-primary-color), var(--link-primary-color), var(--link-primary-color));
+    @include links (var(--link-invert-color), var(--link-invert-color), var(--link-invert-color), var(--link-invert-color));
 }
 
 
@@ -121,33 +120,33 @@ h5,
 h6 {
     color: var(--headings-color);
     font-weight: var(--font-weight-bold);
-    letter-spacing: -0.03rem;
+    letter-spacing: var(--letter-spacing);
     line-height: 1.3;
     margin-top: baseline(5);
 }
 
 h1 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h1, min), map-get($h1, max));
+    font-size: $h1;
 }
 
 h2 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h2, min), map-get($h2, max));
+    font-size: $h2;
 }
 
 h3 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h3, min), map-get($h3, max));
+    font-size: $h3;
 }
 
 h4 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h4, min), map-get($h4, max));
+    font-size: $h4;
 }
 
 h5 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h5, min), map-get($h5, max));
+    font-size: $h5;
 }
 
 h6 {
-    @include fluid-type(font-size, $minScreen, $maxScreen, map-get($h6, min), map-get($h6, max));
+    font-size: $h6;
 }
 
 h2,
@@ -167,7 +166,7 @@ strong {
 
 blockquote {
     background: var(--gray-1);
-    border-left: 3px solid var(--primary-color);
+    border-left: 3px solid var(--color-primary);
     font-style: italic;
     padding: baseline(2) 0 baseline(2) baseline(8);
 
@@ -216,7 +215,7 @@ pre {
 }
 
 code {
-    background-color: #ffeeee;
+    background-color: rgba(var(--warning-rgb), .15);
     border-radius: 2px;
     color: var(--warning);
     font-size: ms(-1);

@@ -33,11 +33,13 @@
                      {{#siteOwner}}
                         <div class="post__meta post__meta--author">
                            {{#if avatar}}
-                              <img
-                                 src="{{avatar}}"
-                                 {{ lazyload "lazy" }}
-                                 alt="{{name}}"
-                                 class="post__author-thumb">
+                              <img 
+                                 src="{{avatarImage.url}}" 
+                                 {{ lazyload "eager" }}
+                                 height="{{avatarImage.height}}"
+                                 width="{{avatarImage.width}}"
+                                 class="post__author-thumb" 
+                                 alt="{{avatarImage.alt}}">
                            {{/if}}
                            <a href="{{url}}" class="feed__author invert">{{name}}</a>
                         </div>
@@ -48,6 +50,7 @@
          {{/if}}
       </div>
       <div class="feed">
+         {{@config.custom.fontName}}
          {{#each posts}}
             <article class="feed__item">
                <header class="wrapper">
@@ -57,10 +60,12 @@
                            {{#if @config.custom.frontAvatar}}
                               {{#if avatar}}
                                  <img
-                                    src="{{avatar}}" 
+                                    src="{{avatarImage.url}}" 
                                     {{ lazyload "lazy" }}
+                                    height="{{avatarImage.height}}"
+                                    width="{{avatarImage.width}}"      
                                     class="post__author-thumb"
-                                    alt="{{name}}">
+                                    alt="{{avatarImage.alt}}">
                               {{/if}}
                            {{/if}}
                            {{#if @config.custom.frontAuthor}}

@@ -1,0 +1,58 @@
+// Generate calc() function
+// based on Mike Riethmuller's Precise control over responsive typography
+// http://madebymike.com.au/writing/precise-control-responsive-typography/
+@function ms-fluid($val1: 1em, $val2: 1em, $break1: 0, $break2: 0) {
+  $diff: ms-unitless($val2) - ms-unitless($val1);
+
+  // v1 + (v2 - v1) * ( (100vw - b1) / b2 - b1 )
+  @return calc( #{$val1} + #{ms-unitless($val2) - ms-unitless($val1)} * ( ( 100vw - #{$break1}) / #{ms-unitless($break2) - ms-unitless($break1)} ) );
+}
+
+// Main responsive mixin
+@mixin ms-respond($prop, $val, $map: $modularscale, $ms-important: false) {
+  $base: $ms-base;
+  $ratio: $ms-ratio;
+
+  $first-write: true;
+  $last-break: null;
+
+  $important: '';
+
+  @if $ms-important == true {
+    $important: ' !important';
+  }
+
+  // loop through all settings with a breakpoint type value
+  @each $v, $s in $map {
+    @if type-of($v) == number {
+      @if unit($v) != '' {
+
+        // Write out the first value without a media query.
+        @if $first-write {
+          #{$prop}: unquote("#{ms-function($val, $thread: $v, $settings: $map)}#{$important}");
+
+          // Not the first write anymore, reset to false to move on.
+          $first-write: false;
+          $last-break: $v;
+        }
+
+        // Write intermediate breakpoints.
+        @else {
+          @media (min-width: $last-break) and (max-width: $v) {
+            $val1: ms-function($val, $thread: $last-break, $settings: $map);
+            $val2: ms-function($val, $thread: $v, $settings: $map);
+            #{$prop}: unquote("#{ms-fluid($val1,$val2,$last-break,$v)}#{$important}");
+          }
+          $last-break: $v;
+        }
+      }
+    }
+  }
+
+  // Write the last breakpoint.
+  @if $last-break {
+    @media (min-width: $last-break) {
+      #{$prop}: unquote("#{ms-function($val, $thread: $last-break, $settings: $map)}#{$important}");
+    }
+  }
+}

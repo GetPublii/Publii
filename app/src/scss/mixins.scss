@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /*
  * Clearfix placeholder
  */
@@ -6,26 +8,6 @@
         content: " ";
         display: block;
         clear: both;
-    }
-}
-
-/*
- * Place for the common parts of the SCSS code
- */
-@mixin logoColors() {
-    @for $i from 1 through 16 {
-        &[data-color="#{$i}"] {
-            background: #{map-get($logo-colors, #{'bg' + $i})};
-            color: #{map-get($logo-colors, #{'color' + $i})};
-        }
-    }
-}
-
-@mixin logoSVGColors() {
-    @for $i from 1 through 16 {
-        &[data-color="#{$i}"] {
-            color: #{map-get($logo-colors, #{'bg' + $i})};           
-        }
     }
 }
 
@@ -54,7 +36,7 @@
 
     &:focus {
         color: $focus;
-        outline: 2px dotted var(--secondary-color);
+        outline: 2px dotted var(--color-primary);
     }
 }
 
@@ -103,10 +85,12 @@
 
 
 @function strip-unit($value) {
-    @return $value / ($value * 0 + 1);
+    @return math.div($value, $value * 0 + 1);
 }
 
-// Baseline for Vertical Rhythm
-@function baseline($value){
-  @return ($baseline) * $value
-}
+@function baseline($value, $amount: rem) {
+    $product: ($baseline) * $value;
+    @return #{$product}#{$amount};
+  }
+
+

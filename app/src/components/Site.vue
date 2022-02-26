@@ -11,10 +11,8 @@
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
 import SiteAddForm from './SiteAddForm';
 import Sidebar from './Sidebar';
-const mainProcess = remote.require('./main.js');
 
 export default {
     name: 'site',
@@ -67,18 +65,18 @@ export default {
             this.currentSite = siteName;
             this.siteIsLoaded = false;
 
-            ipcRenderer.send('app-site-switch', {
+            mainProcessAPI.send('app-site-switch', {
                 'site': siteName
             });
 
-            ipcRenderer.once('app-site-switched', (event, data) => {
+            mainProcessAPI.receiveOnce('app-site-switched', (data) => {
                 if (data.status !== false) {
                     this.loadSite(siteName, data);
                     this.siteIsLoaded = true;
                     this.$bus.$emit('site-loaded', true);
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: 'An error occured during loading the selected website. Please check the website files and try again.',
+                        message: this.$t('site.siteLoadingErrorMsg'),
                         type: 'warning'
                     });
                 }
@@ -144,16 +142,16 @@ export default {
     .sidebar {
         bottom: 0;
         left: 0;
-        width: 32rem;
+        width: $app-sidebar;
     }
 
     .content {
-       background: var(--bg-primary);
+        background: var(--bg-site);
         bottom: 0;
         overflow: scroll;
-        padding: 4rem 5rem;
+        padding: 3rem 4rem;
         right: 0;
-        width: calc(100% - 32rem); // 32rem = sideabr width
+        width: calc(100% - $app-sidebar); 
 
         &.is-wide {
             width: 100%;
@@ -170,18 +168,6 @@ export default {
     .v-leave-to {
         opacity: 0;
         position: absolute;
-    }
-}
-    
-@media (max-height: 900px) {
-    .site .content {          
-           padding: 4rem;
-    }
- }
- 
-@media (max-width: 1400px) {
-    .site .content {          
-           padding: 4rem;
     }
 }
 

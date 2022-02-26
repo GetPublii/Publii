@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         v-if="isVisible"
         @click="maximizePopup"
         :class="{
@@ -9,22 +9,45 @@
         }">
         <div class="popup sync">
             <div
-                v-if="isInSync && noIssues && (isManual || !isMinimized)"
-                class="sync-success">                
+                v-if="isInSync && noIssues && !isMinimized"
+                class="sync-success">
 
-                <h1>Your website is now in sync</h1>
+                <h1>{{ $t('sync.yourWebsiteIsInSync') }}</h1>
 
                 <p
                     v-if="isManual"
+                    class="description"
+                    v-pure-html="$t('sync.websiteFilesPreparedInfo')">
+                </p>
+
+                <p
+                    v-if="isGithubPages"
                     class="description">
-                    Your website files has been prepared. Use the "Get website files" button below <br>to get your files in order to manually deploy them.
+                    <strong>{{ $t('sync.note') }}</strong> 
+                    {{ $t('sync.githubSyncedPart1') }}<br>
+                    {{ $t('sync.githubSyncedPart2') }}
+                </p>
+
+                <p
+                    v-if="isGitlabPages"
+                    class="description">
+                    <strong>{{ $t('sync.note') }}</strong> 
+                    {{ $t('sync.gitlabSyncedPart1') }}<br>
+                    {{ $t('sync.gitlabSyncedPart2') }}
+                </p>
+
+                <p 
+                    v-if="!(isGithubPages || isGitlabPages || isManual)"
+                    class="description">
+                    {{ $t('sync.allFilesUploadedPart1') }}<br>
+                    {{ $t('sync.allFilesUploadedPart2') }}
                 </p>
 
                 <div class="progress-bars-wrapper">
                     <progress-bar
                         :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
                         color="green"
-                        :progress="100" 
+                        :progress="100"
                         :stopped="false"
                         message="" />
                 </div>
@@ -34,7 +57,14 @@
                         v-if="isManual"
                         type="primary medium quarter-width"
                         :onClick="showFolder">
-                        Get website files
+                        {{ $t('sync.getWebsiteFiles') }}
+                    </p-button>
+
+                    <p-button
+                        v-if="!isManual"
+                        type="primary medium green quarter-width"
+                        :onClick="openWebsite">
+                        {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
@@ -47,7 +77,7 @@
                     <p-button
                         :onClick="close"
                         type="outline medium quarter-width">
-                        OK
+                        {{ $t('ui.ok') }}
                     </p-button>
                 </div>
             </div>
@@ -55,23 +85,23 @@
             <div
                 v-if="isInSync && !noIssues && !isMinimized"
                 class="sync-success">
-                <h1>Some files were not synced properly.</h1>
+                <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
 
                 <p class="description">
-                    Please check hard-upload-errors-log.txt files using the Tools -&gt; Log Viewer tool.
+                    {{ $t('sync.filesNotSyncedErrorMessage') }}
                 </p>
 
                 <div class="buttons">
                     <p-button
-                        type="primary medium  quarter-width"
+                        type="primary medium  green quarter-width"
                         :onClick="openWebsite">
-                        Visit your website
+                        {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
                         type="outline medium quarter-width ">
-                        OK
+                        {{ $t('ui.ok') }}
                     </p-button>
                 </div>
             </div>
@@ -80,10 +110,11 @@
                 v-if="properConfig && !isInSync && !isMinimized"
                 class="sync-todo">
                 <div class="heading">
-                    <h1>Website synchronization</h1>                    
+                    <h1>{{ $t('sync.websiteSynchronization') }}</h1>
 
-                    <p class="description">
-                        Any duplicate files or filenames already in the destination location <br>that match the Publii-generated files will be overwritten.
+                    <p
+                        class="description"
+                        v-pure-html="$t('sync.websiteSynchronizationInfo')">
                     </p>
                 </div>
 
@@ -109,61 +140,63 @@
                         :onClick="startSync"
                         :type="syncInProgress ? 'disabled medium quarter-width': 'medium quarter-width'"
                         :disabled="syncInProgress">
-                        Sync your website
+                        {{ $t('sync.syncYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="cancelSync"
                         type="outline medium quarter-width">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
 
             <div
                 v-if="noDomainConfig"
-                class="sync-issues-to-resolve">                
+                class="sync-issues-to-resolve">
 
-                <h1>Make sure the domain name is set.</h1>
-                <p class="description">                   
-                    Your website cannot currently be synced as the settings appear to lack a domain name. <br>Check your server settings to ensure a domain name has been entered.
+                <h1>{{ $t('sync.domainNameNotSetErrorText') }}</h1>
+                <p
+                    class="description"
+                    v-pure-html="$t('sync.domainNameNotSetErrorMessage')">
                 </p>
 
                 <div class="buttons">
                     <p-button
                         type="medium  quarter-width"
                         :onClick="goToServerSettings">
-                        Go to Settings
+                        {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
                         type="outline medium  quarter-width">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
 
             <div
                 v-if="!noDomainConfig && noServerConfig"
-                class="sync-issues-to-resolve">                
+                class="sync-issues-to-resolve">
 
-                <h1>Make sure the destination server is properly configured.</h1>
-                <p class="description">
-                    Your website cannot currently be synced as the destination server has not been configured correctly. <br>Check your server settings to ensure that the correct information has been entered.
+                <h1>{{ $t('sync.destinationServerNotConfiguredErrorText') }}</h1>
+                <p
+                    class="description"
+                    v-pure-html="$t('sync.destinationServerNotConfiguredErrorMessage')">
                 </p>
 
                 <div class="buttons">
                     <p-button
                         type="medium  quarter-width"
                         :onClick="goToServerSettings">
-                        Go to Settings
+                        {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         type="outline medium  quarter-width"
                         :onClick="close">
-                        Cancel
+                        {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
             </div>
@@ -194,21 +227,20 @@
             </div> -->
         </div>
 
-        <a 
+        <a
             v-if="!isMinimized && uploadInProgress && !isManual"
-            href="#" 
+            href="#"
             class="minimize-popup"
             @click.prevent.stop="minimizePopup">
             <icon
                 size="s"
                 name="minimize"/>
-            <span>Minimize</span>
+            <span>{{ $t('ui.minimize') }}</span>
         </a>
     </div>
 </template>
 
 <script>
-import { ipcRenderer, shell } from 'electron';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -334,11 +366,19 @@ export default {
 
         this.$bus.$on('sync-popup-maximize', this.maximizePopup);
 
-        ipcRenderer.on('app-rendering-progress', this.renderingProgressUpdate);
+        mainProcessAPI.receive('app-rendering-progress', this.renderingProgressUpdate);
 
         // Load the rendering error results (if exists)
-        ipcRenderer.on('app-deploy-render-error', (event, data) => {
+        mainProcessAPI.receive('app-deploy-render-error', (data) => {
             this.$store.commit('setSidebarStatus', 'not-prepared');
+
+            if (data.message[0].message.translation) {
+                data.message[0].message = this.$t(data.message[0].message.translation);
+            }
+
+            if (data.message[0].desc.translation) {
+                data.message[0].desc = this.$t(data.message[0].desc.translation);
+            }
 
             let errorsHTML = Utils.generateErrorLog(data);
             let errorsText = Utils.generateErrorLog(data, true);
@@ -346,7 +386,7 @@ export default {
             this.renderingProgress = 100;
             this.renderingProgressColor = 'red';
             this.renderingProgressIsStopped = true;
-            this.messageFromRenderer = 'An error occurred during rendering of your website.';
+            this.messageFromRenderer = this.$t('rendering.renderingErrorText');
 
             setTimeout(() => {
                 this.close();
@@ -358,7 +398,7 @@ export default {
         });
 
         // Load the rendering results
-        ipcRenderer.on('app-deploy-rendered', (event, data) => {
+        mainProcessAPI.receive('app-deploy-rendered', (data) => {
             if (data.status) {
                 this.$store.commit('setSidebarStatus', 'prepared');
                 this.startUpload();
@@ -367,44 +407,40 @@ export default {
             }
         });
 
-        ipcRenderer.on('app-connection-in-progress', () => {
-            this.messageFromUploader = 'Connecting to the server...';
+        mainProcessAPI.receive('app-connection-in-progress', () => {
+            this.messageFromUploader = this.$t('sync.connectingToServer');
         });
 
-        ipcRenderer.off('app-connection-error', this.showError);
-        ipcRenderer.on('app-connection-error', this.showError);
+        mainProcessAPI.stopReceive('app-connection-error', this.showError);
+        mainProcessAPI.receive('app-connection-error', this.showError);
 
-        ipcRenderer.on('app-connection-success', () => {
-            this.messageFromUploader = 'Connected to the server';
+        mainProcessAPI.receive('app-connection-success', () => {
+            this.messageFromUploader = this.$t('sync.connectedToServer');
         });
 
-        ipcRenderer.on('app-uploading-progress', this.uploadingProgressUpdate);
+        mainProcessAPI.receive('app-uploading-progress', this.uploadingProgressUpdate);
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
         goToServerSettings: function() {
             let siteName = this.$store.state.currentSite.config.name;
-
-            this.$router.push({
-                path: '/site/' + siteName + '/settings/server/'
-            });
-
+            this.$router.push('/site/' + siteName + '/settings/server/');
             this.close();
         },
         openWebsite: function() {
             let urlToOpen = Utils.getValidUrl(this.$store.state.currentSite.config.domain);
 
             if (urlToOpen) {
-                shell.openExternal(urlToOpen);
+                mainProcessAPI.shellOpenExternal(urlToOpen);
             } else {
-                alert('Sorry! The website link seems to be invalid.');
+                alert(this.$t('sync.websiteLinkInvalidMsg'));
             }
 
             this.close();
         },
         showFolder: function() {
             let folderPath = this.manualFilePath;
-            shell.showItemInFolder(folderPath);
+            mainProcessAPI.shellShowItemInFolder(folderPath);
             this.close();
         },
         close: function() {
@@ -413,8 +449,8 @@ export default {
         startSync () {
             if(!this.themeIsSelected) {
                 this.$bus.$emit('confirm-display', {
-                    message: 'You must select a theme before trying to preview your site. Go to page settings and select a theme.',
-                    okLabel: 'Go to settings',
+                    message: this.$t('rendering.selectThemeBeforeCreatingPreviewMsg'),
+                    okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         let siteName = this.$route.params.name;
                         this.$route.push('/site/' + siteName + '/settings/');
@@ -449,19 +485,19 @@ export default {
         },
         cancelSync: function() {
             if (this.renderingInProgress) {
-                ipcRenderer.send('app-deploy-render-abort', {
+                mainProcessAPI.send('app-deploy-render-abort', {
                     'site': this.$store.state.currentSite.config.name
                 });
-            } 
-            
+            }
+
             if (this.syncInProgress) {
-                ipcRenderer.send('app-deploy-abort', {
+                mainProcessAPI.send('app-deploy-abort', {
                     'site': this.$store.state.currentSite.config.name
                 });
             }
 
             if (this.syncInProgress || this.renderingInProgress) {
-                ipcRenderer.once('app-deploy-aborted', (event) => {
+                mainProcessAPI.receiveOnce('app-deploy-aborted', () => {
                     this.$store.commit('setSidebarStatus', 'not-synced');
                     this.close();
                 });
@@ -477,14 +513,18 @@ export default {
             this.renderingProgressColor = 'blue';
             this.renderingProgressIsStopped = false;
 
-            ipcRenderer.send('app-deploy-render', {
+            mainProcessAPI.send('app-deploy-render', {
                 'site': this.$store.state.currentSite.config.name,
                 'theme': this.$store.state.currentSite.config.theme
             });
         },
-        renderingProgressUpdate: function(event, data) {
+        renderingProgressUpdate: function(data) {
             if (this.renderingProgress > data.progress) {
                 return;
+            }
+
+            if (data.message.translation) {
+                data.message = this.$t(data.message.translation);
             }
 
             this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
@@ -495,30 +535,33 @@ export default {
                 this.renderingProgressIsStopped = true;
 
                 if(this.isManual) {
-                    this.messageFromRenderer = 'Preparing files in the output directory';
+                    this.messageFromRenderer = this.$t('file.preparingFilesInOutputDir');
                 } else {
                     this.messageFromRenderer = '';
                 }
             }
         },
-        uploadingProgressUpdate: function(event, data) {
+        uploadingProgressUpdate: function(data) {
             if(this.uploadingProgress > data.progress) {
                 return;
             }
 
             this.uploadingProgress = data.progress;
-            this.messageFromUploader = 'Uploading website';
+            this.messageFromUploader = this.$t('sync.uploadingWebsite');
 
             if(data.operations) {
-                this.messageFromUploader = 'Uploading website (' + data.operations[0] + ' of ' + data.operations[1] + ' operations done)';
+                this.messageFromUploader = `${this.$t('sync.uploadingWebsite')} (${data.operations[0]} ${this.$t('ui.of')} ${data.operations[1]} ${this.$t('sync.operationsDone')})`;
             }
 
             if(data.message) {
+                if (data.message.translation) {
+                    data.message = this.$t(data.message.translation);
+                }
                 this.messageFromUploader = data.message;
             }
         },
-        showError: function(event, data) {
-            this.messageFromUploader = 'An error occurred during connecting to server...';
+        showError: function(data) {
+            this.messageFromUploader = this.$t('sync.connectionToServerErrorText');
             this.uploadError = true;
             this.uploadingProgressColor = 'red';
             this.uploadingProgress = 100;
@@ -526,16 +569,23 @@ export default {
             this.syncInProgress = false;
             this.$store.commit('setSidebarStatus', 'prepared');
 
-            if(data && data.additionalMessage) {
+            if(data && data.additionalMessage ) {
+                if (data.additionalMessage.translation) {
+                    if (data.additionalMessage.translationVars) {
+                        data.additionalMessage = this.$t(data.additionalMessage.translation, data.message.translationVars);
+                    } else {
+                        data.additionalMessage = this.$t(data.additionalMessage.translation);
+                    }
+                }
                 this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server: ' + data.additionalMessage
+                    message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage
                 });
             } else {
                 this.$bus.$emit('alert-display', {
-                    message: 'An error occurred during connecting to the server. Please check your server settings or try again.'
+                    message: this.$t('sync.connectionToServerErrorMessage')
                 });
             }
-        }, 
+        },
         startUpload: function() {
             this.renderingInProgress = false;
             this.uploadInProgress = true;
@@ -549,13 +599,13 @@ export default {
                 let serverName = this.$store.state.currentSite.config.deployment.server;
 
                 this.$bus.$emit('confirm-display', {
-                    message: 'Please provide your FTP password for the following server: ' + serverName,
+                    message: this.$t('sync.provideFTPPasswordForServer') + serverName,
                     hasInput: true,
                     inputIsPassword: true,
                     okClick: (result) => {
                         if(!result || result.trim() === '') {
                             this.$bus.$emit('alert-display', {
-                                message: 'Without password you cannot sync your website. Please try again'
+                                message: this.$t('sync.syncFTPNoPassowrdMsg')
                             });
 
                             this.uploadingProgress = 0;
@@ -569,7 +619,7 @@ export default {
                     },
                     cancelClick: () => {
                         this.$bus.$emit('alert-display', {
-                            message: 'Without password you cannot sync your website. Please try again'
+                            message: this.$t('sync.syncFTPNoPassowrdMsg')
                         });
 
                         this.uploadingProgress = 0;
@@ -584,13 +634,13 @@ export default {
         },
         handleUploadEvents(askedPassword) {
             // Send request for uploading the site
-            ipcRenderer.send('app-deploy-upload', {
+            mainProcessAPI.send('app-deploy-upload', {
                 'site': this.$store.state.currentSite.config.name,
                 'password': askedPassword
             });
 
             // Load the deployment results
-            ipcRenderer.once('app-deploy-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-deploy-uploaded', (data) => {
                 if(data.type && data.path && this.isManual) {
                     this.isInSync = true;
                     this.manualFilePath = data.path;
@@ -607,11 +657,11 @@ export default {
                     this.messageFromUploader = '';
                 } else {
                     this.uploadingProgressColor = 'green';
-                    this.messageFromUploader = 'Your website is now in sync';
+                    this.messageFromUploader = this.$t('sync.yourWebsiteIsInSync');
                 }
 
                 if (data.status) {
-                    ipcRenderer.send('app-sync-is-done', {
+                    mainProcessAPI.send('app-sync-is-done', {
                         'site': this.$store.state.currentSite.config.name
                     });
 
@@ -619,18 +669,18 @@ export default {
                 }
             });
 
-            ipcRenderer.once('app-sync-is-done-saved', () => {
+            mainProcessAPI.receiveOnce('app-sync-is-done-saved', () => {
                 this.$store.commit('setSidebarStatus', 'synced');
                 this.isInSync = true;
 
-                if (this.isMinimized && this.isInSync && this.noIssues && !this.isManual) {
+                if (this.isInSync && this.noIssues && this.isMinimized) {
                     this.isVisible = false;
                 }
             });
-        }, 
+        },
         checkS3Config: function(deploymentConfig) {
             if (deploymentConfig.s3 && deploymentConfig.s3.customProvider) {
-                return  deploymentConfig.s3.endpoint !== '' && 
+                return  deploymentConfig.s3.endpoint !== '' &&
                         deploymentConfig.s3.id !== '' &&
                         deploymentConfig.s3.key !== '' &&
                         deploymentConfig.s3.bucket !== '';
@@ -722,9 +772,9 @@ export default {
     beforeDestroy: function() {
         this.$bus.$off('sync-popup-display');
         this.$bus.$off('sync-popup-maximize', this.maximizePopup);
-        ipcRenderer.off('app-preview-render-error');
-        ipcRenderer.off('app-rendering-progress');
-        ipcRenderer.off('app-connection-error', this.showError);
+        mainProcessAPI.stopReceiveAll('app-preview-render-error');
+        mainProcessAPI.stopReceiveAll('app-rendering-progress');
+        mainProcessAPI.stopReceiveAll('app-connection-error', this.showError);
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
@@ -734,7 +784,7 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/popup-common.scss';
 
-.popup {       
+.popup {
     background: none;
     max-width: $wrapper;
     overflow: visible;
@@ -746,7 +796,7 @@ export default {
         line-height: 1.4;
         margin: auto;
         padding: 0 1rem;
-        text-align: center;      
+        text-align: center;
 
         &.alert {
             background: var(--highlighted);
@@ -757,9 +807,9 @@ export default {
             padding: 1rem 2rem;
             text-align: left;
         }
-        
+
         strong {
-            color: var(--text-primary-color); 
+            color: var(--text-primary-color);
         }
     }
 }
@@ -843,44 +893,48 @@ export default {
         border-radius: 10px;
         box-shadow: 0 0 160px rgba(0, 0, 0, .2);
         cursor: pointer;
-        bottom: 56px;     
+        bottom: 56px;
         left: 0;
         opacity: 0;
         overflow: visible;
         padding: 0;
         top: auto!important;
-        transform: translateY(10%) scale(.8);  
-        z-index: 1;   
-  
+        transform: translateY(10%) scale(.8);
+        z-index: 1;
+
         & .progress-message, .minimized-sync-error {
             color: white !important;
         }
-    
+
         .popup {
             animation: minimized-content .25s cubic-bezier(.17,.67,.13,1.05) .25s forwards;
-            margin-top: 1.6rem;
+            margin-top: 2.6rem;
             position: initial;
             transform: none;
             visibility: hidden;
+
+            .minimized-sync-in-progress {
+                max-width: 20rem;
+            }
         }
 
         @keyframes minimized-popup {
-           
+
             50% {opacity: 0;
-                transform: translateY(10%); 
+                transform: translateY(10%);
             }
             99% {
-                transform: translateY(10%); 
+                transform: translateY(10%);
             }
-           
-            100% {           
-                box-shadow: none; 
-                border-radius: 3px; 
+
+            100% {
+                box-shadow: none;
+                border-radius: 3px;
                 background: none;
                 height: 50px;
-                width: 240px; 
+                width: 240px;
                 opacity: 1;
-                transform: translate(40px, 0); 
+                transform: translate(40px, 0);
             }
         }
 

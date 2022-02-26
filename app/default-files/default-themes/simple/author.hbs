@@ -46,12 +46,14 @@
          {{/featuredImage}}
          <header class="hero__content">
             <div class="wrapper">          
-               {{#if avatar}}
+                {{#if avatar}}
                   <img 
-                        src="{{avatar}}" 
-                        {{ lazyload "lazy" }} 
-                        class="author__avatar" 
-                        alt="{{name}}">
+                     src="{{avatarImage.url}}" 
+                     {{ lazyload "lazy" }}
+                     height="{{avatarImage.height}}"
+                     width="{{avatarImage.width}}" 
+                     class="author__avatar" 
+                     alt="{{avatarImage.alt}}">
                {{/if}}
                <h1>
                   {{name}}
@@ -82,10 +84,12 @@
                         {{#if @config.custom.authorAvatar}}
                            {{#if avatar}}
                               <img
-                                 src="{{avatar}}"
+                                 src="{{avatarImage.url}}" 
                                  {{ lazyload "lazy" }}
+                                 height="{{avatarImage.height}}"
+                                 width="{{avatarImage.width}}"      
                                  class="post__author-thumb"
-                                 alt="{{name}}">
+                                 alt="{{avatarImage.alt}}">
                            {{/if}}
                         {{/if}}
                         {{#if @config.custom.authorAuthor}}
@@ -115,14 +119,14 @@
                      <div class="feed__image">
                         <a href="{{../url}}">
                            <img
-                                 src="{{url}}"
-                                 {{#if @config.site.responsiveImages}}
-                                    {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
-                                 {{/if}}
-                                 {{ lazyload "lazy" }}
-                                 height="{{height}}"
-                                 width="{{width}}"
-                                 alt="{{alt}}">
+                              src="{{url}}"
+                              {{#if @config.site.responsiveImages}}
+                                 {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                              {{/if}}
+                              {{ lazyload "lazy" }}
+                              height="{{height}}"
+                              width="{{width}}"
+                              alt="{{alt}}">
                         </a>
                      </div>
                   {{/if}}

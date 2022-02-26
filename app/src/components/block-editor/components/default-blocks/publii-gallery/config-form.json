@@ -1,0 +1,16 @@
+[
+    {
+        "name": "cssClasses",
+        "type": "text",
+        "label": "editor.blocks.cssClassesLabel",
+        "tooltip": "editor.blocks.cssClassesTooltip",
+        "defaultValue": ""
+    },
+    {
+        "name": "id",
+        "type": "text",
+        "label": "editor.blocks.idLabel",
+        "tooltip": "editor.blocks.gallery.idTooltip",
+        "defaultValue": ""
+    }
+]

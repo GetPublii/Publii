@@ -19,13 +19,14 @@ input[type="email"],
 input[type="search"],
 input[type="password"],
 input[type="colorpicker"],
-.small-image-upload {
+.small-image-upload,
+select {
     background-color: var(--input-bg);
     border: none;
     border-radius: 3px;
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
-    font: 400 1.6rem/1.5 $secondary-font;
+    font: 400 #{$app-font-base}/1.5 var(--font-base);
     outline: none;
     padding: 1.2rem 1.8rem;
 
@@ -99,7 +100,7 @@ input[type="range"] {
 
     &::-webkit-slider-thumb {
         -webkit-appearance: none;
-        background: var(--primary-color);
+        background: var(--color-primary);
         border: none;
         border-radius: 50%;
         box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
@@ -157,7 +158,7 @@ input[type="range"] {
 /* Fix for the colorpicker */
 .colorpicker input {
     box-shadow: none;
-    font: 400 1.2rem/1.5 $secondary-font;
+    font: 400 1.2rem/1.5 var(--font-base);
     padding: 2px;
 }
 
@@ -173,7 +174,7 @@ input[type="range"] {
         border-radius: 1.2rem;
         color: transparent;
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
         height: 2rem;
         line-height: 1rem;
         padding: 0;
@@ -215,21 +216,22 @@ input[type="range"] {
 
         &::-webkit-file-upload-button {
             -webkit-appearance: none;
-            background: var(--button-gray-bg);
-            border: 1px solid var(--button-gray-bg);
-            border-radius: 3px;
-            color: var(--white);
+            background: var(--button-secondary-bg);
+            border: 1px solid var(--button-secondary-bg);
+            border-radius: var(--border-radius);
+            color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: 500;
-            font-size: 1.5rem;
+            font-weight: var(--font-weight-semibold);
+            font-size: 1.4rem;
             padding: .5rem;
             text-align: center;
             width: 16rem;
             outline: none;
 
             &:hover {
-               background: var(--button-gray-hover-bg);
-               border-color: var(--button-gray-hover-bg);
+                background: var(--button-secondary-bg-hover);
+                border-color: var(--button-secondary-bg-hover);
+                color: var(--button-secondary-color-hover);
             }
         }
     }
@@ -245,7 +247,7 @@ input[type="range"] {
 }
 
 .multiselect__option--highlight {
-    background: var(--input-bg-hover);
+    background: var(--input-bg-light);
     color: var(--text-primary-color);
 }
 
@@ -257,7 +259,7 @@ input[type="range"] {
 
 .multiselect__placeholder {
     color: var(--text-primary-color);
-    font-size: 16px;
+    font-size: $app-font-base;
     height: inherit;
     line-height: 47px;
     margin: 0;

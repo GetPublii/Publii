@@ -11,7 +11,7 @@
 
     &__single {
         background: var(--input-bg);
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         line-height: 1.4;
         margin-bottom: 0;
         padding: 0;
@@ -28,12 +28,12 @@
 
         &--highlight,
         &--highlight:after {
-            background: var(--input-bg-hover);
+            background: var(--input-bg-light);
             color: var(--text-primary-color);
         }
 
         &.multiselect__option--selected {
-            background: var(--input-bg-hover);
+            background: var(--input-bg-light);
             color: var(--text-primary-color);
             font-weight: 600;
         }
@@ -42,7 +42,7 @@
         &--group-selected {
             &.multiselect__option--highlight,
             &.multiselect__option--highlight:after {
-                background: var(--input-bg-hover);
+                background: var(--input-bg-light);
                 color: var(--text-primary-color);
             }                
         }
@@ -66,8 +66,7 @@
         color: var(--text-primary-color);
     }
 }
-
-.menu-item-editor {
+.options-sidebar {
     label {
         &.is-invalid {
             .multiselect__tags {
@@ -76,4 +75,3 @@
         }
     }
 }
-

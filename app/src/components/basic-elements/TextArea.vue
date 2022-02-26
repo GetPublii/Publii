@@ -4,6 +4,7 @@
             :id="editorID"
             :data-id="editorID"
             :rows="rows"
+            :cols="cols"
             class="publii-textarea"
             :spellcheck="spellcheck"
             v-model="content"></textarea>
@@ -32,7 +33,11 @@ export default {
         },
         rows: {
             default: false,
-            type: [Number, Boolean]
+            type: [String, Number, Boolean]
+        },
+        cols: {
+            default: false,
+            type: [String, Number, Boolean]
         },
         charCounter: {
             default: false,
@@ -57,15 +62,15 @@ export default {
             content: this.value
         };
     },
-    mounted () {
-        setTimeout(() => {
+    async mounted () {
+        setTimeout(async () => {
             this.content = this.value;
 
             if (this.wysiwyg) {
                 this.editorID = this.generateID();
 
-                setTimeout(() => {
-                    this.initWysiwyg();
+                setTimeout(async () => {
+                    await this.initWysiwyg();
                 }, 0);
             }
 
@@ -89,17 +94,22 @@ export default {
         }
     },
     methods: {
-        initWysiwyg () {
+        async initWysiwyg () {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
-            let secondToolbarStructure = "formatselect removeformat code undo redo";
+            let secondToolbarStructure = "formatselect removeformat undo redo code";
 
             if (customFormats.length) {
-                secondToolbarStructure = "styleselect formatselect removeformat code undo redo";
+                secondToolbarStructure = "styleselect formatselect removeformat undo redo code";
+            }
+
+            if (this.$store.state.wysiwygTranslation) {
+                tinymce.addI18n('custom', this.$store.state.wysiwygTranslation);
             }
 
             tinymce.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
+                language: this.$store.state.wysiwygTranslation ? 'en' : 'custom',
                 content_css: this.getTinyMCECSSFiles(),
                 plugins: "autolink link lists paste code",
                 toolbar1: "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist",
@@ -128,10 +138,12 @@ export default {
                 style_formats: customFormats,
                 contextmenu: false,
                 browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
-                setup: function (editor) {
-                    editor.on('init', function () {
+                setup: async function (editor) {
+                    editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', self.$root.getCurrentAppTheme());
+                        let htmlElement = iframe.contentWindow.window.document.querySelector('html');
+                        htmlElement.setAttribute('data-theme', await self.$root.getCurrentAppTheme());
+                        htmlElement.setAttribute('style', self.$root.overridedCssVariables);
                     });
                 }
             });
@@ -244,7 +256,7 @@ export default {
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
     display: block;
-    font: 400 1.6rem/1.5 $secondary-font;
+    font: 400 #{$app-font-base}/1.5 var(--font-base);
     max-width: 100%;
     overflow: auto;
     outline: none;

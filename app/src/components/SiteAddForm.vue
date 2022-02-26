@@ -1,62 +1,122 @@
 <template>
     <div class="site-create-wrapper">
         <div class="site-create">
-            <h2 class="title">
-                {{ header }}
-            </h2>
+            <tabs
+                ref="site-create-tabs"
+                id="site-create-options-tabs"
+                :items="tabsItems"
+                isHorizontal>
+                <div slot="tab-0">
+                    <div class="site-create-form">
+                        <logo-creator ref="logo-creator" />
 
-            <div class="site-create-form">
-                <logo-creator ref="logo-creator" />
+                        <div class="site-create-field">
+                            <label for="site-name">
+                                {{ $t('site.websiteName') }}:
+                                <span
+                                    v-if="siteNameError"
+                                    class="site-create-field-error">
+                                    {{ $t('site.websiteNameRequired') }}
+                                </span>
+                            </label>
 
-                <div class="site-create-field">
-                    <label for="site-name">
-                        Website name:
-                        <span
-                            v-if="siteNameError"
-                            class="site-create-field-error">
-                            website name is required
-                        </span>
-                    </label>
+                            <text-input
+                                ref="site-name"
+                                id="site-name"
+                                :spellcheck="false"
+                                changeEventName="add-website-name-changed"
+                                :customCssClasses="siteNameCssClasses" />
+                        </div>
 
-                    <text-input
-                        ref="site-name"
-                        id="site-name"
-                        :spellcheck="false"
-                        changeEventName="add-website-name-changed"
-                        :customCssClasses="siteNameCssClasses" />
+                        <div class="site-create-field">
+                            <label for="author-name">
+                                {{ $t('author.authorName') }}:
+                                <span
+                                    v-if="authorNameError"
+                                    class="site-create-field-error">
+                                    {{ $t('site.websiteAuthorRequired') }}
+                                </span>
+                            </label>
+
+                            <text-input
+                                ref="author-name"
+                                id="author-name"
+                                :spellcheck="false"
+                                changeEventName="add-website-author-changed"
+                                :customCssClasses="authorNameCssClasses" />
+                        </div>
+                    </div>
                 </div>
+                <div slot="tab-1">
+                    <template v-if="backupFile">
+                        <div class="backup-selected">
+                            <span>{{ $t('site.selectedBackupFile') }}</span>
+                            <div class="backup-selected-file">
+                                <strong>{{ backupFile.name }}</strong>
 
-                <div class="site-create-field">
-                    <label for="author-name">
-                        Author name:
-                        <span
-                            v-if="authorNameError"
-                            class="site-create-field-error">
-                            author name is required and should contains letters
-                        </span>
-                    </label>
+                                <a
+                                    href="#"
+                                    class="backup-remove"
+                                    :title="$t('ui.delete')"
+                                    @click.prevent="removeBackupFile">
+                                    <icon
+                                        name="trash"
+                                        size="xs" />
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            @drop.stop.prevent="uploadBackup"
+                            @dragleave.stop.prevent="hideOverlay"
+                            @dragenter.stop.prevent="showOverlay"
+                            @dragover.stop.prevent="showOverlay"
+                            @drag.stop.prevent="showOverlay"
+                            @dragstart.stop.prevent
+                            @dragend.stop.prevent
+                            :class="{ 'backup': true, 'backup-is-over': backupIsOver }">
+                            <div class="backup-upload">
+                                <icon
+                                    customWidth="60"
+                                    customHeight="60"
+                                    properties="not-clickable"
+                                    name="backup"
+                                    :primaryColor="'color-7'" />
 
-                    <text-input
-                        ref="author-name"
-                        id="author-name"
-                        :spellcheck="false"
-                        changeEventName="add-website-author-changed"
-                        :customCssClasses="authorNameCssClasses" />
+                                    <span>{{ $t('file.dragAndDropBackupFile') }}</span>
+
+                                    <input
+                                        ref="input"
+                                        type="file"
+                                        class="backup-upload-input"
+                                        spellcheck="false"
+                                        @change="valueChanged">
+                            </div>
+
+                            <overlay
+                                v-if="backupIsOver"
+                                :hasBorder="true"
+                                :isBlue="true">
+                                <div>{{ $t('file.dropYourFileHere') }}</div>
+                            </overlay>
+                        </div>
+                    </template>
                 </div>
-            </div>
+            </tabs>
 
             <div :data-mode="status" class="site-create-buttons">
                 <p-button
                     type="primary bottom"
                     :onClick="addWebsite">
-                    Create website
+                    {{ $t('site.createWebsite') }}
                 </p-button>
 
                 <p-button
                     v-if="this.$store.getters.siteNames.length"
                     type="outline bottom"
                     :onClick="goBack">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -64,14 +124,13 @@
         <overlay v-if="overlayIsVisible">
             <div>
                 <div class="loader"><span></span></div>
-                Creation in progress...
+                {{ $t('site.creationInProgress') }}
             </div>
         </overlay>
     </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
@@ -87,7 +146,9 @@ export default {
             authorName: '',
             siteNameError: false,
             authorNameError: false,
-            overlayIsVisible: false
+            overlayIsVisible: false,
+            backupFile: null,
+            backupIsOver: false
         }
     },
     computed: {
@@ -100,10 +161,10 @@ export default {
         },
         header () {
             if(this.status === 'new-website') {
-                return 'Create new website';
+                return this.$t('site.createNewWebsite');
             }
 
-            return 'Create your first website';
+            return this.$t('site.createYourFirstWebsite');
         },
         siteNameCssClasses () {
             if(this.siteNameError) {
@@ -117,6 +178,12 @@ export default {
         },
         defaultSiteConfig () {
             return JSON.parse(JSON.stringify(defaultSiteConfig));
+        },
+        tabsItems () {
+            return [
+                this.header,
+                this.$t('site.installFromBackup'),
+            ];
         }
     },
     mounted () {
@@ -168,9 +235,9 @@ export default {
             this.overlayIsVisible = true;
 
             setTimeout(() => {
-                ipcRenderer.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
+                mainProcessAPI.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
 
-                ipcRenderer.once('app-site-creation-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-error', (data) => {
                     this.overlayIsVisible = false;
                     if (data.name) {
                         this.siteNameError = true;
@@ -180,47 +247,47 @@ export default {
                         this.authorNameError = true;
                     }
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
-                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
                 });
 
-                ipcRenderer.once('app-site-creation-duplicate', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-duplicate', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
 
                     this.$bus.$emit('alert-display', {
-                        message: 'Site using this name exists!',
+                        message: this.$t('site.siteWithThisNameExists'),
                         textCentered: true
                     });
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
                 });
 
-                ipcRenderer.once('app-site-creation-db-error', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-db-error', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
 
                     this.$bus.$emit('alert-display', {
-                        message: 'An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website catalog from Publii sites directory.',
+                        message: this.$t('site.erroOcurredDuringSiteDatabaseCreationInfo'),
                         textCentered: true
                     });
 
-                    ipcRenderer.removeAllListeners('app-site-created');
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
-                })
+                    mainProcessAPI.stopReceiveAll('app-site-created');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                });
 
-                ipcRenderer.once('app-site-created', (event, data) => {
+                mainProcessAPI.receiveOnce('app-site-created', (data) => {
                     this.overlayIsVisible = false;
                     data.authors = self.setAuthor(data.authorName);
                     this.$store.commit('addNewSite', data);
                     window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
                     this.$router.push(`/site/${data.siteConfig.name}`);
-                    
-                    ipcRenderer.removeAllListeners('app-site-creation-error');
-                    ipcRenderer.removeAllListeners('app-site-creation-duplicate');
-                    ipcRenderer.removeAllListeners('app-site-creation-db-error');
+
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
                 });
             }, 250);
         },
@@ -254,6 +321,35 @@ export default {
         },
         onEnterKey () {
             this.onOk();
+        },
+        showOverlay (e) {
+            this.backupIsOver = true;
+        },
+        hideOverlay (e) {
+            if (e.target.classList.contains('backup')) {
+                this.backupIsOver = false;
+            }
+        },
+        uploadBackup (e) {
+            this.backupIsOver = false;
+            this.backupFile = e.dataTransfer.files[0];
+
+            // mainProcessAPI.send('app-language-upload', {
+            //     sourcePath: e.dataTransfer.files[0].path
+            // });
+
+            // mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);
+        },
+        valueChanged (e) {
+            if(!e.target.files.length) {
+                return;
+            }
+
+            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
+            this.uploadBackup(sourcePath);
+        },
+        removeBackupFile () {
+            this.backupFile = null;
         }
     },
     beforeDestroy () {
@@ -272,9 +368,9 @@ export default {
  */
 .site-create {
     background: var(--popup-bg);
-    border-radius: 5px;
-    box-shadow: 0 0 60px rgba($color-4, 0.07);
-    font-size: 1.6rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
+    font-size: $app-font-base;
     margin: 0;
     left: 50%;
     padding: 4.8rem 4.8rem 5.6rem 4.8rem;
@@ -287,8 +383,8 @@ export default {
 
     &-form {
         overflow: hidden;
-        
-        /deep/ .logo-creator-preview {
+
+        ::v-deep .logo-creator-preview {
             min-width: 10rem !important;
         }
     }
@@ -307,7 +403,7 @@ export default {
 
         & > label {
             display: block;
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: 400;
             line-height: 1.4;
             margin-bottom: 1rem;
@@ -332,30 +428,30 @@ export default {
         top: 1px;
 
         .button {
-            border-radius: 0 0 0 3px;
+            border-radius: 0 0 0 var(--border-radius);
 
             & + .button {
                 box-shadow: none!important;
                 border-top: 1px solid var(--input-border-color);
-                border-radius: 0 0 3px 0;
+                border-radius: 0 0 var(--border-radius) 0;
                 color: var(--popup-btn-cancel-color);
                 margin-left: 0;
-                
+
                 &:hover {
-                   background: var(--popup-btn-cancel-hover-bg);
+                   background: var(--popup-btn-cancel-bg-hover);
                    color: var(--popup-btn-cancel-hover-color);
                 }
             }
         }
     }
-    
+
     &-wrapper {
         .loader {
-            display: block;               
+            display: block;
             height: 2.8rem;
             margin: -5.6rem auto 2rem;
             width: 2.8rem;
-            
+
             & > span {
                 animation: spin .9s infinite linear;
                 border-top: 2px solid var(--border-light-color);
@@ -363,25 +459,95 @@ export default {
                 border-bottom: 2px solid var(--border-light-color);
                 border-left: 2px solid var(--gray-4);
                 border-radius: 50%;
-                display: block;   
+                display: block;
                 height: 3.5rem;
-                width: 3.5rem;                 
-                
+                width: 3.5rem;
+
                 &::after {
                     border-radius: 50%;
                     content: "";
-                    display: block;                                      
+                    display: block;
                 }
-            
+
                 @at-root {
                     @keyframes spin {
-                       100% { 
+                       100% {
                           transform: rotate(360deg);
-                       }                  
+                       }
                     }
                 }
-          }                
+          }
        }
+    }
+
+    .backup-selected {
+        text-align: left;
+
+        &-file {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+
+            strong {
+                margin-right: 1rem;
+            }
+        }
+    }
+
+    .backup {
+        border: 2px dashed var(--input-border-color);
+        border-radius: var(--border-radius);
+        color: var(--gray-3);
+        position: relative;
+
+        &-upload {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 340px;
+            justify-content: center;
+            padding: 2rem;
+
+            .icon {
+                margin-bottom: 1.5rem;
+            }
+
+            &-input {
+                clear: both;
+                color: transparent; // hack to remove the phrase "no file selected" from the file input
+                display: block;
+                line-height: 1.6!important;
+                margin: 3rem auto 0 auto!important;
+
+                &::-webkit-file-upload-button {
+                    -webkit-appearance: none;
+                background: var(--button-secondary-bg);
+                border: 1px solid var(--button-secondary-bg);
+                border-radius: var(--border-radius);
+                color: var(--button-secondary-color);
+                cursor: pointer;
+                display: inline-block;
+                font-size: 1.5rem;
+                font-weight: var(--font-weight-semibold);
+                left: 50%;
+                padding: .75rem 1.5rem;
+                position: relative;
+                transform: translate(-50%, 0);
+                outline: none;
+
+                    &:hover {
+                        background: var(--button-secondary-bg-hover);
+                        border-color: var(--button-secondary-bg-hover);
+                        color: var(--button-secondary-color-hover);
+                    }
+                }
+            }
+        }
+
+        .overlay.has-border {
+            border-radius: 3px;
+        }
     }
 }
 </style>

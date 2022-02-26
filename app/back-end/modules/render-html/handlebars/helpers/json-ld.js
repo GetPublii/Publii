@@ -132,9 +132,12 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             }
 
             if (context.data.root.post.author && context.data.root.post.author.name) {
+                let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + context.data.root.post.author.username + '/';
+                
                 jsonLDObject['author'] = {
                     "@type": "Person",
-                    "name": context.data.root.post.author.name
+                    "name": context.data.root.post.author.name,
+                    "url": authorUrl
                 };
             }
 
@@ -177,6 +180,10 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                     };
                 }
             }
+        }
+
+        if (rendererInstance.plugins.hasModifiers('jsonLD')) {
+            jsonLDObject = rendererInstance.plugins.runModifiers('jsonLD', rendererInstance, jsonLDObject); 
         }
 
         output += '<script type="application/ld+json">';

@@ -3,27 +3,28 @@
         <div class="credits-wrapper">
             <div class="heading">
                 <h1 class="title">
-                    Credits
+                    {{ $t('ui.credits') }}
                 </h1>
 
                 <p-button
                     :onClick="goBack"
-                    type="outline"
+                    type="clean back"
                     slot="buttons">
-                    Go back
+                    {{ $t('ui.goBack') }}
                 </p-button>
             </div>
 
-            <p class="credits-intro">Publii uses the following third-party Open Source Software:</p>
-
-            <credits-list
-                :licenses="licenses" />
+            <p class="credits-intro">{{ $t('publii.creditsIntro') }}</p>
+            
+            <fields-group>
+               <credits-list
+                   :licenses="licenses" />
+            </fields-group>
         </div>
     </div>
 </template>
 
 <script>
-import { shell } from 'electron';
 import { mapGetters } from 'vuex';
 import licenses from '../../licenses/all-licenses.json';
 import AboutCreditsList from './AboutCreditsList';
@@ -56,7 +57,7 @@ export default {
 @import '../scss/mixins.scss';
 
 .credits {
-    padding: 4.4rem 0;
+    padding: 3rem 0 4rem;
     width: 100%;
 
     &-wrapper {
@@ -82,7 +83,7 @@ export default {
     }
 
     &-intro {
-        margin: -2rem 0 5rem 0;
+        margin: -2.5rem 0 4rem 0;
     }
 }
 </style>

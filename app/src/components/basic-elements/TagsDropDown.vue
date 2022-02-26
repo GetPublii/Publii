@@ -20,10 +20,6 @@ export default {
             type: Boolean,
             default: false
         },
-        placeholder: {
-            type: String,
-            default: 'Select tag'
-        },
         value: {},
         anchor: {
             default: '',
@@ -38,7 +34,10 @@ export default {
     computed: {
         tagPages () {
             return [''].concat(this.$store.state.currentSite.tags.map(tag => tag.id));
-        }
+        },
+        placeholder () {
+            return this.$t('tag.selectTag');
+        },
     },
     watch: {
         value: function (newValue, oldValue) {
@@ -73,7 +72,7 @@ export default {
 .multiselect__tags {
     min-height: 49px;
 }
-    
+
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }

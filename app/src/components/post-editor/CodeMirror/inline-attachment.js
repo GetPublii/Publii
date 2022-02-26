@@ -1,5 +1,3 @@
-import { ipcRenderer } from 'electron';
-
 /*
  * Inline Text Attachment for Publii in CodeMirror
  *
@@ -129,13 +127,13 @@ import { ipcRenderer } from 'electron';
   inlineAttachment.prototype.uploadFile = function(file) {
     let postID = parseInt(document.querySelector('.post-editor-markdown').getAttribute('data-post-id'), 10);
 
-    ipcRenderer.send('app-image-upload', {
+    mainProcessAPI.send('app-image-upload', {
         'id': postID,
-        'site': window.app.$store.state.currentSite.config.name,
+        'site': window.app.getSiteName(),
         'path': file.path
     });
 
-    ipcRenderer.once('app-image-uploaded', (event, data) => {            
+    mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {            
         var newValue = '';
         
         if (data.baseImage.size) {

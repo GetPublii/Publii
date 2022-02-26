@@ -1,6 +1,7 @@
 <template>
     <v-select
         ref="dropdown"
+        class="posts-dropdown"
         :id="anchor"
         :options="postPages"
         v-model="selectedPost"
@@ -16,10 +17,6 @@
 export default {
     name: 'posts-dropdown',
     props: {
-        placeholder: {
-            type: String,
-            default: 'Select post page'
-        },
         multiple: {
             type: Boolean,
             default: false
@@ -45,8 +42,11 @@ export default {
                     return true;
                 }
 
-                return this.allowedPostStatus.indexOf(post.status) > -1;                
+                return this.allowedPostStatus.indexOf(post.status) > -1;
             }).map(post => post.id));
+        },
+        placeholder () {
+            return this.$t('post.selectPostPage');
         }
     },
     watch: {
@@ -82,11 +82,12 @@ export default {
 .multiselect__tags {
     min-height: 49px;
 }
-    
+
 .multiselect__tags {
     padding: 0 4rem 0 1.8rem;
 }
-.multiselect__input {
-    max-width: 120px;
+
+.posts-dropdown .multiselect__input {
+    max-width: 100%;
 }
 </style>

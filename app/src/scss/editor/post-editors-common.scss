@@ -5,7 +5,7 @@
         display: flex;
         height: 100vh;
         overflow: hidden;
-        padding-top: 7.8rem;
+        padding-top: 11rem;
         user-select: none;
     }
 
@@ -20,21 +20,19 @@
     }
 
     &-form {
-        height: calc(100vh - 7.8rem);
+        height: calc(100vh - 11rem);
         overflow: hidden;
         position: relative;
         width: 100%;
-
-        & > div {
-            padding: 4rem 4rem 3rem 4rem;
-        }
     }
 
     #post-stats-button {
-        bottom: 2rem;
-        height: auto;
-        line-height: 1;
-        left: 1.8rem;
+        background: var(--bg-primary);
+        bottom: .4rem;
+        height: 4.6rem;        
+        left: 1.8rem;       
+        line-height: 4.5rem;
+        padding: 0 1.3rem 0 3.8rem;
         position: absolute;
         text-align: center;        
         z-index: 101;
@@ -96,21 +94,4 @@ body[data-os="linux"] {
     }
 }
 
-/*
- * Responsive improvements
- */
-@media (max-height: 900px) {
-    .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-    }
-}
 
-@media (max-width: 1400px) {    
-    .post-editor-form {
-        & > div {
-            padding: 3rem 3rem 3rem 4rem;
-        }
-    }
-}

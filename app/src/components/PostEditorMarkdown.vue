@@ -1,7 +1,7 @@
 <template>
-    <div 
-        class="post-editor post-editor-markdown" 
-        ref="post-editor" 
+    <div
+        class="post-editor post-editor-markdown"
+        ref="post-editor"
         :data-post-id="postID">
         <topbar-appbar />
         <post-editor-top-bar />
@@ -14,14 +14,16 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
+                        :data-translation="$t('post.addPostTitle')"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
-                        @keyup="updateTitle" />   
+                        @input="updateTitle" />
 
-                    <vue-simplemde 
+                    <vue-easymde
                         ref="markdownEditor"
                         v-model="postData.text"
+                        name="markdown-editor"
                         :configs="editorConfig" />
 
                     <input
@@ -34,18 +36,18 @@
 
             <p-button
                 id="post-help-button"
-                type="clean icon small"
+                type="clean-invert icon small"
                 icon="help"
-                title="Help"
+                :title="$t('ui.help')"
                 @click.native="toggleHelp">
-                <template v-if="!helpPanelOpen">View help</template>
-                <template v-else>Hide help</template>
+                <template v-if="!helpPanelOpen">{{ $t('editor.viewHelp') }}</template>
+                <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
             <author-popup />
             <date-popup />
-            <link-popup 
+            <link-popup
                 ref="linkPopup"
                 :markdown="true" />
             <help-panel-markdown :isOpen="helpPanelOpen" />
@@ -55,8 +57,7 @@
 
 <script>
 import Vue from 'vue';
-import VueSimplemde from 'vue-simplemde'
-import { ipcRenderer } from 'electron';
+import VueEasyMde from './post-editor/EasyMde';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
@@ -84,7 +85,7 @@ export default {
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
         'help-panel-markdown': HelpPanelMarkdown,
-        'vue-simplemde': VueSimplemde
+        'vue-easymde': VueEasyMde
     },
     data () {
         return {
@@ -97,6 +98,16 @@ export default {
             sidebarVisible: false,
             editorIsInitialized: false,
             sidebarVisible: false,
+            editorConfig: {
+                status: false,
+                toolbar: false,
+                placeholder: this.$t('editor.startWriting'),
+                spellChecker: false,
+                promptURLs: true,
+                shortcuts: {
+                    toggleHeadingSmaller: this.isMac ? null : 'Ctrl-H'
+                }
+            },
             postData: {
                 editor: this.$options.editorType,
                 title: '',
@@ -136,23 +147,11 @@ export default {
         isEdit () {
             return !!this.postID;
         },
-        simplemde () {
-            return this.$refs.markdownEditor.simplemde;
-        },
         isMac () {
             return document.body.getAttribute('data-os') === 'osx';
         },
-        editorConfig () {
-            return {
-                status: false,
-                toolbar: false,
-                placeholder: 'Start writing...',
-                spellChecker: false,
-                promptURLs: true,
-                shortcuts: {
-                    toggleHeadingSmaller: this.isMac ? null : 'Ctrl-H'
-                }
-            }
+        easymde () {
+            return this.$refs.markdownEditor.easymde;
         }
     },
     mounted () {
@@ -178,17 +177,19 @@ export default {
             this.possibleDataLoss = true;
         });
 
-        this.simplemde.codemirror.on('change', this.detectDataLoss);
-        window.prompt = this.linkPopupHandler;
-        this.$refs.linkPopup.setSimpleMdeInstance(this.simplemde);
-        inlineAttachment.editors.codemirror4.attach(this.simplemde.codemirror, {});
-        this.$refs['post-title'].focus();
+        Vue.nextTick(() => {
+            this.easymde.codemirror.on('change', this.detectDataLoss);
+            window.prompt = this.linkPopupHandler;
+            this.$refs.linkPopup.setEasyMdeInstance(this.easymde);
+            inlineAttachment.editors.codemirror4.attach(this.easymde.codemirror, {});
+            this.$refs['post-title'].focus();
+        });
     },
     methods: {
         detectEnterInTitle (event) {
             if (event.code === 'Enter' && !event.isComposing) {
                 event.preventDefault();
-                this.simplemde.codemirror.focus();
+                this.easymde.codemirror.focus();
             }
         },
         updateTitle () {
@@ -197,13 +198,13 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            ipcRenderer.send('app-post-load', {
+            mainProcessAPI.send('app-post-load', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            ipcRenderer.once('app-post-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
                 if(data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
@@ -222,16 +223,16 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost (newPostStatus, preview = false, closeEditor = false) {
+        async savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
             }
 
-            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            let postData = await PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
@@ -245,10 +246,10 @@ export default {
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-post-save', postData);
+            mainProcessAPI.send('app-post-save', postData);
 
             // Post save
-            ipcRenderer.once('app-post-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
@@ -256,7 +257,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -271,15 +272,15 @@ export default {
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/markdown/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -300,12 +301,12 @@ export default {
                 this.editorIsInitialized = true;
                 return;
             }
-            
+
             this.$bus.$emit('post-editor-possible-data-loss');
-            this.simplemde.codemirror.off('change', this.detectDataLoss);
+            this.easymde.codemirror.off('change', this.detectDataLoss);
         },
         linkPopupHandler (e) {
-            let selectedText = this.simplemde.codemirror.getSelections();
+            let selectedText = this.easymde.codemirror.getSelections();
 
             if (selectedText && selectedText.length) {
                 selectedText = selectedText[0];
@@ -340,14 +341,14 @@ export default {
 @import '../scss/mixins.scss';
 @import '../scss/editor/post-editors-common.scss';
 @import '../scss/editor/editor-markdown.scss';
-    
-    
-.post-editor-markdown { 
+
+
+.post-editor-markdown {
     overflow-x: hidden;
     position: relative;
     width: 100%;
     z-index: 2;
-    
+
    .post-editor {
         &-wrapper {
             overflow: auto;
@@ -365,10 +366,12 @@ export default {
             #post-title {
                 border: none;
                 box-shadow: none;
+                columns: var(--headings-color);
                 display: block;
                 font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-                font-size: 3.5rem;
-                font-weight: 600;
+                font-size: 3.6rem;
+                font-weight: var(--font-weight-bold);
+                letter-spacing: var(--letter-spacing);
                 line-height: 1.2;
                 margin: 0 10% 2.6rem;
                 padding: 0;
@@ -376,10 +379,10 @@ export default {
                 width: 80%;
 
                 &:empty {
-                    color: var(--gray-3); 
+                    color: var(--gray-4);
 
                     &:before {
-                        content: "Add post title"
+                        content: attr(data-translation);
                     }
 
                     &:focus:before {
@@ -388,15 +391,15 @@ export default {
                 }
             }
 
-            .vue-simplemde {
-                margin: 0 auto;
-                max-width: 720px;
+            .vue-easymde {
                 position: relative;
                 z-index: 1000;
 
                 .CodeMirror {
                     border: none;
                     height: auto!important;
+                    margin: 0 auto;
+                    max-width: var(--editor-width);
                     padding: 0;
 
                     .CodeMirror-selected {
@@ -415,7 +418,7 @@ export default {
 @media (min-width: 1800px) {
     .post-editor-markdown .post-editor-form #post-title {
         margin: 0 auto 2.6rem;
-        max-width: calc(100% - 880px);
+        max-width: calc(100vw - 880px);
         width: 100%;
     }
 }
@@ -424,7 +427,7 @@ export default {
     bottom: 20px;
     position: absolute;
     right: 20px;
-    z-index: 100;
+    z-index: 99991;
 }
 
 body[data-os="win"] {

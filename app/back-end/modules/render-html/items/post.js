@@ -39,17 +39,17 @@ class PostItem {
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
-        let readmoreMatches = this.post.text.match(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+        let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
 
         if (readmoreMatches && readmoreMatches.length) {
             hasCustomExcerpt = true;
 
             // Detect if hide of the custom excerpt is enabled
             if (this.renderer.siteConfig.advanced.postUseTextWithoutCustomExcerpt) {
-                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi);
+                preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
                 preparedText = preparedText[1];
             } else {
-                preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}\s?\/?\>/gmi, '');
+                preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi, '');
             }
         }
 
@@ -124,9 +124,25 @@ class PostItem {
             this.postData.hiddenTags = [];
             this.postData.mainTag = false;
         }
+
+        if (this.renderer.plugins.hasModifiers('postTitle')) {
+            this.postData.title = this.renderer.plugins.runModifiers('postTitle', this.renderer, this.postData.title, { postData: this.postData }); 
+        }
+
+        if (this.renderer.plugins.hasModifiers('postText')) {
+            this.postData.text = this.renderer.plugins.runModifiers('postText', this.renderer, this.postData.text, { postData: this.postData }); 
+        }
+
+        if (this.renderer.plugins.hasModifiers('postExcerpt')) {
+            this.postData.excerpt = this.renderer.plugins.runModifiers('postExcerpt', this.renderer, this.postData.excerpt, { postData: this.postData }); 
+        }
     }
 
     storeData() {
+        if (this.renderer.plugins.hasModifiers('postItemData')) {
+            this.postData = this.renderer.plugins.runModifiers('postItemData', this.renderer, this.postData); 
+        }
+
         this.renderer.cachedItems.posts[this.postID] = JSON.parse(JSON.stringify(this.postData));
     }
 

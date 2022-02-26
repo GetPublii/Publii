@@ -1,7 +1,4 @@
 <script>
-import { remote } from 'electron';
-const mainProcess = remote.require('./main.js');
-
 export default {
     name: 'post-editors-common',
     mounted () {
@@ -11,12 +8,12 @@ export default {
         slugUpdated () {
             this.postSlugEdited = true;
         },
-        updateSlug () {
+        async updateSlug () {
             if(this.isEdit || this.postSlugEdited) {
                 return;
             }
 
-            let slugValue = mainProcess.slug(this.postData.title);
+            let slugValue = await mainProcessAPI.invoke('app-main-process-create-slug', this.postData.title);
             this.postData.slug = slugValue;
         },
         toggleSidebar () {

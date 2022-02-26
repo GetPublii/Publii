@@ -1,0 +1,41 @@
+[
+    {
+        "name": "cssClasses",
+        "type": "text",
+        "label": "editor.blocks.cssClassesLabel",
+        "tooltip": "editor.blocks.cssClassesTooltip",
+        "defaultValue": ""
+    },
+    {
+        "name": "style",
+        "type": "select",
+        "label": "editor.blocks.paragraph.styleLabel",
+        "tooltip": "editor.blocks.paragraph.styleTooltip",
+        "values": [
+            {
+                "value": "msg msg--info",
+                "label": "editor.blocks.paragraph.styles.info"
+            },
+            {
+                "value": "msg msg--highlight",
+                "label": "editor.blocks.paragraph.styles.highlight"
+            },
+            {
+                "value": "msg msg--success",
+                "label": "editor.blocks.paragraph.styles.success"
+            },
+            {
+                "value": "msg msg--warning",
+                "label": "editor.blocks.paragraph.styles.warning"
+            }
+        ],
+        "defaultValue": ""
+    },
+    {
+        "name": "id",
+        "type": "text",
+        "label": "editor.blocks.idLabel",
+        "tooltip": "editor.blocks.paragraph.idTooltip",
+        "defaultValue": ""
+    }
+]

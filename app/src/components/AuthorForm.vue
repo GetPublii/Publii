@@ -1,12 +1,12 @@
 <template>
-    <div 
+    <div
         :key="'author-view-' + authorData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
-        class="options-sidebar-wrapper">
+        class="options-sidebar-container">
         <div class="options-sidebar">
             <h2>
-                <template v-if="authorData.id">Edit author</template>
-                <template v-if="!authorData.id">Add new author</template>
+                <template v-if="authorData.id">{{ $t('author.editAuthor') }}</template>
+                <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
             </h2>
 
            <span
@@ -16,27 +16,27 @@
                 &times;
             </span>
 
-            <div class="author-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'basic' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
                     @click="openItem('basic')">
                     <icon
-                        class="author-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-status"/>
 
-                    <span class="author-settings-label">Basic information</span>
+                    <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
                 </div>
 
                 <div
                     class="author-settings"
                     style="max-height: none;"
                     ref="basic-content-wrapper">
-                    <div 
+                    <div
                         class="author-settings-content"
                         ref="basic-content">
                         <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>Name:</span>
+                            <span>{{ $t('ui.name') }}:</span>
                             <input
                                 v-model="authorData.name"
                                 @keyup="cleanError('name')"
@@ -45,14 +45,14 @@
                         </label>
 
                         <label>
-                            <span>Description:</span>
+                            <span>{{ $t('ui.description') }}:</span>
                             <text-area
                                 v-model="authorData.description"
                                 :rows="4"></text-area>
                         </label>
 
                         <label :class="{ 'is-invalid': errors.indexOf('email') > -1 }">
-                            <span>E-mail:</span>
+                            <span>{{ $t('author.eMail') }}:</span>
                             <input
                                 v-model="authorData.email"
                                 @keyup="emailChanged"
@@ -61,7 +61,7 @@
                         </label>
 
                         <label>
-                            <span>Website:</span>
+                            <span>{{ $t('author.website') }}:</span>
                             <input
                                 v-model="authorData.website"
                                 spellcheck="false"
@@ -71,32 +71,33 @@
                 </div>
             </div>
 
-            <div class="author-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'image' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
                     @click="openItem('image')">
                     <icon
-                        class="author-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-image"/>
 
-                    <span class="author-settings-label">Avatar and Featured image</span>
+                    <span class="options-sidebar-label">{{ $t('author.avatarAndFeaturedImage') }}</span>
                 </div>
 
                 <div
                     class="author-settings"
                     ref="image-content-wrapper">
-                    <div 
+                    <div
                         class="author-settings-content"
                         ref="image-content">
                         <label>
-                            <span>Avatar:</span>
+                            <span>{{ $t('author.avatar') }}:</span>
                             <image-upload
                                 slot="field"
                                 type="small"
                                 id="author"
                                 ref="author-avatar"
                                 :onRemove="avatarRemoved"
+                                imageType="authorImages"
                                 v-model="authorData.avatar" />
                         </label>
 
@@ -106,19 +107,19 @@
                                 id="use-gravatar"
                                 @click.native="toggleGravatar"
                                 v-model="authorData.useGravatar" />
-                            <small>
-                                Use <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatar </a> to provide your author avatar
+                            <small
+                                v-pure-html="$t('author.useGravatarMessage')">
                             </small>
                         </label>
 
                         <div>
-                            <label class="no-margin">Featured image:</label>
-                            <div 
+                            <label class="no-margin">{{ $t('ui.featuredImage') }}:</label>
+                            <div
                                 v-if="!currentThemeHasSupportForAuthorImages"
                                 slot="note"
                                 class="msg msg-small msg-icon msg-alert">
-                                <icon name="warning" size="m" />       
-                                <p>Your theme does not support featured images for authors.</p>
+                                <icon name="warning" size="m" />
+                                <p>{{ $t('author.themeDoesNotSupportFeaturedImagesForAuthors') }}</p>
                             </div>
                             <label>
                                 <image-upload
@@ -135,21 +136,21 @@
                                 <div
                                     v-if="hasFeaturedImage"
                                     class="image-uploader-settings-form">
-                                    <label>Alternative text
+                                    <label>{{ $t('ui.alternativeText') }}
                                         <text-input
                                             ref="featured-image-alt"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"
                                             v-model="authorData.additionalData.featuredImageAlt" />
                                     </label>
 
-                                    <label>Caption
+                                    <label>{{ $t('ui.caption') }}
                                         <text-input
                                             ref="featured-image-caption"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"
                                             v-model="authorData.additionalData.featuredImageCaption" />
                                     </label>
 
-                                    <label>Credits
+                                    <label>{{ $t('ui.credits') }}
                                         <text-input
                                             ref="featured-image-credits"
                                             :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -162,26 +163,26 @@
                 </div>
             </div>
 
-            <div class="author-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'seo' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
                     @click="openItem('seo')">
                     <icon
-                        class="author-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-seo"/>
 
-                    <span class="author-settings-label">SEO</span>
+                    <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
                 </div>
 
                 <div
                     class="author-settings"
                     ref="seo-content-wrapper">
-                    <div 
+                    <div
                         class="author-settings-content"
                         ref="seo-content">
                         <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>Slug:</span>
+                            <span>{{ $t('ui.slug') }}:</span>
                             <input
                                 v-model="authorData.username"
                                 @keyup="cleanError('slug')"
@@ -190,7 +191,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Page title:</span>
+                            <span>{{ $t('ui.pageTitle') }}:</span>
                             <text-input
                                 v-model="authorData.metaTitle"
                                 type="text"
@@ -203,7 +204,7 @@
                         </label>
 
                         <label class="with-char-counter">
-                            <span>Meta Description:</span>
+                            <span>{{ $t('ui.metaDescription') }}:</span>
                             <text-area
                                 v-model="authorData.metaDescription"
                                 :placeholder="metaFieldAttrs"
@@ -215,7 +216,7 @@
                         </label>
 
                         <label>
-                            Meta robots index:
+                            {{ $t('ui.metaRobotsIndex') }}:
                             <dropdown
                                 v-if="!authorData.additionalData.canonicalUrl"
                                 id="tag-meta-robots"
@@ -223,42 +224,42 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>If canonical URL is set, the meta robots tag is ignored.</small>
+                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
                             </div>
                         </label>
 
                         <label>
-                            Canonical URL:
+                            {{ $t('ui.canonicalURL') }}:
                             <input
                                 type="text"
                                 v-model="authorData.additionalData.canonicalUrl"
                                 spellcheck="false"
-                                placeholder="Leave blank to use a default tag page URL" />
+                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
                         </label>
                     </div>
                 </div>
             </div>
 
-            <div class="author-settings-wrapper">
+            <div class="options-sidebar-item">
                 <div
-                    :class="{ 'author-settings-header': true, 'is-open': openedItem === 'other' }"
+                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
                     @click="openItem('other')">
                     <icon
-                        class="author-settings-icon"
+                        class="options-sidebar-icon"
                         size="s"
                         name="sidebar-options"/>
 
-                    <span class="author-settings-label">Other options</span>
+                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
                 </div>
 
                 <div
                     class="author-settings"
                     ref="other-content-wrapper">
-                    <div 
+                    <div
                         class="author-settings-content"
                         ref="other-content">
                         <label>
-                            <span>Custom template:</span>
+                            <span>{{ $t('ui.customTemplate') }}:</span>
                             <dropdown
                                 v-if="currentThemeHasAuthorTemplates"
                                 ref="template"
@@ -270,7 +271,7 @@
                                 v-if="!currentThemeHasAuthorTemplates"
                                 slot="field"
                                 id="template"
-                                placeholder="Not available in your theme"
+                                :placeholder="$t('ui.notAvailableInYourTheme')"
                                 :spellcheck="false"
                                 :disabled="true"
                                 :readonly="true" />
@@ -281,18 +282,18 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="secondary" 
+                    type="secondary"
                     @click.native="save(false)">
-                    <template v-if="authorData.id">Save Changes</template>
-                    <template v-if="!authorData.id">Add new author</template>
+                    <template v-if="authorData.id">{{ $t('ui.saveChanges') }}</template>
+                    <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
                 </p-button>
 
                 <p-button
                     :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
-                    type="primary" 
-                    class="author-settings-preview-button"
+                    type="primary"
+                    class="options-sidebar-preview-button"
                     @click.native="saveAndPreview">
-                    Save &amp; Preview 
+                    {{ $t('ui.saveAndPreview') }}
                     <span>
                         <icon
                             size="s"
@@ -303,24 +304,21 @@
                 <p-button
                     @click.native="close"
                     type="outline">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
 
-            <small 
+            <small
                 v-if="!currentThemeHasSupportForAuthorPages"
                 class="note">
-                The "Save &amp; Preview" option is not available due to lack of support for author pages in your theme.
+                {{ $t('author.saveAndPreviewNotAvailableDueToNoSupportForAuthorPagesInTheme') }}
             </small>
         </div>
     </div>
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
 import Utils from './../helpers/utils';
-import crypto from 'crypto';
-const mainProcess = remote.require('./main.js');
 
 export default {
     name: 'author-form-sidebar',
@@ -363,10 +361,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.renderer.createAuthorPages;
         },
         metaFieldAttrs: function() {
-            let text = 'Leave it blank to use a default page title';
+            let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
 
             if(!this.metaOptionsActive) {
-                text = 'To use this option, first enable indexing of author pages in SEO settings.';
+                text = this.$t('author.toUseThisOptionEnableIndexingAuthorPages');
             }
 
             return text;
@@ -389,11 +387,11 @@ export default {
         },
         metaRobotsOptions () {
             return {
-                '': 'Use site global settings',
-                'index, follow': 'index, follow',
-                'index, nofollow': 'index, nofollow',
-                'noindex, follow': 'noindex, follow',
-                'noindex, nofollow': 'noindex, nofollow'
+                '': this.$t('settings.useSiteGlobalSettings'),
+                'index, follow': this.$t('ui.indexFollow'),
+                'index, nofollow': this.$t('ui.indexNofollow'),
+                'noindex, follow': this.$t('ui.noindexFollow'),
+                'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
         }
     },
@@ -406,7 +404,7 @@ export default {
                     params.additionalData = {};
                 }
             } catch (e) {
-                console.warn('An error occurred during parsing author data for ID: ' + params.id);
+                console.warn(this.$t('author.authorDataParsingErrorMessage') + params.id);
                 params.additionalData = {};
             }
 
@@ -437,11 +435,11 @@ export default {
         });
     },
     methods: {
-        save (showPreview = false) {
+        async save (showPreview = false) {
             if (this.authorData.username === '') {
-                this.authorData.username = mainProcess.slug(this.authorData.name);
+                this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.name);
             } else {
-                this.authorData.username = mainProcess.slug(this.authorData.username);
+                this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.username);
             }
 
             let authorData = {
@@ -464,14 +462,14 @@ export default {
 
             this.saveData(authorData, showPreview);
         },
-        saveAndPreview () {
-            this.save(true);
+        async saveAndPreview () {
+            await this.save(true);
         },
         saveData(authorData, showPreview = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-author-save', authorData);
+            mainProcessAPI.send('app-author-save', authorData);
 
-            ipcRenderer.once('app-author-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-author-saved', (data) => {
                 if(data.status !== false) {
                     if(authorData.id === 0) {
                         let newlyAddedAuthor = JSON.parse(JSON.stringify(data.authors.filter(author => author.id === data.authorID)[0]));
@@ -504,7 +502,7 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-author-item-editor');
-            ipcRenderer.send('app-author-cancel', {
+            mainProcessAPI.send('app-author-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.authorData.id,
                 additionalData: {
@@ -513,10 +511,10 @@ export default {
             });
         },
         showMessage(message) {
-            let msg = 'New author has been created';
+            let msg = this.$t('author.newAuthorHasBeenCreated');
 
             if (this.authorData.id > 0) {
-                msg = 'Author has been updated';
+                msg = this.$t('author.authorHasBeenUpdated');
             }
 
             let messageConfig = {
@@ -532,23 +530,23 @@ export default {
             if (message === 'author-duplicate-name') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('name');
-                messageConfig.message = 'Provided author name is in use. Please try other author name.';
+                messageConfig.message = this.$t('author.authorNameInUseErrorMessage');
             } else if (message === 'author-duplicate-username') {
                 this.displayAdvancedOptions = true;
                 this.errors.push('slug');
-                messageConfig.message = 'Provided author name in a similar form (case insensitive) is in use. Please try other author name.';
+                messageConfig.message = this.$t('author.authorNameSimilarInUseErrorMessage');
             } else if (message === 'author-empty-name') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('name');
-                messageConfig.message = 'Author name cannot be empty. Please try other name.';
+                messageConfig.message = this.$t('author.authorNameCannotBeEmptyErrorMessage');
             } else if (message === 'author-empty-email') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('email');
-                messageConfig.message = 'In order to use Gravatar service provide the author e-mail at first.';
+                messageConfig.message = this.$t('author.useGravatarServiceMessage');
             } else if (message === 'author-empty-username') {
                 this.displayAdvancedOptions = false;
                 this.errors.push('slug');
-                messageConfig.message = 'Author slug cannot be empty';
+                messageConfig.message = this.$t('author.authorSlugCannotBeEmpty');
             }
 
             this.$bus.$emit('message-display', messageConfig);
@@ -571,7 +569,7 @@ export default {
                         this.errors.push('email');
                         this.authorData.useGravatar = false;
                         this.$bus.$emit('message-display', {
-                            message: 'Enter the email address you used for registering your account on Gravatar.',
+                            message: this.$t('author.gravatarEmailWarningMessage'),
                             type: 'warning',
                             lifeTime: 3
                         });
@@ -593,7 +591,7 @@ export default {
             this.authorData.avatar = avatarPath;
         }, 1000),
         md5 (value) {
-            return crypto.createHash('md5').update(value).digest("hex");
+            return mainProcessAPI.createMD5(value);
         },
         avatarRemoved () {
             this.authorData.useGravatar = false;
@@ -644,10 +642,10 @@ export default {
 @import '../scss/variables.scss';
 @import '../scss/options-sidebar.scss';
 @import '../scss/notifications.scss';
-    
+
 .options-sidebar {
     .use-gravatar {
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         font-weight: 400;
         margin-bottom: 2rem;
     }
@@ -670,114 +668,6 @@ export default {
         }
     }
 
-    &-wrapper {
-        &:first-of-type {
-            .author-settings-header {
-                border-top: none;
-            }
-        }
-    }
-
-    &-header {
-        align-items: center;               
-        border-top: 1px solid var(--input-border-color);     
-        color: var(--link-tertiary-color);
-        cursor: pointer;
-        display: flex;
-        height: 6.4rem;
-        margin-left: 0;
-        margin-top: -1px;
-        padding: 0;
-        position: relative;
-        transition: var(--transition);
-        user-select: none;
-        width: 100%;
-
-        &:hover {
-            color: var(--link-tertiary-hover-color);                    
-        }
-
-        &.is-open {
-            .author-settings {
-                &-label {
-                    left: -3.6rem;
-                }
-
-                &-icon {
-                    left: -1.6rem;
-                    position: relative;
-                    opacity: 0;
-                }
-            }
-        }
-    }
-
-    &-label {                
-        font-weight: 600;
-        left: 0;
-        position: relative;
-        transition: left .25s ease-out, color .0s ease-out;
-        width: calc(100% - 5.8rem);
-
-        &-warning {
-            color: var(--warning);
-            font-size: 1.2rem;
-            margin-left: 1rem;
-        }
-    }
-
-    &-icon {
-        fill: var(--primary-color); 
-        left: 0;
-        height: 2.4rem;
-        margin-right: 1.6rem;
-        opacity: 1;
-        position: relative;
-        transition: var(--transition);
-        width: 2.4rem;
-    }
-
-    &-preview-button {
-        display: inline-flex; 
-
-        & > span {
-            align-self: center;
-            display: flex; 
-            margin-left: 1rem;
-        }
-    }
-
-    label {
-        color: var(--label-color);
-        display: block;
-        font-size: 1.5rem;
-        font-weight: 500;
-        line-height: 2.6;
-        margin: 0 0 1.2rem 0;
-
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            background-color: var(--input-bg);
-            width: 100%;
-        }
-
-        textarea {
-            height: 100px;
-        }
-
-        &.with-char-counter {
-            .note {
-                margin-top: -3rem;
-                width: 70%;
-            }
-        }
-
-        &.no-margin {
-            margin: 0;
-        }
-    }            
 }
 
 .note {

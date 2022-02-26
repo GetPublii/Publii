@@ -137,17 +137,17 @@ export default {
             display: block;
         }  
 
-        /deep/ .vc-chrome-body {
+        ::v-deep .vc-chrome-body {
             background-color: var(--bg-primary);
         }   
         
-        /deep/ .vc-input__input {
+        ::v-deep .vc-input__input {
             background-color: var(--input-bg);
             box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
         }
         
-        /deep/ .vc-chrome-toggle-icon {
+        ::v-deep .vc-chrome-toggle-icon {
             
             path {
                fill: var(--icon-primary-color);
@@ -160,7 +160,7 @@ export default {
             }
         }
         
-        /deep/ .vc-chrome-toggle-icon-highlight {
+        ::v-deep .vc-chrome-toggle-icon-highlight {
             background: var(--input-border-color);
         }
     }

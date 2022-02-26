@@ -2,50 +2,55 @@
     <div
         @click="toggleSubmenu"
         class="topbar-app-settings"
-        title="More items">
+        :title="$t('ui.moreItems')">
         <span class="topbar-app-settings-icon"></span>
 
         <ul
             ref="submenu"
             :class="cssClasses">
             <topbar-dropdown-item
-                label="App settings"
-                title="Application configuration"
+                :label="$t('settings.appSettings')"
+                :title="$t('ui.appConfiguration')"
                 path="/app-settings" />
             <topbar-dropdown-item
-                label="Themes"
-                title="Go to the themes manager"
+                :label="$t('theme.themes')"
+                :title="$t('theme.goToThemesManager')"
                 path="/app-themes" />
             <topbar-dropdown-item
-                class="topbar-app-submenu-separator" 
-                path="/app-settings"
-                label="Change application theme" />
+                :label="$t('plugins.plugins')"
+                :title="$t('plugins.goToPluginsManager')"
+                path="/app-plugins" />
             <topbar-dropdown-item
-                label="Help"
-                title="Check Publii documentation"
+                v-if="$store.state.app.config.experimentalFeatureAppUiLanguages"
+                :label="$t('langs.languages')"
+                :title="$t('langs.goToLanguagesManager')"
+                path="/app-languages" />
+            <topbar-dropdown-item 
+                class="topbar-app-submenu-separator"
+                :label="$t('ui.help')"
+                :title="$t('ui.checkDocumentation')"
                 path="https://getpublii.com/docs/" />
             <topbar-dropdown-item
-                label="Report an issue"
-                title="Report a bug in our supportdesk"
+                :label="$t('ui.reportIssue')"
+                :title="$t('ui.reportBugInSupportdesk')"
                 path="https://getpublii.com/forum/" />
             <topbar-dropdown-item
-                label="Github repository"
-                title="View Publii on Github"
+                :label="$t('ui.githubRepository')"
+                :title="$t('ui.publiiOnGithub')"
                 path="https://github.com/getpublii/publii" />
             <topbar-dropdown-item
-                label="Donate"
-                title="Support Publii and donate today!"
+                :label="$t('ui.donate')"
+                :title="$t('ui.supportPublii')"
                 path="https://getpublii.com/donate/" />
             <topbar-dropdown-item
-                label="About Publii"
-                title="More informations about Publii"
+                :label="$t('ui.aboutPublii')"
+                :title="$t('ui.moreInformationOnPublii')"
                 path="/about" />
         </ul>
     </div>
 </template>
 
 <script>
-import { ipcRenderer, remote } from 'electron';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -95,11 +100,10 @@ export default {
         color: var(--icon-secondary-color);
         cursor: pointer;
         display: block;
-        height: 5rem;       
+        height: 5rem;
         order: 3;
-        padding: 0 1rem;
-        width: 35px; 
-
+        padding: 0 0 0 1.5rem;
+        width: 35px;
 
         &:hover {
             color: var(--icon-tertiary-color);
@@ -138,7 +142,7 @@ export default {
 
     &-app-settings {
         -webkit-app-region: no-drag; // Make the buttons clickable again
-        font-weight: 500;
+        font-weight: var(--font-weight-semibold);
 
         & > svg {
             height: 2.4rem;
@@ -149,16 +153,17 @@ export default {
     }
 
     &-app-submenu {
-        background: var(--bg-secondary);
-        box-shadow: 0 1px 0 1px rgba(100, 115, 135, 0.1),
-                     0 2px 16px rgba(29, 39, 52, 0.07);
+        background: var(--popup-bg);
+        box-shadow: var(--box-shadow-medium);
+        border-radius: var(--border-radius);
+        cursor: default;
         font-size: 1.5rem;
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;
-        right: 2.7rem;
-        top: 2.5rem;        
-        
+        right: 3.2rem;
+        top: 1.5rem;
+
         &-separator {
             border-bottom: 1px solid var(--border-light-color);
             margin-bottom: 2rem;
@@ -173,13 +178,13 @@ export default {
 
 @media (max-height: 900px) {
     .topbar-app-submenu {
-        right: 2.3rem;
+        right: 2.8rem;
     }
 }
 
 @media (max-width: 1400px) {
     .topbar-app-submenu {
-        right: 2.3rem;
+        right: 2.8rem;
     }
 }
 </style>

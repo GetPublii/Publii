@@ -1,12 +1,17 @@
 <template>
-    <div class="item">
+    <div :class="'item ' + cssClasses">
         <slot></slot>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'collection-row'
+    name: 'collection-row',
+    props: {
+        'cssClasses': {
+            default: ''
+        }
+    }
 }
 </script>
 
@@ -14,17 +19,9 @@ export default {
 @import '../../scss/variables.scss';
 
 .item {
-    align-items: center;
-    border-bottom: 1px solid var(--border-light-color);
-    display: flex;
-    flex-wrap: wrap;   
+    display: contents;
 
-    &:last-child {
-        .col {
-            border-bottom: none;
-        }
-    }
-    
+
     .add-form {
         margin-top: 0;
     }

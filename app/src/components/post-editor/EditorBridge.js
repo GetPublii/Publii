@@ -1,5 +1,4 @@
 import EditorConfig from './../configs/postEditor.config.js';
-import { ipcRenderer } from 'electron';
 import Utils from './../../helpers/utils';
 
 class EditorBridge {
@@ -28,11 +27,11 @@ class EditorBridge {
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
             statusbar: true,
-            browser_spellcheck: window.app.$store.state.currentSite.config.spellchecking
+            browser_spellcheck: window.app.spellcheckerIsEnabled()
         });
 
-        if (window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements !== '') {
-            let additionalValidElements = window.app.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements;
+        if (window.app.wysiwygAdditionalValidElements() !== '') {
+            let additionalValidElements = window.app.wysiwygAdditionalValidElements();
             editorConfig.extended_valid_elements = editorConfig.extended_valid_elements + ',' + additionalValidElements;
         }
 
@@ -41,10 +40,15 @@ class EditorBridge {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');
         }
 
-        editorConfig = Utils.deepMerge(editorConfig, window.app.$store.state.app.customConfig.tinymce);
+        editorConfig = Utils.deepMerge(editorConfig, window.app.tinymceCustomConfig());
 
         if(this.customThemeEditorConfig) {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
+        }
+
+        if (window.app.getWysiwygTranslation()) {
+            tinymce.addI18n('custom', window.app.getWysiwygTranslation());
+            editorConfig.language = 'custom';
         }
 
         tinymce.init(editorConfig);
@@ -59,7 +63,7 @@ class EditorBridge {
         this.tinymceEditor = editor;
         this.addEditorButtons();
 
-        editor.on('init', () => {
+        editor.on('init', async () => {
             $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
             $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
@@ -67,7 +71,11 @@ class EditorBridge {
             // Scroll the editor to bottom in order to avoid issues
             // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
-            
+
+            if (document.getElementById('app').classList.contains('use-wide-scrollbars')) {
+                iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
+            }
+
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
@@ -84,15 +92,23 @@ class EditorBridge {
                 }
             }, false);
 
+            iframe.contentWindow.window.document.body.addEventListener("dblclick", function(e) {
+                if (e.target.tagName === 'IMG') {
+                    tinymce.activeEditor.execCommand('mceImage');
+                }
+            }, false);
+
             // Support for dark mode
-            iframe.contentWindow.window.document.querySelector('html').setAttribute('data-theme', window.app.$root.getCurrentAppTheme());
+            let htmlElement = iframe.contentWindow.window.document.querySelector('html');
+            htmlElement.setAttribute('data-theme', await window.app.getCurrentAppTheme());
+            htmlElement.setAttribute('style', window.app.overridedCssVariables());
 
             // Add inline editors
             this.addInlineEditor(customFormats);
             this.addLinkEditor(iframe);
 
             this.tinymceEditor.once('keyup', e => {
-                window.app.$bus.$emit('post-editor-possible-data-loss');
+                window.app.reportPossibleDataLoss();
             });
 
             this.tinymceEditor.on('keyup', e => {
@@ -155,7 +171,7 @@ class EditorBridge {
 
                 if(localStorage.getItem('publii-writers-panel') === null) {
                     localStorage.setItem('publii-writers-panel', 'opened');
-                    window.app.$bus.$emit('writers-panel-open');
+                    window.app.writersPanelOpen();
                 }
 
                 if(clickedElement.tagName === 'FIGCAPTION') {
@@ -167,7 +183,7 @@ class EditorBridge {
                         source_view: true
                     });
 
-                    window.app.$bus.$emit('source-code-editor-show', content, this.tinymceEditor);
+                    window.app.sourceCodeEditorShow(content, this.tinymceEditor);
                     return;
                 }
 
@@ -182,7 +198,7 @@ class EditorBridge {
                     let selection = iframe.contentWindow.window.getSelection();
                     selection.removeAllRanges();
                     let range = iframe.contentWindow.window.document.createRange();
-                    
+
                     if (clickedElement.tagName === 'A') {
                         range.selectNode(clickedElement);
                     } else if (clickedElement.parentNode && clickedElement.parentNode.tagName === 'A') {
@@ -192,13 +208,13 @@ class EditorBridge {
                     selection.addRange(range);
 
                     if (this.checkInlineLinkTrigger(clickedElement)) {
-                        window.app.$bus.$emit('update-link-editor', {
+                        window.app.updateLinkEditor({
                             sel: selection,
                             text: clickedElement
                         });
                     }
                 } else {
-                    window.app.$bus.$emit('update-link-editor', {
+                    window.app.updateLinkEditor({
                         sel: false,
                         text: false
                     });
@@ -209,19 +225,12 @@ class EditorBridge {
                     clickedElement.getAttribute('class') &&
                     clickedElement.getAttribute('class').indexOf('gallery') !== -1
                 ) {
-                    window.app.$bus.$emit('update-gallery-popup', {
+                    window.app.updateGalleryPopup({
                         postID: this.postID,
                         galleryElement: clickedElement
                     });
 
-                    window.app.$bus.$on('gallery-popup-updated', response => {
-                        this.hideToolbarsOnCopy();
-
-                        if(response) {
-                            response.gallery.innerHTML = response.html;
-                            response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
-                        }
-                    });
+                    window.app.galleryPopupUpdated(this.galleryPopupUpdated.bind(this));
                 }
             });
 
@@ -232,7 +241,7 @@ class EditorBridge {
                 if (linkToolbar.css('display') !== 'block' && inlineToolbar.css('display') !== 'block') {
                     return;
                 }
-                
+
                 let iframeScrollOffset = iframe.contentWindow.document.body.parentNode.scrollTop;
 
                 if (lastScroll !== -1 && Math.abs(iframeScrollOffset - lastScroll) > 20) {
@@ -263,14 +272,14 @@ class EditorBridge {
                             return;
                         }
 
-                        ipcRenderer.send('app-image-upload', {
+                        mainProcessAPI.send('app-image-upload', {
                             id: this.postID,
-                            site: window.app.$store.state.currentSite.config.name,
+                            site: window.app.getSiteName(),
                             path: filePath,
                             imageType: 'contentImages'
                         });
 
-                        ipcRenderer.once('app-image-uploaded', (event, data) => {
+                        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                             let imagePath = data.baseImage.url;
                             imagePath = imagePath.replace('file://', 'file:///');
 
@@ -290,21 +299,21 @@ class EditorBridge {
 
             // Writers Panel
             let updateWritersPanel = function () {
-                 window.app.$bus.$emit('writers-panel-refresh');
+                 window.app.writersPanelRefresh();
             };
             let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
-                this.hideToolbarsOnCopy();
+                self.hideToolbarsOnCopy();
             });
         });
 
         editor.ui.registry.addButton('gallery', {
             icon: 'gallery',
-            tooltip: "Insert Gallery",
+            tooltip: window.app.translate('editor.insertGallery'),
             onAction: function () {
-                editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false"></div>');
+                editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false" data-translation="' + window.app.translate('image.addImages') + '"></div>');
             }
         });
     }
@@ -312,11 +321,20 @@ class EditorBridge {
     extensionsPath () {
         return [
             'file:///',
-            window.app.$store.state.currentSite.siteDir,
+            window.app.getSiteDir(),
             '/input/themes/',
-            window.app.$store.state.currentSite.config.theme,
+            window.app.getSiteTheme(),
             '/'
         ].join('');
+    }
+
+    galleryPopupUpdated (response) {
+        this.hideToolbarsOnCopy();
+
+        if(response) {
+            response.gallery.innerHTML = response.html;
+            response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
+        }
     }
 
     getTinyMCECSSFiles () {
@@ -333,11 +351,7 @@ class EditorBridge {
         // Add custom editor config
         let customEditorConfig = false;
 
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.extensions &&
-            window.app.$store.state.currentSite.themeSettings.extensions.postEditorConfigOverride
-        ) {
+        if (window.app.hasPostEditorConfigOverride()) {
             let configOverridePath = this.extensionsPath() + 'tinymce.override.json';
 
             jQuery.ajax({
@@ -365,21 +379,14 @@ class EditorBridge {
         ];
 
         // Detect mode
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.customElementsMode &&
-            window.app.$store.state.currentSite.themeSettings.customElementsMode === 'advanced'
-        ) {
-            output = JSON.parse(JSON.stringify(window.app.$store.state.currentSite.themeSettings.customElements));
+        if (window.app.getThemeCustomElementsMode() === 'advanced') {
+            output = JSON.parse(JSON.stringify(window.app.getThemeCustomElements()));
             return output;
         }
 
         // Load custom elements
-        if(
-            window.app.$store.state.currentSite.themeSettings &&
-            window.app.$store.state.currentSite.themeSettings.customElements
-        ) {
-            customElements = window.app.$store.state.currentSite.themeSettings.customElements;
+        if (window.app.getThemeCustomElements()) {
+            customElements = window.app.getThemeCustomElements();
         }
 
         if(customElements && customElements.length) {
@@ -431,41 +438,41 @@ class EditorBridge {
     addEditorButtons() {
         this.tinymceEditor.ui.registry.addButton("publiilink", {
             icon: 'link',
-            tooltip: 'Insert/edit link',
+            tooltip: window.app.translate('link.insertEditLink'),
             onAction: () => {
                 let selectedNode = tinymce.activeEditor.selection.getNode();
 
                 if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
-                    window.app.$bus.$emit('init-link-popup', {
+                    window.app.initLinkPopup({
                         postID: this.postID,
                         selection: selectedNode.parentNode.outerHTML
                     });
                 } else {
-                    window.app.$bus.$emit('init-link-popup', {
+                    window.app.initLinkPopup({
                         postID: this.postID,
                         selection: tinymce.activeEditor.selection.getContent()
                     });
                 }
             }
         });
-        
+
         this.tinymceEditor.ui.registry.addButton("sourcecode", {
             icon: 'sourcecode',
-            tooltip: "Source code",
+            tooltip: window.app.translate('editor.sourceCode'),
             text: "HTML",
             onAction: () => {
                 let content = this.tinymceEditor.getContent({
                     source_view: true
                 });
 
-                window.app.$bus.$emit('source-code-editor-show', content, this.tinymceEditor);
+                window.app.sourceCodeEditorShow(content, this.tinymceEditor);
             }
         });
 
         this.tinymceEditor.ui.registry.addButton('readmore', {
-            text: 'Read more',
+            text: window.app.translate('editor.readMore'),
             onAction: () => {
-                this.tinymceEditor.insertContent('<hr id="read-more">' + "\n");
+                this.tinymceEditor.insertContent('<hr id="read-more" data-translation="' + window.app.translate('editor.readMore') + '">' + "\n");
             }
         });
     }
@@ -476,14 +483,14 @@ class EditorBridge {
         let doc = win.document;
         let body = doc.body;
 
-        window.app.$bus.$emit('init-inline-editor', customFormats);
+        window.app.initInlineEditor('init-inline-editor', customFormats);
 
         $(doc.querySelector('html')).on('mouseup', (e) => {
             let sel = win.getSelection();
             let text = sel.toString();
-            
+
             if (this.checkInlineTrigger(e.target)) {
-                window.app.$bus.$emit('update-inline-editor', {
+                window.app.updateInlineEditor({
                     sel,
                     text
                 });
@@ -522,7 +529,7 @@ class EditorBridge {
     }
 
     addLinkEditor(iframe) {
-        window.app.$bus.$emit('init-link-editor', iframe);
+        window.app.initLinkEditor(iframe);
     }
 
     hideToolbarsOnCopy() {
@@ -597,7 +604,7 @@ class EditorBridge {
         e.originalEvent.preventDefault();
 
         let files = e.originalEvent.dataTransfer.files;
-        let siteName = window.app.$store.state.currentSite.config.name;
+        let siteName = window.app.getSiteName();
 
         if(this.postEditorInnerDragging) {
             return;
@@ -615,7 +622,7 @@ class EditorBridge {
         $('.tox-tinymce').addClass('is-loading-image');
         $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
-        ipcRenderer.send('app-image-upload', {
+        mainProcessAPI.send('app-image-upload', {
             "id": this.postID,
             "site": siteName,
             "path": files[0].path
@@ -623,7 +630,7 @@ class EditorBridge {
 
         this.contentImageUploading = true;
 
-        ipcRenderer.once('app-image-uploaded', (event, data) => {            
+        mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
@@ -640,7 +647,7 @@ class EditorBridge {
 
     reloadEditor () {
         this.tinymceEditor.once('keyup', e => {
-            window.app.$bus.$emit('post-editor-possible-data-loss');
+            window.app.reportPossibleDataLoss();
         });
     }
 }

@@ -4,9 +4,9 @@
         class="overlay">
         <div class="popup popup-link-add">
             <div class="message">
-                <h1>Insert/Edit link</h1>
+                <h1>{{ $t('link.insertEditLink') }}</h1>
 
-                <field label="Select link type:">
+                <field :label="$t('link.selectLinkType') + ':'">
                     <v-select
                         slot="field"
                         v-model="type"
@@ -14,12 +14,12 @@
                         :searchable="false"
                         :custom-label="customTypeLabels"
                         :show-labels="false"
-                        placeholder="Select link type"></v-select>
+                        :placeholder="$t('link.selectLinkType')"></v-select>
                 </field>
 
                 <field
                     v-if="type === 'post'"
-                    label="Post name:">
+                    :label="$t('post.postName')">
                     <v-select
                         slot="field"
                         ref="postPagesSelect"
@@ -29,12 +29,12 @@
                         :close-on-select="true"
                         :show-labels="false"
                         @select="closeDropdown('postPagesSelect')"
-                        placeholder="Select post page"></v-select>
+                        :placeholder="$t('post.selectPostPage')"></v-select>
                 </field>
 
                 <field
                     v-if="type === 'tag'"
-                    label="Tag name:">
+                    :label="$t('tag.tagName')">
                     <v-select
                         slot="field"
                         ref="tagPagesSelect"
@@ -44,12 +44,12 @@
                         :close-on-select="true"
                         :show-labels="false"
                         @select="closeDropdown('tagPagesSelect')"
-                        placeholder="Select tag page"></v-select>
+                        :placeholder="$t('tag.selectTagPage')"></v-select>
                 </field>
 
                 <field
                     v-if="type === 'author'"
-                    label="Author name:">
+                    :label="$t('author.authorName') + ':'">
                     <v-select
                         slot="field"
                         ref="authorPagesSelect"
@@ -59,12 +59,12 @@
                         :close-on-select="true"
                         :show-labels="false"
                         @select="closeDropdown('authorPagesSelect')"
-                        placeholder="Select author page"></v-select>
+                        :placeholder="$t('author.selectAuthorPage')"></v-select>
                 </field>
 
                 <field
                     v-if="type === 'external'"
-                    label="Custom link:">
+                    :label="$t('ui.customLink') + ':'">
                     <input
                         slot="field"
                         type="text"
@@ -75,7 +75,7 @@
 
                 <field
                     v-if="type === 'file'"
-                    label="File:">
+                    :label="$t('file.fileSemicolon')">
                     <v-select
                         slot="field"
                         ref="fileSelect"
@@ -84,12 +84,12 @@
                         :close-on-select="true"
                         :show-labels="false"
                         @select="closeDropdown('fileSelect')"
-                        placeholder="Select file"></v-select>
+                        :placeholder="$t('file.selectFile')"></v-select>
                 </field>
 
-                <field 
+                <field
                     v-if="!markdown"
-                    label="Link target:">
+                    :label="$t('ui.linkTarget') + ':'">
                     <v-select
                         slot="field"
                         ref="targetSelect"
@@ -98,10 +98,11 @@
                         :custom-label="customTargetLabels"
                         :close-on-select="true"
                         :show-labels="false"
-                        @select="closeDropdown('targetSelect')"></v-select>
+                        @select="closeDropdown('targetSelect')"
+                        :placeholder="$t('ui.selectOption')"></v-select>
                 </field>
 
-                <field label="Link label:">
+                <field :label="$t('settings.linkLabel') + ':'">
                     <input
                         slot="field"
                         type="text"
@@ -110,9 +111,9 @@
                         class="link-popup-field-label" />
                 </field>
 
-                <field 
+                <field
                     v-if="!markdown"
-                    label="Link title attribute:">
+                    :label="$t('link.linkTitleAttribute')">
                     <input
                         slot="field"
                         type="text"
@@ -121,9 +122,9 @@
                         class="link-popup-field-title" />
                 </field>
 
-                <field 
+                <field
                     v-if="!markdown"
-                    label="Rel attribute:">
+                    :label="$t('link.linkRelAttribute')">
                     <switcher
                         slot="field"
                         label="nofollow"
@@ -138,9 +139,9 @@
                         v-model="rel.ugc" />
                 </field>
 
-                <field 
+                <field
                     v-if="!markdown && type === 'file'"
-                    label="Download attribute:">
+                    :label="$t('link.downloadAttribute')">
                     <switcher
                         slot="field"
                         label=""
@@ -152,13 +153,13 @@
                 <p-button
                     type="medium no-border-radius half-width"
                     @click.native="setLink">
-                    OK
+                    {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button
                     type="medium no-border-radius half-width cancel-popup"
                     @click.native="cancel">
-                    Cancel
+                    {{ $t('ui.cancel') }}
                 </p-button>
             </div>
         </div>
@@ -166,8 +167,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'link-popup',
     props: {
@@ -179,7 +178,7 @@ export default {
         return {
             postID: 0,
             isVisible: false,
-            simplemdeInstance: null,
+            easymdeInstance: null,
             type: 'post',
             post: null,
             tag: null,
@@ -219,7 +218,7 @@ export default {
             });
         },
         postPages () {
-            return this.$store.state.currentSite.posts.map(post => post.id);
+            return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
         },
         targetList () {
             return [ '-', '_blank' ];
@@ -238,13 +237,13 @@ export default {
     methods: {
         customTypeLabels (value) {
             switch (value) {
-                case 'post': return 'Post link';
-                case 'tag': return 'Tag link';
-                case 'tags': return 'Tags list link';
-                case 'author': return 'Author link';
-                case 'frontpage': return 'Frontpage link';
-                case 'external': return 'Custom link';
-                case 'file': return 'File from File Manager';
+                case 'post': return this.$t('post.postLink');
+                case 'tag': return this.$t('tag.tagLink');
+                case 'tags': return this.$t('tag.tagsListLink');
+                case 'author': return this.$t('author.authorLink');
+                case 'frontpage': return this.$t('ui.frontpageLink');
+                case 'external': return this.$t('ui.customLink');
+                case 'file': return this.$t('file.fileFromFileManager');
             }
         },
         customTagLabels (value) {
@@ -258,11 +257,11 @@ export default {
         },
         customTargetLabels (value) {
             if (value === '-') {
-                return 'The same window';
+                return this.$t('ui.sameWindow');
             }
 
             if (value === '_blank') {
-                return 'New window';
+                return this.$t('ui.newWindow');
             }
         },
         closeDropdown (refID) {
@@ -422,7 +421,7 @@ export default {
         },
         addLinkMarkdown (response) {
             if (response) {
-                this.simplemdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);  
+                this.easymdeInstance.codemirror.replaceSelections([`[${response.text}](${response.url})`]);
             }
         },
         addLinkHTML (response) {
@@ -470,24 +469,24 @@ export default {
                 tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
             }
         },
-        setSimpleMdeInstance (instance) {
-            this.simplemdeInstance = instance;
+        setEasyMdeInstance (instance) {
+            this.easymdeInstance = instance;
         },
         loadFiles () {
-            ipcRenderer.send('app-file-manager-list', {
+            mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: 'root-files'
             });
 
-            ipcRenderer.once('app-file-manager-listed', (event, data) => {
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                 this.filesList = data.map(file => file.name);
 
-                ipcRenderer.send('app-file-manager-list', {
+                mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
                     dirPath: 'media/files'
-                }); 
+                });
 
-                ipcRenderer.once('app-file-manager-listed', (event, data) => {
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
                     this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
                 });
             });
@@ -512,10 +511,10 @@ h1 {
     text-align: center;
 }
 
-.popup {   
+.popup {
     max-width: 60rem;
-    min-width: 60rem;   
-    padding: 4rem;   
+    min-width: 60rem;
+    padding: 4rem;
 
     &.popup-link-add {
         overflow: visible;
@@ -530,9 +529,8 @@ h1 {
 }
 
 .message {
-    color: var(--gray-4);
-    font-size: 1.8rem;   
-    padding: 0;    
+    font-size: 1.8rem;
+    padding: 0;
 }
 
 .buttons {

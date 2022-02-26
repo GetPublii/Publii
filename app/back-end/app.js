@@ -9,6 +9,7 @@ const fileExists = require('file-exists');
 const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
+const url = require('url');
 // Electron classes
 const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow } = require('electron');
 // Collection classes
@@ -16,6 +17,8 @@ const Posts = require('./posts.js');
 const Tags = require('./tags.js');
 const Authors = require('./authors.js');
 const Themes = require('./themes.js');
+const Languages = require('./languages.js');
+const Plugins = require('./plugins.js');
 // Helper classes
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
@@ -26,6 +29,8 @@ const SiteConfigMigrator = require('./migrators/site-config.js');
 // Default config
 const defaultAstAppConfig = require('./../config/AST.app.config');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+// Plugins packages
+const PluginsAPI = require('./modules/plugins/plugins-api.js')
 
 /**
  * Main app class
@@ -53,6 +58,8 @@ class App {
         this.sitesDir = null;
         this.app.sitesDir = null;
         this.db = false;
+        this.pluginsAPI = new PluginsAPI();
+        this.pluginsHelper = new Plugins(this);
 
         /*
          * Run the app
@@ -67,15 +74,17 @@ class App {
 
         this.loadAdditionalConfig();
         this.checkThemes();
-        
+
         let loadingSitesResult = this.loadSites();
-        
+
         if (!loadingSitesResult) {
             this.app.quit();
             return;
         }
-        
+
         this.loadThemes();
+        this.loadLanguages();
+        this.loadPlugins();
         this.initWindow();
         this.initWindowEvents();
     }
@@ -94,15 +103,25 @@ class App {
             fs.copySync(
                 path.join(__dirname, '..', 'default-files', 'default-themes').replace('app.asar', 'app.asar.unpacked'),
                 path.join(this.appDir, 'themes'),
-                { 
+                {
                     filter: this.skipSystemFiles,
                     dereference: true
                 }
             );
+            fs.mkdirSync(path.join(this.appDir, 'languages'));
+            fs.mkdirSync(path.join(this.appDir, 'plugins'));
         }
 
         if (!fs.existsSync(path.join(this.appDir, 'backups'))) {
             fs.mkdirSync(path.join(this.appDir, 'backups'));
+        }
+
+        if (!fs.existsSync(path.join(this.appDir, 'languages'))) {
+            fs.mkdirSync(path.join(this.appDir, 'languages'));
+        }
+
+        if (!fs.existsSync(path.join(this.appDir, 'plugins'))) {
+            fs.mkdirSync(path.join(this.appDir, 'plugins'));
         }
     }
 
@@ -130,7 +149,7 @@ class App {
                     fs.copySync(
                         path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
                         path.join(userThemesPath, file),
-                        { 
+                        {
                             filter: this.skipSystemFiles,
                             dereference: true
                         }
@@ -157,7 +176,7 @@ class App {
                         fs.copySync(
                             path.join(appThemesPath, file).replace('app.asar', 'app.asar.unpacked'),
                             path.join(userThemesPath, file),
-                            { 
+                            {
                                 filter: this.skipSystemFiles,
                                 dereference: true
                             }
@@ -283,9 +302,9 @@ class App {
 
     // Load websites
     loadSites() {
-        if (fs.ensureDirSync(this.sitesDir)) {
-            dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' existing or create it manually, then reopen the application.');
-            return false; 
+        if (!fs.existsSync(this.sitesDir)) {
+            dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' exists or create it manually, then reopen the application.');
+            return false;
         }
 
         let files = fs.readdirSync(this.sitesDir);
@@ -301,7 +320,6 @@ class App {
     // Load themes
     loadThemes() {
         let themesLoader = new Themes(this);
-
         this.themes = themesLoader.loadThemes();
         this.themesPath = normalizePath(path.join(this.appDir, 'themes'));
         this.dirPaths = {
@@ -309,6 +327,107 @@ class App {
             temp: normalizePath(path.join(this.appDir, 'temp')),
             logs: normalizePath(this.app.getPath('logs'))
         };
+    }
+
+    // Load languages
+    loadLanguages() {
+        let languagesLoader = new Languages(this);
+        this.languages = languagesLoader.loadLanguages();
+        this.languagesPath = normalizePath(path.join(this.appDir, 'languages'));
+        this.languagesDefaultPath = normalizePath(path.join(__dirname, '..', 'default-files', 'default-languages').replace('app.asar', 'app.asar.unpacked'));
+        this.languageLoadingError = false;
+
+        if (this.appConfig.language && this.appConfig.languageType) {
+            this.currentLanguageName = this.appConfig.language;
+            this.currentLanguageType = this.appConfig.languageType;
+            this.currentLanguageTranslations = languagesLoader.loadTranslations(this.appConfig.language, this.appConfig.languageType);
+            let languageConfig = languagesLoader.loadLanguageConfig(this.appConfig.language, this.appConfig.languageType);
+
+            if (languageConfig) {
+                this.currentLanguageMomentLocale = languageConfig.momentLocale;
+                this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
+            }
+            
+            if (
+                !this.currentLanguageTranslations ||
+                !languageConfig ||
+                (!this.currentWysiwygTranslation && this.currentLanguageName !== 'en-gb')
+            ) {
+                this.loadDefaultLanguage(languagesLoader, true);
+            }
+        } else {
+            this.loadDefaultLanguage(languagesLoader, false);
+        }
+    }
+
+    // Load plugins
+    loadPlugins() {
+        let pluginsLoader = new Plugins(this);
+        this.plugins = pluginsLoader.loadPlugins();
+        this.pluginsPath = normalizePath(path.join(this.appDir, 'plugins'));
+    }
+
+    // Load default language
+    loadDefaultLanguage (languagesLoader, errorOccurred = false) {
+        this.currentLanguageName = 'en-gb';
+        this.currentLanguageType = 'default';
+        this.currentLanguageTranslations = languagesLoader.loadTranslations('en-gb', 'default');
+        let languageConfig = languagesLoader.loadLanguageConfig('en-gb', 'default');
+        this.currentLanguageMomentLocale = languageConfig.momentLocale;
+        this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en-gb', 'default');
+
+        if (errorOccurred) {
+            this.languageLoadingError = true;
+        }
+    }
+
+    // Load language
+    loadLanguage (lang, type) {
+        if (type !== 'default' && type !== 'installed') {
+            type = 'default';
+            lang = 'en-gb';
+        }
+
+        let languagesLoader = new Languages(this);
+        this.currentLanguageName = lang.replace(/[^a-z\-\_\.]/gmi, '');
+        this.currentLanguageType = type;
+        this.currentLanguageTranslations = languagesLoader.loadTranslations(lang, type);
+        this.languageLoadingError = false;
+        let languageConfig = languagesLoader.loadLanguageConfig(lang, type);
+
+        if (languageConfig) {
+            this.currentLanguageMomentLocale = languageConfig.momentLocale;
+            this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(lang, type);
+        }
+
+        if (
+            !this.currentLanguageTranslations ||
+            !languageConfig ||
+            (!this.currentWysiwygTranslation && lang !== 'en-gb')
+        ) {
+            this.languageLoadingError = true;
+        }
+    }
+
+    // Set language
+    setLanguage (lang, type) {
+        if (type !== 'default' && type !== 'installed') {
+            type = 'default';
+            lang = 'en-gb';
+        }
+
+        this.appConfig.language = lang.replace(/[^a-z\-\_\.]/gmi, '');
+        this.appConfig.languageType = type;
+
+        try {
+            fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
+        } catch (e) {
+            if (this.hasPermissionsErrors(e)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // Read or create the application config
@@ -324,7 +443,7 @@ class App {
             let screens = screen.getAllDisplays();
             let width = screens[0].workAreaSize.width;
             let height = screens[0].workAreaSize.height;
-           
+
             for (let i = 0; i < screens.length; i++) {
                 if (screens[i].width < width) {
                     width = screens[i].width;
@@ -407,10 +526,9 @@ class App {
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
         windowParams.webPreferences = {
-            nodeIntegration: true,
-            webviewTag: true,
+            nodeIntegration: false,
+            contextIsolation: true,
             spellcheck: true,
-            enableRemoteModule: true,
             preload: path.join(__dirname, 'app-preload.js'),
             icon: path.join(__dirname, 'assets', 'icon.png')
         };
@@ -453,7 +571,14 @@ class App {
         // Register search shortcut listener
         this.mainWindow.webContents.on('before-input-event', (e, input) => {
             if (input.key === 'f' && (input.meta || input.control)) {
-                this.mainWindow.webContents.send('app-show-search-form');     
+                this.mainWindow.webContents.send('app-show-search-form');
+            } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
+                this.mainWindow.webContents.send('block-editor-undo');
+            } else if (
+                (input.key === 'z' && (input.meta || input.control) && input.shift) || 
+                (input.key === 'y' && (input.meta || input.control) && !input.shift)
+            ) {
+                this.mainWindow.webContents.send('block-editor-redo');
             }
         });
 
@@ -464,16 +589,16 @@ class App {
             if (typeof urlToOpen !== 'string') {
                 return false;
             }
-        
+
             let url;
-            let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:'];
-        
+            let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:', 'dweb:'];
+
             try {
                 url = new URL(urlToOpen);
             } catch (e) {
                 return false;
             }
-        
+
             if (allowedProtocols.indexOf(url.protocol) > -1) {
                 url = url.href.replace(/\s/gmi, '');
                 shell.openExternal(url);
@@ -488,19 +613,31 @@ class App {
         });
 
         this.mainWindow.webContents.on('did-finish-load', function() {
-            let appVersionInfo = {
+            let appData = {
                 version: self.versionData,
                 config: self.appConfig,
                 customConfig: {
                     tinymce: self.tinymceOverridedConfig
                 },
+                currentLanguage: {
+                    name: self.currentLanguageName,
+                    translations: self.currentLanguageTranslations,
+                    wysiwygTranslation: self.currentWysiwygTranslation,
+                    momentLocale: self.currentLanguageMomentLocale,
+                    languageLoadingError: self.languageLoadingError
+                },
+                languages: self.languages,
+                languagesPath: self.languagesPath,
+                languagesDefaultPath: self.languagesDefaultPath,
+                plugins: self.plugins,
+                pluginsPath: self.pluginsPath,
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,
                 dirs: self.dirPaths
             };
 
-            self.mainWindow.webContents.send('app-data-loaded', appVersionInfo);
+            self.mainWindow.webContents.send('app-data-loaded', appData);
         });
 
         if (process.platform === 'linux') {
@@ -511,7 +648,7 @@ class App {
             });
         }
 
-        this.mainWindow.on('close', function(e) {
+        this.mainWindow.on('close', async function(e) {
             let currentWindowURL = e.sender.webContents.getURL();
 
             if (
@@ -522,16 +659,27 @@ class App {
                 return;
             }
 
+            let messageText = await e.sender.webContents.mainFrame.top.executeJavaScript('window.app.translate("core.sureYouWantQuit")');
+
             const choice = dialog.showMessageBoxSync(this, {
                 type: 'question',
                 buttons: ['Yes', 'No'],
                 title: 'Confirm',
-                message: "Are you sure you want to quit? \nAll unsaved changes will be lost."
+                message: messageText
             });
-            
+
             if (choice === 1) {
                 e.preventDefault();
             }
+        });
+
+        // Create context menu
+        const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
+        let contextMenuBuilder = new ContextMenuBuilder(this.mainWindow.webContents);
+
+        this.mainWindow.webContents.on('context-menu', (event, params) => {
+            event.preventDefault();
+            contextMenuBuilder.showPopupMenu(params);
         });
 
         // Open Dev Tools

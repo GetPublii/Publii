@@ -2,17 +2,17 @@
     <div :class="{ 'post-editor-writers-panel': true, 'is-hidden': !isVisible }">
         <dl>
             <dt id="counter-words">{{ words }}</dt>
-            <dd>Words</dd>
+            <dd>{{ $t('post.words') }}</dd>
             <dt id="counter-unique-words">{{ uniqueWords }}</dt>
-            <dd>Unique words</dd>
+            <dd>{{ $t('post.uniqueWords') }}</dd>
             <dt id="counter-characters">{{ characters }}</dt>
-            <dd>Characters</dd>
+            <dd>{{ $t('post.characters') }}</dd>
             <dt id="counter-sentences">{{ sentences }}</dt>
-            <dd>Sentences</dd>
+            <dd>{{ $t('post.sentences') }}</dd>
             <dt id="counter-paragraphs">{{ paragraphs }}</dt>
-            <dd>Paragraphs</dd>
-            <dt id="counter-reading-time"><span v-pure-html="readingTime"></span><small>min</small></dt>
-            <dd>Reading Time</dd>
+            <dd>{{ $t('post.paragraphs') }}</dd>
+            <dt id="counter-reading-time"><span v-pure-html="readingTime"></span><small>{{ $t('post.min') }}</small></dt>
+            <dd>{{ $t('post.readingTime') }}</dd>
         </dl>
     </div>
 </template>
@@ -148,7 +148,7 @@ body[data-os="linux"] {
             dt {
                 font-size: 2.6rem;
             }
-            
+
             dd {
                 line-height: 1.1;
             }

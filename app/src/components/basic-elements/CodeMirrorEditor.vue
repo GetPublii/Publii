@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import beautify from 'js-beautify';
 import CodeMirror from 'codemirror';
 import cssMode from '../../assets/vendor/js/codemirror/css.js';
 import xmlMode from '../../assets/vendor/js/codemirror/xml.js';
@@ -51,9 +52,11 @@ export default {
         setTimeout(() => {
             this.initEditor();
         }, 0);
+
+        this.$bus.$on('source-code-editor-beautify-code', this.beautifyCode);
     },
     methods: {
-        initEditor: function() {
+        initEditor () {
             this.editor = CodeMirror.fromTextArea(
                 this.$refs['textarea'],
                 {
@@ -73,7 +76,16 @@ export default {
             );
 
             this.$bus.$emit(this.editorLoadedEventName, true);
+        },
+        beautifyCode () {
+            let editorContent = this.editor.getValue();
+            editorContent = beautify.html(editorContent, { indent_with_tabs: true });
+            this.editor.setValue(editorContent);
+            this.editor.refresh();
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('source-code-editor-beautify-code', this.beautifyCode);
     }
 }
 </script>
@@ -89,7 +101,7 @@ export default {
 
 // Search + Search and Replace popup in Code Mirror
 .CodeMirror-advanced-dialog {
-    background: var(--bg-primary);
+    background: var(--input-bg-light);
     border: none;
     bottom: 0;
     box-shadow: 0 0 0 1px var(--input-border-color);
@@ -101,9 +113,10 @@ export default {
     z-index: 102;
 
     & > .row {
+        clear: left;
         display: block;
         float: left;
-        width: calc(100% - 360px);
+        width: calc(100% - 340px);
 
         & > label {
             float: left;
@@ -117,7 +130,7 @@ export default {
             border-radius: 30px;
             box-shadow: none!important;            
             float: left;
-            font-family: $secondary-font;
+            font-family: var(--font-base);
             margin: 0;
             padding: 1rem 2rem;
             width: calc(100% - 80px);
@@ -144,22 +157,22 @@ export default {
         width: 350px;
 
         button {
-            background: var(--button-bg);
+            background: var(--button-secondary-bg);
             border: none;
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             box-shadow: none;
-            color: var(--white);
+            color: var(--button-secondary-color);
             cursor: pointer;
             display: inline-block;
             font: {
                 size: 1.4rem;
-                family: $secondary-font;
+                family: var(--font-base);
                 weight: 500;
             }
             height: 3.8rem;
             line-height: 3.8rem;
             margin: 2px 2px 30px;
-            padding: 0 1.4rem;
+            padding: 0 1rem;
             position: relative;
             transition: var(--transition);
             user-select: none;
@@ -172,8 +185,22 @@ export default {
             &:active,
             &:focus,
             &:hover {
-                background: var(--button-hover-bg);
-                color: var(--white);
+                background: var(--button-secondary-bg-hover);
+                color: var(--button-secondary-color-hover);
+            }
+
+            &:last-child {
+                background: transparent;
+                box-shadow: inset 0 0 0 2px var(--input-border-color);
+                color: var(--text-primary-color);
+
+                &:active,
+                &:focus,
+                &:hover {
+                    background: transparent;
+                    box-shadow: inset 0 0 0 2px var(--gray-3);
+                    color: var(--text-primary-color);
+                }
             }
         }
     }

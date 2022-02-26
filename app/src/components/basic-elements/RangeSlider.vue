@@ -107,7 +107,7 @@ export default {
 
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
-            background: var(--primary-color);
+            background: var(--color-primary);
             border: none;
             border-radius: 50%;
             box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
@@ -128,7 +128,7 @@ export default {
         }
 
         &:focus::-webkit-slider-runnable-track {
-            background: rgba(var(--primary-color-rgb), .5);
+            background: rgba(var(--color-primary-rgb), .5);
             outline: none;
         }
     }

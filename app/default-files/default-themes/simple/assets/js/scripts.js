@@ -536,74 +536,13 @@ if (searchButton) {
     }
 })();
 
-// Back to Top - by CodyHouse.co on MIT license
-(function(){    
-	var backTop = document.getElementsByClassName('js-footer__bttop')[0],		
-		offset = 600,		
-		offsetOpacity = 1200,
-		scrollDuration = 50,
-		scrolling = false;
-	if( backTop ) {		
-		window.addEventListener("scroll", function(event) {
-			if( !scrolling ) {
-				scrolling = true;
-				(!window.requestAnimationFrame) ? setTimeout(checkBackToTop, 250) : window.requestAnimationFrame(checkBackToTop);
-			}
-		});
-		backTop.addEventListener('click', function(event) {
-			event.preventDefault();
-			(!window.requestAnimationFrame) ? window.scrollTo(0, 0) : scrollTop(scrollDuration);
-		});
+// Back to Top 
+var backtotop = document.getElementById("js-back-to-top");
+window.addEventListener('scroll', function (e) {
+	y = window.scrollY;
+	if (y > 400) {
+		backtotop.classList.add("is-visible");
+	} else {
+		backtotop.classList.remove("is-visible");
 	}
-
-	function checkBackToTop() {
-		var windowTop = window.scrollY || document.documentElement.scrollTop;
-		( windowTop > offset ) ? addClass(backTop, 'footer__bttop--show') : removeClass(backTop, 'footer__bttop--show', 'footer__bttop--fade-out');
-		( windowTop > offsetOpacity ) && addClass(backTop, 'footer__bttop--fade-out');
-		scrolling = false;
-	}
-	
-	function scrollTop(duration) {
-	    var start = window.scrollY || document.documentElement.scrollTop,
-	        currentTime = null;
-	        
-	    var animateScroll = function(timestamp){
-	    	if (!currentTime) currentTime = timestamp;        
-	        var progress = timestamp - currentTime;
-	        var val = Math.max(Math.easeInOutQuad(progress, start, -start, duration), 0);
-	        window.scrollTo(0, val);
-	        if(progress < duration) {
-	            window.requestAnimationFrame(animateScroll);
-	        }
-	    };
-
-	    window.requestAnimationFrame(animateScroll);
-	}
-
-	Math.easeInOutQuad = function (t, b, c, d) {
- 		t /= d/2;
-		if (t < 1) return c/2*t*t + b;
-		t--;
-		return -c/2 * (t*(t-2) - 1) + b;
-	};
-    
-	function hasClass(el, className) {
-	  	if (el.classList) return el.classList.contains(className);
-	  	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
-	}
-	function addClass(el, className) {
-		var classList = className.split(' ');
-	 	if (el.classList) el.classList.add(classList[0]);
-	 	else if (!hasClass(el, classList[0])) el.className += " " + classList[0];
-	 	if (classList.length > 1) addClass(el, classList.slice(1).join(' '));
-	}
-	function removeClass(el, className) {
-		var classList = className.split(' ');
-	  	if (el.classList) el.classList.remove(classList[0]);	
-	  	else if(hasClass(el, classList[0])) {
-	  		var reg = new RegExp('(\\s|^)' + classList[0] + '(\\s|$)');
-	  		el.className=el.className.replace(reg, ' ');
-	  	}
-	  	if (classList.length > 1) removeClass(el, classList.slice(1).join(' '));
-	}
-})();
+});

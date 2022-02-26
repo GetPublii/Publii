@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import { shell } from 'electron'
-
 export default {
     name: 'topbar-dropdown-item',
     props: [
@@ -42,7 +40,7 @@ export default {
     methods: {
         openExternalLink (e) {
             e.preventDefault();
-            shell.openExternal(this.path);
+            mainProcessAPI.shellOpenExternal(this.path);
         }
     }
 }
@@ -51,10 +49,17 @@ export default {
 <style lang="scss" scoped>
 li {
     & > a {
+        color: var(--link-invert-color);
         display: block;
         font-weight: 400;
         padding: .5rem 3rem;
         white-space: nowrap;
+
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-invert-color-hover);
+        }
     }
 }
 </style>

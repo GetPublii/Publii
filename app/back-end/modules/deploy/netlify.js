@@ -119,7 +119,7 @@ class Netlify {
 
         setTimeout(function () {
             process.kill(process.pid, 'SIGTERM');
-        }, 1000); 
+        }, 1000);
     }
 
     onProgress(currentFile) {
@@ -179,7 +179,9 @@ class Netlify {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Request timeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
             }
         }, 10000);

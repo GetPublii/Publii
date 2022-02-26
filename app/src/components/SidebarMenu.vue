@@ -29,35 +29,35 @@ export default {
 
             return [{
                 icon: 'posts',
-                label: 'Posts',
+                label: this.$t('ui.posts'),
                 url: '/site/' + siteName + '/posts/'
             }, {
                 icon: 'tags',
-                label: 'Tags',
+                label: this.$t('ui.tags'),
                 url: '/site/' + siteName + '/tags/'
             }, {
                 icon: 'menus',
-                label: 'Menus',
+                label: this.$t('ui.menus'),
                 url: '/site/' + siteName + '/menus/'
             }, {
                 icon: 'authors',
-                label: 'Authors',
+                label: this.$t('ui.authors'),
                 url: '/site/' + siteName + '/authors/'
             }, {
                 icon: 'themes',
-                label: 'Theme',
+                label: this.$t('ui.theme'),
                 url: '/site/' + siteName + '/settings/themes/'
             }, {
                 icon: 'settings',
-                label: 'Site settings',
+                label: this.$t('settings.siteSettings'),
                 url: '/site/' + siteName + '/settings/'
             }, {
                 icon: 'server',
-                label: 'Server',
+                label: this.$t('ui.server'),
                 url: '/site/' + siteName + '/settings/server/'
             }, {
                 icon: 'tools',
-                label: 'Tools',
+                label: this.$t('ui.tools'),
                 url: '/site/' + siteName + '/tools/'
             }];
         }
@@ -93,27 +93,27 @@ export default {
     padding: 0;
 
     a {
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--sidebar-link-color);
         display: block;
-        font-size: 1.6rem;
-        font-weight: 400;
-        line-height: 3.2rem;
-        margin: 0 0;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-normal);
+        line-height: 2;
+        margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: 0.85rem 0.8rem;   
+        padding: .825rem .6rem;
         transition: var(--transition);
 
         &:active,
         &:focus,
         &:hover {
-            background: var(--sidebar-link-hover-bg);
-            color: var(--sidebar-link-hover-color);
+            background: var(--sidebar-link-bg-hover);
+            color: var(--sidebar-link-color-hover);
             opacity: 1;
-            
+
             svg {
-               fill: var(--sidebar-link-icon-hover);       
+               fill: var(--sidebar-link-icon-hover);
             }
         }
     }
@@ -121,17 +121,19 @@ export default {
     svg {
         fill: var(--sidebar-link-icon);
         left: 1rem;
-        margin-right: 2.6rem;
+        margin-right: 2.4rem;
         position: relative;
         transition: var(--transition);
-        top: .4rem;
+        top: .5rem;
     }
 
     &-item {
+        margin: 0 0 .2rem;
+
         &.is-active {
             a {
-                background: var(--sidebar-link-active-bg);
-                color: var(--sidebar-link-active-color);
+                background: var(--sidebar-link-bg-active);
+                color: var(--sidebar-link-color-active);
                 opacity: 1;
             }
         }
@@ -148,4 +150,5 @@ export default {
         }
     }
 }
+
 </style>

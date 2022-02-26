@@ -5,9 +5,9 @@
         <span
             v-if="logoColor"
             class="site-logo-bg">
-            <icon                 
-                :name="logoIcon"               
-                size="s" 
+            <icon
+                :name="logoIcon"
+                size="s"
                 iconset="svg-map-site"/>
         </span>
 
@@ -17,12 +17,12 @@
                 {{ siteName }}
             </strong>
         </span>
-        
+
         <span
             class="site-logo-icon-open"
-            name="sidebar-arrow">                        
+            name="sidebar-arrow">
         </span>
-        
+
     </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
         },
         siteName: function() {
             if(!this.siteIsLoaded) {
-                return 'Select a website';
+                return this.$t('ui.selectWebsite');
             }
 
             return this.$store.state.currentSite.config.displayName;
@@ -69,9 +69,9 @@ export default {
         },
         linkTitle: function() {
             if(this.isOnline) {
-                return 'Visit your website';
+                return this.$t('sync.visitYourWebsite');
             } else {
-                return 'After the initial sync, your website will be available online';
+                return this.$t('sync.afterInitialSyncSiteWillBeAvailableOnline');
             }
         },
         siteLink: function() {
@@ -121,7 +121,7 @@ export default {
 @import '../scss/mixins.scss';
 
 .site-logo {
-    align-items: center;       
+    align-items: center;
     color: var(--sidebar-preview-btn-color);
     display: flex;
     padding: 2.5rem 4rem;
@@ -131,10 +131,10 @@ export default {
     &:active,
     &:focus,
     &:hover {
-        
+
         .site-logo-icon-open {
-            border-top-color: var(--sidebar-link-icon-hover);    
-            opacity: 1; 
+            border-top-color: var(--sidebar-link-icon-hover);
+            opacity: 1;
         }
     }
 
@@ -154,7 +154,7 @@ export default {
         display: flex;
         height: 20px;
         justify-content: center;
-        width: 20px;            
+        width: 20px;
     }
 
     &-name {
@@ -162,12 +162,12 @@ export default {
         width: calc(100% - 5rem);
     }
 
-    &-link {       
+    &-link {
         display: block;
-        font-size: 1.6rem;
-        font-weight: 500;
+        font-size: $app-font-base;
+        font-weight: var(--font-weight-semibold);
         margin: 0;
-        overflow: hidden;       
+        overflow: hidden;
         position: relative;
         text-overflow: ellipsis;
         transition: all .3s ease-out;
@@ -187,18 +187,18 @@ export default {
         border-color: var(--sidebar-link-icon) transparent transparent;
         border-style: solid;
         border-width: 5px;
-        opacity: 1;                     
-        cursor: pointer;                   
+        opacity: 1;
+        cursor: pointer;
         height: 5px;
         left: auto;
-        line-height: 1.1; 
+        line-height: 1.1;
         opacity: var(--sidebar-link-opacity);
         padding: 0;
         position: absolute;
         right: 4rem;
         width: 5px;
-        text-align: center;       
-        transition: var(--transition);        
+        text-align: center;
+        transition: var(--transition);
         top: calc(50% - 2px);
     }
 }

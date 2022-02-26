@@ -1,5 +1,7 @@
 <template>
-    <div class="empty-state">
+    <div 
+        v-if="theme"
+        class="empty-state">
         <img
             v-if="imageName"
             :src="imagePath"
@@ -47,13 +49,20 @@ export default {
         }
     },
     computed: {
-        imagePath: function() {
-            let theme = this.$root.getCurrentAppTheme();
-            return '../src/assets/svg/' + theme + '/' + this.imageName;
-        },
-        hasButtonSlot: function() {
+        hasButtonSlot () {
             return !!this.$slots['button'];
+        },
+        imagePath () {
+            return '../src/assets/svg/' + this.theme + '/' + this.imageName;
         }
+    },
+    data () {
+        return {
+            theme: ''
+        };
+    },
+    async mounted () {
+        this.theme = await this.$root.getCurrentAppTheme();
     }
 }
 </script>

@@ -4,9 +4,9 @@
             :src="thumbnail"
             class="theme-thumbnail"
             alt="">
-        
+
         <figcaption class="theme-name">
-            <h3> 
+            <h3>
                 {{ name }}
                 <span class="theme-version">
                     {{ version }}
@@ -15,9 +15,9 @@
             <a
                 href="#"
                 class="theme-delete"
-                title="Delete theme"
+                :title="$t('theme.deleteTheme')"
                 @click.stop.prevent="deleteTheme(name, directory)">
-                    <icon                   
+                    <icon
                         size="xs"
                         properties="not-clickable"
                         name="trash" />
@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'themes-list-item',
     props: [
@@ -51,16 +49,16 @@ export default {
     methods: {
         deleteTheme: function(themeName, themeDirectory) {
             let confirmConfig = {
-                message: 'Do you really want to remove the ' + themeName + ' theme?',
+                message: this.$t('theme.removeThemeMessage', themeName),
                 okClick: function() {
-                    ipcRenderer.send('app-theme-delete', {
+                    mainProcessAPI.send('app-theme-delete', {
                         name: themeName,
                         directory: themeDirectory
                     });
 
-                    ipcRenderer.once('app-theme-deleted', (event, data) => {
+                    mainProcessAPI.receiveOnce('app-theme-deleted', (data) => {
                         this.$bus.$emit('message-display', {
-                            message: 'Theme has been successfully removed.',
+                            message: this.$t('theme.removeThemeSuccessMessage'),
                             type: 'success',
                             lifeTime: 3
                         });
@@ -80,36 +78,42 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 
-.theme {    
+.theme {
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);      
+    height: 100%;
     margin: 0;
-    position: relative;        
-    
+    overflow: hidden;
+    padding: 1rem;
+    position: relative;
+    transition: var(--transition);
+    text-align: center;
+
     &-thumbnail {
-        border: 1px solid var(--gray-1);
-        border-radius: 4px;
         display: block;
-        height: auto;       
-        max-width: 100%;        
-        transition: var(--transition);        
+        height: auto;
+        max-width: 100%;
     }
 
-    &-delete {      
+    &-delete {
         background: var(--bg-primary);
         border-radius: 50%;
         height: 3rem;
-        display: inline-block;      
+        display: inline-block;
         position: absolute;
         right: 1.4rem;
-        text-align: center;        
-        width: 3rem;        
-        
+        text-align: center;
+        width: 3rem;
+
         & > svg {
              fill: var(--icon-secondary-color);
              transform: scale(.9);
              transition: var(--transition);
              vertical-align: middle;
         }
-        
+
         &:hover {
              & > svg {
                 fill: var(--warning);
@@ -118,19 +122,19 @@ export default {
         }
     }
 
-    &-name { 
+    &-name {
         align-items: center;
         background: var(--gray-1);
         border-radius: 0 0 4px 4px;
-        display: flex;        
+        display: flex;
         justify-content: space-between;
-        padding: 0 2rem; 
+        padding: 0 2rem;
         position: relative;
-        text-align: left;   
-        
+        text-align: left;
+
         & > h3 {
-             font-size: 1.5rem; 
-             font-weight: 500; 
+             font-size: 1.5rem;
+             font-weight: var(--font-weight-semibold);
              line-height: 1.4;
              margin: 1.2rem 0;
         }

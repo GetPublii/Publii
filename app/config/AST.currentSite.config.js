@@ -8,7 +8,7 @@ const AstCurrentSiteConfig = {
         icon: ''
     },
     domain: '',
-    language: 'en',
+    language: 'en-gb',
     spellchecking: false,
     advanced: {
         cssCompression: 1,
@@ -103,6 +103,7 @@ const AstCurrentSiteConfig = {
         customHeadCode: '',
         customHeadAmpCode: '',
         customBodyCode: '',
+        customCommentsCode: '',
         customFooterCode: '',
         customFooterAmpCode: '',
         gdpr: {

@@ -92,7 +92,7 @@ class GithubPages {
         if (this.deployment.siteConfig.domain.indexOf('github.io') === -1) {
             let cnameFilePath = path.join(self.deployment.inputDir, 'CNAME');
             let domainName = this.deployment.siteConfig.domain;
-            
+
             if (domainName.indexOf('//') > -1) {
                 domainName = domainName.split('//')[1];
             }
@@ -115,7 +115,12 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your website contains over 4000 items (' + numberOfFiles + ' files and directories). Currently our Github Pages implementation supports pages up to 4000 items'
+                        additionalMessage: {
+                            translation: 'core.server.tooManyFilesInfo',
+                            translationVars: {
+                                numberOfFiles: numberOfFiles
+                            }
+                        }
                     }
                 });
 
@@ -131,7 +136,13 @@ class GithubPages {
                             type: 'web-contents',
                             message: 'app-connection-error',
                             value: {
-                                additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                                additionalMessage: {
+                                    translation: 'core.server.requestLimitExceededInfo',
+                                    translationVars: {
+                                        remaining: parseInt(result.remaining, 10),
+                                        resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                                    }
+                                }
                             }
                         });
 
@@ -153,7 +164,7 @@ class GithubPages {
 
                 setTimeout(function () {
                     process.kill(process.pid, 'SIGTERM');
-                }, 1000); 
+                }, 1000);
             }
         });
 
@@ -163,7 +174,9 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Request timeout'
+                        additionalMessage: {
+                            translation: 'core.server.requestTimeout'
+                        }
                     }
                 });
             }
@@ -209,7 +222,9 @@ class GithubPages {
             if(result === null) {
                 this.waitForTimeout = false;
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Selected branch does not exist'
+                    message: {
+                        translation: 'core.server.branchDoesNotExist'
+                    }
                 });
 
                 return;
@@ -228,7 +243,9 @@ class GithubPages {
         setTimeout(function() {
             if(this.waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: 'Request timeout'
+                    message: {
+                        translation: 'core.server.requestTimeout'
+                    }
                 });
 
                 this.waitForTimeout = false;
@@ -252,7 +269,7 @@ class GithubPages {
             let sha = await this.createTree(finalTree);
             sha = await this.createCommit(sha, commitSHA);
             let result = await this.createReference(sha);
-            
+
             if(result === false) {
                 setTimeout(function () {
                     process.kill(process.pid, 'SIGTERM');
@@ -339,7 +356,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Get informations about the latest commit...'
+                message: 'core.server.getInfoAboutLatestCommit'
             }
         });
 
@@ -368,7 +385,7 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Retrieving handler of the remote tree of files...'
+                message: 'core.server.retrievingHandlerOfRemoteFilesTree'
             }
         });
 
@@ -389,7 +406,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Retrieving the remote tree of files...'
+                message: {
+                    translation: 'core.server.retrievingRemoteFilesTree'
+                }
             }
         });
 
@@ -411,7 +430,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 8,
-                message: 'Preparing tree of files to upload...'
+                message: {
+                    translation: 'core.server.preparingFilesTreeToUpload'
+                }
             }
         });
 
@@ -549,13 +570,19 @@ class GithubPages {
     async createBlobs(files, reuploadSession = false) {
         if (this.apiRateLimiting) {
             let result = await this.getAPIRateLimit();
-            
+
             if(result.remaining < this.filesToUpdate + 10) {
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'Your API request limit were exceed (' + parseInt(result.remaining, 10) + ' requests left). Please wait till (' + moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a') + ' UTC) and then try again.'
+                        additionalMessage: {
+                            translation: 'core.server.requestLimitExceededInfo',
+                            translationVars: {
+                                remaining: parseInt(result.remaining, 10),
+                                resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                            }
+                        }
                     }
                 });
 
@@ -615,7 +642,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'Creating the new remote tree of files...'
+                message: {
+                    translation: 'core.server.creatingNewRemoteFilesTree'
+                }
             }
         });
 
@@ -643,7 +672,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 95,
-                message: 'Creating the new remote tree of files...'
+                message: {
+                    translation: 'core.server.creatingNewRemoteFilesTree'
+                }
             }
         });
 
@@ -670,7 +701,9 @@ class GithubPages {
             message: 'app-uploading-progress',
             value: {
                 progress: 99,
-                message: 'Finishing the deployment process...'
+                message: {
+                    translation: 'core.server.finishingDeploymentProcess'
+                }
             }
         });
 

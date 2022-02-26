@@ -48,8 +48,8 @@
         }
 
         .tinymce-overlay {
-            border: 3px solid var(--primary-color);
-            background: rgba(var(--primary-color-rgb), .17);
+            border: 3px solid var(--color-primary);
+            background: rgba(var(--color-primary-rgb), .17);
             display: none;
             height: 100%;
             left: 0;
@@ -62,11 +62,11 @@
 
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
-                background: var(--primary-color);
+                background: var(--color-primary);
                 border-radius: 3px;
                 color: var(--white);
-                font-size: 1.6rem;
-                font-weight: 500;
+                font-size: $app-font-base;
+                font-weight: var(--font-weight-semibold);
                 height: auto;
                 left: 50%;
                 line-height: 1.5;
@@ -133,14 +133,7 @@
         
         .tox-tbtn {
             svg {
-                fill: var(--icon-primary-color);
-                transition: var(--transition);
-            }
-            
-            &:hover {
-                svg {
-                    fill: var(--icon-tertiary-color);
-                }
+                fill: var(--icon-tertiary-color);
             }
         }
 
@@ -235,8 +228,8 @@
     #link-toolbar,
     #inline-toolbar {
         align-items: center;
-        background: var(--input-bg);
-        border-radius: 4px;
+        background: var(--popup-bg);
+        border-radius: var(--border-radius);
         box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
         display: none;
         min-height: 44px;
@@ -294,9 +287,6 @@
             }
 
             &:hover {
-               svg {
-                  fill: var(--icon-tertiary-color);
-               }
 
                &::before {
                   opacity: 1;
@@ -305,8 +295,7 @@
             }
            
             svg {
-               fill: var(--icon-primary-color);
-               transition: var(--transition);
+               fill: var(--icon-tertiary-color);
             }
         }
 
@@ -322,7 +311,7 @@
             box-shadow: none;
             box-sizing: content-box;
             color: var(--icon-primary-color);
-            font: 400 1.6rem/1.3 $secondary-font;
+            font: 400 #{$app-font-base}/1.3 var(--font-base);
             margin-left: 15px;
             max-width: 150px !important;
             min-width: 125px;
@@ -387,7 +376,7 @@ body {
             background-color: var(--popup-bg);
             border: none;
             border-radius: .6rem;            
-            font-size: 1.6rem;
+            font-size: $app-font-base;
             font-weight: 400;
             min-width: 62rem;
             overflow: hidden;
@@ -406,7 +395,7 @@ body {
             &__title {
                 color: var(--text-primary-color);
                 font-size: 1.8rem;
-                font-weight: 500;
+                font-weight: var(--font-weight-semibold);
                 margin: 0 auto;
                 text-align: center;
                 text-transform: none;
@@ -433,7 +422,7 @@ body {
 
                         font: {
                             size: 1.5rem;
-                            family: $secondary-font;
+                            family: var(--font-base);
                             weight: 500;
                         }
 
@@ -454,7 +443,7 @@ body {
                         &:focus,
                         &:hover,
                         &.button-active {
-                            background: var(--button-hover-bg);
+                            background: var(--button-bg-hover);
                             color: var(--white);
                         }
                         
@@ -471,7 +460,7 @@ body {
                             &:active,
                             &:focus,
                             &:hover {
-                                background: var(--popup-btn-cancel-hover-bg);
+                                background: var(--popup-btn-cancel-bg-hover);
                                 color: var(--popup-btn-cancel-hover-color);
                             }
                         }
@@ -495,7 +484,7 @@ body {
                         padding: 0.3rem 0.1rem;   
                         
                         &:hover {
-                            color: var(--tab-active-bg);
+                            color: var(--tab-active-color); 
                         }
 
                         &:focus {
@@ -503,8 +492,8 @@ body {
                         }
 
                         &--active {
-                            border-color: var(--tab-active-bg);
-                            color: var(--tab-active-bg);  
+                            border-color: var(--button-tertiary-bg);
+                            color: var(--tab-active-color);  
                         }
                     }
                 }
@@ -515,11 +504,16 @@ body {
         .tox-toolbar-label {
             color: var(--label-color);
             font-size: 1.5rem;
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             line-height: 2.6;
         }
 
+        .tox-checkbox__label {
+            font-size: 1.5rem;
+        }
+
         .tox-selectfield select,
+        .tox-listboxfield .tox-listbox--select,
         .tox-textarea,
         .tox-textfield,
         .tox-toolbar-textfield {
@@ -528,12 +522,20 @@ body {
             border-radius: 3px;
             box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
-            font: 400 1.6rem/1.5 $secondary-font;
+            font: 400 #{$app-font-base}/1.5 var(--font-base);
             outline: none;
             padding: 1.2rem 1.8rem;
 
             &:focus {
+                background-color: var(--input-bg);
                 box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+            }
+        }
+
+        .tox-listboxfield .tox-listbox--select {
+            &:focus {
+                background-color: var(--input-bg);
+                box-shadow: inset 0 0 0 1px var(--input-border-color);
             }
         }
         
@@ -553,10 +555,15 @@ body {
                 border-color: transparent;
                 color: var(--icon-secondary-color);
             }
-        }        
+        }   
+        
+        .tox-listbox__select-chevron svg {
+            fill: var(--icon-primary-color); 
+        }
         
         .tox-tbtn {
             color: var(--text-primary-color);
+            cursor: pointer;
             margin: 2px 2px 3px 0;
             transition: var(--transition);
             
@@ -569,7 +576,7 @@ body {
             &:hover,
             &--enabled,
             &--enabled:hover {
-                background-color: var(--input-border-color);
+                background-color: var(--gray-6);
                 color: var(--text-primary-color);
                 
                 svg {
@@ -583,7 +590,11 @@ body {
                 svg {
                    fill: var(--icon-tertiary-color);
                 }
-            }                     
+            }  
+            
+            &__select-label {
+                cursor: pointer;
+            }
         }
         
         .tox-menu {
@@ -600,7 +611,7 @@ body {
                     
                     &--enabled {
                         background-color: var(--gray-1);
-                        color: var(--primary-color);
+                        color: var(--color-primary);
                     }
                     
                     &--active {
@@ -639,6 +650,11 @@ body {
                     }
                 }
                 
+                .tox-collection__item--enabled {
+                    background-color: var(--input-bg-light);
+                    color: var(--text-primary-color);
+                }
+
                 .tox-collection__group {
                     border-color: var(--border-light-color);
                 }
@@ -647,7 +663,7 @@ body {
         
        .tox-checkbox__icons {
            .tox-checkbox-icon__indeterminate svg {
-              fill: var(--primary-color); 
+              fill: var(--color-primary); 
            }
            
            .tox-checkbox-icon__unchecked svg {
@@ -655,7 +671,7 @@ body {
            }
            
            .tox-checkbox-icon__checked svg {
-               fill: var(--primary-color); 
+               fill: var(--color-primary); 
            }
         }
         
@@ -671,29 +687,29 @@ body {
         .tox-pop {
             
             &__dialog {
-                background: var(--input-bg);
-                border: 1px solid var(--input-bg);
+                background: var(--popup-bg);
+                border: 1px solid var(--popup-bg);
                 border-radius: 4px;
                 box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
             }
             
             &.tox-pop--bottom {
                 &::before {
-                    border-color: var(--input-bg) transparent transparent transparent;
+                    border-color: var(--popup-bg) transparent transparent transparent;
                 }
                 
                 &::after {
-                    border-color: var(--input-bg) transparent transparent transparent;
+                    border-color: var(--popup-bg) transparent transparent transparent;
                 }
             }
             
             &.tox-pop--top {
                 &::before {
-                    border-color: transparent transparent var(--input-bg) transparent;
+                    border-color: transparent transparent var(--popup-bg) transparent;
                 }
                 
                 &::after {
-                    border-color: transparent transparent var(--input-bg) transparent;
+                    border-color: transparent transparent var(--popup-bg) transparent;
                 }
             }         
             
@@ -715,6 +731,21 @@ body {
                color: var(--text-light-color) !important;
             }
         }    
+
+        .tox-color-input span {
+            top: 11px;
+        }
+
+        .tox-swatches__picker-btn {
+
+            &:hover {
+               background: none;
+            }
+
+            svg {
+               fill: var(--icon-tertiary-color)
+            }
+        }  
     }
 }
 
@@ -753,7 +784,7 @@ body[data-os="win"] {
 
         &:active,
         &:focus {
-            color: var(--primary-color);
+            color: var(--color-primary);
         }
 
         &:hover {
@@ -764,7 +795,7 @@ body[data-os="win"] {
 }
 
 .tinymce-iframe {
-    font-size: 1.6rem;
+    font-size: $app-font-base;
     margin: 2rem auto;
     max-width: 1024px;
 }
@@ -796,7 +827,7 @@ body[data-os="win"] {
             &:focus,
             &:hover {
                 background: var(--white) !important;
-                color: var(--gray-5) !important;
+                color: var(--icon-primary-color) !important;
             }
 
             i {
@@ -807,7 +838,7 @@ body[data-os="win"] {
 
         .tox-title {
             color: $color-4;
-            font-family: $secondary-font !important;
+            font-family: var(--font-base) !important;
             font-size: 1.8rem !important;
             font-weight: 600 !important;
             text-align: center;
@@ -840,7 +871,7 @@ body[data-os="win"] {
                 border-radius: 0 0 0 .6rem !important;
                 box-shadow: none !important;
                 color: var(--white) !important;
-                font-size: 1.6rem;
+                font-size: $app-font-base;
                 height: 5.6rem;
                 left: 0 !important;
                 line-height: 5.6rem;
@@ -852,7 +883,7 @@ body[data-os="win"] {
                 }
 
                 & > button {
-                    font-size: 1.6rem;
+                    font-size: $app-font-base;
                 }
 
                 &.tox-disabled > button {
@@ -895,7 +926,7 @@ body[data-os="win"] {
         box-shadow: inset 0 0 0 1px $color-8;
         box-sizing: border-box;
         color: var(--text-primary-color);
-        font: 400 1.6rem/1.5 $secondary-font;
+        font: 400 #{$app-font-base}/1.5 var(--font-base);
         height: 4.8rem;
         outline: none;
         padding: 1.2rem 1.8rem;

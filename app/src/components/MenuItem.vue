@@ -3,7 +3,7 @@
         :class="cssClasses"
         :data-id="id"
         :title="titleTooltip">
-        <div class="menu-item-wrapper">            
+        <div class="menu-item-wrapper">
             <span class="menu-item-label">
                 {{ label }}
 
@@ -13,7 +13,7 @@
                     size="xs"
                     class="removed-icon"
                     primary-color="color-3"
-                    title="Linked item is not rendered (empty tag/author page), not exists or is trashed" />
+                    :title="$t('menu.likedItemError')" />
 
                 <icon
                     v-if="isDraft"
@@ -21,7 +21,7 @@
                     size="xs"
                     class="draft-icon"
                     primary-color="color-7"
-                    title="This post is a draft" />
+                    :title="$t('post.thisPostIsADraft')" />
 
                 <icon
                     v-if="isHidden"
@@ -29,13 +29,23 @@
                     name="hidden-post"
                     class="hidden-icon"
                     primaryColor="color-7"
-                    title="This menu item is hidden" />
+                    :title="$t('menu.menuItemIsHidden')" />
             </span>
 
             <a
                 href="#"
+                class="menu-item-duplicate"
+                :title="$t('menu.duplicateThisMenuItem')"
+                @click.prevent="duplicateMenuItem">
+                <icon
+                    name="duplicate"
+                    size="xs" />
+            </a>
+
+            <a
+                href="#"
                 class="menu-item-remove"
-                title="Delete this menu item"
+                :title="$t('menu.deleteThisMenuItem')"
                 @click.prevent="removeMenuItem">
                 <icon
                     name="trash"
@@ -45,28 +55,28 @@
             <a
                 href="#"
                 class="menu-item-edit"
-                title="Edit this menu item"
-                @click.prevent="editMenuItem">Edit</a>
+                :title="$t('menu.editThisMenuItem')"
+                @click.prevent="editMenuItem">{{ $t('ui.edit') }}</a>
 
             <a
                 v-if="!isHidden"
                 href="#"
                 class="menu-item-hide"
-                title="Hide this menu item"
-                @click.prevent="hideMenuItem">Hide</a>
+                :title="$t('menu.hideThisMenuItem')"
+                @click.prevent="hideMenuItem">{{ $t('ui.hide') }}</a>
 
             <a
                 v-if="isHidden"
                 href="#"
                 class="menu-item-show"
-                title="Show this menu item"
-                @click.prevent="showMenuItem">Show</a>
+                :title="$t('menu.showThisMenuItem')"
+                @click.prevent="showMenuItem">{{ $t('ui.show') }}</a>
 
             <a
                 href="#"
                 class="menu-item-submenu"
-                title="Add submenu item"
-                @click.prevent="addSubmenuItem()">Add submenu</a>
+                :title="$t('menu.addSubmenuItem')"
+                @click.prevent="addSubmenuItem()">{{ $t('menu.addSubmenu') }}</a>
         </div>
 
         <draggable
@@ -81,10 +91,11 @@
             @add="listItemAdded">
             <menu-item
                 v-for="(item, index) in items"
-                :key="getUID()"
+                :key="'item-' + index + '-' + getUID()"
                 :itemData="item"
                 :itemMenuID="menuID"
-                :itemOrder="index" />
+                :itemOrder="index"
+                :editedID="editedID" />
         </draggable>
     </li>
 </template>
@@ -96,6 +107,10 @@ import Draggable from 'vuedraggable';
 export default {
     name: 'menu-item',
     props: {
+        editedID: {
+            type: [Boolean, Number],
+            required: false
+        },
         itemData: {
             type: Object,
             required: true
@@ -131,6 +146,7 @@ export default {
         cssClasses () {
             return {
                 'menu-item': true,
+                'is-edited': this.editedID === this.id,
                 'is-invalid': this.isInvalid,
                 'is-draft': this.isDraft
             };
@@ -143,11 +159,11 @@ export default {
         },
         titleTooltip () {
             if (this.isInvalid) {
-                return "Linked item is not rendered (empty tag/author page), not exists or is trashed";
+                return this.$t('menu.likedItemError');
             }
 
             if (this.isDraft) {
-                return "Linked item is a draft";
+                return this.$t('menu.likedItemIsADraft');
             }
 
             return false;
@@ -259,8 +275,8 @@ export default {
             }, 50);
         },
         editMenuItem () {
-            this.$bus.$emit('show-menu-item-editor-from-submenu');
-
+            this.$bus.$emit('show-menu-item-editor-from-submenu', this.id);
+            
             setTimeout(() => {
                 this.$bus.$emit('show-menu-item-editor', {
                     menuID: this.menuID,
@@ -276,9 +292,17 @@ export default {
                 });
             }, 50);
         },
+        duplicateMenuItem () {
+            this.$store.commit('duplicateMenuItem', {
+                menuID: this.menuID,
+                menuItemID: this.id
+            });
+
+            this.$bus.$emit('save-new-menu-structure');
+        },
         removeMenuItem () {
             this.$bus.$emit('confirm-display', {
-                message: 'Do you really want to remove selected menu item?',
+                message: this.$t('menu.menuIemsRemoveMessage'),
                 okClick: this.removeSelectedMenuItem
             });
         },
@@ -313,7 +337,7 @@ export default {
         },
         hideMenuItem () {
             this.isHidden = true;
-            
+
             this.$store.commit('hideMenuItem', {
                 itemID: this.id,
                 menuID: this.menuID
@@ -348,7 +372,7 @@ li {
     }
 
     &.is-ghost {
-        border: 1px dashed var(--input-border-color);
+        border: 1px dashed #42a5f5;
 
         & > .menu-item-wrapper {
             opacity: 0;
@@ -380,30 +404,40 @@ li {
         top: 2px;
     }
 
+    &.is-edited {
+        & > div {
+            background: var(--collection-bg-hover);
+            border-left: 3px solid var(--color-primary);
+        }
+    }
+
     & > div {
-        background: var(--gray-1);
-        border-left: 2px solid var(--input-border-color);
+        background: var(--collection-bg);
+        border: 1px solid var(--border-light-color);
+        border-left: 3px solid var(--input-border-color);
         border-radius: 3px;
         cursor: move !important;
         padding: 4 * $spacing 10 * $spacing;
         position: relative;
 
         &:hover {
-            background: var(--gray-6);  
-        }
-        
-        .menu-item-label {
-            color: var(--text-primary-color);
-            margin-right: 2rem;           
+            background: var(--collection-bg-hover);
+            border-left: 3px solid var(--color-primary);
         }
 
-        .menu-item-remove { 
+        .menu-item-label {
+            color: var(--text-primary-color);
+            margin-right: 2rem;
+        }
+
+        .menu-item-remove,
+        .menu-item-duplicate {
             background: var(--bg-primary);
             position: relative;
-            border-radius: 50%;            
+            border-radius: 50%;
             cursor: pointer;
-            display: inline-block;            
-            height: 3rem;           
+            display: inline-block;
+            height: 3rem;
             padding: 0;
             position: absolute;
             right: 1.5rem;
@@ -419,7 +453,7 @@ li {
                 color: var(--headings-color)
             }
 
-            &:hover {                  
+            &:hover {
                 & > svg {
                    fill: var(--warning);
                    transform: scale(1);
@@ -427,7 +461,7 @@ li {
             }
 
             svg {
-                fill: var(--icon-secondary-color);               
+                fill: var(--icon-secondary-color);
                 height: 1.6rem;
                 pointer-events: none;
                 transform: scale(.9);
@@ -436,28 +470,39 @@ li {
                 width: 1.6rem;
             }
         }
-        
+
+        .menu-item-duplicate {
+            right: 5rem;
+
+            &:hover {
+                & > svg {
+                   fill: currentColor;
+                   transform: scale(1);
+               }
+            }
+        }
+
         .menu-item-edit,
         .menu-item-hide,
         .menu-item-show,
         .menu-item-submenu {
-            color: var(--link-secondary-color);
+            color: var(--link-primary-color);
             font-size: 1.4rem;
             padding: 1rem .5rem;
-            
+
             &:active,
             &:focus,
             &:hover {
-                color: var(--link-secondary-hover-color);
+                color: var(--link-primary-color-hover);
             }
         }
-        
+
         .menu-item-edit,
         .menu-item-hide,
-        .menu-item-show {            
+        .menu-item-show {
             padding-right: 1rem;
             position: relative;
-            
+
             &::after {
                 background: var(--input-border-color);
                 content: "";
@@ -469,7 +514,7 @@ li {
                 transform: translate(0, -50%);
                 width: 1px;
             }
-        }        
+        }
 
         select {
             height: 2.4rem;
@@ -478,7 +523,8 @@ li {
 
     ol {
         list-style-type: none;
-        padding-left: 10 * $spacing;
+        padding-left: 0;
+        margin-left: 15 * $spacing;
 
         & > li:first-child {
             margin-top: 3 * $spacing;

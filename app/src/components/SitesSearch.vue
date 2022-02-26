@@ -7,7 +7,7 @@
             properties="is-small"
             ref="search-input"
             :spellcheck="false"
-            placeholder="Search..."
+            :placeholder="$t('ui.search')"
             tabindex="0" />
         <span
             v-if="value !== ''"
@@ -37,16 +37,16 @@ export default {
 @import '../scss/variables.scss';
 
 .sites-popup {
-    .search {   
+    .search {
         position: relative;
 
-        .input-wrapper {              
+        .input-wrapper {
             padding: 1rem;
 
             input {
-                background: var(--gray-1);
+                background: var(--input-bg-lightest);
                 border-radius: 30px;
-                box-shadow: none!important;               
+                box-shadow: none!important;
                 padding: 1.2rem 4.4rem 1.2rem 6rem!important;
             }
 
@@ -65,14 +65,14 @@ export default {
         font-size: 2.4rem;
         font-weight: 300;
         height: 3rem;
-        line-height: 1; 
+        line-height: 1;
         padding: 0;
         position: absolute;
         right: 3rem;
-        text-align: center;       
-        transition: all .3s ease-out;         
+        text-align: center;
+        transition: all .3s ease-out;
         top: 50%;
-        transform: translate(0, -50%);        
+        transform: translate(0, -50%);
         width: 3rem;
 
         &:active,
@@ -80,7 +80,7 @@ export default {
         &:hover {
             color: var(--icon-tertiary-color);
         }
-        
+
         &:hover {
             background: var(--input-border-color);
         }

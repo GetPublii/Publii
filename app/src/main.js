@@ -1,10 +1,11 @@
-import { ipcRenderer, remote, nativeTheme } from 'electron';
 import moment from 'moment';
 import Vue from 'vue';
 import store from './store/index';
 import router from './router';
+import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
+import 'prismjs';
 
 // Basic elements
 import Alert from './components/basic-elements/Alert';
@@ -42,8 +43,71 @@ import Tabs from './components/basic-elements/Tabs';
 import TextArea from './components/basic-elements/TextArea';
 import TextInput from './components/basic-elements/TextInput';
 import vSelect from '../node_modules/vue-multiselect/dist/vue-multiselect.min.js';
+import VuePrismEditor from 'vue-prism-editor/dist/VuePrismEditor.common';
+import 'vue-prism-editor/dist/VuePrismEditor.css';
+
+// Prism JS languages
+import 'prismjs/components/prism-markup-templating.min.js';
+import 'prismjs/components/prism-apacheconf.min.js';
+import 'prismjs/components/prism-aspnet.min.js';
+import 'prismjs/components/prism-bash.min.js';
+import 'prismjs/components/prism-basic.min.js';
+import 'prismjs/components/prism-batch.min.js';
+import 'prismjs/components/prism-c.min.js';
+import 'prismjs/components/prism-cpp.min.js';
+import 'prismjs/components/prism-csharp.min.js';
+import 'prismjs/components/prism-css.min.js';
+import 'prismjs/components/prism-dart.min.js';
+import 'prismjs/components/prism-docker.min.js';
+import 'prismjs/components/prism-elm.min.js';
+import 'prismjs/components/prism-git.min.js';
+import 'prismjs/components/prism-glsl.min.js';
+import 'prismjs/components/prism-go.min.js';
+import 'prismjs/components/prism-graphql.min.js';
+import 'prismjs/components/prism-haml.min.js';
+import 'prismjs/components/prism-handlebars.min.js';
+import 'prismjs/components/prism-haskell.min.js';
+import 'prismjs/components/prism-http.min.js';
+import 'prismjs/components/prism-ini.min.js';
+import 'prismjs/components/prism-java.min.js';
+import 'prismjs/components/prism-javascript.min.js';
+import 'prismjs/components/prism-json.min.js';
+import 'prismjs/components/prism-jsonp.min.js';
+import 'prismjs/components/prism-jsx.min.js';
+import 'prismjs/components/prism-kotlin.min.js';
+import 'prismjs/components/prism-latex.min.js';
+import 'prismjs/components/prism-less.min.js';
+import 'prismjs/components/prism-lisp.min.js';
+import 'prismjs/components/prism-lua.min.js';
+import 'prismjs/components/prism-makefile.min.js';
+import 'prismjs/components/prism-markdown.min.js';
+import 'prismjs/components/prism-matlab.min.js';
+import 'prismjs/components/prism-nasm.min.js';
+import 'prismjs/components/prism-nginx.min.js';
+import 'prismjs/components/prism-objectivec.min.js';
+import 'prismjs/components/prism-pascal.min.js';
+import 'prismjs/components/prism-perl.min.js';
+import 'prismjs/components/prism-php.min.js';
+import 'prismjs/components/prism-pug.min.js';
+import 'prismjs/components/prism-python.min.js';
+import 'prismjs/components/prism-r.min.js';
+import 'prismjs/components/prism-regex.min.js';
+import 'prismjs/components/prism-ruby.min.js';
+import 'prismjs/components/prism-sass.min.js';
+import 'prismjs/components/prism-scss.min.js';
+import 'prismjs/components/prism-scala.min.js';
+import 'prismjs/components/prism-sql.min.js';
+import 'prismjs/components/prism-swift.min.js';
+import 'prismjs/components/prism-twig.min.js';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/components/prism-vbnet.min.js';
+import 'prismjs/components/prism-visual-basic.min.js';
+import 'prismjs/components/prism-yaml.min.js';
 
 window.app = null;
+
+// i18n
+Vue.use(VueI18n);
 
 // DOMPurify configuration
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
@@ -75,7 +139,19 @@ Vue.directive('pure-html', {
     }
 });
 
-ipcRenderer.on('app-data-loaded', function (event, initialData) {
+// Directive for using with initial HTML code for contenteditable elements
+Vue.directive('initial-html', {
+    inserted: function (el, binding, vnode) {
+        el.innerHTML = binding.value;
+    }
+});
+
+mainProcessAPI.receive('app-data-loaded', function (initialData) {
+    // Set moment locale
+    if (initialData.currentLanguage.momentLocale) {
+        moment.locale(initialData.currentLanguage.momentLocale);
+    }
+
     // Add global Vue properties for commonly used libraries
     Vue.prototype.$moment = moment;
 
@@ -118,11 +194,20 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
     Vue.component('text-area', TextArea);
     Vue.component('text-input', TextInput);
     Vue.component('v-select', vSelect);
+    Vue.component('prism-editor', VuePrismEditor);
+
+    const i18n = new VueI18n({
+        locale: initialData.currentLanguage.name,
+        messages: {
+            [initialData.currentLanguage.name]: initialData.currentLanguage.translations
+        }
+    });
 
     // Init Publii front-end
-    window.app = new Vue({
+    new Vue({
         el: '#app',
         store,
+        i18n,
         router,
         render: h => h(App, {
             attrs: {
@@ -132,34 +217,91 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
         components: {
             'App': App
         },
+        computed: {
+            overridedCssVariables () {
+                return [
+                    '--editor-font-size: ' + this.$store.state.app.config.editorFontSize + 'px', 
+                    '--editor-font-family: ' + this.$store.state.app.config.editorFontFamily
+                ].join(';') + ';';
+            }
+        },
         data () {
             return {
                 skipThemeChangeEvents: false
             };
         },
-        mounted () {
-            this.setupAppTheme();
+        async mounted () {
+            await this.setupAppTheme();
+            
+            window.app = {
+                languageLoadingError: !!initialData.currentLanguage.languageLoadingError,
+                getSiteName: () => this.$store.state.currentSite.config.name,
+                getSiteDir: () => this.$store.state.currentSite.siteDir,
+                getSiteTheme: () => this.$store.state.currentSite.config.theme,
+                getThemeCustomElementsMode: () => this.$store.state.currentSite.themeSettings.customElementsMode,
+                getThemeCustomElements: () => this.$store.state.currentSite.themeSettings ? this.$store.state.currentSite.themeSettings.customElements : false,
+                spellcheckerIsEnabled: () => this.$store.state.currentSite.config.spellchecking,
+                wysiwygAdditionalValidElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements,
+                tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
+                getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
+                reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
+                writersPanelOpen: () => this.$bus.$emit('writers-panel-open'),
+                writersPanelRefresh: () => this.$bus.$emit('writers-panel-refresh'),
+                sourceCodeEditorShow: (content, editor) => this.$bus.$emit('source-code-editor-show', content, editor),
+                updateLinkEditor: (data) => this.$bus.$emit('update-link-editor', data),
+                updateGalleryPopup: (data) => this.$bus.$emit('update-gallery-popup', data),
+                hasPostEditorConfigOverride: () => this.$store.state.currentSite.themeSettings.extensions ? this.$store.state.currentSite.themeSettings.extensions.postEditorConfigOverride : false,
+                initLinkPopup: (data) => this.$bus.$emit('init-link-popup', data),
+                initLinkEditor: (iframe) => this.$bus.$emit('init-link-editor', iframe),
+                initInlineEditor: (customFormats) => this.$bus.$emit('init-inline-editor', customFormats),
+                updateInlineEditor: (data) => this.$bus.$emit('update-inline-editor', data),
+                galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback),
+                getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
+                translate: (phraseKey) => this.$t(phraseKey),
+                overridedCssVariables: () => this.overridedCssVariables
+            };
+
+            // Find issues with loading languages
+            if (window.app.languageLoadingError) {
+                window.app.languageLoadingError = false;
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('langs.languageLoadingError'),
+                    buttonStyle: 'danger'
+                });
+            }
+
+            // Object for plugins
+            let pluginsAPI = {
+                saveConfigFile: (fileName, fileContent) => this.pluginsApiSaveConfigFile(fileName, fileContent),
+                saveLanguageFile: (fileName, fileContent) => this.pluginsApiSaveLanguageFile(fileName, fileContent),
+                readConfigFile: (fileName) => this.pluginsApiReadConfigFile(fileName),
+                readLanguageFile: (fileName) => this.pluginsApiReadLanguageFile(fileName),
+                readThemeFile: (themeName, fileName) => this.pluginsApiReadThemeFile(themeName, fileName),
+                deleteConfigFile: (fileName) => this.pluginsApiDeleteConfigFile(fileName),
+                deleteLanguageFile: (fileName) => this.pluginsApiDeleteLanguageFile(fileName),
+                getThemesList: () => this.pluginsApiGetThemesList(),
+                getCurrentTheme: () => this.pluginsApiGetCurrentTheme()
+            };
+
+            // Make window.pluginsAPI immutable
+            window.pluginsAPI = Object.freeze(pluginsAPI);
         },
         methods: {
-            setupAppTheme () {
+            async setupAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'default') {
-                    remote.nativeTheme.themeSource = 'light';
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                 } else if (currentTheme === 'dark') {
-                    remote.nativeTheme.themeSource = 'dark';
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                 } else {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        currentTheme = 'dark';
-                    } else {
-                        currentTheme = 'default';
-                    }
+                    currentTheme = await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
                 document.querySelector('html').setAttribute('data-theme', currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
-                remote.nativeTheme.on('updated', () => {
+                mainProcessAPI.receive('app-theme-mode:changed', () => {
                     if (this.skipThemeChangeEvents) {
                         return;
                     }
@@ -167,20 +309,16 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                     this.$bus.$emit('app-theme-change');
                 });
             },
-            getCurrentAppTheme () {
+            async getCurrentAppTheme () {
                 let currentTheme = this.$store.state.app.theme;
 
                 if (currentTheme === 'system') {
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        return 'dark';
-                    } else {
-                        return 'default';
-                    }
-                } 
+                    return await mainProcessAPI.invoke('app-theme-mode:get-theme');
+                }
 
                 return currentTheme;
             },
-            toggleTheme () {
+            async toggleTheme () {
                 this.skipThemeChangeEvents = true;
                 let currentTheme = this.$store.state.app.theme;
                 let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
@@ -188,27 +326,22 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
 
                 if (currentTheme === 'dark') {
                     theme = 'dark';
-                    remote.nativeTheme.themeSource = 'dark';
+                    mainProcessAPI.invoke('app-theme-mode:set-dark');
                     currentTheme = 'dark';
                 } else if (currentTheme === 'default') {
                     theme = 'default';
-                    remote.nativeTheme.themeSource = 'light';
+                    mainProcessAPI.invoke('app-theme-mode:set-light');
                     currentTheme = 'default';
                 } else {
                     theme = 'system';
-                    remote.nativeTheme.themeSource = 'system';
+                    mainProcessAPI.invoke('app-theme-mode:set-system');
                     currentTheme = 'system';
-
-                    if (remote.nativeTheme.shouldUseDarkColors) {
-                        theme = 'dark';
-                    } else {
-                        theme = 'default';
-                    }
+                    theme = await mainProcessAPI.invoke('app-theme-mode:get-theme')
                 }
 
                 this.$store.commit('setAppTheme', currentTheme);
                 localStorage.setItem('publii-theme', currentTheme);
-                ipcRenderer.send('app-save-color-theme', currentTheme);
+                mainProcessAPI.send('app-save-color-theme', currentTheme);
 
                 for (let i = 0; i < iframes.length; i++) {
                     iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
@@ -219,6 +352,81 @@ ipcRenderer.on('app-data-loaded', function (event, initialData) {
                 setTimeout(() => {
                     this.skipThemeChangeEvents = false;
                 }, 500);
+            },
+            async pluginsApiSaveConfigFile (fileName, fileContent) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:save-config-file', {
+                    fileName, 
+                    siteName,
+                    pluginName,
+                    fileContent
+                });
+                return result;
+            },
+            async pluginsApiSaveLanguageFile (fileName, fileContent) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:save-language-file', {
+                    fileName, 
+                    siteName,
+                    pluginName,
+                    fileContent
+                });
+                return result;
+            },
+            async pluginsApiReadConfigFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-config-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            async pluginsApiReadLanguageFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-language-file', {
+                    fileName, 
+                    siteName
+                });
+                return result;
+            },
+            async pluginsApiReadThemeFile (themeName, fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let result = await mainProcessAPI.invoke('app-plugins-api:read-theme-file', {
+                    themeName,
+                    fileName, 
+                    siteName
+                });
+                return result;
+            },
+            async pluginsApiDeleteConfigFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:delete-config-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            async pluginsApiDeleteLanguageFile (fileName) {
+                let siteName = this.$store.state.currentSite.config.name;
+                let pluginName = this.$route.params.pluginname;
+                let result = await mainProcessAPI.invoke('app-plugins-api:delete-language-file', {
+                    fileName, 
+                    siteName,
+                    pluginName
+                });
+                return result;
+            },
+            pluginsApiGetThemesList () {
+                return JSON.parse(JSON.stringify(this.$store.state.currentSite.themes));
+            },
+            pluginsApiGetCurrentTheme () {
+                return this.$store.state.currentSite.config.theme;
             }
         },
         beforeDestroy () {

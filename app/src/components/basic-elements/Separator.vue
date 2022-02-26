@@ -1,6 +1,8 @@
 <template>
     <div :class="cssClasses" :id="anchor">
-        <div class="separator-wrapper">
+        <div 
+        class="separator-wrapper"
+        :class="{ 'has-label': label }">
             <label v-if="label">{{ label }}</label>
         </div>
 
@@ -63,44 +65,38 @@ export default {
     &.small,
     &.medium,
     &.big {
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
+
+        & > .separator-wrapper {
+
+            & > label {
+               margin-bottom: -2rem;
+            }
+        }
     }
 
     &.small {
-        padding-top: 1rem;
+        padding-top: 2rem;
     }
 
     &.medium {
-        padding-top: 2rem;
+        padding-top: 3rem;
     }
 
     &.big {
         padding-top: 4rem;
     }
 
-    &.line > .separator-wrapper:before {
-        border-top: 2px solid var(--input-border-color);
-        content: "";
-        left: 0;
-        position: absolute;
-        top: 50%;
-        width: 100%;
-    }
-
     & > .separator-wrapper {
-        height: 2rem;
         position: relative;
 
         & > label {
-            background: var(--bg-primary);
             color: var(--headings-color);
+            display: block;
             font-size: 1.7rem;
             font-weight: 600;
-            padding-right: .75rem;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
+            padding: 3.5rem 0 0;
+
         }
     }
 
@@ -112,11 +108,54 @@ export default {
         font-style: italic;
         line-height: 1.4;
         opacity: .75;
-        // padding: .5rem 0 1rem 0;
     }
 
-    &.line > .note {
-        padding: 2.5rem 0 0 0;
+    &.line {
+        & > .separator-wrapper:before {
+            border-top: 4px solid var(--bg-site);
+            content: "";
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        & > .note {
+           padding: 2.5rem 0 0 0;
+        }
+    }
+}
+
+.field {
+    &:first-child {
+
+        .separator-wrapper {
+            
+            & > label {
+                padding-top: .5rem;
+            }
+
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
+
+.site-settings .tab  {
+
+    .separator:first-child {
+
+        .separator-wrapper {
+            
+            & > label {
+                padding-top: .5rem;
+            }
+
+            &::before {
+                display: none;
+            }
+        }
     }
 }
 </style>

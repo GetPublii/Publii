@@ -1,10 +1,10 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
         <span class="upload-path">
             <template v-if="!isUploading">{{ fileName }}</template>
-            <template v-if="isUploading">Loading image...</template>
+            <template v-if="isUploading">{{ $t('image.loadingImage') }}</template>
         </span>
 
         <input
@@ -19,7 +19,7 @@
             v-if="!isEmpty"
             href="#"
             class="upload-remove"
-            title="Remove image"
+            :title="$t('image.removeImage')"
             @click="remove">
             &times;
         </a>
@@ -27,10 +27,6 @@
 </template>
 
 <script>
-import normalizePath from 'normalize-path';
-import { ipcRenderer } from 'electron';
-import PreloaderImages from './../configs/preloaderImages';
-
 export default {
     name: 'small-image-upload',
     props: {
@@ -42,7 +38,19 @@ export default {
             default: () => false,
             type: Function
         },
+        onBeforeRemove: {
+            default: () => false,
+            type: Function
+        },
         anchor: {
+            default: '',
+            type: String
+        },
+        imageType: {
+            default: 'optionImages',
+            type: String
+        },
+        pluginDir: {
             default: '',
             type: String
         }
@@ -72,7 +80,7 @@ export default {
     mounted () {
         setTimeout(() => {
             if (this.value !== '') {
-                this.filePath = this.value;
+                this.fileName = this.value;
                 this.isEmpty = false;
             }
         }, 0);
@@ -80,6 +88,7 @@ export default {
     methods: {
         remove (e) {
             e.preventDefault();
+            this.onBeforeRemove(this.fileName);
             this.fileName = '';
             this.isEmpty = true;
             this.onRemove();
@@ -99,14 +108,21 @@ export default {
                 id: 'website',
                 site: this.$store.state.currentSite.config.name,
                 path: sourcePath,
-                imageType: 'optionImages'
+                imageType: this.imageType,
+                pluginDir: this.pluginDir
             };
 
-            ipcRenderer.send('app-image-upload', uploadData);
+            mainProcessAPI.send('app-image-upload', uploadData);
 
-            ipcRenderer.once('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+                let dir = 'media/website/';
+
+                if (this.imageType === 'pluginImages') {
+                    dir = 'media/plugins/' + this.pluginDir + '/';
+                }
+
                 this.isEmpty = false;
-                this.fileName = 'media/website/' + normalizePath(data.baseImage.newPath).split('/').pop();
+                this.fileName = dir + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
                 this.isUploading = false;
             });
         },
@@ -136,52 +152,54 @@ export default {
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 3rem;                   
-        line-height: 1.1; 
+        height: 3rem;
+        line-height: 1.1;
         padding: 0;
         position: absolute;
         right: 1.5rem;
-        text-align: center; 
-        top: 50%;  
-        transition: var(--transition);   
-        transform: translateY(-50%);             
+        text-align: center;
+        top: 50%;
+        transition: var(--transition);
+        transform: translateY(-50%);
         width: 3rem;
-                                
+
         &:active,
         &:focus,
         &:hover {
             color: var(--icon-tertiary-color);
         }
-        
+
         &:hover {
             background: var(--input-border-color);
-        }  
+        }
     }
 
     .upload-input {
         display: block;
+        overflow: hidden;
         position: absolute;
-        right: .7rem;
-        top: .7rem;
-        width: 16rem!important;
+        right: .6rem;
+        top: .6rem;
+        width: 12rem!important;
 
         &::-webkit-file-upload-button {
             -webkit-appearance: none;
-            background: var(--button-gray-bg);
-            border: 1px solid var(--button-gray-bg);
-            border-radius: 3px;
-            color: var(--white);
+            background: var(--button-secondary-bg);
+            border: 1px solid var(--button-secondary-bg);
+            border-radius: var(--border-radius);
+            color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: 500;
+            font-weight: var(--font-weight-semibold);
             font-size: 1.5rem;
-            padding: .5rem;
+            padding: .6rem;
             text-align: center;
-            width: 16rem;
+            width: 12rem;
             outline: none;
 
             &:hover {
-               background: var(--button-gray-hover-bg);
-               border-color: var(--button-gray-hover-bg);
+                background: var(--button-secondary-bg-hover);
+                border-color: var(--button-secondary-bg-hover);
+                color: var(--button-secondary-color-hover);
             }
         }
     }

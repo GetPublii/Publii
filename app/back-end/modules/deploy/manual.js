@@ -31,10 +31,16 @@ class ManualDeployment {
     }
 
     returnCatalog() {
-        let outputPath = this.deployment.siteConfig.deployment.manual.outputDirectory;
+        let outputDirName = slug(this.deployment.siteName) + '-files'; 
 
-        if(outputPath !== '') {
-            if(Utils.dirExists(outputPath)) {
+        if (!this.deployment.siteConfig.deployment.manual.outputDirectory) {
+            this.deployment.siteConfig.deployment.manual.outputDirectory = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        }
+
+        let outputPath = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, outputDirName);
+
+        if (outputPath !== '') {
+            if (Utils.dirExists(outputPath)) {
                 fs.emptyDirSync(outputPath);
             }
 
@@ -55,7 +61,7 @@ class ManualDeployment {
         );
 
         if(this.deployment.siteConfig.deployment.manual.outputDirectory !== '') {
-            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '.zip');
+            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '-files.zip');
         }
 
         let output = fs.createWriteStream(backupFile);
@@ -70,7 +76,9 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'An error occurred during creating ZIP archive. Please try again.'
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingZIP'
+                    }
                 }
             });
 
@@ -93,7 +101,7 @@ class ManualDeployment {
         );
 
         if(this.deployment.siteConfig.deployment.manual.outputDirectory !== '') {
-            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '.tar');
+            backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '-files.tar');
         }
 
         let output = fs.createWriteStream(backupFile);
@@ -108,7 +116,9 @@ class ManualDeployment {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'An error occurred during creating TAR archive. Please try again.'
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingTAR'
+                    }
                 }
             });
 

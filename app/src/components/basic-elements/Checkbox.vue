@@ -44,7 +44,7 @@ input[type="checkbox"] {
     -webkit-appearance: none;
     background: var(--bg-primary);
     border: 1px solid var(--input-border-color);
-    border-radius:2px;
+    border-radius: 4px;
     height: 1.9rem;
     line-height: 1.6rem;
     margin: 0 .5rem 0 0;
@@ -56,13 +56,13 @@ input[type="checkbox"] {
     z-index: 1;
 
     &:hover {
-        border: 1px solid var(--primary-color);
+        border: 1px solid var(--color-primary);
         cursor: pointer;
     }
 
     &.is-checked {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
+        background: var(--color-primary);
+        border-color: var(--color-primary);
 
         &:before {
             color: var(--white);

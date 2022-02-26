@@ -1,6 +1,6 @@
 <template>
     <div
-        class="wrapper"
+        class="box"
         @click="selectDir">
         <text-input
             icon="folder"
@@ -23,9 +23,6 @@
 
 
 <script>
-import { ipcRenderer, remote } from 'electron';
-const mainProcess = remote.require('./main');
-
 export default {
     name: 'dirselect',
     props: {
@@ -65,15 +62,15 @@ export default {
         }
     },
     methods: {
-        clear: function() {
+        clear () {
             this.$refs.input.content = '';
             this.fieldValue = '';
             this.$emit('input', '');
         },
-        selectDir: function() {
-            mainProcess.selectDirectory('dir-select');
+        async selectDir () {
+            await mainProcessAPI.invoke('app-main-process-select-directory', 'dir-select');
 
-            ipcRenderer.once('app-directory-selected', (event, data) => {
+            mainProcessAPI.receiveOnce('app-directory-selected', (data) => {
                 if (data.path === undefined || !data.path.filePaths.length) {
                     return;
                 }
@@ -84,7 +81,7 @@ export default {
                 this.$emit('input', this.fieldValue);
             });
         },
-        getValue: function() {
+        getValue () {
             return this.fieldValue;
         }
     }
@@ -96,7 +93,7 @@ export default {
 
 // @ToDo: move ".clear" to a separate component - ClearButton
 
-.wrapper {
+.box {
     position: relative;
 
     input {

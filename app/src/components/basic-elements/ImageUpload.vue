@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         :id="anchor"
         :class="wrapperCssClasses">
         <div
@@ -16,10 +16,10 @@
             <div class="upload-overlay">
                 <icon
                     name="blank-image"
-                    customWidth="64"
-                    customHeight="64" />
+                    customWidth="80"
+                    customHeight="66" />
 
-                {{ labelText }}
+               <div> {{ labelText }}</div>
                 <input
                     ref="input"
                     type="file"
@@ -32,7 +32,7 @@
                     class="upload-uploading-overlay">
                     <div>
                         <div class="loader"><span></span></div>
-                        Upload in progress...
+                        {{ $t('ui.uploadInProgress') }}
                     </div>
                 </div>
             </div>
@@ -43,15 +43,12 @@
             href="#"
             class="upload-remove"
             @click="remove">
-            Remove image
+            {{ $t('image.removeImage') }}
         </a>
     </div>
 </template>
 
 <script>
-import normalizePath from 'normalize-path';
-import { ipcRenderer } from 'electron';
-
 export default {
     name: 'image-upload',
     props: {
@@ -70,6 +67,10 @@ export default {
             default: () => false,
             type: Function
         },
+        onBeforeRemove: {
+            default: () => false,
+            type: Function
+        },
         onAdd: {
             default: () => false,
             type: Function
@@ -83,12 +84,16 @@ export default {
             type: String
         },
         imageType: {
-            default: 'optionImages',
+            default: 'pluginImages',
+            type: String
+        },
+        pluginDir: {
+            default: '',
             type: String
         }
     },
     data () {
-        return {          
+        return {
             isEmpty: true,
             filePath: '',
             isUploading: false,
@@ -138,10 +143,10 @@ export default {
     },
     computed: {
         labelText () {
-            let label = 'Drop to upload your photo or';
+            let label = this.$t('image.dropToUploadPhotoOr');
 
             if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages' && this.imageType !== 'authorImages') {
-                label = 'Drop featured image here or';
+                label = this.$t('image.dropFeaturedImageOr');
             }
 
             return label;
@@ -174,24 +179,26 @@ export default {
         },
         mediaPath () {
             if (this.itemId && this.imageType === 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
             } else if (this.itemId && this.imageType === 'authorImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
             } else if (this.itemId === 0 && this.imageType === 'tagImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
             } else if (this.itemId === 0 && this.imageType === 'authorImages') {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+            } else if (this.imageType === 'pluginImages') {
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             } else if (this.itemId === 0) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
             } else if (this.itemId) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
 
             if (this.addMediaFolderPath) {
-                return normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
+                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
             }
 
-            return normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
+            return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
         }
     },
     methods: {
@@ -209,11 +216,12 @@ export default {
         },
         drop (e) {
             this.stopEvents(e);
-            let sourcePath = normalizePath(e.dataTransfer.files[0].path);
+            let sourcePath = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
             this.uploadImage(sourcePath);
         },
         remove (e) {
             e.preventDefault();
+            this.onBeforeRemove(this.filePath);
             this.filePath = '';
             this.$refs['input'].value = '';
             this.isEmpty = true;
@@ -224,7 +232,7 @@ export default {
                 return;
             }
 
-            let sourcePath = normalizePath(e.target.files[0].path);
+            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {
@@ -243,17 +251,21 @@ export default {
             } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'authorImages';
+            } else if (this.imageType === 'pluginImages') {
+                uploadData.imageType = 'pluginImages';
+                uploadData.pluginDir = this.pluginDir;
             } else if ((this.itemId || this.itemId === 0)) {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
-            }
+            } 
 
-            ipcRenderer.send('app-image-upload', uploadData);
+            mainProcessAPI.send('app-image-upload', uploadData);
+            console.log('DATA', uploadData);
 
-            ipcRenderer.once('app-image-uploaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                 this.isEmpty = false;
                 this.isHovered = false;
-                this.filePath = normalizePath(data.baseImage.newPath);
+                this.filePath = mainProcessAPI.normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
                 this.onAdd();
             });
@@ -280,7 +292,6 @@ export default {
 
 .upload {
     &-image {
-        background: var(--input-bg-light);
         background-clip: padding-box;
         background-position: center;
         background-repeat: no-repeat;
@@ -288,7 +299,7 @@ export default {
         border-radius: 3px;
         color: var(--gray-3);
         display: block;
-        font-size: 1.6rem;
+        font-size: $app-font-base;
         font-weight: var(--font-weight-normal);
         line-height: 1.5;
         margin: 0 0 -40px 0;
@@ -330,31 +341,37 @@ export default {
             display: block;
             line-height: 1.6!important;
             margin: 2rem auto 0 auto!important;
-            width: 16rem!important;
+
+            span {
+                    display: none;
+                }
 
             &::-webkit-file-upload-button {
                 -webkit-appearance: none;
-                background: var(--button-gray-bg);
-                border: 1px solid var(--button-gray-bg);
-                border-radius: 3px;
-                color: var(--white);
+                background: var(--button-secondary-bg);
+                border: 1px solid var(--button-secondary-bg);
+                border-radius: var(--border-radius);
+                color: var(--button-secondary-color);
                 cursor: pointer;
-                font-weight: 500;
-                font-size: 1.5rem;
-                padding: .5rem;
-                text-align: center;
-                width: 16rem;
+                display: inline-block;
+                font-size: 1.4rem;
+                font-weight: var(--font-weight-semibold);
+                left: 50%;
+                padding: .75rem 1.5rem;
+                position: relative;
+                transform: translate(-50%, 0);
                 outline: none;
-
+                
                 &:hover {
-                    background: var(--button-gray-hover-bg);
-                    border-color: var(--button-gray-hover-bg);
+                    background: var(--button-secondary-bg-hover);
+                    border-color: var(--button-secondary-bg-hover);
+                    color: var(--button-secondary-color-hover);
                 }
             }
         }
 
         &.is-hovered {
-            border-color: var(--primary-color);
+            border-color: var(--color-primary);
         }
 
         &:not(.is-empty):not(.is-hovered) {
@@ -391,10 +408,10 @@ export default {
         display: none;
 
         svg {
-            display: block; 
-            fill: var(--icon-secondary-color);
+            display: block;
+            fill: var(--icon-quaternary-color);
             margin: 0 auto 1.5rem;
-           
+
         }
     }
 
@@ -412,40 +429,40 @@ export default {
             position: absolute;
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
-            width: 100%;               
+            width: 100%;
         }
-        
+
         .loader {
-            display: block;               
+            display: block;
             height: 2.8rem;
             margin: 0 auto 1rem;
             width: 2.8rem;
-            
+
             & > span {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-right: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-bottom: 2px solid rgba(var(--primary-color-rgb), .2);
-                border-left: 2px solid var(--primary-color);
+                border-top: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-right: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+                border-left: 2px solid var(--color-primary);
                 border-radius: 50%;
-                display: block;   
+                display: block;
                 height: 2.5rem;
-                width: 2.5rem;                 
-                
+                width: 2.5rem;
+
                 &::after {
                     border-radius: 50%;
                     content: "";
-                    display: block;                                      
+                    display: block;
                 }
-            
+
                 @at-root {
                     @keyframes spin {
-                       100% { 
+                       100% {
                           transform: rotate(360deg);
-                       }                  
+                       }
                     }
                 }
-          }                
+          }
        }
     }
 }

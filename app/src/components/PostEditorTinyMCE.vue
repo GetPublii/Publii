@@ -11,10 +11,11 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
+                        :data-translation="$t('post.addPostTitle')"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
-                        @keyup="updateTitle" />                
+                        @input="updateTitle" />
 
                     <editor ref="tinymceEditor" />
 
@@ -30,12 +31,12 @@
 
             <p-button
                 id="post-stats-button"
-                type="clean icon small"
+                type="clean-invert icon small"
                 icon="stats"
-                title="Toggle post statistics panel"
+                :title="$t('editor.togglePostStatsPanel')"
                 @click.native="togglePostStats">
-                <template v-if="!writersPanelOpen">View Stats</template>
-                <template v-else>Hide Stats</template>
+                <template v-if="!writersPanelOpen">{{ $t('editor.viewStats') }}</template>
+                <template v-else>{{ $t('editor.hideStats') }}</template>
             </p-button>
 
             <sidebar :isVisible="sidebarVisible" />
@@ -52,7 +53,6 @@
 
 <script>
 import Vue from 'vue';
-import { ipcRenderer } from 'electron';
 import PostEditorSidebar from './post-editor/Sidebar';
 import InlineEditor from './post-editor/InlineEditor';
 import PostEditorSourceCode from './post-editor/SourceCodeEditor';
@@ -186,13 +186,13 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            ipcRenderer.send('app-post-load', {
+            mainProcessAPI.send('app-post-load', {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            ipcRenderer.once('app-post-loaded', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
                 if (data !== false && this.postID !== 0) {
                     let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
@@ -229,17 +229,17 @@ export default {
                 this.unwatchDataLoss();
             }, { deep: true });
         },
-        savePost (newPostStatus, preview = false, closeEditor = false) {
+        async savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: 'You cannot save a post with empty title.'
+                    message: this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
             }
 
             tinymce.triggerSave();
-            let postData = PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            let postData = await PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
@@ -253,10 +253,10 @@ export default {
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            ipcRenderer.send('app-post-save', postData);
+            mainProcessAPI.send('app-post-save', postData);
 
             // Post save
-            ipcRenderer.once('app-post-saved', (event, data) => {
+            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
@@ -264,7 +264,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert('An error occurred - please try again.');
+                    alert(this.$t('editor.errorOccured'));
                 }
             });
         },
@@ -279,15 +279,15 @@ export default {
             }
 
             this.$router.push('/site/' + this.$route.params.name + '/posts/editor/tinymce/' + this.postID);
-            let message = 'Changes have been saved';
+            let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
                 this.newPost = false;
 
                 if (newStatus === 'draft') {
-                    message = 'New draft has been created';
+                    message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = 'New post has been created';
+                    message = this.$t('editor.newPostCreated');
                 }
             }
 
@@ -342,10 +342,12 @@ export default {
         #post-title {
             border: none;
             box-shadow: none;
+            color: var(--headings-color);
             display: block;
             font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 3.5rem;
-            font-weight: 600;
+            font-size: 3.6rem;
+            font-weight: var(--font-weight-bold);
+            letter-spacing: var(--letter-spacing);
             line-height: 1.2;
             margin: 0 10% 2.6rem;
             padding: 0;
@@ -353,10 +355,10 @@ export default {
             width: 80%;
 
             &:empty {
-                color: var(--gray-3); 
+                color: var(--gray-4);
 
                 &:before {
-                    content: "Add post title"
+                    content: attr(data-translation);
                 }
 
                 &:focus:before {
@@ -374,7 +376,7 @@ export default {
 @media (min-width: 1800px) {
     .post-editor-form #post-title {
         margin: 0 auto 2.6rem;
-        max-width: calc(100% - 880px);
+        max-width: calc(100vw - 880px);
         width: 100%;
     }
 }
