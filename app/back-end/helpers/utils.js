@@ -318,6 +318,28 @@ class UtilsHelper {
 
         return require(module);
     }
+
+    /**
+     * Compare arrays regardles of order
+     */
+    static arraysHaveTheSameContent (arrayA, arrayB) {
+        if (arrayA.length !== arrayB.length) {
+            return false;
+        }
+
+        let uniqueValues = new Set([...arrayA, ...arrayB]);
+
+        for (let value of uniqueValues) {
+            let arrayACount = arrayA.filter(item => item === value).length;
+            let arrayBCount = arrayB.filter(item => item === value).length;
+          
+            if (arrayACount !== arrayBCount) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 module.exports = UtilsHelper;

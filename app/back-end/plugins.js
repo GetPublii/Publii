@@ -57,6 +57,25 @@ class Plugins {
         return output;
     }
 
+    /*
+     * Get plugins count
+     */
+    getExistingPluginsDirs () {
+        let pathToPlugins = this.pluginsPath;
+        let output = [];
+        let filesAndDirs = fs.readdirSync(pathToPlugins);
+
+        for (let i = 0; i < filesAndDirs.length; i++) {
+            if (filesAndDirs[i][0] === '.' || !UtilsHelper.dirExists(path.join(pathToPlugins, filesAndDirs[i]))) {
+                continue;
+            }
+
+            output.push(filesAndDirs[i]);
+        }
+
+        return output;
+    }
+
     /**
      * Get status of site-specific plugins 
      */
@@ -88,12 +107,47 @@ class Plugins {
 
         try {
             pluginsConfig = JSON.parse(pluginsConfig);
+            let loadedPlugins = Object.keys(pluginsConfig);
+            let existingPlugins = this.getExistingPluginsDirs();
+
+            if (!UtilsHelper.arraysHaveTheSameContent(existingPlugins, loadedPlugins)) {
+                this.validateLoadedPlugins(siteName, pluginsConfig, existingPlugins);
+            }
         } catch (e) {
             console.log('(!) Error during loading plugins config for site ', siteName);
+            console.log(e);
             return {};
         }
 
         return pluginsConfig;
+    }
+
+    /**
+     * Check for non-existing plugins and resave config
+     */
+    validateLoadedPlugins (siteName, configToCheck, existingPlugins) {
+        console.log('(i) Validate site.plugins.json due change of the plugins count');
+        let loadedPlugins = Object.keys(configToCheck);
+
+        for (let i = 0; i < loadedPlugins.length; i++) {
+            let pluginDirectoryName = loadedPlugins[i];
+
+            if (!UtilsHelper.dirExists(path.join(this.pluginsPath, pluginDirectoryName))) {
+                delete configToCheck[pluginDirectoryName];
+                console.log('(i) Removed plugin from site.plugins.json: ', pluginDirectoryName);
+            }
+        }
+
+        for (let i = 0; i < existingPlugins.length; i++) {
+            let existingPluginDirectoryName = existingPlugins[i];
+
+            if (typeof configToCheck[existingPluginDirectoryName] === 'undefined') {
+                configToCheck[existingPluginDirectoryName] = false;
+                console.log('(i) Added disabled plugin to site.plugins.json: ', existingPluginDirectoryName);
+            }
+        }
+
+        this.saveSitePluginsConfig(siteName, configToCheck);
     }
 
     /**
