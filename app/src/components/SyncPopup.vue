@@ -68,13 +68,6 @@
                     </p-button>
 
                     <p-button
-                        v-if="!isManual"
-                        type="primary medium  quarter-width"
-                        :onClick="openWebsite">
-                        Visit your website
-                    </p-button>
-
-                    <p-button
                         :onClick="close"
                         type="outline medium quarter-width">
                         {{ $t('ui.ok') }}
