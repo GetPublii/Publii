@@ -1,6 +1,9 @@
 <template>
     <li
-        class="single-site"
+        :class="{ 
+            'single-site': true, 
+            'is-duplicating': isDuplicating 
+        }"
         @click="showWebsite(site)"
         @keydown="showWebsiteOnEnter($event, site)">
 
@@ -90,9 +93,12 @@ export default {
             });
         },
         askForClone () {
+            this.isDuplicating = true;
+
             this.$bus.$emit('confirm-display', {
                 message: this.$t('site.specifyNameForWebsiteDuplicate'),
                 okClick: this.cloneWebsite,
+                cancelClick: () => this.isDuplicating = false,
                 hasInput: true,
                 okLabel: this.$t('site.cloneWebsite')
             });
@@ -102,6 +108,8 @@ export default {
                 this.$bus.$emit('alert-display', {
                     message: this.$t('site.websiteNameCantBeEmpty')
                 });
+
+                this.isDuplicating = false;
                 return;
             }
 
@@ -109,11 +117,12 @@ export default {
                 this.$bus.$emit('alert-display', {
                     message: this.$t('site.websiteNameAlreadyInUseMsg')
                 });
+
+                this.isDuplicating = false;
                 return;
             }
 
             this.$bus.$emit('sites-list-duplicate-in-progress', true);
-            this.isDuplicating = true;
 
             mainProcessAPI.send('app-site-clone', {
                 catalogName: this.site,
@@ -260,7 +269,6 @@ export default {
             }
 
             &.is-duplicating {
-
                 &::after { 
                    animation: spin .9s infinite linear;
                    border-top: 2px solid rgba(var(--color-primary-rgb), .2);
@@ -302,15 +310,13 @@ export default {
         width: 3.3rem;
     }
 
-    &:hover {
+    &:hover,
+    &.is-duplicating {
         color: var(--link-primary-color);
         will-change: transform;
-
         .single-site-actions-btn {
             opacity: 1;
         }
-
-       
     }
 
     &-name {
