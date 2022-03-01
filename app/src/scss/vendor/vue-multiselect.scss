@@ -65,6 +65,10 @@
         background: var(--input-bg);
         color: var(--text-primary-color);
     }
+
+    &--active {
+        z-index: 2;
+    }
 }
 .options-sidebar {
     label {
