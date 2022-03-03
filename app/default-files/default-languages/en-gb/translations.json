@@ -854,6 +854,7 @@
         "ftp": "FTP",
         "ftps": "FTPS",
         "ftpWithSSLTLS": "FTP with SSL/TLS",
+        "generatePreviewFiles": "Generate preview files",
         "getWebsiteFiles": "Get website files",
         "githubPages": "Github Pages",
         "githubSyncedPart1": "Changes on Github Pages may not be visible for a few minutes after completing deployment, ",

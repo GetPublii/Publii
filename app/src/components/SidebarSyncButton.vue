@@ -4,12 +4,19 @@
             'sidebar-sync': true,
             'sidebar-sync-in-progress': syncInProgress
         }">
+
         <a
             href="#"
             class="sidebar-preview-link"
-            @click="renderPreview"
-        >
+            @click="renderPreview">
             {{ $t('sync.previewChanges') }}
+        </a>
+
+        <a
+            href="#"
+            class="sidebar-preview-link"
+            @click="renderFiles">
+            {{ $t('sync.generatePreviewFiles') }}
         </a>
 
         <a
@@ -159,6 +166,35 @@ export default {
             }
 
             this.$bus.$emit('rendering-popup-display');
+        },
+        renderFiles: function() {
+            if (!this.$store.state.currentSite.config.theme) {
+                let siteName = this.$store.state.currentSite.config.name;
+
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('sync.youHaventSelectedAnyThemeInfo'),
+                    okLabel: this.$t('sync.goToSettings'),
+                    okClick: () => {
+                        this.$router.push(`/site/${siteName}/settings/`);
+                    }
+                });
+                return;
+            }
+
+            if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                    okLabel: this.$t('sync.goToAppSettings'),
+                    okClick: () => {
+                        this.$router.push(`/app-settings/`);
+                    }
+                });
+                return;
+            }
+
+            this.$bus.$emit('rendering-popup-display', {
+                showPreview: false
+            });
         },
         syncWebsite: function(e) {
             if (e.screenX === 0 && e.screenY === 0) {

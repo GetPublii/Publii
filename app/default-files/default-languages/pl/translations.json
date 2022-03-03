@@ -854,6 +854,7 @@
         "ftp": "FTP",
         "ftps": "FTPS",
         "ftpWithSSLTLS": "FTP z SSL/TLS",
+        "generatePreviewFiles": "Wygeneruj pliki podglądu",
         "getWebsiteFiles": "Pobierz pliki strony internetowej",
         "githubPages": "Strony Github",
         "githubSyncedPart1": "Zmiany na Github Pages mogą być widoczne po kilku minutach od wysłania, ",
