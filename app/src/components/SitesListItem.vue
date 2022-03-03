@@ -278,8 +278,8 @@ export default {
                    border-radius: 50%;
                    content: "";
                    display: block;
-                   height: 2.5rem;
-                   width: 2.5rem;
+                   height: 100%;
+                   width: 100%;
                    @include centerXY(true, true);
 
                     @at-root {
