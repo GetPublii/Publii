@@ -1080,7 +1080,7 @@
         },
         {
             "name": "maxFontSize",
-            "label": "Maximum font sum",
+            "label": "Maximum font size",
             "group": "Fonts",
             "note": "The font-size of the root element in REM unit",
             "value": "1.2",
