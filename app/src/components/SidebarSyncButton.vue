@@ -13,6 +13,7 @@
         </a>
 
         <a
+            v-if="$store.state.app.config.enableAdvancedPreview"
             href="#"
             class="sidebar-preview-link"
             @click="renderFiles">
