@@ -14,7 +14,7 @@
         "createTagPages": true,
         "createAuthorPages": true,
         "createTagsList": true,
-        "createSearchPage": true,
+        "createSearchPage": false,
         "create404page": true,
         "customHTML": {
             "afterPost": "After every post"
@@ -803,6 +803,10 @@
                     "value": "ruda"
                 },
                 {
+                    "label": "Smooch Sans",
+                    "value": "smoochsans"
+                },
+                {
                     "label": "Source Code Pro",
                     "value": "sourcecodepro"
                 },
@@ -820,7 +824,6 @@
                 }
             ]
         },  
-
         {
             "name": "fontHeadings",
             "label": "Headings font (H1-H6)",
@@ -991,6 +994,10 @@
                 {
                     "label": "Ruda",
                     "value": "ruda"
+                },
+                {
+                    "label": "Smooch Sans",
+                    "value": "smoochsans"
                 },
                 {
                     "label": "Source Code Pro",

@@ -208,6 +208,11 @@ var generateThemeVariables = function(params) {
         family: '\'Ruda\', sans-serif',
         weight: '400 900'
        },
+       smoochsans: {
+        name: 'Smooch Sans',
+        family: '\'Smooch Sans\', sans-serif',
+        weight: '100 900'
+       },
        sourcecodepro: {
         name: 'Source Code Pro',
         family: '\'Source Code Pro\', monospace',
