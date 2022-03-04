@@ -127,7 +127,7 @@ export default {
                     activeLabel: this.$t('ui.saveAndRender'),
                     value: 'full-site-render',
                     isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
-                    icon: 'full-preview-monitor',
+                    icon: 'full-render-monitor',
                     onClick: this.saveAndRender.bind(this, 'full-site')
                 },
                 {
@@ -142,7 +142,7 @@ export default {
                     label: this.$t('ui.renderFrontPageOnly'),
                     activeLabel: this.$t('ui.saveAndRender'),
                     value: 'homepage-render',
-                    icon: 'quick-preview',
+                    icon: 'quick-render',
                     isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
                     onClick: this.saveAndRender.bind(this, 'homepage')
                 }
