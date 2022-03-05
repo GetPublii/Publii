@@ -41,13 +41,13 @@ export default {
         position: relative;
 
         .input-wrapper {
-            padding: 1rem;
+            padding: 1rem 2rem;
 
             input {
                 background: var(--input-bg-lightest);
                 border-radius: 30px;
                 box-shadow: none!important;
-                padding: 1.2rem 4.4rem 1.2rem 6rem!important;
+                padding: 1.5rem 4.4rem 1.5rem 6rem!important;
             }
 
             svg {
@@ -83,7 +83,7 @@ export default {
 
         &:hover {
             background: var(--input-border-color);
-        }
+          }
         }
     }
 }

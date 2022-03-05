@@ -68,7 +68,7 @@ export default {
     display: grid;
     font-weight: var(--font-weight-normal);
     justify-content: left;
-    padding: 1.5rem 2rem 1.5rem 2rem;
+    padding: 1.5rem 2rem;
     text-align: left;
 
     &:first-child {

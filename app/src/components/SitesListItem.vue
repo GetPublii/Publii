@@ -202,15 +202,21 @@ export default {
  */
 .single-site {
     align-items: center;
+    background: var(--collection-bg);
     border-bottom: 1px solid var(--border-light-color);
+    color: var(--link-primary-color-hover);
     cursor: pointer;
     display: flex;
     margin: 0;
-    padding: 1.2rem 0;
-    position: relative;color: var(--link-primary-color-hover);
+    padding: 1.2rem 2rem;
+    position: relative;
 
     &:focus {
         background: var(--input-bg-light);
+    }
+
+    &:last-child {
+        border: none;
     }
 
     &-actions {
@@ -312,8 +318,11 @@ export default {
 
     &:hover,
     &.is-duplicating {
+        background: var(--collection-bg-hover);
+        box-shadow: inset 3px 0 0 var(--color-primary);
         color: var(--link-primary-color);
         will-change: transform;
+
         .single-site-actions-btn {
             opacity: 1;
         }
