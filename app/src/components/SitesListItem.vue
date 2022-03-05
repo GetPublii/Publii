@@ -229,7 +229,7 @@ export default {
         }
 
         &-btn {
-            background: var(--input-bg-lightest);
+            background: var(--bg-primary);
             position: relative;
             border-radius: 50%;
             display: inline-block;
