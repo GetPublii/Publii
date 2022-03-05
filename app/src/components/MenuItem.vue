@@ -86,6 +86,10 @@
             ghostClass="is-ghost"
             :class="{ 'menu-item-list': true }"
             v-model="itemsList"
+            v-bind="{
+                animation: 0,
+                forceFallback: true
+            }"
             :key="'draggable-menu-items-' + id"
             @update="listItemUpdated"
             @add="listItemAdded">

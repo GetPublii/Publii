@@ -123,6 +123,10 @@
                             ghostClass="is-ghost"
                             class="menu-item-list"
                             v-model="$store.state.currentSite.menuStructure[index].items"
+                            v-bind="{
+                                animation: 0,
+                                forceFallback: true
+                            }"
                             :key="'draggable-menu-items-levle0-' + index"
                             @update="listItemUpdated($event, index)"
                             @add="listItemAdded($event, index)">
