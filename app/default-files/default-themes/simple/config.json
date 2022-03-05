@@ -1088,7 +1088,18 @@
             "min": 1,
             "max": 3,
             "step": 0.05
-        },   
+        }, 
+        {
+            "name": "lineHeight",
+            "label": "Line height",
+            "group": "Fonts",
+            "note": "The default line-height for the entire website",
+            "value": "1.7",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.1
+        },  
         {
             "name": "separator",
             "type": "separator",
@@ -1116,24 +1127,6 @@
             "min": 100,
             "max": 900,
             "step": 1
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Fonts",
-            "size": "small"
-        },
-        {
-            "name": "lineHeight",
-            "label": "Line height",
-            "group": "Fonts",
-            "note": "The default line-height for the entire website",
-            "value": "1.7",
-            "type": "range",
-            "min": 1,
-            "max": 3,
-            "step": 0.1
         },
         {
             "name": "separator",
@@ -1270,20 +1263,7 @@
             "value": false,
             "type": "checkbox"
         },
-        {
-            "name": "backToTopButton",
-            "group": "Footer",
-            "label": "\"Back to top\" button",
-            "value": true,
-            "type": "checkbox"
-        },  
-         {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Footer",
-            "size": "small"
-        },
+       
         {
             "name": "socialButtons",
             "group": "Footer",
@@ -1550,7 +1530,20 @@
                 "value": "true"
             }]
         },
-
+        {
+            "name": "backToTopButton",
+            "group": "Additional",
+            "label": "\"Back to top\" button",
+            "value": true,
+            "type": "checkbox"
+        },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Additional",
+            "size": "small"
+        },
         {
             "name": "formatDate",
             "label": "Date format",

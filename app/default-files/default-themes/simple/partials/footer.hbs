@@ -58,12 +58,11 @@
         </div>
     {{/if}}
     {{#if @config.custom.backToTopButton}}
-       <a href="#js-header" id="js-back-to-top" class="btn footer__bttop" aria-label="{{ translate 'partials.footer.backToTop' }}"> 
-           <svg>
-               <title>{{ translate 'partials.footer.backToTop' }}</title>
-               <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#toparrow" />
-           </svg>
-       </a>   
+        <button onclick="backToTopFunction()" id="backToTop" class="footer__bttop" aria-label="{{ translate 'partials.footer.backToTop' }}" title="{{ translate 'partials.footer.backToTop' }}">
+            <svg>
+                <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#toparrow"/>
+            </svg>
+        </button>
     {{/if}}
 
 </footer>

@@ -536,13 +536,21 @@ if (searchButton) {
     }
 })();
 
-// Back to Top 
-var backtotop = document.getElementById("js-back-to-top");
-window.addEventListener('scroll', function (e) {
-	y = window.scrollY;
-	if (y > 400) {
-		backtotop.classList.add("is-visible");
-	} else {
-		backtotop.classList.remove("is-visible");
-	}
-});
+// Back to top 
+var backToTopButton = document.getElementById("backToTop");
+if (backToTopButton) {
+   window.onscroll = function() {backToTopScrollFunction()};
+
+   function backToTopScrollFunction() {
+   if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+      backToTopButton.classList.add("is-visible");
+   } else {
+      backToTopButton.classList.remove("is-visible");
+     }
+   }
+
+   function backToTopFunction() {
+     document.body.scrollTop = 0;
+     document.documentElement.scrollTop = 0;
+   };
+}
