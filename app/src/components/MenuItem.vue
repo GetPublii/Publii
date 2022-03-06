@@ -89,8 +89,8 @@
                 v-if="!selectedItem"
                 href="#"
                 class="menu-item-select"
-                :title="$t('menu.selectItem')"
-                @click.prevent="selectItem()">{{ $t('menu.selectItem') }}</a>
+                :title="$t('menu.moveItem')"
+                @click.prevent="selectItem()">{{ $t('menu.moveItem') }}</a>
             
             <a
                 v-if="selectedItem && isSelected"
@@ -426,7 +426,10 @@ export default {
             this.$bus.$emit('save-new-menu-structure');
         },
         selectItem () {
-            this.$bus.$emit('menus-manager-selected-item', this.id);
+            this.$bus.$emit('menus-manager-selected-item', {
+                id: this.id, 
+                menuID: this.menuID
+            });
         },
         unselectItem () {
             this.$bus.$emit('menus-manager-unselect-item');

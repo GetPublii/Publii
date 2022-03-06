@@ -138,7 +138,7 @@
                                 :itemMenuID="index"
                                 :itemOrder="subindex"
                                 :editedID="editedID"
-                                :selectedItem="selectedItem" />
+                                :selectedItem="selectedItemMenuID === index ? selectedItem : null" />
                         </draggable>
                     </div>
                 </div>
@@ -191,7 +191,8 @@ export default {
             selectedItems: [],
             openedItems: [],
             openedEditForms: [],
-            selectedItem: null
+            selectedItem: null,
+            selectedItemMenuID: null
         };
     },
     computed: {
@@ -398,11 +399,13 @@ export default {
         listItemAdded (e) {
             this.saveNewMenuStructure();
         },
-        selectMenuItem (id) {
-            this.selectedItem = id;
+        selectMenuItem (data) {
+            this.selectedItem = data.id;
+            this.selectedItemMenuID = data.menuID;
         },
         unselectMenuItem () {
             this.selectedItem = null;
+            this.selectedItemMenuID = null;
         },
         moveMenuItem (config) {
             if (!this.selectedItem) {
