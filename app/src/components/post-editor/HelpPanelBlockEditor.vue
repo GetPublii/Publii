@@ -77,10 +77,10 @@
                     <td>/toc</td>
                     <td></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td>/embed</td>
                     <td></td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td>/image</td>
                     <td></td>
