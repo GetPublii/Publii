@@ -369,6 +369,10 @@
         "externalLink": "Zewnętrzny link",
         "externalURL": "Zewnętrzyny URL",
         "hideThisMenuItem": "Ukryj ten element menu",
+        "insertActions": "Umieść wybrany element:",
+        "insertAfter": "za",
+        "insertAsChild": "jako submenu",
+        "insertBefore": "przed",
         "internalLink": "Link wewnętrzny",
         "items": "Elementy",
         "label": "Etykieta",
@@ -390,12 +394,14 @@
         "noMenusMessage": "Brak elementów menu; stwórz nowe używając przycisku \"Dodaj element menu\" znajdującego się powyżej.",
         "provideNameForNewMenu": "Podaj nazwę dla Twojego nowego menu:",
         "provideNewNameForMenu": "Podaj nową nazwę dla wybranego menu:",
+        "selectItem": "Zaznacz",
         "selectItemType": "Wybierz rodzaj elmentu",
         "selectLinkTarget": "Wybierz target linka",
         "showThisMenuItem": "Pokaż ten element menu",
         "textSeparator": "Separator tekstu",
         "type": "Rodzaj",
-        "unassigned": "Nieprzypisane"
+        "unassigned": "Nieprzypisane",
+        "unselectItem": "Odznacz"
     },
     "plugins": {
         "addPluginSuccessMessage": "Wtyczka została dodana",

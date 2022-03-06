@@ -362,6 +362,60 @@ export default {
             return menu;
         });
     },
+    moveMenuItem (state, data) {
+        if (data.position === 'child') {
+            let destination = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.destinationID);
+            let target = JSON.parse(JSON.stringify(findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.targetID)));
+            
+            state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
+                if (index === data.menuID) {
+                    menu.items = menu.items.filter(item => deleteMenuItemByID(item, data.targetID));
+                }
+    
+                return menu;
+            });
+
+            destination.items.push(target);
+        } else if (data.position === 'after' || data.position === 'before') {
+            let destination = findMenuItemByIDwithParent(state.currentSite.menuStructure[data.menuID].items, data.destinationID);
+            let target = JSON.parse(JSON.stringify(findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.targetID)));
+            let destinationParent;
+            
+            if (destination.parentItemID) {
+                destinationParent = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, destination.parentItemID);
+            } else {
+                destinationParent = state.currentSite.menuStructure[data.menuID];
+            }
+            
+            state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
+                if (index === data.menuID) {
+                    menu.items = menu.items.filter(item => deleteMenuItemByID(item, data.targetID));
+                }
+    
+                return menu;
+            });
+
+            let destinationIndex = destinationParent.items.findIndex(item => item.id === destination.item.id);
+
+            if (destinationIndex === -1) {
+                return;
+            }
+
+            if (data.position === 'after') {
+                if (destinationIndex < destinationParent.items.length - 1) {
+                    destinationParent.items.splice(destinationIndex + 1, 0, target);
+                } else {
+                    destinationParent.items.push(target);
+                }
+            } else if (data.position === 'before') {
+                if (destinationIndex > 0) {
+                    destinationParent.items.splice(destinationIndex, 0, target);
+                } else {
+                    destinationParent.items.unshift(target);
+                }
+            }
+        }
+    },
     reorderMenuItems (state, data) {
         let itemToModify = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.itemID);
         Vue.set(itemToModify, 'items', data.items.slice());
@@ -507,7 +561,8 @@ function updateMenuItemIDs (item, newID) {
     let offsetIndex = 0;
 
     item = item.replace(/"id":[0-9]{1,}/g, () => {
-        return ('"id":' + newID + (++offsetIndex));
+        offsetIndex++;
+        return ('"id":' + newID + offsetIndex);
     });
 
     return JSON.parse(item);

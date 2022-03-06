@@ -3,7 +3,10 @@
         :class="cssClasses"
         :data-id="id"
         :title="titleTooltip">
-        <div class="menu-item-wrapper">
+        <div :class="{
+            'menu-item-wrapper': true,
+            'is-dnd-disabled': !!selectedItem 
+        }">
             <span class="menu-item-label">
                 {{ label }}
 
@@ -33,6 +36,7 @@
             </span>
 
             <a
+                v-if="!selectedItem"
                 href="#"
                 class="menu-item-duplicate"
                 :title="$t('menu.duplicateThisMenuItem')"
@@ -43,6 +47,7 @@
             </a>
 
             <a
+                v-if="!selectedItem"
                 href="#"
                 class="menu-item-remove"
                 :title="$t('menu.deleteThisMenuItem')"
@@ -53,30 +58,79 @@
             </a>
 
             <a
+                v-if="!selectedItem"
                 href="#"
                 class="menu-item-edit"
                 :title="$t('menu.editThisMenuItem')"
                 @click.prevent="editMenuItem">{{ $t('ui.edit') }}</a>
 
             <a
-                v-if="!isHidden"
+                v-if="!isHidden && !selectedItem"
                 href="#"
                 class="menu-item-hide"
                 :title="$t('menu.hideThisMenuItem')"
                 @click.prevent="hideMenuItem">{{ $t('ui.hide') }}</a>
 
             <a
-                v-if="isHidden"
+                v-if="isHidden && !selectedItem"
                 href="#"
                 class="menu-item-show"
                 :title="$t('menu.showThisMenuItem')"
                 @click.prevent="showMenuItem">{{ $t('ui.show') }}</a>
 
             <a
+                v-if="!selectedItem"
                 href="#"
                 class="menu-item-submenu"
                 :title="$t('menu.addSubmenuItem')"
                 @click.prevent="addSubmenuItem()">{{ $t('menu.addSubmenu') }}</a>
+
+            <a
+                v-if="!selectedItem"
+                href="#"
+                class="menu-item-select"
+                :title="$t('menu.selectItem')"
+                @click.prevent="selectItem()">{{ $t('menu.selectItem') }}</a>
+            
+            <a
+                v-if="selectedItem && isSelected"
+                href="#"
+                class="menu-item-unselect"
+                :title="$t('menu.unselectItem')"
+                @click.prevent="unselectItem()">{{ $t('menu.unselectItem') }}</a>
+
+            <span 
+                v-if="selectedItem && !isSelected && !parentIsSelected"
+                class="menu-item-insert-actions">
+                {{ $t('menu.insertActions') }}
+            </span>
+
+            <a
+                v-if="selectedItem && !isSelected && !parentIsSelected"
+                href="#"
+                class="menu-item-insert-before"
+                :title="$t('menu.insertBefore')"
+                @click.prevent="insertSelectedItem('before')">
+                {{ $t('menu.insertBefore') }}
+            </a>
+
+            <a
+                v-if="selectedItem && !isSelected && !parentIsSelected"
+                href="#"
+                class="menu-item-insert-after"
+                :title="$t('menu.insertAfter')"
+                @click.prevent="insertSelectedItem('after')">
+                {{ $t('menu.insertAfter') }}
+            </a>
+
+            <a
+                v-if="selectedItem && !isSelected && !parentIsSelected"
+                href="#"
+                class="menu-item-insert-as-child"
+                :title="$t('menu.insertAsChild')"
+                @click.prevent="insertSelectedItem('child')">
+                {{ $t('menu.insertAsChild') }}
+            </a>
         </div>
 
         <draggable
@@ -88,7 +142,8 @@
             v-model="itemsList"
             v-bind="{
                 animation: 0,
-                forceFallback: true
+                forceFallback: true,
+                disabled: !!selectedItem
             }"
             :key="'draggable-menu-items-' + id"
             @update="listItemUpdated"
@@ -99,13 +154,14 @@
                 :itemData="item"
                 :itemMenuID="menuID"
                 :itemOrder="index"
-                :editedID="editedID" />
+                :editedID="editedID"
+                :selectedItem="selectedItem"
+                :parentIsSelected="isSelected || parentIsSelected" />
         </draggable>
     </li>
 </template>
 
 <script>
-import Vue from 'vue';
 import Draggable from 'vuedraggable';
 
 export default {
@@ -126,6 +182,12 @@ export default {
         itemOrder: {
             type: Number,
             required: true
+        },
+        selectedItem: {
+            required: true
+        },
+        parentIsSelected: {
+            required: false
         }
     },
     components: {
@@ -152,7 +214,8 @@ export default {
                 'menu-item': true,
                 'is-edited': this.editedID === this.id,
                 'is-invalid': this.isInvalid,
-                'is-draft': this.isDraft
+                'is-draft': this.isDraft,
+                'is-selected': this.isSelected
             };
         },
         isInvalid () {
@@ -185,6 +248,9 @@ export default {
 
                 this.$bus.$emit('save-new-menu-structure');
             }
+        },
+        isSelected () {
+            return this.id === this.selectedItem;
         }
     },
     mounted () {
@@ -358,6 +424,19 @@ export default {
             });
 
             this.$bus.$emit('save-new-menu-structure');
+        },
+        selectItem () {
+            this.$bus.$emit('menus-manager-selected-item', this.id);
+        },
+        unselectItem () {
+            this.$bus.$emit('menus-manager-unselect-item');
+        },
+        insertSelectedItem (position) {
+            this.$bus.$emit('menus-manager-move-item', {
+                menuID: this.menuID,
+                position: position,
+                destinationID: this.id
+            });
         }
     }
 }
@@ -370,9 +449,13 @@ li {
     margin-bottom: 3 * $spacing;
     padding: 0;
     position: relative;
-
+    
     &.is-chosen {
         opacity: .75;
+    }
+
+    &.is-selected {
+        border: 1px dashed #42a5f5;
     }
 
     &.is-ghost {
@@ -423,6 +506,10 @@ li {
         cursor: move !important;
         padding: 4 * $spacing 10 * $spacing;
         position: relative;
+
+        &.is-dnd-disabled {
+            cursor: auto!important;
+        }
 
         &:hover {
             background: var(--collection-bg-hover);

@@ -125,7 +125,8 @@
                             v-model="$store.state.currentSite.menuStructure[index].items"
                             v-bind="{
                                 animation: 0,
-                                forceFallback: true
+                                forceFallback: true,
+                                disabled: !!selectedItem
                             }"
                             :key="'draggable-menu-items-levle0-' + index"
                             @update="listItemUpdated($event, index)"
@@ -136,7 +137,8 @@
                                 :itemData="subitem"
                                 :itemMenuID="index"
                                 :itemOrder="subindex"
-                                :editedID="editedID" />
+                                :editedID="editedID"
+                                :selectedItem="selectedItem" />
                         </draggable>
                     </div>
                 </div>
@@ -188,7 +190,8 @@ export default {
             filterValue: '',
             selectedItems: [],
             openedItems: [],
-            openedEditForms: []
+            openedEditForms: [],
+            selectedItem: null
         };
     },
     computed: {
@@ -213,13 +216,25 @@ export default {
             this.editorVisible = false;
         });
 
-        this.$bus.$on('show-menu-item-editor-from-submenu', (itemID) => {
+        this.$bus.$on('show-menu-item-editor-from-submenu', itemID => {
             this.editedID = itemID;
             this.editorVisible = true;
         });
 
         this.$bus.$on('save-new-menu-structure', () => {
             this.saveNewMenuStructure();
+        });
+
+        this.$bus.$on('menus-manager-selected-item', itemID => {
+            this.selectMenuItem(itemID);
+        });
+
+        this.$bus.$on('menus-manager-unselect-item', () => {
+            this.unselectMenuItem();
+        });
+
+        this.$bus.$on('menus-manager-move-item', config => {
+            this.moveMenuItem(config);
         });
     },
     methods: {
@@ -382,12 +397,35 @@ export default {
         },
         listItemAdded (e) {
             this.saveNewMenuStructure();
+        },
+        selectMenuItem (id) {
+            this.selectedItem = id;
+        },
+        unselectMenuItem () {
+            this.selectedItem = null;
+        },
+        moveMenuItem (config) {
+            if (!this.selectedItem) {
+                return;
+            }
+
+            this.$store.commit('moveMenuItem', {
+                position: config.position,
+                menuID: config.menuID,
+                targetID: this.selectedItem,
+                destinationID: config.destinationID
+            });
+
+            this.saveNewMenuStructure();
+            this.unselectMenuItem();
         }
     },
     beforeDestroy () {
         this.$bus.$off('hide-menu-item-editor');
         this.$bus.$off('show-menu-item-editor-from-submenu');
         this.$bus.$off('save-new-menu-structure');
+        this.$bus.$off('menus-manager-selected-item');
+        this.$bus.$off('menus-manager-move-item');
     }
 }
 </script>

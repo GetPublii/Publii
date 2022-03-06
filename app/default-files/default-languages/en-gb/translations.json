@@ -369,6 +369,10 @@
         "externalLink": "External link",
         "externalURL": "External URL",
         "hideThisMenuItem": "Hide this menu item",
+        "insertActions": "Insert selected item:",
+        "insertAfter": "after",
+        "insertAsChild": "as submenu",
+        "insertBefore": "before",
         "internalLink": "Internal link",
         "items": "Items",
         "label": "Label",
@@ -390,12 +394,14 @@
         "noMenusMessage": "There are no menu items; create new ones via the \"Add menu item\" button above.",
         "provideNameForNewMenu": "Provide a name for your new menu:",
         "provideNewNameForMenu": "Provide a new name for the selected menu:",
+        "selectItem": "Select",
         "selectItemType": "Select item type",
         "selectLinkTarget": "Select link target",
         "showThisMenuItem": "Show this menu item",
         "textSeparator": "Text separator",
         "type": "Type",
-        "unassigned": "Unassigned"
+        "unassigned": "Unassigned",
+        "unselectItem": "Unselect"
     },
     "plugins": {
         "addPluginSuccessMessage": "Plugin has been added",
