@@ -111,8 +111,10 @@
                 class="menu-item-insert-before"
                 :title="$t('menu.insertBefore')"
                 @click.prevent="insertSelectedItem('before')">
-                {{ $t('menu.insertBefore') }}
-            </a>
+                <icon
+                    class="menu-item-move-icon"
+                    size="xs"
+                    name="move-up"/> {{ $t('menu.insertBefore') }}</a>
 
             <a
                 v-if="selectedItem && !isSelected && !parentIsSelected"
@@ -120,17 +122,17 @@
                 class="menu-item-insert-after"
                 :title="$t('menu.insertAfter')"
                 @click.prevent="insertSelectedItem('after')">
-                {{ $t('menu.insertAfter') }}
-            </a>
+                <icon
+                    class="menu-item-move-icon"
+                    size="xs"
+                    name="move-down"/> {{ $t('menu.insertAfter') }}</a>
 
             <a
                 v-if="selectedItem && !isSelected && !parentIsSelected"
                 href="#"
                 class="menu-item-insert-as-child"
                 :title="$t('menu.insertAsChild')"
-                @click.prevent="insertSelectedItem('child')">
-                {{ $t('menu.insertAsChild') }}
-            </a>
+                @click.prevent="insertSelectedItem('child')">{{ $t('menu.insertAsChild') }} </a>
         </div>
 
         <draggable
@@ -449,7 +451,8 @@ export default {
 @import '../scss/variables.scss';
 
 li {
-    margin-bottom: 3 * $spacing;
+    border: 1px solid transparent;
+    margin-bottom: calc((3 * $spacing) - 2px);
     padding: 0;
     position: relative;
     
@@ -458,11 +461,11 @@ li {
     }
 
     &.is-selected {
-        border: 1px dashed #42a5f5;
+        border: 1px dashed var(--input-border-focus);
     }
 
     &.is-ghost {
-        border: 1px dashed #42a5f5;
+        border: 1px dashed var(--input-border-focus);
 
         & > .menu-item-wrapper {
             opacity: 0;
@@ -579,7 +582,12 @@ li {
         .menu-item-edit,
         .menu-item-hide,
         .menu-item-show,
-        .menu-item-submenu {
+        .menu-item-select,
+        .menu-item-submenu,
+        .menu-item-insert-before,
+        .menu-item-insert-after,
+        .menu-item-insert-as-child,
+        .menu-item-unselect {
             color: var(--link-primary-color);
             font-size: 1.4rem;
             padding: 1rem .5rem;
@@ -591,9 +599,18 @@ li {
             }
         }
 
+        .menu-item-insert-actions {
+            color: var(--text-light-color);
+            font-size: 1.4rem;
+            padding: 1rem .5rem;
+        }
+
         .menu-item-edit,
         .menu-item-hide,
-        .menu-item-show {
+        .menu-item-show,
+        .menu-item-submenu,
+        .menu-item-insert-before,
+        .menu-item-insert-after {
             padding-right: 1rem;
             position: relative;
 
@@ -608,6 +625,10 @@ li {
                 transform: translate(0, -50%);
                 width: 1px;
             }
+        }
+
+        .menu-item-move-icon {
+            vertical-align: text-bottom;
         }
 
         select {
