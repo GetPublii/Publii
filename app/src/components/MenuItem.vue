@@ -97,7 +97,12 @@
                 href="#"
                 class="menu-item-unselect"
                 :title="$t('menu.unselectItem')"
-                @click.prevent="unselectItem()">{{ $t('menu.unselectItem') }}</a>
+                @click.prevent="unselectItem()">
+                <icon
+                    class="menu-item-move-icon"
+                    customWidth="22"
+                    customHeight="22"
+                    name="sidebar-close"/> {{ $t('menu.unselectItem') }}</a>
 
             <span 
                 v-if="selectedItem && !isSelected && !parentIsSelected"
@@ -603,6 +608,17 @@ li {
             color: var(--text-light-color);
             font-size: 1.4rem;
             padding: 1rem .5rem;
+        }
+
+        .menu-item-unselect {
+            color: var(--warning);
+
+            & > svg {
+               fill: var(--warning);
+               position: relative;
+               right: 3px;
+               top: 3px;
+            }
         }
 
         .menu-item-edit,
