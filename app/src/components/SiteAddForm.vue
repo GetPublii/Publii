@@ -1,109 +1,49 @@
 <template>
     <div class="site-create-wrapper">
         <div class="site-create">
-            <tabs
-                ref="site-create-tabs"
-                id="site-create-options-tabs"
-                :items="tabsItems"
-                isHorizontal>
-                <div slot="tab-0">
-                    <div class="site-create-form">
-                        <logo-creator ref="logo-creator" />
+            <h2 class="title">
+                {{ header }}
+            </h2>
 
-                        <div class="site-create-field">
-                            <label for="site-name">
-                                {{ $t('site.websiteName') }}:
-                                <span
-                                    v-if="siteNameError"
-                                    class="site-create-field-error">
-                                    {{ $t('site.websiteNameRequired') }}
-                                </span>
-                            </label>
+            <div class="site-create-form">
+                <logo-creator ref="logo-creator" />
 
-                            <text-input
-                                ref="site-name"
-                                id="site-name"
-                                :spellcheck="false"
-                                changeEventName="add-website-name-changed"
-                                :customCssClasses="siteNameCssClasses" />
-                        </div>
+                <div class="site-create-field">
+                    <label for="site-name">
+                        {{ $t('site.websiteName') }}:
+                        <span
+                            v-if="siteNameError"
+                            class="site-create-field-error">
+                            {{ $t('site.websiteNameRequired') }}
+                        </span>
+                    </label>
 
-                        <div class="site-create-field">
-                            <label for="author-name">
-                                {{ $t('author.authorName') }}:
-                                <span
-                                    v-if="authorNameError"
-                                    class="site-create-field-error">
-                                    {{ $t('site.websiteAuthorRequired') }}
-                                </span>
-                            </label>
-
-                            <text-input
-                                ref="author-name"
-                                id="author-name"
-                                :spellcheck="false"
-                                changeEventName="add-website-author-changed"
-                                :customCssClasses="authorNameCssClasses" />
-                        </div>
-                    </div>
+                    <text-input
+                        ref="site-name"
+                        id="site-name"
+                        :spellcheck="false"
+                        changeEventName="add-website-name-changed"
+                        :customCssClasses="siteNameCssClasses" />
                 </div>
-                <div slot="tab-1">
-                    <template v-if="backupFile">
-                        <div class="backup-selected">
-                            <span>{{ $t('site.selectedBackupFile') }}</span>
-                            <div class="backup-selected-file">
-                                <strong>{{ backupFile.name }}</strong>
 
-                                <a
-                                    href="#"
-                                    class="backup-remove"
-                                    :title="$t('ui.delete')"
-                                    @click.prevent="removeBackupFile">
-                                    <icon
-                                        name="trash"
-                                        size="xs" />
-                                </a>
-                            </div>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div
-                            @drop.stop.prevent="uploadBackup"
-                            @dragleave.stop.prevent="hideOverlay"
-                            @dragenter.stop.prevent="showOverlay"
-                            @dragover.stop.prevent="showOverlay"
-                            @drag.stop.prevent="showOverlay"
-                            @dragstart.stop.prevent
-                            @dragend.stop.prevent
-                            :class="{ 'backup': true, 'backup-is-over': backupIsOver }">
-                            <div class="backup-upload">
-                                <icon
-                                    customWidth="60"
-                                    customHeight="60"
-                                    properties="not-clickable"
-                                    name="backup"
-                                    :primaryColor="'color-7'" />
+                <div class="site-create-field">
+                    <label for="author-name">
+                        {{ $t('author.authorName') }}:
+                        <span
+                            v-if="authorNameError"
+                            class="site-create-field-error">
+                            {{ $t('site.websiteAuthorRequired') }}
+                        </span>
+                    </label>
 
-                                    <span>{{ $t('file.dragAndDropBackupFile') }}</span>
-
-                                    <input
-                                        ref="input"
-                                        type="file"
-                                        class="backup-upload-input"
-                                        spellcheck="false"
-                                        @change="valueChanged">
-                            </div>
-
-                            <overlay
-                                v-if="backupIsOver"
-                                :hasBorder="true"
-                                :isBlue="true">
-                                <div>{{ $t('file.dropYourFileHere') }}</div>
-                            </overlay>
-                        </div>
-                    </template>
+                    <text-input
+                        ref="author-name"
+                        id="author-name"
+                        :spellcheck="false"
+                        changeEventName="add-website-author-changed"
+                        :customCssClasses="authorNameCssClasses" />
                 </div>
-            </tabs>
+            </div>
 
             <div :data-mode="status" class="site-create-buttons">
                 <p-button
@@ -134,7 +74,6 @@
 import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
-
 export default {
     name: 'site-add-form',
     mixins: [
@@ -146,9 +85,7 @@ export default {
             authorName: '',
             siteNameError: false,
             authorNameError: false,
-            overlayIsVisible: false,
-            backupFile: null,
-            backupIsOver: false
+            overlayIsVisible: false
         }
     },
     computed: {
@@ -156,14 +93,12 @@ export default {
             if(this.$store.getters.siteNames.length) {
                 return 'new-website';
             }
-
             return 'first-website';
         },
         header () {
             if(this.status === 'new-website') {
                 return this.$t('site.createNewWebsite');
             }
-
             return this.$t('site.createYourFirstWebsite');
         },
         siteNameCssClasses () {
@@ -178,12 +113,6 @@ export default {
         },
         defaultSiteConfig () {
             return JSON.parse(JSON.stringify(defaultSiteConfig));
-        },
-        tabsItems () {
-            return [
-                this.header,
-                this.$t('site.installFromBackup'),
-            ];
         }
     },
     mounted () {
@@ -191,12 +120,10 @@ export default {
             this.siteName = newValue;
             this.siteNameError = false;
         });
-
         this.$bus.$on('add-website-author-changed', (newValue) => {
             this.authorName = newValue;
             this.authorNameError = false;
         });
-
         this.$bus.$emit('add-website-form-displayed');
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
@@ -218,73 +145,57 @@ export default {
         formIsInvalid () {
             this.checkWebsiteName();
             this.checkAuthorName();
-
             if (this.siteNameError || this.authorNameError) {
                 return true;
             }
-
             return false;
         },
         addWebsite (e) {
             let self = this;
-
             if (this.formIsInvalid()) {
                 return;
             }
-
             this.overlayIsVisible = true;
-
             setTimeout(() => {
                 mainProcessAPI.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
-
                 mainProcessAPI.receiveOnce('app-site-creation-error', (data) => {
                     this.overlayIsVisible = false;
                     if (data.name) {
                         this.siteNameError = true;
                     }
-
                     if (data.author) {
                         this.authorNameError = true;
                     }
-
                     mainProcessAPI.stopReceiveAll('app-site-created');
                     mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
                     mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
                 });
-
                 mainProcessAPI.receiveOnce('app-site-creation-duplicate', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
-
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.siteWithThisNameExists'),
                         textCentered: true
                     });
-
                     mainProcessAPI.stopReceiveAll('app-site-created');
                     mainProcessAPI.stopReceiveAll('app-site-creation-error');
                 });
-
                 mainProcessAPI.receiveOnce('app-site-creation-db-error', (data) => {
                     this.overlayIsVisible = false;
                     this.siteNameError = true;
-
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.erroOcurredDuringSiteDatabaseCreationInfo'),
                         textCentered: true
                     });
-
                     mainProcessAPI.stopReceiveAll('app-site-created');
                     mainProcessAPI.stopReceiveAll('app-site-creation-error');
                 });
-
                 mainProcessAPI.receiveOnce('app-site-created', (data) => {
                     this.overlayIsVisible = false;
                     data.authors = self.setAuthor(data.authorName);
                     this.$store.commit('addNewSite', data);
                     window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
                     this.$router.push(`/site/${data.siteConfig.name}`);
-
                     mainProcessAPI.stopReceiveAll('app-site-creation-error');
                     mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
                     mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
@@ -301,7 +212,6 @@ export default {
                     icon: this.$refs['logo-creator'].getActiveIcon()
                 }
             };
-
             return Utils.deepMerge(this.defaultSiteConfig, baseConfig);
         },
         setAuthor (authorName) {
@@ -321,35 +231,6 @@ export default {
         },
         onEnterKey () {
             this.onOk();
-        },
-        showOverlay (e) {
-            this.backupIsOver = true;
-        },
-        hideOverlay (e) {
-            if (e.target.classList.contains('backup')) {
-                this.backupIsOver = false;
-            }
-        },
-        uploadBackup (e) {
-            this.backupIsOver = false;
-            this.backupFile = e.dataTransfer.files[0];
-
-            // mainProcessAPI.send('app-language-upload', {
-            //     sourcePath: e.dataTransfer.files[0].path
-            // });
-
-            // mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);
-        },
-        valueChanged (e) {
-            if(!e.target.files.length) {
-                return;
-            }
-
-            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
-            this.uploadBackup(sourcePath);
-        },
-        removeBackupFile () {
-            this.backupFile = null;
         }
     },
     beforeDestroy () {
@@ -362,15 +243,14 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
-
 /*
  * Site create form
  */
 .site-create {
     background: var(--popup-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
-    font-size: $app-font-base;
+    border-radius: 5px;
+    box-shadow: 0 0 60px rgba($color-4, 0.07);
+    font-size: 1.6rem;
     margin: 0;
     left: 50%;
     padding: 4.8rem 4.8rem 5.6rem 4.8rem;
@@ -380,15 +260,12 @@ export default {
     transform: translateX(-50%) translateY(-50%);
     user-select: none;
     width: 770px;
-
     &-form {
         overflow: hidden;
-
-        ::v-deep .logo-creator-preview {
+        /deep/ .logo-creator-preview {
             min-width: 10rem !important;
         }
     }
-
     .title {
         color: var(--text-primary-color);
         font-size: 1.8rem;
@@ -396,28 +273,23 @@ export default {
         margin: 0 0 4rem 0!important;
         text-transform: none;
     }
-
     &-field {
         margin: 0 0 3rem 0;
         text-align: left;
-
         & > label {
             display: block;
-            font-size: $app-font-base;
+            font-size: 1.6rem;
             font-weight: 400;
             line-height: 1.4;
             margin-bottom: 1rem;
         }
-
         &-error {
             color: var(--warning);
         }
-
         &:last-child {
             margin-bottom: 0;
         }
     }
-
     &-buttons {
         display: flex;
         margin: 0 -4.8rem -5.6rem -4.8rem;
@@ -426,32 +298,27 @@ export default {
         position: relative;
         text-align: center;
         top: 1px;
-
         .button {
-            border-radius: 0 0 0 var(--border-radius);
-
+            border-radius: 0 0 0 3px;
             & + .button {
                 box-shadow: none!important;
                 border-top: 1px solid var(--input-border-color);
-                border-radius: 0 0 var(--border-radius) 0;
+                border-radius: 0 0 3px 0;
                 color: var(--popup-btn-cancel-color);
                 margin-left: 0;
-
                 &:hover {
-                   background: var(--popup-btn-cancel-bg-hover);
+                   background: var(--popup-btn-cancel-hover-bg);
                    color: var(--popup-btn-cancel-hover-color);
                 }
             }
         }
     }
-
     &-wrapper {
         .loader {
             display: block;
             height: 2.8rem;
             margin: -5.6rem auto 2rem;
             width: 2.8rem;
-
             & > span {
                 animation: spin .9s infinite linear;
                 border-top: 2px solid var(--border-light-color);
@@ -462,13 +329,11 @@ export default {
                 display: block;
                 height: 3.5rem;
                 width: 3.5rem;
-
                 &::after {
                     border-radius: 50%;
                     content: "";
                     display: block;
                 }
-
                 @at-root {
                     @keyframes spin {
                        100% {
@@ -478,76 +343,6 @@ export default {
                 }
           }
        }
-    }
-
-    .backup-selected {
-        text-align: left;
-
-        &-file {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 0;
-
-            strong {
-                margin-right: 1rem;
-            }
-        }
-    }
-
-    .backup {
-        border: 2px dashed var(--input-border-color);
-        border-radius: var(--border-radius);
-        color: var(--gray-3);
-        position: relative;
-
-        &-upload {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            height: 340px;
-            justify-content: center;
-            padding: 2rem;
-
-            .icon {
-                margin-bottom: 1.5rem;
-            }
-
-            &-input {
-                clear: both;
-                color: transparent; // hack to remove the phrase "no file selected" from the file input
-                display: block;
-                line-height: 1.6!important;
-                margin: 3rem auto 0 auto!important;
-
-                &::-webkit-file-upload-button {
-                    -webkit-appearance: none;
-                background: var(--button-secondary-bg);
-                border: 1px solid var(--button-secondary-bg);
-                border-radius: var(--border-radius);
-                color: var(--button-secondary-color);
-                cursor: pointer;
-                display: inline-block;
-                font-size: 1.5rem;
-                font-weight: var(--font-weight-semibold);
-                left: 50%;
-                padding: .75rem 1.5rem;
-                position: relative;
-                transform: translate(-50%, 0);
-                outline: none;
-
-                    &:hover {
-                        background: var(--button-secondary-bg-hover);
-                        border-color: var(--button-secondary-bg-hover);
-                        color: var(--button-secondary-color-hover);
-                    }
-                }
-            }
-        }
-
-        .overlay.has-border {
-            border-radius: 3px;
-        }
     }
 }
 </style>
