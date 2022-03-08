@@ -623,7 +623,7 @@
         "footerText": "Tekst w stopce",
         "frontpage": "Pierwsza strona",
         "GDPR": "GDPR",
-        "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. &lt;a href=\"#cookie-settings\"&gt;Ustawienia ciasteczek&lt;/a&gt;). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
+        "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. <a href=\"#cookie-settings\">Ustawienia ciasteczek</a>). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
         "gdprTitle": "Tytuł",
         "generateOpenGraphTags": "Generuj tagi Open Graph",
         "generateTwitterCards": "Generuj karty Twitter'a",

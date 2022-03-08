@@ -623,7 +623,7 @@
         "footerText": "Footer text",
         "frontpage": "Frontpage",
         "GDPR": "GDPR",
-        "gdprBehaviourInfo": "Remember to place a link with the above anchor in your website navigation or the website content (e.g. &lt;a href=\"#cookie-settings\"&gt;Cookie preferences&lt;/a&gt;). Otherwise, your website's users might not be able to change their individual cookie preferences.",
+        "gdprBehaviourInfo": "Remember to place a link with the above anchor in your website navigation or the website content (e.g. <a href=\"#cookie-settings\">Cookie preferences</a>). Otherwise, your website's users might not be able to change their individual cookie preferences.",
         "gdprTitle": "Title",
         "generateOpenGraphTags": "Generate Open Graph tags",
         "generateTwitterCards": "Generate Twitter cards",
