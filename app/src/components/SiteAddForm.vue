@@ -262,7 +262,7 @@ export default {
     width: 770px;
     &-form {
         overflow: hidden;
-        /deep/ .logo-creator-preview {
+        ::v-deep .logo-creator-preview {
             min-width: 10rem !important;
         }
     }
