@@ -3,9 +3,9 @@
         <div class="site-create">
             <tabs
                 ref="site-create-tabs"
+                id="site-create-options-tabs"
                 :items="tabsItems"
-                isHorizontal
-                :onToggle="tabChanged">
+                isHorizontal>
                 <div slot="tab-0">
                     <div class="site-create-form">
                         <logo-creator ref="logo-creator" />
@@ -107,7 +107,6 @@
 
             <div :data-mode="status" class="site-create-buttons">
                 <p-button
-                    v-if="tabsActiveIndex === 0"
                     type="primary bottom"
                     :onClick="addWebsite">
                     {{ $t('site.createWebsite') }}
@@ -149,8 +148,7 @@ export default {
             authorNameError: false,
             overlayIsVisible: false,
             backupFile: null,
-            backupIsOver: false,
-            tabsActiveIndex: 0
+            backupIsOver: false
         }
     },
     computed: {
@@ -352,9 +350,6 @@ export default {
         },
         removeBackupFile () {
             this.backupFile = null;
-        },
-        tabChanged () {
-            this.tabsActiveIndex = this.$refs['site-create-tabs'].activeIndex;
         }
     },
     beforeDestroy () {
@@ -434,10 +429,6 @@ export default {
 
         .button {
             border-radius: 0 0 0 var(--border-radius);
-
-            &:last-child:first-child {
-                border-radius: 0 0 var(--border-radius) var(--border-radius);
-            }
 
             & + .button {
                 box-shadow: none!important;

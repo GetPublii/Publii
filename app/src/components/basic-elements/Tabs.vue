@@ -49,8 +49,7 @@ export default {
     },
     data () {
         return {
-            activeItem: false,
-            activeIndex: 0
+            activeItem: false
         }
     },
     mounted () {
@@ -58,7 +57,6 @@ export default {
 
         if(lastOpenedTab && this.items.indexOf(lastOpenedTab) > -1) {
             this.activeItem = lastOpenedTab;
-            this.activeIndex = this.items.indexOf(lastOpenedTab);
         } else {
             this.activeItem = this.items[0] || false;
         }
@@ -80,12 +78,7 @@ export default {
         },
         toggle (newActiveItem, scrollTo = false) {
             this.activeItem = newActiveItem;
-            this.activeIndex = this.items.indexOf(newActiveItem);
-
-            if (this.id) {
-                window.sessionStorage.setItem(this.id, newActiveItem);
-            }
-
+            window.sessionStorage.setItem(this.id, newActiveItem);
             this.onToggle();
 
             setTimeout(() => {
