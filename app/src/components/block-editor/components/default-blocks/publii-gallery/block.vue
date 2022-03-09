@@ -8,6 +8,7 @@
       v-if="content.images.length > 0 && view === 'preview'"
       ref="block"
       v-model="content.images"
+      handle="img"
       :data-cols="config.columns"
       :data-count="content.images.length"
       @start="draggingInProgress = true"

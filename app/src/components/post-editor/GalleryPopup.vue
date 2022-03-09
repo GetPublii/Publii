@@ -12,6 +12,7 @@
                     group="gallery-items"
                     chosenClass="is-chosen"
                     ghostClass="is-ghost"
+                    handle="img"
                     class="gallery-popup-images-list"
                     v-model="images"
                     :data-translation="$t('image.yourGalleryIsEmpty')">
