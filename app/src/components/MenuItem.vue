@@ -594,8 +594,9 @@ li {
         .menu-item-insert-as-child,
         .menu-item-unselect {
             color: var(--link-primary-color);
+            display: inline-block;
             font-size: 1.4rem;
-            padding: 1rem .5rem;
+            padding: .25rem .5rem;
 
             &:active,
             &:focus,
