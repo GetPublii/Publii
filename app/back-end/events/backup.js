@@ -103,7 +103,7 @@ class BackupEvents {
     createBackup(siteName, filename, event) {
         let backupsDir = this.backupsLocation;
         let sourceDir = path.join(this.app.sitesDir, siteName);
-        let backupProcess = new Worker(__dirname + '/../workers/backup/create');
+        let backupProcess = new Worker(__dirname + '/../workers/backup/create.js');
 
         backupProcess.postMessage({
             type: 'dependencies',
@@ -139,7 +139,7 @@ class BackupEvents {
         let backupsDir = this.backupsLocation;
         let destinationDir = this.app.sitesDir;
         let tempDir = path.join(this.app.appDir, 'temp');
-        let backupProcess = new Worker(__dirname + '/../workers/backup/restore');
+        let backupProcess = new Worker(__dirname + '/../workers/backup/restore.js');
 
         backupProcess.postMessage({
             type: 'dependencies',
