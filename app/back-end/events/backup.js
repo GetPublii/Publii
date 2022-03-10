@@ -2,7 +2,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Backup = require('../modules/backup/backup.js');
-const { Worker } = require('worker_threads');
 
 class BackupEvents {
     constructor(appInstance) {
@@ -100,80 +99,39 @@ class BackupEvents {
         });
     }
 
-    createBackup(siteName, filename, event) {
+    async createBackup(siteName, filename, event) {
         let backupsDir = this.backupsLocation;
         let sourceDir = path.join(this.app.sitesDir, siteName);
-        let backupProcess = new Worker(__dirname + '/../workers/backup/create.js');
+        let backupResult = await Backup.create(siteName, filename, backupsDir, sourceDir);
 
-        backupProcess.postMessage({
-            type: 'dependencies',
-            siteName: siteName,
-            backupsDir: backupsDir,
-            sourceDir: sourceDir,
-            backupFilename: filename
-        });
-
-        backupProcess.on('message', function(data) {
-            if(data.type === 'app-backup-create-success') {
-                event.sender.send('app-backup-created', {
-                    status: true,
-                    backups: data.backups
-                });
-
-                setTimeout(() => {
-                    backupProcess.terminate();
-                }, 1000);
-            } else {
-                event.sender.send('app-backup-created', {
-                    status: false
-                });
-
-                setTimeout(() => {
-                    backupProcess.terminate();
-                }, 1000);
-            }
-        });
+        if (backupResult.type === 'app-backup-create-success') {
+            event.sender.send('app-backup-created', {
+                status: true,
+                backups: backupResult.backups
+            });
+        } else {
+            event.sender.send('app-backup-created', {
+                status: false
+            });
+        }
     }
 
-    restoreBackup(siteName, backupName, event) {
+    async restoreBackup(siteName, backupName, event) {
         let backupsDir = this.backupsLocation;
         let destinationDir = this.app.sitesDir;
         let tempDir = path.join(this.app.appDir, 'temp');
-        let backupProcess = new Worker(__dirname + '/../workers/backup/restore.js');
+        let backupResult = await Backup.restore(siteName, backupName, backupsDir, destinationDir, tempDir, this.app);
 
-        backupProcess.postMessage({
-            type: 'dependencies',
-            siteName: siteName,
-            backupName: backupName,
-            backupsDir: backupsDir,
-            destinationDir: destinationDir,
-            tempDir: tempDir
-        });
-
-        backupProcess.on('message', data => {
-            if (data.type === 'app-backup-restore-success') {
-                event.sender.send('app-backup-restored', {
-                    status: true
-                });
-
-                setTimeout(() => {
-                    backupProcess.terminate();
-                }, 1000);
-            } else if (data.type === 'app-backup-restore-close-db') {
-                if (this.app.db) {
-                    this.app.db.close();
-                }
-            } else {
-                event.sender.send('app-backup-restored', {
-                    status: false,
-                    error: data.error
-                });
-
-                setTimeout(() => {
-                    backupProcess.terminate();
-                }, 1000);
-            }
-        });
+        if (backupResult.type === 'app-backup-restore-success') {
+            event.sender.send('app-backup-restored', {
+                status: true
+            });
+        } else {
+            event.sender.send('app-backup-restored', {
+                status: false,
+                error: backupResult.error
+            });
+        }
     }
 }
 

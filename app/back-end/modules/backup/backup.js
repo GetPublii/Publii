@@ -9,7 +9,6 @@ const moment = require('moment');
 const archiver = require('archiver');
 const tar = require('tar-fs');
 const { shell } = require('electron');
-const { parentPort } = require('worker_threads');
 
 class Backup {
     /**
@@ -75,7 +74,7 @@ class Backup {
      * @param backupsDir
      * @param sourceDir
      */
-    static create(siteName, backupFilename, backupsDir, sourceDir) {
+    static async create(siteName, backupFilename, backupsDir, sourceDir) {
         let sourcePath = path.join(sourceDir);
         let backupsPath = path.join(backupsDir, siteName);
 
@@ -83,17 +82,15 @@ class Backup {
             if(Utils.dirExists(backupsDir)) {
                 fs.mkdirSync(backupsPath);
             } else {
-                parentPort.postMessage({
+                return {
                     type: 'app-backup-create-error',
                     status: false,
                     error: 'core.backup.locationDoesNotExists'
-                });
-
-                return;
+                };
             }
         }
 
-        if(Utils.dirExists(backupsPath)) {
+        if (Utils.dirExists(backupsPath)) {
             backupFilename = backupFilename.replace(/[^a-z0-9\-\_]/gmi, '');
             let backupFile = path.join(backupsPath, backupFilename + '.tar');
 
@@ -102,36 +99,39 @@ class Backup {
             fs.emptyDirSync(path.join(sourcePath, 'output'));
             fs.emptyDirSync(path.join(sourcePath, 'preview'));
 
-            let output = fs.createWriteStream(backupFile);
-            let archive = archiver('tar');
+            let createOperation = new Promise(function (resolve, reject) {
+                let output = fs.createWriteStream(backupFile);
+                let archive = archiver('tar');
 
-            output.on('close', function () {
-                parentPort.postMessage({
-                    type: 'app-backup-create-success',
-                    backups: Backup.loadList(siteName, backupsDir)
+                output.on('close', function () {
+                    resolve({
+                        type: 'app-backup-create-success',
+                        backups: Backup.loadList(siteName, backupsDir)
+                    });
                 });
+
+                archive.on('error', function (err) {
+                    resolve({
+                        type: 'app-backup-create-error',
+                        status: false,
+                        error: err
+                    });
+                });
+
+                archive.pipe(output);
+                archive.directory(sourcePath, '/');
+                archive.finalize();
             });
 
-            archive.on('error', function (err) {
-                parentPort.postMessage({
-                    type: 'app-backup-create-error',
-                    status: false,
-                    error: err
-                });
-            });
-
-            archive.pipe(output);
-            archive.directory(sourcePath, '/');
-            archive.finalize();
-
-            return;
+            let results = await createOperation;
+            return results;
         }
 
-        parentPort.postMessage({
+        return {
             type: 'app-backup-create-error',
             status: false,
             error: 'core.backup.locationDoesNotExists'
-        });
+        };
     }
 
     /**
@@ -214,95 +214,91 @@ class Backup {
      * @param destinationDir
      * @param tempDir
      */
-    static restore(siteName, backupName, backupsDir, destinationDir, tempDir) {
+    static async restore(siteName, backupName, backupsDir, destinationDir, tempDir, appInstance) {
         let backupFilePath = path.join(backupsDir, siteName, backupName);
         let destinationPath = path.join(destinationDir, siteName);
 
-        if(!Utils.fileExists(backupFilePath)) {
-            parentPort.postMessage({
+        if (!Utils.fileExists(backupFilePath)) {
+            return {
                 type: 'app-backup-restore-error',
                 status: false,
                 error: 'core.backup.fileDoesNotExists'
-            });
-
-            return;
+            };
         }
 
-        if(!Utils.dirExists(destinationDir)) {
-            parentPort.postMessage({
+        if (!Utils.dirExists(destinationDir)) {
+            return {
                 type: 'app-backup-restore-error',
                 status: false,
                 error: 'core.backup.destinationDirectoryDoesNotExists'
-            });
-
-            return;
+            };
         }
 
         if(!Utils.dirExists(tempDir)) {
             fs.mkdirSync(tempDir);
 
             if(!Utils.dirExists(tempDir)) {
-                parentPort.postMessage({
+                return {
                     type: 'app-backup-restore-error',
                     status: false,
                     error: 'core.backup.temporaryDirectoryDoesNotExists'
-                });
-
-                return;
+                };
             }
         }
 
         // Empty the temp directory before extracting the backups content
         fs.emptyDirSync(tempDir);
 
-        fs.createReadStream(backupFilePath)
-            .on('error', function(err) {
-                parentPort.postMessage({
-                    type: 'app-backup-restore-error',
-                    status: false,
-                    error: 'core.backup.errorDuringReadingBackupFile'
-                });
+        let restoreOperation = new Promise(function (resolve, reject) {
+            fs.createReadStream(backupFilePath)
+                .on('error', function(err) {
+                    resolve({
+                        type: 'app-backup-restore-error',
+                        status: false,
+                        error: 'core.backup.errorDuringReadingBackupFile'
+                    });
+                })
+                .pipe(tar.extract(tempDir, {
+                    finish: () => {
+                    // Verify the backup
+                    let backupTest = Backup.verify(tempDir, siteName);
+        
+                    if(!backupTest) {    
+                        resolve({
+                            type: 'app-backup-restore-error',
+                            status: false,
+                            error: 'core.backup.errorDuringReadingBackupFile'
+                        });
 
-                setTimeout(function () {
-                    process.exit();
-                }, 1000);
-            })
-            .pipe(tar.extract(tempDir, {
-                finish: () => {
-                // Verify the backup
-                let backupTest = Backup.verify(tempDir, siteName);
-    
-                if(!backupTest) {
-                    setTimeout(function () {
-                        process.exit();
-                    }, 1000);
-    
-                    return;
-                }
-    
-                // Close DB connection and remove site dir contents
-                parentPort.postMessage({
-                    type: 'app-backup-restore-close-db',
-                    status: true
-                });
-    
-                fs.emptyDirSync(destinationPath);
-    
-                // Move files from the temp dir to the site dir
-                let backupContents = fs.readdirSync(tempDir);
-    
-                for(let content of backupContents) {
-                    fs.moveSync(
-                        path.join(tempDir, content),
-                        path.join(destinationPath, content)
-                    );
-                }
-    
-                parentPort.postMessage({
-                    type: 'app-backup-restore-success',
-                    status: true
-                });
-            }}));
+                        return;
+                    }
+        
+                    // Close DB connection and remove site dir contents
+                    if (appInstance.db) {
+                        appInstance.db.close();
+                    }
+        
+                    fs.emptyDirSync(destinationPath);
+        
+                    // Move files from the temp dir to the site dir
+                    let backupContents = fs.readdirSync(tempDir);
+        
+                    for(let content of backupContents) {
+                        fs.moveSync(
+                            path.join(tempDir, content),
+                            path.join(destinationPath, content)
+                        );
+                    }
+        
+                    resolve({
+                        type: 'app-backup-restore-success',
+                        status: true
+                    });
+                }}));
+        });
+
+        let results = await restoreOperation;
+        return results;
     }
 
     /**

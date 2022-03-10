@@ -67,9 +67,7 @@
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",
       "node_modules/integer/**/*",
-      "node_modules/node-expat/**/*",
-      "back-end/workers/backup/create.js",
-      "back-end/workers/backup/restore.js"
+      "node_modules/node-expat/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
