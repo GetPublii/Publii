@@ -1,6 +1,7 @@
+const { parentPort } = require('worker_threads');
 const Backup = require('./../../modules/backup/backup.js');
 
-process.on('message', function(msg){
+parentPort.on('message', function(msg){
     if(msg.type === 'dependencies') {
         let siteName = msg.siteName;
         let backupsDir = msg.backupsDir;

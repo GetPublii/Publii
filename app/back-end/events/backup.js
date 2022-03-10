@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Backup = require('../modules/backup/backup.js');
-const childProcess = require('child_process');
+const { Worker } = require('worker_threads');
 
 class BackupEvents {
     constructor(appInstance) {
@@ -103,9 +103,9 @@ class BackupEvents {
     createBackup(siteName, filename, event) {
         let backupsDir = this.backupsLocation;
         let sourceDir = path.join(this.app.sitesDir, siteName);
-        let backupProcess = childProcess.fork(__dirname + '/../workers/backup/create');
+        let backupProcess = new Worker(__dirname + '/../workers/backup/create');
 
-        backupProcess.send({
+        backupProcess.postMessage({
             type: 'dependencies',
             siteName: siteName,
             backupsDir: backupsDir,
@@ -119,10 +119,18 @@ class BackupEvents {
                     status: true,
                     backups: data.backups
                 });
+
+                setTimeout(() => {
+                    backupProcess.terminate();
+                }, 1000);
             } else {
                 event.sender.send('app-backup-created', {
                     status: false
                 });
+
+                setTimeout(() => {
+                    backupProcess.terminate();
+                }, 1000);
             }
         });
     }
@@ -131,9 +139,9 @@ class BackupEvents {
         let backupsDir = this.backupsLocation;
         let destinationDir = this.app.sitesDir;
         let tempDir = path.join(this.app.appDir, 'temp');
-        let backupProcess = childProcess.fork(__dirname + '/../workers/backup/restore');
+        let backupProcess = new Worker(__dirname + '/../workers/backup/restore');
 
-        backupProcess.send({
+        backupProcess.postMessage({
             type: 'dependencies',
             siteName: siteName,
             backupName: backupName,
@@ -147,6 +155,10 @@ class BackupEvents {
                 event.sender.send('app-backup-restored', {
                     status: true
                 });
+
+                setTimeout(() => {
+                    backupProcess.terminate();
+                }, 1000);
             } else if (data.type === 'app-backup-restore-close-db') {
                 if (this.app.db) {
                     this.app.db.close();
@@ -156,6 +168,10 @@ class BackupEvents {
                     status: false,
                     error: data.error
                 });
+
+                setTimeout(() => {
+                    backupProcess.terminate();
+                }, 1000);
             }
         });
     }

@@ -9,6 +9,7 @@ const moment = require('moment');
 const archiver = require('archiver');
 const tar = require('tar-fs');
 const { shell } = require('electron');
+const { parentPort } = require('worker_threads');
 
 class Backup {
     /**
@@ -82,7 +83,7 @@ class Backup {
             if(Utils.dirExists(backupsDir)) {
                 fs.mkdirSync(backupsPath);
             } else {
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-create-error',
                     status: false,
                     error: 'core.backup.locationDoesNotExists'
@@ -105,26 +106,18 @@ class Backup {
             let archive = archiver('tar');
 
             output.on('close', function () {
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-create-success',
                     backups: Backup.loadList(siteName, backupsDir)
                 });
-
-                setTimeout(function () {
-                    process.exit();
-                }, 1000);
             });
 
             archive.on('error', function (err) {
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-create-error',
                     status: false,
                     error: err
                 });
-
-                setTimeout(function () {
-                    process.exit();
-                }, 1000);
             });
 
             archive.pipe(output);
@@ -134,7 +127,7 @@ class Backup {
             return;
         }
 
-        process.send({
+        parentPort.postMessage({
             type: 'app-backup-create-error',
             status: false,
             error: 'core.backup.locationDoesNotExists'
@@ -226,7 +219,7 @@ class Backup {
         let destinationPath = path.join(destinationDir, siteName);
 
         if(!Utils.fileExists(backupFilePath)) {
-            process.send({
+            parentPort.postMessage({
                 type: 'app-backup-restore-error',
                 status: false,
                 error: 'core.backup.fileDoesNotExists'
@@ -236,7 +229,7 @@ class Backup {
         }
 
         if(!Utils.dirExists(destinationDir)) {
-            process.send({
+            parentPort.postMessage({
                 type: 'app-backup-restore-error',
                 status: false,
                 error: 'core.backup.destinationDirectoryDoesNotExists'
@@ -249,7 +242,7 @@ class Backup {
             fs.mkdirSync(tempDir);
 
             if(!Utils.dirExists(tempDir)) {
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-restore-error',
                     status: false,
                     error: 'core.backup.temporaryDirectoryDoesNotExists'
@@ -264,7 +257,7 @@ class Backup {
 
         fs.createReadStream(backupFilePath)
             .on('error', function(err) {
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-restore-error',
                     status: false,
                     error: 'core.backup.errorDuringReadingBackupFile'
@@ -288,7 +281,7 @@ class Backup {
                 }
     
                 // Close DB connection and remove site dir contents
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-restore-close-db',
                     status: true
                 });
@@ -305,7 +298,7 @@ class Backup {
                     );
                 }
     
-                process.send({
+                parentPort.postMessage({
                     type: 'app-backup-restore-success',
                     status: true
                 });
@@ -347,7 +340,7 @@ class Backup {
 
         // If errors were founded
         if(foundedErrors) {
-            process.send({
+            parentPort.postMessage({
                 type: 'app-backup-restore-error',
                 status: false,
                 error: 'core.backup.fileIsCorrupted'
