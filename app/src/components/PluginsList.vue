@@ -95,12 +95,12 @@ export default {
 
 .add-more-plugins {
     background-color: var(--bg-secondary);
-            border: 1px solid transparent;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-small);      
-            height: 100%;
-            transition: var(--transition);
-            text-align: center;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);      
+    height: 100%;
+    transition: var(--transition);
+    text-align: center;
 
     &:hover {
          background: var(--bg-primary);
@@ -122,6 +122,7 @@ export default {
          flex-direction: column;
          height: 100%;
          justify-content: center;
+         min-height: 29rem;
          width: 100%;
     }
 
