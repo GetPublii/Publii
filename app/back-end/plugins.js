@@ -81,7 +81,7 @@ class Plugins {
      */
     getSiteSpecificPluginsState (siteName) {
         let pluginsConfig = this.loadSitePluginsConfig(siteName);
-        let pluginNames = Object.keys(pluginsConfig);
+        let pluginNames = typeof pluginsConfig === 'object' ? Object.keys(pluginsConfig) : [];
         let status = {};
 
         for (let i = 0; i < pluginNames.length; i++) {
