@@ -635,7 +635,7 @@
         "homepageNoIndexPagination": "Jeśli ta opcja jest włączona, pliki paginacji strony głównej zostaną wykluczone z mapy witryny i otrzymają <strong>noindex, follow</strong> metatag robotów.",
         "homepagePagination": "Paginacja strony głównej",
         "howToPrepareYourThemeForGDPRInfo": "Włączenie GDPR Cookie Popup wymaga dodatkowych zmian w Twoim motywie, zwłaszcza jeśli korzystasz ze skryptów stron trzecich. <a href=\"https://getpublii.com/dev/prepare-theme-gdpr-compliant/\" target=\"_blank\" rel=\"noopener noreferrer\">Przeczytaj jak przygotować motyw do GDPR</a>.",
-        "imageResizeEngineInfo": "Silnik zmiany rozmiaru obrazów The Sharp jest znacznie szybszy niż Jimp, ale może powodować problemy z niektórymi obrazami. Jeśli napotkasz problemy podczas tworzenia lub ponownego generowania miniatur, spróbuj przełączyć się na mechanizm zmiany rozmiaru Jimp. Jeśli chcesz używać obrazów WebP, musisz użyć mechanizmu zmiany rozmiaru Sharp. Należy pamiętać, że mechanizm zmiany rozmiaru Sharp jest niedostępny w systemie Linux.",
+        "imageResizeEngineInfo": "Silnik zmiany rozmiaru obrazów The Sharp jest znacznie szybszy niż Jimp, ale może powodować problemy z niektórymi obrazami. Jeśli napotkasz problemy podczas tworzenia lub ponownego generowania miniatur, spróbuj przełączyć się na mechanizm zmiany rozmiaru Jimp. Jeśli chcesz używać obrazów WebP, musisz użyć mechanizmu zmiany rozmiaru Sharp.",
         "imagesResizeEngine": "Silnik zmiany rozmiaru obrazów:",
         "indentSize": "Rozmiar wcięć (spacje)",
         "internalPage": "Strona wewnętrzna",

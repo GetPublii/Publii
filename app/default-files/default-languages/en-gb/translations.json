@@ -635,7 +635,7 @@
         "homepageNoIndexPagination": "If this option is enabled your homepage pagination files will be excluded from the sitemap and will have the <strong>noindex, follow</strong> robots metatags added.",
         "homepagePagination": "Homepage pagination",
         "howToPrepareYourThemeForGDPRInfo": "Enabling the GDPR Cookie Popup requires some additional changes in your theme, especially if you are using third-party scripts. <a href=\"https://getpublii.com/dev/prepare-theme-gdpr-compliant/\" target=\"_blank\" rel=\"noopener noreferrer\">Read how to prepare your theme for GDPR</a>.",
-        "imageResizeEngineInfo": "The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine. Please note that the Sharp resize engine is unavailable on Linux.",
+        "imageResizeEngineInfo": "The Sharp resize engine is much faster than Jimp, but can cause issues with some images. If you are encountering problems when creating or regenerating thumbnails, please try switching to the Jimp resize engine. Should you wish to use WebP images, then you’ll need to use the Sharp resize engine.",
         "imagesResizeEngine": "Images resize engine:",
         "indentSize": "Indent size (spaces)",
         "internalPage": "Internal page",

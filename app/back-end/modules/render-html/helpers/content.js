@@ -367,13 +367,6 @@ class ContentHelper {
      */
     static _isImage(url) {
         if (
-            process.platform === 'linux' &&
-            url.toLowerCase().indexOf('.jpg') === -1 &&
-            url.toLowerCase().indexOf('.jpeg') === -1 &&
-            url.toLowerCase().indexOf('.png') === -1
-        ) {
-            return false;
-        } else if (
             url.toLowerCase().indexOf('.jpg') === -1 &&
             url.toLowerCase().indexOf('.jpeg') === -1 &&
             url.toLowerCase().indexOf('.png') === -1 &&
@@ -409,18 +402,10 @@ class ContentHelper {
             ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
             ContentHelper._imageIsLocal(url, domain) &&
             !(
-                (
-                    process.platform !== 'linux' &&
-                    url.toLowerCase().indexOf('.jpg') === -1 &&
-                    url.toLowerCase().indexOf('.jpeg') === -1 &&
-                    url.toLowerCase().indexOf('.png') === -1 &&
-                    url.toLowerCase().indexOf('.webp') === -1
-                ) || (
-                    process.platform === 'linux' &&
-                    url.toLowerCase().indexOf('.jpg') === -1 &&
-                    url.toLowerCase().indexOf('.jpeg') === -1 &&
-                    url.toLowerCase().indexOf('.png') === -1
-                )
+                url.toLowerCase().indexOf('.jpg') === -1 &&
+                url.toLowerCase().indexOf('.jpeg') === -1 &&
+                url.toLowerCase().indexOf('.png') === -1 &&
+                url.toLowerCase().indexOf('.webp') === -1
             ) &&
             url.toLowerCase().indexOf('/gallery/') === -1
         ) {

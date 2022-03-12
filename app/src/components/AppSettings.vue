@@ -343,12 +343,6 @@ export default {
         GoToLastOpenedWebsite
     ],
     data () {
-        let imageResizeEngine = 'sharp';
-
-        if (mainProcessAPI.getEnv().platformName === 'linux') {
-            imageResizeEngine = 'jimp';
-        }
-
         return {
             alwaysSaveSearchState: false,
             screensSelected: '',
@@ -402,12 +396,6 @@ export default {
             };
         },
         imageResizeEngines () {
-            if (mainProcessAPI.getEnv().platformName === 'linux') {
-                return {
-                    'jimp': 'Jimp'
-                };
-            }
-
             return {
                 'sharp': 'Sharp',
                 'jimp': 'Jimp'
@@ -489,10 +477,6 @@ export default {
         this.experimentalFeatureAppUiLanguages = this.$store.state.app.config.experimentalFeatureAppUiLanguages;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.theme = this.getAppTheme();
-
-        if (mainProcessAPI.getEnv().platformName === 'linux') {
-            this.imageResizeEnginesSelected = 'jimp';
-        }
 
         Vue.nextTick(() => {
             this.unwatchLocationPreview = this.$watch('locations.preview', this.detectPreviewLocationChange);

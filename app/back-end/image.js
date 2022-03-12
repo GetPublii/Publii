@@ -13,13 +13,7 @@ const slug = require('./helpers/slug');
 const Jimp = require('jimp');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
-
-// Sharp is loaded depending on the platform
-let sharp;
-
-if (process.platform !== 'linux') {
-    sharp = require('sharp');
-}
+let sharp = require('sharp');
 
 class Image extends Model {
     constructor(appInstance, imageData) {
@@ -520,7 +514,7 @@ class Image extends Model {
     allowedImageExtension(extension) {
         let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
 
-        if (process.platform === 'linux' || this.shouldUseJimp()) {
+        if (this.shouldUseJimp()) {
             allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
         }
 
@@ -531,10 +525,6 @@ class Image extends Model {
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
-        if (process.platform === 'linux') {
-            return true;
-        }
-
         return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
     }
 }
