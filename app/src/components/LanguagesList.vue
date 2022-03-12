@@ -134,6 +134,7 @@ export default {
          flex-direction: column;
          height: 100%;
          justify-content: center;
+         min-height: 29rem;
          width: 100%;
     }
 
