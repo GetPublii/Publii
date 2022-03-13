@@ -237,8 +237,8 @@ export default {
 
             img {
                display: block;
-               height: 58px;
-               margin: 0 auto 1rem;
+               height: 52px;
+               margin: 0 auto 1.4rem;
                width: auto;
                max-width: 60%;
             }
