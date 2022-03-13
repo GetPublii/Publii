@@ -474,11 +474,33 @@
             "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
             "size": "small"
         },
-
+        
+        {
+            "name": "colorScheme",
+            "label": "Select color scheme",
+            "group": "Colors",
+            "note": "<br />The auto color scheme means that it automatically adjusted to fit the user&#39;s operating system settings; if the OS does not support this feature, the light version is used.",
+            "value": "auto",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Light",
+                    "value": "light"
+                },
+                {
+                    "label": "Dark",
+                    "value": "dark"
+                },
+                {
+                    "label": "Auto",
+                    "value": "auto"
+                }
+            ]
+        },
         {
             "name": "separator",
             "type": "separator",
-            "label": "Main colors",
+            "label": "Light",
             "group": "Colors",
             "size": "small"
         },
@@ -501,6 +523,34 @@
             "label": "Text color",
             "group": "Colors",
             "value": "#17181E",
+            "type": "colorpicker"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Dark",
+            "group": "Colors",
+            "size": "small"
+        },
+        {
+            "name": "primaryDarkColor",
+            "label": "Primary color",
+            "group": "Colors",
+            "value": "#FFC074",
+            "type": "colorpicker"
+        },             
+        {
+            "name": "headingDarkColor",
+            "label": "Headings color",
+            "group": "Colors",
+            "value": "#EEEDED",
+            "type": "colorpicker"
+        },
+        {
+            "name": "textDarkColor",
+            "label": "Text color",
+            "group": "Colors",
+            "value": "#BFBFBF",
             "type": "colorpicker"
         },
         {

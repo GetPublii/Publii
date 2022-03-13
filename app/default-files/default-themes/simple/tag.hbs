@@ -78,7 +78,7 @@
                            {{/if}}
                         {{/if}}
                         {{#if @config.custom.tagAuthor}}
-                           <a href="{{url}}" class="feed__author invert">{{name}}</a>
+                           <a href="{{url}}" class="feed__author">{{name}}</a>
                         {{/if}}
                      {{/author}}
                      {{#if @config.custom.tagDate}}
@@ -93,7 +93,7 @@
                   </div>
                {{/checkIfAny}}
                <h2>
-                  <a href="{{url}}" class="invert">
+                  <a href="{{url}}">
                      {{title}}
                   </a>
                </h2>
@@ -124,7 +124,7 @@
                   <p>{{{ excerpt }}}</p>
                {{/if}}
                {{#if @config.custom.tagReadMore}}
-                  <a href="{{url}}" class="readmore feed__readmore invert">
+                  <a href="{{url}}" class="readmore feed__readmore">
                      {{ translate 'post.readMore' }}</a>
                {{/if}}
             </div>
