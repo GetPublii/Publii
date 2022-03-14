@@ -44,8 +44,10 @@ class ManualDeployment {
                 fs.emptyDirSync(outputPath);
             }
 
-            move(this.deployment.inputDir + '/*', outputPath)
-                .then(() => this.endDeployment('catalog', outputPath));
+            move(this.deployment.inputDir + '/*', outputPath, { 
+                dot: true, 
+                ignore: ['**/.DS_Store', '**/Thumbs.db'] 
+            }).then(() => this.endDeployment('catalog', outputPath));
             return;
         }
 
