@@ -76,7 +76,7 @@
                                  class="post__author-thumb" 
                                  alt="{{avatarImage.alt}}">
                            {{/if}}
-                           <a href="{{url}}" class="feed__author invert">{{name}}</a>
+                           <a href="{{url}}" class="feed__author">{{name}}</a>
                         {{/author}}
                      </div>
                   {{/if}}
@@ -136,7 +136,7 @@
                         {{/if}}
                         <div class="bio__info">
                            <h3 class="bio__name">
-                              <a href="{{url}}" class="invert" rel="author">{{name}}</a>
+                              <a href="{{url}}" rel="author">{{name}}</a>
                            </h3>
 
                            {{#if description}}
@@ -161,7 +161,7 @@
                            <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
                         </svg>
 
-                        <a href="{{url}}" class="invert post__nav-link" rel="prev">
+                        <a href="{{url}}" class="post__nav-link" rel="prev">
                            <span>{{ translate 'post.previousPost' }}</span>
                            {{title}}
                         </a>
@@ -169,7 +169,7 @@
                   {{/../previousPost}}
                   {{#../nextPost}}
                      <div class="post__nav-next">
-                        <a href="{{url}}" class="invert post__nav-link" rel="next">
+                        <a href="{{url}}" class="post__nav-link" rel="next">
                            <span>{{ translate 'post.nextPost' }}</span>
                            {{title}}
                         </a>
@@ -202,7 +202,7 @@
                            </time>
                         </div>
                         <h3 class="h1">
-                           <a href="{{url}}" class="invert">
+                           <a href="{{url}}">
                               {{title}}
                            </a>
                         </h3>
