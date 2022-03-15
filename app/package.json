@@ -60,7 +60,7 @@
     "moment": "2.29.1",
     "node-version-compare": "1.0.1",
     "normalize-path": "3.0.0",
-    "prismjs": "1.26.0",
+    "prismjs": "1.27.0",
     "request": "2.88.0",
     "sharp": "0.29.3",
     "slug": "0.9.4",
