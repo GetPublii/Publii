@@ -162,10 +162,10 @@ class ContentHelper {
      */
     static prepareExcerpt(length, text) {
         // Detect readmore
-        let readmoreMatches = text.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
+        let readmoreMatches = text.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
 
         if(readmoreMatches && readmoreMatches.length) {
-            text = text.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
+            text = text.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
             text = text[0];
             return text;
         }
