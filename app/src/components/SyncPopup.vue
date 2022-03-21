@@ -55,7 +55,7 @@
                 <div class="buttons">
                     <p-button
                         v-if="isManual"
-                        type="primary medium quarter-width"
+                        type="primary medium green quarter-width"
                         :onClick="showFolder">
                         {{ $t('sync.getWebsiteFiles') }}
                     </p-button>
