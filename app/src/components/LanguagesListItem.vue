@@ -61,7 +61,10 @@ export default {
             return false;
         },
         isOutdated () {
-            if (compare(this.languageData.publiiSupport, this.$store.state.app.versionInfo.version) === -1) {
+            let publiiSupport = this.languageData.publiiSupport.split('.').slice(0, 2).join('.');
+            let currentMajorVersion = this.$store.state.app.versionInfo.version.split('.').slice(0, 2).join('.');
+           
+            if (compare(publiiSupport, currentMajorVersion) === -1) {
                 return true;
             }
 
