@@ -1121,7 +1121,7 @@ textarea {
   color: var(--nav-link-color) !important;
 }
 .navbar .navbar__toggle {
-  background: var(--dark);
+  background: var(--section-bg);
   -webkit-box-shadow: none;
           box-shadow: none;
   border: none;
@@ -1233,7 +1233,7 @@ textarea {
 }
 
 .navbar_mobile_overlay {
-  background: var(--white);
+  background: var(--page-bg);
   height: calc(100vh - 4.4rem);
   left: 0;
   opacity: 1;
@@ -1307,7 +1307,7 @@ textarea {
 }
 
 .navbar_mobile_sidebar {
-  background: var(--white);
+  background: var(--page-bg);
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
           box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
   height: 100vh;
