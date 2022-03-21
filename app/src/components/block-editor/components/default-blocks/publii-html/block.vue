@@ -3,7 +3,6 @@
     <prism-editor
       :class="{ 'publii-block-html': true, 'is-visible': true }"
       ref="block"
-      @paste="pastePlainText"
       @keyup="handleKeyboard($event); debouncedSave()"
       @focus="updateCurrentBlockID"
       :code="content"
