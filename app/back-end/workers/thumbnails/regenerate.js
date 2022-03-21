@@ -83,7 +83,7 @@ function regenerateImage (images, fullPath, catalog) {
     if (promises[0] === 'NO-RESPONSIVE-IMAGES') {
         process.send({
             type: 'progress',
-            value: 100,
+            value: parseInt((context.totalProgress / context.numberOfImages) * 100, 10),
             files: [
                 {
                     translation: 'core.images.responsiveImagesDisabled'
@@ -91,7 +91,14 @@ function regenerateImage (images, fullPath, catalog) {
             ]
         });
 
-        finishProcess();
+        context.totalProgress++;
+
+        if (context.totalProgress >= context.numberOfImages) {
+            finishProcess();
+        } else {
+            regenerateImage(images, fullPath, catalog);
+        }
+
         return;
     }
 
@@ -213,6 +220,8 @@ function getImageType(context, image, catalog) {
  * @private
  */
 function finishProcess() {
+    console.log('Finish process...');
+
     process.send({
         type: 'finished'
     });

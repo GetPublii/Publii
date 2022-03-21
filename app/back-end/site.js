@@ -363,7 +363,7 @@ class Site {
                 return;
             }
 
-            if(data.type === 'finished') {
+            if (data.type === 'finished') {
                 sender.send('app-site-regenerate-thumbnails-success', true);
             }
         });
