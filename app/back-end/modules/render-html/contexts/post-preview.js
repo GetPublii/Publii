@@ -41,7 +41,7 @@ class RendererContextPostPreview extends RendererContext {
         let postURL = this.siteConfig.domain + '/preview.html';
         let preparedText = this.prepareContent(this.renderer.postData.text, this.renderer.postData.id);
         let hasCustomExcerpt = false;
-        let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi);
+        let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
 
         if (readmoreMatches && readmoreMatches.length) {
             hasCustomExcerpt = true;
@@ -53,7 +53,7 @@ class RendererContextPostPreview extends RendererContext {
             slug: this.renderer.postData.slug,
             author: this.renderer.cachedItems.authors[this.renderer.postData.author],
             url: postURL,
-            text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi, ''),
+            text: preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi, ''),
             excerpt: ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText),
             createdAt: this.renderer.postData.creationDate,
             modifiedAt: this.renderer.postData.modificationDate,
@@ -485,7 +485,7 @@ class RendererContextPostPreview extends RendererContext {
         preparedText = preparedText.replace(/contentEditable="true"/gi, '');
 
         // Remove read more text
-        preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]{1,}?\/?\>/gmi, '');
+        preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi, '');
 
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');

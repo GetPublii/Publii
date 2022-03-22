@@ -32,8 +32,14 @@ class GoogleCloud {
             return;
         }
 
+        let keyData = require(keyFilePath); 
+
         let gcs = new Storage({
-            credentials: require(keyFilePath)
+            projectId: keyData.project_id,
+            credentials: {
+                client_email: keyData.client_email,
+                private_key: keyData.private_key
+            }
         });
 
         this.connection = gcs.bucket(bucketName);
@@ -268,8 +274,14 @@ class GoogleCloud {
             return;
         }
 
+        let keyData = require(keyFilePath); 
+
         let gcs = new Storage({
-            credentials: require(keyFilePath)
+            projectId: keyData.project_id,
+            credentials: {
+                client_email: keyData.client_email,
+                private_key: keyData.private_key
+            }
         });
 
         let bucket = gcs.bucket(bucketName);
