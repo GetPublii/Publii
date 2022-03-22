@@ -220,7 +220,7 @@ class SFTP {
 
             self.deployment.uploadFile();
         }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(path.join(self.outputDir, input))}`);
+            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(input)}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
             self.deployment.uploadFile();
         });
