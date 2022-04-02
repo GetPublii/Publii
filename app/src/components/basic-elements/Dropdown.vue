@@ -7,24 +7,54 @@
         :class="{ 'no-border': noBorder }"
         @change="onChangeEvent">
         <slot name="first-choice"></slot>
-        <option
-            v-if="Array.isArray(items)"
-            v-for="(item, index) in items"
-            :value="item.value"
-            :key="'author-' + index"
-            :disabled="disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== ''"
-            :selected="item.value == selectedValue">
-            {{item.label}}
-        </option>
-        <option
-            v-if="!Array.isArray(items)"
-            v-for="(item, key) in items"
-            :value="key"
-            :key="key"
-            :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
-            :selected="key == selectedValue">
-            {{item}}
-        </option>
+        <template v-if="Array.isArray(items)">
+            <option
+                v-for="(item, index) in items"
+                :value="item.value"
+                :key="'author-' + index"
+                :disabled="disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== ''"
+                :selected="item.value == selectedValue">
+                {{item.label}}
+            </option>
+        </template>
+
+        <template v-if="!Array.isArray(items) && !items.hasGroups">
+            <option 
+                v-for="(item, key) in items"
+                :value="key"
+                :key="key"
+                :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                :selected="key == selectedValue">
+                {{item}}
+            </option>
+        </template>
+
+        <template v-if="!Array.isArray(items) && items.hasGroups"> 
+            <option 
+                v-for="(item, key) in items.groups.ungrouped"
+                :value="key"
+                :key="'ungrouped-' + key"
+                :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                :selected="key == selectedValue">
+                {{item}}
+            </option>
+
+            <template v-for="(groupName, index) of Object.keys(items.groups)">
+                <optgroup 
+                    v-if="groupName !== 'ungrouped'"
+                    :key="groupName + '-' + index"
+                    :label="groupName">
+                    <option 
+                        v-for="(item, key) in items.groups[groupName]"
+                        :value="key"
+                        :key="key"
+                        :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                        :selected="key == selectedValue">
+                        {{item}}
+                    </option>
+                </optgroup>
+            </template>
+        </template>
     </select>
 </template>
 
