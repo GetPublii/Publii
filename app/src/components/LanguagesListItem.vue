@@ -90,7 +90,7 @@ export default {
     methods: {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
-                message: this.$t('langs.removeLanguageMessage', languageName),
+                message: this.$t('langs.removeLanguageMessage', { languageName }),
                 okClick: function() {
                     mainProcessAPI.send('app-language-delete', {
                         name: languageName,
