@@ -83,7 +83,7 @@
         <switcher
           v-model="link.targetBlank" />
           {{ $t('link.openInNewTab') }}
-=      </div>
+      </div>
 
       <div
         v-if="linkType === 'file'"
