@@ -3,7 +3,8 @@
         @click="activateLanguage(directory, type)"
         :class="{
             'language': true,
-            'is-active': isActiveLanguage
+            'is-active': isActiveLanguage,
+            'is-outdated': isOutdated
         }">
         <span class="language-thumbnail-wrapper">
             <img
