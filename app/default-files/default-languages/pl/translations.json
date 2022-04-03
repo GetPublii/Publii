@@ -36,8 +36,9 @@
     },
     "core": {
         "archive": {
-            "errorDuringCreatingTAR": "An error occurred during creating TAR archive. Please try again.",
-            "errorDuringCreatingZIP": "An error occurred during creating ZIP archive. Please try again."
+            "destinationNotExists": "Wybrana lokalizacja plików wynikowych nie istnieje",
+            "errorDuringCreatingTAR": "Wystąpił błąd podczas tworzenia archiwum TAR. Spróbuj ponownie.",
+            "errorDuringCreatingZIP": "Wystąpił błąd podczas tworzenia archiwum ZIP. Spróbuj ponownie."
         },
         "backup": {
             "destinationDirectoryDoesNotExists": "Katalog docelowy nie istnieje",
@@ -859,7 +860,7 @@
         "ftps": "FTPS",
         "ftpWithSSLTLS": "FTP z SSL/TLS",
         "generatePreviewFiles": "Wygeneruj pliki podglądu",
-        "getWebsiteFiles": "Pobierz pliki strony internetowej",
+        "getWebsiteFiles": "Zobacz pliki strony",
         "githubPages": "Strony Github",
         "githubSyncedPart1": "Zmiany na Github Pages mogą być widoczne po kilku minutach od wysłania, ",
         "githubSyncedPart2": "zatem należy odczekać chwilę przed weryfikacją zmian.",
@@ -873,7 +874,7 @@
         "keyFile": "Plik klucza",
         "lastRendered": "Ostatnie renderowanie",
         "lastSync": "Ostatnia synchronizacja",
-        "leaveBlankToUseDefaultOutputDirectory": "Pozostaw puste aby użyć domyślnego kata;pgu docelowego",
+        "leaveBlankToUseDefaultOutputDirectory": "Pozostaw puste aby użyć domyślnego katalogu docelowego",
         "manualDeployment": "Wdrażanie ręczne",
         "manualOutputFieldCantBeEmpty": "Ręczny wybór wyjścia nie może być pusty",
         "ManualUpload": "Przesyłanie ręczne",

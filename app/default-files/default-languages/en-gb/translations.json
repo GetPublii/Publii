@@ -36,6 +36,7 @@
     },
     "core": {
         "archive": {
+            "destinationNotExists": "Specified output destination not exists",
             "errorDuringCreatingTAR": "An error occurred during TAR archive creation. Please try again.",
             "errorDuringCreatingZIP": "An error occurred during ZIP archive creation. Please try again."
         },

@@ -31,13 +31,28 @@ class ManualDeployment {
     }
 
     returnCatalog() {
+        let outputBaseDir = this.deployment.siteConfig.deployment.manual.outputDirectory;
         let outputDirName = slug(this.deployment.siteName) + '-files'; 
 
-        if (!this.deployment.siteConfig.deployment.manual.outputDirectory) {
-            this.deployment.siteConfig.deployment.manual.outputDirectory = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        if (outputBaseDir && !Utils.dirExists(outputBaseDir)) {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.archive.destinationNotExists'
+                    }
+                }
+            });
+
+            return;
         }
 
-        let outputPath = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, outputDirName);
+        if (!outputBaseDir) {
+            outputBaseDir = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        }
+
+        let outputPath = path.join(outputBaseDir, outputDirName);
 
         if (outputPath !== '') {
             if (Utils.dirExists(outputPath)) {
