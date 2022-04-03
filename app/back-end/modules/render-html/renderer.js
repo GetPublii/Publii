@@ -1007,6 +1007,13 @@ class Renderer {
      * Generate tag pages
      */
     generateTags(tagID = false, ampMode = false) {
+        if (
+            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.tagPages === false) ||
+            (this.themeConfig.renderer && this.themeConfig.renderer.createTagPages === false)
+        ) {
+            return false;
+        }
+        
         console.time(ampMode ? 'TAGS-AMP' : 'TAGS');
         // Get tags
         let inputFile = ampMode ? 'amp-tag.hbs' : 'tag.hbs';
@@ -1206,6 +1213,13 @@ class Renderer {
      * Generate author pages
      */
     generateAuthors(authorID = false, ampMode = false) {
+        if (
+            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.authorPages === false) ||
+            (this.themeConfig.renderer && this.themeConfig.renderer.createAuthorPages === false)
+        ) {
+            return false;
+        }
+
         console.time(ampMode ? 'AUTHORS-AMP' : 'AUTHORS');
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
@@ -1405,6 +1419,13 @@ class Renderer {
      * Generate the 404 error page (if supported in the theme)
      */
     generate404s() {
+        if (
+            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.errorPage === false) ||
+            (this.themeConfig.renderer && this.themeConfig.renderer.create404Page === false)
+        ) {
+            return false;
+        }
+
         console.time("404");
         // Load template
         let inputFile = '404.hbs';
@@ -1429,6 +1450,13 @@ class Renderer {
      * Generate the 404 error page (if supported in the theme)
      */
     generateSearch() {
+        if (
+            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.searchPage === false) ||
+            (this.themeConfig.renderer && this.themeConfig.renderer.createSearchPage === false)
+        ) {
+            return false;
+        }
+
         console.time("SEARCH");
         // Load template
         let inputFile = 'search.hbs';

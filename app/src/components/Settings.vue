@@ -307,8 +307,15 @@
                             type="medium"
                             :label="$t('tag.tagPage')" />
 
+                        <div
+                            v-if="!currentThemeSupportsTagPages"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportTagPages') }}</p>
+                        </div>
+
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -327,7 +334,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -340,7 +347,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="meta-robots-tags"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -352,7 +359,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="display-empty-tags"
                             :label="$t('settings.displayEmptyTags')">
                             <switcher
@@ -367,7 +374,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-no-index-pagination"
                             :label="$t('settings.disableTagsPaginationIndexing')">
                             <switcher
@@ -382,6 +389,7 @@
                         </field>
 
                         <field
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-no-pagination"
                             :label="$t('settings.disableTagsPagination')">
                             <switcher
@@ -399,8 +407,15 @@
                             type="medium"
                             :label="$t('settings.authorPage')" />
 
+                        <div
+                            v-if="!currentThemeSupportsAuthorPages"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
+                        </div>
+
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -419,7 +434,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -432,7 +447,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="meta-robots-authors"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -444,7 +459,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="display-empty-authors"
                             :label="$t('settings.displayEmptyAuthors')">
                             <switcher
@@ -458,7 +473,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-no-index-pagination"
                             :label="$t('settings.disableAuthorsPaginationIndexing')">
                             <switcher
@@ -473,6 +488,7 @@
                         </field>
 
                         <field
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-no-pagination"
                             :label="$t('settings.disableAuthorsPagination')">
                             <switcher
@@ -499,7 +515,7 @@
                         </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="error-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -518,7 +534,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="error-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -531,7 +547,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="meta-robots-error"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -552,10 +568,10 @@
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
                             <p>{{ $t('settings.themeDoesNotSupportSearchPages') }}</p>
-                            </div>
+                        </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="error-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -574,7 +590,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="search-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -587,7 +603,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="meta-robots-search"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -635,8 +651,16 @@
                                 @click.native="clearErrors('tags-prefix')"
                                 v-model="advanced.urls.tagsPrefix"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsTagPages"
                                 slot="field" />
                             <small
+                                v-if="!currentThemeSupportsTagPages"
+                                class="note"
+                                slot="note">
+                                {{ $t('settings.themeDoesNotSupportTagPages') }}
+                            </small>
+                            <small
+                                v-else
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.tagPrefixInfo')">
@@ -652,8 +676,16 @@
                                 @click.native="clearErrors('authors-prefix')"
                                 v-model="advanced.urls.authorsPrefix"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsAuthorPages"
                                 slot="field" />
                             <small
+                                v-if="!currentThemeSupportsAuthorPages"
+                                class="note"
+                                slot="note">
+                                {{ $t('settings.themeDoesNotSupportAuthorPages') }}
+                            </small>
+                            <small
+                                v-else
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.authorPrefixInfo')">
@@ -687,6 +719,7 @@
                                 :readonly="!themeHasSupportForErrorPage"
                                 v-model="advanced.urls.errorPage"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsErrorPage"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForErrorPage"
@@ -706,6 +739,7 @@
                                 :readonly="!themeHasSupportForSearchPage"
                                 v-model="advanced.urls.searchPage"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsSearchPage"
                                 slot="field" />
                             <small
                                 v-if="!themeHasSupportForSearchPage"
@@ -744,14 +778,18 @@
                             <label
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
-                                <switcher v-model="advanced.sitemapAddTags" />
+                                <switcher 
+                                    v-model="advanced.sitemapAddTags"
+                                    :disabled="!currentThemeSupportsTagPages" />
                                 {{ $t('settings.tagPages') }}
                             </label>
 
                             <label
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
-                                <switcher v-model="advanced.sitemapAddAuthors" />
+                                <switcher 
+                                    v-model="advanced.sitemapAddAuthors"
+                                    :disabled="!currentThemeSupportsAuthorPages" />
                                 {{ $t('settings.authorPages') }}
                             </label>
 
@@ -1648,11 +1686,62 @@ export default {
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
         },
+        currentThemeSupportsTagPages () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === 'undefined'
+                )
+            ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createTagPages
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createTagPages
+            );
+        },
+        currentThemeSupportsAuthorPages () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === 'undefined'
+                )
+            ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createAuthorPages
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createAuthorPages
+            );
+        },
         currentThemeSupportsSearchPage () {
             return (
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage
             ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createSearchPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage === 'undefined'
+                ) &&
                 this.$store.state.currentSite.themeSettings.renderer &&
                 this.$store.state.currentSite.themeSettings.renderer.createSearchPage
             );
@@ -1662,8 +1751,17 @@ export default {
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage
             ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures && 
                 this.$store.state.currentSite.themeSettings.renderer &&
-                this.$store.state.currentSite.themeSettings.renderer.create404page
+                this.$store.state.currentSite.themeSettings.renderer.create404Page
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.create404Page
             );
         },
         advancedTabs () {

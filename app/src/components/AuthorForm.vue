@@ -358,6 +358,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorImages;
         },
         currentThemeHasSupportForAuthorPages () {
+            if (this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === false) {
+                return false;
+            }
+
             return this.$store.state.currentSite.themeSettings.renderer.createAuthorPages;
         },
         metaFieldAttrs: function() {

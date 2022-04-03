@@ -331,6 +331,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagImages;
         },
         currentThemeHasSupportForTagPages () {
+            if (this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === false) {
+                return false;
+            }
+
             return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
         },
         metaFieldAttrs: function() {
