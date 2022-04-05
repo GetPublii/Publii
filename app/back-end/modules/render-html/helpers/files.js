@@ -138,7 +138,7 @@ class Files {
             flatten: true
         }).then(files => {
             files.filter(item => {
-                let filename = item.path.replace(dynamicAssetsPath, '');
+                let filename = normalizePath(item.path.replace(dynamicAssetsPath, ''));
                 return filesToCopy.indexOf(filename) > -1
             }).forEach(item => {
                 if (item.mode.dir === false) {
