@@ -72,7 +72,7 @@
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPosts"
-            :itemsCount="showModificationDateAsColumn ? 6 : 5">
+            :itemsCount="showModificationDate && showModificationDateAsColumn ? 6 : 5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -111,7 +111,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    v-if="showModificationDateAsColumn">
+                    v-if="showModificationDate && showModificationDateAsColumn">
                     <span
                         class="col-sortable-title"
                         @click="ordering('modified')">
@@ -333,7 +333,7 @@
                     </div>
 
                     <div
-                        v-if="item.tags"
+                        v-if="showPostTags && item.tags"
                         class="post-tags"
                         style="width: 100%;">
                         <a
@@ -351,14 +351,14 @@
                     type="publish-dates">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
                     <span
-                        v-if="!showModificationDateAsColumn"
+                        v-if="!showModificationDateAsColumn && showModificationDate"
                         class="modify-date">
                         {{ $t('ui.lastModified') }}: {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
                 <collection-cell
-                    v-if="showModificationDateAsColumn"
+                    v-if="showModificationDate && showModificationDateAsColumn"
                     type="modification-dates">
                     <span class="modify-date">
                         {{ getModificationDate(item.modified) }}
@@ -493,8 +493,14 @@ export default {
                 trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
             }
         },
+        showModificationDate () {
+            return this.$store.state.app.config.showModificationDate;
+        },
         showModificationDateAsColumn () {
             return this.$store.state.app.config.showModificationDateAsColumn;
+        },
+        showPostTags () {
+            return this.$store.state.app.config.showPostTags;
         },
         dropdownItems () {
             return [

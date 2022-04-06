@@ -78,6 +78,17 @@
                 </field>
 
                 <field
+                    id="show-modification-date"
+                    :label="$t('settings.showModificationDate')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-modification-date"
+                        v-model="showModificationDate" />
+                </field>
+                
+                <field
+                    v-if="showModificationDate"
                     id="show-modification-date-as-column"
                     :label="$t('settings.showModificationDateAsColumn')"
                     :labelSeparated="false">
@@ -95,6 +106,16 @@
                         slot="field"
                         id="show-post-slugs"
                         v-model="showPostSlugs" />
+                </field>
+
+                <field
+                    id="show-post-tags"
+                    :label="$t('settings.showPostTagsOnTheListing')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-post-tags"
+                        v-model="showPostTags" />
                 </field>
 
                 <field
@@ -337,8 +358,10 @@ export default {
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
             closeEditorOnSave: true,
+            showModificationDate: true,
             showModificationDateAsColumn: false,
             showPostSlugs: false,
+            showPostTags: true,
             postsOrdering: 'id DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
@@ -451,8 +474,10 @@ export default {
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
         this.screensSelected = this.$store.state.app.config.startScreen;
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
+        this.showModificationDate = this.$store.state.app.config.showModificationDate;
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
         this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
+        this.showPostTags = this.$store.state.app.config.showPostTags;
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
@@ -511,8 +536,10 @@ export default {
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
                 closeEditorOnSave: this.closeEditorOnSave,
+                showModificationDate: this.showModificationDate,
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
                 showPostSlugs: this.showPostSlugs,
+                showPostTags: this.showPostTags,
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
