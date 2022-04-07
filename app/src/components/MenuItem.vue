@@ -380,6 +380,7 @@ export default {
         removeMenuItem () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('menu.menuIemsRemoveMessage'),
+                isDanger: true,
                 okClick: this.removeSelectedMenuItem
             });
         },

@@ -68,6 +68,7 @@ export default {
         deletePlugin (pluginName, pluginDirectory) {
             let confirmConfig = {
                 message: this.$t('plugins.removePluginMessage', { pluginName }),
+                isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-plugin-delete', {
                         name: pluginName,

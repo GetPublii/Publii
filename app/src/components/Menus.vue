@@ -357,6 +357,7 @@ export default {
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('menu.menusRemoveMessage'),
+                isDanger: true,
                 okClick: this.deleteSelected
             });
         },

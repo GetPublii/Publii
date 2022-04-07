@@ -91,6 +91,7 @@ export default {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
                 message: this.$t('langs.removeLanguageMessage', { languageName }),
+                isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-language-delete', {
                         name: languageName,
