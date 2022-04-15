@@ -5,7 +5,6 @@ const request = require('request');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
 const asyncRequest = util.promisify(request);
-const asyncReadFile = util.promisify(fs.readFile);
 
 class NetlifyAPI {
     constructor (settings, events = {}) {
@@ -98,7 +97,7 @@ class NetlifyAPI {
     async uploadFile (filePath, deployID) {
         let endpointUrl = this.apiUrl + 'deploys/' + deployID + '/files' + filePath;
         let fullFilePath = this.getFilePath(this.inputDir, filePath, true);
-        let fileContent = await asyncReadFile(fullFilePath);
+        let fileContent = fs.createReadStream(fullFilePath);
         
         return asyncRequest({
             method: 'PUT',
