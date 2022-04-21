@@ -44,7 +44,6 @@
     "fs-extra": "10.0.0",
     "ftp": "0.3.10",
     "github": "9.2.0",
-    "glob-move": "1.0.1",
     "handlebars": "4.7.7",
     "html-minifier": "4.0.0",
     "image-downloader": "3.3.0",
