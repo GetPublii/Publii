@@ -6,7 +6,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const slug = require('./../../helpers/slug');
 const archiver = require('archiver');
-const move = require('glob-move');
 const Utils = require('./../../helpers/utils');
 
 class ManualDeployment {
