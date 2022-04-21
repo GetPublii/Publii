@@ -49,7 +49,7 @@
     "html-minifier": "4.0.0",
     "image-downloader": "3.3.0",
     "image-size": "1.0.1",
-    "isbinaryfile": "3.0.2",
+    "isbinaryfile": "5.0.0",
     "jimp": "0.16.1",
     "js-beautify": "1.14.0",
     "keytar": "7.8.0",

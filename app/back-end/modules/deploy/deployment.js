@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const md5 = require('md5');
 const normalizePath = require('normalize-path');
+const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 const slug = require('./../../helpers/slug');
 const FTP = require('./ftp.js');
 const SFTP = require('./sftp.js');
@@ -158,7 +159,7 @@ class Deployment {
             // Put file
             let fileMD5 = false;
 
-            if(this.fileIsAnImage(filePath)) {
+            if (isBinaryFileSync(path.join(this.inputDir, filePath))) {
                 let stats = fs.statSync(path.join(this.inputDir, filePath));
                 fileMD5 = md5(stats.size);
             } else {
@@ -336,11 +337,11 @@ class Deployment {
             }
 
             // Images will be uploaded at the end
-            if(self.fileIsAnImage(fileA.path)) {
+            if (isBinaryFileSync(fileA.path)) {
                 return -1;
             }
 
-            if(self.fileIsAnImage(fileB.path)) {
+            if (isBinaryFileSync(fileB.path)) {
                 return 1;
             }
 
@@ -445,29 +446,6 @@ class Deployment {
 
             this.client.uploadNewFileList();
         }
-    }
-
-    /**
-     * Detects images by filename
-     *
-     * @param filename
-     * @returns {boolean}
-     */
-    fileIsAnImage(filename) {
-        if(
-            filename.substr(-4).toLowerCase() === '.jpg' ||
-            filename.substr(-5).toLowerCase() === '.jpeg' ||
-            filename.substr(-4).toLowerCase() === '.png' ||
-            filename.substr(-4).toLowerCase() === '.svg' ||
-            filename.substr(-4).toLowerCase() === '.gif' ||
-            filename.substr(-4).toLowerCase() === '.bmp' ||
-            filename.substr(-5).toLowerCase() === '.webp' ||
-            filename.substr(-4).toLowerCase() === '.ico'
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
