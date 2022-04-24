@@ -810,6 +810,21 @@
         "websiteNameRequired": "A website name is required",
         "websiteNotFound": "Website not found"
     },
+    "supportedFeatures": {
+        "featureNames": {
+            "authorImages": "author featured images",
+            "authorPages": "author subpages",
+            "blockEditor": "block editor",
+            "customComments": "custom comments",
+            "customSearch": "custom search",
+            "errorPage": "error subpage",
+            "searchPage": "search subpage",
+            "tagImages": "tag featured images",
+            "tagsList": "tags list subpage",
+            "tagPages": "tag subpages"
+        },
+        "yourThemeDoNotSupport": "Your current theme do not support required feature: {featureName}"
+    },
     "sync": {
         "accessID": "Access ID",
         "accessIDFieldCantBeEmpty": "The access ID field cannot be empty",

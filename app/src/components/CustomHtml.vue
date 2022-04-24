@@ -32,6 +32,12 @@
                 id="custom-html-tabs"
                 :items="tabs"
                 :onToggle="refreshEditors">
+                <supported-features-check
+                    v-for="(htmlFieldName, index) in Object.keys(requiredFeatures)"
+                    :key="'supported-features-check-' + index"
+                    :slot="'tab-' + index"
+                    :featuresToCheck="requiredFeatures[htmlFieldName]" />
+
                 <codemirror-editor
                     v-for="(editor, index) in Object.keys(editors)"
                     :slot="'tab-' + index"
@@ -41,6 +47,7 @@
                     editorLoadedEventName="custom-html-editor-loaded"
                     mode="xml">
                 </codemirror-editor>
+
                 <small
                     v-for="(editor, index) in Object.keys(editors)"
                     class="editor-note"
@@ -65,12 +72,16 @@
 <script>
 import Utils from '../helpers/utils.js';
 import BackToTools from './mixins/BackToTools.js';
+import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 
 export default {
     name: 'custom-html',
     mixins: [
         BackToTools
     ],
+    components: {
+        'supported-features-check': SupportedFeaturesCheck
+    },
     data: function() {
         return {
             buttonsLocked: false,
@@ -78,10 +89,22 @@ export default {
                 'Head',
                 'Body',
                 'Comments',
+                'Search input',
+                'Search content',
                 'Footer',
                 'AMP Head',
                 'AMP Footer'
             ],
+            requiredFeatures: {
+                'custom-head-code': [],
+                'custom-body-code': [],
+                'custom-comments-code': ['customComments'],
+                'custom-search-input': ['customSearch'],
+                'custom-search-content': ['customSearch'],
+                'custom-footer-code': [],
+                'custom-head-amp-code': [],
+                'custom-footer-amp-code': []
+            },
             editors: {},
             loadedEditors: 0
         };
@@ -219,7 +242,7 @@ export default {
                 }
             };
 
-            for(let customCodeEditor of customCodeEditors) {
+            for (let customCodeEditor of customCodeEditors) {
                 let id = customCodeEditor.getAttribute('id');
                 let excludedIDs = [
                     'custom-head-code',

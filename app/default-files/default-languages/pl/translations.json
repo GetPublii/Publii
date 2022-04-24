@@ -810,6 +810,21 @@
         "websiteNameRequired": "nazwa strony jest wymagana",
         "websiteNotFound": "Nie znaleziono strony internetowej"
     },
+    "supportedFeatures": {
+        "featureNames": {
+            "authorImages": "wyróżnione grafiki autorów",
+            "authorPages": "podstrony autorów",
+            "blockEditor": "edytor blokowy",
+            "customComments": "systemy komentarzy",
+            "customSearch": "wyszukiwarki",
+            "errorPage": "podstrona błędów",
+            "searchPage": "podstrona wyszukiwania",
+            "tagImages": "wyróżnione grafiki tagów",
+            "tagsList": "podstrona listy tagów",
+            "tagPages": "podstrony tagów"
+        },
+        "yourThemeDoNotSupport": "Twój obecnie używany motyw nie wspiera wymaganej funkcji: {featureName}"
+    },
     "sync": {
         "accessID": "ID dsostępu",
         "accessIDFieldCantBeEmpty": "Pole ID dostępu nie może być puste",
