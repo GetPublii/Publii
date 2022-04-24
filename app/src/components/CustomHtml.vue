@@ -86,14 +86,14 @@ export default {
         return {
             buttonsLocked: false,
             tabs: [
-                'Head',
-                'Body',
-                'Comments',
-                'Search input',
-                'Search content',
-                'Footer',
-                'AMP Head',
-                'AMP Footer'
+                this.$t('customHTML.tabs.head'),
+                this.$t('customHTML.tabs.body'),
+                this.$t('customHTML.tabs.comments'),
+                this.$t('customHTML.tabs.searchInput'),
+                this.$t('customHTML.tabs.searchContent'),
+                this.$t('customHTML.tabs.footer'),
+                this.$t('customHTML.tabs.ampHead'),
+                this.$t('customHTML.tabs.ampFooter')
             ],
             requiredFeatures: {
                 'custom-head-code': [],
@@ -188,7 +188,14 @@ export default {
                 for(let i = 0; i < customHtmlCodes.length; i++) {
                     let id = customHtmlCodes[i];
                     customHtml[id] = this.getCustomHtmlCode(id);
-                    this.tabs.push(this.$store.state.currentSite.themeSettings.renderer.customHTML[id]);
+
+                    console.log('TAB ID:', id);
+
+                    if (this.$te('customHTML.tabs.' + id)) {
+                        this.tabs.push(this.$t('customHTML.tabs.' + id));
+                    } else {
+                        this.tabs.push(this.$store.state.currentSite.themeSettings.renderer.customHTML[id]);
+                    }
                 }
             }
 

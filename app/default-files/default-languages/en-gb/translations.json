@@ -88,6 +88,20 @@
             "tagsProgressInfo": "Importing tags ({progress} / {total})"
         }
     },
+    "customHTML": {
+        "tabs": {
+            "head": "Head",
+            "body": "Body",
+            "comments": "Comments",
+            "searchInput": "Search input",
+            "searchContent": "Search content",
+            "footer": "Footer",
+            "ampHead": "AMP Head",
+            "ampFooter": "AMP Footer",
+            "beforePost": "Before every post",
+            "afterPost": "After every post"
+        }
+    },
     "date": {
         "apr": "Apr",
         "aug": "Aug",

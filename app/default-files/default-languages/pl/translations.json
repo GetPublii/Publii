@@ -88,6 +88,20 @@
             "tagsProgressInfo": "Importowanie tagów ({progress} / {total})"
         }
     },
+    "customHTML": {
+        "tabs": {
+            "head": "Sekcja head",
+            "body": "Treść strony",
+            "comments": "Komentarze",
+            "searchInput": "Pole wyszukiwarki",
+            "searchContent": "Wyniki wyszukiwania",
+            "footer": "Stopka strony",
+            "ampHead": "Sekcja head w AMP",
+            "ampFooter": "Stopka w AMP",
+            "beforePost": "Przed każdym wpisem",
+            "afterPost": "Po każdym wpisie"
+        }
+    },
     "date": {
         "apr": "Kwi",
         "aug": "Sier",
