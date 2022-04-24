@@ -189,8 +189,6 @@ export default {
                     let id = customHtmlCodes[i];
                     customHtml[id] = this.getCustomHtmlCode(id);
 
-                    console.log('TAB ID:', id);
-
                     if (this.$te('customHTML.tabs.' + id)) {
                         this.tabs.push(this.$t('customHTML.tabs.' + id));
                     } else {
