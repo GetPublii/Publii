@@ -36,9 +36,9 @@
                 </p-button>
             </p-header>
 
-            <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
-                <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
-            </template>
+            <supported-features-check
+                v-if="requiredFeatures"
+                :featuresToCheck="requiredFeatures" />
 
             <div
                 v-if="hasMessage"
@@ -51,6 +51,10 @@
                     {{ messageInOptions.text }}
                 </div>
             </div>
+
+            <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
+                <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
+            </template>
 
             <template v-if="pluginHasConfig && pluginStandardOptionsVisible">
                 <fields-group
@@ -366,6 +370,7 @@
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
+import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 import Vue from 'vue';
 
 export default {
@@ -373,6 +378,9 @@ export default {
     mixins: [
         BackToTools
     ],
+    components: {
+        'supported-features-check': SupportedFeaturesCheck
+    },
     computed: {
         settingsGroups () {
             let groups = [];
@@ -399,6 +407,7 @@ export default {
             hasMessage: false,
             hasPluginCustomOptions: false,
             messageInOptions: null,
+            requiredFeatures: null,
             pluginStandardOptionsVisible: true,
             pluginSettingsDisplay: 'fieldsets',
             pluginSettingsTabsLabel: ''
@@ -430,6 +439,7 @@ export default {
                 this.hasPluginCustomOptions = !!result.pluginData.usePluginSettingsView;
                 this.hasMessage = !!result.pluginData.messageInOptions;
                 this.messageInOptions = result.pluginData.messageInOptions;
+                this.requiredFeatures = result.pluginData.requiredFeatures || [];
                 this.pluginSettingsDisplay = result.pluginData.settingsDisplay || 'fieldsets';
                 this.pluginSettingsTabsLabel = result.pluginData.tabsTitle || this.$t('toolsPlugin.tabsLabel');
 
@@ -637,5 +647,9 @@ export default {
 .msg {
     background: var(--bg-secondary);
     margin-bottom: 3rem;
+
+    & + .msg {
+        margin-top: -2rem;
+    }
 }
 </style>

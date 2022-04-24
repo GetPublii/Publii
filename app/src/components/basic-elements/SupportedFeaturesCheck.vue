@@ -58,6 +58,7 @@ export default {
 @import '../../scss/notifications.scss';
 
 .msg {
+    background: var(--bg-secondary);
     margin-bottom: 1rem;
 }
 
