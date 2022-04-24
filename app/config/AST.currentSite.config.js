@@ -104,6 +104,8 @@ const AstCurrentSiteConfig = {
         customHeadAmpCode: '',
         customBodyCode: '',
         customCommentsCode: '',
+        customSearchInput: '',
+        customSearchContent: '',
         customFooterCode: '',
         customFooterAmpCode: '',
         gdpr: {

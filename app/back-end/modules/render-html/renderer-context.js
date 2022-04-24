@@ -308,6 +308,8 @@ class RendererContext {
         this.context.headAmpCustomCode = this.getCustomHTMLCode('customHeadAmpCode', itemContext);
         this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode', itemContext);
         this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode', itemContext);
+        this.context.customSearchInput = this.getCustomHTMLCode('customSearchInput', itemContext);
+        this.context.customSearchContent = this.getCustomHTMLCode('customSearchContent', itemContext);
         this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode', itemContext);
         this.context.footerAmpCustomCode = this.getCustomHTMLCode('customFooterAmpCode', itemContext);
         this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML, itemContext);
