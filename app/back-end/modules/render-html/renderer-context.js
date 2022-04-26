@@ -426,7 +426,7 @@ class RendererContext {
     }
 
     getContentStructure() {
-        if (this.themeConfig.renderer && !this.themeConfig.renderer.createContentStructure) {
+        if (!RendererHelpers.getRendererOptionValue('createContentStructure', this.themeConfig)) {
             return false;
         }
 

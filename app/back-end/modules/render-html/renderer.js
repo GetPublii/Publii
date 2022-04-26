@@ -481,7 +481,7 @@ class Renderer {
         // Include the helpers from the helpers.js file
         let themeHelpers;
         
-        if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
+        if (RendererHelpers.getRendererOptionValue('includeHandlebarsInHelpers', this.themeConfig)) {
             themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath, Handlebars);
         } else {
             themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath);
@@ -995,7 +995,7 @@ class Renderer {
             this.siteConfig.advanced.urls.tagsPrefix === '' ||
             !this.themeConfig.supportedFeatures ||
             !this.themeConfig.supportedFeatures.tagsList ||
-            !this.themeConfig.renderer.createTagsList
+            !RendererHelpers.getRendererOptionValue('createTagsList', this.themeConfig)
         ) {
             return false;
         }
@@ -1030,8 +1030,10 @@ class Renderer {
      */
     generateTags(tagID = false, ampMode = false) {
         if (
-            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.tagPages === false) ||
-            (this.themeConfig.renderer && this.themeConfig.renderer.createTagPages === false)
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.tagPages === false
+            ) || RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig) === false
         ) {
             return false;
         }
@@ -1245,8 +1247,10 @@ class Renderer {
      */
     generateAuthors(authorID = false, ampMode = false) {
         if (
-            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.authorPages === false) ||
-            (this.themeConfig.renderer && this.themeConfig.renderer.createAuthorPages === false)
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.authorPages === false
+            ) || RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)
         ) {
             return false;
         }
@@ -1460,8 +1464,10 @@ class Renderer {
      */
     generate404s() {
         if (
-            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.errorPage === false) ||
-            (this.themeConfig.renderer && this.themeConfig.renderer.create404Page === false)
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.errorPage === false
+            ) || RendererHelpers.getRendererOptionValue('create404Page', this.themeConfig) === false
         ) {
             return false;
         }
@@ -1496,8 +1502,10 @@ class Renderer {
      */
     generateSearch() {
         if (
-            (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.searchPage === false) ||
-            (this.themeConfig.renderer && this.themeConfig.renderer.createSearchPage === false)
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.searchPage === false
+            ) || RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig) === false
         ) {
             return false;
         }
