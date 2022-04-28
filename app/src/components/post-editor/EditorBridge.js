@@ -303,6 +303,7 @@ class EditorBridge {
             };
             let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
+            updateWritersPanel();
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
                 self.hideToolbarsOnCopy();
