@@ -300,11 +300,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -320,11 +315,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -351,11 +341,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -382,11 +367,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -1250,7 +1230,7 @@ class Renderer {
             (
                 this.themeConfig.supportedFeatures && 
                 this.themeConfig.supportedFeatures.authorPages === false
-            ) || RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)
+            ) || RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig) === false
         ) {
             return false;
         }
@@ -1467,7 +1447,7 @@ class Renderer {
             (
                 this.themeConfig.supportedFeatures && 
                 this.themeConfig.supportedFeatures.errorPage === false
-            ) || RendererHelpers.getRendererOptionValue('create404Page', this.themeConfig) === false
+            ) || !RendererHelpers.getRendererOptionValue('create404Page', this.themeConfig) === false
         ) {
             return false;
         }

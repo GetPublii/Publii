@@ -109,7 +109,10 @@ export default {
 
             mainProcessAPI.send('app-preview-render', renderConfig);
 
+            console.log('SEND');
+
             mainProcessAPI.receiveOnce('app-preview-rendered', (data) => {
+                console.log('RECEIVE', data);
                 if (data.status === true) {
                     if (mode === 'post' || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
@@ -123,6 +126,7 @@ export default {
                 }
             });
 
+            console.log('STOP RECEIVEING');
             mainProcessAPI.stopReceive('app-preview-render-error', this.renderError);
             mainProcessAPI.receiveOnce('app-preview-render-error', this.renderError);
         },
