@@ -100,18 +100,22 @@
                                 imageType="authorImages"
                                 v-model="authorData.avatar" />
                         </label>
-
+                        <div                               
+                            slot="note"
+                            class="msg msg-small msg-icon msg-info">
+                            <icon name="info" size="m" />
+                            <p>{{ $t('author.whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer') }}</p>
+                        </div>
                         <label class="use-gravatar">
                             <switcher
                                 slot="field"
                                 id="use-gravatar"
                                 @click.native="toggleGravatar"
                                 v-model="authorData.useGravatar" />
-                            <small
+                            <span
                                 v-pure-html="$t('author.useGravatarMessage')">
-                            </small>
+                            </span>
                         </label>
-
                         <div>
                             <label class="no-margin">{{ $t('ui.featuredImage') }}:</label>
                             <div

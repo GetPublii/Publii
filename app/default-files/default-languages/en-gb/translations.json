@@ -29,6 +29,7 @@
         "selectAuthor": "Select author",
         "selectAuthorPage": "Select author page",
         "themeDoesNotSupportFeaturedImagesForAuthors": "Your theme does not support featured images for authors",
+        "whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer": "When you use the Gravatar service, please note, that your site visitors need to query a third-party server to load your avatar image.",
         "toUseThisOptionEnableIndexingAuthorPages": "To use this option, first enable indexing of author pages in SEO settings.",
         "useGravatarMessage": "Use <a href=\"https://gravatar.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Gravatar </a> to provide your author avatar",
         "useGravatarServiceMessage": "In order to use Gravatar service first provide the author's e-mail.",

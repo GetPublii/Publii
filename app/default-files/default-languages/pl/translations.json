@@ -29,6 +29,7 @@
         "selectAuthor": "Wybierz autora",
         "selectAuthorPage": "Wybierz stronę autora",
         "themeDoesNotSupportFeaturedImagesForAuthors": "Twój motyw nie wspiera wyróżnionych obrazków dla autorów.",
+        "whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer": "Korzystając z opcji Gravatara, pamiętaj, że odwiedzający twoją witrynę potrzebują wysyłać żądanie do serwera firmy trzeciej, aby załadować obraz awatara.",
         "toUseThisOptionEnableIndexingAuthorPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron autorów.",
         "useGravatarMessage": "Użyj <a href=\"https://gravatar.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Gravatara </a> aby dodać avatar do autora.",
         "useGravatarServiceMessage": "Aby skorzystać z usługi Gravatar podaj adres e-mail autora.",
