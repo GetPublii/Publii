@@ -320,7 +320,7 @@ export default {
 
             if (this.filenameIsInUse(filename)) {
                 this.$bus.$emit('message-display', {
-                    message: this.$t('file.createBackupNameInUseMsg', filename),
+                    message: this.$t('file.createBackupNameInUseMsg', { filename }),
                     type: 'warning',
                     lifeTime: 3
                 });
