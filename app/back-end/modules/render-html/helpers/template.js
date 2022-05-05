@@ -17,6 +17,8 @@ class TemplateHelper {
         this.outputDir = outputDir;
         this.siteConfig = siteConfig;
         this.themeConfig = this.loadThemeConfig();
+        this.loadedTemplates = {};
+        this.loadedPartialTemplates = {};
     }
 
     /*
@@ -41,20 +43,30 @@ class TemplateHelper {
         let filePath = path.join(this.themeDir, fileName);
         let overrideFilePath = Utils.fileIsOverrided(this.themeDir, filePath);
 
-        if(overrideFilePath) {
+        if (overrideFilePath) {
             filePath = overrideFilePath;
         }
 
-        if(fileExists(filePath)) {
-            return fs.readFileSync(filePath, 'utf8');
+        if (fileExists(filePath)) {
+            if (this.loadedTemplates[filePath]) {
+                return this.loadedTemplates[filePath];
+            }
+
+            this.loadedTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
+            return this.loadedTemplates[filePath];
         }
 
         // Support for the AMP default files
-        if(fileName.indexOf('amp-') === 0) {
+        if (fileName.indexOf('amp-') === 0) {
             filePath = path.join(__dirname, '..', '..', '..', '..', 'default-files', 'theme-files', fileName);
 
-            if(fileExists(filePath)) {
-                return fs.readFileSync(filePath, 'utf8');
+            if (fileExists(filePath)) {
+                if (this.loadedTemplates[filePath]) {
+                    return this.loadedTemplates[filePath];
+                }
+    
+                this.loadedTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
+                return this.loadedTemplates[filePath];
             }
         }
 
@@ -72,8 +84,13 @@ class TemplateHelper {
             filePath = overrideFilePath;
         }
 
-        if(fileExists(filePath)) {
-            return fs.readFileSync(filePath, 'utf8');
+        if (fileExists(filePath)) {
+            if (this.loadedPartialTemplates[filePath]) {
+                return this.loadedPartialTemplates[filePath];
+            }
+
+            this.loadedPartialTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
+            return this.loadedPartialTemplates[filePath];
         }
 
         return false;
