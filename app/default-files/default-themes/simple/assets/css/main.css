@@ -1290,6 +1290,9 @@ textarea {
   padding: 0;
   visibility: hidden;
 }
+.navbar_mobile_overlay .navbar__submenu[aria-hidden=false] {
+  visibility: visible;
+}
 .navbar_mobile_overlay .navbar__submenu_wrapper {
   height: 0;
   opacity: 0;
@@ -1301,9 +1304,6 @@ textarea {
 .navbar_mobile_overlay .navbar__submenu_wrapper.is-active {
   height: auto;
   opacity: 1;
-}
-.navbar_mobile_overlay .navbar__submenu_wrapper.is-active > .navbar__submenu {
-  visibility: visible;
 }
 
 .navbar_mobile_sidebar {
@@ -1366,6 +1366,9 @@ textarea {
   padding: 0;
   visibility: hidden;
 }
+.navbar_mobile_sidebar .navbar__submenu[aria-hidden=false] {
+  visibility: visible;
+}
 .navbar_mobile_sidebar .navbar__submenu_wrapper {
   height: 0;
   opacity: 0;
@@ -1377,9 +1380,6 @@ textarea {
 .navbar_mobile_sidebar .navbar__submenu_wrapper.is-active {
   height: auto;
   opacity: 1;
-}
-.navbar_mobile_sidebar .navbar__submenu_wrapper.is-active > .navbar__submenu {
-  visibility: visible;
 }
 .navbar_mobile_sidebar__overlay {
   background: rgba(0, 0, 0, 0.5);
@@ -1921,16 +1921,7 @@ textarea {
 .post__video::before, .post__iframe::before {
   display: block;
   content: "";
-  padding-top: 56.25%;
-}
-.post__video--21by9::before, .post__iframe--21by9::before {
-  padding-top: 42.857143%;
-}
-.post__video--4by3::before, .post__iframe--4by3::before {
-  padding-top: 75%;
-}
-.post__video--1by1::before, .post__iframe--1by1::before {
-  padding-top: 100%;
+  padding-top: var(--embed-aspect-ratio);
 }
 .post__video > iframe, .post__video > video, .post__iframe > iframe, .post__iframe > video {
   border: none;
@@ -1998,7 +1989,7 @@ textarea {
   margin-left: 0.4rem;
 }
 
-.search-page__form {
+.search-page-form {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
@@ -2007,15 +1998,14 @@ textarea {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin-bottom: calc(1.7rem + .5vw);
 }
 @media all and (max-width: 37.4375em) {
-  .search-page__input {
+  .search-page-input {
     margin-bottom: 0.5666666667rem;
   }
 }
 @media all and (min-width: 20em) {
-  .search-page__input {
+  .search-page-input {
     -webkit-box-flex: 1;
         -ms-flex: 1 0 auto;
             flex: 1 0 auto;

@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.4.1.0",
+    "version": "2.5.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -26,9 +26,8 @@
         "tagImages": true,
         "authorImages": true,
         "searchPage": true,
-        "errorPage": true,
-        "tagPages": true,
-        "authorPages": true
+        "customSearch": true,
+        "errorPage": true
     },
     "config": [
 
@@ -1224,38 +1223,6 @@
         },
 
         {
-            "name": "createSearchPage",
-            "label": "Search",
-            "group": "Search",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "searchId",
-            "group": "Search",
-            "label": "Google Custom Search Id",
-            "note": "A search ID is required for search functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "createSearchPage",
-                "value": "true"
-            }]
-        },
-        {
-            "name": "searchParam",
-            "group": "Search",
-            "label": "Search parameter",
-            "note": "You can change the default \"q\" search parameter if desired; this is recommended only for advanced users.",
-            "value": "q",
-            "type": "text",
-            "dependencies": [{
-                "field": "createSearchPage",
-                "value": "true"
-            }]
-        },
-
-        {
             "name": "shareFacebook",
             "group": "Share Buttons",
             "label": "Facebook",
@@ -1589,6 +1556,20 @@
             "value": true,
             "type": "checkbox"
         },  
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Additional",
+            "size": "small"
+        },
+        {
+            "name": "createSearchPage",
+            "label": "Search page",
+            "group": "Additional",
+            "value": false,
+            "type": "checkbox"
+        },
         {
             "name": "separator",
             "type": "separator",

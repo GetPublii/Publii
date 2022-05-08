@@ -14,15 +14,7 @@
          <div class="search">
             <div class="search__overlay js-search-overlay">
                <div class="search__overlay-inner">
-                  <form action="{{@website.searchUrl}}" class="search__form">
-                     <input
-                        class="search__input js-search-input"
-                        type="search"
-                        name="{{@config.custom.searchParam}}"
-                        placeholder="{{ translate 'search.placeholder' }}" 
-                        aria-label="{{ translate 'search.placeholder' }}"
-                        autofocus="autofocus"/>
-                  </form>
+                  {{{@customSearchInput}}} 
                   <button class="search__close js-search-close" aria-label="{{ translate 'search.close' }}">
                      {{ translate 'search.close' }}
                   </button>
