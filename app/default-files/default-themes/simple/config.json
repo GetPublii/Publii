@@ -1568,6 +1568,7 @@
             "name": "createSearchPage",
             "label": "Search page",
             "group": "Additional",
+            "note": "Enabling this option will create an additional search.html page which may be required by some search plugins.",
             "value": false,
             "type": "checkbox"
         },
