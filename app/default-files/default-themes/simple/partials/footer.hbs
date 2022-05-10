@@ -68,17 +68,10 @@
 </footer>
 </div>
 
-<script>
-   window.publiiThemeMenuConfig = {    
-        mobileMenuMode: '{{@config.custom.mobilemenu}}',
-        animationSpeed: 300,
-        submenuWidth: {{#checkIf @config.custom.submenu '==' "auto" }}'auto'{{else}}{{@config.custom.submenuWidth}}{{/checkIf}},
-        doubleClickTime: 500,
-        mobileMenuExpandableSubmenus: {{@config.custom.mobilemenuExpandableSubmenus}}, 
-        relatedContainerForOverlayMenuSelector: '.top',
-   };
-</script>
 <script defer src="{{js "scripts.min.js"}}"></script>
+
+<script>window.publiiThemeMenuConfig={mobileMenuMode:'{{@config.custom.mobilemenu}}',animationSpeed:300,submenuWidth: {{#checkIf @config.custom.submenu '==' "auto" }}'auto'{{else}}{{@config.custom.submenuWidth}}{{/checkIf}},doubleClickTime:500,mobileMenuExpandableSubmenus:{{@config.custom.mobilemenuExpandableSubmenus}},relatedContainerForOverlayMenuSelector:'.top'};</script>
+
 {{#if @config.site.mediaLazyLoad}}
     <script>        
         var images = document.querySelectorAll('img[loading]');

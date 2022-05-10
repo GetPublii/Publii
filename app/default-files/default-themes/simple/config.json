@@ -26,9 +26,9 @@
         "tagImages": true,
         "authorImages": true,
         "searchPage": true,
+        "errorPage": true,
         "customSearch": true,
-        "customComments": true,
-        "errorPage": true
+        "customComments": true
     },
     "config": [
 

@@ -461,7 +461,6 @@ window.addEventListener('scroll', function (e) {
     init();
 })(window.publiiThemeMenuConfig);
 
-
 // Load comments
 var comments = document.getElementById("js-comments");  
    if (comments) {
@@ -481,10 +480,10 @@ var searchButton = document.querySelector(".js-search-btn");
 if (searchButton) {
     searchButton.addEventListener("click", function () {        
         searchOverlay.classList.add("expanded");
-		  if (searchInput) {
-        setTimeout(function() { 
-            searchInput.focus(); 
-        }, 60);     
+        if (searchInput) {
+            setTimeout(function() { 
+                searchInput.focus(); 
+            }, 60);     
 		}   
     });
     
