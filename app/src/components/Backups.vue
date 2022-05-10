@@ -169,6 +169,7 @@ export default {
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('file.deletBackupsConfirmMsg'),
+                isDanger: true,
                 okClick: this.deleteSelected
             });
         },
