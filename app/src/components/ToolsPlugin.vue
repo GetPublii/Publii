@@ -244,6 +244,7 @@
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :disabled="field.disabled"
                                     :cols="field.cols"></text-area>
 
                                 <text-area
@@ -337,6 +338,7 @@
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
+                                    :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small
@@ -541,16 +543,25 @@ export default {
                     let inputGroupName = inputOptions[i].group;
 
                     if (inputGroupName) {
-                        groups[inputGroupName][inputOptions[i].value] = inputOptions[i].label;
+                        groups[inputGroupName][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
                     } else {
-                        groups['ungrouped'][inputOptions[i].value] = inputOptions[i].label;
+                        groups['ungrouped'][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
                     }
                 }
 
                 options.groups = groups;
             } else {
                 for (let i = 0; i < inputOptions.length; i++) {
-                    options[inputOptions[i].value] = inputOptions[i].label;
+                    options[inputOptions[i].value] = {
+                        label: inputOptions[i].label,
+                        disabled: inputOptions[i].disabled
+                    };
                 }
             }
 
