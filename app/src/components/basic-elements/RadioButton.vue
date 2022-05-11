@@ -9,6 +9,7 @@
                 :id="name + '-' + item.value"
                 :value="item.value"
                 :key="'radio-item-' + index"
+                :disabled="item.disabled"
                 v-model="content" />
             <label
                 class="radio"

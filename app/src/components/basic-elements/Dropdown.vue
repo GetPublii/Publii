@@ -12,7 +12,7 @@
                 v-for="(item, index) in items"
                 :value="item.value"
                 :key="'author-' + index"
-                :disabled="disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== ''"
+                :disabled="(disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== '') || item.disabled"
                 :selected="item.value == selectedValue">
                 {{item.label}}
             </option>
@@ -23,9 +23,14 @@
                 v-for="(item, key) in items"
                 :value="key"
                 :key="key"
-                :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                :disabled="(disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== '') || item.disabled"
                 :selected="key == selectedValue">
-                {{item}}
+                <template v-if="item.label">
+                {{ item.label }}
+                </template>
+                <template v-else>
+                {{ item }}
+                </template>
             </option>
         </template>
 
@@ -34,9 +39,9 @@
                 v-for="(item, key) in items.groups.ungrouped"
                 :value="key"
                 :key="'ungrouped-' + key"
-                :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                :disabled="(disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== '') || item.disabled"
                 :selected="key == selectedValue">
-                {{item}}
+                {{item.label}}
             </option>
 
             <template v-for="(groupName, index) of Object.keys(items.groups)">
@@ -48,9 +53,9 @@
                         v-for="(item, key) in items.groups[groupName]"
                         :value="key"
                         :key="key"
-                        :disabled="disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== ''"
+                        :disabled="(disabledValues.indexOf(key) > -1 && key !== selectedValue && key !== '') || item.disabled"
                         :selected="key == selectedValue">
-                        {{item}}
+                        {{item.label}}
                     </option>
                 </optgroup>
             </template>

@@ -140,7 +140,8 @@
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    :cols="field.cols"></text-area>
+                                    :cols="field.cols"
+                                    :disabled="field.disabled"></text-area>
 
                                 <text-area
                                     v-if="field.type === 'wysiwyg'"
@@ -229,6 +230,7 @@
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
+                                    :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small
@@ -598,16 +600,25 @@ export default {
                     let inputGroupName = inputOptions[i].group;
 
                     if (inputGroupName) {
-                        groups[inputGroupName][inputOptions[i].value] = inputOptions[i].label;
+                        groups[inputGroupName][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
                     } else {
-                        groups['ungrouped'][inputOptions[i].value] = inputOptions[i].label;
+                        groups['ungrouped'][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
                     }
                 }
 
                 options.groups = groups;
             } else {
                 for (let i = 0; i < inputOptions.length; i++) {
-                    options[inputOptions[i].value] = inputOptions[i].label;
+                    options[inputOptions[i].value] = {
+                        label: inputOptions[i].label,
+                        disabled: inputOptions[i].disabled
+                    };
                 }
             }
 
