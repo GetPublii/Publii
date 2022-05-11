@@ -716,13 +716,13 @@
                                 id="error-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('error-page') > -1 }"
                                 @click.native="clearErrors('error-page')"
-                                :readonly="!themeHasSupportForErrorPage"
+                                :readonly="!currentThemeSupportsErrorPage"
                                 v-model="advanced.urls.errorPage"
                                 :spellcheck="false"
                                 :disabled="!currentThemeSupportsErrorPage"
                                 slot="field" />
                             <small
-                                v-if="!themeHasSupportForErrorPage"
+                                v-if="!currentThemeSupportsErrorPage"
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportErrorPages') }}
@@ -1850,14 +1850,6 @@ export default {
                 'summary': this.$t('settings.twitteSummaryCard'),
                 'summary_large_image': this.$t('settings.twitteSummaryCardLargeImage')
             };
-        },
-        themeHasSupportForErrorPage () {
-            return this.$store.state.currentSite.themeSettings.renderer &&
-                   this.$store.state.currentSite.themeSettings.renderer.create404page;
-        },
-        themeHasSupportForSearchPage () {
-            return this.$store.state.currentSite.themeSettings.renderer &&
-                   this.$store.state.currentSite.themeSettings.renderer.createSearchPage;
         },
         sitemapLink () {
             let sitemapLink = false;
