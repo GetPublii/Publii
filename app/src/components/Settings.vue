@@ -736,13 +736,13 @@
                                 id="search-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('search-page') > -1 }"
                                 @click.native="clearErrors('search-page')"
-                                :readonly="!themeHasSupportForSearchPage"
+                                :readonly="!currentThemeSupportsSearchPage"
                                 v-model="advanced.urls.searchPage"
                                 :spellcheck="false"
                                 :disabled="!currentThemeSupportsSearchPage"
                                 slot="field" />
                             <small
-                                v-if="!themeHasSupportForSearchPage"
+                                v-if="!currentThemeSupportsSearchPage"
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportSearchPages') }}
