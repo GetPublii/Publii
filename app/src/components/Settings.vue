@@ -359,7 +359,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
+                            v-if="currentThemeSupportsTagPages"
                             id="display-empty-tags"
                             :label="$t('settings.displayEmptyTags')">
                             <switcher
@@ -389,7 +389,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
+                            v-if="currentThemeSupportsTagPages"
                             id="tag-no-pagination"
                             :label="$t('settings.disableTagsPagination')">
                             <switcher
@@ -459,7 +459,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
+                            v-if="currentThemeSupportsAuthorPages"
                             id="display-empty-authors"
                             :label="$t('settings.displayEmptyAuthors')">
                             <switcher
@@ -488,7 +488,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
+                            v-if="currentThemeSupportsAuthorPages"
                             id="author-no-pagination"
                             :label="$t('settings.disableAuthorsPagination')">
                             <switcher
