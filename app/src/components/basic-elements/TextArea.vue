@@ -83,6 +83,18 @@ export default {
                     }, 250);
                 }
             });
+
+            this.$bus.$on('plugin-settings-before-save', () => {
+                if (this.wysiwyg) {
+                    tinymce.triggerSave();
+
+                    setTimeout(() => {
+                        if (this.editorID && tinymce.get(this.editorID)) {
+                            this.content = tinymce.get(this.editorID).getContent();
+                        }
+                    }, 250);
+                }
+            });
         }, 0);
     },
     watch: {

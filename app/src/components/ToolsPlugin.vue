@@ -29,7 +29,7 @@
 
                 <p-button
                     v-if="pluginStandardOptionsVisible"
-                    @click.native="saveSettings"
+                    @click.native="save"
                     slot="buttons"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
@@ -354,7 +354,7 @@
 
                 <p-footer>
                     <p-button
-                        @click.native="saveSettings"
+                        @click.native="save"
                         slot="buttons"
                         :disabled="buttonsLocked">
                         {{ $t('settings.saveSettings') }}
@@ -600,6 +600,13 @@ export default {
                     Vue.set(this.settingsValues, setting[0], setting[1]);
                 }
             }
+        },
+        save () {
+            this.$bus.$emit('plugin-settings-before-save');
+
+            setTimeout(() => {
+                this.saveSettings();
+            }, 500);
         },
         saveSettings () {
             mainProcessAPI.send('app-site-save-plugin-config', {
