@@ -327,21 +327,21 @@ class Deployment {
             return 0;
         });
 
-        this.filesToUpload = this.filesToUpload.sort(function(fileA, fileB) {
-            if(fileA.type === 'directory') {
+        this.filesToUpload = this.filesToUpload.sort((fileA, fileB) => {
+            if (fileA.type === 'directory') {
                 return 1;
             }
 
-            if(fileB.type === 'directory') {
+            if (fileB.type === 'directory') {
                 return -1;
             }
 
             // Images will be uploaded at the end
-            if (isBinaryFileSync(fileA.path)) {
+            if (isBinaryFileSync(path.join(this.inputDir, fileA.path))) {
                 return -1;
             }
 
-            if (isBinaryFileSync(fileB.path)) {
+            if (isBinaryFileSync(path.join(this.inputDir, fileB.path))) {
                 return 1;
             }
 
