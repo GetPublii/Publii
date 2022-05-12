@@ -1963,19 +1963,19 @@ textarea {
   margin-top: calc(2.55rem + 1vw);
 }
 
-.author__avatar {
+.page--author__avatar {
   border-radius: 50%;
   height: 3rem;
   margin-bottom: calc(-1.4166666667rem - 1vw);
   width: 3rem;
 }
 @media all and (min-width: 37.5em) {
-  .author__avatar {
+  .page--author__avatar {
     height: 4rem;
     width: 4rem;
   }
 }
-.author__website {
+.page--author__website {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -1983,13 +1983,12 @@ textarea {
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
-.author__website a {
+.page--author__website a {
   font-family: var(--menu-font);
   font-weight: var(--font-weight-bold);
   margin-left: 0.4rem;
 }
-
-.search-page-form {
+.page--search form {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
@@ -2000,16 +1999,21 @@ textarea {
       flex-wrap: wrap;
 }
 @media all and (max-width: 37.4375em) {
-  .search-page-input {
+  .page--search input {
     margin-bottom: 0.5666666667rem;
   }
 }
 @media all and (min-width: 20em) {
-  .search-page-input {
+  .page--search input {
     -webkit-box-flex: 1;
         -ms-flex: 1 0 auto;
             flex: 1 0 auto;
     margin-right: 0.5666666667rem;
+  }
+}
+@media all and (max-width: 37.4375em) {
+  .page--search button {
+    width: 100%;
   }
 }
 

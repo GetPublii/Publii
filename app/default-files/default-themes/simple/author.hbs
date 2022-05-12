@@ -1,8 +1,8 @@
 {{> head}}
 {{> top}}
-<main>
+<main class="page page--author">
    {{#author}}
-      <div class="hero author">
+      <div class="hero">
          {{#featuredImage}}
             {{#if url}}
                <figure class="hero__image hero__image--overlay">                      
@@ -52,7 +52,7 @@
                      {{ lazyload "lazy" }}
                      height="{{avatarImage.height}}"
                      width="{{avatarImage.width}}" 
-                     class="author__avatar" 
+                     class="page--author__avatar" 
                      alt="{{avatarImage.alt}}">
                {{/if}}
                <h1>
@@ -63,7 +63,7 @@
                   <p>{{description}}</p>
                {{/if}}   
                {{#if website}}
-                  <p class="post__meta post__meta--author author__website">
+                  <p class="post__meta post__meta--author page--author__website">
                      <svg height="24" width="24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#website"/>
                      </svg>

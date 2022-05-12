@@ -1398,6 +1398,24 @@
             "value": "0.28333rem",
             "type": "text"
         },
+
+        {
+            "name": "searchFeature",
+            "label": "Search",
+            "group": "Search",
+            "note": "Enable / disable the search box, which is usually located next to the top menu. In order to use the search function, you also need to install the search plugin.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "createSearchPage",
+            "label": "Search subpage",
+            "group": "Search",
+            "note": "Enabling this option will create an additional search.html page which may be required by some search plugins.",
+            "value": false,
+            "type": "checkbox"
+        },
+
         {
             "name": "separator",
             "type": "separator",
@@ -1564,21 +1582,7 @@
             "group": "Additional",
             "size": "small"
         },
-        {
-            "name": "createSearchPage",
-            "label": "Search page",
-            "group": "Additional",
-            "note": "Enabling this option will create an additional search.html page which may be required by some search plugins.",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Additional",
-            "size": "small"
-        },
+       
         {
             "name": "formatDate",
             "label": "Date format",
