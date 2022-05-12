@@ -579,7 +579,6 @@ class ContentHelper {
                 links[baseUrl] = renderer.cachedItems[pluralName][id].url;
             } else {
                 console.log('(i) Non-existing link: ' + pluralName + ' (' + id + ')');
-                console.log(JSON.stringify(renderer.cachedItems));
                 links[baseUrl] = '#non-existing-' + type + '-with-id-' + id;
             }
         }
