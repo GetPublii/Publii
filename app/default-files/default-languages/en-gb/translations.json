@@ -341,7 +341,7 @@
         "getMoreLanguages": "Get more languages",
         "goToLanguagesManager": "Go to the languages manager",
         "installLanguage": "Install language",
-        "isOutdated": "Is outdated",
+        "isOutdated": "Outdated",
         "isOutdatedTitle": "This language supports Publii up to v.{supportedVersion}, while you are using Publii v.{currentVersion} - please update Publii to use this language.",
         "language": "Language:",
         "languageChangedMsg": "Application language changed",

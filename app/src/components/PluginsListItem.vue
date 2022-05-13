@@ -1,23 +1,27 @@
 <template>
-    <figure :class="{ 'plugin': true, }">
+    <figure
+        :class="{
+                'plugin': true,
+                'is-incompatible': isIncompatible
+            }">
         <span class="plugin-thumbnail-wrapper">
             <img
                 :src="thumbnail"
                 class="plugin-thumbnail"
                 alt="">
-            <span 
-                v-if="isIncompatible"
-                class="plugin-is-incompatible"
-                :title="$t('plugins.isIncompatibleTitle', { supportedVersion: pluginData.minimumPubliiVersion, currentVersion: this.$store.state.app.versionInfo.version })">
-                {{ $t('plugins.isIncompatible') }}
-            </span>
         </span>
 
         <figcaption class="plugin-name">
             <h3>
-                {{ name }}
+                <span>{{ name }}</span>
                 <span class="plugin-version">
                     {{ version }}
+                </span>
+                <span 
+                    v-if="isIncompatible"
+                    class="plugin-is-incompatible"
+                    :title="$t('plugins.isIncompatibleTitle', { supportedVersion: pluginData.minimumPubliiVersion, currentVersion: this.$store.state.app.versionInfo.version })">
+                    {{ $t('plugins.isIncompatible') }}
                 </span>
              </h3>
             <a
@@ -167,29 +171,37 @@ export default {
              font-weight: var(--font-weight-semibold);
              line-height: 1.4;
              margin: 1.2rem 0;
+
+             span:first-of-type {
+                 display: block;
+             }
         }
     }
 
     &-version {
         color: var(--text-light-color);
-        display: block;
         font-size: 1.2rem;
         font-weight: var(--font-weight-normal);
-        margin: 0 4rem 0 auto;
+    }
+
+    &-version,
+    &-is-incompatible {
+        color: var(--text-light-color);
+        font-size: 1.2rem;
+        font-weight: var(--font-weight-normnal);
     }
 
     &-is-incompatible {
-        bottom: 7rem;
-        border: 2px solid var(--warning);  
-        font-size: 1.4rem;
-        line-height: 1.5;
-        left: 1rem;        
-        padding: 3rem;
-        position: absolute;
-        right: 1rem;        
-        text-align: left;
-        top: 1rem; 
-        z-index: 1;
+        color: var(--warning);
+        margin: 0 4rem 0 .5rem;
+        text-transform: uppercase;
+    }
+
+    &.is-incompatible {
+       .plugin-version {
+           text-decoration-color: var(--warning);
+           text-decoration-line: line-through;
+       }
     }
 }
 </style>
