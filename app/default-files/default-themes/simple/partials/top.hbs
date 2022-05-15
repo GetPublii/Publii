@@ -14,15 +14,42 @@
          <div class="search">
             <div class="search__overlay js-search-overlay">
                <div class="search__overlay-inner">
-                  <form action="{{@website.searchUrl}}" class="search__form">
-                     <input
-                        class="search__input js-search-input"
-                        type="search"
-                        name="{{@config.custom.searchParam}}"
-                        placeholder="{{ translate 'search.placeholder' }}" 
-                        aria-label="{{ translate 'search.placeholder' }}"
-                        autofocus="autofocus"/>
-                  </form>
+                  {{#checkIf @config.custom.searchMode '===' "external"}}
+                        <form action="{{@config.custom.searchServer}}" class="search__form" method="{{@config.custom.searchMethod}}" {{#if @config.custom.searchTab}}target="_blank"{{/if}} {{#if @config.custom.searchForceWebsiteResults}}onsubmit="configInputSubmit();"{{/if}}>
+                            {{#if @config.custom.searchForceWebsiteResults}}
+                                <input
+                                    id="search_input"
+                                    class="search__input js-search-input"
+                                    type="search"
+                                    placeholder="{{ translate 'search.placeholder' }}" 
+                                    aria-label="{{ translate 'search.placeholder' }}"
+                                    autofocus="autofocus"/>
+                                <input
+                                    id="search_go"
+                                    type="hidden"
+                                    name="{{@config.custom.searchParam}}"/>
+                            {{else}}
+                                <input
+                                    class="search__input js-search-input"
+                                    type="search"
+                                    name="{{@config.custom.searchParam}}"
+                                    placeholder="{{ translate 'search.placeholder' }}" 
+                                    aria-label="{{ translate 'search.placeholder' }}"
+                                    autofocus="autofocus"/>
+                            {{/if}}
+                      </form>
+                        {{#if @config.custom.searchForceWebsiteResults}}<script>function configInputSubmit(){document.getElementById('search_go').value='site:'+window.location.hostname+' '+document.getElementById('search_input').value;return true;}</script>{{/if}}
+                    {{else}}
+                        <form action="{{@website.searchUrl}}" class="search__form" {{#if @config.custom.searchTab}}target="_blank"{{/if}}>
+                             <input
+                                class="search__input js-search-input"
+                                type="search"
+                                name="{{@config.custom.searchParam}}"
+                                placeholder="{{ translate 'search.placeholder' }}" 
+                                aria-label="{{ translate 'search.placeholder' }}"
+                                autofocus="autofocus"/>
+                        </form>
+                    {{/checkIf}}
                   <button class="search__close js-search-close" aria-label="{{ translate 'search.close' }}">
                      {{ translate 'search.close' }}
                   </button>
