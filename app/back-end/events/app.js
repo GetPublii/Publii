@@ -14,6 +14,13 @@ const unzip = require("unzipper");
 class AppEvents {
     constructor(appInstance) {
         /*
+         * Close app
+         */
+        ipcMain.on('app-close', function(event, config) {
+            appInstance.app.quit();
+        });
+        
+        /*
          * Save licence acceptance
          */
         ipcMain.on('app-license-accept', function(event, config) {

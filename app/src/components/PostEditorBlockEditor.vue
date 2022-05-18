@@ -115,6 +115,21 @@ export default {
         }
     },
     mounted () {
+        window.onbeforeunload = e => {
+            if (this.possibleDataLoss) {
+                e.returnValue = false;
+
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('core.sureYouWantQuit'),
+                    isDanger: true,
+                    okClick: () => {
+                        window.onbeforeunload = null;
+                        mainProcessAPI.send('app-close', true);
+                    }
+                });
+            }
+        };
+
         this.$bus.$on('date-changed', this.setCreationDate);
         this.$bus.$on('post-editor-possible-data-loss', this.setPossibleDataLoss);
         this.$bus.$on('block-editor-title-updated', this.updateTitle);
@@ -293,6 +308,7 @@ export default {
         this.$bus.$off('block-editor-title-updated', this.updateTitle);
         this.$bus.$off('block-editor-content-updated', this.setPossibleDataLoss);
         this.$bus.$off('block-editor-post-saved', this.editorPostSaved);
+        window.onbeforeunload = null;
     }
 };
 </script>

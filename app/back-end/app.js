@@ -648,31 +648,6 @@ class App {
             });
         }
 
-        this.mainWindow.on('close', async function(e) {
-            let currentWindowURL = e.sender.webContents.getURL();
-
-            if (
-                currentWindowURL.indexOf('/posts/editor/blockeditor/') === -1 &&
-                currentWindowURL.indexOf('/posts/editor/markdown/') === -1 &&
-                currentWindowURL.indexOf('/posts/editor/tinymce/') === -1
-            ) {
-                return;
-            }
-
-            let messageText = await e.sender.webContents.mainFrame.top.executeJavaScript('window.app.translate("core.sureYouWantQuit")');
-
-            const choice = dialog.showMessageBoxSync(this, {
-                type: 'question',
-                buttons: ['Yes', 'No'],
-                title: 'Confirm',
-                message: messageText
-            });
-
-            if (choice === 1) {
-                e.preventDefault();
-            }
-        });
-
         // Create context menu
         const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
         let contextMenuBuilder = new ContextMenuBuilder(this.mainWindow.webContents);

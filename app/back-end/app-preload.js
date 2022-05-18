@@ -86,7 +86,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugin-activate',
             'app-site-plugin-deactivate',
             'app-site-get-plugin-config',
-            'app-site-save-plugin-config'
+            'app-site-save-plugin-config',
+            'app-close'
         ];
 
         if (validChannels.includes(channel)) {
