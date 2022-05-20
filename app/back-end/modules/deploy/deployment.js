@@ -129,7 +129,7 @@ class Deployment {
                     fileList.push({
                         path: filePath,
                         type: 'file',
-                        md5: fs.readFileSync(path.join(this.inputDir, filePath))
+                        md5: md5(fs.readFileSync(path.join(this.inputDir, filePath)))
                     });
                 }
 
