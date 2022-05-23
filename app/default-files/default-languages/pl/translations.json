@@ -533,7 +533,7 @@
         "selectThemeBeforeCreatingPreviewMsg": "Musisz wybrać motyw, zanim spróbujesz utworzyć podgląd swojej witryny. Przejdź do ustawień strony i wybierz motyw."
     },
     "settings": {
-        "addGDPRCookieBanner": "Dodaj GDPR baner Ciasteczek",
+        "addGDPRCookieBanner": "Dodaj cookie banner (GDPR)",
         "additionalValidElementsInWYSIWYGEditor": "Dodatkowe poprawne elementy w edytorze WYSIWYG",
         "additionalValidElementsInWYSIWYGEditorInfo": "Jeśli edytor WYSIWYG usunie jakieś tagi z Twojego kodu HTML tutaj możesz podać dodatkowe elementy dozwolone.<br> Na przykład: <strong>v-select[*],v-dropdown[*]</strong> zezwoli na niestandardowe tagi v-select i v-dropdown z dowolnymi atrybutami.",
         "advancedOptions": "Opcje zaawansowane",
@@ -567,8 +567,8 @@
         "codeEditor": "Edytor kodu (CodeMirror)",
         "colorTheme": "Motyw kolorystyczny",
         "content": "Treść",
-        "cookieGroups": "Grupy ciasteczek",
-        "cookiePopup": "Popup Ciasteczek",
+        "cookieGroups": "Grupy plików cookies",
+        "cookiePopup": "Popup cookies",
         "createXMLSitemap": "Stwórz XML mapy strony",
         "currentTheme": "Aktualny motyw:",
         "customFeedTitle": "Własny tytuł kanału",
@@ -637,7 +637,7 @@
         "footerText": "Tekst w stopce",
         "frontpage": "Pierwsza strona",
         "GDPR": "GDPR",
-        "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. <a href=\"#cookie-settings\">Ustawienia ciasteczek</a>). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
+        "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. <a href=\"#cookie-settings\">Ustawienia plików cookies</a>). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
         "gdprTitle": "Tytuł",
         "generateOpenGraphTags": "Generuj tagi Open Graph",
         "generateTwitterCards": "Generuj karty Twitter'a",
