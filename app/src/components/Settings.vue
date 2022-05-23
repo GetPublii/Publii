@@ -1088,6 +1088,48 @@
                     </div>
 
                     <div slot="tab-6">
+                        <separator
+                            type="small"
+                            :is-line="true"
+                            :label="$t('settings.embedVideos')" />
+
+                        <field
+                            id="yt-nocookie"
+                            :label="$t('settings.ytNoCookies')">
+                            <label slot="field">
+                                <switcher
+                                    id="yt-nocookies"
+                                    v-model="advanced.gdpr.ytNoCookies" />
+                            </label>
+
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.howYtNoCookiesWorks')">
+                            </small>
+                        </field>
+
+                        <field
+                            id="vimeo-no-track"
+                            :label="$t('settings.vimeoNoTrack')">
+                            <label slot="field">
+                                <switcher
+                                    id="vimeo-no-track"
+                                    v-model="advanced.gdpr.vimeoNoTrack" />
+                            </label>
+
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.howVimeoNoTrackWorks')">
+                            </small>
+                        </field>
+
+                        <separator
+                            type="small"
+                            :is-line="true"
+                            :label="$t('settings.cookiePopup')" />
+                        
                         <field
                             id="gdpr-enabled"
                             :label="$t('settings.addGDPRCookieBanner')">
@@ -1103,12 +1145,6 @@
                                 v-pure-html="$t('settings.howToPrepareYourThemeForGDPRInfo')">
                             </small>
                         </field>
-
-                        <separator
-                            v-if="advanced.gdpr.enabled"
-                            type="small"
-                            :is-line="true"
-                            :label="$t('settings.cookiePopup')" />
 
                         <field
                             v-if="advanced.gdpr.enabled"

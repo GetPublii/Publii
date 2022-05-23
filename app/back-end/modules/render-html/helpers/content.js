@@ -120,6 +120,39 @@ class ContentHelper {
             preparedText = ContentHelper._prepareAmpContent(preparedText);
         }
 
+        // Add dnt=1 for Vimeo links
+        if (renderer.siteConfig.advanced.gdpr.vimeoNoTrack) {
+            preparedText = preparedText.replace(/src="(http[s]?\:\/\/player\.vimeo\.com\/video\/.*?)"/gmi, function (url, matches) {
+                if (matches.indexOf('dnt=') > -1) {
+                    return 'src="' + matches + '"';
+                }
+            
+                if (matches.indexOf('?') > -1) {
+                    return 'src="' + matches + '&dnt=1"';
+                }
+            
+                return 'src="' + matches + '?dnt=1"';
+            });
+
+            preparedText = preparedText.replace(/src='(http[s]?\:\/\/player\.vimeo\.com\/video\/.*?)'/gmi, function (url, matches) {
+                if (matches.indexOf('dnt=') > -1) {
+                    return 'src=\'' + matches + '\'';
+                }
+            
+                if (matches.indexOf('?') > -1) {
+                    return 'src=\'' + matches + '&dnt=1\'';
+                }
+            
+                return 'src=\'' + matches + '?dnt=1\'';
+            });
+        }
+        
+        // Add youtube-nocookie.com domain for YouTube videos
+        if (renderer.siteConfig.advanced.gdpr.ytNoCookies) {
+            preparedText = preparedText.replace(/src="http[s]?\:\/\/www\.youtube\.com\/embed\//gmi, 'src="https://www.youtube-nocookie.com/embed/');
+            preparedText = preparedText.replace(/src='http[s]?\:\/\/www\.youtube\.com\/embed\//gmi, 'src=\'https://www.youtube-nocookie.com/embed/');
+        }
+
         return preparedText;
     }
 

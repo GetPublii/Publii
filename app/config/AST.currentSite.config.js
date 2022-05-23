@@ -125,7 +125,9 @@ const AstCurrentSiteConfig = {
             saveButtonLabel: 'Save',
             behaviour: 'badge',
             badgeLabel: 'Cookie Policy',
-            behaviourLink: '#cookie-settings'
+            behaviourLink: '#cookie-settings',
+            vimeoNoTrack: false,
+            ytNoCookies: false
         },
         relatedPostsOrder: 'default',
         relatedPostsCriteria: 'titles-and-tags',
