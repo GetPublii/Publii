@@ -16,6 +16,14 @@
                 &times;
             </span>
 
+            <div
+                v-if="!currentThemeHasSupportForAuthorImages"
+                slot="note"
+                class="msg msg-small msg-icon msg-alert note">
+                <icon name="warning" size="m" />
+                <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
+            </div>
+
             <div class="options-sidebar-item">
                 <div
                     :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
@@ -312,11 +320,6 @@
                 </p-button>
             </div>
 
-            <small
-                v-if="!currentThemeHasSupportForAuthorPages"
-                class="note">
-                {{ $t('author.saveAndPreviewNotAvailableDueToNoSupportForAuthorPagesInTheme') }}
-            </small>
         </div>
     </div>
 </template>
@@ -679,9 +682,8 @@ export default {
 }
 
 .note {
-    display: block;
-    font-style: italic;
-    line-height: 1.4;
-    margin: 2rem 0;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
 }
 </style>
