@@ -28,6 +28,11 @@
                 size="m"
                 name="sidebar-close"
                 @click.native="removeGroup(index)" />
+
+            <text-area
+                v-model="group.description"
+                :placeholder="$t('gdpr.groupDescriptionPlaceholder')"
+                :rows="3"></text-area>
         </div>
 
         <p-button
@@ -67,6 +72,10 @@ export default {
                         this.content[i].state = true;
                     }
                 }
+
+                if (typeof this.content[i].description === 'undefined') {
+                    this.content[i].description = '';
+                }
             }
         }, 0);
     },
@@ -75,6 +84,7 @@ export default {
             this.content.push({
                 name: "",
                 id: "",
+                description: "",
                 state: false
             });
         },
@@ -110,6 +120,7 @@ export default {
     .gdpr-group {
         align-items: center;
         display: flex;
+        flex-wrap: wrap;
         padding: .25rem 0;
 
         .input-wrapper {
@@ -126,6 +137,12 @@ export default {
             &:hover {
                 fill: var(--icon-tertiary-color);
             }
+        }
+
+        div:last-child {
+            margin-bottom: 2rem;
+            margin-top: 1.25rem;
+            width: calc(100% - 95px);
         }
     }
 

@@ -7,6 +7,7 @@
             :cols="cols"
             class="publii-textarea"
             :spellcheck="spellcheck"
+            :placeholder="placeholder"
             v-model="content"></textarea>
         <char-counter
             v-if="charCounter"
@@ -52,6 +53,10 @@ export default {
             type: Boolean
         },
         anchor: {
+            default: '',
+            type: String
+        },
+        placeholder: {
             default: '',
             type: String
         }

@@ -1269,6 +1269,159 @@
                             </small>
                         </field>
 
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-banner-position"
+                            :label="$t('settings.bannerPosition')">
+                            <dropdown
+                                slot="field"
+                                id="gdpr-banner-position"
+                                key="gdpr-banner-position"
+                                v-model="advanced.gdpr.bannerPosition"
+                                :items="{ 
+                                    'centered': $t('settings.gdprBannerPosition.centered'), 
+                                    'left': $t('settings.gdprBannerPosition.left'), 
+                                    'right': $t('settings.gdprBannerPosition.right'),
+                                    'bar': $t('settings.gdprBannerPosition.bar') 
+                                }"></dropdown>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-show-reject-button"
+                            :label="$t('settings.gdprShowRejectButton')">
+                            <label slot="field">
+                                <switcher
+                                    id="gdpr-show-reject-button"
+                                    v-model="advanced.gdpr.showRejectButton" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.showRejectButton"
+                            id="gdpr-reject-button-label"
+                            :label="$t('settings.gdprRejectButtonLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-reject-button-label"
+                                    v-model="advanced.gdpr.rejectButtonLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-allow-advanced-configuration"
+                            :label="$t('settings.gdprAllowAdvancedConfiguration')">
+                            <label slot="field">
+                                <switcher
+                                    id="gdpr-allow-advanced-configuration"
+                                    v-model="advanced.gdpr.allowAdvancedConfiguration" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-link-label"
+                            :label="$t('settings.gdprAdvancedConfigurationLinkLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-link-label"
+                                    v-model="advanced.gdpr.advancedConfigurationLinkLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-accept-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationAcceptButtonLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-accept-button-label"
+                                    v-model="advanced.gdpr.advancedConfigurationAcceptButtonLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-reject-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationRejectButtonLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-reject-button-label"
+                                    v-model="advanced.gdpr.advancedConfigurationRejectButtonLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-save-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationSaveButtonLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-reject-button-label"
+                                    v-model="advanced.gdpr.advancedConfigurationSaveButtonLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-title"
+                            :label="$t('settings.gdprAdvancedConfigurationTitle')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-title"
+                                    v-model="advanced.gdpr.advancedConfigurationTitle"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-description"
+                            :label="$t('settings.gdprAdvancedConfigurationDescription')">
+                            <label slot="field">
+                                <text-area
+                                    id="gdpr-advanced-configuration-description"
+                                    v-model="advanced.gdpr.advancedConfigurationDescription"
+                                    :rows="4"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-show-description-link"
+                            :label="$t('settings.gdprAdvancedConfigurationShowDescriptionLink')">
+                            <label slot="field">
+                                <switcher
+                                    id="gdpr-advanced-configuration-show-description-link"
+                                    v-model="advanced.gdpr.advancedConfigurationShowDescriptionLink" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-debug-mode"
+                            :label="$t('settings.gdprDebugMode')">
+                            <label slot="field">
+                                <switcher
+                                    id="gdpr-debug-mode"
+                                    v-model="advanced.gdpr.debugMode" />
+                            </label>
+                        </field>
+
                         <separator
                             v-if="advanced.gdpr.enabled"
                             type="big"
