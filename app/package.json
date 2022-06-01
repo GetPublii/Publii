@@ -62,7 +62,7 @@
     "normalize-path": "3.0.0",
     "prismjs": "1.26.0",
     "request": "2.88.0",
-    "sharp": "0.29.3",
+    "sharp": "0.30.5",
     "slug": "0.9.4",
     "sqlstring": "2.3.2",
     "ssh2-sftp-client": "7.2.2",
