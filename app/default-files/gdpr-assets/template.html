@@ -1,0 +1,123 @@
+<!-- Start main cookie container -->
+<div 
+    class="cb"
+    data-behaviour="{{behaviour}}"
+    data-behaviour-link="{{behaviourLink}}"
+    data-revision="{{cookieSettingsRevision}}"
+    data-config-ttl="{{cookieSettingsTTL}}"
+    data-debug-mode="{{debugMode}}">
+    <!-- Start Banner -->
+    <div 
+        role="dialog" 
+        aria-modal="true" 
+        aria-hidden="false" 
+        aria-labelledby="cb-title" 
+        aria-describedby="cb-txt" 
+        class="cb__banner {{bannerPositionCssClass}}">
+        <div class="cb__inner">
+            <div 
+                id="cb-title" 
+                role="heading" 
+                class="cb__title">
+                {{popupTitlePrimary}}
+            </div>
+            <div 
+                id="cb-txt" 
+                class="cb__txt">
+                {{popupDesc}}
+                {{privacyPolicyLink}}
+            </div>
+          
+            <div class="cb__buttons">
+                {{#allowAdvancedConfiguration}}
+                <button 
+                    type="button" 
+                    class="cb__btn cb__btn--link cb__btn--configure" 
+                    aria-haspopup="dialog">
+                    {{advancedConfigurationLinkLabel}}
+                </button>
+                {{/allowAdvancedConfiguration}}
+                {{#showRejectButton}}
+                <button 
+                    type="button" 
+                    class="cb__btn cb__btn--reject">
+                    {{rejectButtonLabel}}
+                </button>
+                {{/showRejectButton}}
+                <button 
+                    type="button" 
+                    class="cb__btn cb__btn--solid cb__btn--accept">
+                    {{saveButtonLabel}}
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- End of Banner -->
+
+    {{#allowAdvancedConfiguration}}
+    <!-- Start Popup -->
+    <div 
+        class="cb__popup" 
+        role="dialog" 
+        aria-modal="true" 
+        aria-hidden="false" 
+        aria-labelledby="cb-popup-title">
+        <div class="cb__popup__wrapper">
+            <div class="cb__inner cb__popup__inner">
+                <div class="cb__popup__heading">
+                    <div 
+                        id="cb-popup-title" 
+                        role="heading" 
+                        class="cb__title">
+                        {{advancedConfigurationTitle}}
+                    </div>
+                </div>
+             
+                <div class="cb__popup__content">
+                    <div class="cb__txt cb__popup__txt">
+                        {{advancedConfigurationDescription}}
+
+                        {{#advancedConfigurationShowDescriptionLink}}
+                        {{privacyPolicyLink}}
+                        {{/advancedConfigurationShowDescriptionLink}}
+                    </div>
+                
+                    <ul class="cb__groups">
+                        {{cbGroups}}
+                    </ul>
+                </div>
+
+                <div class="cb__buttons cb__popup__buttons">
+                    <button type="button" class="cb__btn cb__btn--solid cb__btn--accept">{{advancedConfigurationAcceptButtonLabel}}</button>
+                    <button type="button" class="cb__btn cb__btn--reject">{{advancedConfigurationRejectButtonLabel}}</button>
+                    <button type="button" class="cb__btn cb__btn--save">{{advancedConfigurationSaveButtonLabel}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Popup -->
+    <!-- Overlay -->
+    <div class="cb__overlay" aria-hidden="false"></div>
+    <!-- End of Overlay -->
+    {{/allowAdvancedConfiguration}}
+
+    {{#showBadge}}
+    <!-- Badge -->
+    <button 
+        class="cb__badge" 
+        aria-label="{{badgeLabel}}">
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            aria-hidden="true" 
+            focusable="false" 
+            width="40" 
+            height="40" 
+            viewBox="0 0 23 23" 
+            fill="currentColor">
+            <path d="M21.41 12.71c-.08-.01-.15 0-.22 0h-.03c-.03 0-.05 0-.08.01-.07 0-.13.01-.19.04-.52.21-1.44.19-2.02-.22-.44-.31-.65-.83-.62-1.53a.758.758 0 0 0-.27-.61.73.73 0 0 0-.65-.14c-1.98.51-3.49.23-4.26-.78-.82-1.08-.73-2.89.24-4.49.14-.23.14-.52 0-.75a.756.756 0 0 0-.67-.36c-.64.03-1.11-.1-1.31-.35-.19-.26-.13-.71-.01-1.29.04-.18.06-.38.03-.59-.05-.4-.4-.7-.81-.66C5.1 1.54 1 6.04 1 11.48 1 17.28 5.75 22 11.6 22c5.02 0 9.39-3.54 10.39-8.42.08-.4-.18-.78-.58-.87Zm-9.81 7.82c-5.03 0-9.12-4.06-9.12-9.06 0-4.34 3.05-8 7.25-8.86-.08.7.05 1.33.42 1.81.24.32.66.67 1.38.84-.76 1.86-.65 3.78.36 5.11.61.81 2.03 2 4.95 1.51.18.96.71 1.54 1.18 1.87.62.43 1.38.62 2.1.62.05 0 .09 0 .13-.01-1.23 3.64-4.7 6.18-8.64 6.18ZM13 17c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1Zm5.29-12.3a.99.99 0 0 1-.29-.71c0-.55.45-.99 1-.99a1 1 0 0 1 .71.3c.19.19.29.44.29.71 0 .55-.45.99-1 .99a1 1 0 0 1-.71-.3ZM9 13.5c0 .83-.67 1.5-1.5 1.5S6 14.33 6 13.5 6.67 12 7.5 12s1.5.67 1.5 1.5Zm3.25.81a.744.744 0 0 1-.06-1.05c.28-.32.75-.34 1.05-.06.31.28.33.75.05 1.06-.15.16-.35.25-.56.25-.18 0-.36-.06-.5-.19ZM8.68 7.26c.41.37.44 1 .07 1.41-.2.22-.47.33-.75.33a.96.96 0 0 1-.67-.26c-.41-.37-.44-1-.07-1.41.37-.42 1-.45 1.41-.08Zm11.48 1.88c.18-.19.52-.19.7 0 .05.04.09.1.11.16.03.06.04.12.04.19 0 .13-.05.26-.15.35-.09.1-.22.15-.35.15s-.26-.05-.35-.15a.355.355 0 0 1-.11-.16.433.433 0 0 1-.04-.19c0-.13.05-.26.15-.35Zm-4.93-1.86a.75.75 0 1 1 1.059-1.06.75.75 0 0 1-1.059 1.06Z" />
+        </svg>
+    </button>
+    <!-- End of Badge -->
+    {{/showBadge}}
+</div>
+<!-- End of main cookie container -->

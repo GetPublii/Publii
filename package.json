@@ -63,6 +63,7 @@
       "*.+(dylib|node|dll|aff|dic)",
       "default-files/default-themes/**/*",
       "default-files/default-languages/**/*",
+      "default-files/gdpr-assets/**/*",
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",

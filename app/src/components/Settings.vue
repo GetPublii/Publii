@@ -1239,7 +1239,11 @@
                                 id="posts-listing-order-by"
                                 key="posts-listing-order-by"
                                 v-model="advanced.gdpr.behaviour"
-                                :items="{ 'badge': $t('settings.badge'), 'link': $t('ui.customLink'), 'badge-link': $t('settings.badgeAndCustomLink') }"></dropdown>
+                                :items="{ 
+                                    'badge': $t('settings.badge'), 
+                                    'link': $t('ui.customLink'), 
+                                    'badge-link': $t('settings.badgeAndCustomLink') 
+                                }"></dropdown>
                         </field>
 
                         <field
@@ -1277,7 +1281,7 @@
                                 slot="field"
                                 id="gdpr-banner-position"
                                 key="gdpr-banner-position"
-                                v-model="advanced.gdpr.bannerPosition"
+                                v-model="advanced.gdpr.popupPosition"
                                 :items="{ 
                                     'centered': $t('settings.gdprBannerPosition.centered'), 
                                     'left': $t('settings.gdprBannerPosition.left'), 
@@ -1287,24 +1291,24 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-show-reject-button"
                             :label="$t('settings.gdprShowRejectButton')">
                             <label slot="field">
                                 <switcher
                                     id="gdpr-show-reject-button"
-                                    v-model="advanced.gdpr.showRejectButton" />
+                                    v-model="advanced.gdpr.popupShowRejectButton" />
                             </label>
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.showRejectButton"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.popupShowRejectButton"
                             id="gdpr-reject-button-label"
                             :label="$t('settings.gdprRejectButtonLabel')">
                             <label slot="field">
                                 <text-input
                                     id="gdpr-reject-button-label"
-                                    v-model="advanced.gdpr.rejectButtonLabel"
+                                    v-model="advanced.gdpr.popupRejectButtonLabel"
                                     :spellcheck="$store.state.currentSite.config.spellchecking"
                                     slot="field" />
                             </label>
@@ -1322,7 +1326,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-link-label"
                             :label="$t('settings.gdprAdvancedConfigurationLinkLabel')">
                             <label slot="field">
@@ -1335,7 +1339,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-accept-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationAcceptButtonLabel')">
                             <label slot="field">
@@ -1348,7 +1352,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-reject-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationRejectButtonLabel')">
                             <label slot="field">
@@ -1361,7 +1365,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-save-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationSaveButtonLabel')">
                             <label slot="field">
@@ -1374,7 +1378,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-title"
                             :label="$t('settings.gdprAdvancedConfigurationTitle')">
                             <label slot="field">
@@ -1387,7 +1391,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-description"
                             :label="$t('settings.gdprAdvancedConfigurationDescription')">
                             <label slot="field">
@@ -1401,7 +1405,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-show-description-link"
                             :label="$t('settings.gdprAdvancedConfigurationShowDescriptionLink')">
                             <label slot="field">
@@ -1412,7 +1416,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-debug-mode"
                             :label="$t('settings.gdprDebugMode')">
                             <label slot="field">
@@ -1422,14 +1426,46 @@
                             </label>
                         </field>
 
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-cookie-settings-revision"
+                            :label="$t('settings.gdprCookieSettingsRevision')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-cookie-settings-revision"
+                                    v-model="advanced.gdpr.cookieSettingsRevision"
+                                    :spellcheck="false"
+                                    type="number"
+                                    min="1"
+                                    step="1"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-cookie-settings-ttl"
+                            :label="$t('settings.gdprCookieSettingsTTL')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-cookie-settings-ttl"
+                                    v-model="advanced.gdpr.cookieSettingsTTL"
+                                    :spellcheck="false"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    slot="field" />
+                            </label>
+                        </field>
+
                         <separator
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             type="big"
                             :is-line="true"
                             :label="$t('settings.cookieGroups')" />
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-popup-groups"
                             label=""
                             :labelFullWidth="true">
