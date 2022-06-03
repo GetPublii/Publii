@@ -9,7 +9,8 @@
         revision: document.querySelector('.cb').getAttribute('data-revision'),
         configTTL: parseInt(document.querySelector('.cb').getAttribute('data-config-ttl'), 10),
         debugMode: document.querySelector('.cb').getAttribute('data-debug-mode') === 'true',
-        initialState: null
+        initialState: null,
+        previouslyAccepted: []
     };
 
     var cbUI = {
@@ -69,6 +70,10 @@
         var configIsFresh = checkIfConfigIsFresh();
 
         if (!configIsFresh || currentConfig === null) {
+            if (cbConfig.debugMode) {
+                console.log('🍪 Config not found, or configuration expired');
+            }
+
             var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
             showBanner();
     
@@ -80,6 +85,10 @@
                 }
             }
         } else if (typeof currentConfig === 'string') {
+            if (cbConfig.debugMode) {
+                console.log('🍪 Config founded');
+            }
+
             var allowedGroups = currentConfig.split(',');
             var checkedCheckboxes = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
             showBadge();
@@ -217,6 +226,7 @@
 
     function allowCookieGroup (allowedGroup) {
         var scripts = document.querySelectorAll('script[type="gdpr-blocker/' + allowedGroup + '"]');
+        cbConfig.previouslyAccepted.push(allowedGroup);
     
         for (var j = 0; j < scripts.length; j++) {
             addScript(scripts[j].src, scripts[j].text);
@@ -224,6 +234,10 @@
 
         var groupEvent = new Event('publii-cookie-banner-unblock-' + allowedGroup);
         document.body.dispatchEvent(groupEvent);
+
+        if (cbConfig.debugMode) {
+            console.log('🍪 Allowed group: ' + allowedGroup);
+        }
     }
 
     function showBannerOrPopup () {
@@ -284,6 +298,10 @@
 
         if (cbConfig.configTTL === 0) {
             localStorage.setItem('publii-gdpr-cookies-config-save-date', 0);
+
+            if (cbConfig.debugMode) {
+                console.log('🍪 Store never expiring configuration');
+            }
         } else {
             localStorage.setItem('publii-gdpr-cookies-config-save-date', +new Date());
         }
@@ -301,6 +319,10 @@
             }
         }
 
+        if (cbConfig.debugMode) {
+            console.log('🍪 Initial state: ' + groups.join(', '));
+        }
+
         return groups;
     }
 
@@ -314,6 +336,10 @@
             if (allowedGroup !== '') {
                 groups.push(allowedGroup);
             }
+        }
+
+        if (cbConfig.debugMode) {
+            console.log('🍪 State to save: ' + groups.join(', '));
         }
 
         return groups;
@@ -341,11 +367,19 @@
         for (var i = 0; i < groupsToAccept.length; i++) {
             var group = groupsToAccept[i];
 
-            if (cbConfig.initialState.indexOf(group) > -1) {
+            if (cbConfig.initialState.indexOf(group) > -1 || cbConfig.previouslyAccepted.indexOf(group) > -1) {
+                if (cbConfig.debugMode) {
+                    console.log('🍪 Skip previously activated group: ' + group);
+                }
+
                 continue;
             }
 
             allowCookieGroup(group);
+        }
+
+        if (cbConfig.debugMode) {
+            console.log('🍪 Accept all cookies: ', groupsToAccept.join(', '));
         }
 
         if (source === 'popup') {
@@ -356,6 +390,10 @@
     }
 
     function rejectAllCookies () {
+        if (cbConfig.debugMode) {
+            console.log('🍪 Reject all cookies');
+        }
+
         storeConfiguration([]);
         setTimeout(function () {
             window.location.reload();
@@ -365,6 +403,10 @@
     function saveConfiguration () {
         var groupsToAccept = getCurrentStateOfConsents();
         storeConfiguration(groupsToAccept);
+
+        if (cbConfig.debugMode) {
+            console.log('🍪 Save new config: ', groupsToAccept.join(', '));
+        }
 
         if (reloadIsNeeded(groupsToAccept)) {
             setTimeout(function () {
@@ -376,7 +418,11 @@
         for (var i = 0; i < groupsToAccept.length; i++) {
             var group = groupsToAccept[i];
 
-            if (cbConfig.initialState.indexOf(group) > -1) {
+            if (cbConfig.initialState.indexOf(group) > -1 || cbConfig.previouslyAccepted.indexOf(group) > -1) {
+                if (cbConfig.debugMode) {
+                    console.log('🍪 Skip previously activated group: ' + group);
+                }
+
                 continue;
             }
 
@@ -394,6 +440,10 @@
             var groupToCheck = initialGroups[i];
 
             if (groupsToAccept.indexOf(groupToCheck) === -1) {
+                if (cbConfig.debugMode) {
+                    console.log('🍪 Reload is needed due lack of: ', groupToCheck);
+                }
+
                 return true;
             }
         }
