@@ -654,6 +654,8 @@
         "gdprAdvancedConfigurationDescription": "Opis w popupie",
         "gdprAdvancedConfigurationShowDescriptionLink": "Pokaż link do polityki prywatności w opisie popupu",
         "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. <a href=\"#cookie-settings\">Ustawienia plików cookies</a>). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
+        "gdprCookieSettingsRevision": "Wersja ustawień",
+        "gdprCookieSettingsTTL": "Przechowuj konfigurację przez X dni",
         "gdprDebugMode": "Włącz tryb debugowania",
         "gdprShowRejectButton": "Pokaż przycisk odrzucania",
         "gdprRejectButtonLabel": "Etykieta przycisku odrzucania",
