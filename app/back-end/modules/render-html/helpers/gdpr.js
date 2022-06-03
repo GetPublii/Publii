@@ -52,7 +52,7 @@ class Gdpr {
 
     static parseTemplate (configuration, template, renderer) {
         // Remove unnecessary code fragments from template
-        if (!configuration.popupShowRejectButton) {
+        if (!configuration.popupShowRejectButton || !configuration.allowAdvancedConfiguration) {
             template = template.replace(/\{\{\#showRejectButton\}\}[\s\S]*?\{\{\/showRejectButton\}\}/gmi, '');
         } else {
             template = template.replace(/\{\{\#showRejectButton\}\}/gmi, '');

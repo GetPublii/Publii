@@ -1427,7 +1427,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled"
                             id="gdpr-cookie-settings-revision"
                             :label="$t('settings.gdprCookieSettingsRevision')">
                             <label slot="field">
@@ -1443,7 +1443,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            v-if="advanced.gdpr.enabled"
                             id="gdpr-cookie-settings-ttl"
                             :label="$t('settings.gdprCookieSettingsTTL')">
                             <label slot="field">

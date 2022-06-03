@@ -74,14 +74,17 @@
                 console.log('🍪 Config not found, or configuration expired');
             }
 
-            var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
             showBanner();
-    
-            for (var i = 0; i < checkedGroups.length; i++) {
-                var allowedGroup = checkedGroups[i].getAttribute('data-group-name');
-    
-                if (allowedGroup !== '-' && allowedGroup !== '') {
-                    allowCookieGroup(allowedGroup);
+
+            if (cbUI.popup.element) {
+                var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
+                
+                for (var i = 0; i < checkedGroups.length; i++) {
+                    var allowedGroup = checkedGroups[i].getAttribute('data-group-name');
+        
+                    if (allowedGroup !== '-' && allowedGroup !== '') {
+                        allowCookieGroup(allowedGroup);
+                    }
                 }
             }
         } else if (typeof currentConfig === 'string') {
@@ -89,26 +92,29 @@
                 console.log('🍪 Config founded');
             }
 
-            var allowedGroups = currentConfig.split(',');
-            var checkedCheckboxes = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
             showBadge();
 
-            for (var j = 0; j < checkedCheckboxes.length; j++) {
-                var name = checkedCheckboxes[j].getAttribute('data-group-name');
+            if (cbUI.popup.element) {
+                var allowedGroups = currentConfig.split(',');
+                var checkedCheckboxes = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
 
-                if (name && name !== '-' && allowedGroups.indexOf(name) === -1) {
-                    checkedCheckboxes[j].checked = false;
-                }
-            }
+                for (var j = 0; j < checkedCheckboxes.length; j++) {
+                    var name = checkedCheckboxes[j].getAttribute('data-group-name');
 
-            for (var i = 0; i < allowedGroups.length; i++) {
-                var checkbox = cbUI.popup.element.querySelector('input[type="checkbox"][data-group-name="' + allowedGroups[i] + '"]');
-
-                if (checkbox) {
-                    checkbox.checked = true;
+                    if (name && name !== '-' && allowedGroups.indexOf(name) === -1) {
+                        checkedCheckboxes[j].checked = false;
+                    }
                 }
 
-                allowCookieGroup(allowedGroups[i]);
+                for (var i = 0; i < allowedGroups.length; i++) {
+                    var checkbox = cbUI.popup.element.querySelector('input[type="checkbox"][data-group-name="' + allowedGroups[i] + '"]');
+
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+
+                    allowCookieGroup(allowedGroups[i]);
+                }
             }
         }
 
@@ -144,7 +150,7 @@
             showBadge();
         }, false);
 
-        if (!cbUI.banner.btnReject) {
+        if (cbUI.banner.btnReject) {
             cbUI.banner.btnReject.addEventListener('click', function (e) {
                 e.preventDefault();
                 rejectAllCookies();
@@ -152,7 +158,7 @@
             }, false);
         }
 
-        if (!cbUI.banner.btnConfigure) {
+        if (cbUI.banner.btnConfigure) {
             cbUI.banner.btnConfigure.addEventListener('click', function (e) {
                 e.preventDefault();
                 hideBanner();
@@ -308,6 +314,10 @@
     }
 
     function getInitialStateOfConsents () {
+        if (!cbUI.popup.element) {
+            return [];
+        }
+
         var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
         var groups = [];
 
@@ -327,6 +337,10 @@
     }
 
     function getCurrentStateOfConsents () {
+        if (!cbUI.popup.element) {
+            return [];
+        }
+
         var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
         var groups = [];
 
@@ -346,6 +360,10 @@
     }
 
     function getAllGroups () {
+        if (!cbUI.popup.element) {
+            return [];
+        }
+
         var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]');
         var groups = [];
 
