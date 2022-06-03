@@ -323,6 +323,7 @@
     height: 100%;
     left: 0;
     opacity: 0;
+    pointer-events: none;
     position: fixed;
     right: 0;
     top: 0;
@@ -358,6 +359,7 @@
     max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
+    pointer-events: auto;
     padding: 1.5em 2em;
     -webkit-user-select: none;
        -moz-user-select: none;

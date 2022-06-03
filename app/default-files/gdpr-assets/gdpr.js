@@ -135,18 +135,22 @@
             showBadge();
         }, false);
 
-        cbUI.banner.btnReject.addEventListener('click', function (e) {
-            e.preventDefault();
-            rejectAllCookies();
-            showBadge();
-        }, false);
+        if (!cbUI.banner.btnReject) {
+            cbUI.banner.btnReject.addEventListener('click', function (e) {
+                e.preventDefault();
+                rejectAllCookies();
+                showBadge();
+            }, false);
+        }
 
-        cbUI.banner.btnConfigure.addEventListener('click', function (e) {
-            e.preventDefault();
-            hideBanner();
-            showAdvancedPopup();
-            showBadge();
-        }, false);
+        if (!cbUI.banner.btnConfigure) {
+            cbUI.banner.btnConfigure.addEventListener('click', function (e) {
+                e.preventDefault();
+                hideBanner();
+                showAdvancedPopup();
+                showBadge();
+            }, false);
+        }
     }
 
     function initPopupEvents () {
@@ -233,19 +237,25 @@
     function showAdvancedPopup () {
         cbUI.popup.element.classList.add('is-visible');
         cbUI.overlay.classList.add('is-visible');
+        cbUI.popup.element.setAttribute('aria-hidden', 'false');
+        cbUI.overlay.setAttribute('aria-hidden', 'false');
     }
 
     function hideAdvancedPopup () {
         cbUI.popup.element.classList.remove('is-visible');
         cbUI.overlay.classList.remove('is-visible');
+        cbUI.popup.element.setAttribute('aria-hidden', 'true');
+        cbUI.overlay.setAttribute('aria-hidden', 'true');
     }
 
     function showBanner () {
         cbUI.banner.element.classList.add('is-visible');
+        cbUI.banner.element.setAttribute('aria-hidden', 'false');
     }
 
     function hideBanner () {
         cbUI.banner.element.classList.remove('is-visible');
+        cbUI.banner.element.setAttribute('aria-hidden', 'true');
     }
 
     function showBadge () {
@@ -253,9 +263,8 @@
             return;
         }
 
-        console.log(cbUI);
-
         cbUI.badge.classList.add('is-visible');
+        cbUI.badge.setAttribute('aria-hidden', 'false');
     }
 
     function getConfigName () {

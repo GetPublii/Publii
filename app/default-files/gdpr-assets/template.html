@@ -10,7 +10,7 @@
     <div 
         role="dialog" 
         aria-modal="true" 
-        aria-hidden="false" 
+        aria-hidden="true" 
         aria-labelledby="cb-title" 
         aria-describedby="cb-txt" 
         class="cb__banner {{bannerPositionCssClass}}">
@@ -60,7 +60,7 @@
         class="cb__popup" 
         role="dialog" 
         aria-modal="true" 
-        aria-hidden="false" 
+        aria-hidden="true" 
         aria-labelledby="cb-popup-title">
         <div class="cb__popup__wrapper">
             <div class="cb__inner cb__popup__inner">
@@ -97,7 +97,7 @@
     </div>
     <!-- End of Popup -->
     <!-- Overlay -->
-    <div class="cb__overlay" aria-hidden="false"></div>
+    <div class="cb__overlay" aria-hidden="true"></div>
     <!-- End of Overlay -->
     {{/allowAdvancedConfiguration}}
 
@@ -105,7 +105,8 @@
     <!-- Badge -->
     <button 
         class="cb__badge" 
-        aria-label="{{badgeLabel}}">
+        aria-label="{{badgeLabel}}"
+        aria-hidden="true">
         <svg 
             xmlns="http://www.w3.org/2000/svg" 
             aria-hidden="true" 
