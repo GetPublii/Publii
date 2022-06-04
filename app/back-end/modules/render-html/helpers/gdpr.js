@@ -11,30 +11,30 @@ class Gdpr {
 
         for (let i = 0; i < configuration.groups.length; i++) {
             if (configuration.groups[i].id === '-' || configuration.groups[i].id === '') {
-                groups += `<li class="cb__group">
+                groups += `<li class="pcb__group">
                     <details>
-                        <summary class="cb__group__title">${configuration.groups[i].name}</summary>
-                        <p class="cb__group__txt">${configuration.groups[i].description}</p>
+                        <summary class="pcb__group__title">${configuration.groups[i].name}</summary>
+                        <p class="pcb__group__txt">${configuration.groups[i].description}</p>
                     </details>
-                    <div class="cb__popup__switch is-checked">
+                    <div class="pcb__popup__switch is-checked">
                         <input 
                             type="checkbox" 
                             data-group-name=""
-                            id="cb-group-${i}" 
+                            id="pcb-group-${i}" 
                             checked />
-                        <label for="cb-group-${i}">${configuration.groups[i].name}</label>
+                        <label for="pcb-group-${i}">${configuration.groups[i].name}</label>
                     </div>
                 </li>`;
                 continue;
             }
 
             groups += `
-            <li class="cb__group">
+            <li class="pcb__group">
                 <details>
-                    <summary class="cb__group__title">${configuration.groups[i].name}</summary>
-                    <p class="cb__group__txt">${configuration.groups[i].description}</p>
+                    <summary class="pcb__group__title">${configuration.groups[i].name}</summary>
+                    <p class="pcb__group__txt">${configuration.groups[i].description}</p>
                 </details>
-                <div class="cb__popup__switch">
+                <div class="pcb__popup__switch">
                     <input 
                         type="checkbox"
                         data-group-name="${configuration.groups[i].id}"
@@ -84,7 +84,7 @@ class Gdpr {
         let bannerPositionCssClass = '';
 
         if (['left', 'right', 'bar'].indexOf(configuration.popupPosition) > -1) {
-            bannerPositionCssClass = 'cb__banner--' + configuration.popupPosition;
+            bannerPositionCssClass = 'pcb__banner--' + configuration.popupPosition;
         }        
 
         let privacyPolicyLink = ``;
