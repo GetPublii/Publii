@@ -1,20 +1,20 @@
 (function() {
-    if (!document.querySelector('.cb')) {
+    if (!document.querySelector('.pcb')) {
         return;
     }
 
     var cbConfig = {
-        behaviour: document.querySelector('.cb').getAttribute('data-behaviour'),
-        behaviourLink: document.querySelector('.cb').getAttribute('data-behaviour-link'),
-        revision: document.querySelector('.cb').getAttribute('data-revision'),
-        configTTL: parseInt(document.querySelector('.cb').getAttribute('data-config-ttl'), 10),
-        debugMode: document.querySelector('.cb').getAttribute('data-debug-mode') === 'true',
+        behaviour: document.querySelector('.pcb').getAttribute('data-behaviour'),
+        behaviourLink: document.querySelector('.pcb').getAttribute('data-behaviour-link'),
+        revision: document.querySelector('.pcb').getAttribute('data-revision'),
+        configTTL: parseInt(document.querySelector('.pcb').getAttribute('data-config-ttl'), 10),
+        debugMode: document.querySelector('.pcb').getAttribute('data-debug-mode') === 'true',
         initialState: null,
         previouslyAccepted: []
     };
 
     var cbUI = {
-        wrapper: document.querySelector('.cb'),
+        wrapper: document.querySelector('.pcb'),
         banner: {
             element: null,
             btnAccept: null,
@@ -36,23 +36,23 @@
 
     function initUI () {
         // setup banner elements
-        cbUI.banner.element = cbUI.wrapper.querySelector('.cb__banner');
-        cbUI.banner.btnAccept = cbUI.banner.element.querySelector('.cb__btn--accept');
-        cbUI.banner.btnReject = cbUI.banner.element.querySelector('.cb__btn--reject');
-        cbUI.banner.btnConfigure = cbUI.banner.element.querySelector('.cb__btn--configure');
+        cbUI.banner.element = cbUI.wrapper.querySelector('.pcb__banner');
+        cbUI.banner.btnAccept = cbUI.banner.element.querySelector('.pcb__btn--accept');
+        cbUI.banner.btnReject = cbUI.banner.element.querySelector('.pcb__btn--reject');
+        cbUI.banner.btnConfigure = cbUI.banner.element.querySelector('.pcb__btn--configure');
 
         // setup popup elements
-        if (cbUI.wrapper.querySelector('.cb__popup')) {
-            cbUI.popup.element = cbUI.wrapper.querySelector('.cb__popup');
-            cbUI.popup.btnSave = cbUI.popup.element.querySelector('.cb__btn--save');
-            cbUI.popup.btnAccept = cbUI.popup.element.querySelector('.cb__btn--accept');
-            cbUI.popup.btnReject = cbUI.popup.element.querySelector('.cb__btn--reject');
+        if (cbUI.wrapper.querySelector('.pcb__popup')) {
+            cbUI.popup.element = cbUI.wrapper.querySelector('.pcb__popup');
+            cbUI.popup.btnSave = cbUI.popup.element.querySelector('.pcb__btn--save');
+            cbUI.popup.btnAccept = cbUI.popup.element.querySelector('.pcb__btn--accept');
+            cbUI.popup.btnReject = cbUI.popup.element.querySelector('.pcb__btn--reject');
             cbUI.popup.checkboxes = cbUI.popup.element.querySelector('input[type="checkbox"]');
             // setup overlay
-            cbUI.overlay = cbUI.wrapper.querySelector('.cb__overlay');
+            cbUI.overlay = cbUI.wrapper.querySelector('.pcb__overlay');
         }
 
-        cbUI.badge = cbUI.wrapper.querySelector('.cb__badge');
+        cbUI.badge = cbUI.wrapper.querySelector('.pcb__badge');
 
         if (cbConfig.behaviour.indexOf('link') > -1) {
             for (var i = 0; i < cbUI.triggerLinks.length; i++) {

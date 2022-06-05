@@ -100,6 +100,7 @@ export default {
 
 .gdpr-groups {
     border-radius: 3px;
+    padding-top: 1.75rem;
 
     .gdpr-groups-header {
         display: flex;
@@ -124,9 +125,13 @@ export default {
         padding: .25rem 0;
 
         .input-wrapper {
-            padding-right: 1.5rem;
+            padding-right: 1rem;
             text-align: left;
-            width: calc(50% - 40px);
+            width: calc(50% - 43px);
+
+           & + .input-wrapper {
+               margin-right: 1rem;
+            }
         }
 
         .icon {
@@ -140,8 +145,8 @@ export default {
         }
 
         div:last-child {
-            margin-bottom: 2rem;
-            margin-top: 1.25rem;
+            margin-bottom: 3rem;
+            margin-top: 1rem;
             width: calc(100% - 95px);
         }
     }

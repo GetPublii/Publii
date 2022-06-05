@@ -1126,10 +1126,10 @@
                         </field>
 
                         <separator
-                            type="small"
+                            type="big"
                             :is-line="true"
-                            :label="$t('settings.cookiePopup')" />
-                        
+                            :label="$t('settings.cookieBanner')" />
+
                         <field
                             id="gdpr-enabled"
                             :label="$t('settings.addGDPRCookieBanner')">
@@ -1146,10 +1146,17 @@
                             </small>
                         </field>
 
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="medium thin"
+                            :is-line="true"
+                            :note="$t('settings.cookieBasicDescription')"
+                            :label="$t('settings.cookieBasic')" />                     
+
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-title-primary"
-                            :label="$t('settings.gdprTitle')">
+                            :label="$t('settings.gdprBannerTitle')">
                             <text-input
                                 id="gdpr-popup-title-primary"
                                 v-model="advanced.gdpr.popupTitlePrimary"
@@ -1160,7 +1167,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-desc"
-                            :label="$t('ui.description')">
+                            :label="$t('settings.gdprBannerMessage')">
                             <text-area
                                 id="gdpr-popup-desc"
                                 v-model="advanced.gdpr.popupDesc"
@@ -1172,7 +1179,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-readmore-link-label"
-                            :label="$t('settings.linkLabel')">
+                            :label="$t('settings.privacyPolicyLinkLabel')">
                             <text-input
                                 id="gdpr-readmore-link-label"
                                 v-model="advanced.gdpr.readMoreLinkLabel"
@@ -1219,6 +1226,12 @@
                                 slot="field" />
                         </field>
 
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="empty"
+                            :is-line="false"
+                            :label="false" />
+
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-save-button-label"
@@ -1229,6 +1242,36 @@
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-show-reject-button"
+                            :label="$t('settings.gdprShowRejectButton')">
+                            <label slot="field">
+                                <switcher
+                                    id="gdpr-show-reject-button"
+                                    v-model="advanced.gdpr.popupShowRejectButton" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.popupShowRejectButton"
+                            id="gdpr-reject-button-label"
+                            :label="$t('settings.gdprRejectButtonLabel')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-reject-button-label"
+                                    v-model="advanced.gdpr.popupRejectButtonLabel"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                         <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="empty"
+                            :is-line="false"
+                            :label="false" />
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1273,6 +1316,12 @@
                             </small>
                         </field>
 
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="empty"
+                            :is-line="false"
+                            :label="false" />
+
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-banner-position"
@@ -1290,29 +1339,13 @@
                                 }"></dropdown>
                         </field>
 
-                        <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
-                            id="gdpr-show-reject-button"
-                            :label="$t('settings.gdprShowRejectButton')">
-                            <label slot="field">
-                                <switcher
-                                    id="gdpr-show-reject-button"
-                                    v-model="advanced.gdpr.popupShowRejectButton" />
-                            </label>
-                        </field>
 
-                        <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.popupShowRejectButton"
-                            id="gdpr-reject-button-label"
-                            :label="$t('settings.gdprRejectButtonLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-reject-button-label"
-                                    v-model="advanced.gdpr.popupRejectButtonLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
-                        </field>
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="ultra thin"
+                            :is-line="true" 
+                            :note="$t('settings.cookieAdvancedDescription')"
+                            :label="$t('settings.cookieAdvanced')" />
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1407,13 +1440,23 @@
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-show-description-link"
-                            :label="$t('settings.gdprAdvancedConfigurationShowDescriptionLink')">
+                            :label="$t('settings.gdprAdvancedConfigurationPrivacyLink')">
                             <label slot="field">
                                 <switcher
                                     id="gdpr-advanced-configuration-show-description-link"
                                     v-model="advanced.gdpr.advancedConfigurationShowDescriptionLink" />
                             </label>
+                             <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.gdprAdvancedConfigurationPrivacyLinkDescription')">
+                            </small>
                         </field>
+
+                         <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="big thin"
+                            :is-line="true"/>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
@@ -1460,7 +1503,7 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
-                            type="big"
+                            type="ultra thin"
                             :is-line="true"
                             :label="$t('settings.cookieGroups')" />
 
