@@ -10,11 +10,21 @@ class Gdpr {
         let groups = ``;
 
         for (let i = 0; i < configuration.groups.length; i++) {
+            let description = configuration.groups[i].description;
+
+            if (description.trim() === '') {
+                description = '';
+            } else {
+                description = `<p class="pcb__group__txt">${configuration.groups[i].description}</p>`;
+            }
+            
             if (configuration.groups[i].id === '-' || configuration.groups[i].id === '') {
                 groups += `<li class="pcb__group">
                     <details>
-                        <summary class="pcb__group__title">${configuration.groups[i].name}</summary>
-                        <p class="pcb__group__txt">${configuration.groups[i].description}</p>
+                        <summary class="pcb__group__title${description.trim() === '' ? ' no-desc' : ''}">
+                            ${configuration.groups[i].name}
+                        </summary>
+                        ${description}
                     </details>
                     <div class="pcb__popup__switch is-checked">
                         <input 
@@ -31,8 +41,10 @@ class Gdpr {
             groups += `
             <li class="pcb__group">
                 <details>
-                    <summary class="pcb__group__title">${configuration.groups[i].name}</summary>
-                    <p class="pcb__group__txt">${configuration.groups[i].description}</p>
+                    <summary class="pcb__group__title${description.trim() === '' ? ' no-desc' : ''}">
+                        ${configuration.groups[i].name}
+                    </summary>
+                    ${description}
                 </details>
                 <div class="pcb__popup__switch">
                     <input 

@@ -23,10 +23,11 @@
         },
         popup: {
             element: null,
+            btnClose: null,
             btnSave: null,
             btnAccept: null,
             btnReject: null,
-            checkboxes: null
+            checkboxes: null,
         },
         overlay: null,
         badge: null,
@@ -44,6 +45,7 @@
         // setup popup elements
         if (cbUI.wrapper.querySelector('.pcb__popup')) {
             cbUI.popup.element = cbUI.wrapper.querySelector('.pcb__popup');
+            cbUI.popup.btnClose = cbUI.wrapper.querySelector('.pcb__popup__close');
             cbUI.popup.btnSave = cbUI.popup.element.querySelector('.pcb__btn--save');
             cbUI.popup.btnAccept = cbUI.popup.element.querySelector('.pcb__btn--accept');
             cbUI.popup.btnReject = cbUI.popup.element.querySelector('.pcb__btn--reject');
@@ -194,6 +196,11 @@
         cbUI.popup.btnSave.addEventListener('click', function (e) {
             e.preventDefault();
             saveConfiguration();
+        }, false);
+
+        cbUI.popup.btnClose.addEventListener('click', function (e) {
+            e.preventDefault();
+            hideAdvancedPopup();
         }, false);
     }
 
@@ -394,6 +401,12 @@
             }
 
             allowCookieGroup(group);
+        }
+
+        var checkboxesToCheck = cbUI.popup.element.querySelectorAll('input[type="checkbox"]');
+
+        for (var j = 0; j < checkboxesToCheck.length; j++) {
+            checkboxesToCheck[j].checked = true;
         }
 
         if (cbConfig.debugMode) {
