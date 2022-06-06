@@ -20,7 +20,7 @@ export default {
     props: {
         'label': {
             default: '',
-            type: String
+            type: [String, Boolean]
         },
         'anchor': {
             default: '',

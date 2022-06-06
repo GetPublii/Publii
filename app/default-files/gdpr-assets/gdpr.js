@@ -403,10 +403,12 @@
             allowCookieGroup(group);
         }
 
-        var checkboxesToCheck = cbUI.popup.element.querySelectorAll('input[type="checkbox"]');
+        if (cbUI.popup.element) {
+            var checkboxesToCheck = cbUI.popup.element.querySelectorAll('input[type="checkbox"]');
 
-        for (var j = 0; j < checkboxesToCheck.length; j++) {
-            checkboxesToCheck[j].checked = true;
+            for (var j = 0; j < checkboxesToCheck.length; j++) {
+                checkboxesToCheck[j].checked = true;
+            }
         }
 
         if (cbConfig.debugMode) {
