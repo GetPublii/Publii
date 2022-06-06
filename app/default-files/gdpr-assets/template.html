@@ -1,6 +1,6 @@
 <!-- Start main cookie container -->
 <div 
-    class="cb"
+    class="pcb"
     data-behaviour="{{behaviour}}"
     data-behaviour-link="{{behaviourLink}}"
     data-revision="{{cookieSettingsRevision}}"
@@ -11,28 +11,28 @@
         role="dialog" 
         aria-modal="true" 
         aria-hidden="true" 
-        aria-labelledby="cb-title" 
-        aria-describedby="cb-txt" 
-        class="cb__banner {{bannerPositionCssClass}}">
-        <div class="cb__inner">
+        aria-labelledby="pcb-title" 
+        aria-describedby="pcb-txt" 
+        class="pcb__banner {{bannerPositionCssClass}}">
+        <div class="pcb__inner">
             <div 
-                id="cb-title" 
+                id="pcb-title" 
                 role="heading" 
-                class="cb__title">
+                class="pcb__title">
                 {{popupTitlePrimary}}
             </div>
             <div 
-                id="cb-txt" 
-                class="cb__txt">
+                id="pcb-txt" 
+                class="pcb__txt">
                 {{popupDesc}}
                 {{privacyPolicyLink}}
             </div>
           
-            <div class="cb__buttons">
+            <div class="pcb__buttons">
                 {{#allowAdvancedConfiguration}}
                 <button 
                     type="button" 
-                    class="cb__btn cb__btn--link cb__btn--configure" 
+                    class="pcb__btn pcb__btn--link pcb__btn--configure" 
                     aria-haspopup="dialog">
                     {{advancedConfigurationLinkLabel}}
                 </button>
@@ -40,13 +40,13 @@
                 {{#showRejectButton}}
                 <button 
                     type="button" 
-                    class="cb__btn cb__btn--reject">
+                    class="pcb__btn pcb__btn--reject">
                     {{rejectButtonLabel}}
                 </button>
                 {{/showRejectButton}}
                 <button 
                     type="button" 
-                    class="cb__btn cb__btn--solid cb__btn--accept">
+                    class="pcb__btn pcb__btn--solid pcb__btn--accept">
                     {{saveButtonLabel}}
                 </button>
             </div>
@@ -57,24 +57,25 @@
     {{#allowAdvancedConfiguration}}
     <!-- Start Popup -->
     <div 
-        class="cb__popup" 
+        class="pcb__popup" 
         role="dialog" 
         aria-modal="true" 
         aria-hidden="true" 
-        aria-labelledby="cb-popup-title">
-        <div class="cb__popup__wrapper">
-            <div class="cb__inner cb__popup__inner">
-                <div class="cb__popup__heading">
+        aria-labelledby="pcb-popup-title">
+        <div class="pcb__popup__wrapper">
+            <div class="pcb__inner pcb__popup__inner">
+                <div class="pcb__popup__heading">
                     <div 
-                        id="cb-popup-title" 
+                        id="pcb-popup-title" 
                         role="heading" 
-                        class="cb__title">
+                        class="pcb__title">
                         {{advancedConfigurationTitle}}
                     </div>
+                    <button class="pcb__popup__close" aria-label="Close" aria-hidden="true"></button>
                 </div>
              
-                <div class="cb__popup__content">
-                    <div class="cb__txt cb__popup__txt">
+                <div class="pcb__popup__content">
+                    <div class="pcb__txt pcb__popup__txt">
                         {{advancedConfigurationDescription}}
 
                         {{#advancedConfigurationShowDescriptionLink}}
@@ -82,29 +83,29 @@
                         {{/advancedConfigurationShowDescriptionLink}}
                     </div>
                 
-                    <ul class="cb__groups">
+                    <ul class="pcb__groups">
                         {{cbGroups}}
                     </ul>
                 </div>
 
-                <div class="cb__buttons cb__popup__buttons">
-                    <button type="button" class="cb__btn cb__btn--solid cb__btn--accept">{{advancedConfigurationAcceptButtonLabel}}</button>
-                    <button type="button" class="cb__btn cb__btn--reject">{{advancedConfigurationRejectButtonLabel}}</button>
-                    <button type="button" class="cb__btn cb__btn--save">{{advancedConfigurationSaveButtonLabel}}</button>
+                <div class="pcb__buttons pcb__popup__buttons">
+                    <button type="button" class="pcb__btn pcb__btn--solid pcb__btn--accept">{{advancedConfigurationAcceptButtonLabel}}</button>
+                    <button type="button" class="pcb__btn pcb__btn--reject">{{advancedConfigurationRejectButtonLabel}}</button>
+                    <button type="button" class="pcb__btn pcb__btn--save">{{advancedConfigurationSaveButtonLabel}}</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- End of Popup -->
     <!-- Overlay -->
-    <div class="cb__overlay" aria-hidden="true"></div>
+    <div class="pcb__overlay" aria-hidden="true"></div>
     <!-- End of Overlay -->
     {{/allowAdvancedConfiguration}}
 
     {{#showBadge}}
     <!-- Badge -->
     <button 
-        class="cb__badge" 
+        class="pcb__badge" 
         aria-label="{{badgeLabel}}"
         aria-hidden="true">
         <svg 
