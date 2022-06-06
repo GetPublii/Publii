@@ -657,7 +657,7 @@
         "gdprAdvancedConfigurationTitle": "Pop-up title",
         "gdprAdvancedConfigurationDescription": "Pop-up message",
         "gdprAdvancedConfigurationPrivacyLink": "Privacy policy link",
-        "gdprAdvancedConfigurationPrivacyLinkDescription":"Display a link to the privacy policy page in the pop-up message. If the 'Privacy policy URL' in the Basic section is set to 'none', the link will also not be displayed in the popup.",
+        "gdprAdvancedConfigurationPrivacyLinkDescription":"Display a link to the privacy policy page in the pop-up message. If the 'Privacy policy URL' in the Basic section is set to 'none', the link will also not be displayed in the pop-up.",
         "gdprBehaviourInfo": "Remember to place a link with the above anchor in your website navigation or the website content (e.g. <a href=\"#cookie-settings\">Cookie preferences</a>). Otherwise, your website's users might not be able to change their individual cookie preferences.",
         "gdprCookieSettingsRevision": "Version of settings",
         "gdprCookieSettingsTTL": "Store config for X days",

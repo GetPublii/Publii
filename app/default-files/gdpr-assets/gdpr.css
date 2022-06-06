@@ -6,6 +6,7 @@
   --pcb-font-weight-bold: 700;
   --pcb-border-radius: 4px;
   --pcb-badge-border-radius: 100%;
+  --pcb-link-transition: all 0.12s linear;
   --pcb-bg: #ffffff;
   --pcb-overlay: rgba(12, 13, 16, .8);
   --pcb-text-color: #343435;
@@ -166,8 +167,8 @@
 .pcb__txt a {
   color: var(--pcb-btn-link);
   font-weight: var(--pcb-font-weight-bold);
-  -webkit-transition: all 0.12s linear;
-  transition: all 0.12s linear;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
@@ -213,8 +214,8 @@
           flex: 1 1 100%;
   padding: 1em 1.5em;
   text-align: center;
-  -webkit-transition: all 0.12s linear;
-  transition: all 0.12s linear;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
   -webkit-transform: none;
           transform: none;
   -webkit-user-select: none;
@@ -231,12 +232,12 @@
 }
 .pcb__btn:active, .pcb__btn:hover, .pcb__btn:focus {
   background: var(--pcb-btn-primary-bg-hover);
-  border: inherit;
-  -webkit-box-shadow: inherit;
-          box-shadow: inherit;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   color: var(--pcb-btn-primary-text-hover);
-  -webkit-transform: inherit;
-          transform: inherit;
+  -webkit-transform: none;
+          transform: none;
 }
 .pcb__btn--solid {
   background: var(--pcb-btn-secondary-bg);
@@ -265,7 +266,7 @@
   }
 }
 .pcb__btn--link:active, .pcb__btn--link:hover, .pcb__btn--link:focus {
-  background: inherit;
+  background: none;
   color: var(--pcb-btn-link-hover);
 }
 .pcb__btn + .pcb__btn {
@@ -371,6 +372,55 @@
   position: absolute;
   right: 0;
   top: 0;
+}
+.pcb__popup__close {
+  background: none;
+  border: none;
+  border-radius: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  cursor: pointer;
+  height: 1.3em;
+  padding: 0.5em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1.3em;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__popup__close {
+    display: none;
+    visibility: hidden;
+  }
+}
+.pcb__popup__close::before, .pcb__popup__close::after {
+  background-color: var(--pcb-btn-link);
+  content: " ";
+  display: block;
+  height: 1.3em;
+  left: 0.65em;
+  position: absolute;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  top: 0;
+  width: 1px;
+}
+.pcb__popup__close::after {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.pcb__popup__close:hover {
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  -webkit-transform: inherit;
+          transform: inherit;
+}
+.pcb__popup__close:hover::before, .pcb__popup__close:hover::after {
+  background-color: var(--pcb-btn-link-hover);
 }
 .pcb__popup__content {
   display: block;
@@ -485,8 +535,8 @@
   display: block;
   padding: 1.25em 3.5em 1.25em 1.25em;
   position: relative;
-  -webkit-transition: all 0.12s linear;
-  transition: all 0.12s linear;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
 }
 .pcb__group__title:hover {
   color: var(--pcb-btn-link-hover);
@@ -508,8 +558,8 @@
   position: absolute;
   -webkit-transform: translate(0, -50%) rotate(-45deg);
           transform: translate(0, -50%) rotate(-45deg);
-  -webkit-transition: all 0.12s linear;
-  transition: all 0.12s linear;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
   top: 50%;
   width: 5px;
 }
@@ -542,8 +592,8 @@
   left: 1.25em;
   padding: 0.55em;
   position: fixed;
-  -webkit-transition: all 0.12s linear;
-  transition: all 0.12s linear;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
   -webkit-transform: none;
           transform: none;
   -webkit-user-select: none;
