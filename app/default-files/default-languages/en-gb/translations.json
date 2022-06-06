@@ -766,6 +766,7 @@
         "showOnlyFeaturedPosts": "Show only featured posts",
         "showPostTagsOnTheListing": "Show post tags on the listing",
         "showPostSlugsOnTheListing": "Show post slugs on the listing",
+        "showPrivacyPolicyLink": "Show privacy policy link",
         "sitemap": "Sitemap",
         "sitemapLinkInfo": "You can find the XML sitemap here: <a href=\"{sitemapLink}\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
         "siteSettings": "Site settings",

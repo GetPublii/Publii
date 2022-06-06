@@ -1171,36 +1171,51 @@
 
                         <field
                             v-if="advanced.gdpr.enabled"
+                            id="show-privacy-policy-link"
+                            :label="$t('settings.showPrivacyPolicyLink')">
+                            <label slot="field">
+                                <switcher
+                                    id="show-privacy-policy-link"
+                                    v-model="advanced.gdpr.showPrivacyPolicyLink" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink"
                             id="gdpr-readmore-link-label"
                             :label="$t('settings.linkLabel')">
                             <text-input
                                 id="gdpr-readmore-link-label"
-                                v-model="advanced.gdpr.readMoreLinkLabel"
+                                v-model="advanced.gdpr.privacyPolicyLinkLabel"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink"
                             id="gdpr-page-type"
                             :label="$t('settings.privacyPolicyURL')">
                             <dropdown
                                 slot="field"
                                 id="gdpr-page-type"
                                 key="gdpr-page-type"
-                                v-model="advanced.gdpr.articleLinkType"
-                                :items="{ 'internal': $t('settings.internalPage'), 'external': $t('settings.externalPage'), 'none': $t('ui.none') }"></dropdown>
+                                v-model="advanced.gdpr.privacyPolicyLinkType"
+                                :items="{ 
+                                    'internal': $t('settings.internalPage'), 
+                                    'external': $t('settings.externalPage'),  
+                                }">
+                            </dropdown>
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'internal'"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink && advanced.gdpr.privacyPolicyLinkType === 'internal'"
                             id="gdpr-page"
                             :label="$t('settings.privacyPolicyPage')">
                             <v-select
                                 ref="gdprPagesSelect"
                                 slot="field"
                                 :options="postPages"
-                                v-model="advanced.gdpr.articleId"
+                                v-model="advanced.gdpr.privacyPolicyPostId"
                                 :custom-label="customPostLabels"
                                 :close-on-select="true"
                                 :show-labels="false"
@@ -1209,12 +1224,12 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'external'"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink && advanced.gdpr.privacyPolicyLinkType === 'external'"
                             id="gdpr-page-url"
                             :label="$t('settings.privacyPolicyPageURL')">
                             <text-input
                                 id="gdpr-page-url"
-                                v-model="advanced.gdpr.articleExternalUrl"
+                                v-model="advanced.gdpr.privacyPolicyExternalUrl"
                                 :spellcheck="false"
                                 slot="field" />
                         </field>
@@ -1243,7 +1258,8 @@
                                     'badge': $t('settings.badge'), 
                                     'link': $t('ui.customLink'), 
                                     'badge-link': $t('settings.badgeAndCustomLink') 
-                                }"></dropdown>
+                                }">
+                            </dropdown>
                         </field>
 
                         <field
@@ -1287,7 +1303,8 @@
                                     'left': $t('settings.gdprBannerPosition.left'), 
                                     'right': $t('settings.gdprBannerPosition.right'),
                                     'bar': $t('settings.gdprBannerPosition.bar') 
-                                }"></dropdown>
+                                }">
+                            </dropdown>
                         </field>
 
                         <field

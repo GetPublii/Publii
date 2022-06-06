@@ -90,7 +90,7 @@ class Gdpr {
         let privacyPolicyLink = ``;
 
         if (Gdpr.getPrivacyPolicyUrl(configuration, renderer)) {
-            privacyPolicyLink = `<a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">${configuration.readMoreLinkLabel}</a>`;
+            privacyPolicyLink = `<a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">${configuration.privacyPolicyLinkLabel}</a>`;
         }
 
         template = template.replace(/\{\{behaviour\}\}/gmi, configuration.behaviour);
@@ -132,19 +132,19 @@ class Gdpr {
     }
 
     static getPrivacyPolicyUrl (configuration, renderer) {
-        if (configuration.articleLinkType === 'none') {
+        if (!configuration.showPrivacyPolicyLink) {
             return false;
         }
         
-        if (configuration.articleLinkType === 'external') {
-            return configuration.articleExternalUrl;
+        if (configuration.privacyPolicyLinkType === 'external') {
+            return configuration.privacyPolicyExternalUrl;
         }
 
-        if (!configuration.articleId && configuration.articleLinkType === 'internal') {
+        if (!configuration.privacyPolicyPostId && configuration.privacyPolicyLinkType === 'internal') {
             return '#not-specified';
         }
 
-        let result = renderer.cachedItems.posts[configuration.articleId];
+        let result = renderer.cachedItems.posts[configuration.privacyPolicyPostId];
 
         if (!result) {
             return '#not-found';

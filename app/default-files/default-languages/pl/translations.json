@@ -766,6 +766,7 @@
         "showOnlyFeaturedPosts": "Pokaż tylko wyróżnione wpisy",
         "showPostSlugsOnTheListing": "Pokaż slug wpisu na liście",
         "showPostTagsOnTheListing": "Pokaż tagi wpisu na liście",
+        "showPrivacyPolicyLink": "Pokaż link do polityki prywatności",
         "sitemap": "Mapa witryny",
         "sitemapLinkInfo": "Mapę XML można znaleźć tutaj: <a href=\"{sitemapLink}\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
         "siteSettings": "Ustawienia strony",
