@@ -1176,6 +1176,11 @@
                                 slot="field" />
                         </field>
 
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="big thin"
+                            :is-line="true"/>
+
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="show-privacy-policy-link"
@@ -1243,9 +1248,8 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled"
-                            type="empty"
-                            :is-line="false"
-                            :label="false" />
+                            type="small thin"
+                            :is-line="true"/>
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1282,11 +1286,10 @@
                             </label>
                         </field>
 
-                         <separator
+                        <separator
                             v-if="advanced.gdpr.enabled"
-                            type="empty"
-                            :is-line="false"
-                            :label="false" />
+                            type="small thin"
+                            :is-line="true"/>
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1334,9 +1337,8 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled"
-                            type="empty"
-                            :is-line="false"
-                            :label="false" />
+                            type="small thin"
+                            :is-line="true"/>
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1355,7 +1357,6 @@
                                 }">
                             </dropdown>
                         </field>
-
 
                         <separator
                             v-if="advanced.gdpr.enabled"
@@ -1387,6 +1388,39 @@
                                     slot="field" />
                             </label>
                         </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="small thin"
+                            :is-line="true"/>
+
+                         <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-title"
+                            :label="$t('settings.gdprAdvancedConfigurationTitle')">
+                            <label slot="field">
+                                <text-input
+                                    id="gdpr-advanced-configuration-title"
+                                    v-model="advanced.gdpr.advancedConfigurationTitle"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-description"
+                            :label="$t('settings.gdprAdvancedConfigurationDescription')">
+                            <label slot="field">
+                                <text-area
+                                    id="gdpr-advanced-configuration-description"
+                                    v-model="advanced.gdpr.advancedConfigurationDescription"
+                                    :rows="4"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    slot="field" />
+                            </label>
+                        </field>
+                        
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
@@ -1429,33 +1463,6 @@
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
-                            id="gdpr-advanced-configuration-title"
-                            :label="$t('settings.gdprAdvancedConfigurationTitle')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-title"
-                                    v-model="advanced.gdpr.advancedConfigurationTitle"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
-                        </field>
-
-                        <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
-                            id="gdpr-advanced-configuration-description"
-                            :label="$t('settings.gdprAdvancedConfigurationDescription')">
-                            <label slot="field">
-                                <text-area
-                                    id="gdpr-advanced-configuration-description"
-                                    v-model="advanced.gdpr.advancedConfigurationDescription"
-                                    :rows="4"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
-                        </field>
-
-                        <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-show-description-link"
                             :label="$t('settings.gdprAdvancedConfigurationPrivacyLink')">
                             <label slot="field">
@@ -1470,9 +1477,9 @@
                             </small>
                         </field>
 
-                         <separator
+                        <separator
                             v-if="advanced.gdpr.enabled"
-                            type="big thin"
+                            type="small thin"
                             :is-line="true"/>
 
                         <field
