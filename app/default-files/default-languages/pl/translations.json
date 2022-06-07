@@ -657,7 +657,7 @@
         "gdprAdvancedConfigurationTitle": "Tytuł w popupie",
         "gdprAdvancedConfigurationDescription": "Opis w popupie",
         "gdprAdvancedConfigurationPrivacyLink": "Link do polityki prywatności",
-        "gdprAdvancedConfigurationPrivacyLinkDescription":"Wyświetl link do strony polityki prywatności w popupie. Jeśli 'URL polityki prywatności' w sekcji 'Podstawowe' jest ustawiony na 'none', link również nie zostanie wyświetlony w popupie.",
+        "gdprAdvancedConfigurationPrivacyLinkDescription":"Wyświetl link do strony polityki prywatności w popupie. Jeśli opcja 'Pokaż link do polityki prywatności' w sekcji 'Podstawowy' jest wyłączona, link również nie zostanie wyświetlony w popupie.",
         "gdprBehaviourInfo": "Pamiętaj o umieszczeniu linku z powyższą kotwicą w nawigacji Twojej strony lub w treści strony (np. <a href=\"#cookie-settings\">Ustawienia plików cookies</a>). W przeciwnym razie użytkownicy Twojej witryny mogą nie mieć możliwości zmiany swoich indywidualnych preferencji dotyczących plików cookie.",
         "gdprCookieSettingsRevision": "Wersja ustawień",
         "gdprCookieSettingsTTL": "Przechowuj ustawienia użytkownika przez X dni",
