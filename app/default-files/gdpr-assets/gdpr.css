@@ -166,7 +166,7 @@
 }
 .pcb__txt a {
   color: var(--pcb-btn-link);
-  font-weight: var(--pcb-font-weight-bold);
+  font-weight: var(--pcb-font-weight-normal);
   -webkit-transition: var(--pcb-link-transition);
   transition: var(--pcb-link-transition);
   text-decoration: underline;
@@ -562,6 +562,13 @@
   transition: var(--pcb-link-transition);
   top: 50%;
   width: 5px;
+}
+.pcb__group__title.no-desc {
+  padding-left: 0;
+  pointer-events: none;
+}
+.pcb__group__title.no-desc::before {
+  content: none;
 }
 .pcb__group__txt {
   font-size: 0.85em;
