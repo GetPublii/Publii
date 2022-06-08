@@ -1390,7 +1390,7 @@
                         </field>
 
                         <separator
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             type="small thin"
                             :is-line="true"/>
 
