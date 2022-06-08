@@ -120,6 +120,16 @@ class ContentHelper {
             preparedText = ContentHelper._prepareAmpContent(preparedText);
         }
 
+        // Add embed consents
+        if (
+            themeConfig.supportedFeatures.embedConsents &&
+            renderer.siteConfig.advanced.gdpr.enabled &&
+            renderer.siteConfig.advanced.gdpr.allowAdvancedConfiguration &&
+            renderer.siteConfig.advanced.gdpr.embedConsents.length
+        ) {
+            preparedText = ContentHelper.addEmbedConsents(preparedText, renderer.siteConfig.advanced.gdpr.embedConsents);
+        }
+
         // Add dnt=1 for Vimeo links
         if (renderer.siteConfig.advanced.gdpr.vimeoNoTrack) {
             preparedText = preparedText.replace(/src="(http[s]?\:\/\/player\.vimeo\.com\/video\/.*?)"/gmi, function (url, matches) {
@@ -624,6 +634,50 @@ class ContentHelper {
         // Replace original URLs with proper URLs
         for(let url of urls) {
             text = text.split(url).join(links[url]);
+        }
+
+        return text;
+    }
+
+    /**
+     * Add overlays for the embed items 
+     * 
+     * @param {string} text 
+     * @param {Array} embedConsents 
+     * 
+     * @returns {string} - modified text
+     */
+    static addEmbedConsents (text, embedConsents) {
+        for (let i = 0; i < embedConsents.length; i++) {
+            let embedConsent = embedConsents[i];
+            text = text.replace(/\<iframe[^\>]*?src="([^"]*?)"[^\>]*?\>\<\/iframe\>/gmi, function (iframe, url) {
+                if (url.indexOf(embedConsent.rule) === -1) {
+                    return iframe;
+                }
+
+                iframe = iframe.replace('src="', 'data-consent-src="');
+                iframe = `
+                <div 
+                    class="publii-embed-consent-wrapper" 
+                    data-consent-group-id="${embedConsent.cookieGroup}">
+                    ${iframe}
+                    <div class="publii-embed-consent-overlay is-active">
+                        <div class="publii-embed-consent-overlay-inner">
+                            <p>${embedConsent.text}</p>
+                            <a 
+                                href="#accept" 
+                                class="publii-embed-consent-button" 
+                                onclick="window.publiiEmbedConsentGiven('${embedConsent.cookieGroup}'); return false;">
+                                ${embedConsent.buttonLabel}
+                            </a>
+                        </div>
+                    </div>
+                    <script>window.publiiEmbedConsentCheck('${embedConsent.cookieGroup}');</script>
+                </div>
+                `;
+
+                return iframe;
+            });   
         }
 
         return text;

@@ -611,7 +611,7 @@
         "editorFontSize": "Rozmiar tekstu (px)",
         "editors": "Edytory",
         "embedConsents": "Zgody na osadzane treści",
-        "embedConsentsDescription": "Możesz zablokować wczytywanie elementów iframe, które zawierają określony fragment w URL i wyświetlić nad nimi prośbę o wyrażenie zgody, jeśli nie wyrażono jej bezpośrednio w bannerze cookies. Powiązanie z bannerem cookies odbywa się na podstawie ID grupy w bannerze cookies.",
+        "embedConsentsDescription": "Możesz zablokować wczytywanie elementów iframe w treści wpisów, które zawierają określony fragment w URL i wyświetlić nad nimi prośbę o wyrażenie zgody, jeśli nie wyrażono jej bezpośrednio w bannerze cookies. Powiązanie z bannerem cookies odbywa się na podstawie ID grupy w bannerze cookies.",
         "embedVideos": "Osadzanie video",
         "enableAdvancedPreview": "Włącz zaawansowany podgląd",
         "enableAMP": "Włącz AMP",

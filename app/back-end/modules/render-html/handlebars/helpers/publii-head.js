@@ -11,6 +11,61 @@ function publiiHeadHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('publiiHead', function (context) {
         let output  = '<meta name="generator" content="Publii Open-Source CMS for Static Site" />';
 
+        if (
+            rendererInstance.themeConfig.supportedFeatures.embedConsents &&
+            rendererInstance.siteConfig.advanced.gdpr.enabled &&
+            rendererInstance.siteConfig.advanced.gdpr.allowAdvancedConfiguration &&
+            rendererInstance.siteConfig.advanced.gdpr.embedConsents.length
+        ) {
+            let configRevision = '';
+            let configTTL = 0;
+
+            if (rendererInstance.siteConfig.advanced.gdpr.cookieSettingsRevision) {
+                configRevision = '-v' + parseInt(rendererInstance.siteConfig.advanced.gdpr.cookieSettingsRevision, 10);
+            }
+
+            if (rendererInstance.siteConfig.advanced.gdpr.cookieSettingsTTL) {
+                configTTL = parseInt(rendererInstance.siteConfig.advanced.gdpr.cookieSettingsTTL, 10);
+            }
+
+            output += `
+            <script>
+            window.publiiEmbedConsentCheck = function (cookieGroup) {
+                var configName = 'publii-gdpr-allowed-cookies${configRevision}';
+                var lastConfigSave = localStorage.getItem('publii-gdpr-cookies-config-save-date');
+                var configIsFresh = false;
+
+                if (lastConfigSave !== null) {
+                    lastConfigSave = parseInt(lastConfigSave, 10);
+
+                    if (lastConfigSave === 0) {
+                        configIsFresh = true;
+                    } else if (${configTTL} > 0 && +new Date() - lastConfigSave < ${configTTL} * 24 * 60 * 60 * 1000) {
+                        configIsFresh = true;
+                    }
+                }
+
+                if (!configIsFresh) {
+                    return;
+                }
+
+                var config = localStorage.getItem(configName);
+
+                if (config.indexOf(cookieGroup) > -1) {
+                    var iframesToUnlock = document.querySelectorAll('.publii-embed-consent-wrapper[data-consent-group-id="' + cookieGroup + '"]');
+
+                    for (var i = 0; i < iframesToUnlock.length; i++) {
+                        var iframeWrapper = iframesToUnlock[i];
+                        iframeWrapper.querySelector('.publii-embed-consent-overlay').classList.remove('is-active');
+                        var iframe = iframeWrapper.querySelector('iframe');
+                        iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
+                    }
+                }
+            }
+            </script>
+            `;
+        }
+
         if (rendererInstance.plugins.hasInsertions('publiiHead')) {
             output += "\n";
             output += rendererInstance.plugins.runInsertions('publiiHead', rendererInstance);

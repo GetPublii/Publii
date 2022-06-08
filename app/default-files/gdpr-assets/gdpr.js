@@ -1,4 +1,4 @@
-(function() {
+(function(win) {
     if (!document.querySelector('.pcb')) {
         return;
     }
@@ -295,7 +295,7 @@
     }
 
     function getConfigName () {
-        var lsKeyName = 'publii-gdpr-allowed-cookies-v1';
+        var lsKeyName = 'publii-gdpr-allowed-cookies';
 
         if (cbConfig.revision) {
             lsKeyName = lsKeyName + '-v' + parseInt(cbConfig.revision, 10);
@@ -483,4 +483,30 @@
 
         return false;
     }
-})();
+
+    win.publiiEmbedConsentGiven = function (cookieGroup) {
+        allowCookieGroup(cookieGroup);
+
+        var checkbox = cbUI.popup.element.querySelector('input[type="checkbox"][data-group-name="' + cookieGroup + '"]');
+
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+
+        var groupsToAccept = getCurrentStateOfConsents();
+        storeConfiguration(groupsToAccept);
+
+        if (cbConfig.debugMode) {
+            console.log('🍪 Save new config: ', groupsToAccept.join(', '));
+        }
+
+        var iframesToUnlock = document.querySelectorAll('.publii-embed-consent-wrapper[data-consent-group-id="' + cookieGroup + '"]');
+
+        for (var i = 0; i < iframesToUnlock.length; i++) {
+            var iframeWrapper = iframesToUnlock[i];
+            iframeWrapper.querySelector('.publii-embed-consent-overlay').classList.remove('is-active');
+            var iframe = iframeWrapper.querySelector('iframe');
+            iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
+        }
+    }
+})(window);

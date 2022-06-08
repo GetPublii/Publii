@@ -611,7 +611,7 @@
         "editorFontSize": "Font size (px)",
         "editors": "Editors",
         "embedConsents": "Consents for embed content",
-        "embedConsentsDescription": "You can block loading of the iframe elements which contains the specific URL fragments and display over them overlay with ask for consent - if user didn't give consent in the cookie banner. Connection with cookie banner is based on the ID of groups in the cookie banner.",
+        "embedConsentsDescription": "You can block loading of the iframe elements in post contents which contains the specific URL fragments and display over them overlay with ask for consent - if user didn't give consent in the cookie banner. Connection with cookie banner is based on the ID of groups in the cookie banner.",
         "embedVideos": "Embed Video",
         "enableAdvancedPreview": "Enable advanced preview",
         "enableAMP": "Enable AMP",

@@ -1536,19 +1536,21 @@
                         </field>
 
                         <separator
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             type="ultra thin"
                             :is-line="true"
                             :label="$t('settings.embedConsents')"
                             :note="$t('settings.embedConsentsDescription')" />
 
                         <div
-                            v-if="!currentThemeSupportsEmbedConsents"
+                            v-if="!currentThemeSupportsEmbedConsents && advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
                             <p>{{ $t('settings.themeDoesNotSupportEmbedConsents') }}</p>
                         </div>
 
                         <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="embed-consents-groups"
                             label=""
                             :labelFullWidth="true">
