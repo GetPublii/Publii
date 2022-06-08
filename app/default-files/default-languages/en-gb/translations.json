@@ -296,6 +296,13 @@
     },
     "gdpr": {
         "addGroup": "Add group",
+        "embedConsents": {
+            "addRule": "Add rule",
+            "groupButtonLabel": "Button label",
+            "groupCookieGroup": "Cookies group",
+            "groupRule": "URL contains",
+            "groupTextPlaceholder": "Consent text"
+        },
         "groupDescriptionPlaceholder": "Insert cookies group description here",
         "groupID": "Group ID",
         "groupName": "Group name",
@@ -603,6 +610,8 @@
         "editorFontFamilySerif": "Serif",
         "editorFontSize": "Font size (px)",
         "editors": "Editors",
+        "embedConsents": "Consents for embed content",
+        "embedConsentsDescription": "You can block loading of the iframe elements which contains the specific URL fragments and display over them overlay with ask for consent - if user didn't give consent in the cookie banner. Connection with cookie banner is based on the ID of groups in the cookie banner.",
         "embedVideos": "Embed Video",
         "enableAdvancedPreview": "Enable advanced preview",
         "enableAMP": "Enable AMP",
@@ -802,6 +811,7 @@
         "themeDoesNotSupportSearchPages": "Your theme does not support search pages",
         "themeDoesNotSupportTagPages": "Your theme does not support tag pages.",
         "themeDoesNotSupportTagsListPage": "Your theme does not support a Tags list page.",
+        "themeDoesNotSupportEmbedConsents": "Your theme does not support consents for embed content.",
         "themePrimaryColor": "Theme primary color",
         "timeFormat": "Time format:",
         "toViewSitemapEnableIndexingInfo": "To view sitemap settings please disable the 'Ask search engines to not index this website' option in the SEO Settings tab; the sitemap won't be generated for your website otherwise.",

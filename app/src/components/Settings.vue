@@ -1534,6 +1534,29 @@
                                 v-model="advanced.gdpr.groups"
                                 slot="field" />
                         </field>
+
+                        <separator
+                            type="ultra thin"
+                            :is-line="true"
+                            :label="$t('settings.embedConsents')"
+                            :note="$t('settings.embedConsentsDescription')" />
+
+                        <div
+                            v-if="!currentThemeSupportsEmbedConsents"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportEmbedConsents') }}</p>
+                        </div>
+
+                        <field
+                            id="embed-consents-groups"
+                            label=""
+                            :labelFullWidth="true">
+                            <embed-consents-groups
+                                id="embed-consents-groups"
+                                v-model="advanced.gdpr.embedConsents"
+                                slot="field" />
+                        </field>
                     </div>
 
                     <div slot="tab-7">
@@ -1935,12 +1958,14 @@
 <script>
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
+import EmbedConsentsGroups from './basic-elements/EmbedConsentsGroups';
 import GdprGroups from './basic-elements/GdprGroups';
 import ThemesDropdown from './basic-elements/ThemesDropdown';
 
 export default {
     name: 'site-settings',
     components: {
+        'embed-consents-groups': EmbedConsentsGroups,
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
     },
@@ -1967,6 +1992,9 @@ export default {
     computed: {
         currentThemeHasSupportedFeaturesList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures;
+        },
+        currentThemeSupportsEmbedConsents () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.embedConsents;
         },
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;

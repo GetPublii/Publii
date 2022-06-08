@@ -14,11 +14,13 @@
             :key="'gdpr-group-' + index">
             <text-input
                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                v-model="group.name" />
+                v-model="group.name"
+                :placeholder="$t('gdpr.groupName')" />
 
             <text-input
                 :spellcheck="false"
-                v-model="group.id" />
+                v-model="group.id"
+                :placeholder="$t('gdpr.groupID')" />
 
             <switcher
                 :disabled="group.id === '-'"

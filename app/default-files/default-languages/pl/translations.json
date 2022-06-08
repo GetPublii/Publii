@@ -296,6 +296,13 @@
     },
     "gdpr": {
         "addGroup": "Dodaj grupę",
+        "embedConsents": {
+            "addRule": "Dodaj regułę",
+            "groupButtonLabel": "Etykieta przycisku",
+            "groupCookieGroup": "Grupa cookies",
+            "groupRule": "URL zawiera",
+            "groupTextPlaceholder": "Treść zgody"
+        },
         "groupDescriptionPlaceholder": "Dodaj tutaj opis grupy plików cookies",
         "groupID": "ID grupy",
         "groupName": "Nazwa grupy",
@@ -603,6 +610,8 @@
         "editorFontFamilySerif": "Szeryfowy",
         "editorFontSize": "Rozmiar tekstu (px)",
         "editors": "Edytory",
+        "embedConsents": "Zgody na osadzane treści",
+        "embedConsentsDescription": "Możesz zablokować wczytywanie elementów iframe, które zawierają określony fragment w URL i wyświetlić nad nimi prośbę o wyrażenie zgody, jeśli nie wyrażono jej bezpośrednio w bannerze cookies. Powiązanie z bannerem cookies odbywa się na podstawie ID grupy w bannerze cookies.",
         "embedVideos": "Osadzanie video",
         "enableAdvancedPreview": "Włącz zaawansowany podgląd",
         "enableAMP": "Włącz AMP",
@@ -802,6 +811,7 @@
         "themeDoesNotSupportSearchPages": "Twój motyw nie obsługuje stron wyszukiwania.",
         "themeDoesNotSupportTagPages": "Twój motyw nie obsługuje stron tagów.",
         "themeDoesNotSupportTagsListPage": "Twój motyw nie wspiera stron listy tagów.",
+        "themeDoesNotSupportEmbedConsents": "Twój motyw nie wspiera zgód dla osadzanych treści.",
         "themePrimaryColor": "Kolor przewodni motywu",
         "timeFormat": "Format czasu:",
         "toViewSitemapEnableIndexingInfo": "Aby wyświetlić ustawienia mapy witryny, wyłącz opcję 'Poproś wyszukiwarki, aby nie indeksowały tej witryny' w zakładce Ustawienia SEO; w przeciwnym wypadku mapa witryny nie zostanie wygenerowana.",

@@ -123,6 +123,7 @@ const AstCurrentSiteConfig = {
                 { 'name': 'Analytical', 'id': 'analytics', 'description': '' },
                 { 'name': 'Marketing', 'id': 'marketing', 'description': '' }
             ],
+            embedConsents: [],
             saveButtonLabel: 'Accept all',
             behaviour: 'badge',
             badgeLabel: 'Cookie Policy',
