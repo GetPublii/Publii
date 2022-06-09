@@ -468,9 +468,11 @@
     function reloadIsNeeded (groupsToAccept) {
         // check if user rejected consent for initial groups
         var initialGroups = cbConfig.initialState;
+        var previouslyAcceptedGroups = cbConfig.previouslyAccepted;
+        var groupsToCheck = initialGroups.concat(previouslyAcceptedGroups);
 
-        for (var i = 0; i < initialGroups.length; i++) {
-            var groupToCheck = initialGroups[i];
+        for (var i = 0; i < groupsToCheck.length; i++) {
+            var groupToCheck = groupsToCheck[i];
 
             if (groupsToAccept.indexOf(groupToCheck) === -1) {
                 if (cbConfig.debugMode) {

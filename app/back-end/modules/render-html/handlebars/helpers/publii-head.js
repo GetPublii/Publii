@@ -51,7 +51,7 @@ function publiiHeadHelper(rendererInstance, Handlebars) {
 
                 var config = localStorage.getItem(configName);
 
-                if (config.indexOf(cookieGroup) > -1) {
+                if (config && config.indexOf(cookieGroup) > -1) {
                     var iframesToUnlock = document.querySelectorAll('.publii-embed-consent-wrapper[data-consent-group-id="' + cookieGroup + '"]');
 
                     for (var i = 0; i < iframesToUnlock.length; i++) {
