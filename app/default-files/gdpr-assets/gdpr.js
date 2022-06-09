@@ -507,6 +507,7 @@
         for (var i = 0; i < iframesToUnlock.length; i++) {
             var iframeWrapper = iframesToUnlock[i];
             iframeWrapper.querySelector('.publii-embed-consent-overlay').classList.remove('is-active');
+            iframeWrapper.querySelector('.publii-embed-consent-overlay').setAttribute('aria-hidden', 'true');
             var iframe = iframeWrapper.querySelector('iframe');
             iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
         }

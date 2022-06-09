@@ -670,7 +670,7 @@ class ContentHelper {
                     class="publii-embed-consent-wrapper" 
                     data-consent-group-id="${embedConsent.cookieGroup}">
                     ${iframe}
-                    <div class="publii-embed-consent-overlay is-active">
+                    <div class="publii-embed-consent-overlay is-active" aria-hidden="false">
                         <div class="publii-embed-consent-overlay-inner">
                             <p>${embedConsent.text}</p>
                             <a 
