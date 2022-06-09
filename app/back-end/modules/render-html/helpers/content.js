@@ -655,7 +655,16 @@ class ContentHelper {
                     return iframe;
                 }
 
+                if (embedConsent.cookieGroup === '-' || embedConsent.cookieGroup === '') {
+                    return iframe;
+                }
+
+                if (iframe.indexOf('data-consent-overlay-added="true"') > -1) {
+                    return iframe;
+                }
+
                 iframe = iframe.replace('src="', 'data-consent-src="');
+                iframe = iframe.replace('<iframe ', '<iframe data-consent-overlay-added="true" ');
                 iframe = `
                 <div 
                     class="publii-embed-consent-wrapper" 

@@ -1564,6 +1564,7 @@
                             <embed-consents-groups
                                 id="embed-consents-groups"
                                 v-model="advanced.gdpr.embedConsents"
+                                :cookieGroups="advanced.gdpr.groups"
                                 slot="field" />
                         </field>
                     </div>

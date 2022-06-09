@@ -17,10 +17,9 @@
                 v-model="group.rule"
                 :placeholder="$t('gdpr.embedConsents.groupRule')" />
 
-            <text-input
-                :spellcheck="false"
+            <dropdown
                 v-model="group.cookieGroup"
-                :placeholder="$t('gdpr.embedConsents.groupCookieGroup')" />
+                :items="availableCookieGroups" />
 
             <text-input
                 :spellcheck="false"
@@ -47,9 +46,32 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'embed-consents',
-    props: ['value'],
+    props: [
+        'value',
+        'cookieGroups'
+    ],
+    computed: {
+        availableCookieGroups () {
+            if (!this.cookieGroups) {
+                return [{
+                    label: 'None',
+                    value: ''
+                }];
+            }
+
+            return [{
+                label: 'None',
+                value: ''
+            }].concat(this.cookieGroups.filter(group => group.id !== '' && group.id !== '-').map(group => ({
+                label: group.id,
+                value: group.id
+            })));
+        }
+    },
     data () {
         return {
             content: []
@@ -61,6 +83,22 @@ export default {
         },
         content (newValue) {
             this.$emit('input', newValue);
+        },
+        cookieGroups: {
+            handler: function (newValue) {
+                if (!newValue) {
+                    return;
+                }
+
+                let availableGroups = newValue.map(group => group.id);
+
+                for (let i = 0; i < this.content.length; i++) {
+                    if (availableGroups.indexOf(this.content[i].cookieGroup) === -1) {
+                        Vue.set(this.content[i], 'cookieGroup', '');
+                    }
+                }
+            },
+            deep: true
         }
     },
     mounted: function() {
@@ -71,10 +109,10 @@ export default {
     methods: {
         addRule () {
             this.content.push({
-                rule: "",
-                buttonLabel: "",
-                cookieGroup: "",
-                text: ""
+                rule: '',
+                buttonLabel: '',
+                cookieGroup: '',
+                text: ''
             });
         },
         removeRule (index) {
@@ -109,10 +147,16 @@ export default {
         flex-wrap: wrap;
         padding: .25rem 0;
 
-        .input-wrapper {
+        .input-wrapper,
+        select {
             padding-right: 1rem;
             text-align: left;
             width: calc((100% / 3) - 15px);
+        }
+
+        select {
+            margin-right: 1rem;
+            width: calc((100% / 3) - 15px - 1rem);
         }
 
         .icon {

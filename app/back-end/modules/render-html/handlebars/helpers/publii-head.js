@@ -56,6 +56,12 @@ function publiiHeadHelper(rendererInstance, Handlebars) {
 
                     for (var i = 0; i < iframesToUnlock.length; i++) {
                         var iframeWrapper = iframesToUnlock[i];
+
+                        if (iframeWrapper.getAttribute('data-consent-given') === 'true') {
+                            continue;
+                        }
+
+                        iframeWrapper.setAttribute('data-consent-given', 'true');
                         iframeWrapper.querySelector('.publii-embed-consent-overlay').classList.remove('is-active');
                         var iframe = iframeWrapper.querySelector('iframe');
                         iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
