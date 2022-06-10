@@ -143,7 +143,8 @@ const AstCurrentSiteConfig = {
             cookieSettingsTTL: '90',
             debugMode: false,
             vimeoNoTrack: false,
-            ytNoCookies: false
+            ytNoCookies: false,
+            settingsVersion: ''
         },
         relatedPostsOrder: 'default',
         relatedPostsCriteria: 'titles-and-tags',

@@ -48,7 +48,8 @@ export default {
             okLabel: this.$t('ui.ok'),
             isDanger: false,
             cancelLabel: this.$t('ui.cancel'),
-            defaultText: ''
+            defaultText: '',
+            cancelNotClosePopup: false
         };
     },
     computed: {
@@ -73,6 +74,7 @@ export default {
                 this.cancelLabel = config.cancelLabel || this.$t('ui.cancel');
                 this.defaultText = config.defaultText || "";
                 this.isDanger = config.isDanger || false;
+                this.cancelNotClosePopup = config.cancelNotClosePopup || false;
 
                 if(config.okClick) {
                     this.okClick = config.okClick;
@@ -108,8 +110,11 @@ export default {
             }
         },
         onCancel () {
-            this.isVisible = false;
-            document.body.classList.remove('has-popup-visible');
+            if (!this.cancelNotClosePopup) {
+                this.isVisible = false;
+                document.body.classList.remove('has-popup-visible');
+            }
+
             this.cancelClick();
         },
         onDocumentKeyDown (e) {

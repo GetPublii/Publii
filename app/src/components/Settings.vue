@@ -120,6 +120,13 @@
                 </div>
             </fields-group>
 
+            <div
+                v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
+                class="msg msg-icon msg-alert">
+                <icon name="warning" customWidth="28" customHeight="28" />
+                <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
+            </div>
+
             <fields-group :title="$t('settings.advancedOptions')">
                 <tabs
                     ref="advanced-tabs"
@@ -2338,6 +2345,7 @@ export default {
                 return true;
             });
             newSettings.advanced = Object.assign({}, this.advanced);
+            newSettings.advanced.gdpr.settingsVersion = 'v2';
             newSettings.theme = this.theme;
 
             // Merge new settings with existing settings

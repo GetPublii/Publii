@@ -837,6 +837,7 @@
         "vimeoNoTrack": "Enable 'Do Not Track' mode for Vimeo videos",
         "websiteSpeed": "Website Speed",
         "whatsApp": "WhatsApp",
+        "youMustReviewGdprSettings": "You must review your GDPR settings due breaking changes in Publii v.0.40. <a href=\"https://getpublii.com/docs/gdpr-breaking-changes\" target=\"_blank\">Read more</a>",
         "ytNoCookies": "Enable Privacy-Enhanced mode for YouTube videos"
     },
     "site": {
@@ -1201,10 +1202,12 @@
         "featuredImage": "Featured image",
         "fillAllRequiredFields": "Please fill all required fields",
         "frontpageLink": "Frontpage link",
+        "gdprBreakingChangesConfirmMsg": "It seems that you are using GDPR settings which has major changes since Publii v.0.40. Please review your settings and save them to hide this message on the website load.",
         "githubRepository": "Github repository",
         "goBack": "Go back",
         "goToPluginCustomOptions": "Hide additional options",
         "goToPluginStandardOptions": "Show additional options",
+        "goToSettings": "Go to GDPR settings",
         "help": "Help",
         "hide": "Hide",
         "hideThisNotification": "Hide this notification",
@@ -1269,6 +1272,7 @@
         "theme": "Theme",
         "tools": "Tools & Plugins",
         "unhide": "Unhide",
-        "uploadInProgress": "Upload in progress..."
+        "uploadInProgress": "Upload in progress...",
+        "whatsNew": "What's new?"
     }
 }
