@@ -673,12 +673,11 @@ class ContentHelper {
                     <div class="publii-embed-consent-overlay is-active" aria-hidden="false">
                         <div class="publii-embed-consent-overlay-inner">
                             <p>${embedConsent.text}</p>
-                            <a 
-                                href="#accept" 
+                            <button 
                                 class="publii-embed-consent-button" 
                                 onclick="window.publiiEmbedConsentGiven('${embedConsent.cookieGroup}'); return false;">
                                 ${embedConsent.buttonLabel}
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <script>window.publiiEmbedConsentCheck('${embedConsent.cookieGroup}');</script>
