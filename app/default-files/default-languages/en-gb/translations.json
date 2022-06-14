@@ -301,6 +301,7 @@
             "groupButtonLabel": "Button label",
             "groupCookieGroup": "Cookies group",
             "groupRule": "URL contains",
+            "groupRulePlaceholder": "youtube.com",
             "groupTextPlaceholder": "Consent text"
         },
         "groupDescriptionPlaceholder": "Insert cookies group description here",
