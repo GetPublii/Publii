@@ -120,14 +120,13 @@
                 </div>
             </fields-group>
 
+            <fields-group :title="$t('settings.advancedOptions')">
             <div
                 v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
-                class="msg msg-icon msg-alert">
+                class="msg msg-icon msg-alert msg-bm">
                 <icon name="warning" customWidth="28" customHeight="28" />
                 <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
             </div>
-
-            <fields-group :title="$t('settings.advancedOptions')">
                 <tabs
                     ref="advanced-tabs"
                     id="advanced-basic-settings-tabs"
@@ -2688,5 +2687,8 @@ export default {
             margin-bottom: 1rem;
         }
     }
+}
+.msg-bm {
+   margin-bottom:3rem;
 }
 </style>
