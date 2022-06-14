@@ -15,7 +15,7 @@
             <text-input
                 :spellcheck="false"
                 v-model="group.rule"
-                :placeholder="$t('gdpr.embedConsents.groupRule')" />
+                :placeholder="$t('gdpr.embedConsents.groupRulePlaceholder')" />
 
             <dropdown
                 v-model="group.cookieGroup"
