@@ -77,18 +77,6 @@
             }
 
             showBanner();
-
-            if (cbUI.popup.element) {
-                var checkedGroups = cbUI.popup.element.querySelectorAll('input[type="checkbox"]:checked');
-                
-                for (var i = 0; i < checkedGroups.length; i++) {
-                    var allowedGroup = checkedGroups[i].getAttribute('data-group-name');
-        
-                    if (allowedGroup !== '-' && allowedGroup !== '') {
-                        allowCookieGroup(allowedGroup);
-                    }
-                }
-            }
         } else if (typeof currentConfig === 'string') {
             if (cbConfig.debugMode) {
                 console.log('🍪 Config founded');
@@ -247,6 +235,7 @@
 
         var groupEvent = new Event('publii-cookie-banner-unblock-' + allowedGroup);
         document.body.dispatchEvent(groupEvent);
+        unlockEmbeds(allowedGroup);
 
         if (cbConfig.debugMode) {
             console.log('🍪 Allowed group: ' + allowedGroup);
@@ -486,7 +475,20 @@
         return false;
     }
 
+    function unlockEmbeds (cookieGroup) {
+        var iframesToUnlock = document.querySelectorAll('.pec-wrapper[data-consent-group-id="' + cookieGroup + '"]');
+
+        for (var i = 0; i < iframesToUnlock.length; i++) {
+            var iframeWrapper = iframesToUnlock[i];
+            iframeWrapper.querySelector('.pec-overlay').classList.remove('is-active');
+            iframeWrapper.querySelector('.pec-overlay').setAttribute('aria-hidden', 'true');
+            var iframe = iframeWrapper.querySelector('iframe');
+            iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
+        }
+    }
+
     win.publiiEmbedConsentGiven = function (cookieGroup) {
+        // it will unlock embeds
         allowCookieGroup(cookieGroup);
 
         var checkbox = cbUI.popup.element.querySelector('input[type="checkbox"][data-group-name="' + cookieGroup + '"]');
@@ -500,16 +502,6 @@
 
         if (cbConfig.debugMode) {
             console.log('🍪 Save new config: ', groupsToAccept.join(', '));
-        }
-
-        var iframesToUnlock = document.querySelectorAll('.pec-wrapper[data-consent-group-id="' + cookieGroup + '"]');
-
-        for (var i = 0; i < iframesToUnlock.length; i++) {
-            var iframeWrapper = iframesToUnlock[i];
-            iframeWrapper.querySelector('.pec-overlay').classList.remove('is-active');
-            iframeWrapper.querySelector('.pec-overlay').setAttribute('aria-hidden', 'true');
-            var iframe = iframeWrapper.querySelector('iframe');
-            iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
         }
     }
 })(window);
