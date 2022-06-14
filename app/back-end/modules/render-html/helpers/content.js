@@ -122,9 +122,11 @@ class ContentHelper {
 
         // Add embed consents
         if (
+            themeConfig.supportedFeatures &&
             themeConfig.supportedFeatures.embedConsents &&
             renderer.siteConfig.advanced.gdpr.enabled &&
             renderer.siteConfig.advanced.gdpr.allowAdvancedConfiguration &&
+            renderer.siteConfig.advanced.gdpr.embedConsents &&
             renderer.siteConfig.advanced.gdpr.embedConsents.length
         ) {
             preparedText = ContentHelper.addEmbedConsents(preparedText, renderer.siteConfig.advanced.gdpr.embedConsents);

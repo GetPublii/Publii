@@ -12,9 +12,11 @@ function publiiHeadHelper(rendererInstance, Handlebars) {
         let output  = '<meta name="generator" content="Publii Open-Source CMS for Static Site" />';
 
         if (
+            rendererInstance.themeConfig.supportedFeatures &&
             rendererInstance.themeConfig.supportedFeatures.embedConsents &&
             rendererInstance.siteConfig.advanced.gdpr.enabled &&
             rendererInstance.siteConfig.advanced.gdpr.allowAdvancedConfiguration &&
+            rendererInstance.siteConfig.advanced.gdpr.embedConsents && 
             rendererInstance.siteConfig.advanced.gdpr.embedConsents.length
         ) {
             let configRevision = '';
