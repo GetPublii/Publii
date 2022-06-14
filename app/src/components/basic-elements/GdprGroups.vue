@@ -5,7 +5,6 @@
             class="gdpr-groups-header">
             <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupName') }}</div>
             <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupID') }}</div>
-            <div class="gdpr-groups-header-cell">{{ $t('gdpr.state') }}</div>
         </div>
 
         <div
@@ -21,10 +20,6 @@
                 :spellcheck="false"
                 v-model="group.id"
                 :placeholder="$t('gdpr.groupID')" />
-
-            <switcher
-                :disabled="group.id === '-'"
-                v-model="group.state" />
 
             <icon
                 size="m"
@@ -67,14 +62,6 @@ export default {
             this.content = this.value;
 
             for (let i = 0; i < this.content.length; i++) {
-                if (typeof this.content[i].state === 'undefined') {
-                    this.content[i].state = false;
-
-                    if (this.content[i].id === '-') {
-                        this.content[i].state = true;
-                    }
-                }
-
                 if (typeof this.content[i].description === 'undefined') {
                     this.content[i].description = '';
                 }
@@ -86,8 +73,7 @@ export default {
             this.content.push({
                 name: "",
                 id: "",
-                description: "",
-                state: false
+                description: ""
             });
         },
         removeGroup (index) {
@@ -112,7 +98,7 @@ export default {
             font-size: 1.4rem;
             font-weight: bold;
             margin: 0 0 1rem 0;
-            width: calc(50% - 40px);
+            width: calc(50% - 23px);
 
             &:last-child {
                 width: 80px;
@@ -129,11 +115,7 @@ export default {
         .input-wrapper {
             padding-right: 1rem;
             text-align: left;
-            width: calc(50% - 43px);
-
-           & + .input-wrapper {
-               margin-right: 1rem;
-            }
+            width: calc(50% - 23px);
         }
 
         .icon {
@@ -149,7 +131,7 @@ export default {
         div:last-child {
             margin-bottom: 3rem;
             margin-top: 1rem;
-            width: calc(100% - 95px);
+            width: calc(100% - 56px);
         }
     }
 

@@ -50,8 +50,7 @@ class Gdpr {
                     <input 
                         type="checkbox"
                         data-group-name="${configuration.groups[i].id}"
-                        id="${configuration.groups[i].id}-cookies"
-                        ${configuration.groups[i].state ? 'checked' : ''} />
+                        id="${configuration.groups[i].id}-cookies" />
                     <label for="${configuration.groups[i].id}-cookies">
                         ${configuration.groups[i].name}
                     </label>

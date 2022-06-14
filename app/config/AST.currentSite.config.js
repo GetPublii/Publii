@@ -118,10 +118,11 @@ const AstCurrentSiteConfig = {
             privacyPolicyLinkType: 'internal',
             privacyPolicyExternalUrl: '',
             groups: [
-                { 'name': 'Required', 'id': '-', 'description': '' },
-                { 'name': 'Functionality', 'id': 'functions', 'description': '' },
-                { 'name': 'Analytical', 'id': 'analytics', 'description': '' },
-                { 'name': 'Marketing', 'id': 'marketing', 'description': '' }
+                { 
+                    'name': 'Required', 
+                    'id': '-', 
+                    'description': '' 
+                }
             ],
             embedConsents: [],
             saveButtonLabel: 'Accept all',
