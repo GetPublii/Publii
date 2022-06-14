@@ -502,12 +502,12 @@
             console.log('🍪 Save new config: ', groupsToAccept.join(', '));
         }
 
-        var iframesToUnlock = document.querySelectorAll('.publii-embed-consent-wrapper[data-consent-group-id="' + cookieGroup + '"]');
+        var iframesToUnlock = document.querySelectorAll('.pec-wrapper[data-consent-group-id="' + cookieGroup + '"]');
 
         for (var i = 0; i < iframesToUnlock.length; i++) {
             var iframeWrapper = iframesToUnlock[i];
-            iframeWrapper.querySelector('.publii-embed-consent-overlay').classList.remove('is-active');
-            iframeWrapper.querySelector('.publii-embed-consent-overlay').setAttribute('aria-hidden', 'true');
+            iframeWrapper.querySelector('.pec-overlay').classList.remove('is-active');
+            iframeWrapper.querySelector('.pec-overlay').setAttribute('aria-hidden', 'true');
             var iframe = iframeWrapper.querySelector('iframe');
             iframe.setAttribute('src', iframe.getAttribute('data-consent-src'));
         }

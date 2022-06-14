@@ -669,14 +669,14 @@ class ContentHelper {
                 iframe = iframe.replace('<iframe ', '<iframe data-consent-overlay-added="true" ');
                 iframe = `
                 <div 
-                    class="publii-embed-consent-wrapper" 
+                    class="pec-wrapper" 
                     data-consent-group-id="${embedConsent.cookieGroup}">
                     ${iframe}
-                    <div class="publii-embed-consent-overlay is-active" aria-hidden="false">
-                        <div class="publii-embed-consent-overlay-inner">
+                    <div class="pec-overlay is-active" aria-hidden="false">
+                        <div class="pec-overlay-inner">
                             <p>${embedConsent.text}</p>
                             <button 
-                                class="publii-embed-consent-button" 
+                                class="pec-button" 
                                 onclick="window.publiiEmbedConsentGiven('${embedConsent.cookieGroup}'); return false;">
                                 ${embedConsent.buttonLabel}
                             </button>
