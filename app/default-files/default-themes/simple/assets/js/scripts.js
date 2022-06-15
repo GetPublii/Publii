@@ -475,7 +475,7 @@ var comments = document.getElementById("js-comments");
 var searchButton = document.querySelector(".js-search-btn");
     searchOverlay = document.querySelector(".js-search-overlay");
     searchClose = document.querySelector(".js-search-close");
-    searchInput = document.querySelector(".search__input");
+    searchInput = document.querySelector("[type='search']");
 
 if (searchButton) {
     searchButton.addEventListener("click", function () {        
