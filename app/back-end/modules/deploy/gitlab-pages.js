@@ -190,18 +190,12 @@ class GitlabPages {
             this.projectID = projects[0].id;
 
             this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
-                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), response, err => {
-                    if (err) {
-                        console.log(`[${ new Date().toUTCString() }] (!) An error occurred during writing files-remote.json file: ${err}`);
-                    }
-
-                    this.deployment.compareFilesList(true);
-                });
+                let remoteListToCheck = fs.readFileSync(path.join(this.deployment.configDir, 'files-remote.json'), 'utf-8');
 
                 try {
-                    if (response.length) {
-                        response = JSON.parse(response);
-                        this.remoteFilesList = response.map(file => {
+                    if (remoteListToCheck.length) {
+                        remoteListToCheck = JSON.parse(remoteListToCheck);
+                        this.remoteFilesList = remoteListToCheck.map(file => {
                             file.path = file.path.substr(7);
 
                             if (file.path.indexOf('/') > -1) {
@@ -217,6 +211,7 @@ class GitlabPages {
                     this.remoteFilesList = [];
                 }
 
+                this.deployment.checkLocalListWithRemoteList(response);
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE DOWNLOADED`);
             }).catch(err => {
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE NOT DOWNLOADED`);
@@ -438,6 +433,7 @@ class GitlabPages {
 
     updateFilesListFile () {
         this.setUploadProgress(98);
+        this.deployment.replaceSyncInfoFiles();
 
         let localFilesListPath = path.join(this.deployment.inputDir, 'files.publii.json');
         let localFilesContent = fs.readFileSync(localFilesListPath);

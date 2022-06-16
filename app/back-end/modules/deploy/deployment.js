@@ -182,6 +182,47 @@ class Deployment {
     }
 
     /**
+     * Check if local list is equal to the server expected copy
+     * 
+     * @param fileContent 
+     */
+    checkLocalListWithRemoteList (fileContent) {
+        try {
+            if (typeof fileContent === 'Buffer') {
+                fileContent = fileContent.toString();
+            }
+
+            let content = JSON.parse(fileContent);
+
+            if (content.revision) {
+                let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
+                let checkSum = md5(filesToCheck);
+                let isExpectedCopy = checkSum === content.revision;
+                this.compareFilesList(isExpectedCopy);    
+                return;
+            }
+            
+            fs.writeFileSync(path.join(this.configDir, 'files-remote.json'), fileContent);
+            this.compareFilesList(true);
+        } catch (e) {
+            this.compareFilesList(false);
+        }
+    }
+
+    /**
+     * Save files.publii.json as files-remote.json and store checksum in the file
+     */
+    replaceSyncInfoFiles () {
+        let inputListPath = path.join(this.inputDir, 'files.publii.json');
+        let remoteListPath = path.join(this.configDir, 'files-remote.json');
+        let contentToSave = fs.readFileSync(inputListPath);
+        let checkSum = md5(contentToSave);
+        let newContent = `{ "revision": "${checkSum}" }`;
+        fs.writeFileSync(remoteListPath, contentToSave);
+        fs.writeFileSync(inputListPath, newContent);
+    }
+
+    /**
      * Compares remote and local files lists
      *
      * @param remoteFileListExists
