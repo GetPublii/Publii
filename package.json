@@ -36,7 +36,7 @@
   "devDependencies": {
     "cross-env": "7.0.2",
     "css-loader": "0.28.7",
-    "electron": "17.1.1",
+    "electron": "17.2.0",
     "electron-builder": "22.14.5",
     "file-loader": "4.2.0",
     "glob": "7.1.6",
