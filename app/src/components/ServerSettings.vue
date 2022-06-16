@@ -38,7 +38,7 @@
 
             <div
                 v-if="deploymentMethodSelected === ''"
-                class="msg msg-icon msg-info">
+                class="msg msg-icon msg-info msg-onbg">
                 <icon name="info" customWidth="28" customHeight="28" />
                 <p v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></p>
             </div>
@@ -179,7 +179,7 @@
                         </span>
 
                         <template v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
-                            <br><br>
+                            <br>
                         </template>
 
                         <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
