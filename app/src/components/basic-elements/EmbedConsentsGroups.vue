@@ -38,7 +38,8 @@
         </div>
 
         <p-button
-            type="small"
+            icon="add-site-mono"
+            type="secondary icon"
             @click.native="addRule">
             {{ $t('gdpr.embedConsents.addRule') }}
         </p-button>

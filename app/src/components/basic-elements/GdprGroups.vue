@@ -33,7 +33,8 @@
         </div>
 
         <p-button
-            type="small"
+            icon="add-site-mono"
+            type="secondary icon"
             @click.native="addGroup">
             {{ $t('gdpr.addGroup') }}
         </p-button>
