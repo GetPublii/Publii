@@ -199,7 +199,6 @@
   }
 }
 .pcb__btn {
-  color: var(--pcb-btn-primary-text);
   background: var(--pcb-btn-primary-bg);
   border: none;
   border-radius: var(--pcb-border-radius);
@@ -207,11 +206,13 @@
           box-shadow: none;
   cursor: pointer;
   display: inline-block;
+  color: var(--pcb-btn-primary-text);
   font-weight: var(--pcb-font-weight-bold);
   font-size: 0.825em;
   -webkit-box-flex: 1;
       -ms-flex: 1 1 100%;
           flex: 1 1 100%;
+  height: initial;
   padding: 1em 1.5em;
   text-align: center;
   -webkit-transition: var(--pcb-link-transition);
@@ -463,6 +464,8 @@
 }
 .pcb__popup__switch input[type=checkbox] {
   color: unset;
+  display: inline-block;
+  float: none;
   height: 0;
   opacity: unset;
   position: unset;
@@ -596,6 +599,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  font-size: initial;
+  height: initial;
   left: 1.25em;
   padding: 0.55em;
   position: fixed;
