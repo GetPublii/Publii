@@ -660,7 +660,8 @@
             "bar": "Bar"
         },
         "gdprAllowAdvancedConfiguration": "Enable advanced cookies configuration",
-        "gdprAdvancedConfigurationLinkLabel": "Advanced configuration link label",
+        "gdprAdvancedConfigurationLinkLabel": "Advanced configuration button label",
+        "gdprAdvancedConfigurationLinkPlaceholder": "Manage preferences",
         "gdprAdvancedConfigurationAcceptButtonLabel": "Accept button label",
         "gdprAdvancedConfigurationRejectButtonLabel": "Reject button label",
         "gdprAdvancedConfigurationSaveButtonLabel": "Save button label",

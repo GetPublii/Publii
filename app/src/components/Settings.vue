@@ -1390,7 +1390,8 @@
                                 <text-input
                                     id="gdpr-advanced-configuration-link-label"
                                     v-model="advanced.gdpr.advancedConfigurationLinkLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking" 
+                                    :placeholder="$t('settings.gdprAdvancedConfigurationLinkPlaceholder')"
                                     slot="field" />
                             </label>
                         </field>

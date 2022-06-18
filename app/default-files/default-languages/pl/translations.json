@@ -660,7 +660,8 @@
             "bar": "Pasek"
         },
         "gdprAllowAdvancedConfiguration": "Włącz zaawansowaną konfigurację plików cookies",
-        "gdprAdvancedConfigurationLinkLabel": "Etykieta linka zaawansowanej konfiguracji",
+        "gdprAdvancedConfigurationLinkLabel": "Etykieta przycisku zaawansowanej konfiguracji",
+        "gdprAdvancedConfigurationLinkPlaceholder": "Zarządzaj preferencjami",
         "gdprAdvancedConfigurationAcceptButtonLabel": "Etykieta przycisku akceptacji",
         "gdprAdvancedConfigurationRejectButtonLabel": "Etykieta przycisku odrzucenia",
         "gdprAdvancedConfigurationSaveButtonLabel": "Etykieta przycisku zapisu",
