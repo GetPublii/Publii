@@ -156,9 +156,7 @@ class FTP {
 
         this.connection.get(
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
-            function(err, stream) {
-                let fileStream;
-
+            function(err, fileStream) {
                 console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
 
                 process.send({
