@@ -17,7 +17,7 @@
             </span>
 
              <div
-                v-if="!currentThemeHasSupportForAuthorImages"
+                v-if="!currentThemeHasSupportForTagImages"
                 slot="note"
                 class="msg msg-small msg-icon msg-alert note">
                 <icon name="warning" size="m" />
