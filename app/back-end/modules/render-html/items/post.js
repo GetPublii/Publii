@@ -14,6 +14,7 @@ class PostItem {
         this.siteConfig = this.renderer.siteConfig;
         this.postData = {};
         this.metaData = {};
+        this.metaDescription = '';
 
         this.getMetaData();
         this.prepareData();
@@ -30,6 +31,14 @@ class PostItem {
 
         if (!this.metaData.editor) {
             this.metaData.editor = 'tinymce';
+        }
+
+        if (this.metaData.metaDesc) {
+            this.metaDescription = this.metaData.metaDesc; 
+        }
+
+        if (this.metaDescription === '') {
+            this.metaDescription = this.siteConfig.advanced.metaDescription;
         }
     }
 
@@ -78,7 +87,8 @@ class PostItem {
             hasGallery: preparedText.indexOf('class="gallery') !== -1,
             template: this.post.template,
             hasCustomExcerpt: hasCustomExcerpt,
-            editor: this.metaData.editor || 'tinymce'
+            editor: this.metaData.editor || 'tinymce',
+            metaDescription: this.metaDescription
         };
 
         if (this.postData.template === '*') {
