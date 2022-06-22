@@ -218,8 +218,8 @@ class ContentHelper {
         length = parseInt(length, 10);
         text = text.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         text = text.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
-        text = text.replace(/\<div class="post__toc"\>[\s\S]*\<\/div\>/gmi, ''); // Remove ToC
-        text = text.replace(/<script>[\s\S]*<\/script>/gmi, ''); // Remove scripts
+        text = text.replace(/\<div class="post__toc"\>[\s\S]*?\<\/div\>/gmi, ''); // Remove ToC
+        text = text.replace(/<script>[\s\S]*?<\/script>/gmi, ''); // Remove scripts
         text = text.replace(/\r?\n/g, ' '); // Replace newline characters with spaces
         text = text.replace(/<\/p>.*?<p/gi, '</p> <p'); // Replace paragraphs spaces into real space
         text = text.replace(/<br.*?>/gi, ' '); // Replace BR tags with spaces
