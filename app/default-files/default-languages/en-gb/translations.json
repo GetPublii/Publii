@@ -304,7 +304,7 @@
             "groupRulePlaceholder": "youtube.com",
             "groupTextPlaceholder": "Consent text"
         },
-        "groupDescriptionPlaceholder": "Insert cookies group description here",
+        "groupDescriptionPlaceholder": "Enter a cookies group description here",
         "groupID": "Group ID",
         "groupName": "Group name",
         "state": "State"
