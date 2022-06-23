@@ -60,9 +60,6 @@ class ContentHelper {
         // Reduce download="download" to download
         preparedText = preparedText.replace(/download="download"/gmi, 'download');
 
-        // Remove contenteditable attributes
-        preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
-
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
@@ -86,7 +83,14 @@ class ContentHelper {
             preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
                 return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
             });
+
+            // Fix some specific syntax cases for double figure elements
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1</figure>');
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<figcaption contentEditable="true">([\s\S]*?)<\/figcaption>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1<figcaption>$2</figcaption></figure>');
         }
+
+        // Remove contenteditable attributes
+        preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
 
         if (editor === 'tinymce') {
             // Wrap galleries with classes into div with gallery-wrapper CSS class
