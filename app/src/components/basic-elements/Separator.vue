@@ -44,6 +44,7 @@ export default {
             return {
                 'separator': true,
                 'line': this.isLine,
+                'no-line': this.type.indexOf('no-line') > -1,
                 'empty': this.type.indexOf('empty') > -1,
                 'thin': this.type.indexOf('thin') > -1,
                 'small': this.type.indexOf('small') > -1,
@@ -130,6 +131,20 @@ export default {
 
         & > .note {
            padding: 2.5rem 0 0 0;
+        }
+    }
+
+    &.no-line {
+        padding: 0 0 2rem;
+        & > .separator-wrapper::before {     
+            content: none; 
+        }
+        & > .separator-wrapper {
+            padding: 0;
+        }
+
+        & > .note {
+           padding: 0;
         }
     }
 
