@@ -759,7 +759,7 @@
         "privacyPolicyURL": "Privacy policy link source",
         "provideFacebookAppID": "Please provide the <a href=\"https://developers.facebook.com/docs/apps/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook App ID</a>",
         "random": "Random",
-        "readAboutOurRecommendedServerSettings": "Looking to learn more about recommended server configurations? Please refer to the following documentation <a href=\"https://getpublii.com/docs/recommended-server-settings\" target=\"_blank\">article</a>.",
+        "readAboutOurRecommendedServerSettings": "Looking to learn more about recommended server configurations? Please refer to the following documentation <a href=\"https://getpublii.com/docs/recommended-server-settings.html\" target=\"_blank\">article</a>.",
         "relatedPostsOptions": "Related posts options",
         "relatedPostsOptionsInfo": "When enabled, related posts will be taken from all tags. When disabled, related posts will only be generated from the same tags as the current post.",
         "relatedPostsOrdering": "Related posts ordering:",

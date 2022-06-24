@@ -759,7 +759,7 @@
         "privacyPolicyURL": "Źródło linka polityki prywatności",
         "provideFacebookAppID": "Proszę podać <a href=\"https://developers.facebook.com/docs/apps/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook App ID</a>",
         "random": "Losowe",
-        "readAboutOurRecommendedServerSettings": "Dowiedz się więcej o zalecanych konfiguracjach serwerów odwiedzając oficjalną stronę <a href=\"https://getpublii.com/docs/recommended-server-settings\" target=\"_blank\">dokumentacji</a>.",
+        "readAboutOurRecommendedServerSettings": "Dowiedz się więcej o zalecanych konfiguracjach serwerów odwiedzając oficjalną stronę <a href=\"https://getpublii.com/docs/recommended-server-settings.html\" target=\"_blank\">dokumentacji</a>.",
         "relatedPostsOptions": "Opcje powiązanych wpisów",
         "relatedPostsOptionsInfo": "Po włączeniu wpisy powiązane będą pobierane ze wszystkich tagów. Po wyłączeniu wpisy powiązane będą generowane tylko na podstawie tych samych tagów, co bieżący wpis.",
         "relatedPostsOrdering": "Sortowanie powiązanych wpisów:",
