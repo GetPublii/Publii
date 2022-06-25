@@ -62,12 +62,14 @@ export default {
             return false;
         },
         isOutdated () {
+            /*
             let publiiSupport = this.languageData.publiiSupport.split('.').slice(0, 2).join('.');
             let currentMajorVersion = this.$store.state.app.versionInfo.version.split('.').slice(0, 2).join('.');
            
             if (compare(publiiSupport, currentMajorVersion) === -1) {
                 return true;
             }
+            */
 
             return false;
         },
