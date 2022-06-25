@@ -5,12 +5,13 @@
       ref="block"
       :class="{ 'publii-block-image': true, 'is-wide': config.imageAlign === 'wide', 'is-full': config.imageAlign === 'full' }">
       <img
+        v-if="!!content.image"
         :src="content.image"
         :height="content.imageHeight"
         :width="content.imageWidth" />
 
       <button
-        v-if="!editor.bulkOperationsMode"
+        v-if="!editor.bulkOperationsMode && !!content.image"
         class="publii-block-image-delete"
         @click.stop.prevent="clearImage()">
         <icon name="trash" />
