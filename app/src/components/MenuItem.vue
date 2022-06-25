@@ -161,7 +161,7 @@
                 :itemData="item"
                 :itemMenuID="menuID"
                 :itemOrder="index"
-                :editedID="editedID"
+                :editedID="parseInt(editedID, 10)"
                 :selectedItem="selectedItem"
                 :parentIsSelected="isSelected || parentIsSelected" />
         </draggable>
