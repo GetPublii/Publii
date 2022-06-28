@@ -58,7 +58,7 @@
         "rendering": {
             "renderingProcessCrashed": "Rendering process crashed",
             "renderingProcessCrashedMsg": "For more information, check the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
-            "renderingProcessFiled": "Rendering process failed"
+            "renderingProcessFailed": "Rendering process failed"
         },
         "server": {
             "branchDoesNotExist": "Selected branch does not exist.",
@@ -275,16 +275,16 @@
         "removeFilesConfirmMsg": "Do you really want to remove the selected files? This action cannot be undone.",
         "removeFilesSuccessMsg": "Selected files have been removed",
         "rename": "Rename",
-        "renameBackupConfrimLabel": "Rename file",
-        "renameBackupConfrimMsg": "Please specify a new backup filename:",
+        "renameBackupConfirmLabel": "Rename file",
+        "renameBackupConfirmMsg": "Please specify a new backup filename:",
         "renameBackupErrorMsg": "An error occurred while renaming the selected backup file. Please try again.",
         "renameBackupNameEmptyMsg": "The backup filename cannot be empty. Please try again.",
         "renameBackupNameInUseMsg": "The specified name is in use by another backup file. Please try again.",
         "renameBackupSameNameMsg": "The specified name is the same as the old name. Please try again.",
         "renameBackupSuccessMsg": "The backup has been successfully renamed.",
         "restore": "Restore",
-        "restoreBackupConfrimLabel": "Restore backup",
-        "restoreBackupConfrimMsg": "Do you really want to restore the selected backup? Existing files will be overwritten.",
+        "restoreBackupConfirmLabel": "Restore backup",
+        "restoreBackupConfirmMsg": "Do you really want to restore the selected backup? Existing files will be overwritten.",
         "restoreBackupErrorMsg": "An error occurred while restoring the selected backup file: ",
         "restoreBackupSuccessMsg": "The website has been successfully restored.",
         "rootDirectory": "root directory",

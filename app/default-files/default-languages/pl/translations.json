@@ -58,7 +58,7 @@
         "rendering": {
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdż pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Przeglądarka logów.",
-            "renderingProcessFiled": "Proces renderowania nie powiódł się"
+            "renderingProcessFailed": "Proces renderowania nie powiódł się"
         },
         "server": {
             "branchDoesNotExist": "Wybrana gałąź nie istnieje.",
@@ -275,16 +275,16 @@
         "removeFilesConfirmMsg": "Czy na pewno chcesz usunąć wybrane pliki? Nie można tego cofnąć.",
         "removeFilesSuccessMsg": "Wybrane pliki zostały usunięte",
         "rename": "Zmień nazwę",
-        "renameBackupConfrimLabel": "Zmień nazwę pliku",
-        "renameBackupConfrimMsg": "Proszę podać nową nazwę pliku kopii zapasowej:",
+        "renameBackupConfirmLabel": "Zmień nazwę pliku",
+        "renameBackupConfirmMsg": "Proszę podać nową nazwę pliku kopii zapasowej:",
         "renameBackupErrorMsg": "Wystąpił błąd podczas zmiany nazwy wybranego pliku kopii zapasowej. Proszę spóbować ponownie.",
         "renameBackupNameEmptyMsg": "Nazwa pliku kopii zapasowej nie może być pusta. Proszę spóbować ponownie.",
         "renameBackupNameInUseMsg": "Podana nazwa jest używana przez inny plik kopii zapasowej. Proszę spóbować ponownie.",
         "renameBackupSameNameMsg": "Podana nazwa jest taka sama jak stara nazwa. Proszę spóbować ponownie.",
         "renameBackupSuccessMsg": "Nazwa kopii zapasowej została pomyślnie zmieniona.",
         "restore": "Przywróć",
-        "restoreBackupConfrimLabel": "Przywróć kopię zapasową",
-        "restoreBackupConfrimMsg": "Czy na pewno chcesz przywrócić wybraną kopię zapasową? Istniejące pliki zostaną nadpisane.",
+        "restoreBackupConfirmLabel": "Przywróć kopię zapasową",
+        "restoreBackupConfirmMsg": "Czy na pewno chcesz przywrócić wybraną kopię zapasową? Istniejące pliki zostaną nadpisane.",
         "restoreBackupErrorMsg": "Wystąpił błąd podczas przywracania wybranego pliku kopii zapasowej: ",
         "restoreBackupSuccessMsg": "Strona została pomyślnie przywrócona.",
         "rootDirectory": "katalog główny",

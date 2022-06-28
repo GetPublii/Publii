@@ -211,9 +211,9 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
-                message: this.$t('file.renameBackupConfrimMsg'),
+                message: this.$t('file.renameBackupConfirmMsg'),
                 okClick: this.rename,
-                okLabel: this.$t('file.renameBackupConfrimLabel'),
+                okLabel: this.$t('file.renameBackupConfirmLabel'),
                 cancelLabel: this.$t('ui.cancel'),
                 defaultText: oldFilename
             });
@@ -360,9 +360,9 @@ export default {
             this.fileToRestore = fileName;
 
             this.$bus.$emit('confirm-display', {
-                message: this.$t('file.restoreBackupConfrimMsg'),
+                message: this.$t('file.restoreBackupConfirmMsg'),
                 okClick: this.restore,
-                okLabel: this.$t('file.restoreBackupConfrimLabel'),
+                okLabel: this.$t('file.restoreBackupConfirmLabel'),
                 cancelLabel: this.$t('ui.cancel'),
             });
         },
