@@ -62,12 +62,14 @@ export default {
         cssClasses: function() {
             let containsSwitcher = false;
 
-            this.$slots['field'].forEach(item => {
-                if (item && item.tag && item.tag.substr(-9) === '-switcher') {
-                    containsSwitcher = true;
-                    return;
-                }
-            });
+            if (this.$slots && this.$slots['field']) {
+                this.$slots['field'].forEach(item => {
+                    if (item && item.tag && item.tag.substr(-9) === '-switcher') {
+                        containsSwitcher = true;
+                        return;
+                    }
+                });
+            }
 
             return {
                 'field': true,

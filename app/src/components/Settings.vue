@@ -778,7 +778,7 @@
                         </field>
 
                         <field
-                            class="multiple-checkboxes"
+                            class="multiple-checkboxes field-with-switcher"
                             v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
                             :label="$t('settings.content')">
                             <label
@@ -1102,11 +1102,10 @@
                         <field
                             id="yt-nocookie"
                             :label="$t('settings.ytNoCookies')">
-                            <label slot="field">
-                                <switcher
-                                    id="yt-nocookies"
-                                    v-model="advanced.gdpr.ytNoCookies" />
-                            </label>
+                            <switcher
+                                id="yt-nocookies"
+                                slot="field"
+                                v-model="advanced.gdpr.ytNoCookies" />
 
                             <small
                                 slot="note"
@@ -1118,11 +1117,10 @@
                         <field
                             id="vimeo-no-track"
                             :label="$t('settings.vimeoNoTrack')">
-                            <label slot="field">
-                                <switcher
-                                    id="vimeo-no-track"
-                                    v-model="advanced.gdpr.vimeoNoTrack" />
-                            </label>
+                            <switcher
+                                slot="field"
+                                id="vimeo-no-track"
+                                v-model="advanced.gdpr.vimeoNoTrack" />
 
                             <small
                                 slot="note"
@@ -1139,11 +1137,10 @@
                         <field
                             id="gdpr-enabled"
                             :label="$t('settings.addGDPRCookieBanner')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression"
-                                    v-model="advanced.gdpr.enabled" />
-                            </label>
+                            <switcher
+                                id="html-compression"
+                                slot="field"
+                                v-model="advanced.gdpr.enabled" />
 
                             <small
                                 slot="note"
@@ -1191,11 +1188,10 @@
                             v-if="advanced.gdpr.enabled"
                             id="show-privacy-policy-link"
                             :label="$t('settings.showPrivacyPolicyLink')">
-                            <label slot="field">
-                                <switcher
-                                    id="show-privacy-policy-link"
-                                    v-model="advanced.gdpr.showPrivacyPolicyLink" />
-                            </label>
+                            <switcher
+                                id="show-privacy-policy-link"
+                                slot="field"
+                                v-model="advanced.gdpr.showPrivacyPolicyLink" />
                         </field>
 
                         <field
@@ -1272,24 +1268,21 @@
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-show-reject-button"
                             :label="$t('settings.gdprShowRejectButton')">
-                            <label slot="field">
-                                <switcher
-                                    id="gdpr-show-reject-button"
-                                    v-model="advanced.gdpr.popupShowRejectButton" />
-                            </label>
+                            <switcher
+                                id="gdpr-show-reject-button"
+                                slot="field"
+                                v-model="advanced.gdpr.popupShowRejectButton" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.popupShowRejectButton"
                             id="gdpr-reject-button-label"
                             :label="$t('settings.gdprRejectButtonLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-reject-button-label"
-                                    v-model="advanced.gdpr.popupRejectButtonLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-reject-button-label"
+                                slot="field"
+                                v-model="advanced.gdpr.popupRejectButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking" />
                         </field>
 
                         <separator
@@ -1375,25 +1368,22 @@
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-allow-advanced-configuration"
                             :label="$t('settings.gdprAllowAdvancedConfiguration')">
-                            <label slot="field">
-                                <switcher
-                                    id="gdpr-allow-advanced-configuration"
-                                    v-model="advanced.gdpr.allowAdvancedConfiguration" />
-                            </label>
+                            <switcher
+                                id="gdpr-allow-advanced-configuration"
+                                slot="field"
+                                v-model="advanced.gdpr.allowAdvancedConfiguration" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-link-label"
                             :label="$t('settings.gdprAdvancedConfigurationLinkLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-link-label"
-                                    v-model="advanced.gdpr.advancedConfigurationLinkLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking" 
-                                    :placeholder="$t('settings.gdprAdvancedConfigurationLinkPlaceholder')"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-advanced-configuration-link-label"
+                                v-model="advanced.gdpr.advancedConfigurationLinkLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking" 
+                                :placeholder="$t('settings.gdprAdvancedConfigurationLinkPlaceholder')"
+                                slot="field" />
                         </field>
 
                         <separator
@@ -1405,27 +1395,23 @@
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-title"
                             :label="$t('settings.gdprAdvancedConfigurationTitle')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-title"
-                                    v-model="advanced.gdpr.advancedConfigurationTitle"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-advanced-configuration-title"
+                                v-model="advanced.gdpr.advancedConfigurationTitle"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-description"
                             :label="$t('settings.gdprAdvancedConfigurationDescription')">
-                            <label slot="field">
-                                <text-area
-                                    id="gdpr-advanced-configuration-description"
-                                    v-model="advanced.gdpr.advancedConfigurationDescription"
-                                    :rows="4"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-area
+                                id="gdpr-advanced-configuration-description"
+                                v-model="advanced.gdpr.advancedConfigurationDescription"
+                                :rows="4"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
                         </field>
                         
 
@@ -1433,50 +1419,43 @@
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-accept-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationAcceptButtonLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-accept-button-label"
-                                    v-model="advanced.gdpr.advancedConfigurationAcceptButtonLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-advanced-configuration-accept-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationAcceptButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-reject-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationRejectButtonLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-reject-button-label"
-                                    v-model="advanced.gdpr.advancedConfigurationRejectButtonLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-advanced-configuration-reject-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationRejectButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-save-button-label"
                             :label="$t('settings.gdprAdvancedConfigurationSaveButtonLabel')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-advanced-configuration-reject-button-label"
-                                    v-model="advanced.gdpr.advancedConfigurationSaveButtonLabel"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-advanced-configuration-reject-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationSaveButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-advanced-configuration-show-description-link"
                             :label="$t('settings.gdprAdvancedConfigurationPrivacyLink')">
-                            <label slot="field">
-                                <switcher
-                                    id="gdpr-advanced-configuration-show-description-link"
-                                    v-model="advanced.gdpr.advancedConfigurationShowDescriptionLink" />
-                            </label>
+                            <switcher
+                                id="gdpr-advanced-configuration-show-description-link"
+                                v-model="advanced.gdpr.advancedConfigurationShowDescriptionLink"
+                                slot="field" />
                              <small
                                 slot="note"
                                 class="note"
@@ -1493,43 +1472,38 @@
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-debug-mode"
                             :label="$t('settings.gdprDebugMode')">
-                            <label slot="field">
-                                <switcher
-                                    id="gdpr-debug-mode"
-                                    v-model="advanced.gdpr.debugMode" />
-                            </label>
+                            <switcher
+                                id="gdpr-debug-mode"
+                                v-model="advanced.gdpr.debugMode"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-cookie-settings-revision"
                             :label="$t('settings.gdprCookieSettingsRevision')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-cookie-settings-revision"
-                                    v-model="advanced.gdpr.cookieSettingsRevision"
-                                    :spellcheck="false"
-                                    type="number"
-                                    min="1"
-                                    step="1"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-cookie-settings-revision"
+                                v-model="advanced.gdpr.cookieSettingsRevision"
+                                :spellcheck="false"
+                                type="number"
+                                min="1"
+                                step="1"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-cookie-settings-ttl"
                             :label="$t('settings.gdprCookieSettingsTTL')">
-                            <label slot="field">
-                                <text-input
-                                    id="gdpr-cookie-settings-ttl"
-                                    v-model="advanced.gdpr.cookieSettingsTTL"
-                                    :spellcheck="false"
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    slot="field" />
-                            </label>
+                            <text-input
+                                id="gdpr-cookie-settings-ttl"
+                                v-model="advanced.gdpr.cookieSettingsTTL"
+                                :spellcheck="false"
+                                type="number"
+                                min="0"
+                                step="1"
+                                slot="field" />
                         </field>
 
                         <separator
@@ -1580,41 +1554,37 @@
                         <field
                             id="html-compression"
                             :label="$t('settings.enableHTMLCompression')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression"
-                                    v-model="advanced.htmlCompression" />
-                            </label>
+                            <switcher
+                                id="html-compression"
+                                v-model="advanced.htmlCompression"
+                                slot="field" />
                         </field>
 
                         <field
                             id="css-compression"
                             :label="$t('settings.enableCSSCompression')">
-                            <label slot="field">
-                                <switcher
-                                    id="css-compression"
-                                    v-model="advanced.cssCompression" />
-                            </label>
+                            <switcher
+                                id="css-compression"
+                                v-model="advanced.cssCompression"
+                                slot="field" />
                         </field>
 
                         <field
                             id="html-compression-remove-comments"
                             :label="$t('settings.removeHTMLComments')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression-remove-comments"
-                                    v-model="advanced.htmlCompressionRemoveComments" />
-                            </label>
+                            <switcher
+                                id="html-compression-remove-comments"
+                                v-model="advanced.htmlCompressionRemoveComments" 
+                                slot="field" />
                         </field>
 
                         <field
                             id="media-lazyload"
                             :label="$t('settings.enableMediaLazyLoad')">
-                            <label slot="field">
-                                <switcher
-                                    id="media-lazyload"
-                                    v-model="advanced.mediaLazyLoad" />
-                            </label>
+                            <switcher
+                                id="media-lazyload"
+                                v-model="advanced.mediaLazyLoad"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1626,11 +1596,10 @@
                         <field
                             id="responsive-images"
                             :label="$t('settings.enableResponsiveImages')">
-                            <label slot="field">
-                                <switcher
-                                    id="responsive-images"
-                                    v-model="advanced.responsiveImages" />
-                            </label>
+                            <switcher
+                                id="responsive-images"
+                                v-model="advanced.responsiveImages"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1642,12 +1611,10 @@
                         <field
                             id="version-suffix"
                             :label="$t('settings.versionParameter')">
-                            <label slot="field">
-                                <switcher
-                                    id="version-suffix"
-                                    v-model="advanced.versionSuffix" />
-
-                            </label>
+                            <switcher
+                                id="version-suffix"
+                                v-model="advanced.versionSuffix"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1676,21 +1643,19 @@
                         <field
                             id="feed-enable-rss"
                             :label="$t('settings.enableRSSFeed')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-enable-rss"
-                                    v-model="advanced.feed.enableRss" />
-                            </label>
+                            <switcher
+                                id="feed-enable-rss"
+                                v-model="advanced.feed.enableRss"
+                                slot="field" />
                         </field>
 
                         <field
                             id="feed-enable-json"
                             :label="$t('settings.enableJSONFeed')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-enable-json"
-                                    v-model="advanced.feed.enableJson" />
-                            </label>
+                            <switcher
+                                id="feed-enable-json"
+                                v-model="advanced.feed.enableJson"
+                                slot="field" />
                         </field>
 
                         <field
@@ -1709,24 +1674,22 @@
                             v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
                             :label="$t('settings.customFeedTitle')">
-                            <label slot="field">
-                                <text-input
-                                    id="feed-title-value"
-                                    type="text"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    v-model="advanced.feed.titleValue" />
-                            </label>
+                            <text-input
+                                id="feed-title-value"
+                                type="text"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                v-model="advanced.feed.titleValue"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-full-text"
                             :label="$t('settings.showFullText')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-full-text"
-                                    v-model="advanced.feed.showFullText" />
-                            </label>
+                            <switcher
+                                id="feed-show-full-text"
+                                v-model="advanced.feed.showFullText"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1738,48 +1701,44 @@
                         <field
                             id="feed-show-only-featured"
                             :label="$t('settings.showOnlyFeaturedPosts')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-only-featured"
-                                    v-model="advanced.feed.showOnlyFeatured" />
-                            </label>
+                            <switcher
+                                id="feed-show-only-featured"
+                                v-model="advanced.feed.showOnlyFeatured"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="!advanced.feed.showOnlyFeatured"
                             id="feed-exclude-featured"
                             :label="$t('settings.excludeFeaturedPosts')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-exclude-featured"
-                                    v-model="advanced.feed.excludeFeatured" />
-                            </label>
+                            <switcher
+                                id="feed-exclude-featured"
+                                v-model="advanced.feed.excludeFeatured"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
                             :label="$t('settings.numberOfPostsInFeed')">
-                            <label slot="field">
-                                <text-input
-                                    id="feed-number-of-posts"
-                                    type="number"
-                                    min="0"
-                                    max="10000000"
-                                    step="1"
-                                    v-model="advanced.feed.numberOfPosts" />
-                            </label>
+                            <text-input
+                                id="feed-number-of-posts"
+                                type="number"
+                                min="0"
+                                max="10000000"
+                                step="1"
+                                v-model="advanced.feed.numberOfPosts"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-featured-image"
                             :label="$t('settings.showFeaturedImage')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-featured-image"
-                                    v-model="advanced.feed.showFeaturedImage" />
-                            </label>
+                            <switcher
+                                id="feed-show-featured-image"
+                                v-model="advanced.feed.showFeaturedImage"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1886,11 +1845,10 @@
                          <field
                             id="related-posts-use-all-posts"
                             :label="$t('settings.relatedPostsOptions')">
-                            <label slot="field">
-                                <switcher
-                                    id="related-posts-use-all-posts"
-                                    v-model="advanced.relatedPostsIncludeAllPosts" />
-                            </label>
+                            <switcher
+                                id="related-posts-use-all-posts"
+                                v-model="advanced.relatedPostsIncludeAllPosts"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1926,15 +1884,14 @@
                         <field
                             id="codemirror-indent-size"
                             :label="$t('settings.indentSize')">
-                            <label slot="field">
-                                <text-input
-                                    id="codemirror-indent-size"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    step="1"
-                                    v-model="advanced.editors.codemirrorTabSize" />
-                            </label>
+                            <text-input
+                                id="codemirror-indent-size"
+                                type="number"
+                                min="1"
+                                max="100"
+                                step="1"
+                                v-model="advanced.editors.codemirrorTabSize"
+                                slot="field" />
                         </field>
 
                         <field
