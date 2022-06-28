@@ -60,11 +60,21 @@ export default {
     },
     computed: {
         cssClasses: function() {
+            let containsSwitcher = false;
+
+            this.$slots['field'].forEach(item => {
+                if (item && item.tag && item.tag.substr(-9) === '-switcher') {
+                    containsSwitcher = true;
+                    return;
+                }
+            });
+
             return {
                 'field': true,
                 'field-label-full-width': this.labelFullWidth,
                 'field-small-spacing': this.spacing === 'small',
-                'field-with-char-counter': this.withCharCounter
+                'field-with-char-counter': this.withCharCounter,
+                'field-with-switcher': containsSwitcher
             };
         },
         labelCssClasses: function() {
@@ -305,6 +315,14 @@ label {
             margin-top: -3rem;
             width: 70%;
         }
+    }
+
+    &.field-with-switcher {
+        & > label {
+            &:first-child {
+                padding-top: 0;
+            }
+        }   
     }
 }
 </style>
