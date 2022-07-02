@@ -338,7 +338,7 @@ export default {
             if(!queue.length) {
                 if(this.existingItems.length) {
                     this.$bus.$emit('alert-display', {
-                        'message': this.$t('file.selectedFileExsistsMsg') + this.existingItems.join(', ')
+                        'message': this.$t('file.selectedFileExistsMsg') + this.existingItems.join(', ')
                     });
 
                     this.existingFiles = [];

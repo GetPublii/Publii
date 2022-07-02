@@ -258,7 +258,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert(this.$t('editor.errorOccured'));
+                    alert(this.$t('editor.errorOccurred'));
                 }
             });
         },

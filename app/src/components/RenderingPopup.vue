@@ -121,7 +121,7 @@ export default {
                     }
                 } else {
                     this.$bus.$emit('alert-display', {
-                        message: this.$t('rendering.errorDuringPreviewCreatinMsg')
+                        message: this.$t('rendering.errorDuringPreviewCreatingMsg')
                     });
                 }
             });

@@ -31,7 +31,7 @@
                 path="https://getpublii.com/docs/" />
             <topbar-dropdown-item
                 :label="$t('ui.reportIssue')"
-                :title="$t('ui.reportBugInSupportdesk')"
+                :title="$t('ui.reportBugInSupportDesk')"
                 path="https://getpublii.com/forum/" />
             <topbar-dropdown-item
                 :label="$t('ui.githubRepository')"

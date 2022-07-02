@@ -408,7 +408,7 @@
                         slot="note"
                         v-if="errors.indexOf('key') > -1"
                         class="note">
-                        {{ $t('sync.sftpkeyNote') }}
+                        {{ $t('sync.sftpKeyNote') }}
                     </small>
                 </field>
 
@@ -1244,7 +1244,7 @@ export default {
                     okClick: (password) => {
                         if(!password) {
                             this.$bus.$emit('alert-display', {
-                                message: this.$t('sync.testConnectionNoPassowrdMsg')
+                                message: this.$t('sync.testConnectionNoPasswordMsg')
                             });
                         } else {
                             this.test(password);

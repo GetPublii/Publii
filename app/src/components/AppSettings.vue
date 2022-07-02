@@ -120,7 +120,7 @@
 
                 <field
                     id="wide-scrollbars"
-                    :label="$t('settings.usewideScrollbars')"
+                    :label="$t('settings.useWideScrollbars')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"

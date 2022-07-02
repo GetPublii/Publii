@@ -19,7 +19,7 @@
             id="post-preview-button"
             type="clean-invert"
             :disabled="!themeConfigured"
-            :title="themeConfigured ? $t('post.configureThemeBeforeGenaratingPreview') : ''"
+            :title="themeConfigured ? $t('post.configureThemeBeforeGeneratingPreview') : ''"
             @click.native="generatePostPreview">
             {{ $t('ui.preview') }}
         </p-button>

@@ -168,7 +168,7 @@ export default {
         },
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('file.deletBackupsConfirmMsg'),
+                message: this.$t('file.deleteBackupsConfirmMsg'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });
@@ -189,13 +189,13 @@ export default {
 
                 if (!data.status) {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('file.deletBackupsErrorMsg'),
+                        message: this.$t('file.deleteBackupsErrorMsg'),
                         type: 'warning',
                         lifeTime: 3
                     });
                 } else {
                     this.$bus.$emit('message-display', {
-                        message: this.$t('file.deletBackupsSuccessMsg'),
+                        message: this.$t('file.deleteBackupsSuccessMsg'),
                         type: 'success',
                         lifeTime: 3
                     });

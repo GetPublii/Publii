@@ -66,7 +66,7 @@
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span :title="$t('tag.tagWillNotAppearInGgeneratedTagLists')">
+                            <span :title="$t('tag.tagWillNotAppearInGeneratedTagLists')">
                                 {{ $t('tag.hideTag') }}
                             </span>
                             <icon
@@ -207,7 +207,7 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
+                                <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
                             </div>
                         </label>
 

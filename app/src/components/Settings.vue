@@ -2134,8 +2134,8 @@ export default {
         },
         twitterCardsTypes () {
             return {
-                'summary': this.$t('settings.twitteSummaryCard'),
-                'summary_large_image': this.$t('settings.twitteSummaryCardLargeImage')
+                'summary': this.$t('settings.twitterSummaryCard'),
+                'summary_large_image': this.$t('settings.twitterSummaryCardLargeImage')
             };
         },
         sitemapLink () {
