@@ -888,8 +888,8 @@
         "yourThemeDoNotSupport": "Twój obecnie używany motyw nie wspiera wymaganej funkcji: {featureName}"
     },
     "sync": {
-        "accessID": "ID dsostępu",
-        "accessIDFieldCantBeEmpty": "Pole ID dostępu nie może być puste",
+        "accessID": "ID dostępowe",
+        "accessIDFieldCantBeEmpty": "Pole ID dostępowe nie może być puste",
         "acl": "ACL",
         "afterInitialSyncSiteWillBeAvailableOnline": "Po początkowej synchronizacji Twoja witryna będzie dostępna online",
         "allFilesUploadedPart1": "Wszystkie pliki zostały pomyślnie wysłane na Twój serwer. ", 
