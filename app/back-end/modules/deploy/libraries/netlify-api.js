@@ -105,7 +105,8 @@ class NetlifyAPI {
             uri: endpointUrl,
             headers: {
                 'User-Agent': 'Publii',
-                'Content-Type': 'application/octet-stream'
+                'Content-Type': 'application/octet-stream',
+                'Content-Length': fileContent.length
             },
             body: fileContent,
             auth: {
