@@ -137,7 +137,7 @@ export default {
             this.$router.push('/site/' + siteName + '/settings/');
         },
         checkWhatsNew () {
-            mainProcessAPI.shellOpenExternal('https://getpublii.com/docs/gdpr-breaking-changes');
+            mainProcessAPI.shellOpenExternal('https://getpublii.com/blog/release-040.html#cookie-banner');
         }
     },
     beforeDestroy () {

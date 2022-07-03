@@ -840,7 +840,7 @@
         "vimeoNoTrack": "Włącz tryb 'Bez śledzenia' dla video z Vimeo",
         "websiteSpeed": "Szybkość witryny",
         "whatsApp": "WhatsApp",
-        "youMustReviewGdprSettings": "Powinieneś sprawdzić swoje ustawienia Prywatności (poprzednio GDPR) ze względu na istotne zmiany w Publii v.0.40. <a href=\"https://getpublii.com/docs/gdpr-breaking-changes\" target=\"_blank\">Czytaj więcej</a>",
+        "youMustReviewGdprSettings": "Powinieneś sprawdzić swoje ustawienia Prywatności (poprzednio GDPR) ze względu na istotne zmiany w Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Czytaj więcej</a>",
         "ytNoCookies": "Włącz tryb rozszerzonej prywatności dla video z YouTube"
     },
     "site": {

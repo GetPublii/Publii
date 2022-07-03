@@ -840,7 +840,7 @@
         "vimeoNoTrack": "Enable 'Do Not Track' mode for Vimeo videos",
         "websiteSpeed": "Website Speed",
         "whatsApp": "WhatsApp",
-        "youMustReviewGdprSettings": "Make sure to check and review your Privacy Settings, especially the Cookie Banner settings due to some significant changes in Publii v.0.40. <a href=\"https://getpublii.com/docs/gdpr-breaking-changes\" target=\"_blank\">Read more</a>",
+        "youMustReviewGdprSettings": "Make sure to check and review your Privacy Settings, especially the Cookie Banner settings due to some significant changes in Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Read more...</a>",
         "ytNoCookies": "Enable Privacy-Enhanced mode for YouTube videos"
     },
     "site": {
