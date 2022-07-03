@@ -194,16 +194,7 @@ class GitlabPages {
 
                 try {
                     if (remoteListToCheck.length) {
-                        remoteListToCheck = JSON.parse(remoteListToCheck);
-                        this.remoteFilesList = remoteListToCheck.map(file => {
-                            file.path = file.path.substr(7);
-
-                            if (file.path.indexOf('/') > -1) {
-                                file.path = '/' + file.path;
-                            }
-
-                            return file;
-                        });
+                        this.remoteFilesList = JSON.parse(remoteListToCheck);
                     } else {
                         this.remoteFilesList = [];
                     }
@@ -281,7 +272,7 @@ class GitlabPages {
                 }
 
                 let filePath = this.deployment.filesToUpload[i].path;
-
+                
                 this.filesToUpdate.push({
                     'action': 'update',
                     'file_path': this.getPrefix(filePath) + filePath,
@@ -322,7 +313,7 @@ class GitlabPages {
                 }
 
                 let filePath = this.deployment.filesToUpload[i].path;
-
+                
                 this.filesToUpdate.push({
                     'action': 'create',
                     'file_path': this.getPrefix(filePath) + filePath,
@@ -392,7 +383,7 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpdate.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
                 commits.push(commit);
             }
 
@@ -417,7 +408,7 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpload.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
                 commits.push(commit);
             }
 
@@ -445,24 +436,12 @@ class GitlabPages {
             actionType = 'update';
         }
 
-        try {
-            localFilesContent = JSON.parse(localFilesContent);
-            localFilesContent = localFilesContent.map(file => {
-                file.path = this.getPrefix(file.path) + file.path;
-                return file;
-            });
-            localFilesContent = JSON.stringify(localFilesContent);
-
-            commit.push({
-                'action': actionType,
-                'file_path': 'publii-files.json',
-                'encoding': 'base64',
-                'content': Buffer.from(localFilesContent).toString('base64')
-            });
-        } catch (err) {
-            console.log(`[${ new Date().toUTCString() }] (!) AN ERROR OCCURRED DURING REMOTE FILES LIST CREATION`);
-            console.log(`[${ new Date().toUTCString() }] ${err}`);
-        }
+        commit.push({
+            'action': actionType,
+            'file_path': 'publii-files.json',
+            'encoding': 'base64',
+            'content': Buffer.from(localFilesContent).toString('base64')
+        });
 
         console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILES LIST UPDATED`);
         return this.makeCommit(commit, this.finishSync.bind(this), 'Publii - upload remote files list');
