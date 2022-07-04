@@ -1059,7 +1059,7 @@
         "noTagsMatchingYourCriteria": "Brak tagów spełniających Twoje kryteria.",
         "removeTagMessage": "Na pewno chcesz usunąć wybrane tagi?",
         "removeTagSuccessMessage": "Wybrane tagi zostały usunięte",
-        "saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme": "Opcja \"Zapis i Podgląd\" nie jest dostępna z powodu braku wsparcia dla stron tagów w Twoim motywie.",
+        "themeDoesNotSupportForTagPagesInTheme": "Opcja \"Zapis i Podgląd\" nie jest dostępna z powodu braku wsparcia dla stron tagów w Twoim motywie.",
         "selectTag": "Wybierz tag",
         "selectTagPage": "Wybierz stronę taga",
         "tag": "Tag",
