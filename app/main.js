@@ -187,11 +187,6 @@ electronApp.on('ready', function () {
     // Get available spellchecker languages
     ipcMain.handle('app-main-get-spellchecker-languages', (event) => appInstance.getMainWindow().webContents.session.availableSpellCheckerLanguages);
 
-    // Remove application menu on Linux
-    if (process.platform === 'linux') {
-        Menu.setApplicationMenu(null);
-    }
-
     if (process.env.NODE_ENV !== 'development') {
         const template = [{
             label: "Publii",
@@ -259,6 +254,11 @@ electronApp.on('ready', function () {
         })
             .then((name) => console.log(`Added Extension:  ${name}`))
             .catch((err) => console.log('An error occurred: ', err));
+    }
+
+    // Remove application menu on Linux
+    if (process.platform === 'linux') {
+        Menu.setApplicationMenu(null);
     }
 
     // Load language translations and set language as used in the app
