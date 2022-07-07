@@ -104,7 +104,10 @@ class FileManagerEvents {
             return;
         }
 
-        output[iterator].isBinary = isBinaryFileSync(output[iterator].fullPath)
+        if (output[iterator] && output[iterator].fullPath && fs.lstatSync(output[iterator].fullPath).isFile()) {
+            output[iterator].isBinary = isBinaryFileSync(output[iterator].fullPath);
+        }
+
         iterator++;
         this.checkIfIsBinaryFile(output, iterator, sender);
     }
