@@ -16,6 +16,14 @@
                 &times;
             </span>
 
+             <div
+                v-if="!currentThemeHasSupportForTagImages"
+                slot="note"
+                class="msg msg-small msg-icon msg-alert note">
+                <icon name="warning" size="m" />
+                <p>{{ $t('settings.themeDoesNotSupportTagPages') }}</p>
+            </div>
+
             <div class="options-sidebar-item">
                 <div
                     :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
@@ -58,7 +66,7 @@
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span :title="$t('tag.tagWillNotAppearInGgeneratedTagLists')">
+                            <span :title="$t('tag.tagWillNotAppearInGeneratedTagLists')">
                                 {{ $t('tag.hideTag') }}
                             </span>
                             <icon
@@ -199,7 +207,7 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
+                                <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
                             </div>
                         </label>
 
@@ -283,11 +291,6 @@
                 </p-button>
             </div>
 
-            <small
-                v-if="!currentThemeHasSupportForTagPages"
-                class="note">
-                {{ $t('tag.saveAndPreviewNotAvailableDueToNoSupportForTagPagesInTheme') }}
-            </small>
         </div>
     </div>
 </template>
@@ -331,6 +334,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagImages;
         },
         currentThemeHasSupportForTagPages () {
+            if (this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === false) {
+                return false;
+            }
+
             return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
         },
         metaFieldAttrs: function() {
@@ -610,9 +617,8 @@ export default {
 }
 
 .note {
-    display: block;
-    font-style: italic;
-    line-height: 1.4;
-    margin: 2rem 0;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
 }
 </style>

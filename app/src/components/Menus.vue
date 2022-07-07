@@ -137,7 +137,7 @@
                                 :itemData="subitem"
                                 :itemMenuID="index"
                                 :itemOrder="subindex"
-                                :editedID="editedID"
+                                :editedID="parseInt(editedID, 10)"
                                 :selectedItem="selectedItemMenuID === index ? selectedItem : null" />
                         </draggable>
                     </div>
@@ -357,6 +357,7 @@ export default {
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('menu.menusRemoveMessage'),
+                isDanger: true,
                 okClick: this.deleteSelected
             });
         },

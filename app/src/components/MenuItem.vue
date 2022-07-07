@@ -161,7 +161,7 @@
                 :itemData="item"
                 :itemMenuID="menuID"
                 :itemOrder="index"
-                :editedID="editedID"
+                :editedID="parseInt(editedID, 10)"
                 :selectedItem="selectedItem"
                 :parentIsSelected="isSelected || parentIsSelected" />
         </draggable>
@@ -379,7 +379,8 @@ export default {
         },
         removeMenuItem () {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('menu.menuIemsRemoveMessage'),
+                message: this.$t('menu.menuItemsRemoveMessage'),
+                isDanger: true,
                 okClick: this.removeSelectedMenuItem
             });
         },

@@ -21,7 +21,6 @@
                 :title="$t('plugins.goToPluginsManager')"
                 path="/app-plugins" />
             <topbar-dropdown-item
-                v-if="$store.state.app.config.experimentalFeatureAppUiLanguages"
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />
@@ -32,7 +31,7 @@
                 path="https://getpublii.com/docs/" />
             <topbar-dropdown-item
                 :label="$t('ui.reportIssue')"
-                :title="$t('ui.reportBugInSupportdesk')"
+                :title="$t('ui.reportBugInSupportDesk')"
                 path="https://getpublii.com/forum/" />
             <topbar-dropdown-item
                 :label="$t('ui.githubRepository')"

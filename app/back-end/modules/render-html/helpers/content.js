@@ -60,9 +60,6 @@ class ContentHelper {
         // Reduce download="download" to download
         preparedText = preparedText.replace(/download="download"/gmi, 'download');
 
-        // Remove contenteditable attributes
-        preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
-
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
@@ -86,7 +83,14 @@ class ContentHelper {
             preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
                 return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
             });
+
+            // Fix some specific syntax cases for double figure elements
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1</figure>');
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<figcaption contentEditable="true">([\s\S]*?)<\/figcaption>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1<figcaption>$2</figcaption></figure>');
         }
+
+        // Remove contenteditable attributes
+        preparedText = preparedText.replace(/contenteditable=".*?"/gi, '');
 
         if (editor === 'tinymce') {
             // Wrap galleries with classes into div with gallery-wrapper CSS class
@@ -118,6 +122,51 @@ class ContentHelper {
         // Additional AMP related operations
         if(ampMode) {
             preparedText = ContentHelper._prepareAmpContent(preparedText);
+        }
+
+        // Add embed consents
+        if (
+            themeConfig.supportedFeatures &&
+            themeConfig.supportedFeatures.embedConsents &&
+            renderer.siteConfig.advanced.gdpr.enabled &&
+            renderer.siteConfig.advanced.gdpr.allowAdvancedConfiguration &&
+            renderer.siteConfig.advanced.gdpr.embedConsents &&
+            renderer.siteConfig.advanced.gdpr.embedConsents.length
+        ) {
+            preparedText = ContentHelper.addEmbedConsents(preparedText, renderer.siteConfig.advanced.gdpr.embedConsents);
+        }
+
+        // Add dnt=1 for Vimeo links
+        if (renderer.siteConfig.advanced.gdpr.vimeoNoTrack) {
+            preparedText = preparedText.replace(/src="(http[s]?\:\/\/player\.vimeo\.com\/video\/.*?)"/gmi, function (url, matches) {
+                if (matches.indexOf('dnt=') > -1) {
+                    return 'src="' + matches + '"';
+                }
+            
+                if (matches.indexOf('?') > -1) {
+                    return 'src="' + matches + '&dnt=1"';
+                }
+            
+                return 'src="' + matches + '?dnt=1"';
+            });
+
+            preparedText = preparedText.replace(/src='(http[s]?\:\/\/player\.vimeo\.com\/video\/.*?)'/gmi, function (url, matches) {
+                if (matches.indexOf('dnt=') > -1) {
+                    return 'src=\'' + matches + '\'';
+                }
+            
+                if (matches.indexOf('?') > -1) {
+                    return 'src=\'' + matches + '&dnt=1\'';
+                }
+            
+                return 'src=\'' + matches + '?dnt=1\'';
+            });
+        }
+        
+        // Add youtube-nocookie.com domain for YouTube videos
+        if (renderer.siteConfig.advanced.gdpr.ytNoCookies) {
+            preparedText = preparedText.replace(/src="http[s]?\:\/\/www\.youtube\.com\/embed\//gmi, 'src="https://www.youtube-nocookie.com/embed/');
+            preparedText = preparedText.replace(/src='http[s]?\:\/\/www\.youtube\.com\/embed\//gmi, 'src=\'https://www.youtube-nocookie.com/embed/');
         }
 
         return preparedText;
@@ -173,8 +222,8 @@ class ContentHelper {
         length = parseInt(length, 10);
         text = text.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         text = text.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
-        text = text.replace(/\<div class="post__toc"\>[\s\S]*\<\/div\>/gmi, ''); // Remove ToC
-        text = text.replace(/<script>[\s\S]*<\/script>/gmi, ''); // Remove scripts
+        text = text.replace(/\<div class="post__toc"\>[\s\S]*?\<\/div\>/gmi, ''); // Remove ToC
+        text = text.replace(/<script>[\s\S]*?<\/script>/gmi, ''); // Remove scripts
         text = text.replace(/\r?\n/g, ' '); // Replace newline characters with spaces
         text = text.replace(/<\/p>.*?<p/gi, '</p> <p'); // Replace paragraphs spaces into real space
         text = text.replace(/<br.*?>/gi, ' '); // Replace BR tags with spaces
@@ -579,7 +628,6 @@ class ContentHelper {
                 links[baseUrl] = renderer.cachedItems[pluralName][id].url;
             } else {
                 console.log('(i) Non-existing link: ' + pluralName + ' (' + id + ')');
-                console.log(JSON.stringify(renderer.cachedItems));
                 links[baseUrl] = '#non-existing-' + type + '-with-id-' + id;
             }
         }
@@ -592,6 +640,58 @@ class ContentHelper {
         // Replace original URLs with proper URLs
         for(let url of urls) {
             text = text.split(url).join(links[url]);
+        }
+
+        return text;
+    }
+
+    /**
+     * Add overlays for the embed items 
+     * 
+     * @param {string} text 
+     * @param {Array} embedConsents 
+     * 
+     * @returns {string} - modified text
+     */
+    static addEmbedConsents (text, embedConsents) {
+        for (let i = 0; i < embedConsents.length; i++) {
+            let embedConsent = embedConsents[i];
+            text = text.replace(/\<iframe[^\>]*?src="([^"]*?)"[^\>]*?\>\<\/iframe\>/gmi, function (iframe, url) {
+                if (url.indexOf(embedConsent.rule) === -1) {
+                    return iframe;
+                }
+
+                if (embedConsent.cookieGroup === '-' || embedConsent.cookieGroup === '') {
+                    return iframe;
+                }
+
+                if (iframe.indexOf('data-consent-overlay-added="true"') > -1) {
+                    return iframe;
+                }
+
+                iframe = iframe.replace('src="', 'data-consent-src="');
+                iframe = iframe.replace('<iframe ', '<iframe data-consent-overlay-added="true" ');
+                iframe = `
+                <div 
+                    class="pec-wrapper" 
+                    data-consent-group-id="${embedConsent.cookieGroup}">
+                    ${iframe}
+                    <div class="pec-overlay is-active" aria-hidden="false">
+                        <div class="pec-overlay-inner">
+                            <p>${embedConsent.text}</p>
+                            <button 
+                                class="pec-button" 
+                                onclick="window.publiiEmbedConsentGiven('${embedConsent.cookieGroup}'); return false;">
+                                ${embedConsent.buttonLabel}
+                            </button>
+                        </div>
+                    </div>
+                    <script>window.publiiEmbedConsentCheck('${embedConsent.cookieGroup}');</script>
+                </div>
+                `;
+
+                return iframe;
+            });   
         }
 
         return text;

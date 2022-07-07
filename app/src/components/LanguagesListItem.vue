@@ -3,26 +3,27 @@
         @click="activateLanguage(directory, type)"
         :class="{
             'language': true,
-            'is-active': isActiveLanguage
+            'is-active': isActiveLanguage,
+            'is-outdated': isOutdated
         }">
         <span class="language-thumbnail-wrapper">
             <img
                 :src="thumbnail"
                 class="language-thumbnail"
                 alt="">
-            <span 
-                v-if="isOutdated"
-                class="language-is-outdated"
-                :title="$t('langs.isOutdatedTitle', { supportedVersion: languageData.publiiSupport, currentVersion: this.$store.state.app.versionInfo.version })">
-                {{ $t('langs.isOutdated') }}
-            </span>
         </span>
 
         <figcaption class="language-name">
             <h3>
-                {{ name }}
+                <span>{{ name }}</span>
                 <span class="language-version">
                     {{ version }}
+                </span>
+                <span 
+                    v-if="isOutdated"
+                    class="language-is-outdated"
+                    :title="$t('langs.isOutdatedTitle', { supportedVersion: languageData.publiiSupport, currentVersion: this.$store.state.app.versionInfo.version })">
+                    {{ $t('langs.isOutdated') }}
                 </span>
              </h3>
             <a
@@ -61,12 +62,14 @@ export default {
             return false;
         },
         isOutdated () {
+            /*
             let publiiSupport = this.languageData.publiiSupport.split('.').slice(0, 2).join('.');
             let currentMajorVersion = this.$store.state.app.versionInfo.version.split('.').slice(0, 2).join('.');
            
             if (compare(publiiSupport, currentMajorVersion) === -1) {
                 return true;
             }
+            */
 
             return false;
         },
@@ -89,7 +92,8 @@ export default {
     methods: {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
-                message: this.$t('langs.removeLanguageMessage', languageName),
+                message: this.$t('langs.removeLanguageMessage', { languageName }),
+                isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-language-delete', {
                         name: languageName,
@@ -235,29 +239,32 @@ export default {
              font-weight: var(--font-weight-semibold);
              line-height: 1.4;
              margin: 1.2rem 0;
+
+             span:first-of-type {
+                 display: block;
+             }
         }
     }
 
-    &-version {
+    &-version,
+    &-is-outdated {
         color: var(--text-light-color);
-        display: block;
         font-size: 1.2rem;
         font-weight: var(--font-weight-normnal);
-        margin: 0 4rem 0 auto;
+        
     }
 
-    &-is-outdated {
-        bottom: 7rem;
-        border: 2px solid var(--warning);  
-        font-size: 1.4rem;
-        line-height: 1.5;
-        left: 1rem;        
-        padding: 3rem;
-        position: absolute;
-        right: 1rem;        
-        text-align: left;
-        top: 1rem; 
-        z-index: 1;
+    &-is-outdated { 
+        color: var(--warning);
+        margin: 0 4rem 0 .5rem;
+        text-transform: uppercase;
+    }
+
+    &.is-outdated {
+       .language-version {
+           text-decoration-color: var(--warning);
+           text-decoration-line: line-through;
+       }
     }
 }
 </style>

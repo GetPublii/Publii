@@ -133,14 +133,7 @@ class SFTP {
                 }
             });
 
-            let remoteFilesList = path.join(this.deployment.configDir, 'files-remote.json');
-            fs.writeFileSync(remoteFilesList, stream);
-
-            if(fs.readFileSync(remoteFilesList).length) {
-                this.deployment.compareFilesList(true);
-            } else {
-                this.deployment.compareFilesList(false);
-            }
+            this.deployment.checkLocalListWithRemoteList(stream);
         }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] ERR (2): ${err} (${err.stack}) [<- files.publii.json]`);
             
@@ -163,6 +156,8 @@ class SFTP {
                 operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
             }
         });
+
+        self.deployment.replaceSyncInfoFiles();
 
         this.connection.put(
             normalizePath(path.join(self.deployment.inputDir, 'files.publii.json')),
@@ -220,7 +215,7 @@ class SFTP {
 
             self.deployment.uploadFile();
         }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(path.join(self.outputDir, input))}`);
+            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(input)}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
             self.deployment.uploadFile();
         });

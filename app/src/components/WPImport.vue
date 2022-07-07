@@ -120,7 +120,7 @@
 
                         <field
                             id="use-autop"
-                            :label="$t('tools.wpImport.addTagsToContentAutomaticallty')"
+                            :label="$t('tools.wpImport.addTagsToContentAutomatically')"
                             :labelSeparated="false"
                             :noLabelSpace="true"
                             spacing="small">

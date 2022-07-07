@@ -156,9 +156,7 @@ class FTP {
 
         this.connection.get(
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
-            function(err, stream) {
-                let fileStream;
-
+            function(err, fileStream) {
                 console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
 
                 process.send({
@@ -171,11 +169,15 @@ class FTP {
                 });
 
                 if (!err) {
-                    fileStream = fs.createWriteStream(path.join(self.deployment.configDir, 'files-remote.json'));
-                    stream.pipe(fileStream);
+                    let fileStreamChunks = [];
 
-                    stream.on('end', function() {
-                        self.deployment.compareFilesList(true);
+                    fileStream.on('data', (chunk) => {
+                        fileStreamChunks.push(chunk.toString());
+                    });
+
+                    fileStream.on('end', () => {
+                        let completeFile = fileStreamChunks.join('');
+                        self.deployment.checkLocalListWithRemoteList(completeFile);
                     });
                 } else {
                     console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
@@ -197,6 +199,8 @@ class FTP {
                 operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
             }
         });
+
+        this.deployment.replaceSyncInfoFiles();
 
         this.connection.put(
             normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),

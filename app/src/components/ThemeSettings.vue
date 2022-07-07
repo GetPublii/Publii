@@ -140,7 +140,8 @@
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    :cols="field.cols"></text-area>
+                                    :cols="field.cols"
+                                    :disabled="field.disabled"></text-area>
 
                                 <text-area
                                     v-if="field.type === 'wysiwyg'"
@@ -229,6 +230,7 @@
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
+                                    :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small
@@ -578,9 +580,46 @@ export default {
         },
         getDropdownOptions (inputOptions) {
             let options = {};
+            let hasGroups = !!inputOptions.filter(option => typeof option.group !== 'undefined').length;
 
-            for (let i = 0; i < inputOptions.length; i++) {
-                options[inputOptions[i].value] = inputOptions[i].label;
+            if (hasGroups) {
+                options.hasGroups = true;
+                let groups = {
+                    ungrouped: {}
+                };
+
+                for (let i = 0; i < inputOptions.length; i++) {
+                    let groupName = inputOptions[i].group;
+
+                    if (groupName && !groups[groupName]) {
+                        groups[groupName] = {};
+                    }
+                }
+
+                for (let i = 0; i < inputOptions.length; i++) {
+                    let inputGroupName = inputOptions[i].group;
+
+                    if (inputGroupName) {
+                        groups[inputGroupName][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
+                    } else {
+                        groups['ungrouped'][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
+                    }
+                }
+
+                options.groups = groups;
+            } else {
+                for (let i = 0; i < inputOptions.length; i++) {
+                    options[inputOptions[i].value] = {
+                        label: inputOptions[i].label,
+                        disabled: inputOptions[i].disabled
+                    };
+                }
             }
 
             return options;

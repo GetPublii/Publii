@@ -5,7 +5,6 @@
             class="gdpr-groups-header">
             <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupName') }}</div>
             <div class="gdpr-groups-header-cell">{{ $t('gdpr.groupID') }}</div>
-            <div class="gdpr-groups-header-cell">{{ $t('gdpr.state') }}</div>
         </div>
 
         <div
@@ -14,24 +13,28 @@
             :key="'gdpr-group-' + index">
             <text-input
                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                v-model="group.name" />
+                v-model="group.name"
+                :placeholder="$t('gdpr.groupName')" />
 
             <text-input
                 :spellcheck="false"
-                v-model="group.id" />
-
-            <switcher
-                :disabled="group.id === '-'"
-                v-model="group.state" />
+                v-model="group.id"
+                :placeholder="$t('gdpr.groupID')" />
 
             <icon
                 size="m"
                 name="sidebar-close"
                 @click.native="removeGroup(index)" />
+
+            <text-area
+                v-model="group.description"
+                :placeholder="$t('gdpr.groupDescriptionPlaceholder')"
+                :rows="3"></text-area>
         </div>
 
         <p-button
-            type="small"
+            icon="add-site-mono"
+            type="secondary icon"
             @click.native="addGroup">
             {{ $t('gdpr.addGroup') }}
         </p-button>
@@ -60,12 +63,8 @@ export default {
             this.content = this.value;
 
             for (let i = 0; i < this.content.length; i++) {
-                if (typeof this.content[i].state === 'undefined') {
-                    this.content[i].state = false;
-
-                    if (this.content[i].id === '-') {
-                        this.content[i].state = true;
-                    }
+                if (typeof this.content[i].description === 'undefined') {
+                    this.content[i].description = '';
                 }
             }
         }, 0);
@@ -75,7 +74,7 @@ export default {
             this.content.push({
                 name: "",
                 id: "",
-                state: false
+                description: ""
             });
         },
         removeGroup (index) {
@@ -90,6 +89,7 @@ export default {
 
 .gdpr-groups {
     border-radius: 3px;
+    padding-top: 1.75rem;
 
     .gdpr-groups-header {
         display: flex;
@@ -99,7 +99,7 @@ export default {
             font-size: 1.4rem;
             font-weight: bold;
             margin: 0 0 1rem 0;
-            width: calc(50% - 40px);
+            width: calc(50% - 23px);
 
             &:last-child {
                 width: 80px;
@@ -110,12 +110,13 @@ export default {
     .gdpr-group {
         align-items: center;
         display: flex;
+        flex-wrap: wrap;
         padding: .25rem 0;
 
         .input-wrapper {
-            padding-right: 1.5rem;
+            padding-right: 1rem;
             text-align: left;
-            width: calc(50% - 40px);
+            width: calc(50% - 23px);
         }
 
         .icon {
@@ -126,6 +127,12 @@ export default {
             &:hover {
                 fill: var(--icon-tertiary-color);
             }
+        }
+
+        div:last-child {
+            margin-bottom: 3rem;
+            margin-top: 1rem;
+            width: calc(100% - 56px);
         }
     }
 

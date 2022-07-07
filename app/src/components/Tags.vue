@@ -319,6 +319,7 @@ export default {
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('tag.removeTagMessage'),
+                isDanger: true,
                 okClick: this.deleteSelected
             });
         },

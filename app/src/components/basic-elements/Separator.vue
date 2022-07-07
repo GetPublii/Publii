@@ -20,7 +20,7 @@ export default {
     props: {
         'label': {
             default: '',
-            type: String
+            type: [String, Boolean]
         },
         'anchor': {
             default: '',
@@ -44,9 +44,13 @@ export default {
             return {
                 'separator': true,
                 'line': this.isLine,
+                'no-line': this.type.indexOf('no-line') > -1,
+                'empty': this.type.indexOf('empty') > -1,
+                'thin': this.type.indexOf('thin') > -1,
                 'small': this.type.indexOf('small') > -1,
                 'medium': this.type.indexOf('medium') > -1,
-                'big': this.type.indexOf('big') > -1
+                'big': this.type.indexOf('big') > -1,
+                'ultra': this.type.indexOf('ultra') > -1
             };
         }
     }
@@ -64,7 +68,8 @@ export default {
 
     &.small,
     &.medium,
-    &.big {
+    &.big,
+    &.ultra {
         padding-bottom: 2rem;
 
         & > .separator-wrapper {
@@ -85,6 +90,10 @@ export default {
 
     &.big {
         padding-top: 4rem;
+    }
+
+    &.ultra {
+        padding-top: 5rem;
     }
 
     & > .separator-wrapper {
@@ -111,7 +120,7 @@ export default {
     }
 
     &.line {
-        & > .separator-wrapper:before {
+        & > .separator-wrapper::before {
             border-top: 4px solid var(--bg-site);
             content: "";
             left: 0;
@@ -122,6 +131,49 @@ export default {
 
         & > .note {
            padding: 2.5rem 0 0 0;
+        }
+    }
+
+    &.no-line {
+        padding: 0 0 2rem;
+        & > .separator-wrapper::before {     
+            content: none; 
+        }
+        & > .separator-wrapper {
+            padding: 0;
+        }
+
+        & > .note {
+           padding: 0;
+        }
+    }
+
+    &.empty {
+        & > .separator-wrapper {
+            padding-bottom: .25rem;
+        }
+    }
+
+    &.thin {
+          & > .separator-wrapper { 
+
+            &::before {
+                border-top: 2px solid var(--bg-site);
+            }
+
+             & > label {
+                 font-size: 1.6rem;
+                padding-top: 2rem;
+            }
+        }
+    }
+
+    & + &.thin {
+        & > .separator-wrapper { 
+
+            &::before {
+                display: none;
+            }
         }
     }
 }

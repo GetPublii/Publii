@@ -94,10 +94,12 @@ class GoogleCloud {
         }
 
         this.connection.file(fileToDownload).download({
-            destination: path.join(self.deployment.configDir, 'files-remote.json')
+            destination: path.join(self.deployment.configDir, 'temp-files-remote.json')
         }, function(err) {
             if (!err) {
-                self.deployment.compareFilesList(true);
+                let downloadedFilePath = path.join(self.deployment.configDir, 'temp-files-remote.json');
+                let downloadedFile = fs.readFileSync(downloadedFilePath);
+                self.deployment.checkLocalListWithRemoteList(downloadedFile);
             } else {
                 self.deployment.compareFilesList(false);
             }
@@ -121,6 +123,8 @@ class GoogleCloud {
                 operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
             }
         });
+
+        self.deployment.replaceSyncInfoFiles();
 
         this.connection.upload(fileToUpload, {
             destination: fileDestination

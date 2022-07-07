@@ -155,6 +155,21 @@ export default {
         }
     },
     mounted () {
+        window.onbeforeunload = e => {
+            if (this.possibleDataLoss) {
+                e.returnValue = false;
+
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('core.sureYouWantQuit'),
+                    isDanger: true,
+                    okClick: () => {
+                        window.onbeforeunload = null;
+                        mainProcessAPI.send('app-close', true);
+                    }
+                });
+            }
+        };
+
         if (this.isEdit) {
             this.newPost = false;
             this.loadPostData();
@@ -257,7 +272,7 @@ export default {
                 if (data.posts) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
-                    alert(this.$t('editor.errorOccured'));
+                    alert(this.$t('editor.errorOccurred'));
                 }
             });
         },
@@ -332,6 +347,7 @@ export default {
         this.$bus.$off('date-changed');
         this.$bus.$off('post-editor-possible-data-loss');
         window.prompt = () => false;
+        window.onbeforeunload = null;
     }
 };
 </script>

@@ -5,15 +5,17 @@
             'tabs-horizontal': isHorizontal
         }"
         @click="detectInternalNavigation">
-        <ul>
-            <li
-                v-for="(item, index) in items"
-                :key="index"
-                :class="{ 'active': item === activeItem}"
-                @click="toggle(item)">
-                {{ item }}
-            </li>
-        </ul>
+        <div>
+            <ul>
+                <li
+                    v-for="(item, index) in items"
+                    :key="index"
+                    :class="{ 'active': item === activeItem}"
+                    @click="toggle(item)">
+                    {{ item }}
+                </li>
+            </ul>
+        </div>
 
         <div class="content">
             <div
@@ -104,34 +106,39 @@ export default {
     &.tabs-horizontal {
         flex-direction: column;
 
-        & > ul {
-            border-bottom: 2px solid var(--input-border-color);
-            text-align: left;
-            width: 100%;
+        & > div {
 
-            & > li {
-                color: var(--text-light-color);
-                display: inline-block;
-                margin: 0 2rem;
-                padding: 0 0 1.7rem 0;
-                top: 2px;
-                width: auto;
+            & > ul {
+                border-bottom: 2px solid var(--input-border-color);
+                position: relative;
+                top: initial;
+                text-align: left;
+                width: 100%;
 
-                &.active {
-                    background: none!important;
-                    border-bottom: 2px solid var(--button-tertiary-bg);
-                    border-radius: 0;
-                    color: var(--tab-color);
-                }
+                & > li {
+                    color: var(--text-light-color);
+                    display: inline-block;
+                    margin: 0 2rem;
+                    padding: 0 0 1.7rem 0;
+                    top: 2px;
+                    width: auto;
 
-                &:hover {
-                    background: none;
-                    border-radius: 0;
-                    color: var(--tab-color);
-                }
+                    &.active {
+                        background: none!important;
+                        border-bottom: 2px solid var(--button-tertiary-bg);
+                        border-radius: 0;
+                        color: var(--tab-color);
+                    }
 
-                &:first-child {
-                    margin-left: 0;
+                    &:hover {
+                        background: none;
+                        border-radius: 0;
+                        color: var(--tab-color);
+                    }
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
                 }
             }
         }
@@ -144,35 +151,40 @@ export default {
         }
     }
 
-    & > ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        user-select: none;
-        width: 18rem;
+    & > div {
 
-        & > li {
-            border-radius: var(--border-radius);
-            color: var(--tab-color);
-            cursor: pointer;
-            padding: 0.8rem 1.2rem;
-            position: relative;
-            transition: var(--transition);
-            width: 100%;
+        & > ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            user-select: none;
+            width: 18rem;
 
-            &.active {
-                background: var(--tab-active-bg)!important;
+            & > li {
                 border-radius: var(--border-radius);
-                color: var(--tab-active-color) !important;
-                transition: all .125s ease-out;
-            }
+                color: var(--tab-color);
+                cursor: pointer;
+                padding: 0.8rem 1.2rem;
+                position: relative;
+                transition: var(--transition);
+                width: 100%;
 
-            &:hover {
-                color: var(--tab-color-hover);
-            }
+                &.active {
+                    background: var(--tab-active-bg)!important;
+                    border-radius: var(--border-radius);
+                    color: var(--tab-active-color) !important;
+                    transition: all .125s ease-out;
+                }
 
-            &:last-child {
-                border-bottom: none;
+                &:hover {
+                    color: var(--tab-color-hover);
+                }
+
+                &:last-child {
+                    border-bottom: none;
+                }
             }
         }
     }
@@ -207,11 +219,11 @@ export default {
  */
 @media (max-height: 900px) {
 
-    .tabs > ul {
+    .tabs > div > ul {
         width: 15rem;
     }
 
-    .tabs > ul > li {
+    .tabs > div > ul > li {
         font-size: 1.5rem;
     }
 
@@ -223,11 +235,11 @@ export default {
 
 @media (max-width: 1400px) {
 
-    .tabs > ul {
+    .tabs > div > ul {
         width: 15rem;
     }
 
-    .tabs > ul > li {
+    .tabs > div > ul > li {
         font-size: 1.5rem;
     }
 

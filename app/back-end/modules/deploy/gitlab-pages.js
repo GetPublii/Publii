@@ -190,26 +190,11 @@ class GitlabPages {
             this.projectID = projects[0].id;
 
             this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
-                fs.writeFile(path.join(this.deployment.configDir, 'files-remote.json'), response, err => {
-                    if (err) {
-                        console.log(`[${ new Date().toUTCString() }] (!) An error occurred during writing files-remote.json file: ${err}`);
-                    }
-
-                    this.deployment.compareFilesList(true);
-                });
+                let remoteListToCheck = fs.readFileSync(path.join(this.deployment.configDir, 'files-remote.json'), 'utf-8');
 
                 try {
-                    if (response.length) {
-                        response = JSON.parse(response);
-                        this.remoteFilesList = response.map(file => {
-                            file.path = file.path.substr(7);
-
-                            if (file.path.indexOf('/') > -1) {
-                                file.path = '/' + file.path;
-                            }
-
-                            return file;
-                        });
+                    if (remoteListToCheck.length) {
+                        this.remoteFilesList = JSON.parse(remoteListToCheck);
                     } else {
                         this.remoteFilesList = [];
                     }
@@ -217,6 +202,7 @@ class GitlabPages {
                     this.remoteFilesList = [];
                 }
 
+                this.deployment.checkLocalListWithRemoteList(response);
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE DOWNLOADED`);
             }).catch(err => {
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE NOT DOWNLOADED`);
@@ -286,7 +272,7 @@ class GitlabPages {
                 }
 
                 let filePath = this.deployment.filesToUpload[i].path;
-
+                
                 this.filesToUpdate.push({
                     'action': 'update',
                     'file_path': this.getPrefix(filePath) + filePath,
@@ -327,7 +313,7 @@ class GitlabPages {
                 }
 
                 let filePath = this.deployment.filesToUpload[i].path;
-
+                
                 this.filesToUpdate.push({
                     'action': 'create',
                     'file_path': this.getPrefix(filePath) + filePath,
@@ -397,7 +383,7 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpdate.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
                 commits.push(commit);
             }
 
@@ -422,7 +408,7 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpload.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path.substr(7)));
+                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
                 commits.push(commit);
             }
 
@@ -438,6 +424,7 @@ class GitlabPages {
 
     updateFilesListFile () {
         this.setUploadProgress(98);
+        this.deployment.replaceSyncInfoFiles();
 
         let localFilesListPath = path.join(this.deployment.inputDir, 'files.publii.json');
         let localFilesContent = fs.readFileSync(localFilesListPath);
@@ -449,24 +436,12 @@ class GitlabPages {
             actionType = 'update';
         }
 
-        try {
-            localFilesContent = JSON.parse(localFilesContent);
-            localFilesContent = localFilesContent.map(file => {
-                file.path = this.getPrefix(file.path) + file.path;
-                return file;
-            });
-            localFilesContent = JSON.stringify(localFilesContent);
-
-            commit.push({
-                'action': actionType,
-                'file_path': 'publii-files.json',
-                'encoding': 'base64',
-                'content': Buffer.from(localFilesContent).toString('base64')
-            });
-        } catch (err) {
-            console.log(`[${ new Date().toUTCString() }] (!) AN ERROR OCCURRED DURING REMOTE FILES LIST CREATION`);
-            console.log(`[${ new Date().toUTCString() }] ${err}`);
-        }
+        commit.push({
+            'action': actionType,
+            'file_path': 'publii-files.json',
+            'encoding': 'base64',
+            'content': Buffer.from(localFilesContent).toString('base64')
+        });
 
         console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILES LIST UPDATED`);
         return this.makeCommit(commit, this.finishSync.bind(this), 'Publii - upload remote files list');

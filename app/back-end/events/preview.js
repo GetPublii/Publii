@@ -82,7 +82,7 @@ class PreviewEvents {
 
                     if (data && data.result && data.result[0] && data.result[0].message) {
                         errorTitle = {
-                            translation: 'core.rendering.renderingProcessFiled'
+                            translation: 'core.rendering.renderingProcessFailed'
                         };
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }
@@ -127,7 +127,7 @@ class PreviewEvents {
 
                     if (data.result && data.result[0] && data.result[0].message) {
                         errorTitle = {
-                            translation: 'core.rendering.renderingProcessFiled'
+                            translation: 'core.rendering.renderingProcessFailed'
                         };
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }

@@ -78,6 +78,17 @@
                 </field>
 
                 <field
+                    id="show-modification-date"
+                    :label="$t('settings.showModificationDate')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-modification-date"
+                        v-model="showModificationDate" />
+                </field>
+                
+                <field
+                    v-if="showModificationDate"
                     id="show-modification-date-as-column"
                     :label="$t('settings.showModificationDateAsColumn')"
                     :labelSeparated="false">
@@ -98,8 +109,18 @@
                 </field>
 
                 <field
+                    id="show-post-tags"
+                    :label="$t('settings.showPostTagsOnTheListing')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-post-tags"
+                        v-model="showPostTags" />
+                </field>
+
+                <field
                     id="wide-scrollbars"
-                    :label="$t('settings.usewideScrollbars')"
+                    :label="$t('settings.useWideScrollbars')"
                     :labelSeparated="false">
                     <switcher
                         slot="field"
@@ -293,20 +314,6 @@
                 </div>
                 <field
                     id="experimental-feature-app-ui-languages"
-                    :label="$t('settings.experimentalFeatureAppUiLanguages')"
-                    :labelSeparated="false">
-                    <switcher
-                        slot="field"
-                        id="experimental-feature-app-ui-languages"
-                        v-model="experimentalFeatureAppUiLanguages" />
-                    <small 
-                        slot="note"
-                        class="note">
-                        {{ $t('settings.experimentalFeatureAppUiLanguagesDesc') }}
-                    </small>
-                </field>
-                <field
-                    id="experimental-feature-app-ui-languages"
                     :label="$t('settings.experimentalFeatureAppAutoBeautifySourceCode')"
                     :labelSeparated="false">
                     <switcher
@@ -351,8 +358,10 @@ export default {
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
             closeEditorOnSave: true,
+            showModificationDate: true,
             showModificationDateAsColumn: false,
             showPostSlugs: false,
+            showPostTags: true,
             postsOrdering: 'id DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
@@ -368,7 +377,6 @@ export default {
             unwatchBackupsLocation: null,
             editorFontSize: 18,
             editorFontFamily: 'serif',
-            experimentalFeatureAppUiLanguages: false,
             experimentalFeatureAppAutoBeautifySourceCode: false,
             changeSitesLocationWithoutCopying: false
         };
@@ -466,15 +474,16 @@ export default {
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
         this.screensSelected = this.$store.state.app.config.startScreen;
         this.closeEditorOnSave = this.$store.state.app.config.closeEditorOnSave;
+        this.showModificationDate = this.$store.state.app.config.showModificationDate;
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
         this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
+        this.showPostTags = this.$store.state.app.config.showPostTags;
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
-        this.experimentalFeatureAppUiLanguages = this.$store.state.app.config.experimentalFeatureAppUiLanguages;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.theme = this.getAppTheme();
 
@@ -527,8 +536,10 @@ export default {
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
                 closeEditorOnSave: this.closeEditorOnSave,
+                showModificationDate: this.showModificationDate,
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
                 showPostSlugs: this.showPostSlugs,
+                showPostTags: this.showPostTags,
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 tagsOrdering: this.tagsOrdering,
@@ -536,7 +547,6 @@ export default {
                 enableAdvancedPreview: this.enableAdvancedPreview,
                 editorFontFamily: this.editorFontFamily,
                 editorFontSize: this.editorFontSize,
-                experimentalFeatureAppUiLanguages: this.experimentalFeatureAppUiLanguages,
                 experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
                 changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };

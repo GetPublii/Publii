@@ -7,6 +7,7 @@
             :cols="cols"
             class="publii-textarea"
             :spellcheck="spellcheck"
+            :placeholder="placeholder"
             v-model="content"></textarea>
         <char-counter
             v-if="charCounter"
@@ -54,6 +55,10 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        placeholder: {
+            default: '',
+            type: String
         }
     },
     data: function() {
@@ -80,6 +85,18 @@ export default {
 
                     setTimeout(() => {
                         this.content = tinymce.get(this.editorID).getContent()
+                    }, 250);
+                }
+            });
+
+            this.$bus.$on('plugin-settings-before-save', () => {
+                if (this.wysiwyg) {
+                    tinymce.triggerSave();
+
+                    setTimeout(() => {
+                        if (this.editorID && tinymce.get(this.editorID)) {
+                            this.content = tinymce.get(this.editorID).getContent();
+                        }
                     }, 250);
                 }
             });

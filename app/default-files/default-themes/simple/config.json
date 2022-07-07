@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.4.1.0",
+    "version": "2.5.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": "Main menu"
@@ -23,10 +23,15 @@
     "supportedFeatures": {
         "blockEditor": true,
         "tagsList": true,
+        "tagPages": true,
         "tagImages": true,
+        "authorPages": true,
         "authorImages": true,
         "searchPage": true,
-        "errorPage": true
+        "errorPage": true,
+        "customSearch": true,
+        "customComments": true,
+        "embedConsents": true
     },
     "config": [
 
@@ -690,187 +695,233 @@
             "options": [
                 {
                     "label": "OS Default Font",
-                    "value": "system-ui"
+                    "value": "system-ui",
+                    "group": "System"
                 },
                 {
                     "label": "Andada Pro",
-                    "value": "andadapro"
+                    "value": "andadapro",
+                    "group": "Serif"
                 },
                 {
                     "label": "Antonio",
-                    "value": "antonio"
+                    "value": "antonio",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Archivo Narrow",
-                    "value": "archivonarrow"
+                    "value": "archivonarrow",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Asap",
-                    "value": "asap"
+                    "value": "asap",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Besley",
-                    "value": "besley"
+                    "value": "besley",
+                    "group": "Serif"
                 },
                 {
                     "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay"
+                    "value": "bigshouldersdisplay",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Bitter",
-                    "value": "bitter"
+                    "value": "bitter",
+                    "group": "Serif"
                 },
                 {
                     "label": "Brygada 1918",
-                    "value": "brygada1918"
+                    "value": "brygada1918",
+                    "group": "Serif"
                 },
                 {
                     "label": "Cairo",
-                    "value": "cairo"
+                    "value": "cairo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Comfortaa",
-                    "value": "comfortaa"
+                    "value": "comfortaa",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Dancing Script",
-                    "value": "dancingscript"
+                    "value": "dancingscript",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Domine",
-                    "value": "domine"
+                    "value": "domine",
+                    "group": "Serif"
                 },
                 {
                     "label": "Dosis",
-                    "value": "dosis"
+                    "value": "dosis",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Exo",
-                    "value": "exo"
+                    "value": "exo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Faustina",
-                    "value": "faustina"
+                    "value": "faustina",
+                    "group": "Serif"
                 },
                 {
                     "label": "Glory",
-                    "value": "glory"
+                    "value": "glory",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Gluten",
-                    "value": "gluten"
+                    "value": "gluten",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Heebo",
-                    "value": "heebo"
+                    "value": "heebo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "JetBrains Mono",
-                    "value": "jetbrainsmono"
+                    "value": "jetbrainsmono",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Jura",
-                    "value": "jura"
+                    "value": "jura",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Karla",
-                    "value": "karla"
+                    "value": "karla",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Kreon",
-                    "value": "kreon"
+                    "value": "kreon",
+                    "group": "Serif"
                 },
                 {
                     "label": "Lemonada",
-                    "value": "lemonada"
+                    "value": "lemonada",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Libre Franklin",
-                    "value": "librefranklin"
+                    "value": "librefranklin",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Lora",
-                    "value": "lora"
+                    "value": "lora",
+                    "group": "Serif"
                 },
                 {
                     "label": "Manuale",
-                    "value": "manuale"
+                    "value": "manuale",
+                    "group": "Serif"
                 },
                 {
                     "label": "Manrope",
-                    "value": "manrope"
+                    "value": "manrope",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Merriweather Sans",
-                    "value": "merriweathersans"
+                    "value": "merriweathersans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Montserrat",
-                    "value": "montserrat"
+                    "value": "montserrat",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Nunito",
-                    "value": "nunito"
+                    "value": "nunito",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Oswald",
-                    "value": "oswald"
+                    "value": "oswald",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Petrona",
-                    "value": "petrona"
+                    "value": "petrona",
+                    "group": "Serif"
                 },
                 {
                     "label": "Playfair Display",
-                    "value": "playfairdisplay"
+                    "value": "playfairdisplay",
+                    "group": "Serif"
                 },
                 {
                     "label": "Public Sans",
-                    "value": "publicsans"
+                    "value": "publicsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Quicksand",
-                    "value": "quicksand"
+                    "value": "quicksand",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Raleway",
-                    "value": "raleway"
+                    "value": "raleway",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Red Hat Mono",
-                    "value": "redhatmono"
+                    "value": "redhatmono",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Roboto Slab",
-                    "value": "robotoslab"
+                    "value": "robotoslab",
+                    "group": "Serif"
                 },
                 {
                     "label": "Rubik",
-                    "value": "rubik"
+                    "value": "rubik",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Ruda",
-                    "value": "ruda"
+                    "value": "ruda",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Smooch Sans",
-                    "value": "smoochsans"
+                    "value": "smoochsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Source Code Pro",
-                    "value": "sourcecodepro"
+                    "value": "sourcecodepro",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Spartan",
-                    "value": "spartan"
+                    "value": "spartan",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Urbanist",
-                    "value": "urbanist"
+                    "value": "urbanist",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Yanone Kaffeesatz",
-                    "value": "yanonekaffeesatz"
+                    "value": "yanonekaffeesatz",
+                    "group": "Sans Serif"
                 }
             ]
         },  
@@ -883,190 +934,236 @@
             "options": [
                 {
                     "label": "OS Default Font",
-                    "value": "system-ui"
+                    "value": "system-ui",
+                    "group": "System"
                 },
                 {
                     "label": "Andada Pro",
-                    "value": "andadapro"
+                    "value": "andadapro",
+                    "group": "Serif"
                 },
                 {
                     "label": "Antonio",
-                    "value": "antonio"
+                    "value": "antonio",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Archivo Narrow",
-                    "value": "archivonarrow"
+                    "value": "archivonarrow",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Asap",
-                    "value": "asap"
+                    "value": "asap",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Besley",
-                    "value": "besley"
+                    "value": "besley",
+                    "group": "Serif"
                 },
                 {
                     "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay"
+                    "value": "bigshouldersdisplay",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Bitter",
-                    "value": "bitter"
+                    "value": "bitter",
+                    "group": "Serif"
                 },
                 {
                     "label": "Brygada 1918",
-                    "value": "brygada1918"
+                    "value": "brygada1918",
+                    "group": "Serif"
                 },
                 {
                     "label": "Cairo",
-                    "value": "cairo"
+                    "value": "cairo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Comfortaa",
-                    "value": "comfortaa"
+                    "value": "comfortaa",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Dancing Script",
-                    "value": "dancingscript"
+                    "value": "dancingscript",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Domine",
-                    "value": "domine"
+                    "value": "domine",
+                    "group": "Serif"
                 },
                 {
                     "label": "Dosis",
-                    "value": "dosis"
+                    "value": "dosis",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Exo",
-                    "value": "exo"
+                    "value": "exo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Faustina",
-                    "value": "faustina"
+                    "value": "faustina",
+                    "group": "Serif"
                 },
                 {
                     "label": "Glory",
-                    "value": "glory"
+                    "value": "glory",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Gluten",
-                    "value": "gluten"
+                    "value": "gluten",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Heebo",
-                    "value": "heebo"
+                    "value": "heebo",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "JetBrains Mono",
-                    "value": "jetbrainsmono"
+                    "value": "jetbrainsmono",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Jura",
-                    "value": "jura"
+                    "value": "jura",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Karla",
-                    "value": "karla"
+                    "value": "karla",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Kreon",
-                    "value": "kreon"
+                    "value": "kreon",
+                    "group": "Serif"
                 },
                 {
                     "label": "Lemonada",
-                    "value": "lemonada"
+                    "value": "lemonada",
+                    "group": "Cursive"
                 },
                 {
                     "label": "Libre Franklin",
-                    "value": "librefranklin"
+                    "value": "librefranklin",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Lora",
-                    "value": "lora"
+                    "value": "lora",
+                    "group": "Serif"
                 },
                 {
                     "label": "Manuale",
-                    "value": "manuale"
+                    "value": "manuale",
+                    "group": "Serif"
                 },
                 {
                     "label": "Manrope",
-                    "value": "manrope"
+                    "value": "manrope",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Merriweather Sans",
-                    "value": "merriweathersans"
+                    "value": "merriweathersans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Montserrat",
-                    "value": "montserrat"
+                    "value": "montserrat",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Nunito",
-                    "value": "nunito"
+                    "value": "nunito",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Oswald",
-                    "value": "oswald"
+                    "value": "oswald",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Petrona",
-                    "value": "petrona"
+                    "value": "petrona",
+                    "group": "Serif"
                 },
                 {
                     "label": "Playfair Display",
-                    "value": "playfairdisplay"
+                    "value": "playfairdisplay",
+                    "group": "Serif"
                 },
                 {
                     "label": "Public Sans",
-                    "value": "publicsans"
+                    "value": "publicsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Quicksand",
-                    "value": "quicksand"
+                    "value": "quicksand",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Raleway",
-                    "value": "raleway"
+                    "value": "raleway",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Red Hat Mono",
-                    "value": "redhatmono"
+                    "value": "redhatmono",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Roboto Slab",
-                    "value": "robotoslab"
+                    "value": "robotoslab",
+                    "group": "Serif"
                 },
                 {
                     "label": "Rubik",
-                    "value": "rubik"
+                    "value": "rubik",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Ruda",
-                    "value": "ruda"
+                    "value": "ruda",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Smooch Sans",
-                    "value": "smoochsans"
+                    "value": "smoochsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Source Code Pro",
-                    "value": "sourcecodepro"
+                    "value": "sourcecodepro",
+                    "group": "Monospace"
                 },
                 {
                     "label": "Spartan",
-                    "value": "spartan"
+                    "value": "spartan",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Urbanist",
-                    "value": "urbanist"
+                    "value": "urbanist",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Yanone Kaffeesatz",
-                    "value": "yanonekaffeesatz"
+                    "value": "yanonekaffeesatz",
+                    "group": "Sans Serif"
                 }
             ]
-        }, 
+        },  
         {
             "name": "fontMenu",
             "label": "Menu font",
@@ -1219,38 +1316,6 @@
                     "value": "uppercase"
                 }
             ]
-        },
-
-        {
-            "name": "createSearchPage",
-            "label": "Search",
-            "group": "Search",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "searchId",
-            "group": "Search",
-            "label": "Google Custom Search Id",
-            "note": "A search ID is required for search functionality, which uses Google Custom Search. Learn how to configure it here: <a href='https://getpublii.com/docs/search-configuration.html' target='_blank'>https://www.getpublii.com/docs/...</a>",
-            "value": "",
-            "type": "text",
-            "dependencies": [{
-                "field": "createSearchPage",
-                "value": "true"
-            }]
-        },
-        {
-            "name": "searchParam",
-            "group": "Search",
-            "label": "Search parameter",
-            "note": "You can change the default \"q\" search parameter if desired; this is recommended only for advanced users.",
-            "value": "q",
-            "type": "text",
-            "dependencies": [{
-                "field": "createSearchPage",
-                "value": "true"
-            }]
         },
 
         {
@@ -1420,6 +1485,24 @@
             "value": "Powered by Publii",
             "type": "wysiwyg"
         },
+
+        {
+            "name": "searchFeature",
+            "label": "Search",
+            "group": "Search",
+            "note": "Enable / disable the search box, which is usually located next to the top menu. In order to use the search function, you also need to install the search plugin.",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "createSearchPage",
+            "label": "Search subpage",
+            "group": "Search",
+            "note": "Enabling this option will create an additional search.html page which may be required by some search plugins to display the search results on a separate page.",
+            "value": false,
+            "type": "checkbox"
+        },
+
         {
             "name": "galleryItemGap",
             "label": "Item spacing",
@@ -1428,6 +1511,7 @@
             "value": "0.28333rem",
             "type": "text"
         },
+
         {
             "name": "separator",
             "type": "separator",
@@ -1594,6 +1678,7 @@
             "group": "Additional",
             "size": "small"
         },
+       
         {
             "name": "formatDate",
             "label": "Date format",

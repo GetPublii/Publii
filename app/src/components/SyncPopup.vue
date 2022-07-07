@@ -598,7 +598,7 @@ export default {
                     okClick: (result) => {
                         if(!result || result.trim() === '') {
                             this.$bus.$emit('alert-display', {
-                                message: this.$t('sync.syncFTPNoPassowrdMsg')
+                                message: this.$t('sync.syncFTPNoPasswordMsg')
                             });
 
                             this.uploadingProgress = 0;
@@ -612,7 +612,7 @@ export default {
                     },
                     cancelClick: () => {
                         this.$bus.$emit('alert-display', {
-                            message: this.$t('sync.syncFTPNoPassowrdMsg')
+                            message: this.$t('sync.syncFTPNoPasswordMsg')
                         });
 
                         this.uploadingProgress = 0;

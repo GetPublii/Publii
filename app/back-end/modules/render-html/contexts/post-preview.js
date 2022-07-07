@@ -481,9 +481,6 @@ class RendererContextPostPreview extends RendererContext {
         preparedText = preparedText.replace(/<publii-non-amp>/gmi, '');
         preparedText = preparedText.replace(/<\/publii-non-amp>/gmi, '');
 
-        // Remove contenteditable attributes
-        preparedText = preparedText.replace(/contentEditable="true"/gi, '');
-
         // Remove read more text
         preparedText = preparedText.replace(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi, '');
 
@@ -530,7 +527,14 @@ class RendererContextPostPreview extends RendererContext {
             preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
                 return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
             });
+
+            // Fix some specific syntax cases for double figure elements
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1</figure>');
+            preparedText = preparedText.replace(/<figure contenteditable="false">[\s]*?<figure class="post__image">([\s\S]*?)<\/figure>[\s]*?<figcaption contentEditable="true">([\s\S]*?)<\/figcaption>[\s]*?<\/figure>/gmi, '<figure class="post__image">$1<figcaption>$2</figcaption></figure>');
         }
+
+        // Remove contenteditable attributes
+        preparedText = preparedText.replace(/contentEditable=".*?"/gi, '');
 
         if (this.editor === 'tinymce') {
             // Wrap galleries with classes into div with gallery-wrapper CSS class

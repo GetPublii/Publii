@@ -1,6 +1,6 @@
 {{> head}}
 {{> top}}
-<main>
+<main class="page page--search">
    <article class="post search-page">
       <div class="hero">
          {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
@@ -30,28 +30,7 @@
          </header>
       </div>
       <div class="wrapper post__entry">
-          
-         <form action="{{@website.searchUrl}}" class="search-page__form">
-            <input
-               type="search"
-               name="{{@config.custom.searchParam}}"
-               placeholder="{{ translate 'search.placeholder' }}"
-               class="search-page__input"/>
-            <button type="submit">{{ translate 'search.submit' }}</button>
-         </form>
-
-         <script>
-            (function () {
-               var cx = '{{@config.custom.searchId}}';
-               var gcse = document.createElement('script');
-               gcse.type  = 'text/javascript';
-               gcse.async = true;
-               gcse.src   = 'https://cse.google.com/cse.js?cx=' + cx;
-               var s = document.getElementsByTagName('script')[0];
-               s.parentNode.insertBefore(gcse, s);
-            })();
-         </script>
-         <gcse:searchresults-only></gcse:searchresults-only>
+         {{{@customSearchContent}}}  
       </div>
    </article>
 </main>

@@ -93,53 +93,6 @@ var generateOverride = function (params) {
         }`;
     }
     
-    if(params.search) {
-        output += ` 
-         .search-page table { 
-               border: none;
-               margin: 0;
-         }
-
-         .search-page table td { 
-               border: none;
-               padding: 0;
-         }
-
-         .gsc-above-wrapper-area-container,
-         .gsc-table-result {
-               display: inline-table;
-               margin-top: 0;
-               white-space: normal;
-         }
-
-         .cse .gsc-control-cse, .gsc-control-cse {
-               padding: 0 !important;
-         }
-
-         .gsc-thumbnail-inside,
-         .gsc-url-top {
-               padding: 0 !important;
-         }
-
-         .gsc-control-cse, .gsc-control-cse .gsc-table-result {
-               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;  
-               font-size: 0.8888rem !important;
-         }
-
-         .gs-title  {       
-               font-weight: bold;
-               height: auto !important; 
-               margin-bottom: 0.53333rem;
-               text-decoration: none !important; 
-         }
-
-         .gsc-result{
-               border-bottom: 1px solid #E9E9E9 !important; 
-               padding: calc(1.13332rem + .5vw) 0 !important; 
- 
-        }`;    	 
-    }	
-
     if(params.galleryZoom !== true) {
         output += `   
         .pswp--zoom-allowed .pswp__img {

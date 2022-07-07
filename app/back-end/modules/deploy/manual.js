@@ -6,7 +6,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const slug = require('./../../helpers/slug');
 const archiver = require('archiver');
-const move = require('glob-move');
 const Utils = require('./../../helpers/utils');
 
 class ManualDeployment {
@@ -31,23 +30,44 @@ class ManualDeployment {
     }
 
     returnCatalog() {
+        let outputBaseDir = this.deployment.siteConfig.deployment.manual.outputDirectory;
         let outputDirName = slug(this.deployment.siteName) + '-files'; 
 
-        if (!this.deployment.siteConfig.deployment.manual.outputDirectory) {
-            this.deployment.siteConfig.deployment.manual.outputDirectory = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        if (outputBaseDir && !Utils.dirExists(outputBaseDir)) {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.archive.destinationNotExists'
+                    }
+                }
+            });
+
+            return;
         }
 
-        let outputPath = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, outputDirName);
+        if (!outputBaseDir) {
+            outputBaseDir = path.join(this.deployment.sitesDir, this.deployment.siteName);
+        }
+
+        let outputPath = path.join(outputBaseDir, outputDirName);
 
         if (outputPath !== '') {
             if (Utils.dirExists(outputPath)) {
                 fs.emptyDirSync(outputPath);
             }
 
-            move(this.deployment.inputDir + '/*', outputPath, { 
-                dot: true, 
-                ignore: ['**/.DS_Store', '**/Thumbs.db'] 
+            fs.copy(this.deployment.inputDir, outputPath, {
+                filter: (src, dest) => {
+                    if (src.substring(-9) === '.DS_Store' || src.substring(-9) === 'Thumbs.db') {
+                        return false;
+                    }
+
+                    return true;
+                }
             }).then(() => this.endDeployment('catalog', outputPath));
+            
             return;
         }
 

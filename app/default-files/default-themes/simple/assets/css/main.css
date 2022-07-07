@@ -1290,6 +1290,9 @@ textarea {
   padding: 0;
   visibility: hidden;
 }
+.navbar_mobile_overlay .navbar__submenu[aria-hidden=false] {
+  visibility: visible;
+}
 .navbar_mobile_overlay .navbar__submenu_wrapper {
   height: 0;
   opacity: 0;
@@ -1301,9 +1304,6 @@ textarea {
 .navbar_mobile_overlay .navbar__submenu_wrapper.is-active {
   height: auto;
   opacity: 1;
-}
-.navbar_mobile_overlay .navbar__submenu_wrapper.is-active > .navbar__submenu {
-  visibility: visible;
 }
 
 .navbar_mobile_sidebar {
@@ -1366,6 +1366,9 @@ textarea {
   padding: 0;
   visibility: hidden;
 }
+.navbar_mobile_sidebar .navbar__submenu[aria-hidden=false] {
+  visibility: visible;
+}
 .navbar_mobile_sidebar .navbar__submenu_wrapper {
   height: 0;
   opacity: 0;
@@ -1377,9 +1380,6 @@ textarea {
 .navbar_mobile_sidebar .navbar__submenu_wrapper.is-active {
   height: auto;
   opacity: 1;
-}
-.navbar_mobile_sidebar .navbar__submenu_wrapper.is-active > .navbar__submenu {
-  visibility: visible;
 }
 .navbar_mobile_sidebar__overlay {
   background: rgba(0, 0, 0, 0.5);
@@ -1912,8 +1912,6 @@ textarea {
 .post__video, .post__iframe {
   position: relative;
   display: block;
-  margin-top: calc(1.7rem + 0.5vw);
-  margin-bottom: calc(1.7rem + 0.5vw);
   overflow: hidden;
   padding: 0;
   width: 100%;
@@ -1921,18 +1919,9 @@ textarea {
 .post__video::before, .post__iframe::before {
   display: block;
   content: "";
-  padding-top: 56.25%;
+  padding-top: var(--embed-aspect-ratio);
 }
-.post__video--21by9::before, .post__iframe--21by9::before {
-  padding-top: 42.857143%;
-}
-.post__video--4by3::before, .post__iframe--4by3::before {
-  padding-top: 75%;
-}
-.post__video--1by1::before, .post__iframe--1by1::before {
-  padding-top: 100%;
-}
-.post__video > iframe, .post__video > video, .post__iframe > iframe, .post__iframe > video {
+.post__video iframe, .post__video video, .post__iframe iframe, .post__iframe video {
   border: none;
   height: 100%;
   left: 0;
@@ -1972,19 +1961,19 @@ textarea {
   margin-top: calc(2.55rem + 1vw);
 }
 
-.author__avatar {
+.page--author__avatar {
   border-radius: 50%;
   height: 3rem;
   margin-bottom: calc(-1.4166666667rem - 1vw);
   width: 3rem;
 }
 @media all and (min-width: 37.5em) {
-  .author__avatar {
+  .page--author__avatar {
     height: 4rem;
     width: 4rem;
   }
 }
-.author__website {
+.page--author__website {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -1992,13 +1981,12 @@ textarea {
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
-.author__website a {
+.page--author__website a {
   font-family: var(--menu-font);
   font-weight: var(--font-weight-bold);
   margin-left: 0.4rem;
 }
-
-.search-page__form {
+.page--search form {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
@@ -2007,19 +1995,23 @@ textarea {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin-bottom: calc(1.7rem + .5vw);
 }
 @media all and (max-width: 37.4375em) {
-  .search-page__input {
+  .page--search input {
     margin-bottom: 0.5666666667rem;
   }
 }
 @media all and (min-width: 20em) {
-  .search-page__input {
+  .page--search input {
     -webkit-box-flex: 1;
         -ms-flex: 1 0 auto;
             flex: 1 0 auto;
     margin-right: 0.5666666667rem;
+  }
+}
+@media all and (max-width: 37.4375em) {
+  .page--search button {
+    width: 100%;
   }
 }
 
@@ -2086,6 +2078,45 @@ textarea {
   line-height: 0.7;
   margin-right: 0.5666666667rem;
   padding: 0.5666666667rem 0.5666666667rem 0.5666666667rem 0;
+}
+
+.pec-wrapper {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.pec-overlay {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: var(--light);
+  font-size: 14px;
+  display: none;
+  height: inherit;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  line-height: 1.4;
+  padding: 1rem;
+  position: relative;
+  text-align: center;
+}
+@media all and (min-width: 37.5em) {
+  .pec-overlay {
+    font-size: 16px;
+    line-height: var(--line-height);
+    padding: 1rem 2rem;
+  }
+}
+.pec-overlay.is-active {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.pec-overlay-inner p {
+  margin: 0 0 1rem;
 }
 
 /* Pagination ------------------------ */

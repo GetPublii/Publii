@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const md5 = require('md5');
 const normalizePath = require('normalize-path');
+const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 const slug = require('./../../helpers/slug');
 const FTP = require('./ftp.js');
 const SFTP = require('./sftp.js');
@@ -128,7 +129,7 @@ class Deployment {
                     fileList.push({
                         path: filePath,
                         type: 'file',
-                        md5: fs.readFileSync(path.join(this.inputDir, filePath))
+                        md5: md5(fs.readFileSync(path.join(this.inputDir, filePath)))
                     });
                 }
 
@@ -158,7 +159,7 @@ class Deployment {
             // Put file
             let fileMD5 = false;
 
-            if(this.fileIsAnImage(filePath)) {
+            if (isBinaryFileSync(path.join(this.inputDir, filePath))) {
                 let stats = fs.statSync(path.join(this.inputDir, filePath));
                 fileMD5 = md5(stats.size);
             } else {
@@ -178,6 +179,47 @@ class Deployment {
             JSON.stringify(fileList, null, 4),
             {'flags': 'w'}
         );
+    }
+
+    /**
+     * Check if local list is equal to the server expected copy
+     * 
+     * @param fileContent 
+     */
+    checkLocalListWithRemoteList (fileContent) {
+        try {
+            if (typeof fileContent === 'Buffer') {
+                fileContent = fileContent.toString();
+            }
+
+            let content = JSON.parse(fileContent);
+
+            if (content.revision) {
+                let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
+                let checkSum = md5(filesToCheck);
+                let isExpectedCopy = checkSum === content.revision;
+                this.compareFilesList(isExpectedCopy);    
+                return;
+            }
+            
+            fs.writeFileSync(path.join(this.configDir, 'files-remote.json'), fileContent);
+            this.compareFilesList(true);
+        } catch (e) {
+            this.compareFilesList(false);
+        }
+    }
+
+    /**
+     * Save files.publii.json as files-remote.json and store checksum in the file
+     */
+    replaceSyncInfoFiles () {
+        let inputListPath = path.join(this.inputDir, 'files.publii.json');
+        let remoteListPath = path.join(this.configDir, 'files-remote.json');
+        let contentToSave = fs.readFileSync(inputListPath);
+        let checkSum = md5(contentToSave);
+        let newContent = `{ "revision": "${checkSum}" }`;
+        fs.writeFileSync(remoteListPath, contentToSave);
+        fs.writeFileSync(inputListPath, newContent);
     }
 
     /**
@@ -202,12 +244,6 @@ class Deployment {
 
                     if (this.siteConfig.deployment.protocol === 'gitlab-pages') {
                         remoteFiles = remoteFiles.map(file => {
-                            file.path = file.path.substr(7);
-
-                            if (file.path.indexOf('/') > -1) {
-                                file.path = '/' + file.path;
-                            }
-
                             return file;
                         });
                     }
@@ -326,21 +362,21 @@ class Deployment {
             return 0;
         });
 
-        this.filesToUpload = this.filesToUpload.sort(function(fileA, fileB) {
-            if(fileA.type === 'directory') {
+        this.filesToUpload = this.filesToUpload.sort((fileA, fileB) => {
+            if (fileA.type === 'directory') {
                 return 1;
             }
 
-            if(fileB.type === 'directory') {
+            if (fileB.type === 'directory') {
                 return -1;
             }
 
             // Images will be uploaded at the end
-            if(self.fileIsAnImage(fileA.path)) {
+            if (isBinaryFileSync(path.join(this.inputDir, fileA.path))) {
                 return -1;
             }
 
-            if(self.fileIsAnImage(fileB.path)) {
+            if (isBinaryFileSync(path.join(this.inputDir, fileB.path))) {
                 return 1;
             }
 
@@ -445,29 +481,6 @@ class Deployment {
 
             this.client.uploadNewFileList();
         }
-    }
-
-    /**
-     * Detects images by filename
-     *
-     * @param filename
-     * @returns {boolean}
-     */
-    fileIsAnImage(filename) {
-        if(
-            filename.substr(-4).toLowerCase() === '.jpg' ||
-            filename.substr(-5).toLowerCase() === '.jpeg' ||
-            filename.substr(-4).toLowerCase() === '.png' ||
-            filename.substr(-4).toLowerCase() === '.svg' ||
-            filename.substr(-4).toLowerCase() === '.gif' ||
-            filename.substr(-4).toLowerCase() === '.bmp' ||
-            filename.substr(-5).toLowerCase() === '.webp' ||
-            filename.substr(-4).toLowerCase() === '.ico'
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

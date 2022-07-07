@@ -32,6 +32,12 @@
                 id="custom-html-tabs"
                 :items="tabs"
                 :onToggle="refreshEditors">
+                <supported-features-check
+                    v-for="(htmlFieldName, index) in Object.keys(requiredFeatures)"
+                    :key="'supported-features-check-' + index"
+                    :slot="'tab-' + index"
+                    :featuresToCheck="requiredFeatures[htmlFieldName]" />
+
                 <codemirror-editor
                     v-for="(editor, index) in Object.keys(editors)"
                     :slot="'tab-' + index"
@@ -41,6 +47,7 @@
                     editorLoadedEventName="custom-html-editor-loaded"
                     mode="xml">
                 </codemirror-editor>
+
                 <small
                     v-for="(editor, index) in Object.keys(editors)"
                     class="editor-note"
@@ -65,23 +72,39 @@
 <script>
 import Utils from '../helpers/utils.js';
 import BackToTools from './mixins/BackToTools.js';
+import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 
 export default {
     name: 'custom-html',
     mixins: [
         BackToTools
     ],
+    components: {
+        'supported-features-check': SupportedFeaturesCheck
+    },
     data: function() {
         return {
             buttonsLocked: false,
             tabs: [
-                'Head',
-                'Body',
-                'Comments',
-                'Footer',
-                'AMP Head',
-                'AMP Footer'
+                this.$t('customHTML.tabs.head'),
+                this.$t('customHTML.tabs.body'),
+                this.$t('customHTML.tabs.comments'),
+                this.$t('customHTML.tabs.searchInput'),
+                this.$t('customHTML.tabs.searchContent'),
+                this.$t('customHTML.tabs.footer'),
+                this.$t('customHTML.tabs.ampHead'),
+                this.$t('customHTML.tabs.ampFooter')
             ],
+            requiredFeatures: {
+                'custom-head-code': [],
+                'custom-body-code': [],
+                'custom-comments-code': ['customComments'],
+                'custom-search-input': ['customSearch'],
+                'custom-search-content': ['customSearch'],
+                'custom-footer-code': [],
+                'custom-head-amp-code': [],
+                'custom-footer-amp-code': []
+            },
             editors: {},
             loadedEditors: 0
         };
@@ -147,6 +170,8 @@ export default {
                 'custom-head-code': this.$store.state.currentSite.config.advanced.customHeadCode,
                 'custom-body-code': this.$store.state.currentSite.config.advanced.customBodyCode,
                 'custom-comments-code': this.$store.state.currentSite.config.advanced.customCommentsCode,
+                'custom-search-input': this.$store.state.currentSite.config.advanced.customSearchInput,
+                'custom-search-content': this.$store.state.currentSite.config.advanced.customSearchContent,
                 'custom-footer-code': this.$store.state.currentSite.config.advanced.customFooterCode,
                 'custom-head-amp-code': this.$store.state.currentSite.config.advanced.customHeadAmpCode,
                 'custom-footer-amp-code': this.$store.state.currentSite.config.advanced.customFooterAmpCode
@@ -163,7 +188,12 @@ export default {
                 for(let i = 0; i < customHtmlCodes.length; i++) {
                     let id = customHtmlCodes[i];
                     customHtml[id] = this.getCustomHtmlCode(id);
-                    this.tabs.push(this.$store.state.currentSite.themeSettings.renderer.customHTML[id]);
+
+                    if (this.$te('customHTML.tabs.' + id)) {
+                        this.tabs.push(this.$t('customHTML.tabs.' + id));
+                    } else {
+                        this.tabs.push(this.$store.state.currentSite.themeSettings.renderer.customHTML[id]);
+                    }
                 }
             }
 
@@ -217,7 +247,7 @@ export default {
                 }
             };
 
-            for(let customCodeEditor of customCodeEditors) {
+            for (let customCodeEditor of customCodeEditors) {
                 let id = customCodeEditor.getAttribute('id');
                 let excludedIDs = [
                     'custom-head-code',

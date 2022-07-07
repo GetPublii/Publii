@@ -161,14 +161,7 @@ class S3 {
             if (err && err.code === 'NoSuchKey') {
                 self.deployment.compareFilesList(false);
             } else {
-                fs.writeFile(path.join(self.deployment.configDir, 'files-remote.json'), data.Body, function() {
-                    if (err) {
-                        self.onError(err);
-                        return;
-                    }
-
-                    self.deployment.compareFilesList(true);
-                });
+                self.deployment.checkLocalListWithRemoteList(data.Body);
             }
         });
     }
@@ -184,6 +177,8 @@ class S3 {
                 operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
             }
         });
+
+        self.deployment.replaceSyncInfoFiles();
 
         fs.readFile(path.join(this.deployment.inputDir, 'files.publii.json'), (err, fileContent) => {
             let fileName = 'files.publii.json';

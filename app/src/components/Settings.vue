@@ -121,6 +121,12 @@
             </fields-group>
 
             <fields-group :title="$t('settings.advancedOptions')">
+            <div
+                v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
+                class="msg msg-icon msg-alert msg-bm">
+                <icon name="warning" customWidth="28" customHeight="28" />
+                <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
+            </div>
                 <tabs
                     ref="advanced-tabs"
                     id="advanced-basic-settings-tabs"
@@ -307,8 +313,15 @@
                             type="medium"
                             :label="$t('tag.tagPage')" />
 
+                        <div
+                            v-if="!currentThemeSupportsTagPages"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportTagPages') }}</p>
+                        </div>
+
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -327,7 +340,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -340,7 +353,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="meta-robots-tags"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -352,7 +365,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="currentThemeSupportsTagPages"
                             id="display-empty-tags"
                             :label="$t('settings.displayEmptyTags')">
                             <switcher
@@ -367,7 +380,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsTagPages"
                             id="tag-no-index-pagination"
                             :label="$t('settings.disableTagsPaginationIndexing')">
                             <switcher
@@ -382,6 +395,7 @@
                         </field>
 
                         <field
+                            v-if="currentThemeSupportsTagPages"
                             id="tag-no-pagination"
                             :label="$t('settings.disableTagsPagination')">
                             <switcher
@@ -399,8 +413,15 @@
                             type="medium"
                             :label="$t('settings.authorPage')" />
 
+                        <div
+                            v-if="!currentThemeSupportsAuthorPages"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
+                        </div>
+
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -419,7 +440,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -432,7 +453,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="meta-robots-authors"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -444,7 +465,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="currentThemeSupportsAuthorPages"
                             id="display-empty-authors"
                             :label="$t('settings.displayEmptyAuthors')">
                             <switcher
@@ -458,7 +479,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsAuthorPages"
                             id="author-no-index-pagination"
                             :label="$t('settings.disableAuthorsPaginationIndexing')">
                             <switcher
@@ -473,6 +494,7 @@
                         </field>
 
                         <field
+                            v-if="currentThemeSupportsAuthorPages"
                             id="author-no-pagination"
                             :label="$t('settings.disableAuthorsPagination')">
                             <switcher
@@ -499,7 +521,7 @@
                         </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="error-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -518,7 +540,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="error-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -531,7 +553,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsErrorPage"
                             id="meta-robots-error"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -552,10 +574,10 @@
                             class="msg msg-icon msg-alert">
                             <icon name="warning" customWidth="28" customHeight="28" />
                             <p>{{ $t('settings.themeDoesNotSupportSearchPages') }}</p>
-                            </div>
+                        </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="error-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -574,7 +596,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="search-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -587,7 +609,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && currentThemeSupportsSearchPage"
                             id="meta-robots-search"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -635,8 +657,16 @@
                                 @click.native="clearErrors('tags-prefix')"
                                 v-model="advanced.urls.tagsPrefix"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsTagPages"
                                 slot="field" />
                             <small
+                                v-if="!currentThemeSupportsTagPages"
+                                class="note"
+                                slot="note">
+                                {{ $t('settings.themeDoesNotSupportTagPages') }}
+                            </small>
+                            <small
+                                v-else
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.tagPrefixInfo')">
@@ -652,8 +682,16 @@
                                 @click.native="clearErrors('authors-prefix')"
                                 v-model="advanced.urls.authorsPrefix"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsAuthorPages"
                                 slot="field" />
                             <small
+                                v-if="!currentThemeSupportsAuthorPages"
+                                class="note"
+                                slot="note">
+                                {{ $t('settings.themeDoesNotSupportAuthorPages') }}
+                            </small>
+                            <small
+                                v-else
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.authorPrefixInfo')">
@@ -684,12 +722,13 @@
                                 id="error-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('error-page') > -1 }"
                                 @click.native="clearErrors('error-page')"
-                                :readonly="!themeHasSupportForErrorPage"
+                                :readonly="!currentThemeSupportsErrorPage"
                                 v-model="advanced.urls.errorPage"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsErrorPage"
                                 slot="field" />
                             <small
-                                v-if="!themeHasSupportForErrorPage"
+                                v-if="!currentThemeSupportsErrorPage"
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportErrorPages') }}
@@ -703,12 +742,13 @@
                                 id="search-page-file"
                                 :class="{ 'is-invalid': errors.indexOf('search-page') > -1 }"
                                 @click.native="clearErrors('search-page')"
-                                :readonly="!themeHasSupportForSearchPage"
+                                :readonly="!currentThemeSupportsSearchPage"
                                 v-model="advanced.urls.searchPage"
                                 :spellcheck="false"
+                                :disabled="!currentThemeSupportsSearchPage"
                                 slot="field" />
                             <small
-                                v-if="!themeHasSupportForSearchPage"
+                                v-if="!currentThemeSupportsSearchPage"
                                 class="note"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportSearchPages') }}
@@ -738,20 +778,24 @@
                         </field>
 
                         <field
-                            class="multiple-checkboxes"
+                            class="multiple-checkboxes field-with-switcher"
                             v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
                             :label="$t('settings.content')">
                             <label
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
-                                <switcher v-model="advanced.sitemapAddTags" />
+                                <switcher 
+                                    v-model="advanced.sitemapAddTags"
+                                    :disabled="!currentThemeSupportsTagPages" />
                                 {{ $t('settings.tagPages') }}
                             </label>
 
                             <label
                                 v-if="advanced.sitemapEnabled"
                                 slot="field">
-                                <switcher v-model="advanced.sitemapAddAuthors" />
+                                <switcher 
+                                    v-model="advanced.sitemapAddAuthors"
+                                    :disabled="!currentThemeSupportsAuthorPages" />
                                 {{ $t('settings.authorPages') }}
                             </label>
 
@@ -1050,14 +1094,53 @@
                     </div>
 
                     <div slot="tab-6">
+                        <separator
+                            type="small"
+                            :is-line="true"
+                            :label="$t('settings.embedVideos')" />
+
+                        <field
+                            id="yt-nocookie"
+                            :label="$t('settings.ytNoCookies')">
+                            <switcher
+                                id="yt-nocookies"
+                                slot="field"
+                                v-model="advanced.gdpr.ytNoCookies" />
+
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.howYtNoCookiesWorks')">
+                            </small>
+                        </field>
+
+                        <field
+                            id="vimeo-no-track"
+                            :label="$t('settings.vimeoNoTrack')">
+                            <switcher
+                                slot="field"
+                                id="vimeo-no-track"
+                                v-model="advanced.gdpr.vimeoNoTrack" />
+
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.howVimeoNoTrackWorks')">
+                            </small>
+                        </field>
+
+                        <separator
+                            type="big"
+                            :is-line="true"
+                            :label="$t('settings.cookieBanner')" />
+
                         <field
                             id="gdpr-enabled"
                             :label="$t('settings.addGDPRCookieBanner')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression"
-                                    v-model="advanced.gdpr.enabled" />
-                            </label>
+                            <switcher
+                                id="html-compression"
+                                slot="field"
+                                v-model="advanced.gdpr.enabled" />
 
                             <small
                                 slot="note"
@@ -1068,14 +1151,15 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled"
-                            type="small"
+                            type="medium thin"
                             :is-line="true"
-                            :label="$t('settings.cookiePopup')" />
+                            :note="$t('settings.cookieBasicDescription')"
+                            :label="$t('settings.cookieBasic')" />                     
 
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-title-primary"
-                            :label="$t('settings.gdprTitle')">
+                            :label="$t('settings.gdprBannerTitle')">
                             <text-input
                                 id="gdpr-popup-title-primary"
                                 v-model="advanced.gdpr.popupTitlePrimary"
@@ -1086,7 +1170,7 @@
                         <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-popup-desc"
-                            :label="$t('ui.description')">
+                            :label="$t('settings.gdprBannerMessage')">
                             <text-area
                                 id="gdpr-popup-desc"
                                 v-model="advanced.gdpr.popupDesc"
@@ -1095,38 +1179,57 @@
                                 slot="field" />
                         </field>
 
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="big thin"
+                            :is-line="true"/>
+
                         <field
                             v-if="advanced.gdpr.enabled"
+                            id="show-privacy-policy-link"
+                            :label="$t('settings.showPrivacyPolicyLink')">
+                            <switcher
+                                id="show-privacy-policy-link"
+                                slot="field"
+                                v-model="advanced.gdpr.showPrivacyPolicyLink" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink"
                             id="gdpr-readmore-link-label"
-                            :label="$t('settings.linkLabel')">
+                            :label="$t('settings.privacyPolicyLinkLabel')">
                             <text-input
                                 id="gdpr-readmore-link-label"
-                                v-model="advanced.gdpr.readMoreLinkLabel"
+                                v-model="advanced.gdpr.privacyPolicyLinkLabel"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 slot="field" />
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink"
                             id="gdpr-page-type"
                             :label="$t('settings.privacyPolicyURL')">
                             <dropdown
                                 slot="field"
                                 id="gdpr-page-type"
                                 key="gdpr-page-type"
-                                v-model="advanced.gdpr.articleLinkType"
-                                :items="{ 'internal': $t('settings.internalPage'), 'external': $t('settings.externalPage'), 'none': $t('ui.none') }"></dropdown>
+                                v-model="advanced.gdpr.privacyPolicyLinkType"
+                                :items="{ 
+                                    'internal': $t('settings.internalPage'), 
+                                    'external': $t('settings.externalPage'),  
+                                }">
+                            </dropdown>
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'internal'"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink && advanced.gdpr.privacyPolicyLinkType === 'internal'"
                             id="gdpr-page"
                             :label="$t('settings.privacyPolicyPage')">
                             <v-select
                                 ref="gdprPagesSelect"
                                 slot="field"
                                 :options="postPages"
-                                v-model="advanced.gdpr.articleId"
+                                v-model="advanced.gdpr.privacyPolicyPostId"
                                 :custom-label="customPostLabels"
                                 :close-on-select="true"
                                 :show-labels="false"
@@ -1135,15 +1238,20 @@
                         </field>
 
                         <field
-                            v-if="advanced.gdpr.enabled && advanced.gdpr.articleLinkType === 'external'"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.showPrivacyPolicyLink && advanced.gdpr.privacyPolicyLinkType === 'external'"
                             id="gdpr-page-url"
                             :label="$t('settings.privacyPolicyPageURL')">
                             <text-input
                                 id="gdpr-page-url"
-                                v-model="advanced.gdpr.articleExternalUrl"
+                                v-model="advanced.gdpr.privacyPolicyExternalUrl"
                                 :spellcheck="false"
                                 slot="field" />
                         </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="small thin"
+                            :is-line="true"/>
 
                         <field
                             v-if="advanced.gdpr.enabled"
@@ -1157,6 +1265,32 @@
                         </field>
 
                         <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-show-reject-button"
+                            :label="$t('settings.gdprShowRejectButton')">
+                            <switcher
+                                id="gdpr-show-reject-button"
+                                slot="field"
+                                v-model="advanced.gdpr.popupShowRejectButton" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.popupShowRejectButton"
+                            id="gdpr-reject-button-label"
+                            :label="$t('settings.gdprRejectButtonLabel')">
+                            <text-input
+                                id="gdpr-reject-button-label"
+                                slot="field"
+                                v-model="advanced.gdpr.popupRejectButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking" />
+                        </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="small thin"
+                            :is-line="true"/>
+
+                        <field
                             v-if="advanced.gdpr.enabled"
                             id="gdpr-behaviour"
                             :label="$t('settings.openPopupWindowBy')">
@@ -1165,7 +1299,12 @@
                                 id="posts-listing-order-by"
                                 key="posts-listing-order-by"
                                 v-model="advanced.gdpr.behaviour"
-                                :items="{ 'badge': $t('settings.badge'), 'link': $t('ui.customLink'), 'badge-link': $t('settings.badgeAndCustomLink') }"></dropdown>
+                                :items="{ 
+                                    'badge': $t('settings.badge'), 
+                                    'link': $t('ui.customLink'), 
+                                    'badge-link': $t('settings.badgeAndCustomLink') 
+                                }">
+                            </dropdown>
                         </field>
 
                         <field
@@ -1197,12 +1336,184 @@
 
                         <separator
                             v-if="advanced.gdpr.enabled"
-                            type="big"
+                            type="small thin"
+                            :is-line="true"/>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-banner-position"
+                            :label="$t('settings.bannerPosition')">
+                            <dropdown
+                                slot="field"
+                                id="gdpr-banner-position"
+                                key="gdpr-banner-position"
+                                v-model="advanced.gdpr.popupPosition"
+                                :items="{ 
+                                    'centered': $t('settings.gdprBannerPosition.centered'), 
+                                    'left': $t('settings.gdprBannerPosition.left'), 
+                                    'right': $t('settings.gdprBannerPosition.right'),
+                                    'bar': $t('settings.gdprBannerPosition.bar') 
+                                }">
+                            </dropdown>
+                        </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="ultra thin"
+                            :is-line="true" 
+                            :note="$t('settings.cookieAdvancedDescription')"
+                            :label="$t('settings.cookieAdvanced')" />
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-allow-advanced-configuration"
+                            :label="$t('settings.gdprAllowAdvancedConfiguration')">
+                            <switcher
+                                id="gdpr-allow-advanced-configuration"
+                                slot="field"
+                                v-model="advanced.gdpr.allowAdvancedConfiguration" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-link-label"
+                            :label="$t('settings.gdprAdvancedConfigurationLinkLabel')">
+                            <text-input
+                                id="gdpr-advanced-configuration-link-label"
+                                v-model="advanced.gdpr.advancedConfigurationLinkLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking" 
+                                :placeholder="$t('settings.gdprAdvancedConfigurationLinkPlaceholder')"
+                                slot="field" />
+                        </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            type="small thin"
+                            :is-line="true"/>
+
+                         <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-title"
+                            :label="$t('settings.gdprAdvancedConfigurationTitle')">
+                            <text-input
+                                id="gdpr-advanced-configuration-title"
+                                v-model="advanced.gdpr.advancedConfigurationTitle"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-description"
+                            :label="$t('settings.gdprAdvancedConfigurationDescription')">
+                            <text-area
+                                id="gdpr-advanced-configuration-description"
+                                v-model="advanced.gdpr.advancedConfigurationDescription"
+                                :rows="4"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
+                        </field>
+                        
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-accept-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationAcceptButtonLabel')">
+                            <text-input
+                                id="gdpr-advanced-configuration-accept-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationAcceptButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-reject-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationRejectButtonLabel')">
+                            <text-input
+                                id="gdpr-advanced-configuration-reject-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationRejectButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-save-button-label"
+                            :label="$t('settings.gdprAdvancedConfigurationSaveButtonLabel')">
+                            <text-input
+                                id="gdpr-advanced-configuration-reject-button-label"
+                                v-model="advanced.gdpr.advancedConfigurationSaveButtonLabel"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-advanced-configuration-show-description-link"
+                            :label="$t('settings.gdprAdvancedConfigurationPrivacyLink')">
+                            <switcher
+                                id="gdpr-advanced-configuration-show-description-link"
+                                v-model="advanced.gdpr.advancedConfigurationShowDescriptionLink"
+                                slot="field" />
+                             <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.gdprAdvancedConfigurationPrivacyLinkDescription')">
+                            </small>
+                        </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled"
+                            type="small thin"
+                            :is-line="true"/>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="gdpr-debug-mode"
+                            :label="$t('settings.gdprDebugMode')">
+                            <switcher
+                                id="gdpr-debug-mode"
+                                v-model="advanced.gdpr.debugMode"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-cookie-settings-revision"
+                            :label="$t('settings.gdprCookieSettingsRevision')">
+                            <text-input
+                                id="gdpr-cookie-settings-revision"
+                                v-model="advanced.gdpr.cookieSettingsRevision"
+                                :spellcheck="false"
+                                type="number"
+                                min="1"
+                                step="1"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled"
+                            id="gdpr-cookie-settings-ttl"
+                            :label="$t('settings.gdprCookieSettingsTTL')">
+                            <text-input
+                                id="gdpr-cookie-settings-ttl"
+                                v-model="advanced.gdpr.cookieSettingsTTL"
+                                :spellcheck="false"
+                                type="number"
+                                min="0"
+                                step="1"
+                                slot="field" />
+                        </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            type="ultra thin"
                             :is-line="true"
                             :label="$t('settings.cookieGroups')" />
 
                         <field
-                            v-if="advanced.gdpr.enabled"
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             id="gdpr-popup-groups"
                             label=""
                             :labelFullWidth="true">
@@ -1211,47 +1522,69 @@
                                 v-model="advanced.gdpr.groups"
                                 slot="field" />
                         </field>
+
+                        <separator
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            type="ultra thin"
+                            :is-line="true"
+                            :label="$t('settings.embedConsents')"
+                            :note="$t('settings.embedConsentsDescription')" />
+
+                        <div
+                            v-if="!currentThemeSupportsEmbedConsents && advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <p>{{ $t('settings.themeDoesNotSupportEmbedConsents') }}</p>
+                        </div>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="embed-consents-groups"
+                            label=""
+                            :labelFullWidth="true">
+                            <embed-consents-groups
+                                id="embed-consents-groups"
+                                v-model="advanced.gdpr.embedConsents"
+                                :cookieGroups="advanced.gdpr.groups"
+                                slot="field" />
+                        </field>
                     </div>
 
                     <div slot="tab-7">
                         <field
                             id="html-compression"
                             :label="$t('settings.enableHTMLCompression')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression"
-                                    v-model="advanced.htmlCompression" />
-                            </label>
+                            <switcher
+                                id="html-compression"
+                                v-model="advanced.htmlCompression"
+                                slot="field" />
                         </field>
 
                         <field
                             id="css-compression"
                             :label="$t('settings.enableCSSCompression')">
-                            <label slot="field">
-                                <switcher
-                                    id="css-compression"
-                                    v-model="advanced.cssCompression" />
-                            </label>
+                            <switcher
+                                id="css-compression"
+                                v-model="advanced.cssCompression"
+                                slot="field" />
                         </field>
 
                         <field
                             id="html-compression-remove-comments"
                             :label="$t('settings.removeHTMLComments')">
-                            <label slot="field">
-                                <switcher
-                                    id="html-compression-remove-comments"
-                                    v-model="advanced.htmlCompressionRemoveComments" />
-                            </label>
+                            <switcher
+                                id="html-compression-remove-comments"
+                                v-model="advanced.htmlCompressionRemoveComments" 
+                                slot="field" />
                         </field>
 
                         <field
                             id="media-lazyload"
                             :label="$t('settings.enableMediaLazyLoad')">
-                            <label slot="field">
-                                <switcher
-                                    id="media-lazyload"
-                                    v-model="advanced.mediaLazyLoad" />
-                            </label>
+                            <switcher
+                                id="media-lazyload"
+                                v-model="advanced.mediaLazyLoad"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1263,11 +1596,10 @@
                         <field
                             id="responsive-images"
                             :label="$t('settings.enableResponsiveImages')">
-                            <label slot="field">
-                                <switcher
-                                    id="responsive-images"
-                                    v-model="advanced.responsiveImages" />
-                            </label>
+                            <switcher
+                                id="responsive-images"
+                                v-model="advanced.responsiveImages"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1279,12 +1611,10 @@
                         <field
                             id="version-suffix"
                             :label="$t('settings.versionParameter')">
-                            <label slot="field">
-                                <switcher
-                                    id="version-suffix"
-                                    v-model="advanced.versionSuffix" />
-
-                            </label>
+                            <switcher
+                                id="version-suffix"
+                                v-model="advanced.versionSuffix"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1313,21 +1643,19 @@
                         <field
                             id="feed-enable-rss"
                             :label="$t('settings.enableRSSFeed')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-enable-rss"
-                                    v-model="advanced.feed.enableRss" />
-                            </label>
+                            <switcher
+                                id="feed-enable-rss"
+                                v-model="advanced.feed.enableRss"
+                                slot="field" />
                         </field>
 
                         <field
                             id="feed-enable-json"
                             :label="$t('settings.enableJSONFeed')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-enable-json"
-                                    v-model="advanced.feed.enableJson" />
-                            </label>
+                            <switcher
+                                id="feed-enable-json"
+                                v-model="advanced.feed.enableJson"
+                                slot="field" />
                         </field>
 
                         <field
@@ -1346,24 +1674,22 @@
                             v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
                             :label="$t('settings.customFeedTitle')">
-                            <label slot="field">
-                                <text-input
-                                    id="feed-title-value"
-                                    type="text"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    v-model="advanced.feed.titleValue" />
-                            </label>
+                            <text-input
+                                id="feed-title-value"
+                                type="text"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                v-model="advanced.feed.titleValue"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-full-text"
                             :label="$t('settings.showFullText')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-full-text"
-                                    v-model="advanced.feed.showFullText" />
-                            </label>
+                            <switcher
+                                id="feed-show-full-text"
+                                v-model="advanced.feed.showFullText"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1375,48 +1701,44 @@
                         <field
                             id="feed-show-only-featured"
                             :label="$t('settings.showOnlyFeaturedPosts')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-only-featured"
-                                    v-model="advanced.feed.showOnlyFeatured" />
-                            </label>
+                            <switcher
+                                id="feed-show-only-featured"
+                                v-model="advanced.feed.showOnlyFeatured"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="!advanced.feed.showOnlyFeatured"
                             id="feed-exclude-featured"
                             :label="$t('settings.excludeFeaturedPosts')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-exclude-featured"
-                                    v-model="advanced.feed.excludeFeatured" />
-                            </label>
+                            <switcher
+                                id="feed-exclude-featured"
+                                v-model="advanced.feed.excludeFeatured"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-number-of-posts"
                             :label="$t('settings.numberOfPostsInFeed')">
-                            <label slot="field">
-                                <text-input
-                                    id="feed-number-of-posts"
-                                    type="number"
-                                    min="0"
-                                    max="10000000"
-                                    step="1"
-                                    v-model="advanced.feed.numberOfPosts" />
-                            </label>
+                            <text-input
+                                id="feed-number-of-posts"
+                                type="number"
+                                min="0"
+                                max="10000000"
+                                step="1"
+                                v-model="advanced.feed.numberOfPosts"
+                                slot="field" />
                         </field>
 
                         <field
                             v-if="advanced.feed.enableRss || advanced.feed.enableJson"
                             id="feed-show-featured-image"
                             :label="$t('settings.showFeaturedImage')">
-                            <label slot="field">
-                                <switcher
-                                    id="feed-show-featured-image"
-                                    v-model="advanced.feed.showFeaturedImage" />
-                            </label>
+                            <switcher
+                                id="feed-show-featured-image"
+                                v-model="advanced.feed.showFeaturedImage"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1523,11 +1845,10 @@
                          <field
                             id="related-posts-use-all-posts"
                             :label="$t('settings.relatedPostsOptions')">
-                            <label slot="field">
-                                <switcher
-                                    id="related-posts-use-all-posts"
-                                    v-model="advanced.relatedPostsIncludeAllPosts" />
-                            </label>
+                            <switcher
+                                id="related-posts-use-all-posts"
+                                v-model="advanced.relatedPostsIncludeAllPosts"
+                                slot="field" />
 
                             <small
                                 slot="note"
@@ -1563,15 +1884,14 @@
                         <field
                             id="codemirror-indent-size"
                             :label="$t('settings.indentSize')">
-                            <label slot="field">
-                                <text-input
-                                    id="codemirror-indent-size"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    step="1"
-                                    v-model="advanced.editors.codemirrorTabSize" />
-                            </label>
+                            <text-input
+                                id="codemirror-indent-size"
+                                type="number"
+                                min="1"
+                                max="100"
+                                step="1"
+                                v-model="advanced.editors.codemirrorTabSize"
+                                slot="field" />
                         </field>
 
                         <field
@@ -1612,12 +1932,14 @@
 <script>
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
+import EmbedConsentsGroups from './basic-elements/EmbedConsentsGroups';
 import GdprGroups from './basic-elements/GdprGroups';
 import ThemesDropdown from './basic-elements/ThemesDropdown';
 
 export default {
     name: 'site-settings',
     components: {
+        'embed-consents-groups': EmbedConsentsGroups,
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
     },
@@ -1645,14 +1967,68 @@ export default {
         currentThemeHasSupportedFeaturesList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures;
         },
+        currentThemeSupportsEmbedConsents () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.embedConsents;
+        },
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
+        },
+        currentThemeSupportsTagPages () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === 'undefined'
+                )
+            ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createTagPages
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.tagPages === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createTagPages
+            );
+        },
+        currentThemeSupportsAuthorPages () {
+            return (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === 'undefined'
+                )
+            ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createAuthorPages
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createAuthorPages
+            );
         },
         currentThemeSupportsSearchPage () {
             return (
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage
             ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures && 
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.createSearchPage
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.searchPage === 'undefined'
+                ) &&
                 this.$store.state.currentSite.themeSettings.renderer &&
                 this.$store.state.currentSite.themeSettings.renderer.createSearchPage
             );
@@ -1662,8 +2038,17 @@ export default {
                 this.$store.state.currentSite.themeSettings.supportedFeatures &&
                 this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage
             ) || (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures && 
                 this.$store.state.currentSite.themeSettings.renderer &&
-                this.$store.state.currentSite.themeSettings.renderer.create404page
+                this.$store.state.currentSite.themeSettings.renderer.create404Page
+            ) || (
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                (
+                    this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage ||
+                    typeof this.$store.state.currentSite.themeSettings.supportedFeatures.errorPage === 'undefined'
+                ) &&
+                this.$store.state.currentSite.themeSettings.renderer &&
+                this.$store.state.currentSite.themeSettings.renderer.create404Page
             );
         },
         advancedTabs () {
@@ -1749,17 +2134,9 @@ export default {
         },
         twitterCardsTypes () {
             return {
-                'summary': this.$t('settings.twitteSummaryCard'),
-                'summary_large_image': this.$t('settings.twitteSummaryCardLargeImage')
+                'summary': this.$t('settings.twitterSummaryCard'),
+                'summary_large_image': this.$t('settings.twitterSummaryCardLargeImage')
             };
-        },
-        themeHasSupportForErrorPage () {
-            return this.$store.state.currentSite.themeSettings.renderer &&
-                   this.$store.state.currentSite.themeSettings.renderer.create404page;
-        },
-        themeHasSupportForSearchPage () {
-            return this.$store.state.currentSite.themeSettings.renderer &&
-                   this.$store.state.currentSite.themeSettings.renderer.createSearchPage;
         },
         sitemapLink () {
             let sitemapLink = false;
@@ -1925,6 +2302,7 @@ export default {
                 return true;
             });
             newSettings.advanced = Object.assign({}, this.advanced);
+            newSettings.advanced.gdpr.settingsVersion = 'v2';
             newSettings.theme = this.theme;
 
             // Merge new settings with existing settings
@@ -2267,5 +2645,8 @@ export default {
             margin-bottom: 1rem;
         }
     }
+}
+.msg-bm {
+   margin-bottom:3rem;
 }
 </style>

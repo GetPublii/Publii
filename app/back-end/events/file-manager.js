@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
-const isBinaryFile = require('isbinaryfile');
+const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
 /*
  * Events for the IPC communication regarding file manager
@@ -99,23 +99,14 @@ class FileManagerEvents {
      * @param sender
      */
     checkIfIsBinaryFile(output, iterator, sender) {
-        let self = this;
-
         if(!output.length || iterator >= output.length) {
             sender.send('app-file-manager-listed', output);
             return;
         }
 
-        isBinaryFile(output[iterator].fullPath, function(err, result) {
-            if(err) {
-                output[iterator].isBinary = false;
-            } else {
-                output[iterator].isBinary = result;
-            }
-
-            iterator++;
-            self.checkIfIsBinaryFile(output, iterator, sender);
-        });
+        output[iterator].isBinary = isBinaryFileSync(output[iterator].fullPath)
+        iterator++;
+        this.checkIfIsBinaryFile(output, iterator, sender);
     }
 
     /**

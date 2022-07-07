@@ -29,16 +29,16 @@
 
                 <p-button
                     v-if="pluginStandardOptionsVisible"
-                    @click.native="saveSettings"
+                    @click.native="save"
                     slot="buttons"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-header>
 
-            <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
-                <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
-            </template>
+            <supported-features-check
+                v-if="requiredFeatures"
+                :featuresToCheck="requiredFeatures" />
 
             <div
                 v-if="hasMessage"
@@ -51,6 +51,10 @@
                     {{ messageInOptions.text }}
                 </div>
             </div>
+
+            <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
+                <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
+            </template>
 
             <template v-if="pluginHasConfig && pluginStandardOptionsVisible">
                 <fields-group
@@ -240,6 +244,7 @@
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :disabled="field.disabled"
                                     :cols="field.cols"></text-area>
 
                                 <text-area
@@ -333,6 +338,7 @@
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
+                                    :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
 
                                 <small
@@ -348,7 +354,7 @@
 
                 <p-footer>
                     <p-button
-                        @click.native="saveSettings"
+                        @click.native="save"
                         slot="buttons"
                         :disabled="buttonsLocked">
                         {{ $t('settings.saveSettings') }}
@@ -366,6 +372,7 @@
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
+import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 import Vue from 'vue';
 
 export default {
@@ -373,6 +380,9 @@ export default {
     mixins: [
         BackToTools
     ],
+    components: {
+        'supported-features-check': SupportedFeaturesCheck
+    },
     computed: {
         settingsGroups () {
             let groups = [];
@@ -399,6 +409,7 @@ export default {
             hasMessage: false,
             hasPluginCustomOptions: false,
             messageInOptions: null,
+            requiredFeatures: null,
             pluginStandardOptionsVisible: true,
             pluginSettingsDisplay: 'fieldsets',
             pluginSettingsTabsLabel: ''
@@ -430,6 +441,7 @@ export default {
                 this.hasPluginCustomOptions = !!result.pluginData.usePluginSettingsView;
                 this.hasMessage = !!result.pluginData.messageInOptions;
                 this.messageInOptions = result.pluginData.messageInOptions;
+                this.requiredFeatures = result.pluginData.requiredFeatures || [];
                 this.pluginSettingsDisplay = result.pluginData.settingsDisplay || 'fieldsets';
                 this.pluginSettingsTabsLabel = result.pluginData.tabsTitle || this.$t('toolsPlugin.tabsLabel');
 
@@ -511,9 +523,46 @@ export default {
         },
         getDropdownOptions (inputOptions) {
             let options = {};
+            let hasGroups = !!inputOptions.filter(option => typeof option.group !== 'undefined').length;
 
-            for (let i = 0; i < inputOptions.length; i++) {
-                options[inputOptions[i].value] = inputOptions[i].label;
+            if (hasGroups) {
+                options.hasGroups = true;
+                let groups = {
+                    ungrouped: {}
+                };
+
+                for (let i = 0; i < inputOptions.length; i++) {
+                    let groupName = inputOptions[i].group;
+
+                    if (groupName && !groups[groupName]) {
+                        groups[groupName] = {};
+                    }
+                }
+
+                for (let i = 0; i < inputOptions.length; i++) {
+                    let inputGroupName = inputOptions[i].group;
+
+                    if (inputGroupName) {
+                        groups[inputGroupName][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
+                    } else {
+                        groups['ungrouped'][inputOptions[i].value] = {
+                            label: inputOptions[i].label,
+                            disabled: inputOptions[i].disabled
+                        };
+                    }
+                }
+
+                options.groups = groups;
+            } else {
+                for (let i = 0; i < inputOptions.length; i++) {
+                    options[inputOptions[i].value] = {
+                        label: inputOptions[i].label,
+                        disabled: inputOptions[i].disabled
+                    };
+                }
             }
 
             return options;
@@ -551,6 +600,13 @@ export default {
                     Vue.set(this.settingsValues, setting[0], setting[1]);
                 }
             }
+        },
+        save () {
+            this.$bus.$emit('plugin-settings-before-save');
+
+            setTimeout(() => {
+                this.saveSettings();
+            }, 500);
         },
         saveSettings () {
             mainProcessAPI.send('app-site-save-plugin-config', {
@@ -609,5 +665,9 @@ export default {
 .msg {
     background: var(--bg-secondary);
     margin-bottom: 3rem;
+
+    & + .msg {
+        margin-top: -2rem;
+    }
 }
 </style>

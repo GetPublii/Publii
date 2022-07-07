@@ -13,7 +13,7 @@
             </h1>
 
             <p class="popup-info">
-                {{ $t('tools.thumbnails.processingRegenerateThumbanilsInfo') }}
+                {{ $t('tools.thumbnails.processingRegenerateThumbnailsInfo') }}
             </p>
 
             <progress-bar

@@ -238,6 +238,7 @@ export default {
     },
     mounted () {
         this.$bus.$on('show-menu-item-editor', params => {
+            console.log(params);
             this.reset();
             this.menuItemID = params.menuItemID || '';
             this.parentID = params.parentID || '';
@@ -425,8 +426,8 @@ export default {
             let type = this.type;
 
             switch (type) {
-                case 'post':      return this.postPage;
-                case 'tag':       return this.tagPage;
+                case 'post':      return parseInt(this.postPage, 10);
+                case 'tag':       return parseInt(this.tagPage, 10);
                 case 'tags':      return 'empty';
                 case 'author':    return this.authorPage;
                 case 'frontpage': return 'empty';
@@ -438,9 +439,9 @@ export default {
         setLinkValue (value) {
             this.internalLink = this.type === 'internal' ? value : '';
             this.externalLink = this.type === 'external' ? value : '';
-            this.tagPage = this.type === 'tag' ? value : '';
+            this.tagPage = this.type === 'tag' ? parseInt(value, 10) : '';
             this.authorPage = this.type === 'author' ? value : '';
-            this.postPage = this.type === 'post' ? value : '';
+            this.postPage = this.type === 'post' ? parseInt(value, 10) : '';
         }
     },
     beforeDestroy () {

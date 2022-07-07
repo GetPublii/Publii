@@ -73,6 +73,7 @@ export default {
                 if (data.status !== false) {
                     this.loadSite(siteName, data);
                     this.siteIsLoaded = true;
+                    this.checkGdprConfig();
                     this.$bus.$emit('site-loaded', true);
                 } else {
                     this.$bus.$emit('message-display', {
@@ -112,6 +113,31 @@ export default {
         },
         whenSiteLoaded () {
             this.currentSite = this.$store.state.currentSite.config.name;
+        },
+        checkGdprConfig () {
+            if (
+                this.$store.state.currentSite.config.advanced &&
+                this.$store.state.currentSite.config.advanced.gdpr &&
+                this.$store.state.currentSite.config.advanced.gdpr.enabled &&
+                !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion
+            ) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: this.$t('ui.gdprBreakingChangesConfirmMsg'),
+                    okClick: this.goToGdprSettings,
+                    cancelClick: this.checkWhatsNew,
+                    okLabel: this.$t('ui.goToSettings'),
+                    cancelLabel: this.$t('ui.whatsNew'),
+                    cancelNotClosePopup: true
+                });
+            }
+        },
+        goToGdprSettings () {
+            let siteName = this.$route.params.name;
+            this.$router.push('/site/' + siteName + '/settings/');
+        },
+        checkWhatsNew () {
+            mainProcessAPI.shellOpenExternal('https://getpublii.com/blog/release-040.html#cookie-banner');
         }
     },
     beforeDestroy () {

@@ -300,11 +300,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -320,11 +315,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -351,11 +341,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -382,11 +367,6 @@ class Renderer {
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
-
-        process.send({
-            type: 'app-rendering-preview',
-            result: true
-        });
     }
 
     /**
@@ -481,7 +461,7 @@ class Renderer {
         // Include the helpers from the helpers.js file
         let themeHelpers;
         
-        if (this.themeConfig.renderer.includeHandlebarsInHelpers) {
+        if (RendererHelpers.getRendererOptionValue('includeHandlebarsInHelpers', this.themeConfig)) {
             themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath, Handlebars);
         } else {
             themeHelpers = UtilsHelper.requireWithNoCache(helpersFilePath);
@@ -712,6 +692,10 @@ class Renderer {
                 return;
             }
 
+            if (this.plugins.hasModifiers('htmlOutput')) {
+                output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            }
+
             this.templateHelper.saveOutputFile('index.html', output);
         } else {
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
@@ -761,6 +745,10 @@ class Renderer {
                     currentPage
                 }, false, false, context);
                 let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+                if (this.plugins.hasModifiers('htmlOutput')) {
+                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                }
 
                 if (offset === 0) {
                     this.templateHelper.saveOutputFile('index.html', output);
@@ -868,6 +856,10 @@ class Renderer {
             this.globalContext = this.createGlobalContext('post', [], false, postSlugs[i], postViewConfig, context);
             let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
+            if (this.plugins.hasModifiers('htmlOutput')) {
+                output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            }
+
             this.templateHelper.saveOutputPostFile(postSlugs[i], output);
 
             if(ampMode) {
@@ -935,6 +927,11 @@ class Renderer {
         let postConfig = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
         this.globalContext = this.createGlobalContext('post', [], false, postSlug, postConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+        }
+
         this.templateHelper.saveOutputFile(postSlug + '.html', output);
     }
 
@@ -978,7 +975,7 @@ class Renderer {
             this.siteConfig.advanced.urls.tagsPrefix === '' ||
             !this.themeConfig.supportedFeatures ||
             !this.themeConfig.supportedFeatures.tagsList ||
-            !this.themeConfig.renderer.createTagsList
+            !RendererHelpers.getRendererOptionValue('createTagsList', this.themeConfig)
         ) {
             return false;
         }
@@ -999,6 +996,11 @@ class Renderer {
         this.menuContext = ['tags'];
         this.globalContext = this.createGlobalContext('tags', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+        }
+
         this.templateHelper.saveOutputTagsListFile(output);
         console.timeEnd(ampMode ? 'TAGS-LIST-AMP' : 'TAGS-LIST');
     }
@@ -1007,6 +1009,15 @@ class Renderer {
      * Generate tag pages
      */
     generateTags(tagID = false, ampMode = false) {
+        if (
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.tagPages === false
+            ) || RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig) === false
+        ) {
+            return false;
+        }
+        
         console.time(ampMode ? 'TAGS-AMP' : 'TAGS');
         // Get tags
         let inputFile = ampMode ? 'amp-tag.hbs' : 'tag.hbs';
@@ -1123,6 +1134,11 @@ class Renderer {
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
                 this.globalContext = this.createGlobalContext('tag', [], false, tagSlug, false, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+                if (this.plugins.hasModifiers('htmlOutput')) {
+                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                }
+
                 this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
@@ -1184,6 +1200,10 @@ class Renderer {
                     }, tagSlug, false, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
+                    if (this.plugins.hasModifiers('htmlOutput')) {
+                        output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                    }
+
                     if (offset === 0) {
                         this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
                     } else if (tagID === false) {
@@ -1206,6 +1226,15 @@ class Renderer {
      * Generate author pages
      */
     generateAuthors(authorID = false, ampMode = false) {
+        if (
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.authorPages === false
+            ) || RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig) === false
+        ) {
+            return false;
+        }
+
         console.time(ampMode ? 'AUTHORS-AMP' : 'AUTHORS');
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
@@ -1332,6 +1361,11 @@ class Renderer {
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
                 this.globalContext = this.createGlobalContext('author', [], false, authorUsername, false, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+                if (this.plugins.hasModifiers('htmlOutput')) {
+                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                }
+
                 this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
             } else {
                 let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
@@ -1389,6 +1423,10 @@ class Renderer {
                     }, authorUsername, false, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
+                    if (this.plugins.hasModifiers('htmlOutput')) {
+                        output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                    }
+
                     if (offset === 0) {
                         this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
                     } else if (authorID === false) {
@@ -1405,6 +1443,15 @@ class Renderer {
      * Generate the 404 error page (if supported in the theme)
      */
     generate404s() {
+        if (
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.errorPage === false
+            ) || !RendererHelpers.getRendererOptionValue('create404Page', this.themeConfig) === false
+        ) {
+            return false;
+        }
+
         console.time("404");
         // Load template
         let inputFile = '404.hbs';
@@ -1421,6 +1468,11 @@ class Renderer {
         this.menuContext = ['404'];
         this.globalContext = this.createGlobalContext('404', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+        }
+
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.errorPage, output);
         console.timeEnd("404");
     }
@@ -1429,6 +1481,15 @@ class Renderer {
      * Generate the 404 error page (if supported in the theme)
      */
     generateSearch() {
+        if (
+            (
+                this.themeConfig.supportedFeatures && 
+                this.themeConfig.supportedFeatures.searchPage === false
+            ) || RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig) === false
+        ) {
+            return false;
+        }
+
         console.time("SEARCH");
         // Load template
         let inputFile = 'search.hbs';
@@ -1444,6 +1505,11 @@ class Renderer {
         this.menuContext = ['search'];
         this.globalContext = this.createGlobalContext('search', [], false, false, false, context);
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+        }
+
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.searchPage, output);
         console.timeEnd("SEARCH");
     }
@@ -1618,6 +1684,15 @@ class Renderer {
 
         let context = contextGenerator.getContext(numberOfPosts);
         let output = this.renderTemplate(compiledTemplate, context, false, 'feed-' + format + '.hbs');
+
+        if (format === 'xml' && this.plugins.hasModifiers('feedXmlOutput')) {
+            output = this.plugins.runModifiers('feedXmlOutput', this.renderer, output, context); 
+        }
+
+        if (format === 'json' && this.plugins.hasModifiers('feedJsonOutput')) {
+            output = this.plugins.runModifiers('feedXmlOutput', this.renderer, output, context); 
+        }
+
         this.templateHelper.saveOutputFile('feed.' + format, output);
     }
 

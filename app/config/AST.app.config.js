@@ -11,8 +11,10 @@ const AstAppConfig = {
     timeFormat: 12,
     closeEditorOnSave: true,
     wideScrollbars: false,
+    showModificationDate: true,
     showModificationDateAsColumn: false,
     showPostSlugs: false,
+    showPostTags: true,
     postsOrdering: 'id DESC',
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
@@ -22,7 +24,6 @@ const AstAppConfig = {
     enableAdvancedPreview: false,
     editorFontSize: 18,
     editorFontFamily: 'sans-serif',
-    experimentalFeatureAppUiLanguages: false,
     experimentalFeatureAppAutoBeautifySourceCode: false
 };
 

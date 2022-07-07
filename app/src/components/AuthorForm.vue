@@ -16,6 +16,14 @@
                 &times;
             </span>
 
+            <div
+                v-if="!currentThemeHasSupportForAuthorImages"
+                slot="note"
+                class="msg msg-small msg-icon msg-alert note">
+                <icon name="warning" size="m" />
+                <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
+            </div>
+
             <div class="options-sidebar-item">
                 <div
                     :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
@@ -100,18 +108,22 @@
                                 imageType="authorImages"
                                 v-model="authorData.avatar" />
                         </label>
-
+                        <div                               
+                            slot="note"
+                            class="msg msg-small msg-icon msg-info">
+                            <icon name="info" size="m" />
+                            <p>{{ $t('author.whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer') }}</p>
+                        </div>
                         <label class="use-gravatar">
                             <switcher
                                 slot="field"
                                 id="use-gravatar"
                                 @click.native="toggleGravatar"
                                 v-model="authorData.useGravatar" />
-                            <small
+                            <span
                                 v-pure-html="$t('author.useGravatarMessage')">
-                            </small>
+                            </span>
                         </label>
-
                         <div>
                             <label class="no-margin">{{ $t('ui.featuredImage') }}:</label>
                             <div
@@ -224,7 +236,7 @@
                                 :items="metaRobotsOptions">
                             </dropdown>
                             <div v-else>
-                                <small>{{ $t('ui.ifCanonicalURLIsSetMmetaRobotsTagiInored') }}</small>
+                                <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
                             </div>
                         </label>
 
@@ -308,11 +320,6 @@
                 </p-button>
             </div>
 
-            <small
-                v-if="!currentThemeHasSupportForAuthorPages"
-                class="note">
-                {{ $t('author.saveAndPreviewNotAvailableDueToNoSupportForAuthorPagesInTheme') }}
-            </small>
         </div>
     </div>
 </template>
@@ -358,6 +365,10 @@ export default {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorImages;
         },
         currentThemeHasSupportForAuthorPages () {
+            if (this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.authorPages === false) {
+                return false;
+            }
+
             return this.$store.state.currentSite.themeSettings.renderer.createAuthorPages;
         },
         metaFieldAttrs: function() {
@@ -671,9 +682,8 @@ export default {
 }
 
 .note {
-    display: block;
-    font-style: italic;
-    line-height: 1.4;
-    margin: 2rem 0;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
 }
 </style>

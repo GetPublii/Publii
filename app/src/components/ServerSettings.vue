@@ -38,6 +38,13 @@
 
             <div
                 v-if="deploymentMethodSelected === ''"
+                class="msg msg-icon msg-info msg-onbg">
+                <icon name="info" customWidth="28" customHeight="28" />
+                <p v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></p>
+            </div>
+
+            <div
+                v-if="deploymentMethodSelected === ''"
                 class="server-settings-grid">
 
                  <div
@@ -139,7 +146,7 @@
             </div>
 
             <fields-group v-if="deploymentMethodSelected !== ''" :title="$t('sync.settings')">
-                <div class="msg msg-icon msg-info" v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                <div class="msg msg-icon msg-info">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
                         <span v-if="deploymentMethodSelected === 'ftp'">
@@ -170,6 +177,12 @@
                             v-if="deploymentMethodSelected === 'google-cloud'"
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
                         </span>
+
+                        <template v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
+                            <br>
+                        </template>
+
+                        <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
                     </p>
                 </div>
 
@@ -395,7 +408,7 @@
                         slot="note"
                         v-if="errors.indexOf('key') > -1"
                         class="note">
-                        {{ $t('sync.sftpkeyNote') }}
+                        {{ $t('sync.sftpKeyNote') }}
                     </small>
                 </field>
 
@@ -1231,7 +1244,7 @@ export default {
                     okClick: (password) => {
                         if(!password) {
                             this.$bus.$emit('alert-display', {
-                                message: this.$t('sync.testConnectionNoPassowrdMsg')
+                                message: this.$t('sync.testConnectionNoPasswordMsg')
                             });
                         } else {
                             this.test(password);

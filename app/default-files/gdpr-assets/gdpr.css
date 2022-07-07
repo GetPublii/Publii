@@ -1,0 +1,628 @@
+:root {
+  --pcb-width: 42em;
+  --pcb-popup-height: 36em;
+  --pcb-font-base-size: 17px;
+  --pcb-font-weight-normal: 400;
+  --pcb-font-weight-bold: 700;
+  --pcb-border-radius: 4px;
+  --pcb-badge-border-radius: 100%;
+  --pcb-link-transition: all 0.12s linear;
+  --pcb-bg: #ffffff;
+  --pcb-overlay: rgba(12, 13, 16, .8);
+  --pcb-text-color: #343435;
+  --pcb-headings-color: #283149;
+  --pcb-border-color: #e1e1e1;
+  --pcb-bg-light: #f6f6f9;
+  --pcb-btn-primary-bg: #e7e8ea;
+  --pcb-btn-primary-bg-hover: #cbcdd2;
+  --pcb-btn-primary-text: #283149;
+  --pcb-btn-primary-text-hover: #283149;
+  --pcb-btn-secondary-bg: #1089ff;
+  --pcb-btn-secondary-bg-hover: #0079f2;
+  --pcb-btn-secondary-text: #ffffff;
+  --pcb-btn-secondary-text-hover: #ffffff;
+  --pcb-btn-link: #283149;
+  --pcb-btn-link-hover: #0079f2;
+  --pcb-badge-bg: #1089ff;
+  --pcb-badge-bg-hover: #0079f2;
+  --pcb-badge-color: #fff;
+  --pcb-badge-color-hover: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pcb-bg: #191a1f;
+    --pcb-overlay: rgba(10, 10, 12, .8);
+    --pcb-text-color: #a5a7b7;
+    --pcb-headings-color: #d9d9e0;
+    --pcb-border-color: #393a47;
+    --pcb-bg-light: #f6f6f9;
+    --pcb-btn-primary-bg: #32343e;
+    --pcb-btn-primary-bg-hover: #3c3f4b;
+    --pcb-btn-primary-text: #d9d9e0;
+    --pcb-btn-primary-text-hover: #ffffff;
+    --pcb-btn-secondary-bg: #1089ff;
+    --pcb-btn-secondary-bg-hover: #0079f2;
+    --pcb-btn-secondary-text: #ffffff;
+    --pcb-btn-secondary-text-hover: #ffffff;
+    --pcb-btn-link: #d9d9e0;
+    --pcb-btn-link-hover: #42a0ff;
+    --pcb-badge-bg: #1089ff;
+    --pcb-badge-bg-hover: #0079f2;
+    --pcb-badge-color: #fff;
+    --pcb-badge-color-hover: #fff;
+  }
+}
+.pcb {
+  color: var(--pcb-text-color);
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  z-index: 999999;
+}
+.pcb *, .pcb::after, .pcb::before {
+  -webkit-animation: none;
+          animation: none;
+  background: 0;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: inherit;
+  float: none;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: inherit;
+  font-family: inherit;
+  line-height: 1;
+  font-size: 1em;
+  margin: 0;
+  opacity: unset;
+  padding: 0;
+  position: unset;
+  text-transform: none;
+  letter-spacing: unset;
+  visibility: unset;
+  -webkit-transform: none;
+          transform: none;
+  -webkit-transition: none;
+  transition: none;
+  text-decoration: none;
+  text-align: left;
+}
+.pcb__banner {
+  background: var(--pcb-bg);
+  -webkit-box-shadow: 0 0.625em 1.875em rgba(2, 2, 3, 0.28);
+          box-shadow: 0 0.625em 1.875em rgba(2, 2, 3, 0.28);
+  border-radius: calc(1.5 * var(--pcb-border-radius));
+  bottom: 1.25em;
+  font-size: var(--pcb-font-base-size);
+  left: 1em;
+  max-width: var(--pcb-width);
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 1.5em 2em;
+  opacity: 0;
+  position: fixed;
+  right: 1em;
+  text-align: center;
+  -webkit-transform: translateY(1.5em);
+          transform: translateY(1.5em);
+  -webkit-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+  visibility: hidden;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  z-index: 1;
+}
+.pcb__banner--left {
+  margin-left: 0;
+}
+.pcb__banner--right {
+  margin-left: auto;
+  margin-right: 0;
+}
+.pcb__banner--bar {
+  max-width: 100%;
+  border-radius: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5em 2em;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__banner--bar {
+    font-size: 17px;
+  }
+}
+.pcb__banner.is-visible {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  visibility: visible;
+}
+.pcb__inner {
+  max-width: var(--pcb-width);
+  margin: 0 auto;
+}
+.pcb__title {
+  color: var(--pcb-headings-color);
+  font-size: 1.05em;
+  font-weight: var(--pcb-font-weight-bold);
+  margin-bottom: 0.75em;
+}
+.pcb__txt {
+  font-size: 0.85em;
+  font-weight: var(--pcb-font-weight-normal);
+  line-height: 1.5;
+}
+.pcb__txt a {
+  color: var(--pcb-btn-link);
+  font-weight: var(--pcb-font-weight-normal);
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  -webkit-text-decoration-skip: ink;
+          text-decoration-skip-ink: auto;
+}
+.pcb__txt a:active, .pcb__txt a:hover, .pcb__txt a:focus {
+  color: var(--pcb-btn-link-hover);
+}
+.pcb__buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-top: 0.5em;
+}
+@media all and (min-width: 30em) and (max-width: 37.4375em) {
+  .pcb__buttons {
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+}
+@media all and (min-width: 37.5em) {
+  .pcb__buttons {
+    margin-top: 1.25em;
+  }
+}
+.pcb__btn {
+  background: var(--pcb-btn-primary-bg);
+  border: none;
+  border-radius: var(--pcb-border-radius);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  cursor: pointer;
+  display: inline-block;
+  color: var(--pcb-btn-primary-text);
+  font-weight: var(--pcb-font-weight-bold);
+  font-size: 0.825em;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 100%;
+          flex: 1 1 100%;
+  height: initial;
+  padding: 1em 1.5em;
+  text-align: center;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  -webkit-transform: none;
+          transform: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__btn {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 10 auto;
+            flex: 0 10 auto;
+  }
+}
+.pcb__btn:active, .pcb__btn:hover, .pcb__btn:focus {
+  background: var(--pcb-btn-primary-bg-hover);
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: var(--pcb-btn-primary-text-hover);
+  -webkit-transform: none;
+          transform: none;
+}
+.pcb__btn--solid {
+  background: var(--pcb-btn-secondary-bg);
+  color: var(--pcb-btn-secondary-text);
+}
+.pcb__btn--solid:active, .pcb__btn--solid:hover, .pcb__btn--solid:focus {
+  background: var(--pcb-btn-secondary-bg-hover);
+  color: var(--pcb-btn-secondary-text-hover);
+}
+.pcb__btn--link {
+  background: none;
+  color: var(--pcb-btn-link);
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  -webkit-text-decoration-skip: ink;
+          text-decoration-skip-ink: auto;
+}
+@media all and (max-width: 37.4375em) {
+  .pcb__btn--link {
+    margin-bottom: 0.25em;
+  }
+}
+.pcb__btn--link:active, .pcb__btn--link:hover, .pcb__btn--link:focus {
+  background: none;
+  color: var(--pcb-btn-link-hover);
+}
+.pcb__btn + .pcb__btn {
+  margin: 0.25em 0;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__btn + .pcb__btn {
+    margin: 0 0 0 0.5em;
+  }
+}
+.pcb__overlay {
+  background: var(--pcb-overlay);
+  bottom: 0;
+  display: none;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  z-index: 999999999;
+}
+.pcb__overlay.is-visible {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+.pcb__popup {
+  display: table;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  visibility: hidden;
+  z-index: 9999999999;
+  -webkit-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__popup {
+    left: 1em;
+    right: 1em;
+    -webkit-transform: translateY(1.5em);
+            transform: translateY(1.5em);
+    width: calc(100% - 2em);
+  }
+}
+.pcb__popup.is-visible {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+}
+.pcb__popup__wrapper {
+  background: var(--pcb-bg);
+  font-size: var(--pcb-font-base-size);
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 1.5em 2em;
+  pointer-events: auto;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+@media all and (min-width: 37.5em) {
+  .pcb__popup__wrapper {
+    border-radius: calc(1.5 * var(--pcb-border-radius));
+    -webkit-box-shadow: 0 0.625em 1.875em rgba(2, 2, 3, 0.28);
+            box-shadow: 0 0.625em 1.875em rgba(2, 2, 3, 0.28);
+    max-height: var(--pcb-popup-height);
+    max-width: var(--pcb-width);
+  }
+}
+.pcb__popup__inner {
+  padding-top: 2.5em;
+  padding-bottom: 10em;
+  position: relative;
+  height: 100%;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__popup__inner {
+    padding-bottom: 2.5em;
+  }
+}
+.pcb__popup__heading {
+  border-bottom: 1px solid var(--pcb-border-color);
+  left: 0;
+  height: 2.5em;
+  padding-bottom: 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.pcb__popup__close {
+  background: none;
+  border: none;
+  border-radius: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  cursor: pointer;
+  height: 1.3em;
+  padding: 0.5em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1.3em;
+}
+@media all and (min-width: 37.5em) {
+  .pcb__popup__close {
+    display: none;
+    visibility: hidden;
+  }
+}
+.pcb__popup__close::before, .pcb__popup__close::after {
+  background-color: var(--pcb-btn-link);
+  content: " ";
+  display: block;
+  height: 1.3em;
+  left: 0.65em;
+  position: absolute;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  top: 0;
+  width: 1px;
+}
+.pcb__popup__close::after {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.pcb__popup__close:hover {
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  -webkit-transform: inherit;
+          transform: inherit;
+}
+.pcb__popup__close:hover::before, .pcb__popup__close:hover::after {
+  background-color: var(--pcb-btn-link-hover);
+}
+.pcb__popup__content {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: calc(100% + 1em);
+  margin-right: -1em;
+  padding-right: 1em;
+}
+.pcb__popup__txt {
+  margin-top: 2em;
+}
+.pcb__popup__buttons {
+  background-color: var(--pcb-bg);
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 1.25em 0 0;
+  position: absolute;
+  right: 0;
+}
+.pcb__popup__buttons::before {
+  content: "";
+  border-top: 1px solid var(--pcb-border-color);
+  height: 1px;
+  left: 0;
+  width: 100%;
+  position: absolute;
+  top: 0;
+}
+.pcb__popup__buttons .pcb__btn:nth-child(3) {
+  margin-left: auto;
+}
+.pcb__popup__switch {
+  height: 100%;
+  position: absolute;
+  right: 1em;
+  top: 0;
+}
+.pcb__popup__switch input[type=checkbox] {
+  color: unset;
+  display: inline-block;
+  float: none;
+  height: 0;
+  opacity: unset;
+  position: unset;
+  width: 0;
+  visibility: hidden;
+}
+.pcb__popup__switch input[type=checkbox] + label {
+  background: var(--pcb-btn-primary-bg-hover);
+  border-radius: 100px;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  display: block;
+  cursor: pointer;
+  height: 24px;
+  margin: unset;
+  padding: unset;
+  position: relative;
+  text-indent: -9999px;
+  width: 44px;
+}
+.pcb__popup__switch input[type=checkbox] + label::before {
+  display: none;
+}
+.pcb__popup__switch input[type=checkbox] + label::after {
+  content: "";
+  background: var(--pcb-bg);
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border-radius: 20px;
+  display: block;
+  left: 2px;
+  height: 20px;
+  -webkit-mask: none;
+          mask: none;
+  position: absolute;
+  width: 20px;
+  top: 2px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+.pcb__popup__switch input:checked + label {
+  background: var(--pcb-btn-secondary-bg);
+}
+.pcb__popup__switch input:checked + label:after {
+  left: calc(100% - 2px);
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%);
+}
+.pcb__popup__switch.is-checked label {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.pcb__groups {
+  list-style: none;
+  margin: 2em 0 1em;
+}
+.pcb__group {
+  border: 1px solid var(--pcb-border-color);
+  border-radius: var(--pcb-border-radius);
+  margin-bottom: 0.5em;
+  padding: 0 1em;
+  position: relative;
+}
+.pcb__group__title {
+  font-weight: var(--pcb-font-weight-bold);
+  font-size: 0.941em;
+  color: var(--pcb-headings-color);
+  cursor: pointer;
+  display: block;
+  padding: 1.25em 3.5em 1.25em 1.25em;
+  position: relative;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+}
+.pcb__group__title:hover {
+  color: var(--pcb-btn-link-hover);
+}
+.pcb__group__title:focus {
+  outline: none;
+}
+.pcb__group__title::marker, .pcb__group__title::-webkit-details-marker {
+  display: none;
+}
+.pcb__group__title::before {
+  content: "";
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  border-color: inherit;
+  left: 0;
+  height: 5px;
+  display: block;
+  position: absolute;
+  -webkit-transform: translate(0, -50%) rotate(-45deg);
+          transform: translate(0, -50%) rotate(-45deg);
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  top: 50%;
+  width: 5px;
+}
+.pcb__group__title.no-desc {
+  padding-left: 0;
+  pointer-events: none;
+}
+.pcb__group__title.no-desc::before {
+  content: none;
+}
+.pcb__group__txt {
+  font-size: 0.85em;
+  font-weight: var(--pcb-font-weight-normal);
+  line-height: 1.5;
+  margin-top: -0.5em;
+  padding: 0.5em 0 1.25em 1.25em;
+}
+.pcb__group__txt:empty {
+  display: none;
+}
+.pcb__group > details[open] .pcb__group__title::before {
+  -webkit-transform: translate(0, -50%) rotate(45deg);
+          transform: translate(0, -50%) rotate(45deg);
+}
+.pcb__badge {
+  background: var(--pcb-badge-bg);
+  border: none;
+  border-radius: var(--pcb-badge-border-radius);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  bottom: 1.25em;
+  color: var(--pcb-badge-color);
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: initial;
+  height: initial;
+  left: 1.25em;
+  padding: 0.55em;
+  position: fixed;
+  -webkit-transition: var(--pcb-link-transition);
+  transition: var(--pcb-link-transition);
+  -webkit-transform: none;
+          transform: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  visibility: hidden;
+}
+.pcb__badge:active, .pcb__badge:hover, .pcb__badge:focus {
+  background: var(--pcb-badge-bg-hover);
+  border: inherit;
+  -webkit-box-shadow: inherit;
+          box-shadow: inherit;
+  color: var(--pcb-badge-color-hover);
+  -webkit-transform: inherit;
+          transform: inherit;
+}
+.pcb__badge.is-visible {
+  visibility: visible;
+}

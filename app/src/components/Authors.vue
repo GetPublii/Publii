@@ -271,6 +271,7 @@ export default {
         bulkDelete: function() {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('author.removeAuthorsMessage'),
+                isDanger: true,
                 okClick: this.deleteSelected
             });
         },
