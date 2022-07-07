@@ -1910,10 +1910,12 @@ textarea {
   overflow: hidden;
 }
 .post__video, .post__iframe {
-  position: relative;
   display: block;
+  margin-top: calc(1.7rem + 0.5vw);
+  margin-bottom: calc(1.7rem + 0.5vw);
   overflow: hidden;
   padding: 0;
+  position: relative;
   width: 100%;
 }
 .post__video::before, .post__iframe::before {
