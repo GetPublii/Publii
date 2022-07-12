@@ -770,13 +770,13 @@ export default {
 
             dt {
                 color: var(--label-color);
-                font-size: 1.5rem;
+                font-size: 1.4rem;
                 margin: 0 0 .5rem 0;
             }
 
             dd {
                 color: var(--gray-4);
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 margin: 0;
 
                 a {

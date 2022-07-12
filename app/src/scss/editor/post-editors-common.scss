@@ -39,6 +39,7 @@
     }
 }
 
+
 /*
  * Windows & linux adjustments
  */
@@ -95,3 +96,65 @@ body[data-os="linux"] {
 }
 
 
+/*
+ * Responsive improvements
+ */
+
+@media (min-width: 1200px) {
+    .post-editor-form {
+        &.writers-panel-open {
+            margin-left: $writers-panel-width;
+            width: calc(100% - $writers-panel-width);
+        }
+        &.writers-panel-open.sidebar-open {
+            width: 100%;
+        }
+    }
+}
+
+@media (min-width: 1380px) {
+    .post-editor-form {
+        &.sidebar-open {
+            width: calc(100% - $options-sidebar-width);
+            
+            .editor .bulk-operations-bar {
+                width: calc(100% - $options-sidebar-width);
+            }
+        }
+    }
+}
+
+@media (min-width: 1500px) {
+    .post-editor-form {
+        &.writers-panel-open.sidebar-open {
+            margin-left: $writers-panel-width;
+            width: calc(100% - $writers-panel-width - $options-sidebar-width);
+        }
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+ @media (min-width: 1380px) and (max-width: 1500px) {
+    .post-editor-form {
+        &.sidebar-open {
+            .wrapper.contains-wide-image {
+                max-width: var(--editor-width)!important;
+            }
+            .contains-full-image {
+                width: calc(var(--editor-width) )!important;
+            }
+        }
+    }
+}
+
+@media (min-width: 1501px) and (max-width: 1600px) {
+    .post-editor-form {
+        &.sidebar-open {
+            .contains-full-image {
+                width: calc(var(--editor-width) + 168px) !important
+            }
+        }
+    }
+}

@@ -335,7 +335,7 @@ export default {
 .publii-block-gallery {
   display: flex;
   flex-wrap: wrap;
-  margin: -1%;
+  margin: -1rem;
   outline: none;
   position: relative;
 
@@ -349,7 +349,7 @@ export default {
 
   &-item {
     cursor: move;
-    padding: 1%;
+    padding: 1rem;
     position: relative;
     width: calc(100% / 3);
 

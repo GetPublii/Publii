@@ -656,7 +656,6 @@ export default {
 
 .options-sidebar {
     .use-gravatar {
-        font-size: $app-font-base;
         font-weight: 400;
         margin-bottom: 2rem;
     }

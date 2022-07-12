@@ -471,8 +471,8 @@ select[multiple] {
         }
 
         &--wide {
-            margin-left: baseline(-22);
-            margin-right: baseline(-22);
+            margin-left: -10%;
+            margin-right: -10%;
 
             & > img {
                 width: 100%;
@@ -557,13 +557,12 @@ img {
         max-width: calc(100vw - 3.2rem);
     }
 
-    &.post__image--wide {
-        margin-left: baseline(-22);
-        margin-right: baseline(-22);
-        max-width: calc(100% + #{baseline(44)});
-        width: calc(100% + #{baseline(44)})
+    &.post__image--wide {    
+        margin-left: -10%;
+        margin-right: -10%;
+        max-width: 100vw;
+        width: calc(100% + 20%);
     }
-
 }
 
 .msg {
@@ -611,6 +610,7 @@ img {
     cursor: pointer !important;
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
     position: relative;
     -webkit-user-select: none;
     user-select: none;
@@ -665,8 +665,8 @@ img {
     }
 
     &__item {
+        flex-grow: 1;
         margin: 0;
-        padding: 1%;
         pointer-events: none;
 
         & a {
@@ -684,47 +684,36 @@ img {
         }
     }
 
-    &:after {
-        content: "";
-    }
-
     &[data-columns="1"] .gallery__item {
         width: 100%;
     }
 
-    &[data-columns="2"]:after,
     &[data-columns="2"] .gallery__item {
-        width: 50%;
+        width: calc(100% / 2 - 1rem);
     }
 
-    &[data-columns="3"]:after,
     &[data-columns="3"] .gallery__item {
-        width: 33.333333%;
+        width: calc(100% / 3 - 1rem);
     }
 
-    &[data-columns="4"]:after,
     &[data-columns="4"] .gallery__item {
-        width: 25%;
+        width: calc(100% / 4 - 1rem);
     }
 
-    &[data-columns="5"]:after,
     &[data-columns="5"] .gallery__item {
-        width: 20%;
+        width: calc(100% / 5 - 1rem);
     }
 
-    &[data-columns="6"]:after,
     &[data-columns="6"] .gallery__item {
-        width: 16.666666%;
+        width: calc(100% / 6 - 1rem);
     }
 
-    &[data-columns="7"]:after,
     &[data-columns="7"] .gallery__item {
-        width: 14.285714%;
+        width: calc(100% / 7 - 1rem);
     }
 
-    &[data-columns="8"]:after,
     &[data-columns="8"] .gallery__item {
-        width: 12.5%;
+        width: calc(100% / 8 - 1rem);
     }
 
     &-wrapper--full {
@@ -739,10 +728,9 @@ img {
     }
 
     &-wrapper--wide {
-        margin-left: baseline(-22);
-        margin-right: baseline(-22);
-        max-width: calc(100% + #{baseline(44)});
-        width: calc(100% + #{baseline(44)})
+        margin-left: -10%;
+        margin-right: -10%;
+        width: calc(100% + 20%);
     }
 }
 

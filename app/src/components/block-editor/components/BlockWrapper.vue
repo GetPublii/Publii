@@ -332,7 +332,7 @@ export default {
   }
 
   &.contains-full-image {
-    width: calc(100% - 252px)!important;
+    width: calc(100% - 168px)!important;
 
     .publii-block-image-form input {
       margin-left: auto;

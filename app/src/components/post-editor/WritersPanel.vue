@@ -95,7 +95,7 @@ export default {
         text-align: center;
         top: var(--topbar-height);
         transition: var(--transition);
-        width: 185px;
+        width: $writers-panel-width;
         z-index: 100;
 
         &.is-hidden {
@@ -109,13 +109,13 @@ export default {
 
             dt {
                 color: var(--text-primary-color);
-                font-size: 3rem;
+                font-size: 2.6rem;
                 font-family: Georgia, serif;
             }
 
             dd {
                 border-bottom: 1px solid var(--input-border-color);
-                font-size: 1.5rem;
+                font-size: 1.4rem;
                 margin: 0 0 1rem 0;
                 padding: 0 0 2rem 0;
 
@@ -145,10 +145,6 @@ body[data-os="linux"] {
 @media (max-height: 900px) {
     .post-editor-writers-panel {
         dl {
-            dt {
-                font-size: 2.6rem;
-            }
-
             dd {
                 line-height: 1.1;
             }
