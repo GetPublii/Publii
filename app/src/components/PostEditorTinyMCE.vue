@@ -4,7 +4,11 @@
         <post-editor-top-bar />
 
         <div class="post-editor-wrapper">
-            <div class="post-editor-form">
+            <div :class="{
+                'post-editor-form': true,
+                'writers-panel-open': writersPanelOpen,
+                'sidebar-open': sidebarVisible
+            }">
                 <div>
                     <div
                         id="post-title"

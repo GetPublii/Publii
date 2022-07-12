@@ -4,7 +4,10 @@
         <post-editor-top-bar />
 
         <div class="post-editor-wrapper">
-            <div class="post-editor-form">
+            <div :class="{
+                'post-editor-form': true,
+                'sidebar-open': sidebarVisible
+            }">
                 <div>
                     <publii-block-editor />
                 </div>
