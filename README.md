@@ -13,7 +13,7 @@ and hassle-free, even for beginners.
 
 ## Why Publii?
 Unlike static-site generators that are often unwieldy and difficult to use, Publii provides an
-easy-to-understand UI much like server-based CMSs such as WordPress or Joomla!, where users
+easy-to-understand UI. Much like server-based CMSs such as WordPress or Joomla!, users
 can create posts and other site content, and style their site using a variety of built-in themes and
 options. Users can enjoy the benefits of a super-fast and secure static website, with all the
 convenience that a CMS provides.
