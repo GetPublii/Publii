@@ -36,7 +36,7 @@ class FTP {
         }
 
         if(this.deployment.siteConfig.deployment.protocol !== 'ftp') {
-            secureConnection = 'control';
+            secureConnection = true;
         }
 
         let connectionParams = {
@@ -441,7 +441,7 @@ class FTP {
         }
 
         if(deploymentConfig.protocol !== 'ftp') {
-            secureConnection = 'control';
+            secureConnection = true;
         }
 
         let connectionParams = {
