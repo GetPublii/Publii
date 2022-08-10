@@ -327,6 +327,7 @@ export default {
     }
 
     &__option {
+        font-size: 14px;
         padding: 8px 15px;
         min-height: 30px;
 
@@ -352,8 +353,8 @@ export default {
     &__input {
       background: none !important;
       color: var(--text-primary-color);
-      font-size: 13px;
-      height: 27px;
+      font-size: 14px;
+      height: 21px;
 
       &::placeholder {
         color: var(--gray-4);
@@ -371,8 +372,8 @@ export default {
       }
 
       .multiselect__option {
-        padding: 8px 0;
         min-height: 30px;
+        padding: 8px 0;
         text-align: center;
       }
     }

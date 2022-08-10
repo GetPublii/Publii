@@ -297,7 +297,7 @@ export default {
     top: 0;
     transition: all .3s ease-out;
     width: 100%;
-    z-index: 10000;
+    z-index: 999991;
 
     &.is-visible {
       opacity: 1;
