@@ -16,6 +16,7 @@ class ManualDeployment {
     async initConnection() {
         this.deployment.setInput();
         this.deployment.prepareLocalFilesList();
+        this.deployment.replaceSyncInfoFiles();
 
         switch(this.deployment.siteConfig.deployment.manual.output) {
             case 'catalog': this.returnCatalog(); break;
