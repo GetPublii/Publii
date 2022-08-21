@@ -98,11 +98,11 @@ html[data-theme="default"] {
     --border-light-color: var(--neutral-10); 
         
     --input-bg: var(--white);
-    --input-border-dark: var(--neutral-20);
     --input-bg-light: var(--neutral-5);
     --input-bg-lightest: var(--white);
     --input-border-color: var(--neutral-15);
     --input-border-focus: var(--color-55);
+    --input-border-checked: var(--color-20);
     --input-data-time-popup: light;
         
     --button-bg: var(--color-55);
@@ -281,11 +281,11 @@ html[data-theme="dark"] {
     --border-light-color: var(--neutral-48);
         
     --input-bg: var(--neutral-55);
-    --input-border-dark: var(--neutral-40);
     --input-bg-light: var(--neutral-48);
     --input-bg-lightest: var(--neutral-49);
     --input-border-color: var(--neutral-45);
     --input-border-focus: var(--color-50);
+    --input-border-checked: rgba(16,137,255, .59);
     --input-data-time-popup: dark;
   
     --button-bg: var(--color-50);
