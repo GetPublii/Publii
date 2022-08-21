@@ -89,11 +89,11 @@ export default {
 }
 
 .switcher {
-    background: rgba(142, 146, 157, 0.45);
+    background: var(--input-border-dark);
     border-radius: 20px;
     cursor: pointer;
     display: inline-block;
-    height: 16px;
+    height: 20px;
     margin-right: .5rem;
     position: relative;
     top: 2px;
@@ -107,15 +107,16 @@ export default {
 
     &:after {
         position: absolute;
-        left: 0;
-        top: -2px;
+        left: 2px;
+        top: 2px;
         display: block;
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
-        background: #8e929d;
+        background: var(--input-bg-lightest);
         content: '';
         transition: all .28s ease;
+        
     }
 
     &:active:after {
@@ -123,11 +124,11 @@ export default {
     }
 
     &.is-checked {
-        background: var(--input-border-checked);
+        background: var(--input-border-focus);
 
         &:after {
             left: 14px;
-            background: var(--input-border-focus);
+            background: var(--input-bg-lightest);
         }
     }
 
