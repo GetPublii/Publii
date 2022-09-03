@@ -613,7 +613,7 @@
         "editors": "Editors",
         "embedConsents": "Embed content consents",
         "embedConsentsDescription": "This section allows you to block content loaded in iframes from third-party content providers that may set cookies. By providing the domain of the iframe URL e.g. <strong>youtube.com</strong>, filling out the required elements such as a message, an accept button, and assigning it to an existing cookie group, iframes will be replaced with a placeholder informing visitors that the content is blocked due to their consent settings (i.e. that the visitor has not consented to the types of cookies used by the iframe in the cookie banner).",
-        "embedVideos": "Embed Video",
+        "embedVideos": "Embedding Videos",
         "enableAdvancedPreview": "Enable advanced preview",
         "enableAMP": "Enable AMP",
         "enableAMPInfo": "AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong> when this option is enabled your website will load third-party scripts provided by Google's AMP CDN.",
