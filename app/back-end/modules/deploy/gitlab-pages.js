@@ -383,7 +383,8 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpdate.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
+                let fixedPath = commit.file_path.indexOf('public/') === 0 ? commit.file_path.substr(6) : commit.file_path;
+                commit.content = this.readFile(path.join(this.deployment.inputDir, fixedPath));
                 commits.push(commit);
             }
 
@@ -408,7 +409,8 @@ class GitlabPages {
                 progress = progress + this.binaryProgressOffset;
                 this.binaryFilesUploadedCount++;
                 let commit = this.binaryFilesToUpload.shift();
-                commit.content = this.readFile(path.join(this.deployment.inputDir, commit.file_path));
+                let fixedPath = commit.file_path.indexOf('public/') === 0 ? commit.file_path.substr(6) : commit.file_path;
+                commit.content = this.readFile(path.join(this.deployment.inputDir, fixedPath));
                 commits.push(commit);
             }
 
