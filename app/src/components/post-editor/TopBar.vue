@@ -173,6 +173,7 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 message: this.$t('ui.cancelPostWarningMsg'),
+                isDanger: true,
                 okClick: this.cleanUpPost
             });
         },

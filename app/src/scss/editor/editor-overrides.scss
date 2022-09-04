@@ -140,32 +140,40 @@
         .tox-tbtn:not(span),
         .tox-split-button,
         .tox-tbtn--select {
-            background: var(--input-bg-light);
+            background: none;
             border-radius: 2px;
+            border: 1px solid var(--border-light-color);
             color: var(--text-primary-color);
             height: 38px;
-            margin: 1px;
+            margin: 2px;
             padding: 2px;
             min-width: 38px;
 
             &:active,
             &:focus,
-            &:hover {
-                background: var(--input-border-color);
-                box-shadow: 0 0 0 1px var(--border-light-color) inset;
+            &:hover,
+            &.tox-tbtn--active[aria-expanded='true'],
+            &.tox-tbtn--enabled {
+                background: var(--gray-6);
+                border-color: var(--gray-6);
 
                 & > button {
                     background: transparent;
                 }
-            }
 
-            &.tox-tbtn--enabled {
-                background: var(--input-border-color);
-                box-shadow: 0 0 0 1px var(--border-light-color) inset;
-                
-                svg {
-                    fill: var(--icon-tertiary-color);
-                }
+            }
+           
+        }
+
+        .tox-split-button {
+            box-shadow: none !important;
+            padding: 1px;
+
+            &:active,
+            &:focus,
+            &:hover {
+                background: none;
+                border-color: none;
             }
         }
 
@@ -174,6 +182,7 @@
         }
 
         .tox-split-button__chevron {
+            margin-left: 1px !important;
             min-width: 16px;
         }
 
