@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "devtron": "1.4.0",
-    "electron": "18.3.0",
+    "electron": "18.3.11",
     "node-abi": "3.8.0"
   }
 }
