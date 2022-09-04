@@ -452,6 +452,7 @@ export default {
     computed: {
         items () {
             let items = this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
+            items = items.filter(item => item.title !== null);
 
             items.forEach((item, i) => {
                 if (item.tags.length) {
