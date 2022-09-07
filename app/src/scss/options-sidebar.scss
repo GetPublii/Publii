@@ -218,7 +218,15 @@
     &-buttons {
         border-top: 1px solid var(--input-border-color);
         display: flex;
+        flex-wrap: wrap;
+        gap: 0.625rem;
         padding: 3rem 0 0 0;
+
+        & > .button{
+            flex-grow: 1;
+            margin-left: 0;
+            text-align: center;
+        }
     }
 
     .msg {
