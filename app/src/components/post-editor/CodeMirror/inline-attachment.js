@@ -97,8 +97,6 @@
   };
 
   inlineAttachment.defaults = {
-    uploadUrl: 'upload_attachment.php',
-    uploadMethod: 'POST',
     uploadFieldName: 'file',
     defaultExtension: 'png',
     jsonFieldName: 'filename',
@@ -106,7 +104,9 @@
       'image/jpeg',
       'image/png',
       'image/jpg',
-      'image/gif'
+      'image/gif',
+      'image/svg+xml',
+      'image/webp'
     ],
     progressText: '![Uploading file...]()',
     urlText: "![Image description]({filename})",
