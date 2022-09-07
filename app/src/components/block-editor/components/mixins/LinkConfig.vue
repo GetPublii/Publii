@@ -139,20 +139,23 @@ export default {
 
             let extractedContent = range.extractContents();
             let extractedContentChildren = extractedContent.children;
-            let nodesToInsert = extractedContentChildren[0].childNodes;
-            let firstNode = nodesToInsert[0];
-            let lastNode = nodesToInsert[nodesToInsert.length - 1];
 
-            for (let i = nodesToInsert.length - 1; i >= 0; i--) {
-              range.insertNode(nodesToInsert[i]);
+            if (extractedContentChildren[0]) {
+              let nodesToInsert = extractedContentChildren[0].childNodes;
+              let firstNode = nodesToInsert[0];
+              let lastNode = nodesToInsert[nodesToInsert.length - 1];
+
+              for (let i = nodesToInsert.length - 1; i >= 0; i--) {
+                range.insertNode(nodesToInsert[i]);
+              }
+
+              setTimeout(() => {
+                range.setStartBefore(firstNode);
+                range.setEndAfter(lastNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+              }, 0);
             }
-
-            setTimeout(() => {
-              range.setStartBefore(firstNode);
-              range.setEndAfter(lastNode);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            }, 0);
           }, 0);
         }
       }, 100);
