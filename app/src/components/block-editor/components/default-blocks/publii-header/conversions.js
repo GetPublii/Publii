@@ -5,7 +5,7 @@ const availableConversions = [
     'type': 'publii-paragraph',
     'convert': function (config, content, editorInstance) {
       // eslint-disable-next-line
-      let newContent = editorInstance.extensions.conversionHelpers.stripTags(content.replace(/<br>/gmi, "\n")).replace(/\n/gmi, '<br>');
+      let newContent = content.replace(/\n/gmi, '<br>');
       let newConfig = {
         textAlign: config.textAlign,
         advanced: {

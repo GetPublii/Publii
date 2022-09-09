@@ -5,7 +5,17 @@ const availableConversions = [
     'type': 'publii-paragraph',
     'convert': function (config, content, editorInstance) {
       // eslint-disable-next-line
-      let newContent = editorInstance.extensions.conversionHelpers.stripTags(content.replace(/<\/li><li>/gmi, "\n")).replace(/\n/gmi, '<br>');
+      let newContent = content.replace(/<ul.*?>/gmi, '')
+                                // eslint-disable-next-line
+                                .replace(/<ol.*?>/gmi, '')
+                                // eslint-disable-next-line
+                                .replace(/<\/li><li>/gmi, "<br>")
+                                // eslint-disable-next-line
+                                .replace(/\n/gmi, '<br>')
+                                // eslint-disable-next-line
+                                .replace(/<li.*?>/gmi, '')
+                                // eslint-disable-next-line
+                                .replace(/<\/li.*?>/gmi, '');
       let newConfig = {
         textAlign: 'left',
         advanced: {
