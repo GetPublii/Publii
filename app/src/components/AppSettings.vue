@@ -11,7 +11,8 @@
 
                 <p-button
                     :onClick="checkBeforeSave"
-                    slot="buttons">
+                    slot="buttons"
+                    :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-header>
@@ -331,7 +332,8 @@
             <p-footer>
                 <p-button
                     :onClick="checkBeforeSave"
-                    slot="buttons">
+                    slot="buttons"
+                    :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
             </p-footer>
@@ -352,6 +354,7 @@ export default {
     data () {
         return {
             alwaysSaveSearchState: false,
+            buttonsLocked: false,
             screensSelected: '',
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
@@ -525,6 +528,8 @@ export default {
             this.save();
         },
         save () {
+            this.buttonsLocked = true;
+
             let newSettings = {
                 licenseAccepted: true,
                 startScreen: this.screensSelected,
@@ -587,6 +592,7 @@ export default {
 
             this.$store.commit('setAppTheme', this.theme);
             this.$bus.$emit('app-theme-change');
+            this.buttonsLocked = false;
         },
         getAppTheme () {
             let theme = localStorage.getItem('publii-theme');
