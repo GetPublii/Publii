@@ -321,13 +321,14 @@
                                     <small class="note">{{ $t('settings.pageTitleVariables') }}</small>
                                 </label>
 
-                                <label>
+                                <label class="with-char-counter">
                                     {{ $t('ui.metaDescription') }}:
                                     <text-area
                                         v-model="$parent.postData.metaDescription"
                                         :charCounter="true"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :preferredCount="160"></text-area>
+                                    <small class="note">{{ $t('settings.pageTitleVariables') }}</small>
                                 </label>
 
                                 <label>

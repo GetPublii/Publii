@@ -237,6 +237,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.postPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field
@@ -295,6 +300,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.tagsListPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field
@@ -350,6 +360,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.tagPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field
@@ -450,6 +465,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.authorPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field
@@ -550,6 +570,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.errorPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field
@@ -606,6 +631,11 @@
                                 :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.searchPageTitleVariables') }}
+                            </small>
                         </field>
 
                         <field

@@ -30,14 +30,14 @@ class RendererContextTags extends RendererContext {
 
         // Prepare meta data
         this.metaTitle = this.siteConfig.advanced.tagsMetaTitle.replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.tagsMetaDescription;
+        this.metaDescription = this.siteConfig.advanced.tagsMetaDescription.replace(/%sitename/g, siteName);
 
         if (this.metaTitle === '') {
             this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         }
 
         if (this.metaDescription === '') {
-            this.metaDescription = this.siteConfig.advanced.metaDescription;
+            this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
     }
 

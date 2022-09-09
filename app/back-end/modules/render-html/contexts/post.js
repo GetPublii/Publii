@@ -71,7 +71,7 @@ class RendererContextPost extends RendererContext {
         }
 
         if (this.metaDescription === '') {
-            this.metaDescription = this.siteConfig.advanced.metaDescription;
+            this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
 
         // load related posts
@@ -395,6 +395,10 @@ class RendererContextPost extends RendererContext {
         if(this.metaTitle === '') {
             this.metaTitle = this.post.title;
         }
+
+        this.metaDescription = this.metaDescription.replace(/%posttitle/g, this.post.title)
+                                                    .replace(/%sitename/g, siteName)
+                                                    .replace(/%authorname/g, this.post.author.name);
 
         this.context = {
             title: this.metaTitle,

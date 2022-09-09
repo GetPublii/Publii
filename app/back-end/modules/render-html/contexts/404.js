@@ -24,14 +24,14 @@ class RendererContext404 extends RendererContext {
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
         this.metaTitle = this.siteConfig.advanced.errorMetaTitle.replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.errorMetaDescription;
+        this.metaDescription = this.siteConfig.advanced.errorMetaDescription.replace(/%sitename/g, siteName);
 
         if (this.metaTitle === '') {
             this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         }
 
         if (this.metaDescription === '') {
-            this.metaDescription = this.siteConfig.advanced.metaDescription;
+            this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
     }
 

@@ -92,7 +92,8 @@ class RendererContextAuthor extends RendererContext {
 
         this.metaTitle = this.siteConfig.advanced.authorMetaTitle.replace(/%authorname/g, this.author.name)
                                                                  .replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.authorMetaDescription;
+        this.metaDescription = this.siteConfig.advanced.authorMetaDescription.replace(/%authorname/g, this.author.name)
+                                                                             .replace(/%sitename/g, siteName);
         this.metaRobots = false;
         this.hasCustomCanonicalUrl = false;
         this.canonicalUrl = '';
@@ -105,7 +106,8 @@ class RendererContextAuthor extends RendererContext {
         }
 
         if (metaData && metaData.metaDescription) {
-            this.metaDescription = metaData.metaDescription;
+            this.metaDescription = metaData.metaDescription.replace(/%authorname/g, this.author.name)
+                                                           .replace(/%sitename/g, siteName);
         }
 
         if (this.metaTitle === '') {
@@ -113,7 +115,7 @@ class RendererContextAuthor extends RendererContext {
         }
 
         if (this.metaDescription === '') {
-            this.metaDescription = this.siteConfig.advanced.metaDescription;
+            this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
 
         if (metaData && metaData.metaRobots) {

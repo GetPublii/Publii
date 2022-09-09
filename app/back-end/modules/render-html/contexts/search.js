@@ -18,14 +18,14 @@ class RendererContextSearch extends RendererContext {
         }
 
         this.metaTitle = this.siteConfig.advanced.searchMetaTitle.replace(/%sitename/g, siteName);
-        this.metaDescription = this.siteConfig.advanced.searchMetaDescription;
+        this.metaDescription = this.siteConfig.advanced.searchMetaDescription.replace(/%sitename/g, siteName);
 
         if (this.metaTitle === '') {
             this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         }
 
         if (this.metaDescription === '') {
-            this.metaDescription = this.siteConfig.advanced.metaDescription;
+            this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
 
         this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
