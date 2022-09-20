@@ -1,4 +1,7 @@
 const stripTags = require('striptags');
+const sizeOf = require('image-size');
+const path = require('path');
+const normalizePath = require('normalize-path');
 
 /**
  * Helper for creating Open Graph and Twitter Cars metatags
@@ -84,16 +87,39 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         }
 
         // Get fallback image if available
-        if(openGraphImage && openGraphImage !== '' && image === contextData.data.website.logo) {
+        if (openGraphImage && openGraphImage !== '' && image === contextData.data.website.logo) {
             image = openGraphImage;
         }
 
         // Generate Open Graph tags
-        if(openGraphEnabled) {
+        if (openGraphEnabled) {
             output += '<meta property="og:title" content="' + title.replace(/"/g, "'") + '" />';
 
             if (image) {
                 output += '<meta property="og:image" content="' + image + '"/>';
+            }
+
+            let ogImageDimensions = false;
+            let imageLocalPath = image;
+
+            try {
+                let baseLocalPath = path.join(rendererInstance.sitesDir, rendererInstance.siteName, 'input', 'media');
+                baseLocalPath = normalizePath(baseLocalPath);
+                imageLocalPath = normalizePath(image)
+                imageLocalPath = imageLocalPath.split('/media/');
+                
+                if (imageLocalPath[1]) {
+                    imageLocalPath = path.join(baseLocalPath, imageLocalPath[1]);
+                    ogImageDimensions = sizeOf(imageLocalPath);
+                }
+            } catch(e) {
+                console.log('OG image - wrong image path - missing dimensions', imageLocalPath);
+                ogImageDimensions = false;
+            }
+
+            if (ogImageDimensions) {
+                output += '<meta property="og:image:width" content="' + ogImageDimensions.width + '" />';
+                output += '<meta property="og:image:height" content="' + ogImageDimensions.height + '" />'
             }
 
             output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
