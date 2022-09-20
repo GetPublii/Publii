@@ -195,7 +195,7 @@ export default {
     methods: {
         updateTitle () {
             this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
-            this.updateSlug();
+            this.$bus.$emit('update-post-slug', false);
         },
         detectEnterInTitle (event) {
             if (event.code === 'Enter' && !event.isComposing) {

@@ -212,7 +212,7 @@ export default {
         },
         updateTitle () {
             this.postData.title = this.$refs['post-title'].innerText.replace(/\n/gmi, ' ');
-            this.updateSlug();
+            this.$bus.$emit('update-post-slug', false);
         },
         loadPostData () {
             // Send request for a post to the back-end

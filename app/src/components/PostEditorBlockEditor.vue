@@ -204,7 +204,7 @@ export default {
         },
         updateTitle (newTitle) {
             this.postData.title = newTitle;
-            this.updateSlug();
+            this.$bus.$emit('update-post-slug', false);
         },
         loadPostData () {
             // Send request for a post to the back-end

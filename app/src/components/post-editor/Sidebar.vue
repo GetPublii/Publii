@@ -307,6 +307,11 @@
                                         class="note is-warning">
                                         {{ $t('post.postSlugLengthWarning') }}
                                     </small>
+                                    <span 
+                                        class="regenerate-slug"
+                                        @click="$bus.$emit('update-post-slug', true)">
+                                        UPDATE SLUG
+                                    </span>
                                 </label>
 
                                 <label class="with-char-counter">

@@ -3,13 +3,14 @@ export default {
     name: 'post-editors-common',
     mounted () {
         this.sidebarVisible = localStorage.getItem('publii-' + this.$options.editorType + '-editor-sidebar') === 'opened';
+        this.$bus.$on('update-post-slug', this.updateSlug);
     },
     methods: {
         slugUpdated () {
             this.postSlugEdited = true;
         },
-        async updateSlug () {
-            if(this.isEdit || this.postSlugEdited) {
+        async updateSlug (forceUpdate = false) {
+            if ((this.isEdit || this.postSlugEdited) && !forceUpdate) {
                 return;
             }
 
@@ -36,6 +37,9 @@ export default {
                 this.$router.push('/site/' + siteName + '/posts/');
             }
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('update-post-slug', this.updateSlug);
     }
 }
 </script>
