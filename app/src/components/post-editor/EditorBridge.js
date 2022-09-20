@@ -306,7 +306,11 @@ class EditorBridge {
             updateWritersPanel();
 
             iframe.contentWindow.window.document.addEventListener('copy', () => {
-                self.hideToolbarsOnCopy();
+                self.hideToolbarsOnCopyOrScroll();
+            });
+
+            iframe.contentWindow.window.document.addEventListener('scroll', () => {
+                self.hideToolbarsOnCopyOrScroll();
             });
         });
 
@@ -330,7 +334,7 @@ class EditorBridge {
     }
 
     galleryPopupUpdated (response) {
-        this.hideToolbarsOnCopy();
+        this.hideToolbarsOnCopyOrScroll();
 
         if(response) {
             response.gallery.innerHTML = response.html;
@@ -533,7 +537,7 @@ class EditorBridge {
         window.app.initLinkEditor(iframe);
     }
 
-    hideToolbarsOnCopy() {
+    hideToolbarsOnCopyOrScroll() {
         $('#link-toolbar').css('display', 'none');
         $('#inline-toolbar').css('display', 'none');
     }
