@@ -62,10 +62,6 @@ class PostHelper {
             creationDate = Date.now();
         }
 
-        if (postData.status.indexOf('draft') > -1 && newPostStatus === 'published') {
-            creationDate = Date.now();
-        }
-
         return {
             'site': $store.state.currentSite.config.name,
             'title': postData.title,
