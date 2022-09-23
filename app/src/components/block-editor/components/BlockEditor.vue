@@ -42,7 +42,8 @@
         :id="block.id"
         :block-type="block.type"
         :key="'block-wrapper-' + block.id"
-        :ref="'block-wrapper-' + block.id">
+        :ref="'block-wrapper-' + block.id"
+        :editor="editorInstance">
         <component
           :is="block.type"
           :id="block.id"
@@ -118,6 +119,7 @@ export default {
   data () {
     return {
       editorInstance: this,
+      uiSelectorID: false,
       config: {
         postID: ''
       },
@@ -187,6 +189,7 @@ export default {
     this.$bus.$on('publii-block-editor-load', this.loadAllBlocks);
     this.$bus.$on('publii-block-editor-update-current-block-id', this.updateCurrentBlockID);
     this.$bus.$on('undomanager-save-history', this.saveChangesHistory);
+    this.$bus.$on('block-editor-ui-selector-opened', this.setUISelectorID);
 
     setTimeout(() => {
       this.internal.editorIsLoaded = true;
@@ -354,7 +357,6 @@ export default {
       if (lastContentBlock.type === 'publii-paragraph' && lastContentBlock.content === '') {
         let blockID = lastContentBlock.id;
         this.$refs['block-' + blockID][0].focus();
-        this.$refs['block-' + blockID][0].toggleNewBlockUIIcon();
         return;
       }
 
@@ -496,6 +498,9 @@ export default {
     },
     saveChangesHistory (blockID, content) {
       this.extensions.undoManager.saveHistory(blockID, content);
+    },
+    setUISelectorID (id) {
+        this.uiSelectorID = id;
     }
   },
   beforeDestroy () {
@@ -686,7 +691,7 @@ export default {
          box-shadow: var(--box-shadow-small);
          background: var(--input-bg);
          height: 48px;
-         opaciy: 0;
+         opacity: 0;
          width: 70px;
 
          &::after {

@@ -218,6 +218,7 @@
         "markdownHelpPanelDesc": "You can easily manage headings, text styles or create other HTML elements by using the following keyboard shortcuts or markdown syntax:",
         "newDraftCreated": "New draft has been created",
         "newPostCreated": "New post has been created",
+        "nothingFound": "No blocks found",
         "quote": "Quote",
         "quoteAuthor": "Quote author",
         "quoteText": "Quote text",

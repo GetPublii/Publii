@@ -7,12 +7,53 @@
       'is-selected': isSelected,
       'show-bulk-operations': $parent.bulkOperationsMode,
       'has-ui-opened': uiOpened,
+      'has-ui-block-selector-opened': newBlockUIListVisible,
       [customCssClasses.join(' ')]: true,
-      'is-hovered': isHovered && !uiOpened
+      'is-hovered': isHovered && !uiOpened && canDisplayUI
     }"
     @mousemove="moveOverBlock"
     @mouseleave="leaveBlock"
     @click.stop="blockClick">
+    <div
+      :class="{ 
+        'block-selector': true, 
+        'is-visible': (isHovered || newBlockUIListVisible) && !uiOpened && canDisplayUI
+      }">
+      <button
+        class="block-selector-add"
+        @click.stop="toggleNewBlockUI()"
+        tabindex="-1">
+        <icon name="add" />
+      </button>
+
+      <div
+        v-if="newBlockUIListVisible"
+        @click.stop
+        :class="{ 'block-selector-list': true, 'is-visible': true }">
+        <input v-model="blockFilterPhrase" />
+        <div class="block-selector-list-wrapper">
+            <button
+                v-for="(blockItem, index) of filteredBlocks"
+                :key="'filtered-blocks-' + index"
+                :class="{ 
+                    'block-selector-block-list-item': true, 
+                    'is-active': newBlockUIActiveIndex === index 
+                }"
+                @click.stop="addNewBlock(blockItem.blockName);">
+                <icon :name="blockItem.icon" />
+                <span class="block-selector-block-list-item-label">
+                    {{ $t(blockItem.label) }}
+                </span>
+            </button>
+            <span 
+                v-if="!filteredBlocks.length"
+                class="block-selector-list-empty-state">
+                {{ $t('editor.nothingFound') }}
+            </span>
+        </div>
+      </div>
+    </div>
+
     <slot />
 
     <div
@@ -48,40 +89,34 @@
     </div>
 
     <div class="wrapper-ui">
-      <div
+      <div 
         :class="{ 'wrapper-ui-show-options': true }"
         @click.stop="togglePopup">
-          <button
-            :class="{ 'wrapper-ui-show-options-button': true, 'is-visible': isSelected && !uiOpened }">
-            <icon name="dotted-line" />
-          </button>
+        <button
+          :class="{ 'wrapper-ui-show-options-button': true, 'is-visible': isHovered && !uiOpened && canDisplayUI }">
+          <icon name="dotted-line" />
+        </button>
 
-          <div
-            v-if="uiOpened"
-            :class="{ 'wrapper-ui-options': true, 'is-visible': true }">
-            <button
-              class="wrapper-ui-options-button-move"
-              tabindex="-1"
-              :disabled="$parent.internal.firstBlockID === id"
-              @click.stop="moveUp">
-              <icon name="up" />
-            </button>
-            <button
-              class="wrapper-ui-options-button-move"
-              tabindex="-1"
-              :disabled="$parent.internal.lastBlockID === id"
-              @click.stop="moveDown">
-              <icon name="down" />
-            </button>
-          </div>
+        <div
+          v-if="uiOpened"
+          :class="{ 'wrapper-ui-options': true, 'is-visible': true }">
+          <button
+            class="wrapper-ui-options-button-move"
+            tabindex="-1"
+            :disabled="$parent.internal.firstBlockID === id"
+            @click.stop="moveUp">
+            <icon name="up" />
+          </button>
+          <button
+            class="wrapper-ui-options-button-move"
+            tabindex="-1"
+            :disabled="$parent.internal.lastBlockID === id"
+            @click.stop="moveDown">
+            <icon name="down" />
+          </button>
+        </div>
       </div>
     </div>
-
-    <button
-      class="wrapper-ui-add-block-between"
-      @click="addBlockAfter(id)">
-      <icon name="add" />
-    </button>
   </div>
 </template>
 
@@ -98,13 +133,87 @@ export default {
   components: {
     'icon': Icon
   },
+  computed: {
+    canDisplayUI () {
+        return !this.editor.uiSelectorID || this.editor.uiSelectorID === this.id;
+    },
+    filteredBlocks () {
+      let blocks = JSON.parse(JSON.stringify(this.availableBlocks));
+
+      if (this.editor.hasReadMore) {
+        blocks = blocks.filter(block => block.blockName !== 'publii-readmore');
+      }
+
+      if (this.blockFilterPhrase.length) {
+        blocks = blocks.filter(block => block.blockName.replace('publii-', '').indexOf(this.blockFilterPhrase.toLocaleLowerCase()) > -1);
+      }
+
+      return blocks;
+    }
+  },
   data () {
     return {
       customCssClasses: [],
       isHovered: false,
       isSelected: false,
       uiOpened: false,
-      moveTimeout: false
+      moveTimeout: false,
+      // new block UI
+      blockFilterPhrase: '',
+      newBlockUIActiveIndex: 0,
+      newBlockUIListVisible: false,
+      availableBlocks: [
+        {
+            blockName: 'publii-header',
+            icon: 'headings',
+            label: 'editor.header'
+        },
+        {
+            blockName: 'publii-image',
+            icon: 'image',
+            label: 'image.image'
+        },
+        {
+            blockName: 'publii-gallery',
+            icon: 'gallery',
+            label: 'editor.gallery'
+        },
+        {
+            blockName: 'publii-list',
+            icon: 'unordered-list',
+            label: 'editor.list'
+        },
+        {
+            blockName: 'publii-quote',
+            icon: 'quote',
+            label: 'editor.quote'
+        },
+        {
+            blockName: 'publii-code',
+            icon: 'code',
+            label: 'editor.code'
+        },
+        {
+            blockName: 'publii-html',
+            icon: 'html',
+            label: 'editor.html'
+        },
+        {
+            blockName: 'publii-separator',
+            icon: 'separator',
+            label: 'editor.separator'
+        },
+        {
+            blockName: 'publii-readmore',
+            icon: 'readmore',
+            label: 'editor.readMoreBlockName'
+        },
+        {
+            blockName: 'publii-toc',
+            icon: 'toc',
+            label: 'editor.toc'
+        }
+      ]
     };
   },
   watch: {
@@ -115,6 +224,14 @@ export default {
         this.$bus.$emit('block-editor-ui-closed-for-block', this.id);
       }
     },
+    newBlockUIListVisible (newState) {
+        if (newState === true) {
+            this.blockFilterPhrase = '';
+            this.$bus.$emit('block-editor-ui-selector-opened', this.id);
+        } else if (newState === false) {
+            this.$bus.$emit('block-editor-ui-selector-opened', false);
+        }
+    },
     '$parent.bulkOperationsMode': function (newState) {
       if (newState) {
         this.uiOpened = false;
@@ -123,6 +240,7 @@ export default {
   },
   mounted () {
     this.$bus.$on('block-editor-deselect-blocks', this.deselectBlock);
+    this.$bus.$on('block-editor-close-new-block-ui', this.hideNewBlockUI);
   },
   methods: {
     blockClick (e) {
@@ -134,9 +252,11 @@ export default {
       }
     },
     deselectBlock (blockID) {
-      if (blockID !== this.id) {
-        this.setSelectionState(false);
-      }
+        this.newBlockUIListVisible = false;
+        
+        if (blockID !== this.id) {
+            this.setSelectionState(false);
+        }
     },
     moveOverBlock () {
       clearTimeout(this.moveTimeout);
@@ -206,34 +326,51 @@ export default {
     duplicateBlock () {
       this.$bus.$emit('block-editor-duplicate-block', this.id);
     },
-    addBlockAfter () {
-      this.$bus.$emit('block-editor-add-block', 'publii-paragraph', this.id);
-    },
     saveChangesHistory () {
         this.$slots.default[0].componentInstance.saveChangesHistory();
+    },
+    /**
+     * New block UI methods
+     */
+    toggleNewBlockUI () {
+      this.newBlockUIListVisible = !this.newBlockUIListVisible;
+    },
+    addNewBlock (blockType) {
+      this.$bus.$emit('block-editor-add-block', blockType, this.id);
+      this.$bus.$emit('block-editor-delete-block', this.id, false);
+      this.newBlockUIListVisible = false;
+      this.$bus.$emit('block-editor-ui-selector-opened', false);
+    },
+    hideNewBlockUI () {
+      this.newBlockUIListVisible = false;
     }
   },
   beforeDestroy () {
     this.$bus.$off('block-editor-deselect-blocks', this.deselectBlock);
+    this.$bus.$off('block-editor-close-new-block-ui', this.hideNewBlockUI);
   }
 }
 </script>
 
 <style lang="scss">
-@import '../vendors/modularscale';
-@import '../../../scss/variables.scss';
-@import '../../../scss/mixins.scss';
+@import "../vendors/modularscale";
+@import "../../../scss/variables.scss";
+@import "../../../scss/mixins.scss";
 
 .wrapper {
   border: 1px solid transparent;
   box-sizing: content-box;
   margin: 0 auto;
-  opacity: .33;
+  opacity: 0.33;
   padding: 0 32px;
   position: relative;
-  transition: width .25s ease-out, opacity .35s ease-out;
+  transition: width 0.25s ease-out, opacity 0.35s ease-out;
   width: var(--editor-width);
   z-index: 1;
+
+  &.has-ui-block-selector-opened {
+    z-index: 2;
+  }
 
   &[data-block-type="publii-embed"] {
     margin: 0 auto;
@@ -245,19 +382,21 @@ export default {
     }
   }
 
-  &.is-selected {
-    z-index: 10;
-
+  &.is-hovered {
     .wrapper-ui {
       opacity: 1;
       pointer-events: auto;
     }
   }
 
+  &.is-selected {
+    z-index: 10;
+  }
+
   &.show-bulk-operations {
-      background: var(--popup-bg);
-      margin-top: baseline(8,em);
-      transition: all .25s ease-out;
+    background: var(--popup-bg);
+    margin-top: baseline(8, em);
+    transition: all 0.25s ease-out;
 
     div {
       pointer-events: none;
@@ -273,7 +412,7 @@ export default {
   }
 
   & > div {
-    padding: baseline(4,em) 0;
+    padding: baseline(4, em) 0;
   }
 
   &.has-ui-opened {
@@ -301,20 +440,20 @@ export default {
       flex-direction: column-reverse;
 
       .publii-block-code-lang {
-          top: calc(#{baseline(6,em)} + 44px)!important;
+        top: calc(#{baseline(6, em)} + 44px) !important;
       }
       .publii-block-code > .prism-editor__line-numbers,
       .publii-block-html > .prism-editor__line-numbers {
-          background: var(--pre-bg-hover) !important;
+        background: var(--pre-bg-hover) !important;
       }
       .publii-block-code > pre,
       .publii-block-html > pre {
-          background: var(--pre-bg-hover) !important;
+        background: var(--pre-bg-hover) !important;
       }
       .publii-block-gallery-uploader-loader-overlay {
-          height: 250px;
-          top: 61px;
-          width: calc(100% - 64px) !important;
+        height: 250px;
+        top: 61px;
+        width: calc(100% - 64px) !important;
       }
     }
 
@@ -328,11 +467,11 @@ export default {
   }
 
   &.contains-wide-image {
-      width: calc(var(--editor-width) + 168px)!important;
+    width: calc(var(--editor-width) + 168px) !important;
   }
 
   &.contains-full-image {
-    width: calc(100% - 168px)!important;
+    width: calc(100% - 168px) !important;
 
     .publii-block-image-form input {
       margin-left: auto;
@@ -342,16 +481,16 @@ export default {
   }
 
   &-ui {
+    left: -50px;
     opacity: 0;
     position: absolute;
     pointer-events: none;
-    right: -50px;
     top: -41px;
     z-index: 1;
 
     .wrapper-ui-show-options {
       height: 44px;
-      transition: all .25s ease-out;
+      transition: all 0.25s ease-out;
       width: 50px;
 
       &-button {
@@ -363,17 +502,17 @@ export default {
         position: absolute;
         right: 0px;
         top: 14px;
-        transform: scale(.5);
+        transform: scale(0.5);
         transform-origin: center center;
-        transition: transform .25s ease-out;
+        transition: transform 0.25s ease-out;
 
         &:focus {
           outline: none;
         }
 
         &::after {
-          content:"";
-          border: 2px solid rgba(var(--color-primary-rgb), .4);
+          content: "";
+          border: 2px solid rgba(var(--color-primary-rgb), 0.4);
           border-radius: 50%;
           height: 50px;
           left: 50%;
@@ -385,10 +524,10 @@ export default {
 
           @keyframes focusOut {
             0% {
-                opacity: 0;
+              opacity: 0;
             }
             25% {
-                 opacity: 1;
+              opacity: 1;
             }
           }
         }
@@ -407,7 +546,7 @@ export default {
           }
 
           &::after {
-            animation: focusOut .75s ease-out backwards;
+            animation: focusOut 0.75s ease-out backwards;
           }
         }
       }
@@ -460,8 +599,8 @@ export default {
           position: absolute;
           height: 34px;
           top: 50%;
-          transition: all .15s cubic-bezier(.4,0,.2,1);
-          transform: scale(.5) translate(-50%, -50%);
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: scale(0.5) translate(-50%, -50%);
           transform-origin: left top;
           width: 34px;
           z-index: -1;
@@ -469,7 +608,6 @@ export default {
 
         &:hover,
         &.is-active {
-
           svg {
             fill: var(--icon-tertiary-color);
           }
@@ -480,11 +618,11 @@ export default {
           }
         }
         &:disabled {
-            cursor: default;
-            opacity: .4;
+          cursor: default;
+          opacity: 0.4;
 
           &::before {
-              background: none;
+            background: none;
           }
         }
       }
@@ -508,12 +646,12 @@ export default {
       margin: -9px 0 9px 0;
 
       &-title {
-          color: var(--gray-3);
-          display: block;
-          font-size: 11px;
-          font-weight: 700;
-          margin: 0 auto 0 0;
-          text-transform: uppercase;
+        color: var(--gray-3);
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        margin: 0 auto 0 0;
+        text-transform: uppercase;
       }
 
       &-button {
@@ -546,8 +684,8 @@ export default {
           position: absolute;
           height: 34px;
           top: 50%;
-          transition: all .15s cubic-bezier(.4,0,.2,1);
-          transform: scale(.5) translate(-50%, -50%);
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: scale(0.5) translate(-50%, -50%);
           transform-origin: left top;
           width: 34px;
           z-index: -1;
@@ -555,7 +693,6 @@ export default {
 
         &:hover,
         &.is-active {
-
           &::before {
             opacity: 1;
             transform: scale(1) translate(-50%, -50%);
@@ -579,62 +716,61 @@ export default {
     &-move,
     &-delete,
     &-duplicate {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        margin: 0;
-        outline: none;
-        padding: 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin: 0;
+      outline: none;
+      padding: 0;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+
+      svg {
+        fill: var(--icon-primary-color);
+        transition: var(--transition);
+      }
+
+      // hover effect
+      &::before {
+        content: "";
+        background: var(--gray-6);
+        border-radius: 3px;
+        display: block;
+        left: 50%;
+        opacity: 0;
         position: absolute;
+        height: 34px;
         top: 50%;
-        transform: translateY(-50%);
-        width: 38px;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: scale(0.5) translate(-50%, -50%);
+        transform-origin: left top;
+        width: 34px;
+        z-index: -1;
+      }
 
+      &:hover,
+      &.is-active {
         svg {
-          fill: var(--icon-primary-color);
-          transition: var(--transition);
+          fill: var(--icon-tertiary-color);
         }
 
-        // hover effect
         &::before {
-          content: "";
-          background: var(--gray-6);
-          border-radius: 3px;
-          display: block;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          height: 34px;
-          top: 50%;
-          transition: all .15s cubic-bezier(.4,0,.2,1);
-          transform: scale(.5) translate(-50%, -50%);
-          transform-origin: left top;
-          width: 34px;
-          z-index: -1;
-        }
-
-        &:hover,
-        &.is-active {
-
-          svg {
-            fill: var(--icon-tertiary-color);
-          }
-
-          &::before {
-            opacity: 1;
-            transform: scale(1) translate(-50%, -50%);
-          }
+          opacity: 1;
+          transform: scale(1) translate(-50%, -50%);
         }
       }
+    }
 
     &-delete {
       &:hover {
         svg {
-            fill: var(--white);
-          }
-          &::before {
-           background: var(--warning);
-          }        
+          fill: var(--white);
+        }
+        &::before {
+          background: var(--warning);
+        }
       }
     }
 
@@ -642,7 +778,7 @@ export default {
       right: -90px;
 
       svg {
-          vertical-align: middle;
+        vertical-align: middle;
       }
 
       & + .wrapper-ui-bulk-move {
@@ -651,10 +787,10 @@ export default {
 
       &:disabled {
         cursor: default;
-        opacity: .4;
+        opacity: 0.4;
 
         &::before {
-           background: none;
+          background: none;
         }
       }
     }
@@ -667,35 +803,6 @@ export default {
       left: -60px;
     }
   }
-
-  &-ui-add-block-between {
-    background: none;
-    border: none;
-    bottom: -8px;
-    cursor: pointer;
-    display: none;
-    height: 30px;
-    left: 50%;
-    outline: none;
-    padding: 0!important;
-    position: absolute;
-    transform: translateX(-50%);
-    width: 60px;
-
-    & > svg {
-        fill: var(--color-primary);
-    }
-  }
-
-  &.is-hovered {
-    .wrapper-ui-add-block-between {
-      display: block;
-
-      & > svg {
-          animation: fadeInAddButton .12s ease-out forwards;
-      }
-    }
-  }
 }
 
 .editor[data-ui-opened-block=""] {
@@ -704,14 +811,39 @@ export default {
   }
 }
 
-.editor:not([data-ui-opened-block=""]),
-.show-bulk-operations {
-  .wrapper-ui-add-block-between {
-    display: none!important;
-  }
-}
+.block-selector {
+  display: none !important;
+  left: -26px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
 
-.is-empty:not(.publii-block-image-wrapper):not(.publii-block-gallery-wrapper) ~ .wrapper-ui-add-block-between {
-  display: none!important;
+  &.is-visible {
+    display: block !important;
+  }
+
+  .block-selector-list {
+    background: #fff;
+    border: 1px solid #eee;
+    position: absolute;
+    top: 60px;
+    width: 200px;
+    z-index: 100;
+
+    input {
+        width: 100%;
+    }
+    
+    &-wrapper {
+        max-height: 150px;
+        overflow: auto; 
+    }
+
+    &-item {
+        display: block;
+        width: 100%;
+    }
+  }
 }
 </style>
