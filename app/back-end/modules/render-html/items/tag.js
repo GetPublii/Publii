@@ -28,6 +28,11 @@ class TagItem {
     prepareData() {
         let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex;
         let tagAdditionalData = this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {};
+        let tagURL = URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml);
+
+        if (tagAdditionalData.isHidden === true) {
+            tagURL = '';
+        }
 
         this.tagData = {
             id: this.tag.id,
@@ -37,7 +42,7 @@ class TagItem {
             additionalData: tagAdditionalData,
             featuredImage: {},
             postsNumber: this.getPostsNumber(),
-            url: URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml),
+            url: tagURL,
             template: tagAdditionalData.template ? tagAdditionalData.template : '' 
         };
 
