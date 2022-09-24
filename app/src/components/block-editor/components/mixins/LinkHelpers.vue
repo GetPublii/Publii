@@ -7,7 +7,7 @@ export default {
         return [0];
       }
 
-      return this.$parent.currentSiteData.tags.map(tag => tag.id);
+      return this.$parent.currentSiteData.tags.filter(tag => tag.additionalData.indexOf('"isHidden":false') > -1).map(tag => tag.id);
     },
     authorPages () {
       if (!this.$parent.currentSiteData || !this.$parent.currentSiteData.authors.length) {

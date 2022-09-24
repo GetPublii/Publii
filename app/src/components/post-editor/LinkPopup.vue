@@ -202,7 +202,7 @@ export default {
             return [ 'post', 'tag', 'tags', 'author', 'frontpage', 'external', 'file' ];
         },
         tagPages () {
-            return this.$store.state.currentSite.tags.map(tag => tag.id);
+            return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":false') > -1).map(tag => tag.id);
         },
         authorPages () {
             return this.$store.state.currentSite.authors.map(author => author.username).sort((a, b) => {
@@ -247,7 +247,7 @@ export default {
             }
         },
         customTagLabels (value) {
-            return this.$store.state.currentSite.tags.filter(tag => tag.id === value).map(tag => tag.name)[0];
+            return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":false') > -1 && tag.id === value).map(tag => tag.name)[0];
         },
         customAuthorsLabels (value) {
             return this.$store.state.currentSite.authors.filter(author => author.username === value).map(author => author.name)[0];

@@ -289,7 +289,7 @@ export default {
 
             if(this.type === 'tag') {
                 validItems = this.$store.state.currentSite.tags.filter(
-                    tag => tag.id == this.link
+                    tag => tag.id == this.link && tag.additionalData.indexOf('"isHidden":false') > -1
                 );
 
                 if(!this.$store.state.currentSite.config.advanced.displayEmptyTags) {
