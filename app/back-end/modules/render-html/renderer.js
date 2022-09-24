@@ -1238,7 +1238,10 @@ class Renderer {
         console.time(ampMode ? 'AUTHORS-AMP' : 'AUTHORS');
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
-        fs.mkdirSync(authorsDirPath);
+
+        if (!UtilsHelper.dirExists(authorsDirPath)) {
+            fs.mkdirSync(authorsDirPath);
+        }
 
         // Get authors
         let authorsIDs = [];
