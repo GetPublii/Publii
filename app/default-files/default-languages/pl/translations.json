@@ -1219,6 +1219,8 @@
         "ifCanonicalUrlIsSetMetaRobotsTagIsIgnored": "Jeśłi kanoiczny URL jest ustawiony, tagi meta robotów są ignorowane.",
         "indexFollow": "index, follow",
         "indexNofollow": "index, nofollow",
+        "indexFollowNoArchive": "index, follow, noarchive",
+        "indexNofollowNoArchive": "index, nofollow, noarchive",
         "iUnderstand": "OK, rozumiem",
         "lastModified": "Ostatnia modyfikacja",
         "leaveBlankToUseDefaultPageTitle": "Pozostaw puste aby zastosować domyślny tytuł strony",

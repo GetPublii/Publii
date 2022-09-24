@@ -1219,6 +1219,8 @@
         "ifCanonicalUrlIsSetMetaRobotsTagIsIgnored": "If canonical URLs are enabled, the meta robots tag is ignored.",
         "indexFollow": "index, follow",
         "indexNofollow": "index, nofollow",
+        "indexFollowNoArchive": "index, follow, noarchive",
+        "indexNofollowNoArchive": "index, nofollow, noarchive",
         "iUnderstand": "OK, I understand",
         "lastModified": "Last modified",
         "leaveBlankToUseDefaultPageTitle": "Leave blank to use a default page title",

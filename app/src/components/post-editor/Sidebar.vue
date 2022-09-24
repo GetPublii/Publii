@@ -531,6 +531,8 @@ export default {
             return {
                 'index, follow': this.$t('ui.indexFollow'),
                 'index, nofollow': this.$t('ui.indexNofollow'),
+                'index, follow, noarchive': this.$t('ui.indexFollowNoArchive'),
+                'index, nofollow, noarchive': this.$t('ui.indexNofollowNoArchive'),
                 'noindex, follow': this.$t('ui.noindexFollow'),
                 'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
