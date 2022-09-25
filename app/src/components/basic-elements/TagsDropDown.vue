@@ -54,7 +54,13 @@ export default {
     },
     methods: {
         tagLabels (value) {
-            return this.$store.state.currentSite.tags.filter(tag => tag.id === value).map(tag => tag.name)[0];
+            return this.$store.state.currentSite.tags.filter(tag => tag.id === value).map(tag => {
+                if (tag.additionalData.indexOf('"isHidden":true') > -1) {
+                    return tag.name + ' (' + this.$t('tag.thisTagIsHidden') + ')';
+                } else {
+                    return tag.name;
+                }
+            })[0];
         },
         closeDropdown () {
             this.$refs['dropdown'].isOpen = false;
