@@ -2,7 +2,7 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const moment = require('moment');
-const xmlParser = require('fast-xml-parser');
+const { XMLParser } = require('fast-xml-parser');
 const download = require('image-downloader');
 const automaticParagraphs = require('./automatic-paragraphs.js');
 const slug = require('./../../helpers/slug');
@@ -83,6 +83,10 @@ class WxrParser {
     parseFile() {
         let results = false;
         try {
+            let xmlParser = new XMLParser({
+                ignoreAttributes: false,
+                attributeNamePrefix : "@_"
+            });
             results = xmlParser.parse(this.fileContent);
         } catch(e) {
             console.log('An error occurred:', e);
@@ -304,11 +308,11 @@ class WxrParser {
         let itemSlug = '';
 
         if(this.usedTaxonomy === 'tags') {
-            itemName = tagData['wp:tag_name'];
-            itemSlug = tagData['wp:tag_slug'];
+            itemName = (tagData['wp:tag_name']).toString();
+            itemSlug = (tagData['wp:tag_slug']).toString();
         } else {
-            itemName = tagData['wp:cat_name'];
-            itemSlug = tagData['wp:category_nicename'];
+            itemName = (tagData['wp:cat_name']).toString();
+            itemSlug = (tagData['wp:category_nicename']).toString();
         }
 
         // For each author item insert author object
@@ -387,7 +391,7 @@ class WxrParser {
             let postText = this.preparePostText(posts[i]['content:encoded'], postImages);
             let postStatus = posts[i]['wp:status'] === 'draft' ? 'draft' : 'published'
             let postTags = '';
-            let postTitle = typeof posts[i].title === 'string' ? posts[i].title : 'Untitled';
+            let postTitle = (posts[i].title).toString();
 
             if(posts[i]['category'] && (posts[i]['category'].length || posts[i]['category'] instanceof Object)) {
                 let tags = false;
@@ -399,12 +403,12 @@ class WxrParser {
                 console.log(posts[i]['category']);
 
                 if(this.usedTaxonomy === 'tags') {
-                    tags = posts[i]['category'].filter(item => item.domain === 'post_tag');
+                    tags = posts[i]['category'].filter(item => item['@_domain'] === 'post_tag');
                 } else {
-                    tags = posts[i]['category'].filter(item => item.domain === 'category');
+                    tags = posts[i]['category'].filter(item => item['@_domain'] === 'category');
                 }
 
-                postTags = [...new Set(tags.map(tag => tag['$t']))].join(',');
+                postTags = [...new Set(tags.map(tag => tag['#text']))].join(',');
             }
 
             if(!this.importAuthors) {

@@ -23,7 +23,7 @@ class Tag extends Model {
         }
 
         if(tagData.name || tagData.name === '') {
-            this.name = tagData.name;
+            this.name = (tagData.name).toString();
             this.slug = tagData.slug;
             this.description = tagData.description;
             this.additionalData = tagData.additionalData;
