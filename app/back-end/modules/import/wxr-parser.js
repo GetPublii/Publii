@@ -372,7 +372,14 @@ class WxrParser {
             return;
         }
 
+        let untitledPostsCount = 1;
+
         for(let i = 0; i < posts.length; i++) {
+            if (!posts[i].title) {
+                console.log('(!) Empty post title detected - fallback to "Untitled #X" title');
+                posts[i].title = 'Untitled #' + untitledPostsCount++;
+            }
+
             // For each post item insert post object
             let postImages = this.getPostImages(posts[i]['content:encoded']);
             let postSlug = slug(posts[i].title);
