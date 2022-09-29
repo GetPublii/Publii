@@ -182,13 +182,18 @@ class S3 {
 
         fs.readFile(path.join(this.deployment.inputDir, 'files.publii.json'), (err, fileContent) => {
             let fileName = 'files.publii.json';
+            let fileACL = 'public-read';
+
+            if (this.deployment.siteConfig.deployment.s3.acl) {
+                fileACL = this.deployment.siteConfig.deployment.s3.acl;
+            }
 
             if(typeof this.prefix === 'string' && this.prefix !== '') {
                 fileName = this.prefix + fileName;
             }
 
             let params = {
-                ACL: 'authenticated-read',
+                ACL: fileACL,
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,
