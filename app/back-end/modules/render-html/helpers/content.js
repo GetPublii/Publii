@@ -65,8 +65,14 @@ class ContentHelper {
 
         // Find all images and add srcset and sizes attributes
         if (renderer.siteConfig.advanced.responsiveImages) {
+            let useWebp = false;
+
+            if (renderer.siteConfig?.advanced?.forceWebp) {
+                useWebp = true;
+            }
+
             preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"/gmi, function(matches, url) {
-                return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, domain);
+                return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, useWebp, domain);
             });
         }
 
@@ -251,11 +257,8 @@ class ContentHelper {
 
     /**
      * Returns srcset for featured image
-     *
-     * @param baseUrl
-     * @returns {*}
      */
-    static getFeaturedImageSrcset(baseUrl, themeConfig, type = 'post') {
+    static getFeaturedImageSrcset(baseUrl, themeConfig, useWebp, type = 'post') {
         if(!ContentHelper._isImage(baseUrl) || !UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
@@ -288,7 +291,7 @@ class ContentHelper {
 
         if(groups === false) {
             for(let dimension of dimensions) {
-                let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension);
+                let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
                 srcset.push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
             }
 
@@ -304,7 +307,7 @@ class ContentHelper {
                         srcset[groupName] = [];
                     }
 
-                    let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension);
+                    let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
                     srcset[groupName].push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
                 }
             }
@@ -347,7 +350,7 @@ class ContentHelper {
      * @param themeConfig
      * @returns {*}
      */
-    static getContentImageSrcset(baseUrl, themeConfig) {
+    static getContentImageSrcset(baseUrl, themeConfig, useWebp) {
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
@@ -362,7 +365,7 @@ class ContentHelper {
         let srcset = [];
 
         for(let dimension of dimensions) {
-            let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension);
+            let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
             srcset.push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
         }
 
@@ -395,11 +398,16 @@ class ContentHelper {
      * @returns {string}
      * @private
      */
-    static _getSrcSet(url, dimension) {
+    static _getSrcSet(url, dimension, useWebp) {
         let filename = url.split('/');
         filename = filename[filename.length-1];
         let filenameFile = path.parse(filename).name;
         let filenameExtension = path.parse(filename).ext;
+
+        if (useWebp && ['.jpg', '.jpeg', '.png'].indexOf(filenameExtension) > -1) {
+            filenameExtension = '.webp';
+        }
+
         let baseUrlWithoutFilename = url.replace(filename, '');
         let responsiveImage = baseUrlWithoutFilename + 'responsive/' + filenameFile + '-' + dimension + filenameExtension;
         responsiveImage = responsiveImage.replace(/\s/g, '%20');
@@ -437,7 +445,7 @@ class ContentHelper {
      * @returns {*}
      * @private
      */
-    static _addResponsiveAttributes(matches, url, themeConfig, domain) {
+    static _addResponsiveAttributes(matches, url, themeConfig, useWebp, domain) {
         if (
             url.indexOf('media/posts') === -1 &&
             url.indexOf('media\posts') === -1 &&
@@ -448,7 +456,7 @@ class ContentHelper {
         }
 
         if(
-            ContentHelper.getContentImageSrcset(url, themeConfig) !== false &&
+            ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) !== false &&
             ContentHelper._imageIsLocal(url, domain) &&
             !(
                 url.toLowerCase().indexOf('.jpg') === -1 &&
@@ -461,10 +469,10 @@ class ContentHelper {
             if(ContentHelper.getContentImageSizes(themeConfig)) {
                 return matches +
                     ' sizes="' + ContentHelper.getContentImageSizes(themeConfig) + '"' +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig) + '" ';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '" ';
             } else {
                 return matches +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig) + '" ';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '" ';
             }
         } else if (!ContentHelper._imageIsLocal(url, domain)) {
             return matches + ' data-is-external-image="true" ';

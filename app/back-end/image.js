@@ -199,6 +199,9 @@ class Image extends Model {
         let siteConfig = JSON.parse(fs.readFileSync(siteConfigPath));
         siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
         let imagesQuality = 60;
+        let alphaQuality = 100;
+        let forceWebp = false;
+        let webpLossless = false;
         let imageExtension = path.parse(originalPath).ext;
         let imageDimensions = {
             width: false, 
@@ -227,8 +230,7 @@ class Image extends Model {
         }
 
         if (
-            siteConfig.advanced &&
-            siteConfig.advanced.imagesQuality &&
+            siteConfig?.advanced?.imagesQuality &&
             !isNaN(parseInt(siteConfig.advanced.imagesQuality, 10))
         ) {
             imagesQuality = siteConfig.advanced.imagesQuality;
@@ -237,6 +239,26 @@ class Image extends Model {
             if (imagesQuality < 1 || imagesQuality > 100) {
                 imagesQuality = 60;
             }
+        }
+
+        if (
+            siteConfig?.advanced?.alphaQuality &&
+            !isNaN(parseInt(siteConfig.advanced.alphaQuality, 10))
+        ) {
+            alphaQuality = siteConfig.advanced.alphaQuality;
+            alphaQuality = parseInt(alphaQuality);
+
+            if (alphaQuality < 1 || alphaQuality > 100) {
+                alphaQuality = 100;
+            }
+        }
+
+        if (siteConfig?.advanced?.webpLossless) {
+            webpLossless = !!siteConfig.advanced.webpLossless;
+        }
+
+        if (siteConfig?.advanced?.forceWebp && !this.shouldUseJimp()) {
+            forceWebp = !!siteConfig.advanced.forceWebp;
         }
 
         // If there is no selected theme
@@ -302,6 +324,15 @@ class Image extends Model {
             let extension = path.parse(originalPath).ext;
             let destinationPath = path.join(targetImagesDir, filename + '-' + name + extension);
             let result;
+            let shouldBeChangedToWebp = false;
+
+            if (!this.shouldUseJimp() && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
+                shouldBeChangedToWebp = true;
+            }
+
+            if (forceWebp && shouldBeChangedToWebp) {
+                destinationPath = path.join(targetImagesDir, filename + '-' + name + '.webp');
+            }
 
             if (!this.allowedImageExtension(extension)) {
                 continue;
@@ -361,7 +392,7 @@ class Image extends Model {
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
-                        if (extension.toLowerCase() === '.png') {
+                        if (extension.toLowerCase() === '.png' && !forceWebp) {
                             sharp(originalPath)
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
@@ -373,13 +404,22 @@ class Image extends Model {
 
                                     resolve(destinationPath);
                                 }).catch(err => reject(err))
-                        } else if (extension.toLowerCase() === '.webp') {
+                        } else if (extension.toLowerCase() === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
+                            let webpConfig = {
+                                quality: imagesQuality,
+                                alphaQuality: alphaQuality,
+                            };
+
+                            if (webpLossless) {
+                                webpConfig = {
+                                    lossless: true
+                                };
+                            }
+
                             sharp(originalPath)
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .webp({
-                                    quality: imagesQuality
-                                })
+                                .webp(webpConfig)
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);

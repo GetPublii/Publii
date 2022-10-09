@@ -76,9 +76,14 @@ class FeaturedImageItem {
         }
 
         let featuredImageSrcSets = '';
+        let useWebp = false;
+
+        if (this.renderer.siteConfig?.advanced?.forceWebp) {
+            useWebp = true;
+        }
 
         if(!this.isGifOrSvg(url)) {
-            featuredImageSrcSets = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, this.itemType);
+            featuredImageSrcSets = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, useWebp, this.itemType);
         }
 
         let featuredImageSizes = false;
@@ -122,6 +127,11 @@ class FeaturedImageItem {
                     let base = path.parse(url).base;
                     let filename = path.parse(url).name;
                     let extension = path.parse(url).ext;
+
+                    if (useWebp) {
+                        extension = '.webp';
+                    }
+
                     let newFilename = filename + '-' + dimensionName + extension;
                     let capitalizedDimensionName = dimensionName.charAt(0).toUpperCase() + dimensionName.slice(1);
 

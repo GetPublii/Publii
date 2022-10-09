@@ -65,6 +65,16 @@ function returnSrcSetAttribute (url, group) {
         filename = filename[filename.length-1];
         let filenameFile = path.parse(filename).name;
         let filenameExtension = path.parse(filename).ext;
+        let useWebp = false;
+
+        if (this.siteConfig?.advanced?.forceWebp) {
+            useWebp = true;
+        }
+
+        if (useWebp) {
+            filenameExtension = '.webp';
+        }
+
         let baseUrlWithoutFilename = url.replace(filename, '');
         let responsiveImage = baseUrlWithoutFilename + 'responsive/' + filenameFile + '-' + name + filenameExtension;
         srcset.push(responsiveImage + ' ' + dimensionsData[name].width + 'w');

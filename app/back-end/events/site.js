@@ -140,8 +140,13 @@ class SiteEvents {
 
 
             if (
-                (oldConfig.advanced && oldConfig.advanced.responsiveImages !== config.settings.advanced.responsiveImages) ||
-                (oldConfig.advanced && oldConfig.advanced.imagesQuality !== config.settings.advanced.imagesQuality)
+                oldConfig.advanced && (
+                    (oldConfig.advanced.responsiveImages !== config.settings.advanced.responsiveImages) ||
+                    (oldConfig.advanced.imagesQuality !== config.settings.advanced.imagesQuality) || 
+                    (oldConfig.advanced.alphaQuality !== config.settings.advanced.alphaQuality) || 
+                    (oldConfig.advanced.forceWebp !== config.settings.advanced.forceWebp) ||
+                    (oldConfig.advanced.webpLossless !== config.settings.advanced.webpLossless)
+                )
             ) {
                 thumbnailsRegenerateRequired = true;
             }

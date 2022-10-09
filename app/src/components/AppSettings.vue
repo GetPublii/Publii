@@ -57,6 +57,12 @@
                         :items="imageResizeEngines"
                         v-model="imageResizeEnginesSelected"></dropdown>
                     <small
+                        v-if="showWebpWarning"
+                        slot="note"
+                        class="note is-warning">
+                        {{ $t('settings.imageResizeEngineWarning') }}
+                    </small>
+                    <small
                         slot="note"
                         class="note">
                         {{ $t('settings.imageResizeEngineInfo') }}
@@ -463,6 +469,9 @@ export default {
                 'var(--font-base)': this.$t('settings.editorFontFamilySansSerif'),
                 'var(--font-serif)': this.$t('settings.editorFontFamilySerif')
             };
+        },
+        showWebpWarning () {
+            return this.imageResizeEnginesSelected === 'jimp';
         }
     },
     mounted () {
@@ -641,6 +650,10 @@ export default {
         margin: 0 auto;
         max-width: $wrapper;
     }
+}
+
+.note.is-warning {
+    color: var(--warning);
 }
 
 #site-location-switcher {

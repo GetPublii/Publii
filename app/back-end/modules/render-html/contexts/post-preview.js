@@ -387,7 +387,13 @@ class RendererContextPostPreview extends RendererContext {
             let featuredImageSizes = false;
 
             if(!this.isGifOrSvg(url)) {
-                featuredImageSrcSet = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig);
+                let useWebp = false;
+
+                if (this.renderer.siteConfig?.advanced?.forceWebp) {
+                    useWebp = true;
+                }
+
+                featuredImageSrcSet = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, useWebp);
                 featuredImageSizes = ContentHelper.getFeaturedImageSizes(this.themeConfig);
             } else {
                 featuredImageSrcSet = '';
@@ -487,11 +493,17 @@ class RendererContextPostPreview extends RendererContext {
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
+        let useWebp = false;
+
+        if (this.renderer.siteConfig?.advanced?.forceWebp) {
+            useWebp = true;
+        }
+
         // Find all images and add srcset and sizes attributes
         if (this.siteConfig.responsiveImages) {
             preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
                 if(
-                    ContentHelper.getContentImageSrcset(url, self.themeConfig) !== false &&
+                    ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) !== false &&
                     !(
                         url.toLowerCase().indexOf('.jpg') === -1 &&
                         url.toLowerCase().indexOf('.jpeg') === -1 &&
@@ -503,10 +515,10 @@ class RendererContextPostPreview extends RendererContext {
                     if(ContentHelper.getContentImageSizes(self.themeConfig)) {
                         return matches +
                             ' sizes="' + ContentHelper.getContentImageSizes(self.themeConfig) + '"' +
-                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) + '" ';
                     } else {
                         return matches +
-                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig) + '" ';
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) + '" ';
                     }
                 } else {
                     return matches;

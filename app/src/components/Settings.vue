@@ -1654,6 +1654,38 @@
                         </field>
 
                         <field
+                            v-if="advanced.responsiveImages"
+                            id="convert-to-webp"
+                            :label="$t('settings.convertToWebp')">
+                            <switcher
+                                id="version-suffix"
+                                v-model="advanced.forceWebp"
+                                slot="field" />
+
+                            <small
+                                v-if="advanced.forceWebp && $store.state.app.config.resizeEngine === 'jimp'"
+                                slot="note"
+                                class="note is-warning">
+                                {{ $t('settings.convertToWebpJimpWarning') }}
+                            </small>
+
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.convertToWebpInfo') }}
+                            </small>
+                        </field>
+
+                        <field
+                            id="webp-lossless"
+                            :label="$t('settings.webpLossless')">
+                            <switcher
+                                id="webp-lossless"
+                                v-model="advanced.webpLossless"
+                                slot="field" />
+                        </field>
+
+                        <field
                             id="images-quality"
                             :label="$t('settings.responsiveImagesQuality')">
                             <label slot="field">
@@ -1663,7 +1695,24 @@
                                     min="1"
                                     max="100"
                                     step="1"
+                                    :disabled="advanced.forceWebp && advanced.webpLossless"
                                     v-model="advanced.imagesQuality" />
+                                %
+                            </label>
+                        </field>
+
+                        <field
+                            id="images-alpha-quality"
+                            :label="$t('settings.responsiveImagesAlphaQuality')">
+                            <label slot="field">
+                                <text-input
+                                    id="images-alpha-quality"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    step="1"
+                                    :disabled="advanced.forceWebp && advanced.webpLossless"
+                                    v-model="advanced.alphaQuality" />
                                 %
                             </label>
                         </field>
@@ -2677,6 +2726,10 @@ export default {
             margin-bottom: 1rem;
         }
     }
+}
+
+.note.is-warning {
+    color: var(--warning);
 }
 .msg-bm {
    margin-bottom:3rem;
