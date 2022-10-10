@@ -450,13 +450,16 @@ class ContentHelper {
      * @private
      */
     static _addResponsiveAttributes(matches, url, themeConfig, useWebp, domain) {
+        matches = matches.replace('/>', '');
+        matches = matches.replace('>', '');
+
         if (
             url.indexOf('media/posts') === -1 &&
             url.indexOf('media\posts') === -1 &&
             url.indexOf('media/website') === -1 &&
             url.indexOf('media\website') === -1
         ) {
-            return matches + ' data-is-external-image="true" ';
+            return matches + ' data-is-external-image="true">';
         }
 
         if(
@@ -473,15 +476,15 @@ class ContentHelper {
             if(ContentHelper.getContentImageSizes(themeConfig)) {
                 return matches +
                     ' sizes="' + ContentHelper.getContentImageSizes(themeConfig) + '"' +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '" ';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '">';
             } else {
                 return matches +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '" ';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '">';
             }
         } else if (!ContentHelper._imageIsLocal(url, domain)) {
-            return matches + ' data-is-external-image="true" ';
+            return matches + ' data-is-external-image="true">';
         } else {
-            return matches;
+            return matches + '>';
         }
     }
 
