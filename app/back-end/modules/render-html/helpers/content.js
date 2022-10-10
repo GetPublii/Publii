@@ -71,7 +71,11 @@ class ContentHelper {
                 useWebp = true;
             }
 
-            preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"/gmi, function(matches, url) {
+            preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"[\s\S]*?>/gmi, function(matches, url) {
+                if (matches.indexOf('data-responsive="false"') > -1) {
+                    return matches;
+                }
+
                 return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, useWebp, domain);
             });
         }
