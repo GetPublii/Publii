@@ -613,6 +613,7 @@
       -ms-user-select: none;
           user-select: none;
   visibility: hidden;
+  width: auto;
 }
 .pcb__badge:active, .pcb__badge:hover, .pcb__badge:focus {
   background: var(--pcb-badge-bg-hover);

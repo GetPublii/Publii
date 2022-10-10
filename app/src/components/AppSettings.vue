@@ -56,18 +56,19 @@
                         id="images-resize-engine"
                         :items="imageResizeEngines"
                         v-model="imageResizeEnginesSelected"></dropdown>
-                    <small
+                    <p
                         v-if="showWebpWarning"
-                        slot="note"
-                        class="note is-warning">
-                        {{ $t('settings.imageResizeEngineWarning') }}
-                    </small>
+                        slot="note" 
+                        class="msg msg-icon msg-alert">
+                        <icon name="warning" customWidth="28" customHeight="28" />
+                        <span>{{ $t('settings.imageResizeEngineWarning') }}</span>
+                    </p>
                     <small
                         slot="note"
                         class="note">
                         {{ $t('settings.imageResizeEngineInfo') }}
                     </small>
-                </field>             
+                </field>      
 
                 <field
                     id="always-save-search-state"

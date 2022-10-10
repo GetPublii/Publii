@@ -1624,21 +1624,6 @@
                         </field>
 
                         <field
-                            id="responsive-images"
-                            :label="$t('settings.enableResponsiveImages')">
-                            <switcher
-                                id="responsive-images"
-                                v-model="advanced.responsiveImages"
-                                slot="field" />
-
-                            <small
-                                slot="note"
-                                class="note">
-                                {{ $t('settings.enableResponsiveImagesInfo') }}
-                            </small>
-                        </field>
-
-                        <field
                             id="version-suffix"
                             :label="$t('settings.versionParameter')">
                             <switcher
@@ -1653,36 +1638,23 @@
                             </small>
                         </field>
 
-                        <field
-                            v-if="advanced.responsiveImages"
-                            id="convert-to-webp"
-                            :label="$t('settings.convertToWebp')">
-                            <switcher
-                                id="version-suffix"
-                                v-model="advanced.forceWebp"
-                                slot="field" />
+                        <separator
+                            type="small thin"
+                            :is-line="true"/>
 
-                            <small
-                                v-if="advanced.forceWebp && $store.state.app.config.resizeEngine === 'jimp'"
-                                slot="note"
-                                class="note is-warning">
-                                {{ $t('settings.convertToWebpJimpWarning') }}
-                            </small>
+                        <field
+                            id="responsive-images"
+                            :label="$t('settings.enableResponsiveImages')">
+                            <switcher
+                                id="responsive-images"
+                                v-model="advanced.responsiveImages"
+                                slot="field" />
 
                             <small
                                 slot="note"
                                 class="note">
-                                {{ $t('settings.convertToWebpInfo') }}
+                                {{ $t('settings.enableResponsiveImagesInfo') }}
                             </small>
-                        </field>
-
-                        <field
-                            id="webp-lossless"
-                            :label="$t('settings.webpLossless')">
-                            <switcher
-                                id="webp-lossless"
-                                v-model="advanced.webpLossless"
-                                slot="field" />
                         </field>
 
                         <field
@@ -1701,7 +1673,47 @@
                             </label>
                         </field>
 
+                        <separator
+                            v-if="advanced.responsiveImages"
+                            type="small thin"
+                            :is-line="true"/>
+                        
                         <field
+                            v-if="advanced.responsiveImages"
+                            id="convert-to-webp"
+                            :label="$t('settings.convertToWebp')">
+                            <switcher
+                                id="version-suffix"
+                                v-model="advanced.forceWebp"
+                                slot="field" />
+
+                            <p
+                                v-if="advanced.forceWebp && $store.state.app.config.resizeEngine === 'jimp'"
+                                slot="note" 
+                                class="msg msg-icon msg-alert">
+                                <icon name="warning" customWidth="28" customHeight="28" />
+                                <span>{{ $t('settings.convertToWebpJimpWarning') }}</span>
+                            </p>
+
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.convertToWebpInfo') }}
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.responsiveImages && advanced.forceWebp"
+                            id="webp-lossless"
+                            :label="$t('settings.webpLossless')">
+                            <switcher
+                                id="webp-lossless"
+                                v-model="advanced.webpLossless"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.responsiveImages && advanced.forceWebp"
                             id="images-alpha-quality"
                             :label="$t('settings.responsiveImagesAlphaQuality')">
                             <label slot="field">
