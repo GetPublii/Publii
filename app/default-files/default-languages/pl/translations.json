@@ -578,7 +578,7 @@
         "colorTheme": "Motyw kolorystyczny",
         "content": "Treść",
         "convertToWebp": "Konwertuj do WebP",
-        "convertToWebpInfo": "Włącz tę opcję, jeśli chcesz konwertować wszystkie grafiki w formatach JPG/PNG do formatu WebP. Zregenerowanie miniaturek będzie konieczne po włączeniu tej opcji. Opcja ta zadziała tylko gdy używasz biblioteki Sharp do tworzenia miniaturek.",
+        "convertToWebpInfo": "Włącz tę opcję, jeśli chcesz konwertować wszystkie grafiki w formatach JPG, JPEG oraz PNG do formatu WebP. Po włączeniu tej opcji konieczna jest ponowna regeneracja miniaturek. Opcja ta zadziała tylko gdy używasz biblioteki Sharp do tworzenia miniaturek.",
         "convertToWebpJimpWarning": "Ta opcja nie działa z obecnie używanym silnikiem tworzenia miniaturek - Jimp. Proszę użyć silnika Sharp aby móc używać tej opcji.",
         "cookieGroups": "Grupy plików cookies",
         "cookieBanner": "Banner cookies",
@@ -845,7 +845,7 @@
         "versionParameterInfo": "Dodaj parametr wersji w adresach URL plików CSS/JS, aby pominąć pamięć podręczną przeglądarki. Ta opcja może spowodować, że podczas wdrażania konieczne będzie zsynchronizowanie większej liczby plików niż zwykle.",
         "vimeoNoTrack": "Włącz tryb 'Bez śledzenia' dla video z Vimeo",
         "websiteSpeed": "Szybkość witryny",
-        "webpLossless": "Użyj kompresji bezstratnej dla grafik w formacie WebP",
+        "webpLossless": "Włącz bezstratną kompresję dla grafik w formacie WebP",
         "whatsApp": "WhatsApp",
         "youMustReviewGdprSettings": "Powinieneś sprawdzić swoje ustawienia Prywatności (poprzednio GDPR) ze względu na istotne zmiany w Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Czytaj więcej</a>",
         "ytNoCookies": "Włącz tryb rozszerzonej prywatności dla video z YouTube"
