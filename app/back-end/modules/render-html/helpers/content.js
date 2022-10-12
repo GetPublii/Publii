@@ -408,7 +408,7 @@ class ContentHelper {
         let filenameFile = path.parse(filename).name;
         let filenameExtension = path.parse(filename).ext;
 
-        if (useWebp && ['.jpg', '.jpeg', '.png'].indexOf(filenameExtension) > -1) {
+        if (useWebp && ['.jpg', '.jpeg', '.png'].indexOf(filenameExtension.toLowerCase()) > -1) {
             filenameExtension = '.webp';
         }
 

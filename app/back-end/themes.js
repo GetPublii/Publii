@@ -517,7 +517,8 @@ class Themes {
 
         // Load theme config
         let themeConfig = UtilsHelper.loadThemeConfig(this.siteInputPath, currentTheme);
-
+        let forceWebp = !!this.appInstance.sites[this.siteName]?.advanced?.forceWebp;
+        
         // check if responsive images config exists
         if(UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             dimensions = UtilsHelper.responsiveImagesDimensions(themeConfig, 'optionImages');
@@ -537,6 +538,11 @@ class Themes {
             for(let dimensionName of dimensions) {
                 let filename = path.parse(originalPath).name;
                 let extension = path.parse(originalPath).ext;
+                
+                if (forceWebp && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
+                    extension = '.webp'; 
+                }
+
                 let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
 
                 if(UtilsHelper.fileExists(responsiveImagePath)) {

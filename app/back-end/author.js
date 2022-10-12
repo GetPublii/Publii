@@ -373,10 +373,17 @@ class Author extends Model {
                 return;
             }
 
+            let forceWebp = !!this.application.sites[this.site]?.advanced?.forceWebp;
+
             // Remove responsive images of each size
             for(let dimensionName of dimensions) {
                 let filename = path.parse(originalPath).name;
                 let extension = path.parse(originalPath).ext;
+            
+                if (forceWebp && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
+                    extension = '.webp'; 
+                }
+
                 let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
 
                 if(Utils.fileExists(responsiveImagePath)){

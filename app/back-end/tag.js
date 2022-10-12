@@ -286,8 +286,7 @@ class Tag extends Model {
 
             if (featuredImageResult) {
                 try {
-                    featuredImageResult = JSON.parse(featuredImageResult);
-                    featuredImage = featuredImageResult.featuredImage;
+                    featuredImageResult = JSON.parse(featuredImageResult[0].additional_data).featuredImage;
                 } catch (e) {
                     console.log('(!) An issue occurred during parsing tag additional data', this.id);
                 }
@@ -355,10 +354,17 @@ class Tag extends Model {
                 return;
             }
 
+            let forceWebp = !!this.application.sites[this.site]?.advanced?.forceWebp;
+
             // Remove responsive images of each size
             for(let dimensionName of dimensions) {
                 let filename = path.parse(originalPath).name;
                 let extension = path.parse(originalPath).ext;
+
+                if (forceWebp && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
+                    extension = '.webp'; 
+                }
+
                 let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
 
                 if(Utils.fileExists(responsiveImagePath)){
