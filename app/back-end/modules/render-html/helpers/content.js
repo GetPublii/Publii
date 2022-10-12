@@ -37,9 +37,17 @@ class ContentHelper {
         // Get media URL
         let domainMediaPath = domain + '/media/posts/' + postID + '/';
 
+        // Detect forced WebP images
+        let useWebp = false;
+
+        if (renderer.siteConfig?.advanced?.forceWebp) {
+            useWebp = true;
+        }
+
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
         preparedText = ContentHelper.parseText(preparedText, editor);
+        preparedText = ContentHelper.setWebpCompatibility(useWebp, preparedText);
 
         // Remove content for AMP or non-AMP depending from ampMode value
         if (ampMode) {
@@ -65,12 +73,6 @@ class ContentHelper {
 
         // Find all images and add srcset and sizes attributes
         if (renderer.siteConfig.advanced.responsiveImages) {
-            let useWebp = false;
-
-            if (renderer.siteConfig?.advanced?.forceWebp) {
-                useWebp = true;
-            }
-
             preparedText = preparedText.replace(/<img[\s\S]*?src="(.*?)"[\s\S]*?>/gmi, function(matches, url) {
                 if (matches.indexOf('data-responsive="false"') > -1) {
                     return matches;
@@ -710,6 +712,91 @@ class ContentHelper {
         }
 
         return text;
+    }
+
+    /**
+     * Replaces non-WebP images to WebP or WebP images to non-WebP images in gallery thumbnails if necessary
+     * @param {boolean} forceWebp - state of force WebP option
+     * @param {string} text - text to modify
+     * @returns {string} - modified text
+     */
+    static setWebpCompatibility (forceWebp, text) {
+        text = text.replace(/\<figure class="gallery__item">[\s\S]*?<a[\s\S]*?href="(.*?)"[\s\S]+?>[\s\S]*?<img[\s\S]*?src="(.*?)"/gmi, (matches, linkUrl, imgUrl) => {
+            if (linkUrl && imgUrl) {
+                if (
+                    forceWebp && 
+                    ContentHelper.getImageType(linkUrl) === 'webp-compatible' && 
+                    !ContentHelper.isWebpImage(imgUrl)
+                ) {
+                    let imgExtension = ContentHelper.getImageExtension(imgUrl);
+                    let newImgUrl = imgUrl.substr(0, imgUrl.length + (-1 * imgExtension.length)) + '.webp';
+                    matches = matches.replace(imgUrl, newImgUrl);
+                } else if (
+                    !forceWebp && 
+                    ContentHelper.getImageType(linkUrl) === 'webp-compatible' && 
+                    ContentHelper.isWebpImage(imgUrl)
+                ) {
+                    let imgExtension = ContentHelper.getImageExtension(linkUrl);
+                    let newImgUrl = imgUrl.substr(0, imgUrl.length - 5) + imgExtension;
+                    matches = matches.replace(imgUrl, newImgUrl);
+                }
+            }
+
+            return matches;
+        });
+
+        return text;
+    }
+
+    /**
+     * Checks if given URL is a WebP image
+     * @param {string} url 
+     * @returns {boolean}
+     */
+    static isWebpImage (url) {
+        if (url.substr(-5).toLowerCase() === '.webp') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks the given URL image type
+     * @param {string} url 
+     * @returns {string} - webp, webp-compatible or other
+     */
+    static getImageType (url) {
+        if (url.substr(-5).toLowerCase() === '.webp') {
+            return 'webp';
+        }
+
+        if (
+            url.substr(-5).toLowerCase() === '.jpeg' ||
+            url.substr(-4).toLowerCase() === '.jpg' ||
+            url.substr(-4).toLowerCase() === '.png'
+        ) {
+            return 'webp-compatible';
+        }
+
+        return 'other';
+    }
+
+    /**
+     * Returns image extension - only for webp, jpg, jpeg, png
+     * @param {string} url 
+     * @returns {string|boolean} - extension or false if non-compatible image extension
+     */
+    static getImageExtension (url) {
+        if (url.substr(-5).toLowerCase() === '.webp' || url.substr(-5).toLowerCase() === '.jpeg') {
+            return url.substr(-5);
+        } 
+
+        if (url.substr(-4).toLowerCase() === '.jpg' || url.substr(-4).toLowerCase() === '.png') {
+            return url.substr(-4);
+        } 
+
+        return false;
     }
 }
 

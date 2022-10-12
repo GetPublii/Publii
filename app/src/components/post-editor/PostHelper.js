@@ -133,6 +133,7 @@ class PostHelper {
         let mediaPath = PostHelper.getMediaPath($store, data.posts[0].id);
         let preparedText = data.posts[0].text;
         preparedText = preparedText.split('#DOMAIN_NAME#').join('file:///' + mediaPath);
+        preparedText = PostHelper.setWebpCompatibility($store, preparedText);
         postData.text = preparedText;
 
         // Set tags
@@ -221,6 +222,72 @@ class PostHelper {
         mediaPath += '/';
 
         return mediaPath;
+    }
+
+    static setWebpCompatibility ($store, text) {
+        let forceWebp = !!$store.state.currentSite.config.advanced.forceWebp;
+
+        text = text.replace(/\<figure class="gallery__item">[\s\S]*?<a[\s\S]*?href="(.*?)"[\s\S]+?>[\s\S]*?<img[\s\S]*?src="(.*?)"/gmi, (matches, linkUrl, imgUrl) => {
+            if (linkUrl && imgUrl) {
+                if (
+                    forceWebp && 
+                    PostHelper.getImageType(linkUrl) === 'webp-compatible' && 
+                    !PostHelper.isWebpImage(imgUrl)
+                ) {
+                    let imgExtension = PostHelper.getImageExtension(imgUrl);
+                    let newImgUrl = imgUrl.substr(0, imgUrl.length + (-1 * imgExtension.length)) + '.webp';
+                    matches = matches.replace(imgUrl, newImgUrl);
+                } else if (
+                    !forceWebp && 
+                    PostHelper.getImageType(linkUrl) === 'webp-compatible' && 
+                    PostHelper.isWebpImage(imgUrl)
+                ) {
+                    let imgExtension = PostHelper.getImageExtension(linkUrl);
+                    let newImgUrl = imgUrl.substr(0, imgUrl.length - 5) + imgExtension;
+                    matches = matches.replace(imgUrl, newImgUrl);
+                }
+            }
+
+            return matches;
+        });
+
+        return text;
+    }
+
+    static isWebpImage (url) {
+        if (url.substr(-5).toLowerCase() === '.webp') {
+            return true;
+        }
+
+        return false;
+    }
+
+    static getImageType (url) {
+        if (url.substr(-5).toLowerCase() === '.webp') {
+            return 'webp';
+        }
+
+        if (
+            url.substr(-5).toLowerCase() === '.jpeg' ||
+            url.substr(-4).toLowerCase() === '.jpg' ||
+            url.substr(-4).toLowerCase() === '.png'
+        ) {
+            return 'webp-compatible';
+        }
+
+        return 'other';
+    }
+
+    static getImageExtension (url) {
+        if (url.substr(-5).toLowerCase() === '.webp' || url.substr(-5).toLowerCase() === '.jpeg') {
+            return url.substr(-5);
+        } 
+
+        if (url.substr(-4).toLowerCase() === '.jpg' || url.substr(-4).toLowerCase() === '.png') {
+            return url.substr(-4);
+        } 
+
+        return false;
     }
 }
 
