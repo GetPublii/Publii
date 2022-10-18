@@ -261,7 +261,7 @@ export default {
 
   &-form {
     display: none;
-    padding: 20px 0;
+    padding: 0;
 
     &.is-visible {
       display: block;

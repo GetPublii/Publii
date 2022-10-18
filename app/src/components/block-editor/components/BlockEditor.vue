@@ -550,6 +550,7 @@ export default {
 
     &.is-bulk-edit-mode {
       .wrapper {
+        padding: 0 32px;
         width: var(--editor-width)!important;
       }
     }

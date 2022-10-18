@@ -31,14 +31,14 @@ export default {
 
       switch (this.name) {
         case 'add': return 12;
-        case 'headings': return 10;
-        case 'image': return 18;
+        case 'headings': return 9;
+        case 'image': return 16;
         case 'gallery': return 26;
         case 'unordered-list': return 16;
-        case 'quote': return 14;
+        case 'quote': return 13;
         case 'code': return 14;
         case 'table': return 18;
-        case 'html': return 18;
+        case 'html': return 16;
         case 'separator': return 16;
         case 'readmore': return 16;
         case 'video': return 18;
@@ -68,7 +68,7 @@ export default {
         case 'long-line': return 20;
         case 'shorter-line': return 16;
         case 'short-line': return 8;
-        case 'dotted-line': return 17;
+        case 'dotted-line': return 16;
         case 'dot': return 3;
         case 'preview': return 19;
         case 'left': return 14;
@@ -98,14 +98,14 @@ export default {
 
       switch (this.name) {
         case 'add': return 12;
-        case 'headings': return 14;
-        case 'image': return 14;
+        case 'headings': return 13;
+        case 'image': return 12;
         case 'gallery': return 14;
         case 'unordered-list': return 12;
-        case 'quote': return 12;
+        case 'quote': return 11;
         case 'code': return 12;
         case 'table': return 14;
-        case 'html': return 12;
+        case 'html': return 10;
         case 'separator': return 2;
         case 'readmore': return 12;
         case 'video': return 14;
@@ -135,7 +135,7 @@ export default {
         case 'long-line': return 2;
         case 'shorter-line': return 2;
         case 'short-line': return 2;
-        case 'dotted-line': return 4;
+        case 'dotted-line': return 16;
         case 'dot': return 3;
         case 'preview': return 12;
         case 'left': return 13;

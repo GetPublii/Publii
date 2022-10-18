@@ -23,25 +23,30 @@
         class="block-selector-add"
         @click.stop="toggleNewBlockUI()"
         tabindex="-1">
-        <icon name="add" />
+        <icon name="add" customWidth="14" customHeight="14"/>
       </button>
 
       <div
         v-if="newBlockUIListVisible"
         @click.stop
         :class="{ 'block-selector-list': true, 'is-visible': true }">
-        <input v-model="blockFilterPhrase" />
+        <text-input 
+            v-model="blockFilterPhrase" 
+            :placeholder="$t('editor.searchForABlock')" 
+            icon="magnifier-small" />
         <div class="block-selector-list-wrapper">
             <button
                 v-for="(blockItem, index) of filteredBlocks"
                 :key="'filtered-blocks-' + index"
                 :class="{ 
-                    'block-selector-block-list-item': true, 
+                    'block-selector-list-item': true, 
                     'is-active': newBlockUIActiveIndex === index 
                 }"
                 @click.stop="addNewBlock(blockItem.blockName);">
-                <icon :name="blockItem.icon" />
-                <span class="block-selector-block-list-item-label">
+                <span class="block-selector-list-item-icon">
+                    <icon :name="blockItem.icon" />
+                </span>
+                <span class="block-selector-list-item-label">
                     {{ $t(blockItem.label) }}
                 </span>
             </button>
@@ -362,7 +367,7 @@ export default {
   box-sizing: content-box;
   margin: 0 auto;
   opacity: 0.33;
-  padding: 0 32px;
+  padding: 0 68px;
   position: relative;
   transition: width 0.25s ease-out, opacity 0.35s ease-out;
   width: var(--editor-width);
@@ -374,12 +379,6 @@ export default {
 
   &[data-block-type="publii-embed"] {
     margin: 0 auto;
-  }
-
-  &[data-block-type="publii-header"] {
-    & > div {
-      line-height: 1.3 !important;
-    }
   }
 
   &.is-hovered {
@@ -417,27 +416,20 @@ export default {
 
   &.has-ui-opened {
     background: var(--popup-bg);
-    border-radius: 6px;
+    border-radius: var(--border-radius);
     box-shadow: 0 0 32px var(--shadow);
     margin-top: -44px;
     opacity: 1;
+    padding: 0 32px;
     user-select: none;
-    z-index: 2;
-
-    &::after {
-      background: var(--color-primary);
-      bottom: -1px;
-      content: "";
-      position: absolute;
-      right: -1px;
-      top: -1px;
-      width: 3px;
-      z-index: 10;
-    }
+    z-index: 10;
 
     & > div {
       display: flex;
       flex-direction: column-reverse;
+      left: -38px;
+      opacity: 1;
+      top: 44px;
 
       .publii-block-code-lang {
         top: calc(#{baseline(6, em)} + 44px) !important;
@@ -481,82 +473,69 @@ export default {
   }
 
   &-ui {
-    left: -50px;
+    left: 32px;
     opacity: 0;
     position: absolute;
     pointer-events: none;
-    top: -41px;
+    top: -2px;
     z-index: 1;
 
     .wrapper-ui-show-options {
-      height: 44px;
       transition: all 0.25s ease-out;
-      width: 50px;
-
+     
       &-button {
         background: none;
         border: none;
-        cursor: pointer;
+        cursor: pointer; 
+        height: 32px;
         opacity: 0;
-        padding: 16px;
-        position: absolute;
-        right: 0px;
-        top: 14px;
-        transform: scale(0.5);
-        transform-origin: center center;
-        transition: transform 0.25s ease-out;
+        padding: 4px;
+        transition: transform 0.25s ease-out; 
+        width: 32px;
+
+         // hover effect
+        &::before {
+          content: "";
+          background: var(--gray-6);
+          border-radius: 3px;
+          display: block;
+          left: 50%;
+          opacity: 0;
+          position: absolute;
+          height: 32px;
+          top: 50%;
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: scale(0.5) translate(-50%, -50%);
+          transform-origin: left top;
+          width: 32px;
+          z-index: -1;
+        }
+
+        &:hover {
+          &::before {
+            opacity: 1;
+            transform: scale(1) translate(-50%, -50%);
+          }
+        }
 
         &:focus {
           outline: none;
         }
 
-        &::after {
-          content: "";
-          border: 2px solid rgba(var(--color-primary-rgb), 0.4);
-          border-radius: 50%;
-          height: 50px;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          width: 50px;
-
-          @keyframes focusOut {
-            0% {
-              opacity: 0;
-            }
-            25% {
-              opacity: 1;
-            }
-          }
-        }
-
         & > svg {
-          fill: var(--color-primary);
-          vertical-align: middle;
+          fill: var(--icon-tertiary-color);
         }
 
         &.is-visible {
           opacity: 1;
-          transform: scale(1.2);
-
-          &:hover {
-            transform: scale(1.4);
-          }
-
-          &::after {
-            animation: focusOut 0.75s ease-out backwards;
-          }
         }
       }
     }
 
     &-options {
-      height: 44px;
+      left: 0;
       position: absolute;
-      right: 64px;
-      top: 47px;
+      top: 0;
 
       &.is-visible {
         opacity: 1;
@@ -573,14 +552,14 @@ export default {
         border: none;
         cursor: pointer;
         display: flex;
-        height: 100%;
+        height: 32px;
         justify-content: center;
         margin: 0;
         outline: none;
         padding: 0;
         position: absolute;
         top: 0;
-        width: 38px;
+        width: 32px;
         z-index: 0;
 
         svg {
@@ -597,12 +576,12 @@ export default {
           left: 50%;
           opacity: 0;
           position: absolute;
-          height: 34px;
+          height: 32px;
           top: 50%;
           transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
           transform: scale(0.5) translate(-50%, -50%);
           transform-origin: left top;
-          width: 34px;
+          width: 32px;
           z-index: -1;
         }
 
@@ -625,11 +604,6 @@ export default {
             background: none;
           }
         }
-      }
-
-      &-button-move {
-        right: -60px;
-        top: -2px;
       }
 
       &-button-move + .wrapper-ui-options-button-move {
@@ -704,14 +678,13 @@ export default {
 
   &-ui-bulk {
     background: transparent;
-    border-right: 3px solid var(--color-primary);
-    border-radius: 6px 0 0 6px;
     box-shadow: 0 0 16px var(--shadow);
+    border-radius: var(--border-radius);
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    width: calc(var(--editor-width) + 64px);
+    width: calc(var(--editor-width) + 68px);
 
     &-move,
     &-delete,
@@ -813,37 +786,138 @@ export default {
 
 .block-selector {
   display: none !important;
-  left: -26px;
+  left: 0;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
   z-index: 10;
 
   &.is-visible {
     display: block !important;
   }
 
-  .block-selector-list {
-    background: #fff;
-    border: 1px solid #eee;
+  &-list {
+    background: var(--popup-bg);
+    box-shadow: var(--box-shadow-medium);
+    border-radius: var(--border-radius);
+    font-family: var(--font-base);
+    font-size: 14px;
+    padding: 8px 8px 0;
     position: absolute;
     top: 60px;
-    width: 200px;
+    width: 212px;
     z-index: 100;
-
-    input {
-        width: 100%;
-    }
     
+    input {
+        font-size: 14px;
+        padding: 10px 38px 10px 12px !important;
+    }
+    .input-wrapper svg {
+        height: 16px;
+        left: auto;
+        right: 12px;
+        width: 16px;
+    }
+
+    &-empty-state {
+      display: block;
+      padding: 4px 12px 4px;
+    }
+
     &-wrapper {
-        max-height: 150px;
+        margin: 4px 0;
+        max-height: 214px;
         overflow: auto; 
     }
 
     &-item {
-        display: block;
-        width: 100%;
+        align-items: center;
+        background: none;
+        border: none;
+        border-radius: var(--border-radius);
+        color: var(--text-primary-color);
+        cursor: pointer;
+        display: flex;   
+        font-weight: var(--font-weight-semibold);
+        margin: 4px 2px;
+        padding-left: 0;
+        text-align: left;
+        transition: var(--transition);
+        width: 98%;
+
+      &-icon {
+          align-items: center;
+          background-color: var(--gray-1);
+          border-radius: var(--border-radius);
+          display: inline-flex;
+          fill: var(--icon-primary-color);
+          height: 36px;
+          justify-content: center;
+          margin-right: 12px;
+          padding: 8px;
+          transition: var(--transition);
+          width: 36px;
+      }
+
+      &:hover {
+          background-color: var(--gray-1);
+          color: var(--headings-color);
+
+        .block-selector-list-item-icon {
+            background: none;
+            fill: var(--icon-tertiary-color);
+        }
+      }
+
+      &:focus-visible {
+          box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+
+        .block-selector-list-item-icon {
+            background: none;
+        }
+      }
     }
   }
+
+  &-add {
+      align-items: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      height: 32px;
+      justify-content: center;
+      outline: none;
+      width: 32px;
+
+       // hover effect
+       &::before {
+          content: "";
+          background: var(--gray-6);
+          border-radius: 3px;
+          display: block;
+          left: 50%;
+          opacity: 0;
+          position: absolute;
+          height: 32px;
+          top: 50%;
+          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: scale(0.5) translate(-50%, -50%);
+          transform-origin: left top;
+          width: 32px;
+          z-index: -1;
+        }
+
+      & > svg {
+        fill: var(--icon-tertiary-color);
+        transition: all .25s ease-out;
+      }
+
+      &:hover {
+        &::before {
+            opacity: 1;
+            transform: scale(1) translate(-50%, -50%);
+          }
+       }
+    }
 }
 </style>

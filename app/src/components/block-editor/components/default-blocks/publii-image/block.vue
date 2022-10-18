@@ -470,10 +470,9 @@ export default {
 
   &-empty-state {
     color: var(--gray-3);
-    font-size: 12px;
-    font-weight: bold;
+    font-family: var(--font-base);
+    font-size: 14px;
     text-align: center;
-    text-transform: uppercase;
   }
 
   &-delete {
