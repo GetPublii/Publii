@@ -483,6 +483,41 @@ class SiteEvents {
             let customCSS = Site.loadCustomCSS(appInstance, config.site);
             event.sender.send('app-site-css-loaded', customCSS);
         });
+
+        /*
+         * Check website catalog name
+         */
+        ipcMain.on('app-site-check-website-to-restore', async function (event, config) {
+            let result = await Site.checkWebsiteBackup(appInstance, config.backupPath);
+            event.sender.send('app-site-backup-checked', result);
+        });
+
+        /*
+         * Check website catalog availability
+         */
+        ipcMain.on('app-site-check-website-catalog-availability', function (event, config) {
+            let result = Site.checkWebsiteCatalogAvailability(appInstance, config.siteName);
+            event.sender.send('app-site-website-catalog-availability-checked', result);
+        });
+
+        /*
+         * Remove temp backup files 
+         */
+        ipcMain.on('app-site-remove-temporary-backup-files', function (event, config) {
+            let tempBackupDir = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
+
+            if (fs.existsSync(tempBackupDir)) {
+                fs.emptyDirSync(tempBackupDir);
+            }
+        });
+
+        /*
+         * Restore website from backup
+         */
+        ipcMain.on('app-site-restore-from-backup', function (event, config) {
+            let result = Site.restoreFromBackup(appInstance, config.siteName);
+            event.sender.send('app-site-restored-from-backup', result);
+        });
     }
 
     prepareThemeName(themeName) {

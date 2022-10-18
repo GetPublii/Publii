@@ -13,6 +13,7 @@ const childProcess = require('child_process');
 const slug = require('./helpers/slug');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 const { shell } = require('electron');
+const CreateFromBackup = require('./../back-end/modules/backup/create-from-backup');
 
 class Site {
     constructor(appInstance, config, maintenanceMode = false) {
@@ -605,6 +606,52 @@ class Site {
                 fs.moveSync(filesToMove[fileName], destinationPath);
             }
         }
+    }
+
+    static async checkWebsiteBackup (appInstance, backupPath) {
+        let siteCreator = new CreateFromBackup(appInstance, backupPath);
+        let result = await siteCreator.prepareBackupToRestore()
+        return result;
+    }
+
+    static checkWebsiteCatalogAvailability (appInstance, siteName) {
+        let catalogName = slug(siteName).toLowerCase();
+
+        if (fs.existsSync(path.join(appInstance.sitesDir, catalogName))) {
+            return {
+                catalogExists: true
+            };
+        }
+
+        return {
+            catalogExists: false
+        };
+    }
+
+    static restoreFromBackup (appInstance, siteName) {
+        let catalogName = slug(siteName).toLowerCase();
+        let source = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
+        let destination = path.join(appInstance.sitesDir, catalogName);
+
+        if (catalogName.trim() === '') {
+            return {
+                status: 'error',
+            };
+        }
+
+        if (fs.existsSync(destination)) {
+            fs.removeSync(destination);
+        }
+
+        fs.moveSync(source, destination);
+        Site.updateNameAndUUIDInSiteConfig(destination, catalogName, siteName);
+        
+        return {
+            status: 'success',
+            data: {
+                siteCatalogName: catalogName
+            }
+        };
     }
 }
 

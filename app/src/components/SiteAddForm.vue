@@ -150,7 +150,8 @@ export default {
             overlayIsVisible: false,
             backupFile: null,
             backupIsOver: false,
-            tabsActiveIndex: 0
+            tabsActiveIndex: 0,
+            restoreInProgress: false
         }
     },
     computed: {
@@ -334,16 +335,27 @@ export default {
         },
         uploadBackup (e) {
             this.backupIsOver = false;
-            this.backupFile = e.dataTransfer.files[0];
 
-            // mainProcessAPI.send('app-language-upload', {
-            //     sourcePath: e.dataTransfer.files[0].path
-            // });
+            if (typeof e === 'string') {
+                this.backupFile = e;
+            } else {
+                this.backupFile = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
+            }
 
-            // mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);
+            mainProcessAPI.send('app-site-check-website-to-restore', {
+                backupPath: this.backupFile
+            });
+
+            mainProcessAPI.receiveOnce('app-site-backup-checked', (data) => {
+                if (data.status === 'error') {
+                    this.handleCreateFromBackupError(data.type);
+                } else if (data.status === 'success') {
+                    this.askForWebsiteName(data.data.displayName);
+                }
+            });
         },
         valueChanged (e) {
-            if(!e.target.files.length) {
+            if (!e.target.files.length) {
                 return;
             }
 
@@ -355,7 +367,123 @@ export default {
         },
         tabChanged () {
             this.tabsActiveIndex = this.$refs['site-create-tabs'].activeIndex;
-        }
+        },
+        handleCreateFromBackupError (problemType) {
+            if (problemType === 'unsupported-format') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('site.restoreFromBackup.unsupportedFormat'),
+                    buttonStyle: 'danger'
+                });
+            }
+
+            if (problemType === 'unpack-error') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('site.restoreFromBackup.unpackError'),
+                    buttonStyle: 'danger'
+                });
+            }
+
+            if (problemType === 'invalid-backup-content') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('site.restoreFromBackup.invalidBackupContent'),
+                    buttonStyle: 'danger'
+                });
+            }
+
+            if (problemType === 'invalid-site-data') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('site.restoreFromBackup.invalidSiteData'),
+                    buttonStyle: 'danger'
+                });
+            }
+        },
+        askForWebsiteName (siteName) {
+            this.$bus.$emit('confirm-display', {
+                hasInput: true,
+                message: this.$t('site.restoreFromBackup.selectSiteName'),
+                okClick: this.checkCatalogAvailability,
+                okLabel: this.$t('site.restoreFromBackup.createWebsite'),
+                cancelLabel: this.$t('ui.cancel'),
+                cancelClick: () => {
+                    this.removeTemporaryBackupFiles()
+                },
+                defaultText: siteName
+            });
+        },
+        checkCatalogAvailability (siteName) {
+            if (siteName.trim() === '') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('site.restoreFromBackup.siteNameCannotBeEmpty'),
+                    buttonStyle: 'danger',
+                    okClick: () => {
+                        this.askForWebsiteName (siteName);
+                    }
+                });
+                return;
+            }
+
+            mainProcessAPI.send('app-site-check-website-catalog-availability', {
+                siteName: siteName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-website-catalog-availability-checked', (data) => {
+                if (data.catalogExists === true) {
+                    this.$bus.$emit('confirm-display', {
+                        message: this.$t('site.restoreFromBackup.siteExistsWantOverride'),
+                        okClick: () => {
+                            this.restoreWebsiteFromBackup(siteName);
+                        },
+                        isDanger: true,
+                        okLabel: this.$t('site.restoreFromBackup.yesPleaseOverride'),
+                        cancelLabel: this.$t('site.restoreFromBackup.iWantChangeName'),
+                        cancelClick: () => {
+                            this.askForWebsiteName(siteName);
+                        }
+                    });
+                } else if (data.catalogExists === false) {
+                    this.restoreWebsiteFromBackup(siteName);
+                }
+            });
+        },
+        restoreWebsiteFromBackup (siteName) {
+            this.restoreInProgress = true;
+
+            mainProcessAPI.send('app-site-restore-from-backup', {
+                siteName: siteName
+            });
+
+            mainProcessAPI.receiveOnce('app-site-restored-from-backup', (data) => {
+                this.restoreInProgress = false;
+
+                if (data.status === 'error') {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('site.restoreFromBackup.restoreFailed'),
+                        buttonStyle: 'danger'
+                    });
+                } else if (data.status === 'success') {
+                    this.overlayIsVisible = false;
+                    let siteCatalogName = data.data.siteCatalogName;
+
+                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error'); 
+                    
+                    mainProcessAPI.send('app-site-reload', {
+                        siteName: siteCatalogName
+                    });
+
+                    mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
+                        this.$store.commit('setSiteConfig', result);
+                        this.$store.commit('switchSite', result.data);
+                        window.localStorage.setItem('publii-last-opened-website', siteCatalogName);
+                        this.$router.push(`/site/${siteCatalogName}`);
+                    });  
+                }
+            });
+        },
+        removeTemporaryBackupFiles () {
+            mainProcessAPI.send('app-site-remove-temporary-backup-files');
+        } 
     },
     beforeDestroy () {
         this.$bus.$off('add-website-name-changed');
