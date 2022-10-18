@@ -307,11 +307,10 @@
                                         class="note is-warning">
                                         {{ $t('post.postSlugLengthWarning') }}
                                     </small>
-                                    <span 
-                                        class="regenerate-slug"
-                                        @click="$bus.$emit('update-post-slug', true)">
-                                        UPDATE SLUG
-                                    </span>
+                                    <p-button 
+                                        :onClick="updateSlug">
+                                        {{ $t('post.updateSlug') }}
+                                    </p-button>
                                 </label>
 
                                 <label class="with-char-counter">
@@ -710,6 +709,9 @@ export default {
         resetCreationDate () {
             this.$parent.postData.creationDate.timestamp = 0;
             this.$parent.postData.creationDate.text = '';
+        },
+        updateSlug () {
+            this.$bus.$emit('update-post-slug', true);
         }
     },
     beforeDestroy () {
