@@ -48,60 +48,44 @@
                     </div>
                 </div>
                 <div slot="tab-1">
-                    <template v-if="backupFile">
-                        <div class="backup-selected">
-                            <span>{{ $t('site.selectedBackupFile') }}</span>
-                            <div class="backup-selected-file">
-                                <strong>{{ backupFile.name }}</strong>
+                    <div
+                        @drop.stop.prevent="uploadBackup"
+                        @dragleave.stop.prevent="hideOverlay"
+                        @dragenter.stop.prevent="showOverlay"
+                        @dragover.stop.prevent="showOverlay"
+                        @drag.stop.prevent="showOverlay"
+                        @dragstart.stop.prevent
+                        @dragend.stop.prevent
+                        :class="{ 
+                            'backup': true, 
+                            'backup-is-over': backupIsOver,
+                            'restore-in-progress': restoreInProgress
+                        }">
+                        <div class="backup-upload">
+                            <icon
+                                customWidth="60"
+                                customHeight="60"
+                                properties="not-clickable"
+                                name="backup"
+                                :primaryColor="'color-7'" />
 
-                                <a
-                                    href="#"
-                                    class="backup-remove"
-                                    :title="$t('ui.delete')"
-                                    @click.prevent="removeBackupFile">
-                                    <icon
-                                        name="trash"
-                                        size="xs" />
-                                </a>
-                            </div>
+                                <span>{{ $t('file.dragAndDropBackupFile') }}</span>
+
+                                <input
+                                    ref="input"
+                                    type="file"
+                                    class="backup-upload-input"
+                                    spellcheck="false"
+                                    @change="valueChanged">
                         </div>
-                    </template>
-                    <template v-else>
-                        <div
-                            @drop.stop.prevent="uploadBackup"
-                            @dragleave.stop.prevent="hideOverlay"
-                            @dragenter.stop.prevent="showOverlay"
-                            @dragover.stop.prevent="showOverlay"
-                            @drag.stop.prevent="showOverlay"
-                            @dragstart.stop.prevent
-                            @dragend.stop.prevent
-                            :class="{ 'backup': true, 'backup-is-over': backupIsOver }">
-                            <div class="backup-upload">
-                                <icon
-                                    customWidth="60"
-                                    customHeight="60"
-                                    properties="not-clickable"
-                                    name="backup"
-                                    :primaryColor="'color-7'" />
 
-                                    <span>{{ $t('file.dragAndDropBackupFile') }}</span>
-
-                                    <input
-                                        ref="input"
-                                        type="file"
-                                        class="backup-upload-input"
-                                        spellcheck="false"
-                                        @change="valueChanged">
-                            </div>
-
-                            <overlay
-                                v-if="backupIsOver"
-                                :hasBorder="true"
-                                :isBlue="true">
-                                <div>{{ $t('file.dropYourFileHere') }}</div>
-                            </overlay>
-                        </div>
-                    </template>
+                        <overlay
+                            v-if="backupIsOver"
+                            :hasBorder="true"
+                            :isBlue="true">
+                            <div>{{ $t('file.dropYourFileHere') }}</div>
+                        </overlay>
+                    </div>
                 </div>
             </tabs>
 
@@ -329,9 +313,7 @@ export default {
             this.backupIsOver = true;
         },
         hideOverlay (e) {
-            if (e.target.classList.contains('backup')) {
-                this.backupIsOver = false;
-            }
+            this.backupIsOver = false;
         },
         uploadBackup (e) {
             this.backupIsOver = false;
@@ -682,6 +664,7 @@ export default {
         }
 
         .overlay.has-border {
+            pointer-events: none;
             border-radius: 3px;
         }
     }
