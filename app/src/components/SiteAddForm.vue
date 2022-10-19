@@ -323,6 +323,8 @@ export default {
                 this.backupFile = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
             }
 
+            this.restoreInProgress = true;
+
             mainProcessAPI.send('app-site-check-website-to-restore', {
                 backupPath: this.backupFile
             });
@@ -377,6 +379,8 @@ export default {
                     buttonStyle: 'danger'
                 });
             }
+
+            this.restoreInProgress = false;
         },
         askForWebsiteName (siteName) {
             this.$bus.$emit('confirm-display', {
@@ -386,7 +390,8 @@ export default {
                 okLabel: this.$t('site.restoreFromBackup.createWebsite'),
                 cancelLabel: this.$t('ui.cancel'),
                 cancelClick: () => {
-                    this.removeTemporaryBackupFiles()
+                    this.removeTemporaryBackupFiles();
+                    this.restoreInProgress = false;
                 },
                 defaultText: siteName
             });
@@ -427,8 +432,6 @@ export default {
             });
         },
         restoreWebsiteFromBackup (siteName) {
-            this.restoreInProgress = true;
-
             mainProcessAPI.send('app-site-restore-from-backup', {
                 siteName: siteName
             });
