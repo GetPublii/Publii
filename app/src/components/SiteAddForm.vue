@@ -525,6 +525,7 @@ export default {
 
         &-error {
             color: var(--warning);
+            font-size: 1.4rem;
         }
 
         &:last-child {
