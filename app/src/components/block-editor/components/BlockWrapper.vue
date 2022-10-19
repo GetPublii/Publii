@@ -33,7 +33,7 @@
         <text-input 
             v-model="blockFilterPhrase" 
             :placeholder="$t('editor.searchForABlock')" 
-            icon="magnifier-small" />
+            icon="magnifier-small"/>
         <div class="block-selector-list-wrapper">
             <button
                 v-for="(blockItem, index) of filteredBlocks"
@@ -812,10 +812,10 @@ export default {
         padding: 10px 38px 10px 12px !important;
     }
     .input-wrapper svg {
-        height: 16px;
+        height: 16px !important;
         left: auto;
         right: 12px;
-        width: 16px;
+        width: 16px !important;
     }
 
     &-empty-state {
