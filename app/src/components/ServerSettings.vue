@@ -82,10 +82,10 @@
 
                 <div
                     @click="deploymentMethodSelected = 'github-pages'"
-                    :title="$t('sync.githubPages')"
+                    :title="$t('sync.github')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="129"
+                      customWidth="71"
                       customHeight="42"
                       name="githubpages"
                       iconset="svg-map-server"/>
@@ -96,7 +96,7 @@
                     :title="$t('sync.gitlabPages')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="113"
+                      customWidth="108"
                       customHeight="40"
                       name="gitlab"
                       iconset="svg-map-server"/>
@@ -129,7 +129,7 @@
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="50"
+                      customWidth="80"
                       customHeight="50"
                       name="zip"
                       iconset="svg-map-server"/>

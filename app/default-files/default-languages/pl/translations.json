@@ -965,7 +965,7 @@
         "ftpWithSSLTLS": "FTP z SSL/TLS",
         "generatePreviewFiles": "Wygeneruj pliki podglądu",
         "getWebsiteFiles": "Pobierz pliki strony",
-        "githubPages": "Strony Github",
+        "github": "GitHub",
         "githubSyncedPart1": "Zmiany na Github Pages mogą być widoczne po kilku minutach od wysłania, ",
         "githubSyncedPart2": "zatem należy odczekać chwilę przed weryfikacją zmian.",
         "gitlabPages": "Strony Gitlab",

@@ -965,7 +965,7 @@
         "ftpWithSSLTLS": "FTP with SSL/TLS",
         "generatePreviewFiles": "Generate preview files",
         "getWebsiteFiles": "Get website files",
-        "githubPages": "Github Pages",
+        "github": "GitHub",
         "githubSyncedPart1": "Changes on Github Pages may not be visible for a few minutes after completing deployment, ",
         "githubSyncedPart2": "so please be patient.",
         "gitlabPages": "Gitlab Pages",
