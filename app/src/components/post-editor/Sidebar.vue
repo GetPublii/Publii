@@ -304,7 +304,8 @@
                                             spellcheck="false"
                                             @keyup="$parent.slugUpdated">
                                         <p-button 
-                                            :onClick="updateSlug"
+                                            :onClick="updateSlug" 
+                                            :title="$t('post.updateSlug')"
                                             icon="refresh"
                                             type="secondary icon">
                                         </p-button>
