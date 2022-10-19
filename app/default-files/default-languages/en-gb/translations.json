@@ -876,7 +876,7 @@
             "iWantChangeName": "Change website name",
             "restoreFailed": "An error occurred during creating website from backup. Please try again.",
             "selectSiteName": "Please specify a site name",
-            "siteExistsWantOverride": "Some websites exist within the selected directory. Would you like to continue and potentially lose all previous website data? The website from the backup will override any existing websites.",
+            "siteExistsWantOverride": "Some websites exist within the selected directory name. Would you like to continue and potentially lose all previous website data? The website from the backup will override any existing websites.",
             "siteNameCannotBeEmpty": "Website name cannot be empty",
             "unsupportedFormat": "Unsupported format - please use TAR backup file.",
             "unpackError": "An error occurred during unpacking backup - please try again.",

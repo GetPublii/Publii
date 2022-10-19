@@ -671,6 +671,49 @@ export default {
             pointer-events: none;
             border-radius: 3px;
         }
+        &.restore-in-progress {
+            position: relative;
+          
+            &::after {
+                border: 3px solid var(--color-primary);
+                background: rgba(var(--color-primary-rgb), .17);
+                content:"";
+                height: 100%;
+                left: 0;
+                position: absolute;
+                top: 0;
+                width: 100%;
+            }
+
+            &::before {
+                animation: spin .9s infinite linear;
+                border-top: 2px solid rgba(var(--color-primary-rgb), 0.3);
+                border-right: 2px solid rgba(var(--color-primary-rgb), 0.3);
+                border-bottom: 2px solid rgba(var(--color-primary-rgb), 0.3);
+                border-left: 2px solid var(--color-primary);
+                border-radius: 50%;
+                content:"";
+                display: inline-block;
+                height: 3rem;      
+                left: 50%;
+                position: absolute;      
+                top: 50%;      
+                vertical-align: middle;
+                width: 3rem;
+                transform: translate(-50%, -50%);
+
+                @at-root {
+                    @keyframes spin {
+                        100% {
+                            transform: translate(-50%, -50%) rotate(360deg);
+                        }
+                    }
+                }
+            }
+            .backup-upload {
+                opacity: 0;
+            }
+        }
     }
 }
 </style>
