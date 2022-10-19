@@ -66,8 +66,7 @@
                                 customWidth="60"
                                 customHeight="60"
                                 properties="not-clickable"
-                                name="backup"
-                                :primaryColor="'color-7'" />
+                                name="backup" />
 
                                 <span>{{ $t('file.dragAndDropBackupFile') }}</span>
 
@@ -497,6 +496,7 @@ export default {
     width: 770px;
 
     &-form {
+        height: 344px;  
         overflow: hidden;
         ::v-deep .logo-creator-preview {
             min-width: 10rem !important;
@@ -547,18 +547,17 @@ export default {
             &:last-child:first-child {
                 border-radius: 0 0 var(--border-radius) var(--border-radius);
             }
+        }
+        .button-outline {
+            box-shadow: none!important;
+            border-top: 1px solid var(--input-border-color);
+            border-radius: 0 0 var(--border-radius) 0;
+            color: var(--popup-btn-cancel-color);
+            margin-left: 0;
 
-            & + .button {
-                box-shadow: none!important;
-                border-top: 1px solid var(--input-border-color);
-                border-radius: 0 0 var(--border-radius) 0;
-                color: var(--popup-btn-cancel-color);
-                margin-left: 0;
-
-                &:hover {
-                   background: var(--popup-btn-cancel-bg-hover);
-                   color: var(--popup-btn-cancel-hover-color);
-                }
+            &:hover {
+                background: var(--popup-btn-cancel-bg-hover);
+                color: var(--popup-btn-cancel-hover-color);
             }
         }
     }
@@ -628,6 +627,7 @@ export default {
             padding: 2rem;
 
             .icon {
+                fill: var(--icon-primary-color);
                 margin-bottom: 1.5rem;
             }
 

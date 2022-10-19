@@ -124,6 +124,7 @@ export default {
 
                 & > li {
                     color: var(--text-light-color);
+                    border-bottom: 2px solid transparent;
                     display: inline-block;
                     margin: 0 2rem;
                     padding: 0 0 1.7rem 0;
