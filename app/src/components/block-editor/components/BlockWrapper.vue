@@ -863,7 +863,7 @@ export default {
           color: var(--headings-color);
 
         .block-selector-list-item-icon {
-            background: none;
+            background: var(--button-secondary-bg);
             fill: var(--icon-tertiary-color);
         }
       }
