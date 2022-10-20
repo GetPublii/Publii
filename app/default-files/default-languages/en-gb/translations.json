@@ -624,6 +624,7 @@
         "enableAdvancedPreview": "Enable advanced preview",
         "enableAMP": "Enable AMP",
         "enableAMPInfo": "AMP (accelerated mobile pages) creates mobile-optimized pages for your static content that render fast. <br/><strong>Please note:</strong> when this option is enabled your website will load third-party scripts provided by Google's AMP CDN.",
+        "ampDeprecatedMessage": "Starting with the next app release, the AMP feature will be deprecated. More on this can be found on the official Publii blog.",
         "enableAutoIndent": "Enable auto-indent",
         "enableCSSCompression": "Enable CSS compression",
         "enableHTMLCompression": "Enable HTML compression",

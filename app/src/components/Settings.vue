@@ -119,7 +119,7 @@
                     <div v-pure-html="$t('settings.themeDoesNotHaveSupportedFeaturesList')"></div>
                 </div>
             </fields-group>
-
+            
             <fields-group :title="$t('settings.advancedOptions')">
             <div
                 v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
@@ -944,7 +944,12 @@
                     </div>
 
                     <div slot="tab-5">
-
+                        <div                     
+                            slot="note" style="margin-top: 0;"
+                            class="msg msg-icon msg-alert">
+                            <icon name="warning" customWidth="28" customHeight="28" />
+                            <span>{{ $t('settings.ampDeprecatedMessage') }}</span>
+                        </div>
                         <field
                             id="amp-is-enabled"
                             :label="$t('settings.enableAMP')">

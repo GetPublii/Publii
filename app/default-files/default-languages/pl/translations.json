@@ -624,6 +624,7 @@
         "enableAdvancedPreview": "Włącz zaawansowany podgląd",
         "enableAMP": "Włącz AMP",
         "enableAMPInfo": "AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong> kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google's AMP CDN.",
+        "ampDeprecatedMessage": "Od następnej wersji aplikacji funkcja AMP zostanie wycofana. Więcej na ten temat można przeczytać na oficjalnym blogu Publii.",
         "enableAutoIndent": "Włącz automatyczne wcięcia",
         "enableCSSCompression": "Włącz kompresję CSS",
         "enableHTMLCompression": "Włącz kompresję HTML",
