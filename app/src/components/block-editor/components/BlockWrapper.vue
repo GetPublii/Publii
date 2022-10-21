@@ -487,6 +487,7 @@ export default {
         background: none;
         border: none;
         cursor: pointer; 
+        font-size: 19px;
         height: 32px;
         opacity: 0;
         padding: 4px;
