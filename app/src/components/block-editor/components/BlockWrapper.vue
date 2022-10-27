@@ -159,6 +159,21 @@ export default {
       }
 
       return blocks;
+    },
+    blockContentIsEmpty () {
+	  if (['publii-paragraph', 'publii-header', 'publii-code', 'publii-list'].indexOf(this.blockType) === -1) {
+	    return false;
+	  }
+
+      let isEmpty = false;
+
+      this.$slots.default.forEach(vNode => { 
+        if (vNode.componentInstance.$refs['block'].innerHTML === '') {
+          isEmpty = true;
+        }
+      });
+
+      return isEmpty;
     }
   },
   data () {
@@ -355,7 +370,11 @@ export default {
     },
     addNewBlock (blockType) {
       this.$bus.$emit('block-editor-add-block', blockType, this.id);
-      this.$bus.$emit('block-editor-delete-block', this.id, false);
+
+      if (this.blockContentIsEmpty) {
+        this.$bus.$emit('block-editor-delete-block', this.id, false);
+      }
+
       this.newBlockUIListVisible = false;
       this.$bus.$emit('block-editor-ui-selector-opened', false);
     },
