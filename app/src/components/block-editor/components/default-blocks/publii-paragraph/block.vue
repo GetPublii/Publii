@@ -161,50 +161,10 @@ export default {
         return;
       }
 
-      if (e.code === 'Tab' && this.$refs['block'].innerHTML === '' && this.newBlockUIListVisible === false) {
-        this.toggleNewBlockUI();
-        this.newBlockUIActiveIndex = 0;
+      if (e.code === 'Tab' && this.$refs['block'].innerHTML === '' && this.$parent.newBlockUIListVisible === false) {
+        this.$parent.toggleNewBlockUI();
         e.returnValue = false;
         return;
-      }
-
-      if (e.code === 'Tab' && this.$refs['block'].innerHTML === '' && this.newBlockUIListVisible === true) {
-        this.newBlockUIActiveIndex++;
-
-        if (this.newBlockUIActiveIndex > this.$refs['block'].parentNode.querySelectorAll('.publii-block-paragraph-block-selector-list-button').length - 1) {
-          this.newBlockUIActiveIndex = 0;
-        }
-
-        e.returnValue = false;
-        return;
-      }
-
-      if (
-        e.code === 'Enter' &&
-        !e.isComposing &&
-        e.shiftKey === false &&
-        this.newBlockUIListVisible === false &&
-        this.showNewBlockUI === true
-      ) {
-        this.$bus.$emit('block-editor-add-block', 'publii-paragraph', this.id);
-        e.returnValue = false;
-        return;
-      }
-
-      if (
-        e.code === 'Enter' &&
-        !e.isComposing &&
-        e.shiftKey === false &&
-        this.newBlockUIListVisible === true &&
-        this.showNewBlockUI === true
-      ) {
-        this.$refs['block'].parentNode.querySelectorAll('.publii-block-paragraph-block-selector-list-button')[this.newBlockUIActiveIndex].click();
-        e.returnValue = false;
-        return;
-      }
-
-      if (this.blockUIVisible) {
-        this.blockUIVisible = false;
       }
     },
     handleKeyUp (e) {
@@ -218,12 +178,6 @@ export default {
 
       if (e.code === 'Space') {
         this.saveChangesHistory();
-      }
-
-      if (!this.showNewBlockUI && this.$refs['block'].innerHTML === '') {
-        this.showNewBlockUI = true;
-      } else if (this.showNewBlockUI && this.$refs['block'].innerHTML !== '') {
-        this.showNewBlockUI = false;
       }
     },
     alignText (position) {

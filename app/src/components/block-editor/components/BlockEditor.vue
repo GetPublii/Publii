@@ -297,6 +297,7 @@ export default {
       }
     },
     addNewBlock (blockType, afterBlockID = false, content = '') {
+    console.log('ADD NEW BLOCK');
       let blockIndex = this.content.findIndex(el => el.id === afterBlockID);
       let blockConfig = {};
       this.$bus.$emit('block-editor-deselect-blocks');

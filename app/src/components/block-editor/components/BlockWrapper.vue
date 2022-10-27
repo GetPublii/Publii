@@ -33,6 +33,7 @@
         <text-input 
             v-model="blockFilterPhrase" 
             :placeholder="$t('editor.searchForABlock')" 
+            ref="block-search-input"
             icon="magnifier-small"/>
         <div class="block-selector-list-wrapper">
             <button
@@ -348,6 +349,9 @@ export default {
      */
     toggleNewBlockUI () {
       this.newBlockUIListVisible = !this.newBlockUIListVisible;
+      setTimeout(() => {
+        this.$refs['block-search-input'].$el.querySelector('input').focus();
+      }, 100);
     },
     addNewBlock (blockType) {
       this.$bus.$emit('block-editor-add-block', blockType, this.id);
