@@ -149,6 +149,10 @@ export default {
         blocks = blocks.filter(block => block.blockName !== 'publii-readmore');
       }
 
+      if (this.blockType === 'publii-paragraph') {
+        blocks = blocks.filter(block => block.blockName !== 'publii-paragraph');
+      }
+
       if (this.blockFilterPhrase.length) {
         blocks = blocks.filter(block => block.blockName.replace('publii-', '').indexOf(this.blockFilterPhrase.toLocaleLowerCase()) > -1);
       }
@@ -168,6 +172,11 @@ export default {
       newBlockUIActiveIndex: 0,
       newBlockUIListVisible: false,
       availableBlocks: [
+        {
+            blockName: 'publii-paragraph',
+            icon: 'paragraph',
+            label: 'editor.paragraph'
+        },
         {
             blockName: 'publii-header',
             icon: 'headings',
