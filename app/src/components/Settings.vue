@@ -1663,6 +1663,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.responsiveImages"
                             id="images-quality"
                             :label="$t('settings.responsiveImagesQuality')">
                             <label slot="field">
