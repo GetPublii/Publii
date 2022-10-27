@@ -345,10 +345,26 @@ export default {
     moveUp () {
       let startBlockTop = this.$refs['block-wrapper'].getBoundingClientRect().top;
       this.$bus.$emit('block-editor-move-block-up', this.id, startBlockTop);
+
+      setTimeout(() => {
+        this.$refs['block-wrapper'].scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
+      }, 0);
     },
     moveDown () {
       let startBlockTop = this.$refs['block-wrapper'].getBoundingClientRect().top;
       this.$bus.$emit('block-editor-move-block-down', this.id, startBlockTop);
+
+      setTimeout(() => {
+        this.$refs['block-wrapper'].scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
+      }, 0);
     },
     deleteBlock () {
       this.$bus.$emit('block-editor-delete-block', this.id);
