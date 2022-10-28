@@ -80,31 +80,40 @@ export default {
 @import '../../../../../scss/mixins.scss';
 
 .publii-block-readmore {
+  align-items: center;
   caret-color: transparent;
-  margin: baseline(7,em) 0;
+  display: flex;
+  justify-content: center;
   outline: none;
-  position: relative;
   width: 100%;
 
   hr {
-    background-color: var(--input-border-color);
-    cursor: default;
-    height: 1px;
-    border: 0;
+    border: none;
+    height: auto;
+    line-height: 100%;
+    position: relative;
   }
 
-  &:after {
+  &::before {
+    border-bottom: 1px solid var(--input-border-color);
+    content: " ";
+    display: block;
+    position: relative;
+    transform: translateY(-50%);
+    width: 100%;
+    white-space: pre;
+  }
+
+  &::after {
     background: var(--input-bg);
     border: 1px solid var(--input-border-color);
     border-radius: var(--border-radius);
     content: attr(data-translation);
     display: inline-block;
     font-size: ms(-3);
-    left: 50%;
     padding: 6px 16px;
     position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    white-space: pre;
   }
 }
 </style>
