@@ -129,6 +129,7 @@ export default {
           display: block;
           margin-top: -1px;
           position: relative;
+          transform: translateY(-50%);
           width: 100%;
           white-space: pre;
       }
