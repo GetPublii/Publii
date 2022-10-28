@@ -157,6 +157,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .publii-block-toc {
   caret-color: transparent;
   display: block;
@@ -171,7 +172,7 @@ export default {
 
     .publii-block-toc-title {
       outline: none;
-      margin: 10px 0 20px !important;
+      margin: 0 0 20px !important;
       width: 100%;
 
       &:empty {
@@ -192,7 +193,7 @@ export default {
       content: attr(data-translation);
       color: var(--gray-4);
       display: block;
-      text-align: center;
+      margin-left: -2em;
       width: 100%;
     }
   }
