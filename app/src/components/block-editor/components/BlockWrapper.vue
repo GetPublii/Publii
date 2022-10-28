@@ -100,7 +100,7 @@
         @click.stop="togglePopup">
         <button
           :class="{ 'wrapper-ui-show-options-button': true, 'is-visible': isHovered && !uiOpened && canDisplayUI }">
-          <icon name="dotted-line" />
+          <icon name="menu-dots" />
         </button>
 
         <div

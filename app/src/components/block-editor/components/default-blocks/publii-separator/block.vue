@@ -116,10 +116,8 @@ export default {
 
   hr {
     border: none;
-    cursor: pointer;
-    height: baseline(5,em);
-    line-height: 0;
-    margin: 0;
+    height: auto;
+    line-height: 100%;
     position: relative;
   }
 
@@ -127,12 +125,12 @@ export default {
 
       &::after {
           border-bottom: 1px solid var(--input-border-color);
-          bottom: baseline(2,em);
-          content: "";
-          height: 1px;
-          left: 0;
-          position: absolute;
+          content: " ";
+          display: block;
+          margin-top: -1px;
+          position: relative;
           width: 100%;
+          white-space: pre;
       }
   }
 
@@ -150,11 +148,9 @@ export default {
 
     &:before {
       content: "* * *";
-      font-size: 30px;
-      left: 50%;
-      position: absolute;
-      bottom: 0;
-      transform: translateX(-50%) translateY(-50%);
+      display: block;
+      text-align: center;
+      transform: scale(1.5);
     }
   }
 
