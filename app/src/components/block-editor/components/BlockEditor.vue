@@ -190,6 +190,7 @@ export default {
     this.$bus.$on('publii-block-editor-update-current-block-id', this.updateCurrentBlockID);
     this.$bus.$on('undomanager-save-history', this.saveChangesHistory);
     this.$bus.$on('block-editor-ui-selector-opened', this.setUISelectorID);
+    this.$bus.$on('block-editor-set-selected-block', this.setSelectedBlock);
 
     setTimeout(() => {
       this.internal.editorIsLoaded = true;
@@ -501,6 +502,15 @@ export default {
     },
     setUISelectorID (id) {
         this.uiSelectorID = id;
+    },
+    setSelectedBlock (id) {
+        if (this.state.selectedBlockID !== false && this.state.selectedBlockID !== id) {
+            this.$bus.$emit('block-editor-deselect-block', this.state.selectedBlockID);
+        }
+
+        setTimeout(() => {
+            this.state.selectedBlockID = id;
+        }, 0);
     }
   },
   beforeDestroy () {
@@ -519,6 +529,7 @@ export default {
     this.$bus.$off('publii-block-editor-load', this.loadAllBlocks);
     this.$bus.$off('publii-block-editor-update-current-block-id', this.updateCurrentBlockID);
     this.$bus.$off('undomanager-save-history', this.saveChangesHistory);
+    this.$bus.$off('block-editor-set-selected-block', this.setSelectedBlock);
   }
 }
 </script>

@@ -242,8 +242,12 @@ export default {
     },
     newBlockUIListVisible (newState) {
         if (newState === true) {
-            this.blockFilterPhrase = '';
-            this.$bus.$emit('block-editor-ui-selector-opened', this.id);
+            this.$bus.$emit('block-editor-deselect-other-blocks', this.id);
+
+            setTimeout(() => {
+                this.blockFilterPhrase = '';
+                this.$bus.$emit('block-editor-ui-selector-opened', this.id);
+            }, 100);
         } else if (newState === false) {
             this.$bus.$emit('block-editor-ui-selector-opened', false);
         }
@@ -256,6 +260,8 @@ export default {
   },
   mounted () {
     this.$bus.$on('block-editor-deselect-blocks', this.deselectBlock);
+    this.$bus.$on('block-editor-deselect-block', this.deselectSingleBlock);
+    this.$bus.$on('block-editor-deselect-other-blocks', this.deselectOtherBlocks);
     this.$bus.$on('block-editor-close-new-block-ui', this.hideNewBlockUI);
   },
   methods: {
@@ -269,8 +275,21 @@ export default {
     },
     deselectBlock (blockID) {
         this.newBlockUIListVisible = false;
-        
+
         if (blockID !== this.id) {
+            this.setSelectionState(false);
+        }
+    },
+    deselectSingleBlock (blockID) {
+        this.newBlockUIListVisible = false;
+
+        if (blockID === this.id) {
+            this.setSelectionState(false);
+        }
+    },
+    deselectOtherBlocks (blockID) {
+        if (blockID !== this.id) {
+            this.newBlockUIListVisible = false;
             this.setSelectionState(false);
         }
     },
@@ -288,19 +307,24 @@ export default {
     openPopup () {
       this.uiOpened = true;
       this.$bus.$emit('block-editor-clear-text-selection', this.id);
+      this.$bus.$emit('block-editor-set-selected-block', this.id);
     },
     closePopup () {
       this.uiOpened = false;
+      this.$bus.$emit('block-editor-set-selected-block', false);
     },
     togglePopup () {
       this.uiOpened = !this.uiOpened;
 
       if (this.uiOpened) {
         this.$bus.$emit('block-editor-clear-text-selection', this.id);
+        this.$bus.$emit('block-editor-set-selected-block', this.id);
 
         if (this.blockType === 'publii-paragraph') {
           this.$bus.$emit('block-editor-close-new-block-ui', this.id);
         }
+      } else {
+        this.$bus.$emit('block-editor-set-selected-block', false);
       }
     },
     setSelectionState (newState) {
@@ -369,7 +393,9 @@ export default {
       this.newBlockUIListVisible = !this.newBlockUIListVisible;
 
       setTimeout(() => {
-        this.$refs['block-search-input'].$el.querySelector('input').focus();
+        if (this.$refs['block-search-input']) {
+            this.$refs['block-search-input'].$el.querySelector('input').focus();
+        }
       }, 100);
     },
     addNewBlock (blockType) {
@@ -403,6 +429,8 @@ export default {
   },
   beforeDestroy () {
     this.$bus.$off('block-editor-deselect-blocks', this.deselectBlock);
+    this.$bus.$off('block-editor-deselect-block', this.deselectSingleBlock);
+    this.$bus.$off('block-editor-deselect-other-blocks', this.deselectOtherBlocks);
     this.$bus.$off('block-editor-close-new-block-ui', this.hideNewBlockUI);
   }
 }
