@@ -150,7 +150,7 @@ export default {
         blocks = blocks.filter(block => block.blockName !== 'publii-readmore');
       }
 
-      if (this.blockType === 'publii-paragraph') {
+      if (this.blockType === 'publii-paragraph' && this.blockContentIsEmpty) {
         blocks = blocks.filter(block => block.blockName !== 'publii-paragraph');
       }
 
@@ -159,21 +159,6 @@ export default {
       }
 
       return blocks;
-    },
-    blockContentIsEmpty () {
-	  if (['publii-paragraph', 'publii-header', 'publii-code', 'publii-list'].indexOf(this.blockType) === -1) {
-	    return false;
-	  }
-
-      let isEmpty = false;
-
-      this.$slots.default.forEach(vNode => { 
-        if (vNode.componentInstance.$refs['block'].innerHTML === '') {
-          isEmpty = true;
-        }
-      });
-
-      return isEmpty;
     }
   },
   data () {
@@ -187,6 +172,7 @@ export default {
       blockFilterPhrase: '',
       newBlockUIActiveIndex: 0,
       newBlockUIListVisible: false,
+      blockContentIsEmpty: false,
       availableBlocks: [
         {
             blockName: 'publii-paragraph',
@@ -379,7 +365,9 @@ export default {
      * New block UI methods
      */
     toggleNewBlockUI () {
+      this.blockContentIsEmpty = this.checkIfBlockContentIsEmpty();
       this.newBlockUIListVisible = !this.newBlockUIListVisible;
+
       setTimeout(() => {
         this.$refs['block-search-input'].$el.querySelector('input').focus();
       }, 100);
@@ -387,12 +375,27 @@ export default {
     addNewBlock (blockType) {
       this.$bus.$emit('block-editor-add-block', blockType, this.id);
 
-      if (this.blockContentIsEmpty) {
+      if (this.blockContentIsEmpty()) {
         this.$bus.$emit('block-editor-delete-block', this.id, false);
       }
 
       this.newBlockUIListVisible = false;
       this.$bus.$emit('block-editor-ui-selector-opened', false);
+    },
+    checkIfBlockContentIsEmpty () {
+	    if (['publii-paragraph', 'publii-header', 'publii-code', 'publii-list'].indexOf(this.blockType) === -1) {
+	      return false;
+	    }
+
+      let isEmpty = false;
+
+      this.$slots.default.forEach(vNode => { 
+        if (vNode.componentInstance.$refs['block'].innerHTML === '') {
+          isEmpty = true;
+        }
+      });
+
+      return isEmpty;
     },
     hideNewBlockUI () {
       this.newBlockUIListVisible = false;
