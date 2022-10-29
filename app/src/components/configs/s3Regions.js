@@ -18,11 +18,13 @@ export default {
     "ap-northeast-3": 'Asia Pacific (Osaka-Local) (ap-northeast-3)',
     "ap-southeast-1": 'Asia Pacific (Singapore) (ap-southeast-1)',
     "ap-southeast-2": 'Asia Pacific (Sydney) (ap-southeast-2)',
+    "ap-southeast-3": 'Asia Pacific (Jakarta) (ap-southeast-3)',
     "ap-south-1": 'Asia Pacific (Mumbai) (ap-south-1)',
     "sa-east-1": 'South America (São Paulo) (sa-east-1)',
     "cn-north-1": 'China (Beijing) (cn-north-1)',
     "cn-northwest-1": 'China (Ningxia) (cn-northwest-1)',
     "me-south-1": 'Middle East (Bahrain) (me-south-1)',
+    "me-central-1": "Middle East (UAE) (me-central-1)",
     "us-gov-east-1": 'AWS GovCloud (US-East) (us-gov-east-1)',
     "us-gov-west-1": 'AWS GovCloud (US) (us-gov-west-1)'
 };
