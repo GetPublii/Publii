@@ -401,7 +401,7 @@ export default {
     addNewBlock (blockType) {
       this.$bus.$emit('block-editor-add-block', blockType, this.id);
 
-      if (this.blockContentIsEmpty()) {
+      if (this.blockContentIsEmpty) {
         this.$bus.$emit('block-editor-delete-block', this.id, false);
       }
 
