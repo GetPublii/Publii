@@ -467,7 +467,7 @@ class Image extends Model {
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
-                        if (extension.toLowerCase() === '.png') {
+                        if (extension.toLowerCase() === '.png' && !forceWebp) {
                             sharp(originalPath)
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
@@ -478,13 +478,22 @@ class Image extends Model {
                                     wstream.end();
                                     resolve(destinationPath);
                                 }).catch(err => reject(err));
-                        } else if (extension.toLowerCase() === '.webp') {
+                        } else if (extension.toLowerCase() === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
+                            let webpConfig = {
+                                quality: imagesQuality,
+                                alphaQuality: alphaQuality,
+                            };
+
+                            if (webpLossless) {
+                                webpConfig = {
+                                    lossless: true
+                                };
+                            }
+
                             sharp(originalPath)
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .webp({
-                                    quality: imagesQuality
-                                })
+                                .webp(webpConfig)
                                 .toBuffer()
                                 .then(function (outputBuffer) {
                                     let wstream = fs.createWriteStream(destinationPath);
