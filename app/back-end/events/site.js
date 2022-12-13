@@ -316,8 +316,11 @@ class SiteEvents {
 
             let themesHelper = new Themes(appInstance, { site: siteName });
             let themeConfigPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'theme.config.json');
-            let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
-            themesHelper.checkAndCleanImages(themeConfigString);
+
+            if (fs.existsSync(themeConfigPath)) {
+                let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+                themesHelper.checkAndCleanImages(themeConfigString);
+            }
 
             // Send success message
             event.sender.send('app-site-config-saved', {
