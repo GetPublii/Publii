@@ -5,7 +5,7 @@ const Themes = require('../themes.js');
 const Languages = require('../languages.js');
 const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
-const unzip = require("unzipper");
+const AdmZip = require("adm-zip");
 
 /*
  * Events for the IPC communication regarding app
@@ -173,51 +173,50 @@ class AppEvents {
             let extension = path.parse(config.sourcePath).ext;
             let status = '';
 
-            if(extension === '.zip' || extension === '') {
-                if(extension === '.zip') {
+            if (extension === '.zip' || extension === '') {
+                if (extension === '.zip') {
                     let zipPath = path.join(themesLoader.themesPath, '__TEMP__');
+                    let zip = new AdmZip(config.sourcePath);
                     fs.mkdirSync(zipPath);
+                    zip.extractAllTo(zipPath, true);
 
-                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
-                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
-                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
-                                return false;
-                            }
-
-                            return fs.statSync(path.join(zipPath, file)).isDirectory();
-                        });
-
-                        if(dirs.length !== 1) {
-                            event.sender.send('app-theme-uploaded', {
-                                status: 'wrong-format',
-                                themes: appInstance.themes
-                            });
-
-                            fs.removeSync(zipPath);
-
-                            return;
+                    let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                        if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                            return false;
                         }
 
-                        newThemeDir = dirs[0];
+                        return fs.statSync(path.join(zipPath, file)).isDirectory();
+                    });
 
-                        let directoryPath = path.join(themesLoader.themesPath, newThemeDir);
-
-                        try {
-                            fs.statSync(directoryPath);
-                            status = 'updated';
-                            fs.removeSync(directoryPath);
-                        } catch (e) {
-                            status = 'added';
-                        }
-
-                        fs.copySync(path.join(zipPath, newThemeDir), directoryPath);
-                        fs.removeSync(zipPath);
-                        appInstance.themes = themesLoader.loadThemes();
-
+                    if (dirs.length !== 1) {
                         event.sender.send('app-theme-uploaded', {
-                            status: status,
+                            status: 'wrong-format',
                             themes: appInstance.themes
                         });
+
+                        fs.removeSync(zipPath);
+
+                        return;
+                    }
+
+                    newThemeDir = dirs[0];
+                    let directoryPath = path.join(themesLoader.themesPath, newThemeDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(path.join(zipPath, newThemeDir), directoryPath);
+                    fs.removeSync(zipPath);
+                    appInstance.themes = themesLoader.loadThemes();
+
+                    event.sender.send('app-theme-uploaded', {
+                        status: status,
+                        themes: appInstance.themes
                     });
 
                     return;
@@ -254,51 +253,51 @@ class AppEvents {
             let extension = path.parse(config.sourcePath).ext;
             let status = '';
 
-            if(extension === '.zip' || extension === '') {
-                if(extension === '.zip') {
+            if (extension === '.zip' || extension === '') {
+                if (extension === '.zip') {
                     let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
+                    let zip = new AdmZip(config.sourcePath);
                     fs.mkdirSync(zipPath);
+                    zip.extractAllTo(zipPath, true);
 
-                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
-                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
-                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
-                                return false;
-                            }
-
-                            return fs.statSync(path.join(zipPath, file)).isDirectory();
-                        });
-
-                        if (dirs.length !== 1) {
-                            event.sender.send('app-language-uploaded', {
-                                status: 'wrong-format',
-                                languages: appInstance.languages
-                            });
-
-                            fs.removeSync(zipPath);
-
-                            return;
+                    let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                        if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                            return false;
                         }
 
-                        newLanguageDir = dirs[0];
+                        return fs.statSync(path.join(zipPath, file)).isDirectory();
+                    });
 
-                        let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
-
-                        try {
-                            fs.statSync(directoryPath);
-                            status = 'updated';
-                            fs.removeSync(directoryPath);
-                        } catch (e) {
-                            status = 'added';
-                        }
-
-                        fs.copySync(path.join(zipPath, newLanguageDir), directoryPath);
-                        fs.removeSync(zipPath);
-                        appInstance.languages = languagesLoader.loadLanguages();
-
+                    if (dirs.length !== 1) {
                         event.sender.send('app-language-uploaded', {
-                            status: status,
+                            status: 'wrong-format',
                             languages: appInstance.languages
                         });
+
+                        fs.removeSync(zipPath);
+
+                        return;
+                    }
+
+                    newLanguageDir = dirs[0];
+
+                    let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(path.join(zipPath, newLanguageDir), directoryPath);
+                    fs.removeSync(zipPath);
+                    appInstance.languages = languagesLoader.loadLanguages();
+
+                    event.sender.send('app-language-uploaded', {
+                        status: status,
+                        languages: appInstance.languages
                     });
 
                     return;
@@ -335,51 +334,51 @@ class AppEvents {
             let extension = path.parse(config.sourcePath).ext;
             let status = '';
 
-            if(extension === '.zip' || extension === '') {
-                if(extension === '.zip') {
+            if (extension === '.zip' || extension === '') {
+                if (extension === '.zip') {
                     let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
                     fs.mkdirSync(zipPath);
+                    let zip = new AdmZip(config.sourcePath);
+                    zip.extractAllTo(zipPath, true);
 
-                    fs.createReadStream(config.sourcePath).pipe(unzip.Extract({ path: zipPath })).promise().then(() => {
-                        let dirs = fs.readdirSync(zipPath).filter(function(file) {
-                            if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
-                                return false;
-                            }
-
-                            return fs.statSync(path.join(zipPath, file)).isDirectory();
-                        });
-
-                        if (dirs.length !== 1) {
-                            event.sender.send('app-plugin-uploaded', {
-                                status: 'wrong-format',
-                                plugins: appInstance.plugins
-                            });
-
-                            fs.removeSync(zipPath);
-
-                            return;
+                    let dirs = fs.readdirSync(zipPath).filter(function(file) {
+                        if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
+                            return false;
                         }
 
-                        newPluginDir = dirs[0];
+                        return fs.statSync(path.join(zipPath, file)).isDirectory();
+                    });
 
-                        let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
-
-                        try {
-                            fs.statSync(directoryPath);
-                            status = 'updated';
-                            fs.removeSync(directoryPath);
-                        } catch (e) {
-                            status = 'added';
-                        }
-
-                        fs.copySync(path.join(zipPath, newPluginDir), directoryPath);
-                        fs.removeSync(zipPath);
-                        appInstance.plugins = pluginsLoader.loadPlugins();
-
+                    if (dirs.length !== 1) {
                         event.sender.send('app-plugin-uploaded', {
-                            status: status,
+                            status: 'wrong-format',
                             plugins: appInstance.plugins
                         });
+
+                        fs.removeSync(zipPath);
+
+                        return;
+                    }
+
+                    newPluginDir = dirs[0];
+
+                    let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
+
+                    try {
+                        fs.statSync(directoryPath);
+                        status = 'updated';
+                        fs.removeSync(directoryPath);
+                    } catch (e) {
+                        status = 'added';
+                    }
+
+                    fs.copySync(path.join(zipPath, newPluginDir), directoryPath);
+                    fs.removeSync(zipPath);
+                    appInstance.plugins = pluginsLoader.loadPlugins();
+
+                    event.sender.send('app-plugin-uploaded', {
+                        status: status,
+                        plugins: appInstance.plugins
                     });
 
                     return;
