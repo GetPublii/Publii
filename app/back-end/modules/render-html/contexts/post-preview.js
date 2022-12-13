@@ -532,6 +532,10 @@ class RendererContextPostPreview extends RendererContext {
             preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
             preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
             preparedText = preparedText.replace(/<iframe\s/gmi, '<iframe loading="lazy" ');
+            preparedText = preparedText.replace(/<img\sloading="lazy"([^>].*?\sloading="[^>].*?>)/gmi, '<img$1');
+            preparedText = preparedText.replace(/<video\sloading="lazy"([^>].*?\sloading="[^>].*?>)/gmi, '<video$1');
+            preparedText = preparedText.replace(/<audio\sloading="lazy"([^>].*?\sloading="[^>].*?>)/gmi, '<audio$1');
+            preparedText = preparedText.replace(/<iframe\sloading="lazy"([^>].*?\sloading="[^>].*?>)/gmi, '<iframe$1');
         }
 
         if (this.editor === 'tinymce' || this.editor === 'markdown') {
