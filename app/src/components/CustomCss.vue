@@ -27,33 +27,10 @@
                 defaultValue="full-site-preview" />
         </p-header>
 
-        <ul class="filters">
-            <li
-                :class="filterCssClasses('normal')"
-                @click="setFilter('normal')">
-                {{ $t('tools.css.normal') }}
-            </li>
-
-            <li
-                :class="filterCssClasses('amp')"
-                @click="setFilter('amp')">
-                {{ $t('ui.AMP') }}
-            </li>
-        </ul>
-
-        <div :class="{ 'editor-wrapper': true, 'is-active': filterValue === 'normal' }">
+        <div :class="{ 'editor-wrapper': true, 'is-active': true }">
             <codemirror-editor
                 id="custom-css-editor-normal"
                 ref="codemirrorNormal"
-                mode="css"
-                editorLoadedEventName="custom-css-editor-loaded">
-            </codemirror-editor>
-        </div>
-
-        <div :class="{ 'editor-wrapper': true, 'is-active': filterValue === 'amp' }">
-            <codemirror-editor
-                id="custom-css-editor-amp"
-                ref="codemirrorAmp"
                 mode="css"
                 editorLoadedEventName="custom-css-editor-loaded">
             </codemirror-editor>
@@ -87,8 +64,6 @@ export default {
             setTimeout(() => {
                 if (newValue === 'normal') {
                     this.$refs.codemirrorNormal.editor.refresh();
-                } else if (newValue === 'amp') {
-                    this.$refs.codemirrorAmp.editor.refresh();
                 }
             }, 0);
         }
@@ -99,10 +74,7 @@ export default {
             filterValue: 'normal',
             editorValueNormal: `/*
  * ${this.$t('tools.css.putCustomCSSComment')}
- */`,
-            editorValueAmp: `/*
- * ${this.$t('tools.css.putCustomCSSAMPComment')}
- */`,
+ */`
         };
     },
     computed: {
@@ -165,25 +137,17 @@ export default {
                     this.editorValueNormal = data.normal;
                 }
 
-                if (data.amp !== false) {
-                    this.editorValueAmp = data.amp;
-                }
-
                 this.$refs.codemirrorNormal.editor.setValue(this.editorValueNormal);
                 this.$refs.codemirrorNormal.editor.refresh();
-                this.$refs.codemirrorAmp.editor.setValue(this.editorValueAmp);
-                this.$refs.codemirrorAmp.editor.refresh();
             });
         },
         save (showPreview = false, renderingType = false, renderFiles = false) {
             this.$refs.codemirrorNormal.editor.save();
-            this.$refs.codemirrorAmp.editor.save();
-
+            
             mainProcessAPI.send('app-site-css-save', {
                 site: this.$store.state.currentSite.config.name,
                 code: {
-                    normal: document.getElementById('custom-css-editor-normal').value,
-                    amp: document.getElementById('custom-css-editor-amp').value
+                    normal: document.getElementById('custom-css-editor-normal').value
                 }
             });
 

@@ -24,10 +24,6 @@ function jsonLDHelper(rendererInstance, Handlebars) {
 
             if(context.data.website.logo) {
                 jsonLDObject['logo'] = context.data.website.logo;
-
-                if(context.data.amp && context.data.amp.image) {
-                    jsonLDObject['logo'] = context.data.amp.image;
-                }
             }
 
             jsonLDObject['url'] = context.data.website.url;
@@ -79,15 +75,12 @@ function jsonLDHelper(rendererInstance, Handlebars) {
 
             if(
                 context.data.root.post.featuredImage.url ||
-                context.data.website.logo ||
-                (context.data.amp && context.data.amp.image)
+                context.data.website.logo
             ) {
                 let imageUrl = '';
 
                 if(context.data.root.post.featuredImage && context.data.root.post.featuredImage.url) {
                     imageUrl = context.data.root.post.featuredImage.url;
-                } else if(context.data.amp && context.data.amp.image) {
-                    imageUrl = context.data.amp.image;
                 } else {
                     imageUrl = context.data.website.logo;
                 }
@@ -146,13 +139,8 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                 "name": context.data.root.siteOwner.name
             };
 
-            if(context.data.website.logo || (context.data.amp && context.data.amp.image)) {
+            if(context.data.website.logo) {
                 let logoUrl = context.data.website.logo;
-
-                if(context.data.amp && context.data.amp.image) {
-                    logoUrl = context.data.amp.image;
-                }
-
                 let websiteUrl = context.data.website.url;
                 let imagePath = URLHelper.transformAssetURLIntoPath(rendererInstance.inputDir, logoUrl, websiteUrl);
                 let imageDimensions = {

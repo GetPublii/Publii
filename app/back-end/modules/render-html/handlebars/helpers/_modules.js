@@ -29,7 +29,6 @@ module.exports = {
     isNotEmpty: require('./is-not-empty.js'),
     jsonLDHelper: require('./json-ld.js'),
     canonicalLinkHelper: require('./canonical-link.js'),
-    ampLinkHelper: require('./amp-link.js').ampLinkHelper,
     imageDimensionsHelper: require('./image-dimensions.js'),
     responsiveSrcSetHelper: require('./responsive-srcset.js').responsiveSrcSetHelper,
     responsiveSizesHelper: require('./responsive-sizes.js').responsiveSizesHelper,

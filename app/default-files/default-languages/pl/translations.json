@@ -96,8 +96,6 @@
             "searchInput": "Pole wyszukiwarki",
             "searchContent": "Wyniki wyszukiwania",
             "footer": "Stopka strony",
-            "ampHead": "Sekcja head w AMP",
-            "ampFooter": "Stopka w AMP",
             "beforePost": "Przed każdym wpisem",
             "afterPost": "Po każdym wpisie"
         }
@@ -623,9 +621,6 @@
         "embedConsentsDescription": "Ta sekcja umożliwia blokowanie treści ładowanych w ramkach iframe od zewnętrznych dostawców treści, którzy mogą ustawiać pliki cookie. Podając domenę adresu URL iframe np. <strong>youtube.com</strong>, wiadomość, przycisk akceptacji i przypisujac do istniejącej grupy plików cookie, ramka iframe zostanie zastąpiona bannerem informującym odwiedzających, że treść jest zablokowana z powodu ich ustawień zgody (odwiedzający nie wyraził zgodę na rodzaje plików cookie używanych przez element iframe w banerze plików cookie).",
         "embedVideos": "Osadzanie video",
         "enableAdvancedPreview": "Włącz zaawansowany podgląd",
-        "enableAMP": "Włącz AMP",
-        "enableAMPInfo": "AMP (accelerated mobile pages - przyspieszone strony mobilne) tworzy strony, dla Twoich statycznych treści zoptymalizowane pod kątem urządzeń mobilnych, które są szybko renderowane. <br/><strong>Miej na uwadze:</strong> kiedy ta opcja jest włączona Twoja witryna będzie ładować skrypty stron trzecich dostarczone przez Google's AMP CDN.",
-        "ampDeprecatedMessage": "Od następnej wersji aplikacji funkcja AMP zostanie wycofana. Więcej na ten temat można przeczytać na oficjalnym blogu Publii.",
         "enableAutoIndent": "Włącz automatyczne wcięcia",
         "enableCSSCompression": "Włącz kompresję CSS",
         "enableHTMLCompression": "Włącz kompresję HTML",
@@ -1145,7 +1140,6 @@
             "customCSS": "Niestandardowy CSS",
             "customCSSSaveSuccessMsg": "Niestandardowy kod CSS zpsatł zapisany.",
             "normal": "Normalny",
-            "putCustomCSSAMPComment": "Tutaj umieść swój niestandardowy kod CSS (będzie użyty tylko w trybie AMP)",
             "putCustomCSSComment": "Tutaj umieść swój niestandardowy kod CSS"
         },
         "customHTML": "Niestandardowy HTML",
@@ -1205,7 +1199,6 @@
     "ui": {
         "aboutPublii": "O Publii",
         "alternativeText": "Tekst alternatywny",
-        "AMP": "AMP",
         "appConfiguration": "Konfiguracja aplikacji",
         "applyChanges": "Zatwierdź zmiany",
         "authors": "Autorzy",

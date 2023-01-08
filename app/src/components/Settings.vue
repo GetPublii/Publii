@@ -944,191 +944,6 @@
                     </div>
 
                     <div slot="tab-5">
-                        <div                     
-                            slot="note" style="margin-top: 0;"
-                            class="msg msg-icon msg-alert">
-                            <icon name="warning" customWidth="28" customHeight="28" />
-                            <span>{{ $t('settings.ampDeprecatedMessage') }}</span>
-                        </div>
-                        <field
-                            id="amp-is-enabled"
-                            :label="$t('settings.enableAMP')">
-                            <switcher
-                                slot="field"
-                                id="amp-is-enabled"
-                                v-model="advanced.ampIsEnabled" />
-                            <small
-                                slot="note"
-                                class="note"
-                                v-pure-html="$t('settings.enableAMPInfo')">
-                            </small>
-                        </field>
-
-                        <separator
-                            v-if="advanced.ampIsEnabled"
-                            type="small"
-                            :is-line="true" />
-
-                        <field
-                            v-if="advanced.ampIsEnabled"
-                            id="amp-primary-color"
-                            :label="$t('settings.themePrimaryColor')">
-                            <color-picker
-                                slot="field"
-                                id="amp-primary-color"
-                                v-model="advanced.ampPrimaryColor" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled"
-                            id="amp-image"
-                            :label="$t('settings.fallbackLogoImage')">
-                            <image-upload
-                                slot="field"
-                                v-model="advanced.ampImage"
-                                imageType="optionImages" />
-                            <small
-                                slot="note"
-                                class="note">
-                                {{ $t('settings.fallbackLogoImageInfo') }}
-                            </small>
-                        </field>
-
-                        <separator
-                            v-if="advanced.ampIsEnabled"
-                            type="small"
-                            :is-line="true" />
-
-                        <field
-                            v-if="advanced.ampIsEnabled"
-                            id="amp-ga-id"
-                            :label="$t('settings.googleAnalyticsTrackingID')">
-                            <text-input
-                                id="amp-ga-id"
-                                v-model="advanced.ampGaId"
-                                :spellcheck="false"
-                                slot="field" />
-                        </field>
-
-                        <separator
-                            v-if="advanced.ampIsEnabled"
-                            type="small"
-                            :is-line="true" />
-
-                        <field
-                            v-if="advanced.ampIsEnabled"
-                            id="amp-share"
-                            :label="$t('settings.enableSharingButtons')">
-                            <switcher
-                                slot="field"
-                                id="amp-share"
-                                v-model="advanced.ampShare" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-system"
-                            :label="$t('settings.system')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-system"
-                                v-model="advanced.ampShareSystem" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-facebook"
-                            :label="$t('settings.facebook')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-facebook"
-                                v-model="advanced.ampShareFacebook" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare && advanced.ampShareFacebook"
-                            id="amp-share-facebook-id"
-                            label=" ">
-                            <text-input
-                                id="amp-share-facebook-id"
-                                v-model="advanced.ampShareFacebookId"
-                                :spellcheck="false"
-                                slot="field" />
-                            <small
-                                class="note"
-                                slot="note"
-                                v-pure-html="$t('settings.provideFacebookAppID')">
-                            </small>
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-twitter"
-                            :label="$t('settings.twitter')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-twitter"
-                                v-model="advanced.ampShareTwitter" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-pinterest"
-                            :label="$t('settings.pinterest')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-pinterest"
-                                v-model="advanced.ampSharePinterest" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-linkedin"
-                            :label="$t('settings.linkedIn')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-linkedin"
-                                v-model="advanced.ampShareLinkedIn" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-tumblr"
-                            :label="$t('settings.tumblr')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-tumblr"
-                                v-model="advanced.ampShareTumblr" />
-                        </field>
-
-                        <field
-                            v-if="advanced.ampIsEnabled && advanced.ampShare"
-                            id="amp-share-system"
-                            :label="$t('settings.whatsApp')">
-                            <switcher
-                                slot="field"
-                                id="amp-share-whatsapp"
-                                v-model="advanced.ampShareWhatsapp" />
-                        </field>
-
-                        <separator
-                            v-if="advanced.ampIsEnabled"
-                            type="small"
-                            :is-line="true" />
-
-                        <field
-                            v-if="advanced.ampIsEnabled"
-                            id="amp-footer-text"
-                            :label="$t('settings.footerText')">
-                            <text-input
-                                id="amp-footer-text"
-                                v-model="advanced.ampFooterText"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                slot="field" />
-                        </field>
-                    </div>
-
-                    <div slot="tab-6">
                         <separator
                             type="small"
                             :is-line="true"
@@ -1585,7 +1400,7 @@
                         </field>
                     </div>
 
-                    <div slot="tab-7">
+                    <div slot="tab-6">
                         <field
                             id="html-compression"
                             :label="$t('settings.enableHTMLCompression')">
@@ -1736,7 +1551,7 @@
                         </field>
                     </div>
 
-                    <div slot="tab-8">
+                    <div slot="tab-7">
                         <field
                             id="feed-enable-rss"
                             :label="$t('settings.enableRSSFeed')">
@@ -1845,7 +1660,7 @@
                         </field>
                     </div>
 
-                    <div slot="tab-9">
+                    <div slot="tab-8">
                         <field
                             id="posts-listing-order-by"
                             :label="$t('settings.postsOrderBy')">
@@ -1955,7 +1770,7 @@
                         </field>
                     </div>
 
-                    <div slot="tab-10">
+                    <div slot="tab-9">
                         <separator
                             type="medium"
                             :label="$t('post.editorWYSIWYG')" />
@@ -2155,7 +1970,6 @@ export default {
                 this.$t('settings.sitemap'),
                 this.$t('settings.openGraph'),
                 this.$t('settings.twitterCards'),
-                this.$t('ui.AMP'),
                 this.$t('settings.GDPR'),
                 this.$t('settings.websiteSpeed'),
                 this.$t('settings.RSSJSONFeed'),

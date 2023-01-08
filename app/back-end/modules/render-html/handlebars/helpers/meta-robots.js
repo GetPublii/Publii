@@ -9,8 +9,8 @@ const Handlebars = require('handlebars');
  */
 function metaRobotsHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('metaRobots', function (options) {
-        // If canonical is set or AMP is currently rendered - skip meta robots tag
-        if (rendererInstance.ampMode || options.data.root.hasCustomCanonicalUrl) {
+        // If canonical is set - skip meta robots tag
+        if (options.data.root.hasCustomCanonicalUrl) {
             return '';
         }
 

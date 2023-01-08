@@ -56,20 +56,6 @@ class TemplateHelper {
             return this.loadedTemplates[filePath];
         }
 
-        // Support for the AMP default files
-        if (fileName.indexOf('amp-') === 0) {
-            filePath = path.join(__dirname, '..', '..', '..', '..', 'default-files', 'theme-files', fileName);
-
-            if (fileExists(filePath)) {
-                if (this.loadedTemplates[filePath]) {
-                    return this.loadedTemplates[filePath];
-                }
-    
-                this.loadedTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
-                return this.loadedTemplates[filePath];
-            }
-        }
-
         return false;
     }
 

@@ -153,15 +153,6 @@ class SiteEvents {
 
             if(
                 config.settings.advanced &&
-                config.settings.advanced.ampImage &&
-                config.settings.advanced.ampImage !== ''
-            ) {
-                let filename = path.parse(config.settings.advanced.ampImage);
-                config.settings.advanced.ampImage = filename.base;
-            }
-
-            if(
-                config.settings.advanced &&
                 config.settings.advanced.openGraphImage &&
                 config.settings.advanced.openGraphImage !== ''
             ) {

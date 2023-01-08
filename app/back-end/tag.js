@@ -202,7 +202,6 @@ class Tag extends Model {
         }
 
         let restrictedSlugs = [
-            'amp',
             'assets',
             this.application.sites[this.site].advanced.urls.authorsPrefix,
             'media',

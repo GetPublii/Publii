@@ -71,10 +71,6 @@ class FeaturedImageItem {
             return;
         }
 
-        if(this.renderer.ampMode) {
-            url = url.replace('/amp/', '/');
-        }
-
         let featuredImageSrcSets = '';
         let useWebp = false;
 

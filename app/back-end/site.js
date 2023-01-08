@@ -508,21 +508,14 @@ class Site {
      */
     static loadCustomCSS(appInstance, name) {
         let cssPathNormal = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
-        let cssPathAmp = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css-amp.css');
         let cssNormal = false;
-        let cssAmp = false;
-
+        
         if (UtilsHelper.fileExists(cssPathNormal)) {
             cssNormal = fs.readFileSync(cssPathNormal, 'utf8');
         }
 
-        if (UtilsHelper.fileExists(cssPathAmp)) {
-            cssAmp = fs.readFileSync(cssPathAmp, 'utf8');
-        }
-
         return {
-            normal: cssNormal,
-            amp: cssAmp
+            normal: cssNormal
         };
     }
 
@@ -531,9 +524,7 @@ class Site {
      */
     static saveCustomCSS(appInstance, name, code) {
         let cssPathNormal = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css.css');
-        let cssPathAmp = path.join(appInstance.sitesDir, name, 'input', 'config', 'custom-css-amp.css');
         fs.writeFileSync(cssPathNormal, code.normal, 'utf8');
-        fs.writeFileSync(cssPathAmp, code.amp, 'utf8');
     }
 
     /**

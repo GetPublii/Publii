@@ -88,7 +88,6 @@ export default {
             let renderConfig = {
                 "site": this.$store.state.currentSite.config.name,
                 "theme": this.$store.state.currentSite.config.theme,
-                "ampIsEnabled": this.$store.state.currentSite.config.advanced.ampIsEnabled,
                 "showPreview": this.showPreview
             };
 

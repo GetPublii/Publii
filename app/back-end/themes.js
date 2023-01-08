@@ -432,7 +432,6 @@ class Themes {
         let authors = new Authors(this.appInstance, {site: siteData.name});
         let authorsData = authors.load();
         let authorAvatars = [];
-        let ampFallbackImage = '';
         let ogFallbackImage = '';
 
         if(authorsData && authorsData.length) {
@@ -452,10 +451,6 @@ class Themes {
                     authorAvatars.push(avatar);
                 }
             }
-        }
-
-        if(siteData && siteData.advanced && siteData.advanced.ampImage) {
-            ampFallbackImage = siteData.advanced.ampImage;
         }
 
         if(siteData && siteData.advanced && siteData.advanced.openGraphImage) {
@@ -488,7 +483,6 @@ class Themes {
             if(
                 configString.indexOf('/' + imagePath) === -1 &&
                 authorAvatars.indexOf(imagePath) === -1 &&
-                imagePath !== ampFallbackImage &&
                 imagePath !== ogFallbackImage
             ) {
                 try {

@@ -507,7 +507,6 @@ class Post extends Model {
 
         if(this.application.sites[this.site].advanced.urls.cleanUrls) {
             restrictedSlugs = [
-                'amp',
                 'assets',
                 'media',
                 this.application.sites[this.site].advanced.urls.authorsPrefix

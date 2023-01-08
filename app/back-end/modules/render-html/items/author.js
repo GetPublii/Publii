@@ -62,7 +62,7 @@ class AuthorItem {
 
         if(typeof this.authorData.avatar === 'string') {
             if (AvatarHelper.isLocalAvatar(this.authorData.avatar)) {
-                let domain = this.renderer.siteConfig.domain.replace(/\/amp$/m, '/');
+                let domain = this.renderer.siteConfig.domain;
                 let avatarUrl = path.join(domain, 'media', 'website', this.authorData.avatar);
                 avatarUrl = normalizePath(avatarUrl);
                 this.authorData.avatar = URLHelper.fixProtocols(avatarUrl);

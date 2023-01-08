@@ -26,13 +26,8 @@ class ContentHelper {
      * @returns {string}
      */
     static prepareContent(postID, originalText, siteDomain, themeConfig, renderer, editor = 'tinymce') {
-        let ampMode = renderer.ampMode;
         let domain = normalizePath(siteDomain);
         domain = URLHelper.fixProtocols(domain);
-
-        if(ampMode) {
-            domain = domain.substr(0, domain.length - 4);
-        }
 
         // Get media URL
         let domainMediaPath = domain + '/media/posts/' + postID + '/';
@@ -50,15 +45,9 @@ class ContentHelper {
         preparedText = ContentHelper.setWebpCompatibility(useWebp, preparedText);
 
         // Remove content for AMP or non-AMP depending from ampMode value
-        if (ampMode) {
-            preparedText = preparedText.replace(/<publii-non-amp>[\s\S]*?<\/publii-non-amp>/gmi, '');
-            preparedText = preparedText.replace(/<publii-amp>/gmi, '');
-            preparedText = preparedText.replace(/<\/publii-amp>/gmi, '');
-        } else {
-            preparedText = preparedText.replace(/<publii-amp>[\s\S]*?<\/publii-amp>/gmi, '');
-            preparedText = preparedText.replace(/<publii-non-amp>/gmi, '');
-            preparedText = preparedText.replace(/<\/publii-non-amp>/gmi, '');
-        }
+        preparedText = preparedText.replace(/<publii-amp>[\s\S]*?<\/publii-amp>/gmi, '');
+        preparedText = preparedText.replace(/<publii-non-amp>/gmi, '');
+        preparedText = preparedText.replace(/<\/publii-non-amp>/gmi, '');
 
         // Remove TOC plugin ID attributes when TOC does not exist
         if (preparedText.indexOf('class="post__toc') === -1) {
@@ -83,7 +72,7 @@ class ContentHelper {
         }
 
         // Add loading="lazy" attributes to img, video, audio, iframe tags
-        if (renderer.siteConfig.advanced.mediaLazyLoad && !ampMode) {
+        if (renderer.siteConfig.advanced.mediaLazyLoad) {
             preparedText = preparedText.replace(/<img\s/gmi, '<img loading="lazy" ');
             preparedText = preparedText.replace(/<video\s/gmi, '<video loading="lazy" ');
             preparedText = preparedText.replace(/<audio\s/gmi, '<audio loading="lazy" ');
@@ -134,11 +123,6 @@ class ContentHelper {
         // Remove CDATA sections inside scripts added by TinyMCE
         preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         preparedText = preparedText.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
-
-        // Additional AMP related operations
-        if(ampMode) {
-            preparedText = ContentHelper._prepareAmpContent(preparedText);
-        }
 
         // Add embed consents
         if (
@@ -516,45 +500,6 @@ class ContentHelper {
         }
 
         return false;
-    }
-
-    /**
-     * Prepares content for AMP
-     *
-     * Replaces:
-     * - remove all style="" attributes
-     * - <img> with <amp-img>,
-     * - <video> with <amp-video>,
-     * - <audio> with <amp-audio>
-     *
-     * @param text
-     * @returns {*}
-     * @private
-     */
-    static _prepareAmpContent(text) {
-        text = text.replace(/style=".*?"/gmi, '');
-
-        text = text.replace(/(<img)[\s\S]*?(\/?>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-img')
-                        .replace(end, ' layout="responsive"></amp-img>');
-        });
-
-        text = text.replace(/(<video)[\s\S]*?(<\/video>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-video')
-                        .replace(end, '<div fallback><p>Your browser doesn\'t support HTML5 video</p></div></amp-video>');
-        });
-
-        text = text.replace(/(<audio)[\s\S]*?(<\/audio>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-audio')
-                        .replace(end, '<div fallback><p>Your browser doesn\'t support HTML5 audio</p></div></amp-audio>');
-        });
-
-        text = text.replace(/(<iframe)[\s\S]*?(<\/iframe>)/gmi, function(whole, start, end) {
-            return whole.replace(start, '<amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" ')
-                        .replace(end, '</amp-iframe>');
-        });
-
-        return text;
     }
 
     /**

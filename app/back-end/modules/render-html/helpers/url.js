@@ -124,7 +124,6 @@ class URLHelper {
      */
     static transformAssetURLIntoPath(inputDir, assetUrl, websiteUrl) {
         websiteUrl = normalizePath(websiteUrl);
-        websiteUrl = websiteUrl.replace(/\/amp\/|\/amp$/mi, '/');
         websiteUrl = websiteUrl.replace('index.html', '');
         assetUrl = normalizePath(assetUrl);
         assetUrl = assetUrl.replace(websiteUrl, '');

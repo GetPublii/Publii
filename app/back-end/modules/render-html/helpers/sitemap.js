@@ -214,7 +214,6 @@ class Sitemap {
      */
     getInternalsList () {
         let internalsList = [
-            'amp',
             'assets',
             'media',
             '.htaccess',

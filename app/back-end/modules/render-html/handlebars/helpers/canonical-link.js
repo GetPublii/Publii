@@ -10,12 +10,11 @@ const Handlebars = require('handlebars');
 function canonicalLinkHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('canonicalLink', function (context) {
         // If current page is not indexed - skip canonical link
-        if (!rendererInstance.ampMode && (context.data.root.metaRobotsRaw.indexOf('noindex') > -1 || context.data.root.metaRobotsRaw.indexOf('nofollow') > -1) && !context.data.root.hasCustomCanonicalUrl) {
+        if ((context.data.root.metaRobotsRaw.indexOf('noindex') > -1 || context.data.root.metaRobotsRaw.indexOf('nofollow') > -1) && !context.data.root.hasCustomCanonicalUrl) {
             return '';
         }
 
         if (
-            !rendererInstance.ampMode && 
             Array.isArray(context.data.context) &&
             context.data.context[0] && (
                 (
@@ -38,11 +37,6 @@ function canonicalLinkHelper(rendererInstance, Handlebars) {
         // If current page is a post - check for canonical URL
         if (context.data.root.canonicalUrl) {
             pageUrl = context.data.root.canonicalUrl;
-        }
-
-        // We need to remove amp directory from the url in AMP renderer mode
-        if(rendererInstance.ampMode) {
-            pageUrl = pageUrl.replace('/amp/', '/');
         }
 
         // Remove index.html from the end of URL

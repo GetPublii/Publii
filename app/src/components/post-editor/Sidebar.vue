@@ -627,7 +627,6 @@ export default {
             this.tagIsRestricted = false;
 
             let restrictedSlugs = [
-                'amp',
                 'assets',
                 'media',
                 this.$store.state.currentSite.config.advanced.urls.authorsPrefix,

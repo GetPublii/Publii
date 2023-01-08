@@ -1992,25 +1992,24 @@
 
             "featuredImages": {
                 "sizes": {
-                    "post": "(max-width: 1600px) 100vw, 1600px",
-                    "amp": "(max-width: 768px) 100vw, 768px"
+                    "post": "(max-width: 1600px) 100vw, 1600px"
                 },
 
                 "dimensions": {
                     "xs": {
                         "width": 300,
                         "height": "auto",
-                        "group": "post,amp"
+                        "group": "post"
                     },
                     "sm": {
                         "width": 480,
                         "height": "auto",
-                        "group": "post,amp"
+                        "group": "post"
                     },
                     "md": {
                         "width": 768,
                         "height": "auto",
-                        "group": "post,amp"
+                        "group": "post"
                     },
                     "lg": {
                         "width": 1024,
