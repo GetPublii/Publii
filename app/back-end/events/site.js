@@ -363,6 +363,8 @@ class SiteEvents {
                     config: themeConfig.config,
                     customConfig: themeConfig.customConfig,
                     postConfig: themeConfig.postConfig,
+                    tagConfig: themeConfig.tagConfig,
+                    authorConfig: themeConfig.authorConfig,
                     defaultTemplates: themeConfig.defaultTemplates
                 }
             });

@@ -275,7 +275,7 @@
                                 <dropdown
                                     v-if="!field.type || field.type === 'select'"
                                     :id="field.name + '-select'"
-                                    :items="getDropdownPostViewOptions(field.options)"
+                                    :items="getDropdownViewOptions(field.options)"
                                     slot="field"
                                     v-model="postView[field.name]">
                                 </dropdown>
@@ -299,6 +299,108 @@
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
                                     v-model="postView[field.name]">
+                                </color-picker>
+
+                                <small
+                                    v-if="field.note"
+                                    slot="note"
+                                    class="note">
+                                    {{ field.note }}
+                                </small>
+                            </field>
+                        </div>
+
+                        <div v-if="groupName === $t('theme.tagOptions')">
+                            <field>
+                                <small
+                                    slot="note"
+                                    class="note">
+                                    {{ $t('theme.tagOptionsInfo') }}<br><br>
+                                </small>
+                            </field>
+
+                            <field
+                                v-for="(field, subindex) of tagViewThemeSettings"
+                                :label="field.label"
+                                :key="'tab-' + index + '-field-' + subindex">
+                                <dropdown
+                                    v-if="!field.type || field.type === 'select'"
+                                    :id="field.name + '-select'"
+                                    :items="getDropdownViewOptions(field.options)"
+                                    slot="field"
+                                    v-model="tagView[field.name]">
+                                </dropdown>
+
+                                <text-input
+                                    v-if="field.type === 'text' || field.type === 'number'"
+                                    :type="field.type"
+                                    slot="field"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    v-model="tagView[field.name]" />
+
+                                <text-area
+                                    v-if="field.type === 'textarea'"
+                                    slot="field"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    v-model="tagView[field.name]" />
+
+                                <color-picker
+                                    v-if="field.type === 'colorpicker'"
+                                    slot="field"
+                                    v-model="tagView[field.name]">
+                                </color-picker>
+
+                                <small
+                                    v-if="field.note"
+                                    slot="note"
+                                    class="note">
+                                    {{ field.note }}
+                                </small>
+                            </field>
+                        </div>
+
+                        <div v-if="groupName === $t('theme.authorOptions')">
+                            <field>
+                                <small
+                                    slot="note"
+                                    class="note">
+                                    {{ $t('theme.authorOptionsInfo') }}<br><br>
+                                </small>
+                            </field>
+
+                            <field
+                                v-for="(field, subindex) of authorViewThemeSettings"
+                                :label="field.label"
+                                :key="'tab-' + index + '-field-' + subindex">
+                                <dropdown
+                                    v-if="!field.type || field.type === 'select'"
+                                    :id="field.name + '-select'"
+                                    :items="getDropdownViewOptions(field.options)"
+                                    slot="field"
+                                    v-model="authorView[field.name]">
+                                </dropdown>
+
+                                <text-input
+                                    v-if="field.type === 'text' || field.type === 'number'"
+                                    :type="field.type"
+                                    slot="field"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    v-model="authorView[field.name]" />
+
+                                <text-area
+                                    v-if="field.type === 'textarea'"
+                                    slot="field"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    v-model="authorView[field.name]" />
+
+                                <color-picker
+                                    v-if="field.type === 'colorpicker'"
+                                    slot="field"
+                                    v-model="authorView[field.name]">
                                 </color-picker>
 
                                 <small
@@ -382,7 +484,9 @@ export default {
                 logo: ''
             },
             custom: {},
-            postView: {}
+            postView: {},
+            tagView: {},
+            authorView: {}
         };
     },
     computed: {
@@ -399,6 +503,8 @@ export default {
             });
 
             tabs.push(this.$t('theme.postOptions'));
+            tabs.push(this.$t('theme.tagOptions'));
+            tabs.push(this.$t('theme.authorOptions'));
             tabs.push(this.$t('theme.translations'));
 
             return tabs;
@@ -411,6 +517,12 @@ export default {
         },
         hasPostTemplates () {
             return !!Object.keys(this.postTemplates).length;
+        },
+        tagViewThemeSettings () {
+            return this.$store.state.currentSite.themeSettings.tagConfig.filter(field => field.type !== 'separator');
+        },
+        authorViewThemeSettings () {
+            return this.$store.state.currentSite.themeSettings.authorConfig.filter(field => field.type !== 'separator');
         },
         dropdownItems () {
             return [
@@ -495,6 +607,36 @@ export default {
             for (let setting of settings) {
                 if (setting) {
                     Vue.set(this.postView, setting[0], setting[1]);
+                }
+            }
+        },
+        loadTagViewSettings () {
+            let settings = this.$store.state.currentSite.themeSettings.tagConfig.map(field => {
+                if (field.type !== 'separator') {
+                    return [field.name, field.value]
+                }
+
+                return false;
+            });
+
+            for (let setting of settings) {
+                if (setting) {
+                    Vue.set(this.tagView, setting[0], setting[1]);
+                }
+            }
+        },
+        loadAuthorViewSettings () {
+            let settings = this.$store.state.currentSite.themeSettings.authorConfig.map(field => {
+                if (field.type !== 'separator') {
+                    return [field.name, field.value]
+                }
+
+                return false;
+            });
+
+            for (let setting of settings) {
+                if (setting) {
+                    Vue.set(this.authorView, setting[0], setting[1]);
                 }
             }
         },
@@ -624,7 +766,7 @@ export default {
 
             return options;
         },
-        getDropdownPostViewOptions (arrayToConvert) {
+        getDropdownViewOptions (arrayToConvert) {
             let options = {};
 
             for (let i = 0; i < arrayToConvert.length; i++) {
@@ -663,6 +805,8 @@ export default {
                 config: Object.assign({}, this.basic),
                 customConfig: Object.assign({}, this.custom),
                 postConfig: Object.assign({}, this.postView),
+                tagConfig: Object.assign({}, this.tagView),
+                authorConfig: Object.assign({}, this.authorView),
                 defaultTemplates: Object.assign({}, this.defaultTemplates)
             };
 

@@ -1101,6 +1101,8 @@
     },
     "theme": {
         "addThemeSuccessMessage": "Theme has been successfully added.",
+        "authorOptions": "Author options",
+        "authorOptionsInfo": "The author options section allows you to set global options for what extra information should be included in your authors. Changes made in this section will affect all authors on your site, but you can also override the Theme Settings on the Author Edit screen for each individual author if necessary.",
         "authorsPostsPerPage": "Authors posts per page:",
         "authorsPostsPerPageInfo": "Use -1 as value if you need to display all authors' posts on the page.",
         "changeAppTheme": "Change application theme",
@@ -1125,6 +1127,8 @@
         "selectTheme": "Select theme",
         "settingsResetMessage": "Do you really want to reset the theme settings?",
         "settingsResetSuccessMessage": "Theme settings has been reset.",
+        "tagOptions": "Tag options",
+        "tagOptionsInfo": "The Tag options section allows you to set global options for what extra information should be included in your tags. Changes made in this section will affect all tags on your site, but you can also override the Theme Settings on the Tag Edit screen for each individual tag if necessary.",
         "tagsPostsPerPage": "Tags posts per page:",
         "tagsPostsPerPageInfo": "Use -1 as value if you need to display all tag posts on page.",
         "themes": "Themes",

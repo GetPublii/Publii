@@ -308,11 +308,13 @@ class Themes {
             config: newConfig.config,
             customConfig: newConfig.customConfig,
             postConfig: newConfig.postConfig,
+            tagConfig: newConfig.tagConfig,
+            authorConfig: newConfig.authorConfig,
             defaultTemplates: newConfig.defaultTemplates
         };
 
         // Check all options for the media fields
-        let groups = ['config', 'customConfig', 'postConfig'];
+        let groups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
 
         for(let i = 0; i < groups.length; i++) {
             let options = themeDefaultConfig[groups[i]];
@@ -392,7 +394,7 @@ class Themes {
                 return;
             }
 
-            let optionGroups = ['config', 'customConfig', 'postConfig'];
+            let optionGroups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
 
             for(let k = 0; k < optionGroups.length; k++) {
                 let group = optionGroups[k];

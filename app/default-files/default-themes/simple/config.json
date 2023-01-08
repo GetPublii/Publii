@@ -1954,6 +1954,8 @@
             ]
         }
     ],
+    "tagConfig": [],
+    "authorConfig": [],
     "files": {
         "ignoreAssets": ["scss", ".DS_Store"],
         "assetsPath": "assets",

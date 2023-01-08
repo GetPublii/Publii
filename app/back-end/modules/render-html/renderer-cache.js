@@ -2,7 +2,7 @@ const Post = require('./items/post');
 const Author = require('./items/author');
 const Tag = require('./items/tag');
 const FeaturedImage = require('./items/featured-image');
-const PostViewSettingsHelper = require('./helpers/post-view-settings.js');
+const ViewSettingsHelper = require('./helpers/view-settings.js');
 const RendererHelpers = require('./helpers/helpers.js');
 
 class RendererCache {
@@ -58,7 +58,15 @@ class RendererCache {
 
         console.time('TAGS - STORE');
         // Data are automatically stored in the this.renderer.cachedItems
-        tags.map(tag => new Tag(tag, this.renderer));
+        let tagViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.tagConfig));
+        
+        tags = tags.map(tag => {
+            let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag);
+            let newTag = new Tag(tag, this.renderer);
+            newTag.setTagViewConfig(tagViewConfig);
+            return newTag;
+        });
+
         console.timeEnd('TAGS - STORE');
     }
 
@@ -151,7 +159,8 @@ class RendererCache {
                 id,
                 name,
                 username,
-                config
+                config,
+                additional_data
             FROM
                 authors;
         `).all();
@@ -159,7 +168,15 @@ class RendererCache {
 
         console.time('AUTHORS - STORE');
         // Data are automatically stored in the this.renderer.cachedItems
-        authors.map(author => new Author(author, this.renderer));
+        let authorViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.authorConfig));
+        
+        authors = authors.map(author => {
+            let authorViewConfig = this.getViewSettings(authorViewConfigObject, author);
+            let newAuthor = new Author(author, this.renderer)
+            newAuthor.setAuthorViewConfig(authorViewConfig);
+            return newAuthor;
+        });
+
         console.timeEnd('AUTHORS - STORE');
     }
 
@@ -365,7 +382,33 @@ class RendererCache {
             postViewSettings = JSON.parse(postViewData.value);
         }
 
-        return PostViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+    }
+
+    /**
+     * Retrieve view settings
+     *
+     * @param defaultViewConfig
+     * @param itemData
+     *
+     * @returns {object}
+     */
+    getViewSettings(defaultViewConfig, itemData) {
+        let viewSettings = {};
+
+        if (itemData && itemData.additional_data) {
+            try {
+                let dataToUse = JSON.parse(itemData.additional_data); 
+                
+                if (dataToUse.viewConfig) {
+                    viewSettings = dataToUse.viewConfig;
+                }
+            } catch (e) {
+                viewSettings = {};
+            }
+        }
+
+        return ViewSettingsHelper.override(viewSettings, defaultViewConfig);
     }
 }
 

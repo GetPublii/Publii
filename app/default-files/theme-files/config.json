@@ -64,6 +64,8 @@
     ],
     "customConfig": [],
     "postConfig": [],
+    "tagConfig": [],
+    "authorConfig": [],
     "files": {
         "ignoreAssets": [
             "scss",

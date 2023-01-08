@@ -259,6 +259,59 @@
                                 :disabled="true"
                                 :readonly="true" />
                         </label>
+
+                        <template v-if="dataSet">
+                            <template v-for="(field, index) of tagViewThemeSettings">
+                                <separator
+                                    v-if="displayField(field) && field.type === 'separator'"
+                                    :label="field.label"
+                                    :is-line="true"
+                                    :key="'tag-view-field-' + index"
+                                    :note="field.note" />
+
+                                <label
+                                    v-if="displayField(field) && field.type !== 'separator'"
+                                    :key="'tag-view-field-' + index">
+                                    {{ field.label }}
+
+                                    <dropdown
+                                        v-if="!field.type || field.type === 'select'"
+                                        :id="field.name + '-select'"
+                                        class="tag-view-settings"
+                                        v-model="tagData.additionalData.viewConfig[field.name]"
+                                        :items="generateItems(field.options)">
+                                        <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
+                                    </dropdown>
+
+                                    <text-input
+                                        v-if="field.type === 'text' || field.type === 'number'"
+                                        :type="field.type"
+                                        class="tag-view-settings"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        :placeholder="fieldPlaceholder(field)"
+                                        v-model="tagData.additionalData.viewConfig[field.name]" />
+
+                                    <text-area
+                                        v-if="field.type === 'textarea'"
+                                        class="tag-view-settings"
+                                        :placeholder="fieldPlaceholder(field)"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="tagData.additionalData.viewConfig[field.name]" />
+
+                                    <color-picker
+                                        v-if="field.type === 'colorpicker'"
+                                        class="tag-view-settings"
+                                        v-model="tagData.additionalData.viewConfig[field.name]">
+                                    </color-picker>
+
+                                    <small
+                                        v-if="field.note"
+                                        class="note">
+                                        {{ field.note }}
+                                    </small>
+                                </label>
+                            </template>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -309,6 +362,7 @@ export default {
             hasFeaturedImage: false,
             openedItem: 'basic',
             currentTagIsHidden: false,
+            dataSet: false,
             tagData: {
                 id: 0,
                 name: '',
@@ -375,6 +429,9 @@ export default {
                 'noindex, follow': this.$t('ui.noindexFollow'),
                 'noindex, nofollow': this.$t('ui.noindexNofollow')
             };
+        },
+        tagViewThemeSettings () {
+            return this.$store.state.currentSite.themeSettings.tagConfig;
         }
     },
     mounted () {
@@ -397,6 +454,13 @@ export default {
             this.tagData.slug = params.slug || '';
             this.tagData.description = params.description || '';
             this.tagData.additionalData = {};
+
+            if (typeof params.additionalData.viewConfig === 'object') {
+                this.tagData.additionalData.viewConfig = params.additionalData.viewConfig;
+            } else {
+                this.tagData.additionalData.viewConfig = {};
+            }
+
             this.tagData.additionalData.featuredImage = params.additionalData.featuredImage || '';
             this.tagData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
             this.tagData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
@@ -412,6 +476,10 @@ export default {
             if (this.tagData.additionalData && this.tagData.additionalData.featuredImage) {
                 this.hasFeaturedImage = true;
             }
+
+            Vue.nextTick(() => {
+                this.dataSet = true;
+            });
         });
     },
     methods: {
@@ -503,6 +571,8 @@ export default {
         },
         close() {
             this.$bus.$emit('hide-tag-item-editor');
+            this.dataSet = false;
+            
             mainProcessAPI.send('app-tag-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.tagData.id,
@@ -579,6 +649,37 @@ export default {
         },
         toggleHiddenStatus () {
             this.currentTagIsHidden = this.tagData.additionalData.isHidden;
+        },
+        displayField (field) {
+            if (!this.dataSet) {
+                return false;
+            }
+
+            if (!field.tagTemplates) {
+                return true;
+            }
+
+            if (field.tagTemplates.indexOf('!') === 0) {
+                return !(field.tagTemplates.replace('!', '').split(',').indexOf(this.tagData.additionalData.template) > -1);
+            }
+
+            return field.tagTemplates.split(',').indexOf(this.tagData.additionalData.template) > -1;
+        },
+        generateItems (arrayToConvert) {
+            let options = {};
+
+            for (let i = 0; i < arrayToConvert.length; i++) {
+                options[arrayToConvert[i].value] = arrayToConvert[i].label;
+            }
+
+            return options;
+        },
+        fieldPlaceholder (field) {
+            if (field.placeholder || field.placeholder === '') {
+                return field.placeholder;
+            }
+
+			return this.$t('theme.leaveBlankToUseDefault');
         }
     },
     beforeDestroy () {

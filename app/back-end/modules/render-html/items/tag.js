@@ -77,6 +77,15 @@ class TagItem {
 
         return 0;
     }
+
+    /**
+     * Stores tag view configuration in cached items
+     * 
+     * @param {*} config 
+     */
+    setTagViewConfig(config) {
+        this.renderer.cachedItems.tags[this.tagID].tagViewConfig = config;
+    }
 }
 
 module.exports = TagItem;

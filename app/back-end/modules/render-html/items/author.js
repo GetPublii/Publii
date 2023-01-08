@@ -113,6 +113,15 @@ class AuthorItem {
 
         return 0;
     }
+
+    /**
+     * Stores author view configuration in cached items
+     * 
+     * @param {*} config 
+     */
+    setAuthorViewConfig(config) {
+        this.renderer.cachedItems.authors[this.authorID].authorViewConfig = config;
+    }
 }
 
 module.exports = AuthorItem;

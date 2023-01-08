@@ -1,13 +1,13 @@
-class PostViewSettings {
-    static override(postViewSettings, defaultPostViewConfig) {
+class ViewSettings {
+    static override(viewSettings, defaultViewConfig) {
         let outputConfig = {};
 
         // Generate default settings structure
-        let defaultViewFields = Object.keys(defaultPostViewConfig);
+        let defaultViewFields = Object.keys(defaultViewConfig);
 
         for(let i = 0; i < defaultViewFields.length; i++) {
-            let field = postViewSettings[defaultViewFields[i]];
-            let defaultField = defaultPostViewConfig[defaultViewFields[i]];
+            let field = viewSettings[defaultViewFields[i]];
+            let defaultField = defaultViewConfig[defaultViewFields[i]];
 
             if(typeof field !== 'undefined' && (!field.type || (field.type && field.type === 'select'))) {
                 if (
@@ -44,18 +44,18 @@ class PostViewSettings {
             }
         }
 
-        // Override values with the post settings
-        let postViewFields = Object.keys(postViewSettings);
+        // Override values with the view settings
+        let viewFields = Object.keys(viewSettings);
 
-        for(let i = 0; i < postViewFields.length; i++) {
-            let field = postViewSettings[postViewFields[i]];
+        for(let i = 0; i < viewFields.length; i++) {
+            let field = viewSettings[viewFields[i]];
 
             if(typeof field !== 'undefined' && field.value) {
                 if(field.value !== "") {
-                    outputConfig[postViewFields[i]] = field.value;
+                    outputConfig[viewFields[i]] = field.value;
                 }
             } else if(typeof field === 'string' && field !== "") {
-                outputConfig[postViewFields[i]] = field;
+                outputConfig[viewFields[i]] = field;
             }
 
             if((field.type && field.type === 'select') || !field.type) {
@@ -65,19 +65,19 @@ class PostViewSettings {
                     field.value === 0 ||
                     field.value === '0'
                 ) {
-                    outputConfig[postViewFields[i]] = false;
+                    outputConfig[viewFields[i]] = false;
                 } else if(
                     field === 1 ||
                     field === '1' ||
                     field.value === 1 ||
                     field.value === '1'
                 ) {
-                    outputConfig[postViewFields[i]] = true;
+                    outputConfig[viewFields[i]] = true;
                 } else {
                     if (typeof field.value !== 'undefined' && field.value !== '') {
-                        outputConfig[postViewFields[i]] = JSON.stringify(field.value).replace(/"/g, '');
+                        outputConfig[viewFields[i]] = JSON.stringify(field.value).replace(/"/g, '');
                     } else if (typeof field !== 'object' && field !== '') {
-                        outputConfig[postViewFields[i]] = JSON.stringify(field).replace(/"/g, '');
+                        outputConfig[viewFields[i]] = JSON.stringify(field).replace(/"/g, '');
                     }
                 }
             }
@@ -101,4 +101,4 @@ class PostViewSettings {
     }
 }
 
-module.exports = PostViewSettings;
+module.exports = ViewSettings;

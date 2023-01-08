@@ -11,7 +11,7 @@ const slug = require('./../../helpers/slug');
 const sqlite = require('better-sqlite3');
 const URLHelper = require('./helpers/url.js');
 const FilesHelper = require('./helpers/files.js');
-const PostViewSettingsHelper = require('./helpers/post-view-settings.js');
+const ViewSettingsHelper = require('./helpers/view-settings.js');
 const Themes = require('../../themes.js');
 const TemplateHelper = require('./helpers/template.js');
 const RendererContext = require('./renderer-context.js');
@@ -580,20 +580,32 @@ class Renderer {
         this.themeConfig.config = {};
         this.themeConfig.customConfig = {};
         this.themeConfig.postConfig = {};
+        this.themeConfig.tagConfig = {};
+        this.themeConfig.authorConfig = {};
 
-        for(let i = 0; i < tempThemeConfig.config.length; i++) {
+        for (let i = 0; i < tempThemeConfig.config.length; i++) {
             let key = tempThemeConfig.config[i].name;
             this.themeConfig.config[key] = tempThemeConfig.config[i].value;
         }
 
-        for(let i = 0; i < tempThemeConfig.customConfig.length; i++) {
+        for (let i = 0; i < tempThemeConfig.customConfig.length; i++) {
             let key = tempThemeConfig.customConfig[i].name;
             this.themeConfig.customConfig[key] = tempThemeConfig.customConfig[i].value;
         }
 
-        for(let i = 0; i < tempThemeConfig.postConfig.length; i++) {
+        for (let i = 0; i < tempThemeConfig.postConfig.length; i++) {
             let key = tempThemeConfig.postConfig[i].name;
             this.themeConfig.postConfig[key] = tempThemeConfig.postConfig[i].value;
+        }
+
+        for (let i = 0; i < tempThemeConfig.tagConfig.length; i++) {
+            let key = tempThemeConfig.tagConfig[i].name;
+            this.themeConfig.tagConfig[key] = tempThemeConfig.tagConfig[i].value;
+        }
+
+        for (let i = 0; i < tempThemeConfig.authorConfig.length; i++) {
+            let key = tempThemeConfig.authorConfig[i].name;
+            this.themeConfig.authorConfig[key] = tempThemeConfig.authorConfig[i].value;
         }
     }
 
@@ -941,7 +953,7 @@ class Renderer {
             }
         }
 
-        return PostViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
     }
 
     /*
@@ -1101,7 +1113,8 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                this.globalContext = this.createGlobalContext('tag', [], false, tagSlug, false, context);
+                let tagViewConfig = this.cachedItems.tags[tagIDs[i]].tagViewConfig;
+                this.globalContext = this.createGlobalContext('tag', [], false, tagSlug, tagViewConfig, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                 if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1161,12 +1174,13 @@ class Renderer {
                     }
 
                     inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+                    let tagViewConfig = this.cachedItems.tags[tagIDs[i]].tagViewConfig;
                     this.globalContext = this.createGlobalContext('tag', additionalContexts, {
                         pagination, 
                         isFirstPage: currentPage === 1,
                         isLastPage: currentPage === totalPages,
                         currentPage
-                    }, tagSlug, false, context);
+                    }, tagSlug, tagViewConfig, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1323,7 +1337,8 @@ class Renderer {
                 }
 
                 inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-                this.globalContext = this.createGlobalContext('author', [], false, authorUsername, false, context);
+                let authorViewConfig = this.cachedItems.authors[authorsIDs[i]].authorViewConfig;
+                this.globalContext = this.createGlobalContext('author', [], false, authorUsername, authorViewConfig, context);
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                 if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1379,12 +1394,13 @@ class Renderer {
                     }
 
                     inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+                    let authorViewConfig = this.cachedItems.authors[authorsIDs[i]].authorViewConfig;
                     this.globalContext = this.createGlobalContext('author', additionalContexts, {
                         pagination,
                         isFirstPage: currentPage === 1,
                         isLastPage: currentPage === totalPages,
                         currentPage
-                    }, authorUsername, false, context);
+                    }, authorUsername, authorViewConfig, context);
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
