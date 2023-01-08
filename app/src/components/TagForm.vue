@@ -56,7 +56,7 @@
                             <span>{{ $t('ui.description') }}:</span>
                             <text-area
                                 v-model="tagData.description"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :wysiwyg="true"
                                 :rows="4"></text-area>
                         </label>
 
@@ -426,10 +426,14 @@ export default {
                 return;
             }
 
-            let tagData = Object.assign({}, this.tagData);
-            tagData.site = this.$store.state.currentSite.config.name;
+            this.$bus.$emit('view-settings-before-save');
 
-            this.saveData(tagData, showPreview);
+            setTimeout(() => {
+                let tagData = Object.assign({}, this.tagData);
+                tagData.site = this.$store.state.currentSite.config.name;
+
+                this.saveData(tagData, showPreview);
+            }, 500);
         },
         async saveAndPreview () {
             await this.save(true);

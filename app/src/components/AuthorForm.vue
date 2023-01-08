@@ -56,6 +56,7 @@
                             <span>{{ $t('ui.description') }}:</span>
                             <text-area
                                 v-model="authorData.description"
+                                :wysiwyg="true"
                                 :rows="4"></text-area>
                         </label>
 
@@ -455,25 +456,29 @@ export default {
                 this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.username);
             }
 
-            let authorData = {
-                id: this.authorData.id,
-                site: this.$store.state.currentSite.config.name,
-                name: this.authorData.name,
-                username: this.authorData.username,
-                config: JSON.stringify({
-                    email: this.authorData.email,
-                    website: this.authorData.website,
-                    avatar: this.authorData.avatar,
-                    useGravatar: this.authorData.useGravatar,
-                    description: this.authorData.description,
-                    metaTitle: this.authorData.metaTitle,
-                    metaDescription: this.authorData.metaDescription,
-                    template: this.authorData.template
-                }),
-                additionalData: JSON.stringify(this.authorData.additionalData)
-            };
+            this.$bus.$emit('view-settings-before-save');
 
-            this.saveData(authorData, showPreview);
+            setTimeout(() => {
+                let authorData = {
+                    id: this.authorData.id,
+                    site: this.$store.state.currentSite.config.name,
+                    name: this.authorData.name,
+                    username: this.authorData.username,
+                    config: JSON.stringify({
+                        email: this.authorData.email,
+                        website: this.authorData.website,
+                        avatar: this.authorData.avatar,
+                        useGravatar: this.authorData.useGravatar,
+                        description: this.authorData.description,
+                        metaTitle: this.authorData.metaTitle,
+                        metaDescription: this.authorData.metaDescription,
+                        template: this.authorData.template
+                    }),
+                    additionalData: JSON.stringify(this.authorData.additionalData)
+                };
+
+                this.saveData(authorData, showPreview);
+            }, 500);
         },
         async saveAndPreview () {
             await this.save(true);

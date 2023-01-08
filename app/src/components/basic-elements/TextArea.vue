@@ -89,6 +89,16 @@ export default {
                 }
             });
 
+            this.$bus.$on('view-settings-before-save', () => {
+                if (this.wysiwyg) {
+                    tinymce.triggerSave();
+
+                    setTimeout(() => {
+                        this.content = tinymce.get(this.editorID).getContent();
+                    }, 250);
+                }
+            });
+
             this.$bus.$on('plugin-settings-before-save', () => {
                 if (this.wysiwyg) {
                     tinymce.triggerSave();
@@ -255,6 +265,8 @@ export default {
         if (this.wysiwyg) {
             tinymce.remove();
             this.$bus.$off('theme-settings-before-save');
+            this.$bus.$off('plugin-settings-before-save');
+            this.$bus.$off('view-settings-before-save');
         }
     }
 }
