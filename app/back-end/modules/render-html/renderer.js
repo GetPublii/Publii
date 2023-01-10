@@ -147,13 +147,13 @@ class Renderer {
     async renderSite() {
         try {
             if (this.singlePageMode) {
-                this.renderPostPreview();
+                await this.renderPostPreview();
             } else if (this.homepageOnlyMode) {
-                this.renderHomepagePreview();
+                await this.renderHomepagePreview();
             } else if (this.tagOnlyMode) {
-                this.renderTagPreview();
+                await this.renderTagPreview();
             } else if (this.authorOnlyMode) {
-                this.renderAuthorPreview();
+                await this.renderAuthorPreview();
             } else {
                 await this.renderFullPreview();
             }
@@ -289,10 +289,10 @@ class Renderer {
     /**
      * Renders post preview
      */
-    renderPostPreview() {
+    async renderPostPreview () {
         this.preparePreview('post');
 
-        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
@@ -303,11 +303,11 @@ class Renderer {
     /**
      * Renders homepage preview
      */
-    renderHomepagePreview() {
+    async renderHomepagePreview () {
         this.preparePreview('frontpage');
 
         let postIDs = Object.keys(this.cachedItems.posts);
-        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
@@ -318,7 +318,7 @@ class Renderer {
     /**
      * Renders tag page preview
      */
-    renderTagPreview() {
+    async renderTagPreview () {
         this.preparePreview('tag');
 
         let postIDs = Object.keys(this.cachedItems.posts);
@@ -333,7 +333,7 @@ class Renderer {
             }
         }
 
-        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
@@ -344,7 +344,7 @@ class Renderer {
     /**
      * Renders author page preview
      */
-    renderAuthorPreview() {
+    async renderAuthorPreview () {
         this.preparePreview('author');
 
         let postIDs = Object.keys(this.cachedItems.posts);
@@ -359,7 +359,7 @@ class Renderer {
             }
         }
 
-        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
@@ -1694,7 +1694,7 @@ class Renderer {
         console.time("FILES");
         let postIDs = Object.keys(this.cachedItems.posts);
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
-        FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);

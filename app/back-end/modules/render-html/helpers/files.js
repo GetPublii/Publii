@@ -40,7 +40,7 @@ class Files {
      * @param outputDir
      * @param themeConfig
      */
-    static copyAssetsFiles(themeDir, outputDir, themeConfig) {
+    static async copyAssetsFiles(themeDir, outputDir, themeConfig) {
         let assetsPath = path.join(themeDir, themeConfig.files.assetsPath);
         let overridesPath = path.join(themeDir.replace(/[\\\/]{1,1}$/, '') + '-override', themeConfig.files.assetsPath);
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath);
@@ -49,7 +49,7 @@ class Files {
         fs.ensureDirSync(outputPath);
 
         // Copy each directory and file from the assets catalog
-        list([assetsPath], {
+        await list([assetsPath], {
             recurse: true,
             flatten: true
         }).then(files => {
