@@ -57,6 +57,7 @@
                             <text-area
                                 v-model="tagData.description"
                                 :wysiwyg="true"
+                                :miniEditorMode="true"
                                 :rows="4"></text-area>
                         </label>
 

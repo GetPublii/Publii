@@ -149,7 +149,8 @@
                                     :id="'theme-settings-' + index"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
-                                    :wysiwyg="true"></text-area>
+                                    :wysiwyg="true"
+                                    :miniEditorMode="true"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"

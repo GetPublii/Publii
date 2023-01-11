@@ -1,5 +1,7 @@
 <template>
-    <div :id="anchor">
+    <div 
+        :id="anchor"
+        :class="{ 'wysiwyg-mini-editor': miniEditorMode }">
         <textarea
             :id="editorID"
             :data-id="editorID"
@@ -59,6 +61,10 @@ export default {
         placeholder: {
             default: '',
             type: String
+        },
+        miniEditorMode: {
+            default: false,
+            type: Boolean
         }
     },
     data: function() {

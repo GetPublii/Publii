@@ -108,7 +108,8 @@
                                             :id="'theme-settings-' + index"
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
-                                            :wysiwyg="true"></text-area>
+                                            :wysiwyg="true"
+                                            :miniEditorMode="true"></text-area>
 
                                         <image-upload
                                             v-if="field.type === 'upload'"
@@ -253,7 +254,8 @@
                                     :id="'theme-settings-' + index"
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
-                                    :wysiwyg="true"></text-area>
+                                    :wysiwyg="true"
+                                    :miniEditorMode="true"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"
