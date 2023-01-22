@@ -1,5 +1,5 @@
 const fs = require('fs');
-const md5 = require('md5');
+const crypto = require('crypto');
 const path = require('path');
 const memoize = require('fast-memoize');
 
@@ -21,7 +21,7 @@ function getMD5(localPath, overridedLocalPath) {
         fileContent = fs.readFileSync(localPath);
     }
 
-    return md5(fileContent);
+    return crypto.createHash('md5').update(fileContent).digest('hex');
 }
 
 const memoizedMD5 = memoize(getMD5);

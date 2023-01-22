@@ -1,7 +1,7 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
-const md5 = require('md5');
+const crypto = require('crypto');
 const normalizePath = require('normalize-path');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 const slug = require('./../../helpers/slug');
@@ -129,7 +129,7 @@ class Deployment {
                     fileList.push({
                         path: filePath,
                         type: 'file',
-                        md5: md5(fs.readFileSync(path.join(this.inputDir, filePath)))
+                        md5: crypto.createHash('md5').update(fs.readFileSync(path.join(this.inputDir, filePath))).digest('hex')
                     });
                 }
 
@@ -161,9 +161,12 @@ class Deployment {
 
             if (isBinaryFileSync(path.join(this.inputDir, filePath))) {
                 let stats = fs.statSync(path.join(this.inputDir, filePath));
-                fileMD5 = md5(stats.size);
+                // below operations are required for backward-compatibility with previously used md5 module
+                // it differently handled integer values
+                let fileSizePrepared = Buffer.from((stats.size).toString().split(''));
+                fileMD5 = crypto.createHash('md5').update(fileSizePrepared).digest('hex');
             } else {
-                fileMD5 = md5(fs.readFileSync(path.join(this.inputDir, filePath)));
+                fileMD5 = crypto.createHash('md5').update(fs.readFileSync(path.join(this.inputDir, filePath))).digest('hex');
             }
 
             fileList.push({
@@ -196,7 +199,7 @@ class Deployment {
 
             if (content.revision) {
                 let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
-                let checkSum = md5(filesToCheck);
+                let checkSum = crypto.createHash('md5').update(filesToCheck).digest('hex');
                 let isExpectedCopy = checkSum === content.revision;
                 this.compareFilesList(isExpectedCopy);    
                 return;
@@ -216,7 +219,7 @@ class Deployment {
         let inputListPath = path.join(this.inputDir, 'files.publii.json');
         let remoteListPath = path.join(this.configDir, 'files-remote.json');
         let contentToSave = fs.readFileSync(inputListPath);
-        let checkSum = md5(contentToSave);
+        let checkSum = crypto.createHash('md5').update(contentToSave).digest('hex');
         let newContent = `{ "revision": "${checkSum}" }`;
         fs.writeFileSync(remoteListPath, contentToSave);
         fs.writeFileSync(inputListPath, newContent);
