@@ -277,6 +277,7 @@ export default {
     },
     setMenuPosition (state, newPositionData) {
         state.currentSite.menuStructure[newPositionData.index].position = newPositionData.position;
+        state.currentSite.menuStructure[newPositionData.index].maxLevels = newPositionData.maxLevels ? newPositionData.maxLevels : ''; 
     },
     addNewMenu (state, newMenuName) {
         state.currentSite.menuStructure.push({

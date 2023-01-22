@@ -428,6 +428,13 @@
         "unassigned": "Nieprzypisane",
         "unselectItem": "Odznacz"
     },
+    "menuPositionPopup": {
+        "invalidValue": "Nieprawidłowa wartość. Ta wartość nie może być równa 0 ani wyższa niż domyślna wartość z motywu.",
+        "maxLevels": "Maksymalny poziom:",
+        "themeDefaultValue": "Domyślna wartość z motywu:",
+        "title": "Skonfiguruj pozycję menu",
+        "usedBy": "Używane przez inne menu:"
+    },
     "plugins": {
         "addPluginSuccessMessage": "Wtyczka została dodana",
         "deletePlugin": "Usuń wtyczkę",

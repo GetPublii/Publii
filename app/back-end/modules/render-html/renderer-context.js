@@ -63,13 +63,46 @@ class RendererContext {
             unassigned: {}
         };
 
-        for(let i = 0; i < menuData.length; i++) {
-            menuData[i].items = this.prepareMenuItems(menuData[i].items, tagsData, postsData);
+        for (let i = 0; i < menuData.length; i++) {
+            let positions = menuData[i].position.split(';');
+            let maxLevels = menuData[i].maxLevels;
 
-            if (menuData[i].position !== '') {
-                menus.assigned[menuData[i].position] = menuData[i];
+            if (maxLevels) {
+                maxLevels = maxLevels.split(';').map(level => parseInt(level, 10));
             } else {
+                maxLevels = Array.from({length: positions.length}, () => -1);
+            }
+
+            if (positions[0] === '') {
+                menuData[i].items = this.prepareMenuItems(menuData[i].items, tagsData, postsData);
                 menus.unassigned[slug(menuData[i].name)] = menuData[i];
+            } else {
+                for (let j = 0; j < positions.length; j++) {
+                    let maxLevel = maxLevels[j];
+                    let position = positions[j];
+
+                    if (!maxLevel) {
+                        if (typeof this.themeConfig.menus[position] === 'object' && this.themeConfig.menus[position].maxLevels) {
+                            maxLevel = parseInt(this.themeConfig.menus[position].maxLevels, 10);
+                        } else {
+                            maxLevel = -1;
+                        }
+                    } else {
+                        let themeMaxLevel = -1;
+                        
+                        if (typeof this.themeConfig.menus[position] === 'object' && this.themeConfig.menus[position].maxLevels) {
+                            themeMaxLevel = parseInt(this.themeConfig.menus[position].maxLevels, 10);
+                        }
+
+                        if (themeMaxLevel > -1 && maxLevel > -1 && maxLevel > themeMaxLevel) {
+                            maxLevel = themeMaxLevel;
+                        }
+                    }
+
+                    let positionMenuData = JSON.parse(JSON.stringify(menuData[i]));
+                    positionMenuData.items = this.prepareMenuItems(positionMenuData.items, tagsData, postsData, 2, maxLevel + 1);
+                    menus.assigned[position] = positionMenuData;
+                }
             }
         }
 
@@ -84,7 +117,12 @@ class RendererContext {
         return menus;
     }
 
-    prepareMenuItems(items, tagsData, postsData, level = 2) {
+    prepareMenuItems(items, tagsData, postsData, level = 2, maxLevel = false) {
+        // When max level is exceed - return items
+        if (maxLevel && maxLevel !== -1 && maxLevel < level) {
+            return [];
+        }
+
         for (let i = 0; i < items.length; i++) {
             items[i].level = level;
 
@@ -113,7 +151,7 @@ class RendererContext {
             }
 
             if (items[i] && !items[i].isHidden && items[i].items.length > 0) {
-                items[i].items = this.prepareMenuItems(items[i].items, tagsData, postsData, level + 1);
+                items[i].items = this.prepareMenuItems(items[i].items, tagsData, postsData, level + 1, maxLevel);
             }
         }
 

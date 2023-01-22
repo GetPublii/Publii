@@ -428,6 +428,13 @@
         "unassigned": "Unassigned",
         "unselectItem": "Unselect"
     },
+    "menuPositionPopup": {
+        "invalidValue": "Invalid value. This value cannot be 0 and higher than theme default value.",
+        "maxLevels": "Max level:",
+        "themeDefaultValue": "Theme default value:",
+        "title": "Configure menu position",
+        "usedBy": "Used by other menu:"
+    },
     "plugins": {
         "addPluginSuccessMessage": "Plugin has been added",
         "deletePlugin": "Delete plugin",

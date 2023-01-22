@@ -3,7 +3,11 @@
     "version": "2.5.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
-        "mainMenu": "Main menu"
+        "mainMenu": {
+            "desc": "Main menu of the website",
+            "name": "Main menu",
+            "maxLevels": -1
+        }
     },
     "renderer": {
         "relatedPostsNumber": 3,
