@@ -424,6 +424,17 @@ class AppEvents {
          * Load specific log file
          */
         ipcMain.on('app-log-file-load', function(event, filename) {
+            let logPath = appInstance.app.getPath('logs');
+            let logFiles = fs.readdirSync(logPath).filter(function(file) {
+                return file.substr(-4) === '.txt' || file.substr(-4) === '.log';
+            });
+
+            if (logFiles.indexOf(filename) === -1) {
+                event.sender.send('app-log-file-loaded', {
+                    fileContent: 'File not found!'
+                });
+            }
+
             let filePath = path.join(appInstance.app.getPath('logs'), filename);
             let fileContent = fs.readFileSync(filePath, 'utf8');
 

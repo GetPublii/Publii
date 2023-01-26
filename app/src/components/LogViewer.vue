@@ -16,6 +16,12 @@
                 :items="files"
                 selected=""
                 :onChange="loadFile"></dropdown>
+            
+            <p-button
+                :onClick="loadSelectedFile"
+                type="primary">
+                {{ $t('ui.reloadFile') }}
+            </p-button>
         </div>
 
         <codemirror-editor
@@ -34,16 +40,16 @@ export default {
     mixins: [
         BackToTools
     ],
-    data: function() {
+    data () {
         return {
             files: {}
         };
     },
-    mounted: function() {
+    mounted () {
         this.loadFilesList();
     },
     methods: {
-        loadFilesList: function() {
+        loadFilesList () {
             mainProcessAPI.send('app-log-files-load');
 
             mainProcessAPI.receiveOnce('app-log-files-loaded', (data) => {
@@ -59,7 +65,7 @@ export default {
                 this.files = items;
             });
         },
-        loadFile: function(filename) {
+        loadFile (filename) {
             if (filename === '') {
                 this.$refs.codemirror.editor.setValue('');
                 return;
@@ -78,6 +84,10 @@ export default {
 
                 this.$refs.codemirror.editor.refresh();
             });
+        },
+        loadSelectedFile () {
+            let filename = this.$refs['selectedFile'].selectedValue;
+            this.loadFile(filename);
         }
     }
 }
@@ -85,4 +95,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.tools-log-viewer-selector {
+    display: flex;
+
+    .button {
+        margin-left: 1rem;
+    }
+}
 </style>
