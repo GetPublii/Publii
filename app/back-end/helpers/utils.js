@@ -74,9 +74,11 @@ class UtilsHelper {
 
         try {
             fileStat = fs.statSync(filePath);
-        } catch(e) {}
+        } catch(e) {
+            return false;
+        }
 
-        if(fileStat && !fileStat.isDirectory()) {
+        if (fileStat && !fileStat.isDirectory()) {
             return true;
         }
 

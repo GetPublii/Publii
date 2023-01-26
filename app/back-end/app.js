@@ -5,7 +5,6 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
-const fileExists = require('file-exists');
 const sqlite = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
@@ -209,7 +208,7 @@ class App {
         const themeConfigPath = path.join(siteDir, 'input', 'config', 'theme.config.json');
         const dbPath = path.join(siteDir, 'input', 'db.sqlite');
 
-        if(!Utils.fileExists(dbPath)) {
+        if (!Utils.fileExists(dbPath)) {
             return { status: false };
         }
 
@@ -263,7 +262,7 @@ class App {
         // check if the config file exists
         let configFilePath = path.join(dirPath, 'input', 'config', 'site.config.json');
 
-        if (!fileExists(configFilePath)) {
+        if (!Utils.fileExists(configFilePath)) {
             return;
         }
 

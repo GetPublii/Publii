@@ -2,7 +2,6 @@
 const fs = require('fs-extra');
 const path = require('path');
 const minifyHTML = require('html-minifier').minify;
-const fileExists = require('file-exists');
 const Utils = require('./../../../helpers/utils.js');
 
 /*
@@ -47,7 +46,7 @@ class TemplateHelper {
             filePath = overrideFilePath;
         }
 
-        if (fileExists(filePath)) {
+        if (Utils.fileExists(filePath)) {
             if (this.loadedTemplates[filePath]) {
                 return this.loadedTemplates[filePath];
             }
@@ -70,7 +69,7 @@ class TemplateHelper {
             filePath = overrideFilePath;
         }
 
-        if (fileExists(filePath)) {
+        if (Utils.fileExists(filePath)) {
             if (this.loadedPartialTemplates[filePath]) {
                 return this.loadedPartialTemplates[filePath];
             }

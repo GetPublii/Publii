@@ -41,7 +41,6 @@
     "electron-devtools-installer": "3.2.0",
     "fast-memoize": "2.5.2",
     "fast-xml-parser": "4.0.10",
-    "file-exists": "1.0.0",
     "fs-extra": "10.1.0",
     "ftp": "0.3.10",
     "github": "9.2.0",
