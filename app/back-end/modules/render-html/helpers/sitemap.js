@@ -151,7 +151,7 @@ class Sitemap {
      * Retrieves media path for the website
      */
     getMediaPath (postObject) {
-        return this.siteConfig.domain + '/' + path.join('media', 'posts', (postObject.id).toString()) + '/';
+        return this.siteConfig.domain + '/' + normalizePath(path.join('media', 'posts', (postObject.id).toString())) + '/';
     }
 
     /**
