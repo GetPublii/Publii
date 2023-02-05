@@ -168,6 +168,7 @@ export default {
                 height: 320,
                 entity_encoding: "raw",
                 allow_script_urls: true,
+                convert_urls: false,
                 style_formats: customFormats,
                 contextmenu: false,
                 browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
