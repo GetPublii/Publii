@@ -46,7 +46,7 @@
     "github": "9.2.0",
     "handlebars": "4.7.7",
     "html-minifier": "4.0.0",
-    "image-downloader": "3.3.0",
+    "image-downloader": "4.3.0",
     "image-size": "1.0.2",
     "isbinaryfile": "5.0.0",
     "jimp": "0.16.2",
