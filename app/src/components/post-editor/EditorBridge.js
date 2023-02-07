@@ -35,6 +35,11 @@ class EditorBridge {
             editorConfig.extended_valid_elements = editorConfig.extended_valid_elements + ',' + additionalValidElements;
         }
 
+        if (window.app.wysiwygCustomElements() !== '') {
+            let customElements = window.app.wysiwygCustomElements();
+            editorConfig.custom_elements = customElements;
+        }
+
         // Remove style selector when there is no custom styles from the theme
         if(customFormats.length === 0) {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');

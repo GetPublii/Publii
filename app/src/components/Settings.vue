@@ -1789,6 +1789,20 @@
                             </small>
                         </field>
 
+                        <field
+                            :label="$t('settings.customElementsInWYSIWYGEditor')">
+                            <text-area
+                                slot="field"
+                                :spellcheck="false"
+                                :rows="8"
+                                v-model="advanced.editors.wysiwygCustomElements" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.customElementsInWYSIWYGEditorInfo')">
+                            </small>
+                        </field>
+
                         <separator
                             type="medium"
                             :label="$t('settings.codeEditor')" />

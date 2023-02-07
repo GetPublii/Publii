@@ -139,6 +139,7 @@ const AstCurrentSiteConfig = {
         relatedPostsIncludeAllPosts: true,
         editors: {
             wysiwygAdditionalValidElements: '',
+            customElements: '',
             codemirrorTabSize: 4,
             codemirrorAutoIndent: true
         }

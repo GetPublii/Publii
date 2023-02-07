@@ -242,6 +242,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getThemeCustomElements: () => this.$store.state.currentSite.themeSettings ? this.$store.state.currentSite.themeSettings.customElements : false,
                 spellcheckerIsEnabled: () => this.$store.state.currentSite.config.spellchecking,
                 wysiwygAdditionalValidElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements,
+                wysiwygCustomElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygCustomElements,
                 tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
                 getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
                 reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
