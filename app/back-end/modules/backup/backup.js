@@ -102,6 +102,14 @@ class Backup {
             let createOperation = new Promise(function (resolve, reject) {
                 let output = fs.createWriteStream(backupFile);
                 let archive = archiver('tar');
+                
+                output.on('error', function (err) {
+                    resolve({
+                        type: 'app-backup-create-error',
+                        status: false,
+                        error: err
+                    });
+                });
 
                 output.on('close', function () {
                     resolve({

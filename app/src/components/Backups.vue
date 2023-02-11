@@ -351,6 +351,13 @@ export default {
                         type: 'warning',
                         lifeTime: 3
                     });
+
+                    if (data.error) {
+                        this.$bus.$emit('alert-display', {
+                            message: data.error,
+                            buttonStyle: 'danger'
+                        });
+                    }
                 }
 
                 this.operationInProgress = false;

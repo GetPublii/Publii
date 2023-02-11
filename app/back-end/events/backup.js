@@ -111,7 +111,8 @@ class BackupEvents {
             });
         } else {
             event.sender.send('app-backup-created', {
-                status: false
+                status: false,
+                error: backupResult.error
             });
         }
     }

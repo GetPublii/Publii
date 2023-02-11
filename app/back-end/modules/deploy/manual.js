@@ -90,6 +90,22 @@ class ManualDeployment {
         let output = fs.createWriteStream(backupFile);
         let archive = archiver('zip');
 
+        output.on('error', function (err) {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingZIP'
+                    }
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+        });
+
         output.on('close', function () {
             self.endDeployment('zip-archive', backupFile);
         });
@@ -129,6 +145,22 @@ class ManualDeployment {
 
         let output = fs.createWriteStream(backupFile);
         let archive = archiver('tar');
+
+        output.on('error', function (err) {
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.archive.errorDuringCreatingTAR'
+                    }
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+        });
 
         output.on('close', function () {
             self.endDeployment('tar-archive', backupFile);
