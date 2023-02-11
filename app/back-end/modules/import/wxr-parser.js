@@ -400,15 +400,13 @@ class WxrParser {
                     posts[i]['category'] = [posts[i]['category']];
                 }
 
-                console.log(posts[i]['category']);
-
                 if(this.usedTaxonomy === 'tags') {
                     tags = posts[i]['category'].filter(item => item['@_domain'] === 'post_tag');
                 } else {
                     tags = posts[i]['category'].filter(item => item['@_domain'] === 'category');
                 }
 
-                postTags = [...new Set(tags.map(tag => tag['#text']))].join(',');
+                postTags = [...new Set(tags.map(tag => tag['#text']))];
             }
 
             if(!this.importAuthors) {

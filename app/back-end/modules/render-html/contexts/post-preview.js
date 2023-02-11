@@ -27,7 +27,7 @@ class RendererContextPostPreview extends RendererContext {
         if(this.renderer.postData.tags === '') {
             this.tags = false;
         } else {
-            this.tags = this.renderer.postData.tags.split(',');
+            this.tags = this.renderer.postData.tags;
         }
 
         // Retrieve all tags

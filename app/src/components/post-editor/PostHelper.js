@@ -67,7 +67,7 @@ class PostHelper {
             'title': postData.title,
             'slug': postData.slug,
             'text': preparedText,
-            'tags': postData.tags.join(','),
+            'tags': postData.tags,
             'status': finalStatus,
             'creationDate': creationDate,
             'modificationDate': Date.now(),
