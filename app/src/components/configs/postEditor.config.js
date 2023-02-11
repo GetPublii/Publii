@@ -40,6 +40,7 @@ export default {
     autosave_retention: "30m",
     entity_encoding: "raw",
     allow_script_urls: true,
+    convert_urls: false,
     textpattern_patterns: [
         {start: '*', end: '*', format: 'italic'},
         {start: '**', end: '**', format: 'bold'},
