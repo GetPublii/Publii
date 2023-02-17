@@ -581,27 +581,26 @@ class App {
             }
         });
 
-        // Prevent from creating new windows in the Electron context
-        this.mainWindow.webContents.on('new-window', function(event, urlToOpen) {
-            event.preventDefault();
-
-            if (typeof urlToOpen !== 'string') {
-                return false;
+        this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+            if (typeof url !== 'string') {
+                return { action: 'deny' };
             }
 
-            let url;
+            let urlToOpen;
             let allowedProtocols = ['http:', 'https:', 'file:', 'dat:', 'ipfs:', 'dweb:'];
 
             try {
-                url = new URL(urlToOpen);
+                urlToOpen = new URL(url);
             } catch (e) {
-                return false;
+                return { action: 'deny' };
             }
 
-            if (allowedProtocols.indexOf(url.protocol) > -1) {
-                url = url.href.replace(/\s/gmi, '');
+            if (allowedProtocols.indexOf(urlToOpen.protocol) > -1) {
+                urlToOpen = urlToOpen.href.replace(/\s/gmi, '');
                 shell.openExternal(url);
             }
+            
+            return { action: 'deny' };
         });
 
         this.mainWindow.webContents.on('app-command', (e, cmd) => {

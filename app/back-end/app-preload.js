@@ -1,15 +1,12 @@
-const fs = require('fs');
 const { contextBridge, shell, ipcRenderer } = require('electron');
-const normalizePath = require('normalize-path');
-const crypto = require('crypto');
 
 contextBridge.exposeInMainWorld('mainProcessAPI', {
     shellShowItemInFolder: (url) => shell.showItemInFolder(url),
     shellOpenPath: (filePath) => shell.openPath(filePath),
     shellOpenExternal: (url) => shell.openExternal(url),
-    existsSync: (pathToCheck) => fs.existsSync(pathToCheck),
-    normalizePath: (pathToNormalize) => normalizePath(pathToNormalize),
-    createMD5: (value) => crypto.createHash('md5').update(value).digest('hex'),
+    existsSync: (pathToCheck) => ipcRenderer.invoke('publii-native-exists-sync'),
+    normalizePath: (pathToNormalize) => ipcRenderer.invoke('publii-native-normalize-path'),
+    createMD5: (value) => ipcRenderer.invoke('publii-native-md5'),
     getEnv: () => ({
         name: process.env.NODE_ENV,
         nodeVersion: process.versions.node,
