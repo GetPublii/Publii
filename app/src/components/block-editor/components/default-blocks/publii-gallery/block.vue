@@ -58,13 +58,7 @@
     </draggable>
 
     <div
-      v-if="content.images.length === 0 && editor.bulkOperationsMode && view === 'preview'"
-      class="publii-block-gallery-empty-state">
-      {{ $t('editor.emptyGalleryBlock') }}
-    </div>
-
-    <div
-      v-if="(content.images.length === 0 || view === 'edit') && !editor.bulkOperationsMode"
+      v-if="(content.images.length === 0 || view === 'edit')"
       :class="{ 'publii-block-gallery-form': true, 'is-visible': content.images.length === 0 }"
       ref="block">
       <div

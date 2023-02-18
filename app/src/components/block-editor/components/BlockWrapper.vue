@@ -2,10 +2,11 @@
   <div
     :data-block-type="blockType"
     ref="block-wrapper"
+    :data-id="id"
     :class="{
       'wrapper': true,
       'is-selected': isSelected,
-      'show-bulk-operations': $parent.bulkOperationsMode,
+      'is-activated': isActivated,
       'has-ui-opened': uiOpened,
       'has-ui-block-selector-opened': newBlockUIListVisible,
       [customCssClasses.join(' ')]: true,
@@ -62,38 +63,6 @@
 
     <slot />
 
-    <div
-      v-if="$parent.bulkOperationsMode"
-      class="wrapper-ui-bulk">
-      <button
-        class="wrapper-ui-bulk-delete"
-        tabindex="-1"
-        @click.stop="deleteBlock">
-        <icon name="trash" />
-      </button>
-      <button
-        class="wrapper-ui-bulk-duplicate"
-        tabindex="-1"
-        :disabled="blockType === 'publii-readmore'"
-        @click.stop="duplicateBlock">
-        <icon name="duplicate" />
-      </button>
-      <button
-        class="wrapper-ui-bulk-move"
-        tabindex="-1"
-        :disabled="$parent.internal.firstBlockID === id"
-        @click.stop="moveUp">
-        <icon name="up" />
-      </button>
-      <button
-        class="wrapper-ui-bulk-move"
-        tabindex="-1"
-        :disabled="$parent.internal.lastBlockID === id"
-        @click.stop="moveDown">
-        <icon name="down" />
-      </button>
-    </div>
-
     <div class="wrapper-ui">
       <div 
         :class="{ 'wrapper-ui-show-options': true }"
@@ -127,6 +96,7 @@
 </template>
 
 <script>
+import AvailableBlocks from '../available-blocks.json';
 import Icon from '../components/elements/EditorIcon.vue';
 
 export default {
@@ -140,6 +110,9 @@ export default {
     'icon': Icon
   },
   computed: {
+    availableBlocks () {
+        return AvailableBlocks;
+    },
     canDisplayUI () {
         return !this.editor.uiSelectorID || this.editor.uiSelectorID === this.id;
     },
@@ -166,70 +139,14 @@ export default {
       customCssClasses: [],
       isHovered: false,
       isSelected: false,
+      isActivated: false,
       uiOpened: false,
       moveTimeout: false,
       // new block UI
       blockFilterPhrase: '',
       newBlockUIActiveIndex: 0,
       newBlockUIListVisible: false,
-      blockContentIsEmpty: false,
-      availableBlocks: [
-        {
-            blockName: 'publii-paragraph',
-            icon: 'paragraph',
-            label: 'editor.paragraph'
-        },
-        {
-            blockName: 'publii-header',
-            icon: 'headings',
-            label: 'editor.header'
-        },
-        {
-            blockName: 'publii-image',
-            icon: 'image',
-            label: 'image.image'
-        },
-        {
-            blockName: 'publii-gallery',
-            icon: 'gallery',
-            label: 'editor.gallery'
-        },
-        {
-            blockName: 'publii-list',
-            icon: 'unordered-list',
-            label: 'editor.list'
-        },
-        {
-            blockName: 'publii-quote',
-            icon: 'quote',
-            label: 'editor.quote'
-        },
-        {
-            blockName: 'publii-code',
-            icon: 'code',
-            label: 'editor.code'
-        },
-        {
-            blockName: 'publii-html',
-            icon: 'html',
-            label: 'editor.html'
-        },
-        {
-            blockName: 'publii-separator',
-            icon: 'separator',
-            label: 'editor.separator'
-        },
-        {
-            blockName: 'publii-readmore',
-            icon: 'readmore',
-            label: 'editor.readMoreBlockName'
-        },
-        {
-            blockName: 'publii-toc',
-            icon: 'toc',
-            label: 'editor.toc'
-        }
-      ]
+      blockContentIsEmpty: false
     };
   },
   watch: {
@@ -251,11 +168,6 @@ export default {
         } else if (newState === false) {
             this.$bus.$emit('block-editor-ui-selector-opened', false);
         }
-    },
-    '$parent.bulkOperationsMode': function (newState) {
-      if (newState) {
-        this.uiOpened = false;
-      }
     }
   },
   mounted () {
@@ -263,6 +175,8 @@ export default {
     this.$bus.$on('block-editor-deselect-block', this.deselectSingleBlock);
     this.$bus.$on('block-editor-deselect-other-blocks', this.deselectOtherBlocks);
     this.$bus.$on('block-editor-close-new-block-ui', this.hideNewBlockUI);
+    this.$bus.$on('block-editor-list-activate-item', this.activateItem);
+    this.$bus.$on('block-editor-list-deactivate-item', this.deactivateItem);
   },
   methods: {
     blockClick (e) {
@@ -376,12 +290,6 @@ export default {
         });
       }, 0);
     },
-    deleteBlock () {
-      this.$bus.$emit('block-editor-delete-block', this.id);
-    },
-    duplicateBlock () {
-      this.$bus.$emit('block-editor-duplicate-block', this.id);
-    },
     saveChangesHistory () {
         this.$slots.default[0].componentInstance.saveChangesHistory();
     },
@@ -425,6 +333,14 @@ export default {
     },
     hideNewBlockUI () {
       this.newBlockUIListVisible = false;
+    },
+    activateItem (id) {
+      if (id === this.id) {
+        this.isActivated = true;
+      }
+    },
+    deactivateItem () {
+      this.isActivated = false;
     }
   },
   beforeDestroy () {
@@ -432,6 +348,8 @@ export default {
     this.$bus.$off('block-editor-deselect-block', this.deselectSingleBlock);
     this.$bus.$off('block-editor-deselect-other-blocks', this.deselectOtherBlocks);
     this.$bus.$off('block-editor-close-new-block-ui', this.hideNewBlockUI);
+    this.$bus.$off('block-editor-list-activate-item', this.activateItem);
+    this.$bus.$off('block-editor-list-deactivate-item', this.deactivateItem);
   }
 }
 </script>
@@ -471,22 +389,9 @@ export default {
     z-index: 10;
   }
 
-  &.show-bulk-operations {
-    background: var(--popup-bg);
-    margin-top: baseline(8, em);
-    transition: all 0.25s ease-out;
-
-    div {
-      pointer-events: none;
-    }
-
-    .wrapper-ui {
-      display: none;
-    }
-
-    .wrapper-ui-bulk {
-      pointer-events: auto;
-    }
+  &.is-activated {
+    background: rgba(50, 50, 150, .125);
+    z-index: 10;
   }
 
   & > div {
@@ -754,108 +659,7 @@ export default {
         }
       }
     }
-  }
-
-  &-ui-bulk {
-    background: transparent;
-    box-shadow: 0 0 16px var(--shadow);
-    border-radius: var(--border-radius);
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: calc(var(--editor-width) + 68px);
-
-    &-move,
-    &-delete,
-    &-duplicate {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      margin: 0;
-      outline: none;
-      padding: 0;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 38px;
-
-      svg {
-        fill: var(--icon-primary-color);
-        transition: var(--transition);
-      }
-
-      // hover effect
-      &::before {
-        content: "";
-        background: var(--gray-6);
-        border-radius: 3px;
-        display: block;
-        left: 50%;
-        opacity: 0;
-        position: absolute;
-        height: 34px;
-        top: 50%;
-        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-        transform: scale(0.5) translate(-50%, -50%);
-        transform-origin: left top;
-        width: 34px;
-        z-index: -1;
-      }
-
-      &:hover,
-      &.is-active {
-        svg {
-          fill: var(--icon-tertiary-color);
-        }
-
-        &::before {
-          opacity: 1;
-          transform: scale(1) translate(-50%, -50%);
-        }
-      }
-    }
-
-    &-delete {
-      &:hover {
-        svg {
-          fill: var(--white);
-        }
-        &::before {
-          background: var(--warning);
-        }
-      }
-    }
-
-    &-move {
-      right: -90px;
-
-      svg {
-        vertical-align: middle;
-      }
-
-      & + .wrapper-ui-bulk-move {
-        right: -60px;
-      }
-
-      &:disabled {
-        cursor: default;
-        opacity: 0.4;
-
-        &::before {
-          background: none;
-        }
-      }
-    }
-
-    &-delete {
-      left: -90px;
-    }
-
-    &-duplicate {
-      left: -60px;
-    }
-  }
+}
 }
 
 .editor[data-ui-opened-block=""] {

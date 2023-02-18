@@ -9,7 +9,6 @@ export default {
   mounted () {
     this.$bus.$on('block-editor-deselect-blocks', this.deselectBlock);
     this.$bus.$on('block-editor-block-selected', this.selectBlock);
-    this.$bus.$on('block-editor-bulk-edit-start', this.showPreview);
   },
   methods: {
     setView (newView) {
@@ -18,11 +17,6 @@ export default {
         newView === 'preview'
       ) {
         this.save();
-      }
-
-      if (this.editor.bulkOperationsMode) {
-        this.view = 'preview';
-        return;
       }
 
       if (
@@ -57,7 +51,6 @@ export default {
   beforeDestroy () {
     this.$bus.$off('block-editor-deselect-blocks', this.deselectBlock);
     this.$bus.$off('block-editor-block-selected', this.selectBlock);
-    this.$bus.$off('block-editor-bulk-edit-start', this.showPreview);
   }
 }
 </script>

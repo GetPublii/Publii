@@ -116,10 +116,6 @@ body[data-os="linux"] {
     .post-editor-form {
         &.sidebar-open {
             width: calc(100% - $options-sidebar-width);
-            
-            .editor .bulk-operations-bar {
-                width: calc(100% - $options-sidebar-width);
-            }
         }
     }
 }

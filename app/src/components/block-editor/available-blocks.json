@@ -1,0 +1,57 @@
+[
+    {
+        "blockName": "publii-paragraph",
+        "icon": "paragraph",
+        "label": "editor.paragraph"
+    },
+    {
+        "blockName": "publii-header",
+        "icon": "headings",
+        "label": "editor.header"
+    },
+    {
+        "blockName": "publii-image",
+        "icon": "image",
+        "label": "image.image"
+    },
+    {
+        "blockName": "publii-gallery",
+        "icon": "gallery",
+        "label": "editor.gallery"
+    },
+    {
+        "blockName": "publii-list",
+        "icon": "unordered-list",
+        "label": "editor.list"
+    },
+    {
+        "blockName": "publii-quote",
+        "icon": "quote",
+        "label": "editor.quote"
+    },
+    {
+        "blockName": "publii-code",
+        "icon": "code",
+        "label": "editor.code"
+    },
+    {
+        "blockName": "publii-html",
+        "icon": "html",
+        "label": "editor.html"
+    },
+    {
+        "blockName": "publii-separator",
+        "icon": "separator",
+        "label": "editor.separator"
+    },
+    {
+        "blockName": "publii-readmore",
+        "icon": "readmore",
+        "label": "editor.readMoreBlockName"
+    },
+    {
+        "blockName": "publii-toc",
+        "icon": "toc",
+        "label": "editor.toc"
+    }
+]

@@ -11,7 +11,7 @@
         :width="content.imageWidth" />
 
       <button
-        v-if="!editor.bulkOperationsMode && !!content.image"
+        v-if="!!content.image"
         class="publii-block-image-delete"
         @click.stop.prevent="clearImage()">
         <icon name="trash" />
@@ -23,17 +23,11 @@
     </figure>
 
     <div
-      v-if="content.image === '' && editor.bulkOperationsMode"
-      class="publii-block-image-empty-state">
-      {{ $t('editor.emptyImageBlock') }}
-    </div>
-
-    <div
-      v-if="(content.image === '' && !editor.bulkOperationsMode) || $parent.uiOpened"
+      v-if="(content.image === '') || $parent.uiOpened"
       :class="{ 'publii-block-image-form': true, 'is-visible': true }"
       ref="block">
       <div
-        v-if="content.image === '' && !editor.bulkOperationsMode"
+        v-if="content.image === ''"
         :class="{ 'publii-block-image-uploader': true, 'is-hovered': isHovered }"
         @drag.stop.prevent
         @dragstart.stop.prevent
@@ -63,7 +57,7 @@
       </div>
 
       <input
-        v-if="!editor.bulkOperationsMode && $parent.uiOpened"
+        v-if="$parent.uiOpened"
         type="text"
         @focus="updateCurrentBlockID"
         @keydown="handleCaptionKeyboard"
@@ -73,7 +67,7 @@
         :placeholder="$t('image.enterCaption')"
         ref="contentCaption" />
       <input
-        v-if="!editor.bulkOperationsMode && $parent.uiOpened"
+        v-if="$parent.uiOpened"
         type="text"
         @focus="updateCurrentBlockID"
         @keydown="handleAltKeyboard"
@@ -112,13 +106,6 @@ export default {
   components: {
     'icon': EditorIcon,
     'top-menu': TopMenuUI
-  },
-  watch: {
-    'editor.bulkOperationsMode': function (newValue, oldValue) {
-      if (newValue === false && oldValue === true && this.content.image === '') {
-        this.setView('code');
-      }
-    }
   },
   data () {
     return {
@@ -297,11 +284,6 @@ export default {
         newView === 'preview'
       ) {
         this.save();
-      }
-
-      if (this.editor.bulkOperationsMode) {
-        this.view = 'preview';
-        return;
       }
 
       if (

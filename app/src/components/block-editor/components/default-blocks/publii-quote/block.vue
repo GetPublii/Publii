@@ -206,11 +206,6 @@ export default {
         this.save();
       }
 
-      if (this.editor.bulkOperationsMode) {
-        this.view = 'preview';
-        return;
-      }
-
       if (
         !this.content.text &&
         newView === 'preview'

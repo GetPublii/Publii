@@ -4,39 +4,7 @@
     data-ui-opened-block=""
     ref="editor-main"
     @click="$bus.$emit('block-editor-deselect-blocks')">
-    <div
-      @click.stop
-      :class="{ 'bulk-operations-bar': true, 'is-visible': showBulkOperationsBar }">
-      <button
-        v-if="bulkOperationsMode"
-        :disabled="bulkOperationsLog.length === 0"
-        @click.stop="undoBulkOperation"
-        class="undo">
-        <icon name="undo"/>
-      </button>
-      <button
-        v-if="!bulkOperationsMode"
-        @click.stop="startBulkOperations"
-        class="batch">
-        <icon 
-          name="gear"
-          :customHeight="19"
-          :customWidth="19"/>
-      </button>
-      <button
-        v-if="bulkOperationsMode"
-        @click.stop="endBulkOperations"
-        :class="{ 'save': true, 'is-active': bulkOperationsLog.length }">
-        <icon name="save"/>
-      </button>
-      <button
-        v-if="bulkOperationsMode"
-        @click.stop="cancelBulkOperations"
-        class="cancel">
-        <icon name="cancel" />
-      </button>
-    </div>
-    <div :class="{ 'editor-inner': true, 'is-bulk-edit-mode': bulkOperationsMode }">
+    <div :class="{ 'editor-inner': true }">
       <block-wrapper
         v-for="block of content"
         :id="block.id"
@@ -60,6 +28,8 @@
 
     <block-advanced-config />
     <block-link-popup />
+    <blocks-list
+      :content="simplifiedContent" />
   </div>
 </template>
 
@@ -69,6 +39,7 @@ import Vue from 'vue';
 import Block from './Block.vue';
 import BlockAdvancedConfig from './BlockAdvancedConfig.vue';
 import BlockLinkPopup from './BlockLinkPopup.vue';
+import BlocksList from './BlocksList.vue';
 import BlockWrapper from './BlockWrapper.vue';
 import ContentEditableImprovements from './helpers/ContentEditableImprovements.vue';
 import { compileToFunctions } from 'vue-template-compiler';
@@ -97,6 +68,7 @@ export default {
     'block-advanced-config': BlockAdvancedConfig,
     'block-link-popup': BlockLinkPopup,
     'block-wrapper': BlockWrapper,
+    'blocks-list': BlocksList,
     'icon': Icon,
     'publii-code': PubliiCode,
     // 'publii-embed': PubliiEmbed,
@@ -114,6 +86,12 @@ export default {
   computed: {
     hasReadMore () {
       return this.content.filter(block => block.type === 'publii-readmore').length > 0;
+    },
+    simplifiedContent () {
+      return this.content.map(block => ({ 
+        id: block.id, 
+        type: block.type 
+      }));
     }
   },
   data () {
@@ -123,11 +101,7 @@ export default {
       config: {
         postID: ''
       },
-      bulkOperationsMode: false,
       currentSiteData: null,
-      showBulkOperationsBar: false,
-      bulkContentBackup: '',
-      bulkOperationsLog: [],
       state: {
         selectedBlockID: false
       },
@@ -206,13 +180,6 @@ export default {
         Vue.set(this.content, blockIndex - 1, tempBlock);
       }
 
-      if (this.bulkOperationsMode && startBlockTop !== false) {
-        this.bulkOperationsLog.push({
-          type: 'move-up',
-          blockID: blockID
-        });
-      }
-
       this.scrollWindow(blockID, startBlockTop);
     },
     moveBlockDown (blockID, startBlockTop) {
@@ -222,13 +189,6 @@ export default {
         let tempBlock = JSON.parse(JSON.stringify(this.content[blockIndex]));
         Vue.set(this.content, blockIndex, this.content[blockIndex + 1]);
         Vue.set(this.content, blockIndex + 1, tempBlock);
-      }
-
-      if (this.bulkOperationsMode && startBlockTop !== false) {
-        this.bulkOperationsLog.push({
-          type: 'move-down',
-          blockID: blockID
-        });
       }
 
       this.scrollWindow(blockID, startBlockTop);
@@ -253,49 +213,26 @@ export default {
         this.content[blockIndex].config = blockData.config;
       }
     },
-    deleteBlock (blockID, addFocusToPreviousBlock = true, undoBulkOperation = false) {
+    deleteBlock (blockID, addFocusToPreviousBlock = true) {
       let blockIndex = this.content.findIndex(el => el.id === blockID);
       this.content.splice(blockIndex, 1);
       this.state.selectedBlockID = false;
 
-      if (!undoBulkOperation) {
-        if (blockIndex > 0 && addFocusToPreviousBlock) {
-          this.$refs['block-' + this.content[blockIndex - 1].id][0].focus();
-        }
-
-        if (!this.content.length) {
-          this.addNewBlock('publii-paragraph', false);
-        }
-
-        if (this.bulkOperationsMode) {
-          let previousBlockID = 0;
-
-          if (this.content[blockIndex - 1]) {
-            previousBlockID = this.content[blockIndex - 1].id;
-          }
-
-          this.bulkOperationsLog.push({
-            type: 'delete',
-            blockID: blockID,
-            prevBlockID: previousBlockID
-          });
-        }
-
-        this.$refs['editor-main'].setAttribute('data-ui-opened-block', '');
+      if (blockIndex > 0 && addFocusToPreviousBlock) {
+        this.$refs['block-' + this.content[blockIndex - 1].id][0].focus();
       }
+
+      if (!this.content.length) {
+        this.addNewBlock('publii-paragraph', false);
+      }
+
+      this.$refs['editor-main'].setAttribute('data-ui-opened-block', '');
     },
     duplicateBlock (blockID) {
       let blockIndex = this.content.findIndex(el => el.id === blockID);
       let blockCopy = JSON.parse(JSON.stringify(this.content[blockIndex]));
       blockCopy.id = +new Date();
       this.content.splice(blockIndex, 0, blockCopy);
-
-      if (this.bulkOperationsMode) {
-        this.bulkOperationsLog.push({
-          type: 'duplicate',
-          blockID: blockCopy.id
-        });
-      }
     },
     addNewBlock (blockType, afterBlockID = false, content = '') {
       let blockIndex = this.content.findIndex(el => el.id === afterBlockID);
@@ -343,10 +280,6 @@ export default {
       }, 50);
     },
     addNewParagraphAtEnd () {
-      if (this.bulkOperationsMode) {
-        return;
-      }
-
       let lastContentBlockIndex = this.content.length - 1;
       let lastContentBlock = this.content[lastContentBlockIndex];
 
@@ -402,14 +335,9 @@ export default {
     },
     uiClosedForBlock (blockID) {
       this.$refs['editor-main'].setAttribute('data-ui-opened-block', '');
-
-      if (!this.bulkOperationsMode) {
-        this.showBulkOperationsBar = false;
-      }
     },
     uiOpenedForBlock (blockID) {
       this.$refs['editor-main'].setAttribute('data-ui-opened-block', blockID);
-      this.showBulkOperationsBar = true;
     },
     loadAllBlocks () {
       let inputField = document.querySelector('#post-editor');
@@ -439,39 +367,6 @@ export default {
         content: data.content,
         config: JSON.parse(JSON.stringify(data.config))
       });
-    },
-    startBulkOperations () {
-      this.bulkOperationsMode = true;
-      this.bulkContentBackup = JSON.stringify(this.content);
-      this.$bus.$emit('block-editor-bulk-edit-start');
-    },
-    endBulkOperations () {
-      this.bulkOperationsMode = false;
-      this.showBulkOperationsBar = false;
-      this.bulkOperationsLog = [];
-      this.$bus.$emit('block-editor-bulk-edit-end');
-    },
-    undoBulkOperation () {
-      let lastOperation = this.bulkOperationsLog.pop();
-
-      if (lastOperation.type === 'move-up') {
-        this.moveBlockDown(lastOperation.blockID, false);
-      } else if (lastOperation.type === 'move-down') {
-        this.moveBlockUp(lastOperation.blockID, false);
-      } else if (lastOperation.type === 'delete') {
-        let restoredCopy = JSON.parse(this.bulkContentBackup);
-        let blockIndex = restoredCopy.findIndex(el => el.id === lastOperation.blockID);
-        let blockObject = JSON.parse(JSON.stringify(restoredCopy[blockIndex]));
-        let previousBlockIndex = this.content.findIndex(el => el.id === lastOperation.prevBlockID);
-        this.content.splice(previousBlockIndex + 1, 0, blockObject);
-      } else if (lastOperation.type === 'duplicate') {
-        this.deleteBlock(lastOperation.blockID, false, true);
-      }
-    },
-    cancelBulkOperations () {
-      this.content = JSON.parse(this.bulkContentBackup);
-      this.bulkContentBackup = '';
-      this.endBulkOperations();
     },
     updateCurrentBlockID (blockID) {
       if (this.internal.currentBlockID !== blockID) {
@@ -558,13 +453,6 @@ export default {
       width: var(--editor-width);
       z-index: 0;
     }
-
-    &.is-bulk-edit-mode {
-      .wrapper {
-        padding: 0 32px;
-        width: var(--editor-width)!important;
-      }
-    }
   }
 
   // UI animations
@@ -578,211 +466,6 @@ export default {
   .block-editor-ui-fade-enter,
   .block-editor-ui-fade-leave-to {
     opacity: 0;
-  }
-
-  // Bulk operations bar
-  .bulk-operations-bar {
-    align-items: center;
-    bottom: -100px;
-    display: flex;
-    height: 100px;
-    justify-content: center;
-    left: 0;
-    position: fixed;
-    opacity: 0;
-    transition: all .5s cubic-bezier(.17,.67,.01,1.02);
-    will-change: transform;
-    width: 100%;
-    z-index: 1000;
-
-    &.is-visible {
-      background: linear-gradient(to top, var(--bg-primary) 50%, transparent 100%);
-      bottom: 0;
-      opacity: 1;
-
-      & > button.batch::after {
-         animation: batchFocusOut 1s ease-out backwards;
-      }
-    }
-
-    & > button {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      margin: 0;
-      padding: 0;
-      position: relative;
-      transition: all .25s ease-out;
-      user-select: none;
-      white-space: nowrap;
-
-      & > svg {
-         fill: var(--icon-primary-color);
-      }
-
-      &.batch {
-         background: var(--bg-secondary);
-         box-shadow: var(--box-shadow-small);
-         border: 1px solid var(--gray-6);
-         border-radius: 30px;
-         font-size: 15px;
-         font-weight: var(--font-weight-semibold);
-         height: 58px;
-         width: 58px;
-
-         &:hover {
-            border: 2px solid var(--gray-2);
-
-            & > svg {
-               transform: scale(1.1) rotate(180deg);
-            }
-         }
-
-         &::after {
-            content:"";
-            border: 2px solid rgba(var(--color-primary-rgb), .4);
-            border-radius: 50%;
-            height: 58px;
-            left: 50%;
-            opacity: 0;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 58px;
-
-            @keyframes batchFocusOut {
-               0% {
-                 opacity: 0;
-               }
-               50% {
-                 opacity: 1;
-                 transform: translate(-50%, -50%) scale(1.4)
-               }
-            }
-         }
-      }
-
-      &.save {
-         background: var(--input-bg);
-         border: 2px solid var(--gray-2);
-         border-radius: 50%;
-         height: 58px;
-         margin: 0 -10px;
-         width: 58px;
-         z-index: 1;
-
-         &::after {
-            content: "";
-            border-radius: 50%;
-            border: 2px solid var(--bg-primary);
-            position: absolute;
-            left: -4px;
-            top: -4px;
-            width: 62px;
-            height: 62px;
-         }
-
-         &.is-active {
-            border-color: var(--success);
-
-            &:hover {
-               border-color: var(--success);
-               box-shadow: inset 0 0 0 1px var(--success);
-
-               & > svg {
-               fill: var(--success) !important;
-               transform: scale(1.15);
-               }
-            }
-         }
-      }
-
-      &.undo,
-      &.cancel {
-         border: 1px solid var(--input-border-color);
-         box-shadow: var(--box-shadow-small);
-         background: var(--input-bg);
-         height: 48px;
-         opacity: 0;
-         width: 70px;
-
-         &::after {
-           content: "";
-           height: 100%; left: 0;
-           position: absolute;
-           top: 0;
-           width: 100%;
-           transition: all .25s ease-out;
-         }
-      }
-
-      &.undo {
-         animation: left .5s cubic-bezier(.17,.67,.6,1.34);
-         border-right: none;
-         border-radius: 30px 0 0 30px;
-
-         &::after {
-              border-radius: 30px 0 0 30px;
-         }
-
-         &:not([disabled]):hover {
-            border-color: var(--color-primary);
-
-            &::after {
-               box-shadow: inset 0 0 0 1px var(--color-primary);
-            }
-         }
-
-         @keyframes left {
-            from {
-                margin-right: -20px;
-            }
-            to {
-                margin-right: 0;
-                opacity:1;
-            }
-         }
-      }
-
-      &.cancel {
-         animation: right .5s cubic-bezier(.17,.67,.6,1.34);
-         border-left: none;
-         border-radius: 0 30px 30px 0;
-
-         &::after {
-              border-radius: 0 30px 30px 0;
-         }
-
-         &:hover {
-            border-color: var(--warning);
-
-            &::after {
-               box-shadow: inset 0 0 0 1px var(--warning);
-            }
-         }
-
-         @keyframes right {
-            from {
-                margin-left: -20px;
-            }
-            to {
-                margin-left: 0;
-                opacity:1;
-            }
-         }
-      }
-
-      & > svg {
-         vertical-align: middle;
-         transition: all .25s ease-out;
-      }
-
-      &:disabled  {
-         & > svg {
-            fill: var(--gray-2) !important;
-         }
-      }
-    }
   }
 }
 </style>
