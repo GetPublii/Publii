@@ -388,7 +388,10 @@ export default {
             editorFontSize: 18,
             editorFontFamily: 'serif',
             experimentalFeatureAppAutoBeautifySourceCode: false,
-            changeSitesLocationWithoutCopying: false
+            changeSitesLocationWithoutCopying: false,
+            sitesLocationExists: false,
+            backupsLocationExists: false,
+            previewLocationExists: false
         };
     },
     computed: {
@@ -453,15 +456,6 @@ export default {
                 'postsCounter ASC': this.$t('settings.ordering.postsCounterASC')
             };
         },
-        checkSitesCatalog () {
-            return mainProcessAPI.existsSync(this.locations.sites);
-        },
-        checkBackupsCatalog () {
-            return mainProcessAPI.existsSync(this.locations.backups);
-        },
-        checkPreviewCatalog () {
-            return mainProcessAPI.existsSync(this.locations.preview);
-        },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
         },
@@ -473,6 +467,26 @@ export default {
         },
         showWebpWarning () {
             return this.imageResizeEnginesSelected === 'jimp';
+        },
+        isSitesLocationExists () {
+            return this.sitesLocationExists;
+        },
+        isBackupsLocationExists () {
+            return this.backupsLocationExists;
+        },
+        isPreviewLocationExists () {
+            return this.previewLocationExists;
+        }
+    },
+    watch: {
+        'locations.sites': async function (newValue) {
+            this.checkSitesCatalog();
+        },
+        'locations.backups': async function (newValue) {
+            this.checkBackupsCatalog();
+        },
+        'locations.preview': async function (newValue) {
+            this.checkPreviewCatalog();
         }
     },
     mounted () {
@@ -632,7 +646,16 @@ export default {
 
                 this.unwatchBackupsLocation();
             }
-        }
+        },
+        async checkSitesCatalog () {
+            return await mainProcessAPI.existsSync(this.locations.sites);
+        },
+        async checkBackupsCatalog () {
+            return await mainProcessAPI.existsSync(this.locations.backups);
+        },
+        async checkPreviewCatalog () {
+            return await mainProcessAPI.existsSync(this.locations.preview);
+        },
     }
 }
 </script>

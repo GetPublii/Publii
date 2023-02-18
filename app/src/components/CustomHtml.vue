@@ -298,7 +298,7 @@ export default {
         saveAndRender (renderingType = false) {
             this.save(true, renderingType, true);
         },
-        saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
+        async saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
             let siteName = this.$store.state.currentSite.config.name;
 
             this.$store.commit('refreshSiteConfig', {
@@ -307,7 +307,9 @@ export default {
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+                let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+                if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                     this.$bus.$emit('confirm-display', {
                         message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                         okLabel: this.$t('sync.goToAppSettings'),

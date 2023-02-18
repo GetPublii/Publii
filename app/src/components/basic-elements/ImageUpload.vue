@@ -101,12 +101,12 @@ export default {
         }
     },
     watch: {
-        value (newValue, oldValue) {
+        value: async function (newValue, oldValue) {
             if (newValue && typeof newValue === 'string') {
                 if (newValue.indexOf('https://') === 0 || newValue.indexOf('http://') === 0) {
                     this.filePath = newValue;
                 } else {
-                    this.filePath = this.mediaPath + newValue;
+                    this.filePath = await this.mediaPath + newValue;
                 }
 
                 this.isEmpty = false;
@@ -129,12 +129,12 @@ export default {
         }
     },
     mounted () {
-        setTimeout(() => {
+        setTimeout(async () => {
             if (this.value && typeof this.value === 'string') {
                 if (this.value.indexOf('https://') === 0 || this.value.indexOf('http://') === 0) {
                     this.filePath = this.value;
                 } else {
-                    this.filePath = this.mediaPath + this.value;
+                    this.filePath = await this.mediaPath + this.value;
                 }
 
                 this.isEmpty = false;
@@ -177,28 +177,28 @@ export default {
 
             return false;
         },
-        mediaPath () {
+        async mediaPath () {
             if (this.itemId && this.imageType === 'tagImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
             } else if (this.itemId && this.imageType === 'authorImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/' + this.itemId + '/';
             } else if (this.itemId === 0 && this.imageType === 'tagImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/temp/';
             } else if (this.itemId === 0 && this.imageType === 'authorImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/temp/';
             } else if (this.imageType === 'pluginImages') {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             } else if (this.itemId === 0) {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
             } else if (this.itemId) {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
 
             if (this.addMediaFolderPath) {
-                return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/';
             }
 
-            return mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
+            return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
         }
     },
     methods: {
@@ -214,9 +214,9 @@ export default {
             this.stopEvents(e);
             this.isHovered = false;
         },
-        drop (e) {
+        async drop (e) {
             this.stopEvents(e);
-            let sourcePath = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
+            let sourcePath = await mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
             this.uploadImage(sourcePath);
         },
         remove (e) {
@@ -227,12 +227,12 @@ export default {
             this.isEmpty = true;
             this.onRemove();
         },
-        valueChanged (e) {
+        async valueChanged (e) {
             if(!e.target.files.length) {
                 return;
             }
 
-            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
+            let sourcePath = await mainProcessAPI.normalizePath(e.target.files[0].path);
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {
@@ -262,19 +262,19 @@ export default {
             mainProcessAPI.send('app-image-upload', uploadData);
             console.log('DATA', uploadData);
 
-            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
                 this.isEmpty = false;
                 this.isHovered = false;
-                this.filePath = mainProcessAPI.normalizePath(data.baseImage.newPath);
+                this.filePath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
                 this.onAdd();
             });
         },
-        setImage (newPath, addMedia = false) {
+        async setImage (newPath, addMedia = false) {
             this.filePath = newPath;
 
             if (addMedia) {
-                this.filePath = this.mediaPath + newPath;
+                this.filePath = await this.mediaPath + newPath;
             }
 
             if (newPath !== '') {

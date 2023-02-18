@@ -314,16 +314,17 @@ export default {
         hideOverlay (e) {
             this.backupIsOver = false;
         },
-        uploadBackup (e) {
+        async uploadBackup (e) {
             this.backupIsOver = false;
 
             if (typeof e === 'string') {
                 this.backupFile = e;
             } else {
-                this.backupFile = mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
+                this.backupFile = await mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
             }
 
             this.restoreInProgress = true;
+            console.log('T', this.backupFile);
 
             mainProcessAPI.send('app-site-check-website-to-restore', {
                 backupPath: this.backupFile
@@ -337,13 +338,13 @@ export default {
                 }
             });
         },
-        valueChanged (e) {
+        async valueChanged (e) {
             if (!e.target.files.length) {
                 return;
             }
 
-            let sourcePath = mainProcessAPI.normalizePath(e.target.files[0].path);
-            this.uploadBackup(sourcePath);
+            let sourcePath = await mainProcessAPI.normalizePath(e.target.files[0].path);
+            await this.uploadBackup(sourcePath);
         },
         removeBackupFile () {
             this.backupFile = null;

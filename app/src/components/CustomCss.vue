@@ -169,7 +169,7 @@ export default {
                 this.save(true, renderingType, true);
             }, 500);
         },
-        saved (showPreview, renderingType = false, renderFiles = false) {
+        async saved (showPreview, renderingType = false, renderFiles = false) {
             this.$bus.$emit('message-display', {
                 message: this.$t('tools.css.customCSSSaveSuccessMsg'),
                 type: 'success',
@@ -177,7 +177,9 @@ export default {
             });
 
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+                let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+                if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                     this.$bus.$emit('confirm-display', {
                         message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                         okLabel: this.$t('sync.goToAppSettings'),

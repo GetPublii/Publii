@@ -114,7 +114,7 @@ export default {
 
             mainProcessAPI.send('app-image-upload', uploadData);
 
-            mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+            mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
                 let dir = 'media/website/';
 
                 if (this.imageType === 'pluginImages') {
@@ -122,7 +122,8 @@ export default {
                 }
 
                 this.isEmpty = false;
-                this.fileName = dir + mainProcessAPI.normalizePath(data.baseImage.newPath).split('/').pop();
+                let newPath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
+                this.fileName = dir + newPath.split('/').pop();
                 this.isUploading = false;
             });
         },

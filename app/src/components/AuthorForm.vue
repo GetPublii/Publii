@@ -676,12 +676,12 @@ export default {
 
             this.getGravatar();
         },
-        getGravatar: Utils.debouncedFunction(function() {
-            let avatarPath = 'https://www.gravatar.com/avatar/' + this.md5(this.authorData.email) + '?s=240';
+        getGravatar: Utils.debouncedFunction(async function() {
+            let avatarPath = 'https://www.gravatar.com/avatar/' + await this.md5(this.authorData.email) + '?s=240';
             this.authorData.avatar = avatarPath;
         }, 1000),
-        md5 (value) {
-            return mainProcessAPI.createMD5(value);
+        async md5 (value) {
+            return await mainProcessAPI.createMD5(value);
         },
         avatarRemoved () {
             this.authorData.useGravatar = false;

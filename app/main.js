@@ -43,11 +43,11 @@ electronApp.on('ready', function () {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
     });
 
-    ipcMain.handle('publii-native-exists-sync', (pathToCheck) => fs.existsSync(pathToCheck));
+    ipcMain.handle('publii-native-exists-sync', (event, pathToCheck) => fs.existsSync(pathToCheck));
 
-    ipcMain.handle('publii-native-md5', (value) => crypto.createHash('md5').update(value).digest('hex'));
+    ipcMain.handle('publii-native-md5', (event, value) => crypto.createHash('md5').update(value).digest('hex'));
 
-    ipcMain.handle('publii-native-normalize-path', (pathToNormalize) => normalizePath(pathToNormalize));
+    ipcMain.handle('publii-native-normalize-path', (event, pathToNormalize) => normalizePath(pathToNormalize));
 
     ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
 

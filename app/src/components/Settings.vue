@@ -2391,7 +2391,7 @@ export default {
                 oldName: oldName
             });
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 this.setCurrentTheme();
 
                 // Remove old entry if user changed the site name
@@ -2402,7 +2402,9 @@ export default {
                 this.buttonsLocked = false;
 
                 if (showPreview) {
-                    if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+                    let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+                    if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                         this.$bus.$emit('confirm-display', {
                             message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                             okLabel: this.$t('sync.goToAppSettings'),

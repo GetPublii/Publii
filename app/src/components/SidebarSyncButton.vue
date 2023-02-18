@@ -141,7 +141,7 @@ export default {
         }
     },
     methods: {
-        renderPreview: function() {
+        renderPreview: async function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
 
@@ -155,7 +155,9 @@ export default {
                 return;
             }
 
-            if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+            let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+            if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                 this.$bus.$emit('confirm-display', {
                     message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                     okLabel: this.$t('sync.goToAppSettings'),
@@ -168,7 +170,7 @@ export default {
 
             this.$bus.$emit('rendering-popup-display');
         },
-        renderFiles: function() {
+        renderFiles: async function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
 
@@ -182,7 +184,9 @@ export default {
                 return;
             }
 
-            if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+            let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+            if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                 this.$bus.$emit('confirm-display', {
                     message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                     okLabel: this.$t('sync.goToAppSettings'),

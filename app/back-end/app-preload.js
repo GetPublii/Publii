@@ -4,9 +4,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
     shellShowItemInFolder: (url) => shell.showItemInFolder(url),
     shellOpenPath: (filePath) => shell.openPath(filePath),
     shellOpenExternal: (url) => shell.openExternal(url),
-    existsSync: (pathToCheck) => ipcRenderer.invoke('publii-native-exists-sync'),
-    normalizePath: (pathToNormalize) => ipcRenderer.invoke('publii-native-normalize-path'),
-    createMD5: (value) => ipcRenderer.invoke('publii-native-md5'),
+    existsSync: (pathToCheck) => ipcRenderer.invoke('publii-native-exists-sync', pathToCheck),
+    normalizePath: (pathToNormalize) => ipcRenderer.invoke('publii-native-normalize-path', pathToNormalize),
+    createMD5: (value) => ipcRenderer.invoke('publii-native-md5', value),
     getEnv: () => ({
         name: process.env.NODE_ENV,
         nodeVersion: process.versions.node,

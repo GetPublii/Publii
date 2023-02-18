@@ -819,9 +819,9 @@ export default {
             });
 
             // Settings saved
-            mainProcessAPI.receiveOnce('app-site-theme-config-saved', (data) => {
+            mainProcessAPI.receiveOnce('app-site-theme-config-saved', async (data) => {
                 if (data.status === true) {
-                    this.savedSettings(showPreview, renderingType, renderFiles);
+                    await this.savedSettings(showPreview, renderingType, renderFiles);
                     this.$store.commit('setThemeConfig', data);
                     this.$bus.$emit('message-display', {
                         message: this.$t('theme.saveSettingsSuccessMessage'),
@@ -833,9 +833,11 @@ export default {
                 this.loadSettings();
             });
         },
-        savedSettings(showPreview = false, renderingType = false, renderFiles = false) {
+        async savedSettings(showPreview = false, renderingType = false, renderFiles = false) {
             if (showPreview) {
-                if (this.$store.state.app.config.previewLocation !== '' && !mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation)) {
+                let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+                if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
                     this.$bus.$emit('confirm-display', {
                         message: this.$t('sync.previewCatalogDoesNotExistInfo'),
                         okLabel: this.$t('sync.goToAppSettings'),
@@ -873,9 +875,9 @@ export default {
             });
 
             // Settings saved
-            mainProcessAPI.receiveOnce('app-site-theme-config-saved', (data) => {
+            mainProcessAPI.receiveOnce('app-site-theme-config-saved', async (data) => {
                 if (data.status === true) {
-                    this.savedSettings(false);
+                    await this.savedSettings(false);
                     this.$store.commit('setThemeConfig', data);
                 }
 
