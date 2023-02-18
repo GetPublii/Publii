@@ -10,7 +10,7 @@
             </small>
 
             <div
-                v-if="!licenseAccepted"
+                v-if="appConfigLoaded && !licenseAccepted"
                 class="license">
                 <p>
                     <span v-pure-html="$t('publii.publiiLicenseAgreementInfo')"></span>
@@ -34,6 +34,15 @@
 export default {
     name: 'splashscreen',
     computed: {
+        appConfigLoaded () {
+            if (!this.$store || !this.$store.state || !this.$store.state.app || !this.$store.state.app.config) {
+                return false;
+            } 
+
+            let keys = Object.keys(this.$store.state.app.config);
+
+            return keys.length > 0;
+        },
         licenseAccepted: function() {
             return this.$store.state.app.config.licenseAccepted;
         },
