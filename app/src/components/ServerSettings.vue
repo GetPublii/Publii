@@ -107,8 +107,8 @@
                     :title="$t('sync.netlify')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="102"
-                      customHeight="48"
+                      customWidth="112"
+                      customHeight="46"
                       name="netlify"
                       iconset="svg-map-server"/>
                 </div>
