@@ -139,14 +139,36 @@ class Themes {
                 newTheme.replace('install-use-', '') !== oldTheme
             )
         ) {
-            fs.removeSync(path.join(this.siteInputPath, 'config', 'theme.config.json'));
+            let oldConfigPath = path.join(this.siteInputPath, 'config', 'theme.config.json');
+            let basicConfig = false;
+
+            if (UtilsHelper.fileExists(oldConfigPath)) {
+                try {
+                    let oldConfig = fs.readFileSync(oldConfigPath);
+                    oldConfig = JSON.parse(oldConfig);
+                    basicConfig = { 
+                        config: oldConfig.config
+                    };
+                    basicConfig = JSON.stringify(basicConfig, null, 4);
+                } catch (e) {
+                    console.log('(!) Cannot parse old config');
+                }
+
+                fs.removeSync(oldConfigPath);
+
+                if (basicConfig) {
+                    fs.writeFileSync(oldConfigPath, basicConfig);
+                }
+            } else {
+                fs.removeSync(oldConfigPath);
+            }
 
             let newThemeName =  newTheme.replace('install-use-', '')
                                         .replace('uninstall-', '')
                                         .replace('use-', '');
             let backupConfigPath = path.join(this.siteInputPath, 'config', 'theme.' + newThemeName + '.config.json');
 
-            if(UtilsHelper.fileExists(backupConfigPath)) {
+            if (UtilsHelper.fileExists(backupConfigPath)) {
                 fs.copySync(
                     path.join(this.siteInputPath, 'config', 'theme.' + newThemeName + '.config.json'),
                     path.join(this.siteInputPath, 'config', 'theme.config.json')
