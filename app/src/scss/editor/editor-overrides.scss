@@ -363,6 +363,7 @@ body {
         
         &-tinymce {
             border-color: var(--input-border-color);
+            border-radius: 3px;
         }
         
         .tox-toolbar, 
@@ -758,6 +759,30 @@ body {
     }
 }
 
+/*
+ * Mini WYSIWYG editor
+ */
+body .wysiwyg-mini-editor {
+
+    .tox-tbtn {
+        height: 29px;
+        margin: 1px 1px 0 0;
+        transform: scale(.9);
+        width: 29px;
+    }
+
+    .tox-split-button__chevron {
+        width: 16px;
+    }
+
+    .tox-tbtn--select {
+        width: auto;
+    }
+
+    .tox-tbtn__select-label {
+        margin: 0;
+    }
+}
 
 
 /*
