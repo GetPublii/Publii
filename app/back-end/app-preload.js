@@ -1,9 +1,9 @@
-const { contextBridge, shell, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('mainProcessAPI', {
-    shellShowItemInFolder: (url) => shell.showItemInFolder(url),
-    shellOpenPath: (filePath) => shell.openPath(filePath),
-    shellOpenExternal: (url) => shell.openExternal(url),
+    shellShowItemInFolder: (url) => ipcRenderer.invoke('publii-shell-show-item-in-folder', url),
+    shellOpenPath: (filePath) => ipcRenderer.invoke('publii-shell-open-path', filePath),
+    shellOpenExternal: (url) => ipcRenderer.invoke('publii-shell-open-external', url),
     existsSync: (pathToCheck) => ipcRenderer.invoke('publii-native-exists-sync', pathToCheck),
     normalizePath: (pathToNormalize) => ipcRenderer.invoke('publii-native-normalize-path', pathToNormalize),
     createMD5: (value) => ipcRenderer.invoke('publii-native-md5', value),
