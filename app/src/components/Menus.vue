@@ -32,7 +32,7 @@
                     {{ $t('ui.name') }}
                 </collection-cell>
 
-                <collection-cell min-width="360px">
+                <collection-cell>
                     {{ $t('menu.assignedMenu') }}
                 </collection-cell>
 
@@ -76,16 +76,16 @@
 
                 <collection-cell
                     type="assignment">
-                    {{ menuPositions(item.position) }}   
                     
                     <a 
                         href="#"
-                        @click.prevent="openMenuPositionPopup(item, index)">
-                        <icon
-                            size="xs"
-                            name="edit"/>
-
-                        {{ $t('ui.edit') }}
+                        @click.prevent="openMenuPositionPopup(item, index)"
+                        class="menu-assignment-link">
+                        {{ menuPositions(item.position) }} 
+                        <span
+                            class="menu-assignment-link-icon"
+                            name="sidebar-arrow">
+                        </span>                      
                     </a>
                 </collection-cell>
 
@@ -497,10 +497,6 @@ export default {
         overflow: hidden;
     }
 
-    select {
-        width: 15rem;
-    }
-
     .item-content {
         border-bottom: 1px solid var(--border-light-color);
         grid-column-start: 1;
@@ -512,8 +508,33 @@ export default {
     }
 
     .col.assignment {
+        display: flex;
         padding-top: 0;
         padding-bottom: 0;
+    }
+
+    &-assignment-link {
+        padding-right: 4rem;
+        position: relative;
+        width: 100%;
+
+        &-icon {
+            border-color: var(--button-gray-bg) transparent transparent;
+            border-style: solid;
+            border-width: 5px;
+            opacity: 1;
+            cursor: pointer;
+            height: 5px;
+            left: auto;
+            line-height: 1.1;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            width: 5px;
+            text-align: center;
+            transition: var(--transition);
+            top: calc(50% - 2px);
+        }
     }
 
     &-content {

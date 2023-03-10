@@ -96,7 +96,7 @@ export default {
     height: 20px;
     margin-right: .5rem;
     position: relative;
-    top: 2px;
+    top: 4px;
     transition: all .28s ease;
     width: 32px;
     z-index: 1;
