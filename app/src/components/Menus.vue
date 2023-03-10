@@ -455,7 +455,11 @@ export default {
                 let position = positions[i];
 
                 if (menus[position]) {
-                    output.push(menus[position]);
+                    if (typeof menus[position] === 'string') {
+                        output.push(menus[position]);
+                    } else if (menus[position].name) {
+                        output.push(menus[position].name);
+                    }
                 }
             }
 
