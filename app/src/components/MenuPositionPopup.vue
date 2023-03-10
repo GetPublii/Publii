@@ -289,10 +289,9 @@ export default {
 
     .menu-position-item {
         align-items: baseline;
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr auto;
         gap: 0 3rem;
-        justify-content: space-between;
         margin: 3rem 0;
         position: relative;
         
@@ -318,12 +317,12 @@ export default {
             &-error {
                 bottom: -1.75rem;
                 color: var(--warning);
+                margin-left: 41px;
                 position: absolute;
-                text-align: right;
-                width: 100%;
             }
         }
 
+        .menu-position-item-desc,
         .menu-position-item-usedby {   
             color: var(--text-light-color);
             display: block;
