@@ -294,6 +294,7 @@ export default {
         gap: 0 3rem;
         justify-content: space-between;
         margin: 3rem 0;
+        position: relative;
         
         & + .menu-position-item {
             border-top: 1px solid var(--border-light-color);
@@ -315,9 +316,11 @@ export default {
             }
 
             &-error {
-               color: var(--warning);
-               flex-basis: 100%;
-               text-align: center;
+                bottom: -1.75rem;
+                color: var(--warning);
+                position: absolute;
+                text-align: right;
+                width: 100%;
             }
         }
 
