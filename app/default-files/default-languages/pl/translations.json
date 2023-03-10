@@ -930,7 +930,7 @@
         "authenticationMethod": "Metoda uwierzytelnienia",
         "branch": "Gałąź",
         "branchExampleGitHubNote": "Przykłady: <strong>gh-pages</strong>, <strong>docs</strong> lub <strong>main</strong>.",
-        "branchExampleGitLabeNote": "Przykłady: <strong>docs</strong>, <strong>main</strong> lub <strong>master</strong>.",
+        "branchExampleGitLabeNote": "Przykład: <strong>main</strong>.",
         "branchFieldCantBeEmpty": "Pole gałęzi nie może być puste",
         "bucket": "Bucket",
         "bucketFieldCantBeEmpty": "Pole bucket nie może być puste",
