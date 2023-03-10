@@ -930,7 +930,7 @@
         "authenticationMethod": "Authentication method",
         "branch": "Branch",
         "branchExampleGitHubNote": "Examples: <strong>gh-pages</strong>, <strong>docs</strong> or <strong>main</strong>.",
-        "branchExampleGitLabeNote": "Examples: <strong>docs</strong>, <strong>main</strong> or <strong>master</strong>.",
+        "branchExampleGitLabeNote": "Example: <strong>main</strong>",
         "branchFieldCantBeEmpty": "The branch field cannot be empty",
         "bucket": "Bucket",
         "bucketFieldCantBeEmpty": "The bucket field cannot be empty",

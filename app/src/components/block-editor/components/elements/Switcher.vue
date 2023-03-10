@@ -75,14 +75,14 @@ export default {
 @import '../../../../scss/variables.scss';
 
 .switcher {
-  background: rgba(142, 146, 157, 0.45);
+  background: var(--input-border-dark);
   border-radius: 20px;
   cursor: pointer;
   display: inline-block;
-  height: 16px;
+  height: 20px;
   margin-right: .5rem;
   position: relative;
-  top: 2px;
+  top: 4px;
   transition: all .28s ease;
   width: 32px;
   z-index: 1;
@@ -93,13 +93,13 @@ export default {
 
   &:after {
     position: absolute;
-    left: -2px;
-    top: -2px;
+    left: 2px;
+    top: 2px;
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #8e929d;
+    background: var(--input-bg-lightest);
     content: '';
     transition: all .28s ease;
   }
@@ -109,11 +109,11 @@ export default {
   }
 
   &.is-checked {
-    background: rgba(66, 165, 245, 0.45);
+    background: var(--input-border-focus);
 
     &:after {
-        left: 14px;
-        background: var(--input-border-focus);
+      left: 14px;
+      background: var(--input-bg-lightest);
     }
   }
 

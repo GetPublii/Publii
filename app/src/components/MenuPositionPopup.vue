@@ -10,50 +10,57 @@
                     v-for="(menu, position) of availableMenus"
                     :key="'menu-position-item-' + position"
                     class="menu-position-item">
-                    <switcher 
-                        v-model="configuration[position].status"
-                        :key="'menu-position-item-' + position + '-switcher'"
-                        :disabled="!!menu.used" />
-                
-                    <span class="menu-position-item-name">
-                        {{ menu.name }}
-                    </span>
+                    <div>
+                        <switcher 
+                            v-model="configuration[position].status"
+                            :key="'menu-position-item-' + position + '-switcher'"
+                            :disabled="!!menu.used" />
+                    
+                        <span class="menu-position-item-name">
+                            {{ menu.name }}
+                        </span>
+                    
 
-                    <small 
-                        v-if="menu.desc"
-                        class="menu-position-item-desc">
-                        {{ menu.desc }}
-                    </small>
+                        <small 
+                            v-if="menu.desc"
+                            class="menu-position-item-desc">
+                            {{ menu.desc }}
+                        </small>
 
-                    <small 
-                        v-if="menu.used"
-                        class="menu-position-item-usedby">
-                        {{ $t('menuPositionPopup.usedBy') }} {{ getMenuUsingPosition(position) }}
-                    </small>
+                        <small 
+                            v-if="menu.used"
+                            class="menu-position-item-usedby">
+                            {{ $t('menuPositionPopup.usedBy') }} {{ getMenuUsingPosition(position) }}
+                        </small>
+
+                    </div> 
 
                     <div 
                         v-if="configuration[position].status && !menu.used"
                         class="menu-position-item-max-levels"
                         :key="'menu-position-item-' + position + '-input'">
                         {{ $t('menuPositionPopup.maxLevels') }}
-                        <text-input 
-                            type="number"
-                            @input="validateMaxLevels"
-                            v-model="configuration[position].maxLevels"
-                            :min="((menu.maxLevels === -1) ? -1 : 1).toString()"
-                            :max="((menu.maxLevels === -1) ? 999 : menu.maxLevels).toString()"
-                            step="1"
-                            properties="is-small"
-                            :class="{ 'is-invalid': configuration[position].invalid }" />
-                        <small 
-                            v-if="configuration[position].invalid"
-                            class="menu-position-item-max-levels-error">
-                            {{ $t('menuPositionPopup.invalidValue') }}
-                        </small>
-                        <small class="menu-position-item-max-levels-desc">
-                            {{ $t('menuPositionPopup.themeDefaultValue') }} {{ menu.maxLevels }}
-                        </small>
+                        <div>
+                            <text-input 
+                                type="number"
+                                @input="validateMaxLevels"
+                                v-model="configuration[position].maxLevels"
+                                :min="((menu.maxLevels === -1) ? -1 : 1).toString()"
+                                :max="((menu.maxLevels === -1) ? 999 : menu.maxLevels).toString()"
+                                step="1"
+                                properties="is-small"
+                                :class="{ 'is-invalid': configuration[position].invalid }" />
+                            
+                            <small class="menu-position-item-max-levels-desc">
+                                {{ $t('menuPositionPopup.themeDefaultValue') }} {{ menu.maxLevels }}
+                            </small>
+                        </div>
                     </div>
+                    <small 
+                        v-if="configuration[position].invalid"
+                        class="menu-position-item-max-levels-error">
+                        {{ $t('menuPositionPopup.invalidValue') }}
+                    </small>
                 </div>
             </div>
 
@@ -265,6 +272,7 @@ export default {
 
 .popup {
     padding: 4rem 4rem 1rem 4rem;
+    text-align: left;
     width: 60rem;
 }
 
@@ -280,16 +288,47 @@ export default {
     padding-bottom: 2rem;
 
     .menu-position-item {
-        padding-bottom: 1rem;
-
-        .menu-position-item-max-levels-desc,
-        .menu-position-item-max-levels-error,
-        .menu-position-item-usedby {
-            display: block;
+        align-items: baseline;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 3rem;
+        justify-content: space-between;
+        margin: 3rem 0;
+        position: relative;
+        
+        & + .menu-position-item {
+            border-top: 1px solid var(--border-light-color);
+            padding-top: 3rem;
         }
 
-        .menu-position-item-max-levels-error {
-            color: var(--warning);
+        .menu-position-item-max-levels {
+            align-items: baseline;
+            display: flex;
+            gap: 0 .75rem;
+            text-align: left;
+
+            &-desc,
+            &-error {
+                color: var(--text-light-color);
+                display: block;
+                flex-basis: 100%;
+                margin-top: .5rem;
+            }
+
+            &-error {
+                bottom: -1.75rem;
+                color: var(--warning);
+                position: absolute;
+                text-align: right;
+                width: 100%;
+            }
+        }
+
+        .menu-position-item-usedby {   
+            color: var(--text-light-color);
+            display: block;
+            flex-basis: 100%;
+            margin-left: 41px;
         }
 
         input.is-invalid {
