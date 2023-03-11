@@ -19,7 +19,7 @@
             
             <p-button
                 :onClick="loadSelectedFile"
-                type="primary">
+                type="secondary">
                 {{ $t('ui.reloadFile') }}
             </p-button>
         </div>
