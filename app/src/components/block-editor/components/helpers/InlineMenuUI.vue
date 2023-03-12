@@ -164,7 +164,7 @@ export default {
     }
 
     svg {
-      fill: var(--icon-tertiary-color);
+      color: var(--icon-tertiary-color);
     }
 
     // hover effect

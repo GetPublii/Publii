@@ -477,7 +477,7 @@ export default {
     z-index: 2;
 
     svg {
-       fill: var(--white);
+       color: var(--white);
     }
 
     &:active,
@@ -549,7 +549,7 @@ export default {
       width: 100%;
 
       svg {
-        fill: var(--icon-quaternary-color);
+        color: var(--icon-quaternary-color);
       }
 
       span {

@@ -24,7 +24,7 @@
         class="block-selector-add"
         @click.stop="toggleNewBlockUI()"
         tabindex="-1">
-        <icon name="add" customWidth="14" customHeight="14"/>
+        <icon name="add"/>
       </button>
 
       <div
@@ -508,7 +508,7 @@ export default {
         }
 
         & > svg {
-          fill: var(--icon-tertiary-color);
+          color: var(--icon-tertiary-color);
         }
 
         &.is-visible {
@@ -548,7 +548,7 @@ export default {
         z-index: 0;
 
         svg {
-          fill: var(--icon-primary-color);
+          color: var(--icon-primary-color);
           transition: var(--transition);
         }
 
@@ -573,7 +573,7 @@ export default {
         &:hover,
         &.is-active {
           svg {
-            fill: var(--icon-tertiary-color);
+            color: var(--icon-tertiary-color);
           }
 
           &::before {
@@ -629,7 +629,7 @@ export default {
         width: 38px;
 
         svg {
-          fill: var(--icon-tertiary-color);
+          color: var(--icon-tertiary-color);
         }
 
         // hover effect
@@ -733,11 +733,10 @@ export default {
           background-color: var(--gray-1);
           border-radius: var(--border-radius);
           display: inline-flex;
-          fill: var(--icon-primary-color);
+          color: var(--icon-primary-color);
           height: 36px;
           justify-content: center;
           margin-right: 12px;
-          padding: 8px;
           transition: var(--transition);
           width: 36px;
       }
@@ -748,7 +747,7 @@ export default {
 
         .block-selector-list-item-icon {
             background: var(--button-secondary-bg);
-            fill: var(--icon-tertiary-color);
+            color: var(--icon-tertiary-color);
         }
       }
 
@@ -792,7 +791,7 @@ export default {
         }
 
       & > svg {
-        fill: var(--icon-tertiary-color);
+        color: var(--icon-tertiary-color);
         transition: all .25s ease-out;
       }
 

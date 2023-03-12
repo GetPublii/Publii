@@ -222,6 +222,7 @@ export default {
 
         .multiselect__content {
             margin: 0 !important;
+            padding: 0 !important;
         }
 
         .multiselect__element {

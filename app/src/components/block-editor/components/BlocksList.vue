@@ -6,14 +6,14 @@
       v-if="!isOpened"
       class="blocks-list-open"
       @click.prevent="openList">
-      Otwórz
+      <icon name="open-bulk-edition" />
     </button>
 
     <button 
       v-if="isOpened"
       class="blocks-list-close"
       @click.prevent="closeList">
-      Zamknij
+      <icon name="open-bulk-edition" />
     </button>
 
     <ol class="blocks-list-items">
@@ -25,22 +25,24 @@
         }"
         :key="'blocks-list-item-' + item.id"
         @click.stop="activateItem(item.id)">
-        <icon :name="item.icon" />
-        <span>{{ item.label }}</span>
+        <div>
+          <icon :name="item.icon" />
+          <span>{{ item.label }}</span>
 
-        <button
-          class="wrapper-ui-bulk-delete"
-          tabindex="-1"
-          @click.stop="deleteBlock(item.id)">
-          <icon name="trash" />
-        </button>
-        <button
-          class="wrapper-ui-bulk-duplicate"
-          tabindex="-1"
-          :disabled="item.type === 'publii-readmore'"
-          @click.stop="duplicateBlock(item.id)">
-          <icon name="duplicate" />
-        </button>
+          <button
+            class="wrapper-ui-bulk-delete"
+            tabindex="-1"
+            @click.stop="deleteBlock(item.id)">
+            <icon name="trash" />
+          </button>
+          <button
+            class="wrapper-ui-bulk-duplicate"
+            tabindex="-1"
+            :disabled="item.type === 'publii-readmore'"
+            @click.stop="duplicateBlock(item.id)">
+            <icon name="duplicate" />
+          </button>
+        </div>
       </li>
     </ol>
   </aside>
@@ -142,21 +144,21 @@ export default {
 
 <style lang="scss">
 .blocks-list {
-  bottom: 20px;
-  height: 60px;
-  left: 20px;
+  bottom: 0.4rem;
+  height: 4.6rem;
+  left: 1.8rem;
   position: fixed;
-  width: 60px;
+  width: 4.6rem;
 
   &.is-opened {
-    background: #fff;
+    background: var(--option-sidebar-bg);
     bottom: 0;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
-    height: 100vh;
+    box-shadow: var(--box-shadow-medium);
+    height: calc(100vh - var(--topbar-height));
     left: 0;
     overflow: auto;
     position: fixed;
-    top: 0;
+    top: var(--topbar-height);
     width: 320px;
     z-index: 1000000;
   }
@@ -168,8 +170,12 @@ export default {
   }
 
   &-open {
-    height: 60px;
-    width: 60px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 4.6rem;
+    line-height: 4.5rem;
+    width: 4.6rem;
   }
 
   &-items {
@@ -179,8 +185,32 @@ export default {
   }
 
   &-item {
+    border-radius: calc(var(--border-radius) / 2);
+    cursor: pointer;
+    padding: .5rem;
+
+    &:hover {
+      background: var(--collection-bg-hover);
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .25rem;
+    }
+
     &.is-active {
-      border: 2px solid blue;
+      box-shadow: 0 0 0 1px var(--color-primary);
+      position: relative;
+      z-index: 1;
+    }
+
+    & > div {
+      align-items: center;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: .6rem;
     }
   }
 }

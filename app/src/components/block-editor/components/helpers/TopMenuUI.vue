@@ -198,7 +198,7 @@ export default {
   font-family: var(--font-base);
   
   svg {
-    fill: var(--icon-tertiary-color);
+    color: var(--icon-tertiary-color);
   }
 
   &-conversions {
@@ -240,7 +240,7 @@ export default {
       }
 
       & > svg {
-         fill: var(--icon-tertiary-color);
+         color: var(--icon-tertiary-color);
       }
     }
   }
@@ -260,7 +260,7 @@ export default {
          background: var(--warning);
       }
          svg {
-         fill: var(--white);
+            color: var(--white);
       }
   }
 
