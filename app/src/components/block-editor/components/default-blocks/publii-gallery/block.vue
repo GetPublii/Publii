@@ -3,7 +3,8 @@
     :class="{ 'publii-block-gallery-wrapper': true, 'is-empty': isEmpty }"
     @dragover.stop.prevent="dragOver"
     @dragleave.stop.prevent="dragLeave"
-    @drop.stop.prevent="drop">
+    @drop.stop.prevent="drop"
+    @click="resetDeleteConfirmation">
     <draggable
       v-if="content.images.length > 0 && view === 'preview'"
       ref="block"
@@ -24,9 +25,20 @@
           :width="image.width" />
 
         <button
+          v-if="confirmDelete !== index"
           class="publii-block-gallery-item-delete"
           @click.stop.prevent="removeImage(index)">
           <icon name="trash" />
+        </button>
+
+        <button
+          v-if="confirmDelete === index"
+          class="publii-block-gallery-item-delete is-active has-tooltip"
+          @click.stop.prevent="removeImage(index)">
+          <icon name="open-trash" />
+          <span class="ui-top-menu-tooltip has-bigger-space">
+            {{ $t('editor.clickToConfirm') }}
+          </span>
         </button>
       </div>
     </draggable>
@@ -129,6 +141,7 @@ export default {
   },
   data () {
     return {
+      confirmDelete: false,
       draggingInProgress: false,
       isHovered: false,
       imageUploadInProgress: false,
@@ -304,7 +317,11 @@ export default {
       }
     },
     removeImage (index) {
-      this.content.images.splice(index, 1);
+      if (this.confirmDelete !== index) {
+        this.confirmDelete = index;
+      } else {
+        this.content.images.splice(index, 1);
+      }
     },
     save () {
       this.$bus.$emit('block-editor-save-block', {
@@ -312,6 +329,9 @@ export default {
         config: JSON.parse(JSON.stringify(this.config)),
         content: JSON.parse(JSON.stringify(this.content))
       });
+    },
+    resetDeleteConfirmation () {
+      this.confirmDelete = false;
     }
   },
   beforeDestroy () {

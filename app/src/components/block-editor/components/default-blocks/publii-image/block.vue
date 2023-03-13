@@ -1,5 +1,7 @@
 <template>
-  <div :class="{ 'publii-block-image-wrapper': true, 'is-empty': isEmpty }">
+  <div 
+    :class="{ 'publii-block-image-wrapper': true, 'is-empty': isEmpty }"
+    @click="resetDeleteConfirmation">
     <figure
       v-if="view === 'preview' || content.image !== ''"
       ref="block"
@@ -11,10 +13,20 @@
         :width="content.imageWidth" />
 
       <button
-        v-if="!!content.image"
+        v-if="!!content.image && !confirmDelete"
         class="publii-block-image-delete"
         @click.stop.prevent="clearImage()">
         <icon name="trash" />
+      </button>
+
+      <button
+        v-if="!!content.image && confirmDelete"
+        class="publii-block-image-delete is-active has-tooltip"
+        @click.stop.prevent="clearImage()">
+        <icon name="open-trash" />
+        <span class="ui-top-menu-tooltip has-bigger-space">
+          {{ $t('editor.clickToConfirm') }}
+        </span>
       </button>
 
       <figcaption v-if="content.caption !== '' && view === 'preview'">
@@ -113,6 +125,7 @@ export default {
       caretIsAtEndCaption: false,
       caretIsAtStartAlt: false,
       caretIsAtEndAlt: false,
+      confirmDelete: false,
       isHovered: false,
       imageUploadInProgress: false,
       config: {
@@ -275,8 +288,12 @@ export default {
       document.getElementById('post-editor-fake-image-uploader').click();
     },
     clearImage () {
-      this.content.image = '';
-      this.isHovered = false;
+      if (!this.confirmDelete) {
+        this.confirmDelete = true;
+      } else {
+        this.content.image = '';
+        this.isHovered = false;
+      }
     },
     setView (newView) {
       if (
@@ -413,6 +430,9 @@ export default {
         config: JSON.parse(JSON.stringify(this.config)),
         content: JSON.parse(JSON.stringify(this.content))
       });
+    },
+    resetDeleteConfirmation () {
+      this.confirmDelete = false;
     }
   },
   beforeDestroy () {
