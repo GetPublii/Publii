@@ -763,7 +763,6 @@ body {
  * Mini WYSIWYG editor
  */
 body .wysiwyg-mini-editor {
-
     .tox-tbtn {
         height: 29px;
         margin: 1px 1px 0 0;
@@ -781,6 +780,13 @@ body .wysiwyg-mini-editor {
 
     .tox-tbtn__select-label {
         margin: 0;
+    }
+
+    &.has-simplified-toolbar {
+        .tox-tbtn {
+            height: 26px;
+            width: 26px;
+        }
     }
 }
 

@@ -1,7 +1,10 @@
 <template>
     <div 
         :id="anchor"
-        :class="{ 'wysiwyg-mini-editor': miniEditorMode }">
+        :class="{ 
+            'wysiwyg-mini-editor': miniEditorMode, 
+            'has-simplified-toolbar': simplifiedToolbar 
+        }">
         <textarea
             :id="editorID"
             :data-id="editorID"
@@ -63,6 +66,10 @@ export default {
             type: String
         },
         miniEditorMode: {
+            default: false,
+            type: Boolean
+        },
+        simplifiedToolbar: {
             default: false,
             type: Boolean
         }
@@ -130,6 +137,8 @@ export default {
         async initWysiwyg () {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
+            let pluginsList = "autolink link lists paste code";
+            let firstToolbarStructure = "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist";
             let secondToolbarStructure = "formatselect removeformat undo redo code";
 
             if (customFormats.length) {
@@ -140,12 +149,18 @@ export default {
                 tinymce.addI18n('custom', this.$store.state.wysiwygTranslation);
             }
 
+            if (this.simplifiedToolbar) {
+                pluginsList = "autolink link paste code";
+                firstToolbarStructure = "bold italic link unlink forecolor alignleft aligncenter alignright alignjustify removeformat undo redo code";
+                secondToolbarStructure = "";
+            }
+
             tinymce.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
                 language: this.$store.state.wysiwygTranslation ? 'en' : 'custom',
                 content_css: this.getTinyMCECSSFiles(),
-                plugins: "autolink link lists paste code",
-                toolbar1: "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist",
+                plugins: pluginsList,
+                toolbar1: firstToolbarStructure,
                 toolbar2: secondToolbarStructure,
                 toolbar3: "",
                 preview_styles: false,
