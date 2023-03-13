@@ -35,7 +35,7 @@ export default {
         case 'image': return 18;
         case 'gallery': return 26;
         case 'unordered-list': return 18;
-        case 'quote': return 18;
+        case 'quote': return 16;
         case 'code': return 18;
         case 'table': return 18;
         case 'html': return 18;
@@ -98,7 +98,7 @@ export default {
         case 'image': return 18;
         case 'gallery': return 18;
         case 'unordered-list': return 18;
-        case 'quote': return 18;
+        case 'quote': return 16;
         case 'code': return 18;
         case 'table': return 14;
         case 'html': return 18;

@@ -4,17 +4,18 @@
     @click="deactivateItem()">
     <button 
       v-if="!isOpened"
-      class="blocks-list-open"
+      class="clean-invert icon small blocks-list-open"
       @click.prevent="openList">
-      <icon name="open-bulk-edition" />
+      <icon name="open-bulk-edition" /> View Bulk Edit 
     </button>
 
     <button 
       v-if="isOpened"
-      class="blocks-list-close"
+      class="clean-invert icon small blocks-list-close"
       @click.prevent="closeList">
-      <icon name="open-bulk-edition" />
+      <icon name="open-bulk-edition" /> Hide Bulk Edit
     </button>
+    
 
     <ol class="blocks-list-items">
       <li 
@@ -26,21 +27,22 @@
         :key="'blocks-list-item-' + item.id"
         @click.stop="activateItem(item.id)">
         <div>
-          <icon :name="item.icon" />
+          <span class="blocks-list-item-icon"><icon :name="item.icon" /></span>
           <span>{{ item.label }}</span>
 
           <button
-            class="wrapper-ui-bulk-delete"
-            tabindex="-1"
-            @click.stop="deleteBlock(item.id)">
-            <icon name="trash" />
-          </button>
-          <button
-            class="wrapper-ui-bulk-duplicate"
+            class="blocks-list-item-bulk-duplicate"
             tabindex="-1"
             :disabled="item.type === 'publii-readmore'"
             @click.stop="duplicateBlock(item.id)">
-            <icon name="duplicate" />
+            <icon name="duplicate" customWidth="16" customHeight="16"/>
+          </button>
+
+          <button
+            class="blocks-list-item-bulk-delete"
+            tabindex="-1"
+            @click.stop="deleteBlock(item.id)">
+            <icon name="trash" customWidth="16" customHeight="16"/>
           </button>
         </div>
       </li>
@@ -159,58 +161,133 @@ export default {
     overflow: auto;
     position: fixed;
     top: var(--topbar-height);
-    width: 320px;
+    width: 300px;
     z-index: 1000000;
+
+    &::before {
+      background: var(--option-sidebar-bg);
+      content: "";
+      bottom: 0;
+      left: 0;
+      height: 60px;
+      position: fixed;
+      width: inherit;
+      z-index: 1;
+    }
   }
 
+  &-open,
   &-close {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-  }
-
-  &-open {
     background: none;
     border: none;
     cursor: pointer;
     height: 4.6rem;
     line-height: 4.5rem;
     width: 4.6rem;
+    z-index: 2;
+  }
+
+  &-close {
+    bottom: .4rem;
+    left: 1.8rem;
+    position: fixed;
   }
 
   &-items {
     list-style-type: none;
-    margin: 30px 20px;
+    margin: 30px 20px 60px;
     padding: 0;
   }
 
   &-item {
     border-radius: calc(var(--border-radius) / 2);
     cursor: pointer;
-    padding: .5rem;
-
-    &:hover {
-      background: var(--collection-bg-hover);
-    }
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: .25rem;
-    }
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    margin: 6px 0;
+    padding: 0;
 
     &.is-active {
       box-shadow: 0 0 0 1px var(--color-primary);
       position: relative;
       z-index: 1;
+
+      & > div {
+        background-color: var(--button-secondary-bg);
+      }
     }
 
     & > div {
       align-items: center;
+      background-color: var(--gray-1);
       display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      gap: .6rem;
+      border-radius: var(--border-radius);
+      grid-template-columns: auto 1fr auto auto 6px;
+      transition: var(--transition);
+
+      &:hover {
+        background-color: var(--button-secondary-bg);
+        color: var(--headings-color);
+
+        .blocks-list-item-icon {
+            color: var(--icon-tertiary-color);
+        }
+      }
+    }
+
+    &-icon {
+      align-items: center;
+      border-radius: var(--border-radius);
+      display: inline-flex;
+      color: var(--icon-primary-color);
+      height: 38px;
+      justify-content: center;
+      margin-right: 1px;
+      transition: var(--transition);
+      width: 38px;
+    }
+
+    &-bulk-delete, 
+    &-bulk-duplicate {
+      background: var(--bg-primary);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-block;
+      height: 2.8rem;
+      padding: 0;
+      text-align: center;
+      transition: all .3s ease-out;
+      width: 2.8rem;
+
+      &:active,
+      &:focus,
+      &:hover {
+        color: var(--headings-color)
+      }
+
+      &:hover {
+        & > svg {
+            color: currentColor;
+            transform: scale(1);
+        }
+      }
+
+      svg {
+        color: var(--icon-secondary-color);
+        pointer-events: none;
+        transform: scale(.9);
+        transition: var(--transition);
+        vertical-align: middle;
+      }
+    }
+    &-bulk-delete {
+      margin-left: 3px;
+      &:hover {
+        & > svg {
+          color: var(--warning);
+        }
+      }
     }
   }
 }

@@ -390,7 +390,8 @@ export default {
   }
 
   &.is-activated {
-    background: rgba(50, 50, 150, .125);
+    background: rgba(var(--color-primary-rgb), .15);
+    border-radius: calc(var(--border-radius) / 2);
     z-index: 10;
   }
 
@@ -722,8 +723,8 @@ export default {
         cursor: pointer;
         display: flex;   
         font-weight: var(--font-weight-semibold);
-        margin: 4px 2px;
-        padding-left: 0;
+        margin: 5px 2px;
+        padding: 0;
         text-align: left;
         transition: var(--transition);
         width: 98%;
