@@ -138,8 +138,8 @@ export default {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
             let pluginsList = "autolink link lists paste code";
-            let firstToolbarStructure = "bold italic link unlink forecolor blockquote alignleft aligncenter alignright alignjustify bullist numlist";
-            let secondToolbarStructure = "formatselect removeformat undo redo code";
+            let firstToolbarStructure = "bold italic link unlink forecolor blockquote alignleft aligncenter alignright bullist numlist formatselect removeformat code";
+            let secondToolbarStructure = "";
 
             if (customFormats.length) {
                 secondToolbarStructure = "styleselect formatselect removeformat undo redo code";
@@ -151,7 +151,7 @@ export default {
 
             if (this.simplifiedToolbar) {
                 pluginsList = "autolink link paste code";
-                firstToolbarStructure = "bold italic link unlink forecolor alignleft aligncenter alignright alignjustify removeformat undo redo code";
+                firstToolbarStructure = "bold italic link unlink forecolor alignleft aligncenter alignright removeformat code";
                 secondToolbarStructure = "";
             }
 
@@ -164,7 +164,7 @@ export default {
                 toolbar2: secondToolbarStructure,
                 toolbar3: "",
                 preview_styles: false,
-                resize: false,
+                resize: true,
                 menubar: false,
                 forced_root_block: "",
                 force_br_newlines: false,
