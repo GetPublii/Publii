@@ -127,24 +127,16 @@
 
     <!-- Inline editor: separators -->
 
-    <symbol id="long-line" viewBox="0 0 20 2">
-        <path d="M23,0H1A1,1,0,0,0,1,2H23a1,1,0,0,0,0-2Z" />
+    <symbol id="long-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+       <line x1="1" y1="12" x2="23" y2="12"></line>
     </symbol>
 
-    <symbol id="shorter-line" viewBox="0 0 16 2">
-        <path d="M15,0H1A1,1,0,0,0,1,2H15a1,1,0,0,0,0-2Z" />
+    <symbol id="dotted-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+     <circle cx="2" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="22" cy="12" r="1"></circle>
     </symbol>
 
-    <symbol id="short-line" viewBox="0 0 8 2">
-        <path d="M7,0H1A1,1,0,0,0,1,2H7A1,1,0,0,0,7,0Z" />
-    </symbol>
-
-    <symbol id="dotted-line" viewBox="0 0 15 3">
-        <path d="M13.5,0A1.5,1.5,0,1,0,15,1.5,1.5,1.5,0,0,0,13.5,0Zm-6,0A1.5,1.5,0,1,0,9,1.5,1.5,1.5,0,0,0,7.5,0Zm-6,0A1.5,1.5,0,1,0,3,1.5,1.5,1.5,0,0,0,1.5,0Z" />
-    </symbol>
-
-    <symbol id="dot" viewBox="0 0 3 3">
-        <path d="M1.5,0A1.5,1.5,0,1,0,3,1.5,1.5,1.5,0,0,0,1.5,0Z" />
+    <symbol id="dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="1"></circle>
     </symbol>
 
 
