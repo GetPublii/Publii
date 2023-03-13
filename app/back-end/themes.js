@@ -147,7 +147,9 @@ class Themes {
                     let oldConfig = fs.readFileSync(oldConfigPath);
                     oldConfig = JSON.parse(oldConfig);
                     basicConfig = { 
-                        config: oldConfig.config
+                        config: {
+                            logo: oldConfig.config.logo
+                        }
                     };
                     basicConfig = JSON.stringify(basicConfig, null, 4);
                 } catch (e) {
