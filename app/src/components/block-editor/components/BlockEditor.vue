@@ -120,7 +120,7 @@ export default {
       },
       content: [
         {
-          id: +new Date(),
+          id: crypto.randomUUID(),
           type: 'publii-paragraph',
           content: '',
           config: {}
@@ -231,7 +231,7 @@ export default {
     duplicateBlock (blockID) {
       let blockIndex = this.content.findIndex(el => el.id === blockID);
       let blockCopy = JSON.parse(JSON.stringify(this.content[blockIndex]));
-      blockCopy.id = +new Date();
+      blockCopy.id = crypto.randomUUID() ;
       this.content.splice(blockIndex, 0, blockCopy);
     },
     addNewBlock (blockType, afterBlockID = false, content = '') {
@@ -249,7 +249,7 @@ export default {
         blockType = 'publii-header';
       }
 
-      let newBlockID = +new Date();
+      let newBlockID = crypto.randomUUID();
       let newBlockObject = {
         id: newBlockID,
         type: blockType,
@@ -343,7 +343,16 @@ export default {
       let inputField = document.querySelector('#post-editor');
 
       if (inputField.value !== '') {
-        Vue.set(this, 'content', JSON.parse(inputField.value));
+        let loadedContent = JSON.parse(inputField.value);
+
+        if (loadedContent[0] && loadedContent[0].id && typeof loadedContent[0].id !== 'string') {
+            loadedContent = loadedContent.map(block => {
+                block.id = crypto.randomUUID();
+                return block;
+            });
+        }
+
+        Vue.set(this, 'content', loadedContent);
       }
     },
     saveAllBlocks () {
