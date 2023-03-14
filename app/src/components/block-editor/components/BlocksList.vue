@@ -6,14 +6,16 @@
       v-if="!isOpened"
       class="clean-invert icon small blocks-list-open"
       @click.prevent="openList">
-      <icon name="open-bulk-edition" /> View Bulk Edit 
+      <icon name="open-bulk-edition" /> 
+      {{ $t('editor.viewBulkEdit') }}
     </button>
 
     <button 
       v-if="isOpened"
       class="clean-invert icon small blocks-list-close"
       @click.prevent="closeList">
-      <icon name="open-bulk-edition" /> Hide Bulk Edit
+      <icon name="open-bulk-edition" /> 
+      {{ $t('editor.hideBulkEdit') }}
     </button>
     
 
@@ -145,17 +147,18 @@ export default {
 </script>
 
 <style lang="scss">
+
 .blocks-list {
-  bottom: 0.4rem;
+  bottom: .4rem;
   height: 4.6rem;
   left: 1.8rem;
   position: fixed;
-  width: 4.6rem;
+  z-index: 1;
 
   &.is-opened {
     background: var(--option-sidebar-bg);
     bottom: 0;
-    box-shadow: var(--box-shadow-medium);
+    border-right: 1px solid var(--input-border-color);
     height: calc(100vh - var(--topbar-height));
     left: 0;
     overflow: auto;
@@ -165,11 +168,11 @@ export default {
     z-index: 1000000;
 
     &::before {
-      background: var(--option-sidebar-bg);
+      background: linear-gradient(to top, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
       content: "";
       bottom: 0;
-      left: 0;
-      height: 60px;
+      left: -1px;
+      height: 6rem;
       position: fixed;
       width: inherit;
       z-index: 1;
@@ -178,24 +181,45 @@ export default {
 
   &-open,
   &-close {
-    background: none;
+    align-items: center;
+    background: transparent;
     border: none;
+    border-radius: 0 var(--border-radius) 0 0;
+    color: var(--link-primary-color-hover);
     cursor: pointer;
+    display: flex;
+    font-size: 1.4rem;
+    font-weight: var(--font-weight-semibold);
     height: 4.6rem;
     line-height: 4.5rem;
-    width: 4.6rem;
+    padding: 0 1.3rem 0 3.8rem;
+    transition: var(--transition);
+    user-select: none;
+    white-space: nowrap;
     z-index: 2;
+
+    & > svg {
+      left: 0.9rem;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:hover {
+      color: var(--link-primary-color);
+    }
   }
 
   &-close {
     bottom: .4rem;
     left: 1.8rem;
     position: fixed;
+    text-align: center; 
   }
 
   &-items {
     list-style-type: none;
-    margin: 30px 20px 60px;
+    margin: 2rem 2rem 6rem;
     padding: 0;
   }
 

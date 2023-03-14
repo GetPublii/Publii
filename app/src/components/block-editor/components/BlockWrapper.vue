@@ -390,7 +390,7 @@ export default {
   }
 
   &.is-activated {
-    background: rgba(var(--color-primary-rgb), .15);
+    background: rgba(var(--color-primary-rgb), .12);
     border-radius: calc(var(--border-radius) / 2);
     z-index: 10;
   }

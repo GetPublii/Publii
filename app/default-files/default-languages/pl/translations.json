@@ -207,6 +207,7 @@
         "heading4": "Nagłówek 4",
         "heading5": "Nagłówek 5",
         "heading6": "Nagłówek 6",
+        "hideBulkEdit": "Ukryj edycję zbiorczą",
         "hideHelp": "Ukryj Pomoc",
         "hideStats": "Ukryj Statystyki",
         "html": "HTML",
@@ -236,6 +237,7 @@
         "unableToSetSpellCheckerForLanguage": "(!) Nie można ustawić sprawdzania pisowni dla wybranego języka - ",
         "useOrderedList": "Użyj listy uporządkowanej",
         "useUnorderedList": "Użyj listy nieuporządkowanej",
+        "viewBulkEdit": "Edycja zbiorcza",
         "viewHelp": "Pokaż Pomoc",
         "viewStats": "Pokaż Statystyki",
         "wideLine": "Szeroka linia"
