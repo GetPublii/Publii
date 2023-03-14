@@ -443,9 +443,13 @@ export default {
 }
 
 #post-help-button {
-    bottom: 20px;
+    align-items: center;
+    bottom: .4rem;
+    display: flex;
+    height: 4.6rem;
+    line-height: 4.5rem;
     position: absolute;
-    right: 20px;
+    right: 1.8rem;
     z-index: 99991;
 }
 

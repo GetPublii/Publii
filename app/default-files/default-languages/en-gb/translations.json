@@ -207,6 +207,7 @@
         "heading4": "Heading 4",
         "heading5": "Heading 5",
         "heading6": "Heading 6",
+        "hideBulkEdit": "Hide Bulk Edit",
         "hideHelp": "Hide Help",
         "hideStats": "Hide Stats",
         "html": "HTML",
@@ -236,6 +237,7 @@
         "unableToSetSpellCheckerForLanguage": "(!) Unable to set spellchecker to use the selected language - ",
         "useOrderedList": "Use ordered list",
         "useUnorderedList": "Use unordered list",
+        "viewBulkEdit": "Bulk Edit",
         "viewHelp": "View Help",
         "viewStats": "View Stats",
         "wideLine": "Wide line"

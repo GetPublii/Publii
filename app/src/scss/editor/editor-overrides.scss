@@ -763,11 +763,14 @@ body {
  * Mini WYSIWYG editor
  */
 body .wysiwyg-mini-editor {
+    
+
+    .tox-toolbar-overlord {
+        padding: 3px 5px;
+    }
+
     .tox-tbtn {
-        height: 29px;
-        margin: 1px 1px 0 0;
         transform: scale(.9);
-        width: 29px;
     }
 
     .tox-split-button__chevron {
@@ -782,11 +785,12 @@ body .wysiwyg-mini-editor {
         margin: 0;
     }
 
-    &.has-simplified-toolbar {
-        .tox-tbtn {
-            height: 26px;
-            width: 26px;
-        }
+    .tox-statusbar__resize-handle {
+        margin-top: 4px;
+    }
+
+    .tox-statusbar__resize-handle svg {
+        fill: var(--icon-secondary-color);
     }
 }
 
