@@ -525,7 +525,6 @@
         "trashed": "Trashed",
         "uniqueWords": "Unique words",
         "updatedOn": "Updated on",
-        "updateSlug": "Update slug",
         "url": "URL",
         "words": "Words"
     },
@@ -1309,6 +1308,7 @@
         "theme": "Theme",
         "tools": "Tools & Plugins",
         "unhide": "Unhide",
+        "updateSlug": "Update slug",
         "uploadInProgress": "Upload in progress...",
         "whatsNew": "What's new?"
     }

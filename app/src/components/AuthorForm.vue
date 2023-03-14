@@ -203,6 +203,12 @@
                                 @keyup="cleanError('slug')"
                                 spellcheck="false"
                                 type="text">
+                            <p-button 
+                                :onClick="updateSlug" 
+                                :title="$t('ui.updateSlug')"
+                                icon="refresh"
+                                type="secondary icon">
+                            </p-button>
                         </label>
 
                         <label class="with-char-counter">
@@ -375,7 +381,6 @@
                     {{ $t('ui.cancel') }}
                 </p-button>
             </div>
-
         </div>
     </div>
 </template>
@@ -748,6 +753,11 @@ export default {
             }
 
 			return this.$t('theme.leaveBlankToUseDefault');
+        },
+        async updateSlug () {
+            if (this.authorData.name.trim() !== '') {
+                this.authorData.username = await mainProcessAPI.invoke('app-main-process-create-slug', this.authorData.name);
+            }
         }
     },
     beforeDestroy () {

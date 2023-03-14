@@ -305,7 +305,7 @@
                                             @keyup="$parent.slugUpdated">
                                         <p-button 
                                             :onClick="updateSlug" 
-                                            :title="$t('post.updateSlug')"
+                                            :title="$t('ui.updateSlug')"
                                             icon="refresh"
                                             type="secondary icon">
                                         </p-button>

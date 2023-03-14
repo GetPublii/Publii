@@ -525,7 +525,6 @@
         "trashed": "Wyrzucony do kosza",
         "uniqueWords": "Unikalne słowa",
         "updatedOn": "Zaktualizowano",
-        "updateSlug": "Zaktualizuj slug",
         "url": "URL",
         "words": "Słowa"
     },
@@ -1309,6 +1308,7 @@
         "theme": "Motywy",
         "tools": "Narzędzia & Pluginy",
         "unhide": "Odkryj",
+        "updateSlug": "Zaktualizuj slug",
         "uploadInProgress": "Trwa przesyłanie...",
         "whatsNew": "Co się zmieniło?"
     }

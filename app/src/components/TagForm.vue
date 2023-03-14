@@ -173,6 +173,12 @@
                                 @keyup="cleanError('slug')"
                                 spellcheck="false"
                                 type="text">
+                            <p-button 
+                                :onClick="updateSlug" 
+                                :title="$t('ui.updateSlug')"
+                                icon="refresh"
+                                type="secondary icon">
+                            </p-button>
                         </label>
 
                         <label class="with-char-counter">
@@ -682,6 +688,11 @@ export default {
             }
 
 			return this.$t('theme.leaveBlankToUseDefault');
+        },
+        async updateSlug () {
+            if (this.tagData.name.trim() !== '') {
+                this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.name);
+            }
         }
     },
     beforeDestroy () {
