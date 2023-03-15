@@ -187,10 +187,8 @@
                                 v-model="tagData.additionalData.metaTitle"
                                 type="text"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :placeholder="metaFieldAttrs"
-                                :disabled="!metaOptionsActive"
-                                :readonly="!metaOptionsActive"
-                                :charCounter="metaOptionsActive"
+                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                :charCounter="true"
                                 :preferredCount="70" />
                         </label>
 
@@ -198,10 +196,8 @@
                             <span>{{ $t('ui.metaDescription') }}:</span>
                             <text-area
                                 v-model="tagData.additionalData.metaDescription"
-                                :placeholder="metaFieldAttrs"
-                                :disabled="!metaOptionsActive"
-                                :readonly="!metaOptionsActive"
-                                :charCounter="metaOptionsActive"
+                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160"></text-area>
                         </label>
@@ -401,25 +397,6 @@ export default {
             }
 
             return this.$store.state.currentSite.themeSettings.renderer.createTagPages;
-        },
-        metaFieldAttrs: function() {
-            let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
-
-            if(!this.metaOptionsActive) {
-                text = this.$t('tag.toUseThisOptionEnableIndexingTagPages');
-            }
-
-            return text;
-        },
-        metaOptionsActive: function() {
-            if(
-                this.$store.state.currentSite.config.advanced &&
-                this.$store.state.currentSite.config.advanced.metaRobotsTags.indexOf('noindex') !== -1
-            ) {
-                return false;
-            }
-
-            return true
         },
         tagTemplates: function() {
             return this.$store.getters.tagTemplates;

@@ -217,10 +217,8 @@
                                 v-model="authorData.metaTitle"
                                 type="text"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :placeholder="metaFieldAttrs"
-                                :disabled="!metaOptionsActive"
-                                :readonly="!metaOptionsActive"
-                                :charCounter="metaOptionsActive"
+                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                :charCounter="true"
                                 :preferredCount="70" />
                         </label>
 
@@ -228,10 +226,8 @@
                             <span>{{ $t('ui.metaDescription') }}:</span>
                             <text-area
                                 v-model="authorData.metaDescription"
-                                :placeholder="metaFieldAttrs"
-                                :disabled="!metaOptionsActive"
-                                :readonly="!metaOptionsActive"
-                                :charCounter="metaOptionsActive"
+                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                :charCounter="true"
                                 :spellcheck="$store.state.currentSite.config.spellchecking"
                                 :preferredCount="160"></text-area>
                         </label>
@@ -433,25 +429,6 @@ export default {
             }
 
             return this.$store.state.currentSite.themeSettings.renderer.createAuthorPages;
-        },
-        metaFieldAttrs: function() {
-            let text = this.$t('ui.leaveBlankToUseDefaultPageTitle');
-
-            if(!this.metaOptionsActive) {
-                text = this.$t('author.toUseThisOptionEnableIndexingAuthorPages');
-            }
-
-            return text;
-        },
-        metaOptionsActive: function() {
-            if(
-                this.$store.state.currentSite.config.advanced &&
-                this.$store.state.currentSite.config.advanced.metaRobotsAuthors.indexOf('noindex') !== -1
-            ) {
-                return false;
-            }
-
-            return true
         },
         authorTemplates: function() {
             return this.$store.getters.authorTemplates;
