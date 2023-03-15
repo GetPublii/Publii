@@ -51,7 +51,7 @@ export default {
         case 'strikethrough': return 18;
         case 'link': return 18;
         case 'unlink': return 18;
-        case 'marker': return 16;
+        case 'marker': return 18;
         case 'align-left': return 18;
         case 'align-right': return 18;
         case 'align-center': return 18;
@@ -114,7 +114,7 @@ export default {
         case 'strikethrough': return 18;
         case 'link': return 18;
         case 'unlink': return 18;
-        case 'marker': return 13;
+        case 'marker': return 18;
         case 'align-left': return 18;
         case 'align-right': return 18;
         case 'align-center': return 18;
