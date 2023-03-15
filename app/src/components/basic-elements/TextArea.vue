@@ -163,6 +163,7 @@ export default {
                 toolbar1: firstToolbarStructure,
                 toolbar2: secondToolbarStructure,
                 toolbar3: "",
+                icons: 'publii',   
                 preview_styles: false,
                 resize: true,
                 menubar: false,
@@ -278,7 +279,7 @@ export default {
             let customEditorCSS = pathToEditorCSS;
 
             return [
-                'css/editor-options.css?v=0710',
+                'css/editor-options.css?v=0711',
                 customEditorCSS
             ].join(',');
         }

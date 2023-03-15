@@ -133,7 +133,8 @@
         
         .tox-tbtn {
             svg {
-                fill: var(--icon-tertiary-color);
+                color: var(--icon-tertiary-color);
+                fill: none;
             }
         }
 
@@ -304,7 +305,8 @@
             }
            
             svg {
-               fill: var(--icon-tertiary-color);
+               color: var(--icon-tertiary-color);
+               fill: none;
             }
         }
 
@@ -568,7 +570,8 @@ body {
         }   
         
         .tox-listbox__select-chevron svg {
-            fill: var(--icon-primary-color); 
+            color: var(--icon-primary-color); 
+            fill: none;
         }
         
         .tox-tbtn {
@@ -578,7 +581,8 @@ body {
             transition: var(--transition);
             
             svg {
-                 fill: var(--icon-primary-color); 
+                color: var(--icon-primary-color); 
+                 fill: none;
             }
             
             &:active,
@@ -590,7 +594,8 @@ body {
                 color: var(--text-primary-color);
                 
                 svg {
-                   fill: var(--icon-tertiary-color);
+                    color: var(--icon-tertiary-color);
+                   fill: none;
                 }
             }
             
@@ -598,7 +603,8 @@ body {
                 color: var(--text-primary-color);
                 
                 svg {
-                   fill: var(--icon-tertiary-color);
+                   color: var(--icon-tertiary-color);
+                   fill: none;
                 }
             }  
             
@@ -637,11 +643,20 @@ body {
                 color: var(--text-light-color);
                 
                 &-caret svg {
-                    fill: var(--icon-primary-color); 
+                    color: var(--icon-primary-color); 
+                    fill: none;
                 }
                 
                 &-accessory {
                     color: var(--text-light-color);
+                }
+
+                &-checkmark,
+                &-icon {
+                    svg {
+                        color: currentColor;
+                        fill: none;
+                    }
                 }
             }
             
