@@ -636,6 +636,11 @@ class App {
             };
 
             self.mainWindow.webContents.send('app-data-loaded', appData);
+
+            // Open Dev Tools
+            if (self.appConfig.openDevToolsInMain) {
+                self.mainWindow.webContents.openDevTools();
+            }
         });
 
         if (process.platform === 'linux') {
@@ -654,11 +659,6 @@ class App {
             event.preventDefault();
             contextMenuBuilder.showPopupMenu(params);
         });
-
-        // Open Dev Tools
-        if (this.appConfig.openDevToolsInMain) {
-            this.mainWindow.webContents.openDevTools();
-        }
     }
 
     // Add events to the window
