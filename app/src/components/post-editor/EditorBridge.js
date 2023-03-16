@@ -480,7 +480,6 @@ class EditorBridge {
         });
 
         this.tinymceEditor.ui.registry.addButton('readmore', {
-            icon: 'readmore',
             text: window.app.translate('editor.readMore'),
             onAction: () => {
                 this.tinymceEditor.insertContent('<hr id="read-more" data-translation="' + window.app.translate('editor.readMore') + '">' + "\n");
