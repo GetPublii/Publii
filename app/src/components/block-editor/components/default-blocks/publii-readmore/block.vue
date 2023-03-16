@@ -95,7 +95,7 @@ export default {
   }
 
   &::before {
-    border-bottom: 1px solid var(--input-border-color);
+    border-bottom: 1px solid var(--text-primary-color);
     content: " ";
     display: block;
     position: relative;
@@ -106,11 +106,11 @@ export default {
 
   &::after {
     background: var(--input-bg);
-    border: 1px solid var(--input-border-color);
-    border-radius: var(--border-radius);
     content: attr(data-translation);
     display: inline-block;
+    font-family: var(--font-base);
     font-size: ms(-3);
+    font-weight: var(--font-weight-semibold);
     padding: 6px 16px;
     position: absolute;
     white-space: pre;

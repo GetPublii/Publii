@@ -301,7 +301,7 @@ small {
 
 hr#read-more {
     border: none;
-    background-color: var(--input-border-color);
+    background-color: var(--text-primary-color);
     cursor: default;
     height: 1px;
     margin: baseline(10) 0 baseline(12);
@@ -310,12 +310,11 @@ hr#read-more {
 
     &:after {
         background: var(--input-bg);
-        border: 1px solid var(--input-border-color);
-        border-radius: var(--border-radius);
-        color: var(--text-light-color);
         content: attr(data-translation);
         display: inline-block;
+        font-family: var(--font-base);
         font-size: ms(-3);
+        font-weight: var(--font-weight-semibold);
         left: 50%;
         padding: 6px 16px;
         position: absolute;
