@@ -297,7 +297,7 @@
                             ref="seo-content">
                             <div class="post-seo">
                                 <label>{{ $t('post.postSlug') }}:
-                                    <div class="post-seo-container">
+                                    <div class="options-sidebar-item-slug">
                                         <input
                                             type="text"
                                             v-model="$parent.postData.slug"
@@ -929,28 +929,6 @@ export default {
             position: relative;
             top: .1rem;
         }
-    }
-}
-
-
-.post-seo {
-    &-container {
-        position: relative;
-    }
-
-    input {
-        padding-right: 6rem;
-    }
-   .button {
-        border-radius: 3px;
-        bottom: 0;
-        height: calc(100% - 4px);
-        margin: 2px;
-        padding: 0;
-        position: absolute;
-        right: 0;
-        top: 0;  
-        width: 43px;
     }
 }
 

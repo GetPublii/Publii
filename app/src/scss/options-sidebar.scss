@@ -113,6 +113,10 @@
         &-slug {
             position: relative;
 
+            input {
+                padding-right: 6rem;
+            }
+
             .button {
                 border-radius: 3px;
                 bottom: 0;
