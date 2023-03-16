@@ -168,17 +168,19 @@
                         ref="seo-content">
                         <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
                             <span>{{ $t('ui.slug') }}:</span>
-                            <input
-                                v-model="tagData.slug"
-                                @keyup="cleanError('slug')"
-                                spellcheck="false"
-                                type="text">
-                            <p-button 
-                                :onClick="updateSlug" 
-                                :title="$t('ui.updateSlug')"
-                                icon="refresh"
-                                type="secondary icon">
-                            </p-button>
+                            <div class="options-sidebar-item-slug">
+                                <input
+                                    v-model="tagData.slug"
+                                    @keyup="cleanError('slug')"
+                                    spellcheck="false"
+                                    type="text">
+                                <p-button 
+                                    :onClick="updateSlug" 
+                                    :title="$t('ui.updateSlug')"
+                                    icon="refresh"
+                                    type="secondary icon">
+                                </p-button>
+                            </div>
                         </label>
 
                         <label class="with-char-counter">

@@ -109,6 +109,22 @@
                 border-top: none;
             }
         }
+
+        &-slug {
+            position: relative;
+
+            .button {
+                border-radius: 3px;
+                bottom: 0;
+                height: calc(100% - 4px);
+                margin: 2px;
+                padding: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 43px;
+            }
+        }
     }
 
     &-header {
