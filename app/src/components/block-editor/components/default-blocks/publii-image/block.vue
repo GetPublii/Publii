@@ -24,7 +24,7 @@
         class="publii-block-image-delete is-active has-tooltip"
         @click.stop.prevent="clearImage()">
         <icon name="open-trash" />
-        <span class="ui-top-menu-tooltip has-bigger-space">
+        <span class="ui-tooltip has-bigger-space">
           {{ $t('editor.clickToConfirm') }}
         </span>
       </button>
@@ -486,11 +486,11 @@ export default {
     display: flex;
     height: 34px;
     justify-content: center;
-    left: 20px;
+    left: 15px;
     opacity: 0;
     pointer-events: none;
     position: absolute;
-    top: 20px;
+    top: 15px;
     transition: var(--transition);
     will-change: transform;
     width: 34px;
