@@ -3,134 +3,138 @@
 <main class="page page--tag">
    {{#tag}}
       <div class="hero">
-         {{#featuredImage}}
-            {{#if url}}
-               <figure class="hero__image hero__image--overlay">                      
-                  <img
-                     src="{{url}}"
-                     {{#if @config.site.responsiveImages}}                           
-                           {{responsiveImageAttributes 'tagImage' srcset sizes}}
-                     {{/if}}
-                     {{ lazyload "eager" }}
-                     height="{{height}}"
-                     width="{{width}}"
-                     alt="{{alt}}">
-                     
-                  {{#checkIfAny caption credits}}
-                     <figcaption>
-                        {{caption}}
-                        {{credits}}
-                     </figcaption>                      
-                  {{/checkIfAny}}                      
-               </figure>
-            {{else}}
-               {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-                  <figure class="hero__image hero__image--overlay">
+         {{#if tagViewConfig.displayFeaturedImage}}
+            {{#featuredImage}}
+               {{#if url}}
+                  <figure class="hero__image hero__image--overlay">                      
                      <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{#if @config.site.responsiveImages}}
-                           {{responsiveImageAttributes @config.custom.uploadHero}}
+                        src="{{url}}"
+                        {{#if @config.site.responsiveImages}}                           
+                              {{responsiveImageAttributes 'tagImage' srcset sizes}}
                         {{/if}}
                         {{ lazyload "eager" }}
-                        {{imageDimensions @config.custom.uploadHero}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
-
-                     {{#if @config.custom.uploadHeroCaption}}
+                        height="{{height}}"
+                        width="{{width}}"
+                        alt="{{alt}}">
+                        
+                     {{#checkIfAny caption credits}}
                         <figcaption>
-                           {{@config.custom.uploadHeroCaption}}
-                        </figcaption>
-                     {{/if}}
+                           {{caption}}
+                           {{credits}}
+                        </figcaption>                      
+                     {{/checkIfAny}}                      
                   </figure>
-               {{/checkIfAll}}
-            {{/if}}
-         {{/featuredImage}}
+               {{else}}
+                  {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+                     <figure class="hero__image hero__image--overlay">
+                        <img
+                           src="{{@config.custom.uploadHero}}"
+                           {{#if @config.site.responsiveImages}}
+                              {{responsiveImageAttributes @config.custom.uploadHero}}
+                           {{/if}}
+                           {{ lazyload "eager" }}
+                           {{imageDimensions @config.custom.uploadHero}}
+                           alt="{{@config.custom.uploadHeroAlt}}">
+
+                        {{#if @config.custom.uploadHeroCaption}}
+                           <figcaption>
+                              {{@config.custom.uploadHeroCaption}}
+                           </figcaption>
+                        {{/if}}
+                     </figure>
+                  {{/checkIfAll}}
+               {{/if}}
+            {{/featuredImage}}
+         {{/if}}
          <header class="hero__content">
             <div class="wrapper">           
                <h1>
                   {{name}}
-                  <sup>({{postsNumber}})</sup>
+                  {{#if tagViewConfig.displayPostCounter}}<sup>({{postsNumber}})</sup>{{/if}}
                </h1>
-               {{#if description}}
-                  <p>
-                     {{description}}
-                  </p>
-               {{/if}}          
+               {{#if tagViewConfig.displayDescription}} 
+                  {{#if description}}
+                     <div class="page__desc">{{{description}}}</div>
+                  {{/if}}  
+               {{/if}}         
             </div>
          </header>
       </div>
-   {{/tag}}
-   <div class="feed wrapper">
-      {{#each posts}}
-         <article class="feed__item">
-            <header>
-               {{#checkIfAny @config.custom.tagAvatar @config.custom.tagAuthor @config.custom.tagDate}}
-                  <div class="feed__meta">
-                     {{#author}}
-                        {{#if @config.custom.tagAvatar}}
-                           {{#if avatar}}
-                              <img
-                                 src="{{avatarImage.url}}" 
-                                 {{ lazyload "lazy" }}
-                                 height="{{avatarImage.height}}"
-                                 width="{{avatarImage.width}}"      
-                                 class="post__author-thumb"
-                                 alt="{{avatarImage.alt}}">
+      {{#if tagViewConfig.displayPostList}} 
+         <div class="feed">
+            {{#each ../posts}}
+               <article class="feed__item">
+                  <header class="wrapper">
+                     {{#checkIfAny @config.custom.tagAvatar @config.custom.tagAuthor @config.custom.tagDate}}
+                        <div class="feed__meta">
+                           {{#author}}
+                              {{#if @config.custom.tagAvatar}}
+                                 {{#if avatar}}
+                                    <img
+                                       src="{{avatarImage.url}}" 
+                                       {{ lazyload "lazy" }}
+                                       height="{{avatarImage.height}}"
+                                       width="{{avatarImage.width}}"      
+                                       class="post__author-thumb"
+                                       alt="{{avatarImage.alt}}">
+                                 {{/if}}
+                              {{/if}}
+                              {{#if @config.custom.tagAuthor}}
+                                 <a href="{{url}}" class="feed__author">{{name}}</a>
+                              {{/if}}
+                           {{/author}}
+                           {{#if @config.custom.tagDate}}
+                              <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
+                                 {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                 {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                 {{/checkIf}}
+                              </time>
                            {{/if}}
+                        </div>
+                     {{/checkIfAny}}
+                     <h2>
+                        <a href="{{url}}">
+                           {{title}}
+                        </a>
+                     </h2>
+                  </header>
+                  {{#if @config.custom.tagFeaturedImage}}
+                     {{#featuredImage}}
+                        {{#if url}}
+                           <div class="feed__image">
+                              <a href="{{../url}}">
+                                 <img
+                                    src="{{url}}"
+                                    {{#if @config.site.responsiveImages}}
+                                       {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                                    {{/if}}
+                                    {{ lazyload "lazy" }}
+                                    height="{{height}}"
+                                    width="{{width}}"
+                                    alt="{{alt}}">
+                                 </a>
+                           </div>
                         {{/if}}
-                        {{#if @config.custom.tagAuthor}}
-                           <a href="{{url}}" class="feed__author">{{name}}</a>
-                        {{/if}}
-                     {{/author}}
-                     {{#if @config.custom.tagDate}}
-                        <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
-                           {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                              {{date createdAt @config.custom.formatDate}}
-                           {{else}}
-                              {{date createdAt @config.custom.formatDateCustom}}
-                           {{/checkIf}}
-                        </time>
+                     {{/featuredImage}}
+                  {{/if}}
+                  <div class="wrapper">
+                     {{#if hasCustomExcerpt}}
+                        {{{ excerpt }}}
+                     {{else}}
+                        <p>{{{ excerpt }}}</p>
+                     {{/if}}
+                     {{#if @config.custom.tagReadMore}}
+                        <a href="{{url}}" class="readmore feed__readmore">
+                           {{ translate 'post.readMore' }}</a>
                      {{/if}}
                   </div>
-               {{/checkIfAny}}
-               <h2>
-                  <a href="{{url}}">
-                     {{title}}
-                  </a>
-               </h2>
-            </header>
-            {{#if @config.custom.tagFeaturedImage}}
-               {{#featuredImage}}
-                  {{#if url}}
-                     <div class="feed__image">
-                        <a href="{{../url}}">
-                           <img
-                              src="{{url}}"
-                              {{#if @config.site.responsiveImages}}
-                                 {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
-                              {{/if}}
-                              {{ lazyload "lazy" }}
-                              height="{{height}}"
-                              width="{{width}}"
-                              alt="{{alt}}">
-                           </a>
-                       </div>
-                  {{/if}}
-               {{/featuredImage}}
-            {{/if}}
-            <div>
-               {{#if hasCustomExcerpt}}
-                  {{{ excerpt }}}
-               {{else}}
-                  <p>{{{ excerpt }}}</p>
-               {{/if}}
-               {{#if @config.custom.tagReadMore}}
-                  <a href="{{url}}" class="readmore feed__readmore">
-                     {{ translate 'post.readMore' }}</a>
-               {{/if}}
-            </div>
-         </article>
-      {{/each}}
-      {{> pagination}}
-   </div>
+               </article>
+            {{/each}}
+            {{> pagination}}
+         </div>
+      {{/if}}
+   {{/tag}}
 </main>
 {{> footer}}

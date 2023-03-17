@@ -1,5 +1,5 @@
 {{#if @pagination}}
-   <nav class="{{#is "index"}}wrapper{{/is}} pagination {{@website.postsOrdering}}">
+   <nav class="{{#is "index,tag,author"}}wrapper{{/is}} pagination {{@website.postsOrdering}}">
       {{#checkIf @website.postsOrdering '==' "desc"}}
          {{#if @pagination.nextPage}}
             {{#checkIf @website.postsOrdering '==' "desc"}}

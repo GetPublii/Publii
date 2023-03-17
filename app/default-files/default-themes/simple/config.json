@@ -1,13 +1,9 @@
 {
     "name": "Simple",
-    "version": "2.5.0.0",
+    "version": "2.6.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
-        "mainMenu": {
-            "desc": "Main menu of the website",
-            "name": "Main menu",
-            "maxLevels": -1
-        }
+        "mainMenu": "Main menu"
     },
     "renderer": {
         "relatedPostsNumber": 3,
@@ -1958,8 +1954,170 @@
             ]
         }
     ],
-    "tagConfig": [],
-    "authorConfig": [],
+    "authorConfig": [
+        {
+            "name": "displayFeaturedImage",
+            "label": "Display featured image",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayAvatar",
+            "label": "Display avatar",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostCounter",
+            "label": "Display post counter",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayDescription",
+            "label": "Display author biography",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayWebsite",
+            "label": "Display author website",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostList",
+            "label": "Display post list",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        }
+    ],
+    "tagConfig": [
+        {
+            "name": "displayFeaturedImage",
+            "label": "Display featured image",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostCounter",
+            "label": "Display post counter",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayDescription",
+            "label": "Display tag description",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayPostList",
+            "label": "Display post list",
+            "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        }
+    ],
     "files": {
         "ignoreAssets": ["scss", ".DS_Store"],
         "assetsPath": "assets",
@@ -1997,40 +2155,31 @@
             },
 
             "featuredImages": {
-                "sizes": {
-                    "post": "(max-width: 1600px) 100vw, 1600px"
-                },
-
+                "sizes": "(max-width: 1600px) 100vw, 1600px",
                 "dimensions": {
                     "xs": {
                         "width": 300,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     },
                     "sm": {
                         "width": 480,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     },
                     "md": {
                         "width": 768,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     },
                     "lg": {
                         "width": 1024,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     },
                     "xl": {
                         "width": 1360,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     },
                     "2xl": {
                         "width": 1600,
-                        "height": "auto",
-                        "group": "post"
+                        "height": "auto"
                     }
                 }
             },

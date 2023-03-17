@@ -3,149 +3,159 @@
 <main class="page page--author">
    {{#author}}
       <div class="hero">
-         {{#featuredImage}}
-            {{#if url}}
-               <figure class="hero__image hero__image--overlay">                      
-                  <img
-                     src="{{url}}"
-                     {{#if @config.site.responsiveImages}}                           
-                           {{responsiveImageAttributes 'authorImage' srcset sizes}}
-                     {{/if}}
-                     {{ lazyload "eager" }}
-                     height="{{height}}"
-                     width="{{width}}"
-                     alt="{{alt}}">
-                     
-                  {{#checkIfAny caption credits}}
-                     <figcaption>
-                        {{caption}}
-                        {{credits}}
-                     </figcaption>                      
-                  {{/checkIfAny}}                      
-               </figure>
-            {{else}}
-               {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-                  <figure class="hero__image hero__image--overlay">
+         {{#if authorViewConfig.displayFeaturedImage}}
+            {{#featuredImage}}
+               {{#if url}}
+                  <figure class="hero__image hero__image--overlay">                      
                      <img
-                        src="{{@config.custom.uploadHero}}"
-                        {{#if @config.site.responsiveImages}}
-                           {{responsiveImageAttributes @config.custom.uploadHero}}
+                        src="{{url}}"
+                        {{#if @config.site.responsiveImages}}                           
+                              {{responsiveImageAttributes 'authorImage' srcset sizes}}
                         {{/if}}
                         {{ lazyload "eager" }}
-                        {{imageDimensions @config.custom.uploadHero}}
-                        alt="{{@config.custom.uploadHeroAlt}}">
-
-                     {{#if @config.custom.uploadHeroCaption}}
+                        height="{{height}}"
+                        width="{{width}}"
+                        alt="{{alt}}">
+                        
+                     {{#checkIfAny caption credits}}
                         <figcaption>
-                           {{@config.custom.uploadHeroCaption}}
-                        </figcaption>
-                     {{/if}}
+                           {{caption}}
+                           {{credits}}
+                        </figcaption>                      
+                     {{/checkIfAny}}                      
                   </figure>
-               {{/checkIfAll}}
-            {{/if}}
-         {{/featuredImage}}
-         <header class="hero__content">
-            <div class="wrapper">          
-                {{#if avatar}}
-                  <img 
-                     src="{{avatarImage.url}}" 
-                     {{ lazyload "lazy" }}
-                     height="{{avatarImage.height}}"
-                     width="{{avatarImage.width}}" 
-                     class="page--author__avatar" 
-                     alt="{{avatarImage.alt}}">
+               {{else}}
+                  {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
+                     <figure class="hero__image hero__image--overlay">
+                        <img
+                           src="{{@config.custom.uploadHero}}"
+                           {{#if @config.site.responsiveImages}}
+                              {{responsiveImageAttributes @config.custom.uploadHero}}
+                           {{/if}}
+                           {{ lazyload "eager" }}
+                           {{imageDimensions @config.custom.uploadHero}}
+                           alt="{{@config.custom.uploadHeroAlt}}">
+
+                        {{#if @config.custom.uploadHeroCaption}}
+                           <figcaption>
+                              {{@config.custom.uploadHeroCaption}}
+                           </figcaption>
+                        {{/if}}
+                     </figure>
+                  {{/checkIfAll}}
+               {{/if}}
+            {{/featuredImage}}
+         {{/if}}
+         <div class="hero__content">
+            <div class="wrapper">  
+               {{#if authorViewConfig.displayAvatar}}        
+                  {{#if avatar}}
+                     <img 
+                        src="{{avatarImage.url}}" 
+                        {{ lazyload "lazy" }}
+                        height="{{avatarImage.height}}"
+                        width="{{avatarImage.width}}" 
+                        class="page--author__avatar" 
+                        alt="{{avatarImage.alt}}">
+                  {{/if}}
                {{/if}}
                <h1>
                   {{name}}
-                  <sup>({{postsNumber}})</sup>
+                  {{#if authorViewConfig.displayPostCounter}}<sup>({{postsNumber}})</sup>{{/if}}
                </h1>
-               {{#if description}}
-                  <p>{{description}}</p>
-               {{/if}}   
-               {{#if website}}
-                  <p class="post__meta post__meta--author page--author__website">
-                     <svg height="24" width="24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#website"/>
-                     </svg>
-                     <a href="{{website}}" target="_blank" rel="nofollow noreferrer noopener">{{ translate 'author.visitWebsite' }}</a>
-                  </p>
-               {{/if}}  
+               {{#if authorViewConfig.displayDescription}} 
+                  {{#if description}}
+                     <div class="page__desc">{{{description}}}</div>
+                  {{/if}}  
+               {{/if}}
+               {{#if authorViewConfig.displayWebsite}}  
+                  {{#if website}}
+                     <div class="post__meta post__meta--author page--author__website">
+                        <svg height="24" width="24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                           <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#website"/>
+                        </svg>
+                        <a href="{{website}}" target="_blank" rel="nofollow noreferrer noopener">{{ translate 'author.visitWebsite' }}</a>
+                     </div>
+                  {{/if}}  
+               {{/if}} 
             </div>
-         </header>
+         </div>
       </div>
-   {{/author}}
-   <div class="feed">
-      {{#each posts}}
-         <article class="feed__item">
-            <header class="wrapper">
-               {{#checkIfAny @config.custom.authorAvatar @config.custom.authorAuthor @config.custom.authorDate}}
-                  <div class="feed__meta">
-                     {{#author}}
-                        {{#if @config.custom.authorAvatar}}
-                           {{#if avatar}}
-                              <img
-                                 src="{{avatarImage.url}}" 
-                                 {{ lazyload "lazy" }}
-                                 height="{{avatarImage.height}}"
-                                 width="{{avatarImage.width}}"      
-                                 class="post__author-thumb"
-                                 alt="{{avatarImage.alt}}">
+      {{#if authorViewConfig.displayPostList}} 
+         <div class="feed">
+            {{#each ../posts}}
+               <article class="feed__item">
+                  <header class="wrapper">
+                     {{#checkIfAny @config.custom.authorAvatar @config.custom.authorAuthor @config.custom.authorDate}}
+                        <div class="feed__meta">
+                           {{#author}}
+                              {{#if @config.custom.authorAvatar}}
+                                 {{#if avatar}}
+                                    <img
+                                       src="{{avatarImage.url}}" 
+                                       {{ lazyload "lazy" }}
+                                       height="{{avatarImage.height}}"
+                                       width="{{avatarImage.width}}"      
+                                       class="post__author-thumb"
+                                       alt="{{avatarImage.alt}}">
+                                 {{/if}}
+                              {{/if}}
+                              {{#if @config.custom.authorAuthor}}
+                                 <a href="{{url}}" class="feed__author">{{name}}</a>
+                              {{/if}}
+                           {{/author}}
+                           {{#if @config.custom.authorDate}}
+                              <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
+                                 {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                    {{date createdAt @config.custom.formatDate}}
+                                 {{else}}
+                                    {{date createdAt @config.custom.formatDateCustom}}
+                                 {{/checkIf}}
+                              </time>
                            {{/if}}
+                        </div>
+                     {{/checkIfAny}}
+                     <h2>
+                        <a href="{{url}}">
+                           {{title}}
+                        </a>
+                     </h2>
+                  </header>
+                  {{#if @config.custom.authorFeaturedImage}}
+                     {{#featuredImage}}
+                        {{#if url}}
+                           <div class="feed__image">
+                              <a href="{{../url}}">
+                                 <img
+                                    src="{{url}}"
+                                    {{#if @config.site.responsiveImages}}
+                                       {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                                    {{/if}}
+                                    {{ lazyload "lazy" }}
+                                    height="{{height}}"
+                                    width="{{width}}"
+                                    alt="{{alt}}">
+                              </a>
+                           </div>
                         {{/if}}
-                        {{#if @config.custom.authorAuthor}}
-                           <a href="{{url}}" class="feed__author">{{name}}</a>
-                        {{/if}}
-                     {{/author}}
-                     {{#if @config.custom.authorDate}}
-                        <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
-                           {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                              {{date createdAt @config.custom.formatDate}}
-                           {{else}}
-                              {{date createdAt @config.custom.formatDateCustom}}
-                           {{/checkIf}}
-                        </time>
+                     {{/featuredImage}}
+                  {{/if}}
+                  <div class="wrapper">
+                     {{#if hasCustomExcerpt}}
+                        {{{ excerpt }}}
+                     {{else}}
+                        <p>{{{ excerpt }}}</p>
+                     {{/if}}
+                     {{#if @config.custom.authorReadMore}}
+                        <a href="{{url}}" class="readmore feed__readmore">
+                           {{ translate 'post.readMore' }}</a>
                      {{/if}}
                   </div>
-               {{/checkIfAny}}
-               <h2>
-                  <a href="{{url}}">
-                     {{title}}
-                  </a>
-               </h2>
-            </header>
-            {{#if @config.custom.authorFeaturedImage}}
-               {{#featuredImage}}
-                  {{#if url}}
-                     <div class="feed__image">
-                        <a href="{{../url}}">
-                           <img
-                              src="{{url}}"
-                              {{#if @config.site.responsiveImages}}
-                                 {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
-                              {{/if}}
-                              {{ lazyload "lazy" }}
-                              height="{{height}}"
-                              width="{{width}}"
-                              alt="{{alt}}">
-                        </a>
-                     </div>
-                  {{/if}}
-               {{/featuredImage}}
-            {{/if}}
-            <div class="wrapper">
-               {{#if hasCustomExcerpt}}
-                  {{{ excerpt }}}
-               {{else}}
-                  <p>{{{ excerpt }}}</p>
-               {{/if}}
-               {{#if @config.custom.authorReadMore}}
-                  <a href="{{url}}" class="readmore feed__readmore">
-                     {{ translate 'post.readMore' }}</a>
-               {{/if}}
-            </div>
-         </article>
-      {{/each}}
-      {{> pagination}}
-   </div>
+               </article>
+            {{/each}}
+            {{> pagination}}
+         </div>
+      {{/if}} 
+   {{/author}}
 </main>
 {{> footer}}
