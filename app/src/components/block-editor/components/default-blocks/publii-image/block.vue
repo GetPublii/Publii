@@ -569,7 +569,7 @@ export default {
       width: 100%;
 
       svg {
-        color: var(--icon-quaternary-color);
+        fill: var(--icon-quaternary-color);
       }
 
       span {
