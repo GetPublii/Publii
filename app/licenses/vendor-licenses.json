@@ -40,5 +40,11 @@
     },
     "feathericons": {
         "url": "https://feathericons.com"
+    },
+    "tabler-icons": {
+        "url": "https://tabler-icons.io/"
+    },
+    "lucide": {
+        "url": "https://lucide.dev/"
     }
 }
