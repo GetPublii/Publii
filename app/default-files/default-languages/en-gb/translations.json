@@ -431,7 +431,7 @@
         "unselectItem": "Unselect"
     },
     "menuPositionPopup": {
-        "invalidValue": "Invalid value. This value cannot be 0 and higher than theme default value.",
+        "invalidValue": "Invalid value: the entered value cannot be 0 and exceed the theme's default maximum limit. Use -1 for no restrictions.",
         "maxLevels": "Max level:",
         "themeDefaultValue": "Theme default value:",
         "title": "Configure menu position",
