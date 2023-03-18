@@ -572,6 +572,8 @@ export default {
             this.loadBasicSettings();
             this.loadCustomSettings();
             this.loadPostViewSettings();
+            this.loadTagViewSettings();
+            this.loadAuthorViewSettings();
             this.loadDefaultTemplates();
         },
         loadBasicSettings () {
