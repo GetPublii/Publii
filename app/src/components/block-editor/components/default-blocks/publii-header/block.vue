@@ -29,13 +29,9 @@ import ConfigForm from './config-form.json';
 import ContentEditableImprovements from './../../helpers/ContentEditableImprovements.vue';
 import LinkConfig from './../../mixins/LinkConfig.vue';
 import TopMenuUI from './../../helpers/TopMenuUI.vue';
-let mainProcess;
 
-if (window.app && window.remote) {
-  const { remote } = require('electron');
-  mainProcess = remote.require('./main.js');
-} else {
-  mainProcess = {
+if (!mainProcessAPI) {
+  mainProcessAPI = {
     slug: function (text) {
       return text.toLowerCase().replace(/[^a-zA-Z0-9\s]/gmi, '').replace(/\s/gmi, '-').trim();
     }
@@ -189,7 +185,7 @@ export default {
       this.config.headingLevel = level;
       this.save();
     },
-    save () {
+    async save () {
       if (!this.$refs['block'].innerHTML) {
         return;
       }
@@ -197,7 +193,7 @@ export default {
       this.content = this.$refs['block'].innerHTML.replace('<line-separator></line-separator>', '');
 
       if (!this.config.advanced.customId) {
-        this.config.advanced.id = mainProcess.slug(this.content);
+        this.config.advanced.id = await mainProcessAPI.invoke('app-main-process-create-slug', this.content);
       }
 
       this.$bus.$emit('block-editor-save-block', {
