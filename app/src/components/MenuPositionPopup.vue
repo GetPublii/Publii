@@ -51,7 +51,9 @@
                                 properties="is-small"
                                 :class="{ 'is-invalid': configuration[position].invalid }" />
                             
-                            <small class="menu-position-item-max-levels-desc">
+                            <small 
+                                v-if="(configuration[position].maxLevels).toString() !== (menu.maxLevels).toString()"
+                                class="menu-position-item-max-levels-desc">
                                 {{ $t('menuPositionPopup.themeDefaultValue') }} {{ menu.maxLevels }}
                             </small>
                         </div>
