@@ -132,14 +132,14 @@
                               class="bio__avatar" 
                               alt="{{avatarImage.alt}}">                          
                         {{/if}}
-                        <div class="bio__info">
+                        <div>
                            <h3 class="bio__name">
                               <a href="{{url}}" rel="author">{{name}}</a>
                            </h3>
-
                            {{#if description}}
-                              <p>{{description}}
-                              </p>
+                              <div  class="bio__desc">
+                                 {{{description}}}
+                              </div>
                            {{/if}}
                         </div>
                      {{/author}}

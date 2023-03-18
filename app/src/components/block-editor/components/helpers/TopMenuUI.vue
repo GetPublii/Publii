@@ -13,7 +13,7 @@
         class="wrapper-ui-top-menu-conversion has-tooltip"
         @click="makeConversion(conversion.type, conversion.convert); resetDeleteConfirmation();">
         <icon :name="conversion.icon" />
-        <span class="ui-top-menu-tooltip">
+        <span class="ui-tooltip">
           {{ $t(conversion.name) }}
         </span>
       </span>
@@ -29,7 +29,7 @@
             tabindex="-1"
             @click="uiElement.onClick.bind($parent)(); resetDeleteConfirmation();">
             <icon :name="uiElement.icon" />
-            <span class="ui-top-menu-tooltip has-bigger-space">
+            <span class="ui-tooltip has-bigger-space">
               {{ uiElement.tooltip }}
             </span>
           </button>
@@ -53,7 +53,7 @@
         tabindex="-1"
         @click.stop="showAdvancedConfig(); resetDeleteConfirmation();">
         <icon name="gear" />
-        <span class="ui-top-menu-tooltip has-bigger-space">
+        <span class="ui-tooltip has-bigger-space">
           {{ $t('settings.advancedOptions') }}
         </span>
       </button>
@@ -63,7 +63,7 @@
         tabindex="-1"
         @click.stop="deleteBlock">
         <icon name="trash" />
-        <span class="ui-top-menu-tooltip has-bigger-space">
+        <span class="ui-tooltip has-bigger-space">
           {{ $t('editor.deleteBlock') }}
         </span>
       </button>
@@ -73,7 +73,7 @@
         tabindex="-1"
         @click.stop="deleteBlock">
         <icon name="open-trash" />
-        <span class="ui-top-menu-tooltip has-bigger-space">
+        <span class="ui-tooltip has-bigger-space">
           {{ $t('editor.clickToConfirm') }}
         </span>
       </button>
@@ -324,6 +324,10 @@ export default {
       border-top: none;
       color: var(--text-primary-color);
       margin-top: -1px;
+
+      & > ul {
+        padding: 0 !important;
+      }
     }
 
     &__option {
@@ -380,7 +384,7 @@ export default {
   }
 }
 
-.ui-top-menu-tooltip {
+.ui-tooltip {
   background: var(--input-bg-light);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
@@ -428,7 +432,7 @@ export default {
   position: relative;
 
   &:hover {
-    .ui-top-menu-tooltip {
+    .ui-tooltip {
       opacity: 1;
       transform: scale(1) translateX(-50%);
     }

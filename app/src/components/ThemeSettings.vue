@@ -503,9 +503,9 @@ export default {
                 }
             });
 
+            tabs.push(this.$t('theme.authorOptions'));
             tabs.push(this.$t('theme.postOptions'));
             tabs.push(this.$t('theme.tagOptions'));
-            tabs.push(this.$t('theme.authorOptions'));
             tabs.push(this.$t('theme.translations'));
 
             return tabs;

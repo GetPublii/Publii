@@ -317,7 +317,8 @@ export default {
             }
 
             &-error {
-                bottom: -1.75rem;
+                background-color: var(--popup-bg);
+                bottom: -2rem;
                 color: var(--warning);
                 margin-left: 41px;
                 position: absolute;
