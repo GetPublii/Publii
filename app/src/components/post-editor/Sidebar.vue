@@ -909,21 +909,6 @@ export default {
             }
         }
 
-        .note {
-            clear: both;
-            color: var(--text-light-color);
-            display: block;
-            font-style: italic;
-            font-weight: var(--font-weight-normal);
-            line-height: 1.4;
-            padding-top: .5rem;
-
-            &.is-warning {
-                color: var(--warning);
-                opacity: 1;
-            }
-        }
-
         .switcher-item-icon-helper {
             margin: 0 .5rem;
             position: relative;
