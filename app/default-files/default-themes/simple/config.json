@@ -2042,6 +2042,7 @@
         {
             "name": "displayPostList",
             "label": "Display post list",
+            "note": "Disabling the post list can cause duplicate content issues. To avoid this, please disable authors pagination in the SEO section of your site settings.",
             "value": 1,
             "type": "select",
             "options": [
@@ -2108,6 +2109,7 @@
         {
             "name": "displayPostList",
             "label": "Display post list",
+            "note": "Disabling the post list can cause duplicate content issues. To avoid this, please disable tag pagination in the SEO section of your site settings.",
             "value": 1,
             "type": "select",
             "options": [
