@@ -707,15 +707,19 @@ export default {
             }, 50);
         },
         displayField (field) {
+            if (!this.dataSet) {
+                return false;
+            }
+
             if (!field.authorTemplates) {
                 return true;
             }
 
             if (field.authorTemplates.indexOf('!') === 0) {
-                return !(field.authorTemplates.replace('!', '').split(',').indexOf(this.authorData.additionalData.template) > -1);
+                return !(field.authorTemplates.replace('!', '').split(',').indexOf(this.authorData.template) > -1);
             }
 
-            return field.authorTemplates.split(',').indexOf(this.authorData.additionalData.template) > -1;
+            return field.authorTemplates.split(',').indexOf(this.authorData.template) > -1;
         },
         generateItems (arrayToConvert) {
             let options = {};
