@@ -284,6 +284,10 @@ export default {
     position: relative;
     text-align: center;
     top: 1px;
+
+    .button.button-disabled {
+       border-top: 1px solid var(--input-border-color);
+    }
 }
 
 .menu-position-items {

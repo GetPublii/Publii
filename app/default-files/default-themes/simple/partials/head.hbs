@@ -85,7 +85,14 @@
                </style>	
             {{/is}}	
           {{/checkIf}}
-        {{/checkIf}} 		
+        {{/checkIf}} 	
+        <noscript>
+            <style>
+                img[loading] {
+                    opacity: 1;
+                }
+            </style>
+        </noscript>	
         {{{@headCustomCode}}}
     </head>
     <body>
