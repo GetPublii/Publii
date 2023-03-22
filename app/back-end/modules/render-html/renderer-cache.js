@@ -160,7 +160,7 @@ class RendererCache {
                 name,
                 username,
                 config,
-                additional_data
+                additional_data AS additionalData
             FROM
                 authors;
         `).all();
@@ -172,7 +172,7 @@ class RendererCache {
         
         authors = authors.map(author => {
             let authorViewConfig = this.getViewSettings(authorViewConfigObject, author);
-            let newAuthor = new Author(author, this.renderer)
+            let newAuthor = new Author(author, this.renderer);
             newAuthor.setAuthorViewConfig(authorViewConfig);
             return newAuthor;
         });

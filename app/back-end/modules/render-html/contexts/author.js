@@ -99,6 +99,7 @@ class RendererContextAuthor extends RendererContext {
         this.canonicalUrl = '';
 
         let metaData = this.author.config;
+        let additionalData = this.author.additionalData;
 
         if (metaData && metaData.metaTitle) {
             this.metaTitle = metaData.metaTitle.replace(/%authorname/g, this.author.name)
@@ -118,12 +119,12 @@ class RendererContextAuthor extends RendererContext {
             this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
 
-        if (metaData && metaData.metaRobots) {
-            this.metaRobots = metaData.metaRobots;
+        if (additionalData && additionalData.metaRobots) {
+            this.metaRobots = additionalData.metaRobots;
         }
 
-        if (metaData && metaData.canonicalUrl) {
-            this.canonicalUrl = metaData.canonicalUrl;
+        if (additionalData && additionalData.canonicalUrl) {
+            this.canonicalUrl = additionalData.canonicalUrl;
             this.hasCustomCanonicalUrl = true;
             this.metaRobots = '';
         }
@@ -134,12 +135,15 @@ class RendererContextAuthor extends RendererContext {
         this.prepareData();
 
         let metaRobotsValue = this.siteConfig.advanced.metaRobotsAuthors;
+        console.log('[AuthContext] ', metaRobotsValue);
 
         if (this.metaRobots !== false) {
             metaRobotsValue = this.metaRobots;
+            console.log('[AuthContext - OWN] ', metaRobotsValue);
         }
 
         if (this.siteConfig.advanced.noIndexThisPage) {
+            console.log('[AuthContext - NOINDEX] ', metaRobotsValue);
             metaRobotsValue = 'noindex,nofollow';
         }
 

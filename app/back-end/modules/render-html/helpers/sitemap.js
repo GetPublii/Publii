@@ -169,14 +169,14 @@ class Sitemap {
 
             // Detect author pages
             if (file === this.siteConfig.advanced.urls.authorsPrefix) {
-                this.getAuthorsFilesList();
+                await this.getAuthorsFilesList();
                 continue;
             }
 
             // Detect homepage pagination
             if (file === this.siteConfig.advanced.urls.pageName) {
                 if (!this.siteConfig.advanced.homepageNoIndexPagination) {
-                    this.getHomepagePaginationFilesList();
+                    await this.getHomepagePaginationFilesList();
                 }
 
                 continue;
@@ -184,13 +184,13 @@ class Sitemap {
 
             // Detect tag pages - when tags prefix is empty
             if (file.indexOf('.') === -1 && this.siteConfig.advanced.urls.tagsPrefix === '') {
-                this.getTagsFilesList(file);
+                await this.getTagsFilesList(file);
                 continue;
             }
 
             // Detect tag pages - when tags prefix is not empty
             if (this.siteConfig.advanced.urls.tagsPrefix !== '' && file === this.siteConfig.advanced.urls.tagsPrefix) {
-                this.getTagsFilesList(file, this.siteConfig.advanced.urls.tagsPrefix);
+                await this.getTagsFilesList(file, this.siteConfig.advanced.urls.tagsPrefix);
                 continue;
             }
 
@@ -241,8 +241,7 @@ class Sitemap {
      * @returns {boolean}
      */
     shouldIndexAuthors () {
-        return  this.siteConfig.advanced.sitemapAddAuthors &&
-                this.siteConfig.advanced.metaRobotsAuthors.indexOf('noindex') === -1;
+        return this.siteConfig.advanced.sitemapAddAuthors;
     }
 
     /**
@@ -251,8 +250,7 @@ class Sitemap {
      * @returns {boolean}
      */
     shouldIndexHomepage () {
-        return  this.siteConfig.advanced.sitemapAddHomepage &&
-                this.siteConfig.advanced.metaRobotsIndex.indexOf('noindex') === -1;
+        return this.siteConfig.advanced.sitemapAddHomepage;
     }
 
     /**
@@ -261,14 +259,15 @@ class Sitemap {
      * @returns {boolean}
      */
     shouldIndexTags () {
-        return  this.siteConfig.advanced.sitemapAddTags &&
-                this.siteConfig.advanced.metaRobotsTags.indexOf('noindex') === -1;
+        return this.siteConfig.advanced.sitemapAddTags;
     }
 
     /**
      * Retrieves list of author pages to index
      */
-    getAuthorsFilesList () {
+    async getAuthorsFilesList () {
+        const readFile = util.promisify(fs.readFile);
+
         if (!this.shouldIndexAuthors()) {
             return;
         }
@@ -281,31 +280,35 @@ class Sitemap {
                 continue;
             }
 
-            this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
+            let authorFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.authorsPrefix, file, 'index.html'), 'utf8');
+            
+            if (authorFileContent.indexOf('name="robots" content="noindex') === -1) {
+                this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
 
-            if (this.siteConfig.advanced.authorNoIndexPagination || this.siteConfig.advanced.authorNoPagination) {
-                continue;
-            }
+                if (this.siteConfig.advanced.authorNoIndexPagination || this.siteConfig.advanced.authorNoPagination) {
+                    continue;
+                }
 
-            let paginationPath = path.join(
-                this.baseDirectory,
-                this.siteConfig.advanced.urls.authorsPrefix,
-                file,
-                this.siteConfig.advanced.urls.pageName
-            );
+                let paginationPath = path.join(
+                    this.baseDirectory,
+                    this.siteConfig.advanced.urls.authorsPrefix,
+                    file,
+                    this.siteConfig.advanced.urls.pageName
+                );
 
-            if (fs.existsSync(paginationPath)) {
-                let authorFiles = fs.readdirSync(paginationPath);
+                if (fs.existsSync(paginationPath)) {
+                    let authorFiles = fs.readdirSync(paginationPath);
 
-                for (let authorFile of authorFiles) {
-                    // Skip files
-                    if (authorFile.indexOf('.') > -1) {
-                        continue;
+                    for (let authorFile of authorFiles) {
+                        // Skip files
+                        if (authorFile.indexOf('.') > -1) {
+                            continue;
+                        }
+
+                        // Add all pages of pagination
+                        let pageName = this.siteConfig.advanced.urls.pageName;
+                        this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
                     }
-
-                    // Add all pages of pagination
-                    let pageName = this.siteConfig.advanced.urls.pageName;
-                    this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
                 }
             }
         }
@@ -317,37 +320,44 @@ class Sitemap {
      * @param tagName
      * @param prefix
      */
-    getTagsFilesList (tagName, prefix = '') {
+    async getTagsFilesList (tagName, prefix = '') {
+        const readFile = util.promisify(fs.readFile);
+
         if (!this.shouldIndexTags()) {
-            return;
+            return Promise.resolve();
         }
 
         if (prefix === '') {
-            // Add main file to the list
-            this.fileList.push(tagName + '/index.html');
+            let tagFileContent = await readFile(path.join(this.baseDirectory, tagName, 'index.html'), 'utf8');
 
-            if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
-                return;
-            }
+            // Detect if noindex does not exist in the post file
+            if (tagFileContent.indexOf('name="robots" content="noindex') === -1) {
+                // Add main file to the list
+                this.fileList.push(tagName + '/index.html');
 
-            let paginationPath = path.join(this.baseDirectory, tagName, this.siteConfig.advanced.urls.pageName);
+                if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
+                    return Promise.resolve();
+                }
 
-            if (fs.existsSync(paginationPath)) {
-                let files = fs.readdirSync(paginationPath);
+                let paginationPath = path.join(this.baseDirectory, tagName, this.siteConfig.advanced.urls.pageName);
 
-                for (let file of files) {
-                    // Skip files
-                    if (file.indexOf('.') > -1) {
-                        continue;
+                if (fs.existsSync(paginationPath)) {
+                    let files = fs.readdirSync(paginationPath);
+
+                    for (let file of files) {
+                        // Skip files
+                        if (file.indexOf('.') > -1) {
+                            continue;
+                        }
+
+                        // Add all pages of pagination
+                        let pageName = this.siteConfig.advanced.urls.pageName;
+                        this.fileList.push(tagName + '/' + pageName + '/' + file + '/index.html');
                     }
-
-                    // Add all pages of pagination
-                    let pageName = this.siteConfig.advanced.urls.pageName;
-                    this.fileList.push(tagName + '/' + pageName + '/' + file + '/index.html');
                 }
             }
 
-            return;
+            return Promise.resolve();
         }
 
         let files = fs.readdirSync(path.join(this.baseDirectory, this.siteConfig.advanced.urls.tagsPrefix));
@@ -358,31 +368,36 @@ class Sitemap {
                 continue;
             }
 
-            this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/index.html');
+            let tagFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.tagsPrefix, file, 'index.html'), 'utf8');
 
-            if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
-                continue;
-            }
+            // Detect if noindex does not exist in the post file
+            if (tagFileContent.indexOf('name="robots" content="noindex') === -1) {
+                this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/index.html');
 
-            let paginationPath = path.join(
-                this.baseDirectory,
-                this.siteConfig.advanced.urls.tagsPrefix,
-                file,
-                this.siteConfig.advanced.urls.pageName
-            );
+                if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
+                    continue;
+                }
 
-            if (fs.existsSync(paginationPath)) {
-                let tagsFiles = fs.readdirSync(paginationPath);
+                let paginationPath = path.join(
+                    this.baseDirectory,
+                    this.siteConfig.advanced.urls.tagsPrefix,
+                    file,
+                    this.siteConfig.advanced.urls.pageName
+                );
 
-                for (let tagFile of tagsFiles) {
-                    // Skip files
-                    if (tagFile.indexOf('.') > -1) {
-                        continue;
+                if (fs.existsSync(paginationPath)) {
+                    let tagsFiles = fs.readdirSync(paginationPath);
+
+                    for (let tagFile of tagsFiles) {
+                        // Skip files
+                        if (tagFile.indexOf('.') > -1) {
+                            continue;
+                        }
+
+                        // Add all pages of pagination
+                        let pageName = this.siteConfig.advanced.urls.pageName;
+                        this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
                     }
-
-                    // Add all pages of pagination
-                    let pageName = this.siteConfig.advanced.urls.pageName;
-                    this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
                 }
             }
         }
@@ -391,7 +406,7 @@ class Sitemap {
     /**
      * Retrieves homepage files to index
      */
-    getHomepagePaginationFilesList () {
+    async getHomepagePaginationFilesList () {
         if (!this.shouldIndexHomepage()) {
             return;
         }
@@ -404,8 +419,13 @@ class Sitemap {
                 continue;
             }
 
-            let pageName = this.siteConfig.advanced.urls.pageName;
-            this.fileList.push(pageName + '/' + file + '/index.html');
+            const readFile = util.promisify(fs.readFile);
+            let homeFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.pageName, file, 'index.html'), 'utf8');
+
+            if (homeFileContent.indexOf('name="robots" content="noindex') === -1) {
+                let pageName = this.siteConfig.advanced.urls.pageName;
+                this.fileList.push(pageName + '/' + file + '/index.html');
+            }
         }
     }
 
