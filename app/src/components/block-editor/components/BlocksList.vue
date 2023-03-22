@@ -18,42 +18,72 @@
       {{ $t('editor.hideBulkEdit') }}
     </button>
     
-
-    <ol class="blocks-list-items">
+    <draggable
+      tag="ol"
+      group="block-editor-items"
+      chosenClass="is-chosen"
+      ghostClass="is-ghost"
+      :class="{ 'blocks-list-items': true }"
+      v-model="preparedContent"
+      v-bind="{
+          animation: 0,
+          forceFallback: true
+      }">
       <li 
         v-for="(item, index) of preparedContent"
         :class="{
           'blocks-list-item': true, 
           'is-active': activeItem === item.id
         }"
-        :key="'blocks-list-item-' + item.id"
+        :key="'blocks-list-item-' + item.id + '-' + index"
         @click.stop="activateItem(item.id)">
         <div>
-          <span class="blocks-list-item-icon"><icon :name="item.icon" /></span>
+          <span class="blocks-list-item-icon">
+            <icon :name="item.icon" />
+          </span>
           <span>{{ item.label }}</span>
 
           <button
-            class="blocks-list-item-bulk-duplicate"
+            :class="{ 
+              'blocks-list-item-bulk-duplicate': true, 
+              'is-disabled': item.icon === 'readmore'
+            }"
             tabindex="-1"
-            :disabled="item.type === 'publii-readmore'"
+            :disabled="item.icon === 'readmore'"
             @click.stop="duplicateBlock(item.id)">
-            <icon name="duplicate" customWidth="16" customHeight="16"/>
+            <icon   
+              name="duplicate" 
+              customWidth="16" 
+              customHeight="16"/>
           </button>
 
           <button
-            class="blocks-list-item-bulk-delete"
+            :class="{ 
+              'blocks-list-item-bulk-delete': true,
+              'is-active': confirmDelete === item.id,
+              'has-tooltip': confirmDelete === item.id
+            }"
             tabindex="-1"
             @click.stop="deleteBlock(item.id)">
-            <icon name="trash" customWidth="16" customHeight="16"/>
+            <icon 
+              :name="confirmDelete === item.id ? 'open-trash' : 'trash'" 
+              customWidth="16" 
+              customHeight="16"/>
+            <span 
+              v-if="confirmDelete === item.id"
+              class="ui-tooltip has-bigger-space">
+              {{ $t('editor.clickToConfirm') }}
+            </span>
           </button>
         </div>
       </li>
-    </ol>
+    </draggable>
   </aside>
 </template>
 
 <script>
 import AvailableBlocks from '../available-blocks.json';
+import Draggable from 'vuedraggable';
 import Icon from '../components/elements/EditorIcon.vue';
 
 export default {
@@ -62,6 +92,7 @@ export default {
     'content'
   ],
   components: {
+    'draggable': Draggable,
     'icon': Icon
   },
   computed: {
@@ -79,19 +110,29 @@ export default {
 
       return blocks;
     },
-    preparedContent () {
-      return this.content.map(item => ({
-        id: item.id,
-        label: this.availableBlocks[item.type].label,
-        icon: this.availableBlocks[item.type].icon
-      }));
+    preparedContent: {
+      get () {
+        return this.content.map(item => ({
+          id: item.id,
+          icon: this.availableBlocks[item.type].icon,
+          label: this.availableBlocks[item.type].label
+        }));
+      },
+      set (newValue) {
+        let reorderedIDs = newValue.map(item => item.id);
+        this.$bus.$emit('block-editor-items-reorder', reorderedIDs);
+      }
     }
   },
   data () {
     return {
       activeItem: false,
+      confirmDelete: false,
       isOpened: false
     };
+  },
+  mounted () {
+    this.$bus.$on('block-editor-block-selected', this.activateItemWithoutEffect);
   },
   methods: {
     openList () {
@@ -114,8 +155,12 @@ export default {
         });
       }, 0);
     },
+    activateItemWithoutEffect (id) {
+      this.activeItem = id;
+    },
     deactivateItem () {
       this.activeItem = false;
+      this.confirmDelete = false;
       this.$bus.$emit('block-editor-list-deactivate-item');
     },
     /*
@@ -133,7 +178,13 @@ export default {
     },
     */
     deleteBlock (id) {
+      if (this.confirmDelete !== id) {
+        this.confirmDelete = id;
+        return;
+      }
+
       this.$bus.$emit('block-editor-delete-block', id);
+      this.confirmDelete = false;
 
       if (this.activeItem === id) {
         this.deactivateItem();
@@ -142,6 +193,9 @@ export default {
     duplicateBlock (id) {
       this.$bus.$emit('block-editor-duplicate-block', id);
     }
+  },
+  beforeDestroy () {
+    this.$bus.$off('block-editor-block-selected', this.activateItemWithoutEffect);
   }
 }
 </script>
@@ -303,6 +357,11 @@ export default {
         transform: scale(.9);
         transition: var(--transition);
         vertical-align: middle;
+      }
+
+      &.is-disabled {
+        opacity: .25;
+        pointer-events: none;
       }
     }
     &-bulk-delete {

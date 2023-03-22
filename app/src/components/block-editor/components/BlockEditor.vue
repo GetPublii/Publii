@@ -165,6 +165,7 @@ export default {
     this.$bus.$on('undomanager-save-history', this.saveChangesHistory);
     this.$bus.$on('block-editor-ui-selector-opened', this.setUISelectorID);
     this.$bus.$on('block-editor-set-selected-block', this.setSelectedBlock);
+    this.$bus.$on('block-editor-items-reorder', this.reorderBlocks);
 
     setTimeout(() => {
       this.internal.editorIsLoaded = true;
@@ -405,16 +406,29 @@ export default {
       this.extensions.undoManager.saveHistory(blockID, content);
     },
     setUISelectorID (id) {
-        this.uiSelectorID = id;
+      this.uiSelectorID = id;
     },
     setSelectedBlock (id) {
-        if (this.state.selectedBlockID !== false && this.state.selectedBlockID !== id) {
-            this.$bus.$emit('block-editor-deselect-block', this.state.selectedBlockID);
-        }
+      if (this.state.selectedBlockID !== false && this.state.selectedBlockID !== id) {
+        this.$bus.$emit('block-editor-deselect-block', this.state.selectedBlockID);
+      }
 
-        setTimeout(() => {
-            this.state.selectedBlockID = id;
-        }, 0);
+      setTimeout(() => {
+        this.state.selectedBlockID = id;
+      }, 0);
+    },
+    reorderBlocks (newOrdering) {
+      let newContentOrder = [];
+
+      for (let id of newOrdering) {
+        let block = this.content.find(block => block.id === id);
+
+        if (block) {
+          newContentOrder.push(block);
+        }
+      }
+
+      Vue.set(this, 'content', newContentOrder);
     }
   },
   beforeDestroy () {
@@ -434,6 +448,7 @@ export default {
     this.$bus.$off('publii-block-editor-update-current-block-id', this.updateCurrentBlockID);
     this.$bus.$off('undomanager-save-history', this.saveChangesHistory);
     this.$bus.$off('block-editor-set-selected-block', this.setSelectedBlock);
+    this.$bus.$off('block-editor-items-reorder', this.reorderBlocks);
   }
 }
 </script>

@@ -337,6 +337,10 @@ export default {
     activateItem (id) {
       if (id === this.id) {
         this.isActivated = true;
+
+        setTimeout(() => {
+            this.isActivated = false;
+        }, 500);
       }
     },
     deactivateItem () {
@@ -366,7 +370,7 @@ export default {
   opacity: 0.33;
   padding: 0 68px;
   position: relative;
-  transition: width 0.25s ease-out, opacity 0.35s ease-out;
+  transition: width .25s ease-out, opacity .35s ease-out, background .25s ease-out;
   width: var(--editor-width);
   z-index: 1;
 
