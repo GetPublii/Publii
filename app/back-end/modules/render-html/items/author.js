@@ -33,7 +33,7 @@ class AuthorItem {
     prepareData() {
         let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex ? 'index.html' : '';
         let authorConfig = this.author.config ? JSON.parse(this.author.config) : {};
-        let additionalData = this.author.additionalData ? JSON.parse(this.author.additionalData) : {};
+        let additionalData = this.author.additional_data ? JSON.parse(this.author.additional_data) : {};
 
         this.authorData = {
             id: this.authorID,

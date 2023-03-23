@@ -160,7 +160,7 @@ class RendererCache {
                 name,
                 username,
                 config,
-                additional_data AS additionalData
+                additional_data
             FROM
                 authors;
         `).all();

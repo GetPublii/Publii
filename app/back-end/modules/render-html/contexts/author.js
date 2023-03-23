@@ -135,15 +135,12 @@ class RendererContextAuthor extends RendererContext {
         this.prepareData();
 
         let metaRobotsValue = this.siteConfig.advanced.metaRobotsAuthors;
-        console.log('[AuthContext] ', metaRobotsValue);
-
+        
         if (this.metaRobots !== false) {
             metaRobotsValue = this.metaRobots;
-            console.log('[AuthContext - OWN] ', metaRobotsValue);
         }
 
         if (this.siteConfig.advanced.noIndexThisPage) {
-            console.log('[AuthContext - NOINDEX] ', metaRobotsValue);
             metaRobotsValue = 'noindex,nofollow';
         }
 
