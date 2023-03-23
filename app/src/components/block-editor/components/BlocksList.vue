@@ -346,7 +346,7 @@ export default {
       border-radius: 50%;
       cursor: pointer;
       display: inline-block;
-      height: 2.3rem;
+      height: 2.8rem;
       padding: 0;
       text-align: center;
       transition: all .3s ease-out;
