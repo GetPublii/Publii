@@ -282,16 +282,30 @@ export default {
     cursor: pointer;
     font-size: 14px;
     font-weight: var(--font-weight-semibold);
-    margin: 6px 0;
-    padding: 0;
+    margin: 0;
+    padding: 3px 0;
 
     &.is-active {
-      box-shadow: 0 0 0 1px var(--color-primary);
       position: relative;
       z-index: 1;
 
       & > div {
         background-color: var(--button-secondary-bg);
+        box-shadow: 0 0 0 1px var(--color-primary);
+      }
+    }
+
+    &.is-ghost {
+      cursor: move;
+     
+      & > div {
+        background-color: transparent !important;
+        border: 1px dashed var(--input-border-focus);  
+        box-shadow: none; 
+        
+        * {
+          opacity: 0;
+        }
       }
     }
 
@@ -327,16 +341,16 @@ export default {
 
     &-bulk-delete, 
     &-bulk-duplicate {
-      background: var(--bg-primary);
+      background: transparent;
       border: none;
       border-radius: 50%;
       cursor: pointer;
       display: inline-block;
-      height: 2.8rem;
+      height: 2.3rem;
       padding: 0;
       text-align: center;
       transition: all .3s ease-out;
-      width: 2.8rem;
+      width: 2.3rem;
 
       &:active,
       &:focus,
@@ -365,10 +379,16 @@ export default {
       }
     }
     &-bulk-delete {
-      margin-left: 3px;
       &:hover {
         & > svg {
           color: var(--warning);
+        }
+      }
+      &.has-tooltip:hover .ui-tooltip { 
+        transform: scale(1) translateX(-72%); 
+
+        &::after {
+          left: 68%;
         }
       }
     }

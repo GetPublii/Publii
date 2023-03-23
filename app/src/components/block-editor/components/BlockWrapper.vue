@@ -340,7 +340,7 @@ export default {
 
         setTimeout(() => {
             this.isActivated = false;
-        }, 500);
+        }, 1200);
       }
     },
     deactivateItem () {

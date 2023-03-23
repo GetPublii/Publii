@@ -418,13 +418,13 @@ export default {
     border-top-color: transparent;
     content: "";
     filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, .08));
-    height: 12px;
+    height: 14px;
     left: 50%;
     position: absolute;
-    top: -12px;
+    top: -10px;
     transform: scale(.5) translateX(-50%);
     transform-origin: center center;
-    width: 12px;
+    width: 14px;
   }
 }
 
