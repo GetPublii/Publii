@@ -88,9 +88,10 @@ export default {
       return this.content.filter(block => block.type === 'publii-readmore').length > 0;
     },
     simplifiedContent () {
-      return this.content.map(block => ({ 
+      return this.content.map((block, index) => ({ 
         id: block.id, 
-        type: block.type 
+        type: block.type,
+        isFirstAndEmpty: index === 0 && !block.content
       }));
     }
   },

@@ -61,9 +61,11 @@
             :class="{ 
               'blocks-list-item-bulk-delete': true,
               'is-active': confirmDelete === item.id,
-              'has-tooltip': confirmDelete === item.id
+              'has-tooltip': confirmDelete === item.id,
+              'is-disabled': index === 0 && firstBlockDeleteIsDisabled
             }"
             tabindex="-1"
+            :disabled="index === 0 && firstBlockDeleteIsDisabled"
             @click.stop="deleteBlock(item.id)">
             <icon 
               :name="confirmDelete === item.id ? 'open-trash' : 'trash'" 
@@ -109,6 +111,19 @@ export default {
       }
 
       return blocks;
+    },
+    firstBlockDeleteIsDisabled () {
+        if (
+            this.content && 
+            this.content[0] && 
+            this.content[0].type === 'publii-paragraph' && 
+            this.content[0].isFirstAndEmpty && 
+            this.content.length === 1
+        ) {
+            return true;
+        }
+
+        return false;
     },
     preparedContent: {
       get () {
