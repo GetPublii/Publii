@@ -43,7 +43,7 @@
     "gulp": "4.0.2",
     "gulp-dart-sass": "1.0.2",
     "mocha": "8.1.0",
-    "node-abi": "3.28.0",
+    "node-abi": "3.33.0",
     "node-loader": "1.0.1",
     "node-sass": "npm:sass@1.43.4",
     "sass-loader": "10.2.0",
