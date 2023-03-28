@@ -43,7 +43,7 @@
     "fast-xml-parser": "4.0.10",
     "fs-extra": "10.1.0",
     "ftp": "0.3.10",
-    "github": "9.2.0",
+    "github": "14.0.0",
     "handlebars": "4.7.7",
     "html-minifier": "4.0.0",
     "image-downloader": "4.3.0",
