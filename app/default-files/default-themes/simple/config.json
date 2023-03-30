@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.6.0.0",
+    "version": "2.6.1.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -141,107 +141,92 @@
             "name": "separator",
             "type": "separator",
             "label": "",
-            "group": "Layout",
-            "size": "small",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "group": "Post list",
+            "note": "The Post list section offers a range of options for managing the post list displayed on the front page, tag and author pages. In this area, you can easily enable or disable elements such as avatars, dates, or other elements.",
+            "size": ""
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Front page",
+            "group": "Post list",
+            "size": "small"
         },
         {
             "name": "frontFeaturedImage",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Featured image",
             "value": false,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "type": "checkbox"
         },
         {
             "name": "frontAuthor",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author name",
             "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "type": "checkbox"
         },
         {
             "name": "frontAvatar",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author avatar",
             "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "type": "checkbox"
         },
         {
             "name": "frontDate",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Date",
             "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "type": "checkbox"
         },
         {
             "name": "frontReadMore",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Read more button",
             "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "type": "checkbox"
         },
        
         {
             "name": "separator",
             "type": "separator",
             "label": "Tag Page",
-            "group": "Layout",
+            "group": "Post list",
             "size": "big"
         },
         {
             "name": "tagFeaturedImage",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "tagAuthor",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author name",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagAvatar",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author avatar",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagDate",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagReadMore",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Read more button",
             "value": true,
             "type": "checkbox"
@@ -271,40 +256,40 @@
             "name": "separator",
             "type": "separator",
             "label": "Author page",
-            "group": "Layout",
+            "group": "Post list",
             "size": "big"
         },
         {
             "name": "authorFeaturedImage",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAuthor",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author name",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAvatar",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Author avatar",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorDate",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "authorReadMore",
-            "group": "Layout",
+            "group": "Post list",
             "label": "Read more button",
             "value": true,
             "type": "checkbox"
