@@ -113,7 +113,7 @@
         },  
         {
             "name": "frontPost",
-            "label": "Posts",
+            "label": "Select a post",
             "group": "Layout",
             "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
             "value": "",
@@ -140,12 +140,116 @@
         {
             "name": "separator",
             "type": "separator",
+            "label": "Hero section",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "heightHero",
+            "label": "Height",
+            "group": "Layout",
+            "note": "This option enables the adjustment of the hero section's height. Use of VH units recommended; for full-screen set to 100vh",
+            "value": "80vh",
+            "type": "text"
+        },        
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "displayHeroImage",
+            "group": "Layout",
+            "label": "Image assignment",
+            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "uploadHero",
+            "label": "Image",
+            "group": "Layout",
+            "value": "",
+            "type": "upload",
+            "upload": true
+        },
+        {
+            "name": "uploadHeroAlt",
+            "label": "Image Alt text",
+            "group": "Layout",
+            "placeholder": "Add an alternative text to the hero image",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "uploadHeroCaption",
+            "label": "Image Caption",
+            "group": "Layout",
+            "placeholder": "Add text caption to the hero image",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small"
+        },
+        {
+            "name": "textHero",
+            "label": "Text",
+            "group": "Layout",
+            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "siteOwner",
+            "group": "Layout",
+            "label": "Show site owner",
+            "note": "Display the avatar and the name of the website owner (Main author)",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Apperance",
+            "group": "Layout",           
+            "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
+            "size": "small"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Tags Page",
+            "group": "Layout",
+            "size": "big"
+        },
+        {
+            "name": "tagsPostCount",
+            "group": "Layout",
+            "label": "Show post count",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagsDescription",
+            "group": "Layout",
+            "label": "Show tags description",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
             "label": "",
             "group": "Post list",
-            "note": "The Post list section offers a range of options for managing the post list displayed on the front page, tag and author pages. In this area, you can easily enable or disable elements such as avatars, dates, or other elements.",
+            "note": "The Post list section offers a range of options for managing the post list displayed on the front page, tag and author pages. In this area, you can easily enable or disable elements such as avatar, date or other elements.",
             "size": ""
         },
-
         {
             "name": "separator",
             "type": "separator",
@@ -156,35 +260,35 @@
         {
             "name": "frontFeaturedImage",
             "group": "Post list",
-            "label": "Featured image",
+            "label": "Show featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "frontAuthor",
             "group": "Post list",
-            "label": "Author name",
+            "label": "Show author name",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "frontAvatar",
             "group": "Post list",
-            "label": "Author avatar",
+            "label": "Show author avatar",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "frontDate",
             "group": "Post list",
-            "label": "Date",
+            "label": "Show date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "frontReadMore",
             "group": "Post list",
-            "label": "Read more button",
+            "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
         },
@@ -199,56 +303,35 @@
         {
             "name": "tagFeaturedImage",
             "group": "Post list",
-            "label": "Featured image",
+            "label": "Show featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "tagAuthor",
             "group": "Post list",
-            "label": "Author name",
+            "label": "Show author name",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagAvatar",
             "group": "Post list",
-            "label": "Author avatar",
+            "label": "Show author avatar",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagDate",
             "group": "Post list",
-            "label": "Date",
+            "label": "Show date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagReadMore",
             "group": "Post list",
-            "label": "Read more button",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Tags Page",
-            "group": "Layout",
-            "size": "big"
-        },
-        {
-            "name": "tagsPostCount",
-            "group": "Layout",
-            "label": "Post count",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagsDescription",
-            "group": "Layout",
-            "label": "Tag description",
+            "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
         },
@@ -262,35 +345,35 @@
         {
             "name": "authorFeaturedImage",
             "group": "Post list",
-            "label": "Featured image",
+            "label": "Show featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAuthor",
             "group": "Post list",
-            "label": "Author name",
+            "label": "Show author name",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAvatar",
             "group": "Post list",
-            "label": "Author avatar",
+            "label": "Show author avatar",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorDate",
             "group": "Post list",
-            "label": "Date",
+            "label": "Show date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "authorReadMore",
             "group": "Post list",
-            "label": "Read more button",
+            "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
         },  
@@ -387,86 +470,6 @@
             "group": "Navbar",
             "value": true,
             "type": "checkbox"
-        },
-        
-        {
-            "name": "heightHero",
-            "label": "Height",
-            "group": "Hero Section",
-            "note": "Use of VH units recommended; for full-screen set to 100vh",
-            "value": "80vh",
-            "type": "text"
-        },        
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero Section",
-            "size": "small"
-        },
-        {
-            "name": "displayHeroImage",
-            "group": "Hero Section",
-            "label": "Image assignment",
-            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
-            "value": false,
-            "type": "checkbox"
-        },
-
-        {
-            "name": "uploadHero",
-            "label": "Image",
-            "group": "Hero Section",
-            "value": "",
-            "type": "upload",
-            "upload": true
-        },
-        {
-            "name": "uploadHeroAlt",
-            "label": "Image Alt text",
-            "group": "Hero Section",
-            "placeholder": "Add an alternative text to the hero image",
-            "value": "",
-            "type": "text"
-        },
-        {
-            "name": "uploadHeroCaption",
-            "label": "Image Caption",
-            "group": "Hero Section",
-            "placeholder": "Add text caption to the hero image",
-            "value": "",
-            "type": "text"
-        },
-
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero Section",
-            "size": "small"
-        },
-        {
-            "name": "textHero",
-            "label": "Text",
-            "group": "Hero Section",
-            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
-            "type": "wysiwyg"
-        },
-        {
-            "name": "siteOwner",
-            "group": "Hero Section",
-            "label": "Site owner",
-            "note": "Displays the avatar and the name of the website owner (Main author)",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Apperance",
-            "group": "Hero Section",           
-            "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
-            "size": "small"
         },
         
         {
@@ -1504,7 +1507,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Gallery",
             "size": "small"
          },
@@ -1540,7 +1543,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Gallery",
             "size": "small"
          },
@@ -1741,7 +1744,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Additional",
             "size": "small"
          },       
@@ -1765,7 +1768,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Additional",
             "size": "small"
          },
