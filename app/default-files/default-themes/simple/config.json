@@ -148,7 +148,7 @@
             "name": "heightHero",
             "label": "Height",
             "group": "Layout",
-            "note": "This option enables the adjustment of the hero section's height. Use of VH units recommended; for full-screen set to 100vh",
+            "note": "This option allows you to modify the height of the hero section. Use of VH units recommended; for full-screen set to 100vh",
             "value": "80vh",
             "type": "text"
         },        
@@ -675,7 +675,7 @@
             "type": "separator",
             "label": "Main font settings",
             "group": "Fonts",
-            "note": "To see a list of all available fonts, and learn about their specifications, such as typeface and the full range of weights, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
+            "note": "To explore an extensive list of available fonts, along with detailed information about their typefaces, complete range of weights, and other specifications, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
             "size": "small"
         },    
         {
