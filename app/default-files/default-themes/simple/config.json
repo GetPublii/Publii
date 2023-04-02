@@ -157,7 +157,7 @@
             "type": "separator",
             "label": "",
             "group": "Layout",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "displayHeroImage",
@@ -196,7 +196,7 @@
             "type": "separator",
             "label": "",
             "group": "Layout",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "textHero",
@@ -216,10 +216,10 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "Apperance",
+            "label": "",
             "group": "Layout",           
             "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "separator",
@@ -1204,7 +1204,7 @@
             "type": "separator",
             "label": "",
             "group": "Fonts",
-            "size": "big"
+            "size": "big thin"
         },
         {
             "name": "minFontSize",
@@ -1245,7 +1245,7 @@
             "label": "",
             "group": "Fonts",
             "note": "Note that not all fonts support the full range of weights; instead, they will typically support a standard range between 400 and 700. To see the exact range available for the selected body font, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "fontBodyWeight",
@@ -1468,7 +1468,7 @@
             "type": "separator",
             "label": "",
             "group": "Footer",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "copyrightText",
@@ -1509,7 +1509,7 @@
             "type": "separator",
             "label": "",
             "group": "Gallery",
-            "size": "small"
+            "size": "small thin"
          },
         {
             "name": "galleryLightboxStyle",
@@ -1545,7 +1545,7 @@
             "type": "separator",
             "label": "",
             "group": "Gallery",
-            "size": "small"
+            "size": "small thin"
          },
         {
             "name": "galleryAdvanced",
