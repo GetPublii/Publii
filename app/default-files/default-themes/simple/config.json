@@ -81,7 +81,7 @@
         },
         {
             "name": "pageWidth",
-            "label": "Page width",
+            "label": "Post entry width",
             "group": "Layout",
             "note": "For full-screen width, set to 100%",
             "value": "42rem",
@@ -163,7 +163,7 @@
             "name": "displayHeroImage",
             "group": "Layout",
             "label": "Image assignment",
-            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
+            "note": "Display the hero image on all pages including front page, tags, authors, search, 404, also on the post pages when a featured image is unavailable; otherwise, it will be displayed on the front page only. ",
             "value": false,
             "type": "checkbox"
         },
@@ -218,13 +218,14 @@
             "type": "separator",
             "label": "",
             "group": "Layout",           
-            "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
-            "size": "small thin"
+            "note": "The appearance settings for the hero section can be found under the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
+            "size": "thin"
         },
         {
             "name": "separator",
             "type": "separator",
             "label": "Tags Page",
+            "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab." ,
             "group": "Layout",
             "size": "big"
         },
@@ -255,6 +256,7 @@
             "type": "separator",
             "label": "Front page",
             "group": "Post list",
+            "note": "The following options apply to the posts displayed on the front page.",
             "size": "small"
         },
         {
@@ -298,6 +300,7 @@
             "type": "separator",
             "label": "Tag Page",
             "group": "Post list",
+            "note": "The following options apply to the posts displayed on a single tag page.",
             "size": "big"
         },
         {
@@ -340,6 +343,7 @@
             "type": "separator",
             "label": "Author page",
             "group": "Post list",
+            "note": "The following options apply to the posts displayed on an author page.",
             "size": "big"
         },
         {
@@ -391,14 +395,15 @@
             "note": "Specify number of related posts to show. Zero '0' means no posts.",
             "value": "3",
             "type": "text"
-        },
+        },  
+
         {
             "name": "navbarHeight",
             "group": "Navbar",
             "label": "Navbar height",
             "value": "6rem",
             "type": "text"
-        },    
+        },  
         {
             "name": "separator",
             "type": "separator",
@@ -476,7 +481,7 @@
             "name": "colorScheme",
             "label": "Select color scheme",
             "group": "Colors",
-            "note": "<br />The auto color scheme means that it automatically adjusted to fit the user&#39;s operating system settings; if the OS does not support this feature, the light version is used.",
+            "note": "<br>The auto color scheme feature automatically adjusts the color scheme of the interface to match the user's operating system settings. If the operating system does not support this feature, the light version of the color scheme is used instead",
             "value": "auto",
             "type": "radio",
             "options": [
