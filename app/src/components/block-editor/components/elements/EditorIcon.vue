@@ -63,8 +63,8 @@ export default {
         case 'h5': return 20;
         case 'h6': return 20;
         case 'ordered-list': return 18;
-        case 'nesting': return 17;
-        case 'flattening': return 17;
+        case 'nesting': return 18;
+        case 'flattening': return 18;
         case 'long-line': return 18;
         case 'dotted-line': return 18;
         case 'dot': return 18;
@@ -126,8 +126,8 @@ export default {
         case 'h5': return 20;
         case 'h6': return 20;
         case 'ordered-list': return 18;
-        case 'nesting': return 12;
-        case 'flattening': return 12;
+        case 'nesting': return 18;
+        case 'flattening': return 18;
         case 'long-line': return 18;
         case 'dotted-line': return 18;
         case 'dot': return 18;
