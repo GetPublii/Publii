@@ -161,31 +161,40 @@ class SFTP {
 
         this.connection.put(
             normalizePath(path.join(self.deployment.inputDir, 'files.publii.json')),
-            normalizePath(path.join(self.deployment.outputDir, 'files.publii.json'))
-        ).then(function(result) {
-            console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
-            self.connection.end();
+            normalizePath(path.join(self.deployment.outputDir, 'files.publii.json')),
+        ).then(() => {
+            this.connection.chmod(normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')), 0o644).then(() => {
+                console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
+                this.connection.end();
 
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 100,
-                    operations: false
-                }
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-uploading-progress',
+                    value: {
+                        progress: 100,
+                        operations: false
+                    }
+                });
+
+                process.send({
+                    type: 'sender',
+                    message: 'app-deploy-uploaded',
+                    value: {
+                        status: true
+                    }
+                });
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
+            }).catch(err => {
+                this.connection.end();
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
             });
-
-            process.send({
-                type: 'sender',
-                message: 'app-deploy-uploaded',
-                value: {
-                    status: true
-                }
-            });
-
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
         }).catch(err => {
             this.connection.end();
             console.log(`[${ new Date().toUTCString() }] ${err}`);
@@ -197,64 +206,93 @@ class SFTP {
     }
 
     uploadFile(input, output) {
-        let self = this;
+        this.connection.put(input, output).then(() => {
+            this.connection.chmod(output, 0o644).then(() => {
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
+                this.deployment.progressOfUploading += this.deployment.progressPerFile;
 
-        this.connection.put(input, output).then(function (result) {
-            self.deployment.currentOperationNumber++;
-            console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
-            self.deployment.progressOfUploading += self.deployment.progressPerFile;
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-uploading-progress',
+                    value: {
+                        progress: 8 + Math.floor(this.deployment.progressOfUploading),
+                        operations: [
+                            this.deployment.currentOperationNumber, 
+                            this.deployment.operationsCounter
+                        ]
+                    }
+                });
 
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                }
+                this.deployment.uploadFile();
+            }).catch(err => {
+                console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(input)}`);
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
+                this.deployment.uploadFile();
             });
-
-            self.deployment.uploadFile();
         }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${normalizePath(input)}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
-            self.deployment.uploadFile();
+            this.deployment.uploadFile();
         });
     }
 
     uploadDirectory(input, output) {
-        let self = this;
+        this.connection.mkdir(output, true).then(() => {
+            this.connection.chmod(output, 0o755).then(() => {
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
+                this.deployment.progressOfUploading += this.deployment.progressPerFile;
 
-        this.connection.mkdir(output, true).then(function (result) {
-            self.deployment.currentOperationNumber++;
-            console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
-            self.deployment.progressOfUploading += self.deployment.progressPerFile;
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-uploading-progress',
+                    value: {
+                        progress: 8 + Math.floor(this.deployment.progressOfUploading),
+                        operations: [this.deployment.currentOperationNumber, this.deployment.operationsCounter]
+                    }
+                });
 
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                }
+                this.deployment.uploadFile();
+            }).catch(err => {
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
+                console.log(`[${ new Date().toUTCString() }] ${err}`);
+    
+                this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-uploading-progress',
+                    value: {
+                        progress: 8 + Math.floor(this.deployment.progressOfUploading),
+                        operations: [
+                            this.deployment.currentOperationNumber, 
+                            this.deployment.operationsCounter
+                        ]
+                    }
+                });
+    
+                this.deployment.uploadFile();
             });
-
-            self.deployment.uploadFile();
         }).catch(err => {
-            self.deployment.currentOperationNumber++;
+            this.deployment.currentOperationNumber++;
             console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
-            self.deployment.progressOfUploading += self.deployment.progressPerFile;
+            this.deployment.progressOfUploading += this.deployment.progressPerFile;
             process.send({
                 type: 'web-contents',
                 message: 'app-uploading-progress',
                 value: {
-                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
+                    progress: 8 + Math.floor(this.deployment.progressOfUploading),
+                    operations: [
+                        this.deployment.currentOperationNumber, 
+                        this.deployment.operationsCounter
+                    ]
                 }
             });
 
-            self.deployment.uploadFile();
+            this.deployment.uploadFile();
         });
     }
 
@@ -355,24 +393,34 @@ class SFTP {
             client.put(
                 testFilePath,
                 normalizePath(path.join(deploymentConfig.path, 'publii.test'))
-            ).then(result => { 
-                client.delete(
-                    normalizePath(path.join(deploymentConfig.path, 'publii.test'))
-                ).then(result => {
-                    app.mainWindow.webContents.send('app-deploy-test-success');
-                    
-                    if (fs.existsSync(testFilePath)) {
-                        fs.unlinkSync(testFilePath);
-                    }
-
-                    client.end().catch(err => console.log('SFTP session end error'));
+            ).then(() => { 
+                client.chmod(normalizePath(path.join(deploymentConfig.path, 'publii.test')), 0o644).then(() => {
+                    client.delete(
+                        normalizePath(path.join(deploymentConfig.path, 'publii.test'))
+                    ).then(() => {
+                        app.mainWindow.webContents.send('app-deploy-test-success');
+                        
+                        if (fs.existsSync(testFilePath)) {
+                            fs.unlinkSync(testFilePath);
+                        }
+    
+                        client.end().catch(err => console.log('SFTP session end error'));
+                    }).catch(() => {
+                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+                        
+                        if (fs.existsSync(testFilePath)) {
+                            fs.unlinkSync(testFilePath);
+                        }
+    
+                        client.end().catch(err => console.log('SFTP session end error'));
+                    });
                 }).catch(err => {
                     app.mainWindow.webContents.send('app-deploy-test-write-error');
-                    
+                   
                     if (fs.existsSync(testFilePath)) {
                         fs.unlinkSync(testFilePath);
                     }
-
+    
                     client.end().catch(err => console.log('SFTP session end error'));
                 });
             }).catch(err => {
