@@ -100,12 +100,13 @@
             <collection-row
                 v-for="(item, index) in filteredFiles"
                 slot="content"
-                :key="index">
+                :key="'collection-row-' + index">
                 <collection-cell>
                     <checkbox
                         :value="item.name"
                         :checked="isChecked(index)"
-                        :onClick="toggleSelection.bind(this, index)" />
+                        :onClick="toggleSelection.bind(this, index)"
+                        :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
                 <collection-cell

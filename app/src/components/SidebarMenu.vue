@@ -2,7 +2,7 @@
     <ul class="sidebar-menu">
         <li
             v-for="(item, index) in items"
-            :key="index"
+            :key="'sidebar-item-' + index"
             :class="{ 'sidebar-menu-item': true, 'is-active': item.icon === activeMenuItem }"
             @click="setActiveMenuItem(item.icon)">
             <router-link :to="item.url">

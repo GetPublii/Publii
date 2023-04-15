@@ -24,7 +24,7 @@
         <theme-item
             v-for="(theme, index) in themes"
             :themeData="theme"
-            :key="index" />
+            :key="'theme-item-' + index" />
 
         <overlay
             v-if="themeIsOver"
