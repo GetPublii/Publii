@@ -6,22 +6,10 @@ var generateOverride = function (params) {
     let output = '';
 
     if (params.minFontSize !== '1.1' || params.maxFontSize !== '1.2') {
-        output += `
-      
+        output += `  
         html {
-          font-size: ${params.minFontSize}rem;
-        }
-
-        @media screen and (min-width: 20rem) {
-          html {
-               font-size: calc(${params.minFontSize}rem + (${params.maxFontSize} - ${params.minFontSize}) * ((100vw - 20rem) / 50));
-            }
-        }
-
-        @media screen and (min-width: 70rem) {
-          html {
-               font-size: ${params.maxFontSize}rem;
-            }
+            font-size: ${params.minFontSize}rem;
+            font-size: clamp(${params.minFontSize}rem, ${params.minFontSize}rem + (${params.maxFontSize} - ${params.minFontSize}) * ((100vw - 20rem) / 100), ${params.maxFontSize}rem);
         }`;
     }
 
@@ -72,25 +60,6 @@ var generateOverride = function (params) {
                   background: linear-gradient(to ${params.heroOverlayGradientDirection}, transparent 0%, ${params.heroOverlayGradient} 100%);
            }`;
         }
-    }
-
-    if (params.galleryItemGap !== '0.28333rem') {
-        output += `
-        .gallery {
-               margin: calc(1.7rem + 1vw) -${params.galleryItemGap};
-        }
-        .gallery__item {
-               padding: ${params.galleryItemGap};
-        }
-        
-        .gallery__item a::after {
-               bottom: ${params.galleryItemGap};
-               height: calc(100% - ${params.galleryItemGap} * 2);              
-               left: ${params.galleryItemGap};
-               right: ${params.galleryItemGap};
-               top: ${params.galleryItemGap};
-               width: calc(100% - ${params.galleryItemGap} * 2);  
-        }`;
     }
     
     if(params.galleryZoom !== true) {

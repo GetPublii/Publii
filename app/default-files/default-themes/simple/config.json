@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.6.1.0",
+    "version": "2.6.2.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -115,7 +115,7 @@
             "name": "frontPost",
             "label": "Select a post",
             "group": "Layout",
-            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "note": "This option allows you to display the selected post on the front page. We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",            
             "value": "",
             "type": "posts-dropdown", 
             "dependencies": [
@@ -228,6 +228,13 @@
             "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab." ,
             "group": "Layout",
             "size": "big"
+        },
+        {
+            "name": "tagsTagCount",
+            "group": "Layout",
+            "label": "Show tag count",
+            "value": true,
+            "type": "checkbox"
         },
         {
             "name": "tagsPostCount",

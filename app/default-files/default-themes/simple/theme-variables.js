@@ -284,6 +284,8 @@ var generateThemeVariables = function (params) {
       --page-margin:        ${params.pageMargin};
       --entry-width:        ${params.pageWidth}; 
       --navbar-height:      4.4rem; 
+      --border-radius:      6px;
+      --gallery-gap:        ${params.galleryItemGap}; 
       --body-font:          ${fontBodyFamily};
       --heading-font:       ${fontHeadingsFamily};
       --logo-font:          ${params.fontLogo};
