@@ -10,7 +10,7 @@
                      <img
                         src="{{url}}"
                         {{#if @config.site.responsiveImages}}                           
-                              {{responsiveImageAttributes 'tagImage' srcset sizes}}
+                           {{responsiveImageAttributes 'tagImage' srcset sizes}}
                         {{/if}}
                         {{ lazyload "eager" }}
                         height="{{height}}"

@@ -28,7 +28,8 @@ function pageURLHelper(rendererInstance, Handlebars) {
         // Connect the URL parts
         path = path.join('/');
 
-        if(!rendererInstance.previewMode) {
+        // Add trailing slash only if adding index.html is disabled and there is no preview mode active
+        if (!rendererInstance.previewMode && !rendererInstance.siteConfig.advanced.urls.addIndex) {
             path += '/';
         }
 

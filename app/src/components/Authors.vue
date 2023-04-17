@@ -86,14 +86,15 @@
             <collection-row
                 v-for="(item, index) in items"
                 slot="content"
-                :key="index"
+                :key="'collection-row-' + index"
                 :cssClasses="item.id === 1 ? 'is-main-author' : ''">
                 <collection-cell>
                     <checkbox
                         v-if="item.id !== 1"
                         :value="item.id"
                         :checked="isChecked(item.id)"
-                        :onClick="toggleSelection" />
+                        :onClick="toggleSelection"
+                        :key="'collection-row-checkbox-' + index" />
 
                     <span
                         v-if="item.id === 1"

@@ -85,7 +85,7 @@
                             :label="cpt"
                             :labelSeparated="false"
                             :noLabelSpace="true"
-                            :key="index"
+                            :key="'custom-post-type-item-' + index"
                             spacing="small">
                             <switcher
                                 slot="field"

@@ -9,7 +9,7 @@
             <ul>
                 <li
                     v-for="(item, index) in items"
-                    :key="index"
+                    :key="'tab-item-' + index"
                     :class="{ 'active': item === activeItem}"
                     @click="toggle(item)">
                     {{ item }}
@@ -20,7 +20,7 @@
         <div class="content">
             <div
                 v-for="(item, index) in items"
-                :key="index"
+                :key="'tab-item-content-' + index"
                 :class="{ 'tab': true, 'active': item === activeItem}">
                 <slot :name="'tab-' + index"></slot>
             </div>

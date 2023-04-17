@@ -282,12 +282,13 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :data-is-draft="item.isDraft"
-                :key="index">
+                :key="'collection-row-' + index">
                 <collection-cell>
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
-                        :onClick="toggleSelection" />
+                        :onClick="toggleSelection"
+                        :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
                 <collection-cell

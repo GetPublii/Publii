@@ -24,7 +24,9 @@
          <div class="wrapper">
             <h1>
                {{ translate 'tags.tagsPageTitle' }} 
-               <sup>({{tagsNumber}})</sup>
+               {{#if @config.custom.tagsTagCount}}
+                  <sup>({{tagsNumber}})</sup>
+               {{/if}}
             </h1>
             <p>
                {{ translate 'tags.description' }}

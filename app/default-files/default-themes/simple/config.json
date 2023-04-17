@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.6.0.0",
+    "version": "2.6.2.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -81,7 +81,7 @@
         },
         {
             "name": "pageWidth",
-            "label": "Page width",
+            "label": "Post entry width",
             "group": "Layout",
             "note": "For full-screen width, set to 100%",
             "value": "42rem",
@@ -113,9 +113,9 @@
         },  
         {
             "name": "frontPost",
-            "label": "Posts",
+            "label": "Select a post",
             "group": "Layout",
-            "note": "We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",
+            "note": "This option allows you to display the selected post on the front page. We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",            
             "value": "",
             "type": "posts-dropdown", 
             "dependencies": [
@@ -140,130 +140,208 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "",
+            "label": "Hero section",
             "group": "Layout",
-            "size": "small",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
+            "size": "small"
         },
         {
-            "name": "frontFeaturedImage",
+            "name": "heightHero",
+            "label": "Height",
             "group": "Layout",
-            "label": "Featured image",
-            "value": false,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
-        },
-        {
-            "name": "frontAuthor",
-            "group": "Layout",
-            "label": "Author name",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
-        },
-        {
-            "name": "frontAvatar",
-            "group": "Layout",
-            "label": "Author avatar",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
-        },
-        {
-            "name": "frontDate",
-            "group": "Layout",
-            "label": "Date",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
-        },
-        {
-            "name": "frontReadMore",
-            "group": "Layout",
-            "label": "Read more button",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [{
-                "field": "frontSource",
-                "value": "default"
-            }]
-        },
-       
+            "note": "This option allows you to modify the height of the hero section. Use of VH units recommended; for full-screen set to 100vh",
+            "value": "80vh",
+            "type": "text"
+        },        
         {
             "name": "separator",
             "type": "separator",
-            "label": "Tag Page",
+            "label": "",
             "group": "Layout",
-            "size": "big"
+            "size": "small thin"
         },
         {
-            "name": "tagFeaturedImage",
+            "name": "displayHeroImage",
             "group": "Layout",
-            "label": "Featured image",
+            "label": "Image assignment",
+            "note": "Display the hero image on all pages including front page, tags, authors, search, 404, also on the post pages when a featured image is unavailable; otherwise, it will be displayed on the front page only. ",
             "value": false,
             "type": "checkbox"
         },
         {
-            "name": "tagAuthor",
+            "name": "uploadHero",
+            "label": "Image",
             "group": "Layout",
-            "label": "Author name",
+            "value": "",
+            "type": "upload",
+            "upload": true
+        },
+        {
+            "name": "uploadHeroAlt",
+            "label": "Image Alt text",
+            "group": "Layout",
+            "placeholder": "Add an alternative text to the hero image",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "uploadHeroCaption",
+            "label": "Image Caption",
+            "group": "Layout",
+            "placeholder": "Add text caption to the hero image",
+            "value": "",
+            "type": "text"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",
+            "size": "small thin"
+        },
+        {
+            "name": "textHero",
+            "label": "Text",
+            "group": "Layout",
+            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
+            "type": "wysiwyg"
+        },
+        {
+            "name": "siteOwner",
+            "group": "Layout",
+            "label": "Show site owner",
+            "note": "Display the avatar and the name of the website owner (Main author)",
             "value": true,
             "type": "checkbox"
         },
         {
-            "name": "tagAvatar",
-            "group": "Layout",
-            "label": "Author avatar",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagDate",
-            "group": "Layout",
-            "label": "Date",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagReadMore",
-            "group": "Layout",
-            "label": "Read more button",
-            "value": true,
-            "type": "checkbox"
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Layout",           
+            "note": "The appearance settings for the hero section can be found under the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
+            "size": "thin"
         },
         {
             "name": "separator",
             "type": "separator",
             "label": "Tags Page",
+            "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab." ,
             "group": "Layout",
             "size": "big"
         },
         {
+            "name": "tagsTagCount",
+            "group": "Layout",
+            "label": "Show tag count",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
             "name": "tagsPostCount",
             "group": "Layout",
-            "label": "Post count",
+            "label": "Show post count",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "tagsDescription",
             "group": "Layout",
-            "label": "Tag description",
+            "label": "Show tags description",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Post list",
+            "note": "The Post list section offers a range of options for managing the post list displayed on the front page, tag and author pages. In this area, you can easily enable or disable elements such as avatar, date or other elements.",
+            "size": ""
+        },
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Front page",
+            "group": "Post list",
+            "note": "The following options apply to the posts displayed on the front page.",
+            "size": "small"
+        },
+        {
+            "name": "frontFeaturedImage",
+            "group": "Post list",
+            "label": "Show featured image",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontAuthor",
+            "group": "Post list",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontAvatar",
+            "group": "Post list",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontDate",
+            "group": "Post list",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "frontReadMore",
+            "group": "Post list",
+            "label": "Show 'Read more' button",
+            "value": true,
+            "type": "checkbox"
+        },
+       
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "Tag Page",
+            "group": "Post list",
+            "note": "The following options apply to the posts displayed on a single tag page.",
+            "size": "big"
+        },
+        {
+            "name": "tagFeaturedImage",
+            "group": "Post list",
+            "label": "Show featured image",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagAuthor",
+            "group": "Post list",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagAvatar",
+            "group": "Post list",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagDate",
+            "group": "Post list",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "tagReadMore",
+            "group": "Post list",
+            "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
         },
@@ -271,41 +349,42 @@
             "name": "separator",
             "type": "separator",
             "label": "Author page",
-            "group": "Layout",
+            "group": "Post list",
+            "note": "The following options apply to the posts displayed on an author page.",
             "size": "big"
         },
         {
             "name": "authorFeaturedImage",
-            "group": "Layout",
-            "label": "Featured image",
+            "group": "Post list",
+            "label": "Show featured image",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAuthor",
-            "group": "Layout",
-            "label": "Author name",
+            "group": "Post list",
+            "label": "Show author name",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorAvatar",
-            "group": "Layout",
-            "label": "Author avatar",
+            "group": "Post list",
+            "label": "Show author avatar",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "authorDate",
-            "group": "Layout",
-            "label": "Date",
+            "group": "Post list",
+            "label": "Show date",
             "value": true,
             "type": "checkbox"
         },
         {
             "name": "authorReadMore",
-            "group": "Layout",
-            "label": "Read more button",
+            "group": "Post list",
+            "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
         },  
@@ -323,14 +402,15 @@
             "note": "Specify number of related posts to show. Zero '0' means no posts.",
             "value": "3",
             "type": "text"
-        },
+        },  
+
         {
             "name": "navbarHeight",
             "group": "Navbar",
             "label": "Navbar height",
             "value": "6rem",
             "type": "text"
-        },    
+        },  
         {
             "name": "separator",
             "type": "separator",
@@ -405,90 +485,10 @@
         },
         
         {
-            "name": "heightHero",
-            "label": "Height",
-            "group": "Hero Section",
-            "note": "Use of VH units recommended; for full-screen set to 100vh",
-            "value": "80vh",
-            "type": "text"
-        },        
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero Section",
-            "size": "small"
-        },
-        {
-            "name": "displayHeroImage",
-            "group": "Hero Section",
-            "label": "Image assignment",
-            "note": "Display hero image on all pages like frontpage, tags, authors, search, 404, also on the post pages when the featured image doesn't exist; otherwise, it will be displayed on the frontpage only. ",
-            "value": false,
-            "type": "checkbox"
-        },
-
-        {
-            "name": "uploadHero",
-            "label": "Image",
-            "group": "Hero Section",
-            "value": "",
-            "type": "upload",
-            "upload": true
-        },
-        {
-            "name": "uploadHeroAlt",
-            "label": "Image Alt text",
-            "group": "Hero Section",
-            "placeholder": "Add an alternative text to the hero image",
-            "value": "",
-            "type": "text"
-        },
-        {
-            "name": "uploadHeroCaption",
-            "label": "Image Caption",
-            "group": "Hero Section",
-            "placeholder": "Add text caption to the hero image",
-            "value": "",
-            "type": "text"
-        },
-
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": " ",
-            "group": "Hero Section",
-            "size": "small"
-        },
-        {
-            "name": "textHero",
-            "label": "Text",
-            "group": "Hero Section",
-            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
-            "type": "wysiwyg"
-        },
-        {
-            "name": "siteOwner",
-            "group": "Hero Section",
-            "label": "Site owner",
-            "note": "Displays the avatar and the name of the website owner (Main author)",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Apperance",
-            "group": "Hero Section",           
-            "note": "The appearance settings of the hero section can be found on the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
-            "size": "small"
-        },
-        
-        {
             "name": "colorScheme",
             "label": "Select color scheme",
             "group": "Colors",
-            "note": "<br />The auto color scheme means that it automatically adjusted to fit the user&#39;s operating system settings; if the OS does not support this feature, the light version is used.",
+            "note": "<br>The auto color scheme feature automatically adjusts the color scheme of the interface to match the user's operating system settings. If the operating system does not support this feature, the light version of the color scheme is used instead",
             "value": "auto",
             "type": "radio",
             "options": [
@@ -687,7 +687,7 @@
             "type": "separator",
             "label": "Main font settings",
             "group": "Fonts",
-            "note": "To see a list of all available fonts, and learn about their specifications, such as typeface and the full range of weights, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
+            "note": "To explore an extensive list of available fonts, along with detailed information about their typefaces, complete range of weights, and other specifications, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
             "size": "small"
         },    
         {
@@ -1216,7 +1216,7 @@
             "type": "separator",
             "label": "",
             "group": "Fonts",
-            "size": "big"
+            "size": "big thin"
         },
         {
             "name": "minFontSize",
@@ -1257,7 +1257,7 @@
             "label": "",
             "group": "Fonts",
             "note": "Note that not all fonts support the full range of weights; instead, they will typically support a standard range between 400 and 700. To see the exact range available for the selected body font, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "fontBodyWeight",
@@ -1480,7 +1480,7 @@
             "type": "separator",
             "label": "",
             "group": "Footer",
-            "size": "small"
+            "size": "small thin"
         },
         {
             "name": "copyrightText",
@@ -1519,9 +1519,9 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Gallery",
-            "size": "small"
+            "size": "small thin"
          },
         {
             "name": "galleryLightboxStyle",
@@ -1555,9 +1555,9 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Gallery",
-            "size": "small"
+            "size": "small thin"
          },
         {
             "name": "galleryAdvanced",
@@ -1756,7 +1756,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Additional",
             "size": "small"
          },       
@@ -1780,7 +1780,7 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": " ",
+            "label": "",
             "group": "Additional",
             "size": "small"
          },

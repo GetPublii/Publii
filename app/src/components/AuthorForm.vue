@@ -19,7 +19,7 @@
             <div
                 v-if="!currentThemeHasSupportForAuthorPages"
                 slot="note"
-                class="msg msg-small msg-icon msg-alert note">
+                class="msg msg-small msg-icon msg-alert">
                 <icon name="warning" size="m" />
                 <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
             </div>

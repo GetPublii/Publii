@@ -119,6 +119,11 @@ export default {
     filteredBlocks () {
       let blocks = JSON.parse(JSON.stringify(this.availableBlocks));
 
+      blocks = blocks.map(block => {
+        block.labelText = this.$t(block.label).toLocaleLowerCase();
+        return block;
+      });
+
       if (this.editor.hasReadMore) {
         blocks = blocks.filter(block => block.blockName !== 'publii-readmore');
       }
@@ -128,7 +133,8 @@ export default {
       }
 
       if (this.blockFilterPhrase.length) {
-        blocks = blocks.filter(block => block.blockName.replace('publii-', '').indexOf(this.blockFilterPhrase.toLocaleLowerCase()) > -1);
+        let phrase = this.blockFilterPhrase.toLocaleLowerCase();
+        blocks = blocks.filter(block => block.blockName.replace('publii-', '').indexOf(phrase) > -1 || block.labelText.indexOf(phrase) > -1);
       }
 
       return blocks;

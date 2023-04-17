@@ -80,6 +80,6 @@ export default {
 }
 
 .multiselect__input {
-    max-width: 120px;
+    max-width: 100%;
 }
 </style>

@@ -24,7 +24,7 @@
         <language-item
             v-for="(language, index) in languages"
             :languageData="language"
-            :key="index" />
+            :key="'language-item-' + index" />
 
         <overlay
             v-if="languageIsOver"

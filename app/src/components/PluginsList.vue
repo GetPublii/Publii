@@ -23,7 +23,7 @@
         <plugin-item
             v-for="(plugin, index) in plugins"
             :pluginData="plugin"
-            :key="index" />
+            :key="'plugin-item-' + index" />
 
         <overlay
             v-if="pluginIsOver"
