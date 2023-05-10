@@ -1,4 +1,4 @@
-# Publii - Static-Site CMS
+# Publii - Static CMS for privacy-focused, SEO-optimized websites.
 
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/GetPublii/Publii/blob/master/LICENSE)
  [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/GetPublii/Publii/graphs/commit-activity) [![OpenCollective](https://opencollective.com/publii/backers/badge.svg)](https://opencollective.com/publii/) ![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
