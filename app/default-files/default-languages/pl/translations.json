@@ -718,6 +718,8 @@
         "loadAtStart": "Załaduj na początku:",
         "metaDescription": "Opis Meta:",
         "metaRobots": "Meta Roboty:",
+        "noIndexForChatGPT": "Nie pozwalaj na indeksowanie przez boty Chat GPT",
+        "noIndexForCommonCrawlBots": "Nie pozwalaj na indeksowanie przez boty Common Crawl",
         "noIndexWebsite": "Nieindeksowanie strony",
         "notSelected": "Nie wybrano",
         "numberOfPostsInFeed": "Liczba wpisów w kanale",
@@ -857,6 +859,7 @@
         "websiteSpeed": "Szybkość witryny",
         "webpLossless": "Włącz bezstratną kompresję dla grafik w formacie WebP",
         "whatsApp": "WhatsApp",
+        "willWorkOnlyIfYouHaveNoCustomRobotsTxt": "To ustawienie zadziała tylko jeśli nie masz własnego pliku robots.txt",
         "youMustReviewGdprSettings": "Powinieneś sprawdzić swoje ustawienia Prywatności (poprzednio GDPR) ze względu na istotne zmiany w Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Czytaj więcej</a>",
         "ytNoCookies": "Włącz tryb rozszerzonej prywatności dla video z YouTube"
     },

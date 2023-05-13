@@ -37,6 +37,8 @@ const AstCurrentSiteConfig = {
         metaTitle: '%sitename',
         metaDescription: '',
         noIndexThisPage: false,
+        noIndexForChatGPT: false,
+        noIndexForCommonCrawlBots: false,
         homepageNoIndexPagination: false,
         metaRobotsIndex: 'index, follow',
         postMetaTitle: '%posttitle - %sitename ',

@@ -718,6 +718,8 @@
         "loadAtStart": "Load at start:",
         "metaDescription": "Meta Description:",
         "metaRobots": "Meta Robots:",
+        "noIndexForChatGPT": "Do not allow indexation by Chat GPT bots",
+        "noIndexForCommonCrawlBots": "Do not allow indexation by Common Crawl bots",
         "noIndexWebsite": "Noindex website",
         "notSelected": "Not selected",
         "numberOfPostsInFeed": "Number of posts in feed",
@@ -857,6 +859,7 @@
         "webpLossless": "Enable lossless compression for responsive WebP images",
         "websiteSpeed": "Website Speed",
         "whatsApp": "WhatsApp",
+        "willWorkOnlyIfYouHaveNoCustomRobotsTxt": "It will work only if you have no own robots.txt file",
         "youMustReviewGdprSettings": "Make sure to check and review your Privacy Settings, especially the Cookie Banner settings due to some significant changes in Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Read more...</a>",
         "ytNoCookies": "Enable Privacy-Enhanced mode for YouTube videos"
     },

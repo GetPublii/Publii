@@ -145,6 +145,34 @@
                             </small>
                         </field>
 
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-chat-gpt"
+                            :label="$t('settings.noIndexForChatGPT')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForChatGPT" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.willWorkOnlyIfYouHaveNoCustomRobotsTxt') }}
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-common-crawl-btos"
+                            :label="$t('settings.noIndexForCommonCrawlBots')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForCommonCrawlBots" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.willWorkOnlyIfYouHaveNoCustomRobotsTxt') }}
+                            </small>
+                        </field>
+
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"
