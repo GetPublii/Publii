@@ -155,7 +155,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                {{ $t('settings.willWorkOnlyIfYouHaveNoCustomRobotsTxt') }}
+                                {{ $t('settings.noIndexForChatGPTInfo') }}
                             </small>
                         </field>
 
@@ -169,7 +169,7 @@
                             <small
                                 slot="note"
                                 class="note">
-                                {{ $t('settings.willWorkOnlyIfYouHaveNoCustomRobotsTxt') }}
+                                {{ $t('settings.noIndexForCommonCrawlBotsInfo') }}
                             </small>
                         </field>
 
