@@ -674,10 +674,10 @@ export default {
 
                     for (let i = 0; i < values.length; i++) {
                         if (this.custom[dependencyName] === values[i]) {
-                            continue;
+                            return true;
                         }
                     }
-
+                    
                     return false;
                 }
 

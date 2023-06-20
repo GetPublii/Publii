@@ -492,7 +492,7 @@ export default {
 
                     for (let i = 0; i < values.length; i++) {
                         if (this.settingsValues[dependencyName] === values[i]) {
-                            continue;
+                            return true;
                         }
                     }
 
