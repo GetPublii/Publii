@@ -162,7 +162,7 @@ class GitlabPages {
         }
 
         this.client = new Gitlab({
-            url: this.deployment.siteConfig.deployment.gitlab.server,
+            host: this.deployment.siteConfig.deployment.gitlab.server,
             token: token,
             rejectUnauthorized: this.deployment.siteConfig.deployment.gitlab.rejectUnauthorized
         });
