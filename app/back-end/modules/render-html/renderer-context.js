@@ -380,6 +380,10 @@ class RendererContext {
                 code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer, context);
             }
 
+            if (this.renderer.plugins.hasModifiers('customHTML.' + key)) {
+                code = this.renderer.plugins.runModifiers('customHTML.' + key, this.renderer, code, context);
+            }
+
             object[key] = code.trim();
         }
 
