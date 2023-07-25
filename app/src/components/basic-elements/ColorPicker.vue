@@ -1,7 +1,10 @@
 <template>
     <div 
         :id="anchor"
-        class="color-picker">
+        :class="{ 
+            'color-picker': true,
+            'has-disabled-toggle': outputFormat === 'RGBA' || outputFormat === 'HSLA'
+        }">
         <div
             class="color-picker-preview"
             @click="togglePicker"
@@ -16,7 +19,8 @@
         <chrome-picker
             @click.native="stopEventPropagation"
             :class="{ 'is-visible': pickerVisible }"
-            v-model="pickerContent" />
+            v-model="pickerContent"
+            ref="colorpicker" />
     </div>
 </template>
 
@@ -31,6 +35,10 @@ export default {
     props: {
         value: {
             default: '',
+            type: String
+        },
+        outputFormat: {
+            default: 'RGBAorHEX',
             type: String
         },
         anchor: {
@@ -54,6 +62,12 @@ export default {
         }
     },
     mounted: function() {
+        if (this.outputFormat === 'RGBA') {
+            this.$refs['colorpicker'].fieldsIndex = 1;
+        } else if (this.outputFormat === 'HSLA') {
+            this.$refs['colorpicker'].fieldsIndex = 2;
+        }
+
         this.$watch('value', (color) => {
             this.content = color;
             this.pickerContent = color;
@@ -64,8 +78,18 @@ export default {
                 return;
             }
 
-            if (color.a !== 1) {
+            if (this.outputFormat === 'RGBAorHEX') {
+                if (color.a !== 1) {
+                    this.content = 'rgba(' + color.rgba.r + ',' + color.rgba.g + ',' + color.rgba.b + ',' + color.rgba.a + ')';
+                } else {
+                    this.content = color.hex;
+                }
+            } else if (this.outputFormat === 'RGBA') {
                 this.content = 'rgba(' + color.rgba.r + ',' + color.rgba.g + ',' + color.rgba.b + ',' + color.rgba.a + ')';
+            } else if (this.outputFormat === 'HSLA') {
+                this.content = 'hsla(' + color.hsl.h + ', ' + color.hsl.s + ', ' + color.hsl.l + ', ' + color.hsl.a + ')';
+            } else if (this.outputFormat === 'HEX') {
+                this.content = color.hex;   
             } else {
                 this.content = color.hex;
             }
@@ -162,6 +186,14 @@ export default {
         
         ::v-deep .vc-chrome-toggle-icon-highlight {
             background: var(--input-border-color);
+        }
+    }
+
+    &.has-disabled-toggle {
+        .vc-chrome {
+            ::v-deep .vc-chrome-toggle-icon {
+                display: none;
+            }
         }
     }
 }

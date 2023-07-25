@@ -158,6 +158,7 @@
                                             v-model="settingsValues[field.name]"
                                             :data-field="field.name"
                                             :anchor="field.anchor"
+                                            :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
                                             slot="field"></color-picker>
 
                                         <posts-dropdown
@@ -304,6 +305,7 @@
                                     v-model="settingsValues[field.name]"
                                     :data-field="field.name"
                                     :anchor="field.anchor"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
                                     slot="field"></color-picker>
 
                                 <posts-dropdown

@@ -195,6 +195,7 @@
                                     v-model="custom[field.name]"
                                     :data-field="field.name"
                                     :anchor="field.anchor"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
                                     slot="field"></color-picker>
 
                                 <posts-dropdown
@@ -299,7 +300,8 @@
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="postView[field.name]">
+                                    v-model="postView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                 </color-picker>
 
                                 <small
@@ -350,7 +352,8 @@
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="tagView[field.name]">
+                                    v-model="tagView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                 </color-picker>
 
                                 <small
@@ -401,7 +404,8 @@
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="authorView[field.name]">
+                                    v-model="authorView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                 </color-picker>
 
                                 <small
