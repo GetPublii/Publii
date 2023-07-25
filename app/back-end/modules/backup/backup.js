@@ -93,12 +93,6 @@ class Backup {
         if (Utils.dirExists(backupsPath)) {
             backupFilename = backupFilename.replace(/[^a-z0-9\-\_]/gmi, '');
             let backupFile = path.join(backupsPath, backupFilename + '.tar');
-
-            // Empty the preview/output directories before archiving the backups content
-            // as it contains redundant data
-            fs.emptyDirSync(path.join(sourcePath, 'output'));
-            fs.emptyDirSync(path.join(sourcePath, 'preview'));
-
             let createOperation = new Promise(function (resolve, reject) {
                 let output = fs.createWriteStream(backupFile);
                 let archive = archiver('tar');
@@ -127,7 +121,8 @@ class Backup {
                 });
 
                 archive.pipe(output);
-                archive.directory(sourcePath, '/');
+                archive.append((+new Date).toString(), { name: 'backup-date.log' });
+                archive.directory(sourcePath + '/input/', 'input');
                 archive.finalize();
             });
 
