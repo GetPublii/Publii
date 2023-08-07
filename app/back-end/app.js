@@ -657,7 +657,8 @@ class App {
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,
-                dirs: self.dirPaths
+                dirs: self.dirPaths,
+                vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked'))
             };
 
             self.mainWindow.webContents.send('app-data-loaded', appData);

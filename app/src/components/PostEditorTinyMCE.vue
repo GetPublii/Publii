@@ -149,6 +149,12 @@ export default {
                 this.$store.state.currentSite.config.theme,
                 '/'
             ].join('');
+        },
+        vendorPath () {
+            return [
+                'file:///',
+                this.$store.state.vendorPath
+            ].join('');
         }
     },
     mounted () {
@@ -228,7 +234,7 @@ export default {
                 ) {
                     let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
 
-                    if (!document.querySelector('custom-post-editor-script')) {
+                    if (!document.querySelector('#custom-post-editor-script')) {
                         $(document.body).append(
                             // It seems that Webpack goes crazy when it sees 'script' tag :)
                             $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
@@ -236,6 +242,14 @@ export default {
                     }
                 }
 
+                // Add prism.js script
+                if (!document.querySelector('#custom-prismjs-script')) {
+                    $(document.body).append(
+                        // It seems that Webpack goes crazy when it sees 'script' tag :)
+                        $('<' + 'script' + ' id="custom-prismjs-script" src="' + this.vendorPath + '/prism.js"></' + 'script' + '>')
+                    );
+                }
+                
                 setTimeout(() => {
                     this.possibleDataLoss = false;
                     this.setDataLossWatcher();

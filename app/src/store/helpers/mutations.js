@@ -18,6 +18,7 @@ export default {
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
         state.dirs = initialData.dirs;
+        state.vendorPath = initialData.vendorPath;
         state.wysiwygTranslation = initialData.currentLanguage.wysiwygTranslation;
 
         // Set default ordering based on the app config
