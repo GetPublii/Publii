@@ -56,7 +56,8 @@ tinymce.IconManager.add("publii", {
 
        close: '<svg width="24" height="24"><path d="M17.3 8.2L13.4 12l3.9 3.8a1 1 0 01-1.5 1.5L12 13.4l-3.8 3.9a1 1 0 01-1.5-1.5l3.9-3.8-3.9-3.8a1 1 0 011.5-1.5l3.8 3.9 3.8-3.9a1 1 0 011.5 1.5z" fill-rule="evenodd"/></svg>',
 
-       "code-sample": '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"></path><path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"></path></svg>',
+       "code-sample": '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"></path><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"></path></svg>',
+       
 
        "color-levels": '<svg width="24" height="24"><path d="M17.5 11.4A9 9 0 0118 14c0 .5 0 1-.2 1.4 0 .4-.3.9-.5 1.3a6.2 6.2 0 01-3.7 3 5.7 5.7 0 01-3.2 0A5.9 5.9 0 017.6 18a6.2 6.2 0 01-1.4-2.6 6.7 6.7 0 010-2.8c0-.4.1-.9.3-1.3a13.6 13.6 0 012.3-4A20 20 0 0112 4a26.4 26.4 0 013.2 3.4 18.2 18.2 0 012.3 4zm-2 4.5c.4-.7.5-1.4.5-2a7.3 7.3 0 00-1-3.2c.2.6.2 1.2.2 1.9a4.5 4.5 0 01-1.3 3 5.3 5.3 0 01-2.3 1.5 4.9 4.9 0 01-2 .1 4.3 4.3 0 002.4.8 4 4 0 002-.6 4 4 0 001.5-1.5z" fill-rule="evenodd"/></svg>',
 
