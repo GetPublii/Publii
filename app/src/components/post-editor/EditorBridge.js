@@ -527,6 +527,10 @@ class EditorBridge {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
             }
+
+            if (target.matches && target.matches('pre')) {
+                return false;
+            }
         }
 
         return true;

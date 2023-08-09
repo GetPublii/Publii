@@ -126,5 +126,6 @@ export default {
     {title: 'ugc', value: 'ugc'},
    ],
    link_context_toolbar: false,
-   link_quicklink: false
+   link_quicklink: false,
+   codesample_global_prismjs: true
 };
