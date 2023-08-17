@@ -698,7 +698,7 @@ class Renderer {
             }
 
             if (this.plugins.hasModifiers('htmlOutput')) {
-                output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
             }
 
             this.templateHelper.saveOutputFile('index.html', output);
@@ -752,7 +752,7 @@ class Renderer {
                 let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
                 if (this.plugins.hasModifiers('htmlOutput')) {
-                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                    output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
                 }
 
                 if (offset === 0) {
@@ -852,7 +852,7 @@ class Renderer {
             let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
             if (this.plugins.hasModifiers('htmlOutput')) {
-                output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
             }
 
             this.templateHelper.saveOutputPostFile(postSlugs[i], output);
@@ -919,7 +919,7 @@ class Renderer {
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
-            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
         }
 
         this.templateHelper.saveOutputFile(postSlug + '.html', output);
@@ -988,7 +988,7 @@ class Renderer {
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
-            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
         }
 
         this.templateHelper.saveOutputTagsListFile(output);
@@ -1118,7 +1118,7 @@ class Renderer {
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                 if (this.plugins.hasModifiers('htmlOutput')) {
-                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                    output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
                 }
 
                 this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
@@ -1184,7 +1184,7 @@ class Renderer {
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
-                        output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                        output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
                     }
 
                     if (offset === 0) {
@@ -1342,7 +1342,7 @@ class Renderer {
                 let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                 if (this.plugins.hasModifiers('htmlOutput')) {
-                    output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                    output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
                 }
 
                 this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
@@ -1404,7 +1404,7 @@ class Renderer {
                     let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
-                        output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+                        output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
                     }
 
                     if (offset === 0) {
@@ -1450,7 +1450,7 @@ class Renderer {
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
-            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
         }
 
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.errorPage, output);
@@ -1487,7 +1487,7 @@ class Renderer {
         let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
-            output = this.plugins.runModifiers('htmlOutput', this.renderer, output, this.globalContext); 
+            output = this.plugins.runModifiers('htmlOutput', this, output, this.globalContext); 
         }
 
         this.templateHelper.saveOutputFile(this.siteConfig.advanced.urls.searchPage, output);
@@ -1666,11 +1666,11 @@ class Renderer {
         let output = this.renderTemplate(compiledTemplate, context, false, 'feed-' + format + '.hbs');
 
         if (format === 'xml' && this.plugins.hasModifiers('feedXmlOutput')) {
-            output = this.plugins.runModifiers('feedXmlOutput', this.renderer, output, context); 
+            output = this.plugins.runModifiers('feedXmlOutput', this, output, context); 
         }
 
         if (format === 'json' && this.plugins.hasModifiers('feedJsonOutput')) {
-            output = this.plugins.runModifiers('feedXmlOutput', this.renderer, output, context); 
+            output = this.plugins.runModifiers('feedXmlOutput', this, output, context); 
         }
 
         this.templateHelper.saveOutputFile('feed.' + format, output);
