@@ -1818,8 +1818,12 @@ class Renderer {
         if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexThisPage) {
             robotsTxtContent = `User-agent: *\nDisallow: /`;
         } else {
-            if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForChatGPT) {
+            if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForChatGPTUser) {
                 robotsTxtContent += `User-agent: ChatGPT-User\nDisallow: /\n`;
+            }
+
+            if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForChatGPTBot) {
+                robotsTxtContent += `User-agent: ChatGPT-Bot\nDisallow: /\n`;
             }
 
             if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForCommonCrawlBots) {

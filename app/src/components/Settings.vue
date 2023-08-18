@@ -147,21 +147,35 @@
 
                         <field
                             v-if="!advanced.noIndexThisPage"
-                            id="no-index-for-chat-gpt"
-                            :label="$t('settings.noIndexForChatGPT')">
+                            id="no-index-for-chat-gpt-bot"
+                            :label="$t('settings.noIndexForChatGPTBot')">
                             <switcher
                                 slot="field"
-                                v-model="advanced.noIndexForChatGPT" />
+                                v-model="advanced.noIndexForChatGPTBot" />
                             <small
                                 slot="note"
-                                class="note">
-                                {{ $t('settings.noIndexForChatGPTInfo') }}
+                                class="note"
+                                v-pure-html="$t('settings.noIndexForChatGPTBotInfo')">
                             </small>
                         </field>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
-                            id="no-index-for-common-crawl-btos"
+                            id="no-index-for-chat-gpt-user"
+                            :label="$t('settings.noIndexForChatGPTUser')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForChatGPTUser" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.noIndexForChatGPTUserInfo')">
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-common-crawl-bots"
                             :label="$t('settings.noIndexForCommonCrawlBots')">
                             <switcher
                                 slot="field"
