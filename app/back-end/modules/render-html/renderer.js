@@ -1823,7 +1823,7 @@ class Renderer {
             }
 
             if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForChatGPTBot) {
-                robotsTxtContent += `User-agent: ChatGPT-Bot\nDisallow: /\n`;
+                robotsTxtContent += `User-agent: GPTBot\nDisallow: /\n`;
             }
 
             if (this.siteConfig.advanced && this.siteConfig.advanced.noIndexForCommonCrawlBots) {
