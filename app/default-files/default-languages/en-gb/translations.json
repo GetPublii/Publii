@@ -551,6 +551,12 @@
         "renderingPleaseWait": "Please wait while the rendering process is completed.",
         "selectThemeBeforeCreatingPreviewMsg": "You have to select a theme before trying to create a preview of your website. Please go to the website settings section and select a theme."
     },
+    "repeater": {
+        "addItem": "Add item",
+        "duplicateItem": "Duplicate item",
+        "emptyState": "Click the button to add first element",
+        "removeItem": "Remove item"
+    },
     "settings": {
         "addGDPRCookieBanner": "Enable banner",
         "additionalValidElementsInWYSIWYGEditor": "Additional valid elements in the WYSIWYG editor",

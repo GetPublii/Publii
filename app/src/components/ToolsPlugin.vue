@@ -197,6 +197,13 @@
                                             :anchor="field.anchor"
                                             :placeholder="field.placeholder"></text-input>
 
+                                        <repeater
+                                            v-if="field.type === 'repeater'" 
+                                            slot="field"
+                                            :structure="field.structure"
+                                            v-model="settingsValues[field.name]"
+                                            :anchor="field.anchor" />
+
                                         <small
                                             v-if="field.note && field.type !== 'separator'"
                                             slot="note"
@@ -345,6 +352,13 @@
                                     :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
 
+                                <repeater
+                                    v-if="field.type === 'repeater'" 
+                                    slot="field"
+                                    :structure="field.structure"
+                                    v-model="settingsValues[field.name]"
+                                    :anchor="field.anchor" />
+
                                 <small
                                     v-if="field.note && field.type !== 'separator'"
                                     slot="note"
@@ -377,6 +391,7 @@
 <script>
 import BackToTools from './mixins/BackToTools.js';
 import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
+import Repeater from './basic-elements/Repeater';
 import Vue from 'vue';
 
 export default {
@@ -385,7 +400,8 @@ export default {
         BackToTools
     ],
     components: {
-        'supported-features-check': SupportedFeaturesCheck
+        'supported-features-check': SupportedFeaturesCheck,
+        'repeater': Repeater
     },
     computed: {
         settingsGroups () {
@@ -522,7 +538,8 @@ export default {
                 'colorpicker',
                 'posts-dropdown',
                 'authors-dropdown',
-                'tags-dropdown'
+                'tags-dropdown',
+                'repeater'
             ].indexOf(type) === -1;
         },
         getDropdownOptions (inputOptions) {

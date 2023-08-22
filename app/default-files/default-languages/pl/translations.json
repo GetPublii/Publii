@@ -551,6 +551,12 @@
         "renderingPleaseWait": "Proszę czekać, aż proces renderowania zostanie zakończony.",
         "selectThemeBeforeCreatingPreviewMsg": "Musisz wybrać motyw, zanim spróbujesz utworzyć podgląd swojej witryny. Przejdź do ustawień strony i wybierz motyw."
     },
+    "repeater": {
+        "addItem": "Dodaj element",
+        "duplicateItem": "Duplikuj element",
+        "emptyState": "Kliknij przycisk aby dodać pierwszy element",
+        "removeItem": "Usuń element"
+    },
     "settings": {
         "addGDPRCookieBanner": "Dodaj cookie banner (GDPR)",
         "additionalValidElementsInWYSIWYGEditor": "Dodatkowe poprawne elementy w edytorze WYSIWYG",

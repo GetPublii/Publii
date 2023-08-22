@@ -234,6 +234,13 @@
                                     :anchor="field.anchor"
                                     :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
+                                
+                                <repeater
+                                    v-if="field.type === 'repeater'" 
+                                    slot="field"
+                                    :structure="field.structure"
+                                    v-model="custom[field.name]"
+                                    :anchor="field.anchor" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"
@@ -466,6 +473,7 @@ import Vue from 'vue';
 import PostsDropDown from './basic-elements/PostsDropDown';
 import TagsDropDown from './basic-elements/TagsDropDown';
 import AuthorsDropDown from './basic-elements/AuthorsDropDown';
+import Repeater from './basic-elements/Repeater';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -473,7 +481,8 @@ export default {
     components: {
         'authors-dropdown': AuthorsDropDown,
         'posts-dropdown': PostsDropDown,
-        'tags-dropdown': TagsDropDown
+        'tags-dropdown': TagsDropDown,
+        'repeater': Repeater
     },
     data: function() {
         return {
@@ -724,7 +733,8 @@ export default {
                 'colorpicker',
                 'posts-dropdown',
                 'authors-dropdown',
-                'tags-dropdown'
+                'tags-dropdown',
+                'repeater'
             ].indexOf(type) === -1;
         },
         getDropdownOptions (inputOptions) {
