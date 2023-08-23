@@ -73,6 +73,7 @@
                                     <field
                                         v-if="checkDependencies(field.dependencies)"
                                         :label="getFieldLabel(field)"
+                                        :labelHidden="getFieldLabel(field) === ' '"
                                         :key="'tab-' + index + '-field-' + subindex"
                                         :noLabelSpace="field.type === 'separator'"
                                         :labelFullWidth="field.type === 'wysiwyg'">
@@ -230,6 +231,7 @@
                             <field
                                 v-if="checkDependencies(field.dependencies)"
                                 :label="getFieldLabel(field)"
+                                :labelHidden="getFieldLabel(field) === ' '"
                                 :key="'tab-' + index + '-field-' + subindex"
                                 :noLabelSpace="field.type === 'separator'"
                                 :labelFullWidth="field.type === 'wysiwyg'">
