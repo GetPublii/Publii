@@ -37,7 +37,7 @@
                     class="publii-repeater-item-field"
                     :style="'width: ' + itemConfig[subindex].width + '%;'">
                     <label>
-                        <span v-if="!hideLabels || (hideLabels && index === 0)">
+                        <span v-if="itemConfig[subindex].type !== 'checkbox' && (!hideLabels || (hideLabels && index === 0))">
                             {{ itemConfig[subindex].label }}:
                         </span>
 
@@ -48,23 +48,68 @@
                         </dropdown>
 
                         <text-input
-                            v-if="itemConfig[subindex].type === 'text' || itemConfig[subindex].type === 'number'"
+                            v-if="itemConfig[subindex].type === 'text' || itemConfig[subindex].type === 'number' || itemConfig[subindex].type === 'url' || itemConfig[subindex].type === 'email'"
                             :type="itemConfig[subindex].type"
                             :spellcheck="itemConfig[subindex].spellcheck"
                             :placeholder="itemConfig[subindex].placeholder"
-                            v-model="content[index][itemConfig[subindex].name]" />
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :min="itemConfig[subindex].min"
+                            :max="itemConfig[subindex].max"
+                            :step="itemConfig[subindex].step" />
+
+                        <range-slider
+                            v-if="itemConfig[subindex].type === 'range'"
+                            :min="itemConfig[subindex].min"
+                            :max="itemConfig[subindex].max"
+                            :step="itemConfig[subindex].step"
+                            v-model="content[index][itemConfig[subindex].name]"></range-slider>
 
                         <text-area
                             v-if="itemConfig[subindex].type === 'textarea'"
                             :spellcheck="itemConfig[subindex].spellcheck"
                             :placeholder="itemConfig[subindex].placeholder"
+                            :rows="itemConfig[subindex].rows"
                             v-model="content[index][itemConfig[subindex].name]" />
+
+                        <text-area
+                            v-if="itemConfig[subindex].type === 'wysiwyg'"
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :wysiwyg="true"
+                            :miniEditorMode="true"></text-area>
 
                         <color-picker
                             v-if="itemConfig[subindex].type === 'colorpicker'"
                             v-model="content[index][itemConfig[subindex].name]"
                             :outputFormat="itemConfig[subindex].outputFormat ? itemConfig[subindex].outputFormat : 'RGBAorHEX'">
                         </color-picker>
+
+                        <switcher
+                            v-if="itemConfig[subindex].type === 'checkbox'"
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :lower-zindex="true"
+                            :label="itemConfig[subindex].label"></switcher>
+
+                        <radio-buttons
+                            v-if="itemConfig[subindex].type === 'radio'"
+                            :items="itemConfig[subindex].options"
+                            :name="itemConfig[subindex].name"
+                            v-model="content[index][itemConfig[subindex].name]" />
+
+                        <posts-dropdown
+                            v-if="itemConfig[subindex].type === 'posts-dropdown'"
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :allowed-post-status="itemConfig[subindex].allowedPostStatus || ['any']"
+                            :multiple="itemConfig[subindex].multiple"></posts-dropdown>
+
+                        <tags-dropdown
+                            v-if="itemConfig[subindex].type === 'tags-dropdown'"
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :multiple="itemConfig[subindex].multiple"></tags-dropdown>
+
+                        <authors-dropdown
+                            v-if="itemConfig[subindex].type === 'authors-dropdown'"
+                            v-model="content[index][itemConfig[subindex].name]"
+                            :multiple="itemConfig[subindex].multiple"></authors-dropdown>
                     </label>
                 </div>
 
