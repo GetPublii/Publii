@@ -234,12 +234,16 @@
                                     :anchor="field.anchor"
                                     :disabled="field.disabled"
                                     :placeholder="field.placeholder"></text-input>
-                                
+
                                 <repeater
                                     v-if="field.type === 'repeater'" 
                                     slot="field"
                                     :structure="field.structure"
-                                    v-model="custom[field.name]"
+                                    v-model="settingsValues[field.name]"
+                                    :translations="field.translations"
+                                    :maxCount="field.maxCount"
+                                    :hasEmptyState="field.hasEmptyState"
+                                    :hideLabels="field.hideLabels"
                                     :anchor="field.anchor" />
 
                                 <small

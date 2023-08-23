@@ -202,6 +202,10 @@
                                             slot="field"
                                             :structure="field.structure"
                                             v-model="settingsValues[field.name]"
+                                            :translations="field.translations"
+                                            :maxCount="field.maxCount"
+                                            :hasEmptyState="field.hasEmptyState"
+                                            :hideLabels="field.hideLabels"
                                             :anchor="field.anchor" />
 
                                         <small
@@ -357,6 +361,10 @@
                                     slot="field"
                                     :structure="field.structure"
                                     v-model="settingsValues[field.name]"
+                                    :translations="field.translations"
+                                    :maxCount="field.maxCount"
+                                    :hasEmptyState="field.hasEmptyState"
+                                    :hideLabels="field.hideLabels"
                                     :anchor="field.anchor" />
 
                                 <small
