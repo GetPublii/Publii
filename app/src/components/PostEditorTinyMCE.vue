@@ -174,6 +174,7 @@ export default {
             this.$refs['tinymceEditor'].init();
             this.setDataLossWatcher();
         }
+        this.addCustomEditorScript();
 
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
@@ -220,27 +221,28 @@ export default {
                     this.$refs['tinymceEditor'].init();
                 }
 
-                // Add custom editor script
-                if(
-                    this.$store.state.currentSite.themeSettings &&
-                    this.$store.state.currentSite.themeSettings.extensions &&
-                    this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
-                ) {
-                    let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
-
-                    if (!document.querySelector('custom-post-editor-script')) {
-                        $(document.body).append(
-                            // It seems that Webpack goes crazy when it sees 'script' tag :)
-                            $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
-                        );
-                    }
-                }
-
                 setTimeout(() => {
                     this.possibleDataLoss = false;
                     this.setDataLossWatcher();
                 }, 100);
             });
+        },
+        addCustomEditorScript() {
+            // Add custom editor script
+            if(
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.extensions &&
+                this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
+            ) {
+                let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
+
+                if (!document.querySelector('custom-post-editor-script')) {
+                    $(document.body).append(
+                        // It seems that Webpack goes crazy when it sees 'script' tag :)
+                        $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
+                    );
+                }
+            }
         },
         setDataLossWatcher () {
             this.unwatchDataLoss = this.$watch('postData', (newValue, oldValue) => {
