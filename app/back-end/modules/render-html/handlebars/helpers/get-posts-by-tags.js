@@ -29,7 +29,7 @@
  * * excluded - which posts should be excluded
  * * offset - how many posts to skip
  * * orderby - order field
- * * ordering - order direction
+ * * ordering - order direction - asc, desc, random
  * * tag_as - specify if we select by tag id or slug
  * * operator - (OR or AND as value) - defines how the tags should be selected (post must have all tags at once time - AND, or one of them - OR)
  * 
@@ -171,7 +171,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
             postsData = filteredPosts;
         }
 
-        if (orderby && ordering) {
+        if (orderby && ordering && ordering !== 'random') {
             postsData.sort((itemA, itemB) => {
                 if(typeof itemA[orderby] === 'string') {
                     if (ordering === 'asc') {
@@ -187,6 +187,8 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
                     }
                 }
             });
+        } else if (ordering === 'random') {
+            postsData.sort(() => 0.5 - Math.random());
         }
 
         for (let i = offset; i < count + offset; i++) {
