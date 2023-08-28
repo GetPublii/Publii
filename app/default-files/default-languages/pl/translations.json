@@ -618,6 +618,8 @@
         "disableAuthorsPaginationIndexing": "Wyłącz indeksowanie stronicowania autorów",
         "disableAuthorsPaginationIndexingInfo": "Jeśli ta opcja jest włączona, pliki paginacji stron autorów zostaną wykluczone z mapy witryny i otrzymają <strong>noindex, follow</strong> metatag robotów.",
         "disableAuthorsPaginationInfo": "Jeśli ta opcja jest włączona, paginacja autorów nie zostanie wygenerowana.",
+        "disableHomepagePagination": "Wyłącz stronicowanie strony głównej",
+        "disableHomepagePaginationInfo": "Jeśli ta opcja jest włączona, paginacja strony głównej nie zostanie wygenerowana.",
         "disableHomepagePaginationIndexing": "Wyłącz indeksowanie paginacji strony głównej",
         "disableTagsPagination": "Wyłącz stronicowanie tagów",
         "disableTagsPaginationIndexing": "Wyłącz indeksowanie stronicowania tagów",

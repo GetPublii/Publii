@@ -678,7 +678,7 @@ class Renderer {
             postsPerPage = 5;
         }
 
-        if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0) {
+        if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.homepageNoPagination) {
             let context = contextGenerator.getContext(0, postsPerPage);
             let output = '';
             this.menuContext = ['frontpage'];

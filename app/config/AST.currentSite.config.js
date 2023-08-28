@@ -41,6 +41,7 @@ const AstCurrentSiteConfig = {
         noIndexForChatGPTUser: false,
         noIndexForCommonCrawlBots: false,
         homepageNoIndexPagination: false,
+        homepageNoPagination: false,
         metaRobotsIndex: 'index, follow',
         postMetaTitle: '%posttitle - %sitename ',
         postMetaDescription: '',

@@ -618,6 +618,8 @@
         "disableAuthorsPaginationIndexing": "Disable authors pagination indexing",
         "disableAuthorsPaginationIndexingInfo": "When enabled, your authors pagination files will be excluded from the sitemap and will have the <strong>noindex, follow</strong> robots metatags added.",
         "disableAuthorsPaginationInfo": "When enabled, your authors pagination won't be generated.",
+        "disableHomepagePagination": "Disable homepage pagination",
+        "disableHomepagePaginationInfo": "When enabled, your homepage pagination won't be generated.",
         "disableHomepagePaginationIndexing": "Disable homepage pagination indexing",
         "disableTagsPagination": "Disable tags pagination",
         "disableTagsPaginationIndexing": "Disable tags pagination indexing",

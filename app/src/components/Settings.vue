@@ -188,7 +188,6 @@
                         </field>
 
                         <separator
-                            v-if="!advanced.noIndexThisPage"
                             type="medium"
                             :label="$t('settings.frontpage')" />
 
@@ -242,6 +241,20 @@
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.homepageNoIndexPagination')">
+                            </small>
+                        </field>
+
+                        <field
+                            id="homepage-no-pagination"
+                            :label="$t('settings.disableHomepagePagination')">
+                            <switcher
+                                slot="field"
+                                id="homepage-no-pagination"
+                                v-model="advanced.homepageNoPagination" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.disableHomepagePaginationInfo')">
                             </small>
                         </field>
 

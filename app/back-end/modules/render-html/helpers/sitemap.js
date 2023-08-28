@@ -224,7 +224,7 @@ class Sitemap {
 
             // Detect homepage pagination
             if (file === this.siteConfig.advanced.urls.pageName) {
-                if (!this.siteConfig.advanced.homepageNoIndexPagination) {
+                if (!this.siteConfig.advanced.homepageNoIndexPagination && !this.siteConfig.advanced.homepageNoPagination) {
                     await this.getHomepagePaginationFilesList();
                 }
 
