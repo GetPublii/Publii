@@ -41,6 +41,12 @@ class WxrParser {
             },
             imagesQueue: {}
         };
+
+        // Allow download.image to be replaced in tests.
+        this._downloadImage = download.image;
+
+        // Allow tests to override the per-image delay.
+        this.delayBetweenImages = 250;
     }
 
     /**
@@ -85,7 +91,11 @@ class WxrParser {
         try {
             let xmlParser = new XMLParser({
                 ignoreAttributes: false,
-                attributeNamePrefix : "@_"
+                attributeNamePrefix : "@_",
+                isArray: (name, jpath, isLeafNode, isAttribute) => {
+                    // We always want an array of items.
+                    if(jpath == 'rss.channel.item') return true;
+                }
             });
             results = xmlParser.parse(this.fileContent);
         } catch(e) {
@@ -370,11 +380,12 @@ class WxrParser {
     importPostsData() {
         let posts = this.parsedContent.rss.channel['item'];
         let newPost;
-        posts = posts ? posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1) : false;
 
         if(!posts) {
             return;
         }
+
+        posts = posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1);
 
         let untitledPostsCount = 1;
 
@@ -604,7 +615,7 @@ class WxrParser {
         if(imageFileName && imageFileName.pathname) {
             imageFileName = path.basename(imageFileName.pathname);
 
-            download.image({
+            this._downloadImage({
                 url: image.replace(imageFileName, encodeURIComponent(imageFileName)),
                 dest: path.join(dirPath, imageFileName),
                 headers: {
@@ -628,7 +639,7 @@ class WxrParser {
 
                 setTimeout(() => {
                     this.downloadImages(imagesQueue, destinationPath);
-                }, 250);
+                }, this.delayBetweenImages);
             }).catch(err => {
                 this.downloadImagesProgress++;
 
@@ -647,14 +658,14 @@ class WxrParser {
 
                 setTimeout(() => {
                     this.downloadImages(imagesQueue, destinationPath);
-                }, 250);
+                }, this.delayBetweenImages);
             });
         } else {
             console.log('(!!) An error occurred during downloading the image: ' + image);
 
             setTimeout(() => {
                 this.downloadImages(imagesQueue, destinationPath);
-            }, 250);
+            }, this.delayBetweenImages);
         }
     }
 
