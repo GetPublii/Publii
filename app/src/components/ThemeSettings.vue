@@ -244,7 +244,8 @@
                                     :maxCount="field.maxCount"
                                     :hasEmptyState="field.hasEmptyState"
                                     :hideLabels="field.hideLabels"
-                                    :anchor="field.anchor" />
+                                    :anchor="field.anchor"
+                                    :settings="settingsValues" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"

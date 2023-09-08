@@ -31,87 +31,89 @@
                         size="xs" />
                 </span>
 
-                <div 
-                    v-for="(field, subindex) of itemConfig"
-                    :key="'publii-repeater-row-' + index + '-' + subindex"
-                    class="publii-repeater-item-field"
-                    :style="'width: ' + itemConfig[subindex].width + '%;'">
-                    <label>
-                        <span v-if="itemConfig[subindex].type !== 'checkbox' && (!hideLabels || (hideLabels && index === 0))">
-                            {{ itemConfig[subindex].label }}:
-                        </span>
+                <template v-for="(field, subindex) of itemConfig">
+                    <div 
+                        v-if="isVisible(itemConfig[subindex], index)"
+                        :key="'publii-repeater-row-' + index + '-' + subindex"
+                        class="publii-repeater-item-field"
+                        :style="'width: ' + itemConfig[subindex].width + '%;'">
+                        <label>
+                            <span v-if="itemConfig[subindex].type !== 'checkbox' && (!hideLabels || (hideLabels && index === 0))">
+                                {{ itemConfig[subindex].label }}:
+                            </span>
 
-                        <dropdown
-                            v-if="itemConfig[subindex].type === 'dropdown'"
-                            :items="itemConfig[subindex].options"
-                            v-model="content[index][itemConfig[subindex].name]">
-                        </dropdown>
+                            <dropdown
+                                v-if="itemConfig[subindex].type === 'dropdown'"
+                                :items="itemConfig[subindex].options"
+                                v-model="content[index][itemConfig[subindex].name]">
+                            </dropdown>
 
-                        <text-input
-                            v-if="itemConfig[subindex].type === 'text' || itemConfig[subindex].type === 'number' || itemConfig[subindex].type === 'url' || itemConfig[subindex].type === 'email'"
-                            :type="itemConfig[subindex].type"
-                            :spellcheck="itemConfig[subindex].spellcheck"
-                            :placeholder="itemConfig[subindex].placeholder"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :min="itemConfig[subindex].min"
-                            :max="itemConfig[subindex].max"
-                            :step="itemConfig[subindex].step" />
+                            <text-input
+                                v-if="itemConfig[subindex].type === 'text' || itemConfig[subindex].type === 'number' || itemConfig[subindex].type === 'url' || itemConfig[subindex].type === 'email'"
+                                :type="itemConfig[subindex].type"
+                                :spellcheck="itemConfig[subindex].spellcheck"
+                                :placeholder="itemConfig[subindex].placeholder"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :min="itemConfig[subindex].min"
+                                :max="itemConfig[subindex].max"
+                                :step="itemConfig[subindex].step" />
 
-                        <range-slider
-                            v-if="itemConfig[subindex].type === 'range'"
-                            :min="itemConfig[subindex].min"
-                            :max="itemConfig[subindex].max"
-                            :step="itemConfig[subindex].step"
-                            v-model="content[index][itemConfig[subindex].name]"></range-slider>
+                            <range-slider
+                                v-if="itemConfig[subindex].type === 'range'"
+                                :min="itemConfig[subindex].min"
+                                :max="itemConfig[subindex].max"
+                                :step="itemConfig[subindex].step"
+                                v-model="content[index][itemConfig[subindex].name]"></range-slider>
 
-                        <text-area
-                            v-if="itemConfig[subindex].type === 'textarea'"
-                            :spellcheck="itemConfig[subindex].spellcheck"
-                            :placeholder="itemConfig[subindex].placeholder"
-                            :rows="itemConfig[subindex].rows"
-                            v-model="content[index][itemConfig[subindex].name]" />
+                            <text-area
+                                v-if="itemConfig[subindex].type === 'textarea'"
+                                :spellcheck="itemConfig[subindex].spellcheck"
+                                :placeholder="itemConfig[subindex].placeholder"
+                                :rows="itemConfig[subindex].rows"
+                                v-model="content[index][itemConfig[subindex].name]" />
 
-                        <text-area
-                            v-if="itemConfig[subindex].type === 'wysiwyg'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :wysiwyg="true"
-                            :miniEditorMode="true"></text-area>
+                            <text-area
+                                v-if="itemConfig[subindex].type === 'wysiwyg'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :wysiwyg="true"
+                                :miniEditorMode="true"></text-area>
 
-                        <color-picker
-                            v-if="itemConfig[subindex].type === 'colorpicker'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :outputFormat="itemConfig[subindex].outputFormat ? itemConfig[subindex].outputFormat : 'RGBAorHEX'">
-                        </color-picker>
+                            <color-picker
+                                v-if="itemConfig[subindex].type === 'colorpicker'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :outputFormat="itemConfig[subindex].outputFormat ? itemConfig[subindex].outputFormat : 'RGBAorHEX'">
+                            </color-picker>
 
-                        <switcher
-                            v-if="itemConfig[subindex].type === 'checkbox'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :lower-zindex="true"
-                            :label="itemConfig[subindex].label"></switcher>
+                            <switcher
+                                v-if="itemConfig[subindex].type === 'checkbox'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :lower-zindex="true"
+                                :label="itemConfig[subindex].label"></switcher>
 
-                        <radio-buttons
-                            v-if="itemConfig[subindex].type === 'radio'"
-                            :items="itemConfig[subindex].options"
-                            :name="itemConfig[subindex].name"
-                            v-model="content[index][itemConfig[subindex].name]" />
+                            <radio-buttons
+                                v-if="itemConfig[subindex].type === 'radio'"
+                                :items="itemConfig[subindex].options"
+                                :name="itemConfig[subindex].name"
+                                v-model="content[index][itemConfig[subindex].name]" />
 
-                        <posts-dropdown
-                            v-if="itemConfig[subindex].type === 'posts-dropdown'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :allowed-post-status="itemConfig[subindex].allowedPostStatus || ['any']"
-                            :multiple="itemConfig[subindex].multiple"></posts-dropdown>
+                            <posts-dropdown
+                                v-if="itemConfig[subindex].type === 'posts-dropdown'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :allowed-post-status="itemConfig[subindex].allowedPostStatus || ['any']"
+                                :multiple="itemConfig[subindex].multiple"></posts-dropdown>
 
-                        <tags-dropdown
-                            v-if="itemConfig[subindex].type === 'tags-dropdown'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :multiple="itemConfig[subindex].multiple"></tags-dropdown>
+                            <tags-dropdown
+                                v-if="itemConfig[subindex].type === 'tags-dropdown'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :multiple="itemConfig[subindex].multiple"></tags-dropdown>
 
-                        <authors-dropdown
-                            v-if="itemConfig[subindex].type === 'authors-dropdown'"
-                            v-model="content[index][itemConfig[subindex].name]"
-                            :multiple="itemConfig[subindex].multiple"></authors-dropdown>
-                    </label>
-                </div>
+                            <authors-dropdown
+                                v-if="itemConfig[subindex].type === 'authors-dropdown'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :multiple="itemConfig[subindex].multiple"></authors-dropdown>
+                        </label>
+                    </div>
+                </template>
 
                 <div class="publii-repeater-item-ui">
                     <a
@@ -180,6 +182,10 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        settings: {
+            default: () => ({}),
+            type: Object
         }
     },
     components: {
@@ -258,6 +264,54 @@ export default {
 
                 return this.$t('repeater.removeItem');
             }
+        },
+        isVisible (itemConfig, index) {
+            if (!itemConfig.dependencies || !itemConfig.dependencies.length) {
+                return true;
+            }
+
+            for (let i = 0; i < itemConfig.dependencies.length; i++) {
+                let dependencyName = itemConfig.dependencies[i].field;
+                let dependencyType = itemConfig.dependencies[i].type;
+                let dependencyValue = itemConfig.dependencies[i].value;
+                let valueToCompare;
+
+                if (dependencyType === 'pluginOption') {
+                    valueToCompare = this.settings[dependencyName];
+                } else {
+                    valueToCompare = this.content[index][dependencyName];
+                }
+
+                if (dependencyValue === "true" && valueToCompare !== true) {
+                    return false;
+                } else if (dependencyValue === "true") {
+                    continue;
+                }
+
+                if (dependencyValue === "false" && valueToCompare !== false) {
+                    return false;
+                } else if (dependencyValue === "false") {
+                    continue;
+                }
+
+                if (typeof dependencyValue === 'string' && dependencyValue.indexOf(',') > -1) {
+                    let values = dependencyValue.split(',');
+
+                    for (let i = 0; i < values.length; i++) {
+                        if (valueToCompare === values[i]) {
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                }
+
+                if (dependencyValue !== valueToCompare) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
