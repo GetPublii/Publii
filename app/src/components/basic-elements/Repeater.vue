@@ -1,5 +1,16 @@
 <template>
     <div :id="anchor">
+        <div 
+            v-if="!content.length && hasEmptyState"
+            class="publii-repeater-empty-state">
+            <template v-if="translations.emptyState">
+                {{ translation('empty') }}
+            </template>
+            <template v-else>
+                {{ $t('repeater.emptyState') }}
+            </template>
+        </div>
+
         <draggable
             tag="div"
             group="publii-repeater"
@@ -8,17 +19,6 @@
             handle=".move"
             class="publii-repeater"
             v-model="content">
-            <div 
-                v-if="!content.length && hasEmptyState"
-                class="publii-repeater-empty-state">
-                <template v-if="translations.emptyState">
-                    {{ translation('empty') }}
-                </template>
-                <template v-else>
-                    {{ $t('repeater.emptyState') }}
-                </template>
-            </div>
-
             <div 
                 v-for="(row, index) of content"
                 :key="'publii-repeater-row-' + index"
@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable'
+import Draggable from 'vuedraggable';
 
 export default {
     name: 'repeater',
