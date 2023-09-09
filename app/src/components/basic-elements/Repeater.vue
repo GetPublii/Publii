@@ -93,7 +93,7 @@
                             <radio-buttons
                                 v-if="itemConfig[subindex].type === 'radio'"
                                 :items="itemConfig[subindex].options"
-                                :name="itemConfig[subindex].name"
+                                :name="itemConfig[subindex].name + '-' + index + '-' + subindex"
                                 v-model="content[index][itemConfig[subindex].name]" />
 
                             <posts-dropdown
@@ -111,6 +111,13 @@
                                 v-if="itemConfig[subindex].type === 'authors-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
                                 :multiple="itemConfig[subindex].multiple"></authors-dropdown>
+
+                            <small
+                                v-if="itemConfig[subindex].note && (!hideLabels || (hideLabels && index === 0))"
+                                slot="note"
+                                class="note">
+                                {{ itemConfig[subindex].note }}
+                            </small>
                         </label>
                     </div>
                 </template>
