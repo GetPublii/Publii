@@ -150,7 +150,9 @@
 
         <p-button
             v-if="maxCount === -1 || maxCount < content.length"
-            :onClick="addItem">
+            :onClick="addItem"
+            type="secondary icon"
+            icon="add-site-mono">
             {{ translation('add') }}
         </p-button>
     </div>
@@ -335,6 +337,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         position: relative;
+        width: calc(100% - 56px);
 
         &-ui {
             position: absolute;
@@ -348,10 +351,58 @@ export default {
 
                 & > span {
                     display: block;
+                    font-size: 1.4rem;
+                    font-weight: bold;
+                    margin: 0 0 1rem 0;
                 }
 
                 & > * {
                     width: calc(100% - 10px)!important;
+                }
+            }
+
+            .note {
+                clear: both;
+                color: var(--text-light-color);
+                display: block;
+                font-size: 1.35rem;
+                font-style: italic;
+                line-height: 1.4;        
+                padding: .5rem 0 1rem 0;
+                user-select: text;
+
+                svg {
+                    display: inline-block;
+                    height: 1.4rem;
+                    margin-right: .5rem;
+                    width: 1.4rem;
+                }
+                
+                a {
+                    color: var(--link-primary-color);
+                    
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        color: var(--link-primary-color-hover);
+                    }
+                }
+            }
+
+            label + .note {
+                padding-top: 1.5rem;
+            }
+
+            .checkbox ~ .note {
+                margin-bottom: 1.5rem;
+            }
+
+            .range-wrapper {
+                position: relative;
+                z-index: 1;
+
+                & + .note {
+                    padding-top: 1.5rem;
                 }
             }
         }
@@ -364,10 +415,35 @@ export default {
         }
 
         .move {
-            position: absolute;
+            cursor: move;
             left: -20px;
+            position: absolute;
             width: 20px;
         }
+
+        &.is-ghost {
+            &::before { 
+                background-color: var(--collection-bg-hover);                
+                border: 1px dashed var(--input-border-focus);
+                border-radius: var(--border-radius);
+                content: "";
+                display: block;   
+                position: absolute;
+                left: -1.5rem;
+                right: -7rem;
+                bottom: .75rem;
+                top: -1.5rem;
+            }
+            .publii-repeater-item-field, 
+            .publii-repeater-item-ui,
+            .move {
+                opacity: 0;
+            }
+        }
+    }
+
+    &-empty-state {
+        margin-bottom: 1.2rem;
     }
 }
 </style>
