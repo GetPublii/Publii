@@ -145,7 +145,11 @@ class RendererPlugins {
         let output = originalValue;
 
         for (let i = 0; i < modifiers.length; i++) {
-            output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, params)();
+            if (Array.isArray(params)) {
+                output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, ...params)();
+            } else {
+                output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, params)();
+            }
         }
 
         return output;
