@@ -27,6 +27,7 @@
  * * allowed - which post statuses should be included
  * * tags - which tags should be used
  * * excluded - which posts should be excluded
+ * * excluded_status - which posts statuses should be excluded
  * * offset - how many posts to skip
  * * orderby - order field
  * * ordering - order direction - asc, desc, random
@@ -49,6 +50,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         let count;
         let offset = 0;
         let allowedStatus = 'any';
+        let excludedStatus = '';
         let orderby = false;
         let ordering = 'desc';
         let tagAs = 'slug';
@@ -75,6 +77,10 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
             if (queryStringData['excluded']) {
                 excludedPosts = queryStringData['excluded'];
+            }
+
+            if (queryStringData['excluded_status']) {
+                excludedStatus = queryStringData['excluded_status'];
             }
 
             if (queryStringData['tags']) {
@@ -132,17 +138,34 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
         if (allowedStatus !== 'any') {
             allowedStatus = allowedStatus.split(',');
-            filteredPosts = filteredPosts.filter(post => {
-                let hasAllowedStatus = false;
+            excludedStatus = excludedStatus.split(',');
 
+            filteredPosts = filteredPosts.filter(post => {
+                for (let i = 0; i < excludedStatus.length; i++) {
+                    if (post.status.indexOf(excludedStatus[i]) > -1) {
+                        return false;
+                    }
+                }
+                
                 for (let i = 0; i < allowedStatus.length; i++) {
                     if (post.status.indexOf(allowedStatus[i]) > -1) {
-                        hasAllowedStatus = true;
-                        break;
+                        return true;
                     }
                 }
 
-                return hasAllowedStatus;
+                return false;
+            });
+        } else if (allowedStatus === 'any' && excludedStatus !== '') {
+            excludedStatus = excludedStatus.split(',');
+
+            filteredPosts = filteredPosts.filter(post => {
+                for (let i = 0; i < excludedStatus.length; i++) {
+                    if (post.status.indexOf(excludedStatus[i]) > -1) {
+                        return false;
+                    }
+                }
+
+                return true;
             });
         }
 
