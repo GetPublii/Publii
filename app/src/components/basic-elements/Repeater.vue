@@ -125,7 +125,7 @@
                 <div class="publii-repeater-item-ui">
                     <a
                         href="#"
-                        class="duplicate"
+                        class="publii-repeater-item-ui-btn duplicate"
                         :title="translation('duplicate')"
                         tabindex="-1"
                         @click.stop.prevent="duplicateItem(index)">
@@ -136,7 +136,7 @@
 
                     <a
                         href="#"
-                        class="delete"
+                        class="publii-repeater-item-ui-btn delete"
                         :title="translation('remove')"
                         tabindex="-1"
                         @click.stop.prevent="removeItem(index)">
@@ -337,12 +337,60 @@ export default {
         display: flex;
         flex-wrap: wrap;
         position: relative;
-        width: calc(100% - 56px);
+        width: calc(100% - 68px);
 
         &-ui {
+            display: flex;
             position: absolute;
-            right: -30px;
-            width: 30px;
+            right: -68px;
+            width: 68px;
+
+            &-btn {
+                align-items: center;
+                background: var(--gray-1);
+                position: relative;
+                border-radius: 50%;
+                display: flex;
+                height: 30px;
+                justify-content: center;
+                margin: 0 2px;
+                position: relative;
+                text-align: center;
+                width: 30px;
+
+                &:active,
+                &:focus,
+                &:hover {
+                    color: var(--headings-color);
+                }
+
+                &:hover {
+
+                    & > svg {
+                       fill: var(--icon-tertiary-color);
+                       transform: scale(1);
+                    }
+                }
+
+                svg {
+                    fill: var(--icon-secondary-color);
+                    height: 1.6rem;
+                    pointer-events: none;
+                    transform: scale(.9);
+                    transition: var(--transition);
+                    width: 1.6rem;
+                }
+
+                &.delete {
+
+                    &:hover {
+
+                        & > svg {
+                           fill: var(--warning);
+                        }
+                    }
+                }
+            } 
         }
 
         &-field {
@@ -407,18 +455,26 @@ export default {
             }
         }
 
-        &-ui {
-            .delete,
-            .duplicate {
-
-            }
-        }
-
         .move {
             cursor: move;
             left: -20px;
             position: absolute;
             width: 20px;
+
+            &:hover {
+
+                & > svg {
+                      fill: var(--icon-tertiary-color);
+                    }
+                }
+
+            svg {
+                fill: var(--icon-secondary-color);
+                height: 1.6rem;
+                pointer-events: none;
+                vertical-align: middle;
+                width: 1.6rem;
+            }
         }
 
         &.is-ghost {
@@ -438,6 +494,15 @@ export default {
             .publii-repeater-item-ui,
             .move {
                 opacity: 0;
+            }
+        }
+
+        &:first-child {
+            .move {
+                top: 3.24rem
+            }
+            .publii-repeater-item-ui {
+                top: 3.24rem
             }
         }
     }
