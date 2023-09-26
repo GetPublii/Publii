@@ -66,7 +66,7 @@ class GitlabPages {
                 let projectID = projects[0].id;
 
                 // Detect a case when repository name is only similar to the provided repository name (not equal)
-                if (projects[0].name !== repository) {
+                if (projects[0].name !== repository && projects[0].path !== repository) {
                     this.waitForTimeout = false;
                     app.mainWindow.webContents.send('app-deploy-test-error', {
                         message: {
