@@ -614,7 +614,22 @@
                         {{ $t('sync.serverGitLabNote') }}
                     </small>
                 </field>
-
+                
+                <field
+                    v-if="deploymentMethodSelected === 'gitlab-pages'"
+                    id="gl-rejectunauthorized"
+                    label="Certificates"
+                    :labelSeparated="true">
+                    <switcher
+                        slot="field"
+                        id="gl-rejectunauthorized"
+                        key="gl-rejectunauthorized"
+                        v-model="deploymentSettings.gitlab.rejectUnauthorized" />
+                    <template slot="second-label">
+                        Require a valid certificate for connection
+                    </template>
+                </field>
+                
                 <field
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-repo"
