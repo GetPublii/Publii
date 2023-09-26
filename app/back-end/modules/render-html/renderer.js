@@ -1670,7 +1670,7 @@ class Renderer {
         }
 
         if (format === 'json' && this.plugins.hasModifiers('feedJsonOutput')) {
-            output = this.plugins.runModifiers('feedXmlOutput', this.renderer, output, context); 
+            output = this.plugins.runModifiers('feedJsonOutput', this.renderer, output, context); 
         }
 
         this.templateHelper.saveOutputFile('feed.' + format, output);
