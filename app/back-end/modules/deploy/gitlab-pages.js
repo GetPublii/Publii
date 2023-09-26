@@ -49,7 +49,8 @@ class GitlabPages {
 
         this.client = new Gitlab({
             host: deploymentConfig.gitlab.server,
-            token: token
+            token: token,
+            rejectUnauthorized: deploymentConfig.gitlab.rejectUnauthorized
         });
 
         this.client.Projects.all({
@@ -161,8 +162,9 @@ class GitlabPages {
         }
 
         this.client = new Gitlab({
-            url: this.deployment.siteConfig.deployment.gitlab.server,
-            token: token
+            host: this.deployment.siteConfig.deployment.gitlab.server,
+            token: token,
+            rejectUnauthorized: this.deployment.siteConfig.deployment.gitlab.rejectUnauthorized
         });
 
         this.setUploadProgress(6);
