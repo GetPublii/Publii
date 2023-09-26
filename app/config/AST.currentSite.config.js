@@ -182,7 +182,6 @@ const AstCurrentSiteConfig = {
         },
         gitlab: {
             server: 'https://gitlab.com/',
-            rejectUnauthorized: true,
             repo: '',
             branch: '',
             token: ''
