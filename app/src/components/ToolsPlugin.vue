@@ -34,6 +34,16 @@
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
+
+                <btn-dropdown
+                    v-if="!previewNotRequired"
+                    slot="buttons"
+                    buttonColor="green"
+                    :items="dropdownItems"
+                    :disabled="!siteHasTheme || buttonsLocked"
+                    localStorageKey="publii-preview-mode"
+                    :previewIcon="true"
+                    defaultValue="full-site-preview" />
             </p-header>
 
             <supported-features-check
@@ -429,6 +439,45 @@ export default {
         },
         pluginHasConfig () {
             return !!this.settings.length;
+        },
+        dropdownItems () {
+            return [
+                {
+                    label: this.$t('ui.previewFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'full-site-preview',
+                    isVisible: () => true,
+                    icon: 'full-preview-monitor',
+                    onClick: this.saveAndPreview.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.renderFullWebsite'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'full-site-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    icon: 'full-render-monitor',
+                    onClick: this.saveAndRender.bind(this, 'full-site')
+                },
+                {
+                    label: this.$t('ui.previewFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndPreview'),
+                    value: 'homepage-preview',
+                    icon: 'quick-preview',
+                    isVisible: () => true,
+                    onClick: this.saveAndPreview.bind(this, 'homepage')
+                },
+                {
+                    label: this.$t('ui.renderFrontPageOnly'),
+                    activeLabel: this.$t('ui.saveAndRender'),
+                    value: 'homepage-render',
+                    icon: 'quick-render',
+                    isVisible: () => !!this.$store.state.app.config.enableAdvancedPreview,
+                    onClick: this.saveAndRender.bind(this, 'homepage')
+                }
+            ];
+        },
+        siteHasTheme () {
+            return !!this.$store.state.currentSite.config.theme;
         }
     },
     data () {
@@ -444,7 +493,8 @@ export default {
             requiredFeatures: null,
             pluginStandardOptionsVisible: true,
             pluginSettingsDisplay: 'fieldsets',
-            pluginSettingsTabsLabel: ''
+            pluginSettingsTabsLabel: '',
+            previewNotRequired: false
         };
     },
     async mounted () {
@@ -476,6 +526,7 @@ export default {
                 this.requiredFeatures = result.pluginData.requiredFeatures || [];
                 this.pluginSettingsDisplay = result.pluginData.settingsDisplay || 'fieldsets';
                 this.pluginSettingsTabsLabel = result.pluginData.tabsTitle || this.$t('toolsPlugin.tabsLabel');
+                this.previewNotRequired = result.pluginData.previewNotRequired || false;
 
                 if (this.hasPluginCustomOptions) {
                     this.pluginStandardOptionsVisible = false;
@@ -634,27 +685,59 @@ export default {
                 }
             }
         },
-        save () {
+        saveAndPreview (renderingType = false) {
+            this.save(true, renderingType, false);
+        },
+        saveAndRender (renderingType = false) {
+            this.save(true, renderingType, true);
+        },
+        save (showPreview = false, renderingType = false, renderFiles = false) {
             this.$bus.$emit('plugin-settings-before-save');
 
-            setTimeout(() => {
-                this.saveSettings();
+            setTimeout(async () => {
+                await this.saveSettings(showPreview, renderingType, renderFiles);
             }, 500);
         },
-        saveSettings () {
+        async saveSettings (showPreview = false, renderingType = false, renderFiles = false) {
             mainProcessAPI.send('app-site-save-plugin-config', {
                 siteName: this.$route.params.name,
                 pluginName: this.$route.params.pluginname,
                 newConfig: this.settingsValues
             });
 
-            mainProcessAPI.receiveOnce('app-site-plugin-config-saved', (result) => {
+            mainProcessAPI.receiveOnce('app-site-plugin-config-saved', async (result) => {
                 if (result === true) {
                     this.$bus.$emit('message-display', {
                         message: this.$t('toolsPlugin.pluginSettingsSaveSuccess'),
                         type: 'success',
                         lifeTime: 3
                     });
+
+                    if (showPreview) {
+                        let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
+
+                        if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
+                            this.$bus.$emit('confirm-display', {
+                                message: this.$t('sync.previewCatalogDoesNotExistInfo'),
+                                okLabel: this.$t('sync.goToAppSettings'),
+                                okClick: () => {
+                                    this.$router.push(`/app-settings/`);
+                                }
+                            });
+                            return;
+                        }
+
+                        if (renderingType === 'homepage') {
+                            this.$bus.$emit('rendering-popup-display', {
+                                homepageOnly: true,
+                                showPreview: !renderFiles,
+                            });
+                        } else {
+                            this.$bus.$emit('rendering-popup-display', {
+                                showPreview: !renderFiles 
+                            });
+                        }
+                    }
                 } else {
                     this.$bus.$emit('message-display', {
                         message: this.$t('toolsPlugin.pluginSettingsSaveError'),
