@@ -31,6 +31,7 @@
                     v-if="pluginStandardOptionsVisible"
                     @click.native="save"
                     slot="buttons"
+                    type="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
@@ -393,9 +394,23 @@
                 </template>
 
                 <p-footer>
+                    <btn-dropdown
+                        v-if="!previewNotRequired"
+                        slot="buttons"
+                        buttonColor="green"
+                        type="is-reversed"
+                        :items="dropdownItems"
+                        :disabled="!siteHasTheme || buttonsLocked"
+                        localStorageKey="publii-preview-mode"
+                        :previewIcon="true"
+                        :isReversed="true"
+                        defaultValue="full-site-preview" />
+
                     <p-button
+                        v-if="pluginStandardOptionsVisible"
                         @click.native="save"
                         slot="buttons"
+                        type="secondary"
                         :disabled="buttonsLocked">
                         {{ $t('settings.saveSettings') }}
                     </p-button>
