@@ -29,7 +29,7 @@
 
                 <p-button
                     v-if="pluginStandardOptionsVisible"
-                    @click.native="save"
+                    @click.native="save(false, false, false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -408,7 +408,7 @@
 
                     <p-button
                         v-if="pluginStandardOptionsVisible"
-                        @click.native="save"
+                        @click.native="save(false, false, false)"
                         slot="buttons"
                         type="secondary"
                         :disabled="buttonsLocked">
