@@ -1,5 +1,7 @@
 <template>
-    <div :id="anchor">
+    <div 
+        :id="anchor"
+        :class="cssClasses">
         <div 
             v-if="!content.length && hasEmptyState"
             class="publii-repeater-empty-state">
@@ -45,7 +47,8 @@
                             <dropdown
                                 v-if="itemConfig[subindex].type === 'dropdown'"
                                 :items="itemConfig[subindex].options"
-                                v-model="content[index][itemConfig[subindex].name]">
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :customCssClasses="itemConfig[subindex].customCssClasses">
                             </dropdown>
 
                             <text-input
@@ -56,61 +59,71 @@
                                 v-model="content[index][itemConfig[subindex].name]"
                                 :min="itemConfig[subindex].min"
                                 :max="itemConfig[subindex].max"
-                                :step="itemConfig[subindex].step" />
+                                :step="itemConfig[subindex].step"
+                                :customCssClasses="itemConfig[subindex].customCssClasses" />
 
                             <range-slider
                                 v-if="itemConfig[subindex].type === 'range'"
                                 :min="itemConfig[subindex].min"
                                 :max="itemConfig[subindex].max"
                                 :step="itemConfig[subindex].step"
-                                v-model="content[index][itemConfig[subindex].name]"></range-slider>
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></range-slider>
 
                             <text-area
                                 v-if="itemConfig[subindex].type === 'textarea'"
                                 :spellcheck="itemConfig[subindex].spellcheck"
                                 :placeholder="itemConfig[subindex].placeholder"
                                 :rows="itemConfig[subindex].rows"
-                                v-model="content[index][itemConfig[subindex].name]" />
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :customCssClasses="itemConfig[subindex].customCssClasses" />
 
                             <text-area
                                 v-if="itemConfig[subindex].type === 'wysiwyg'"
                                 v-model="content[index][itemConfig[subindex].name]"
                                 :wysiwyg="true"
-                                :miniEditorMode="true"></text-area>
+                                :miniEditorMode="true"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></text-area>
 
                             <color-picker
                                 v-if="itemConfig[subindex].type === 'colorpicker'"
                                 v-model="content[index][itemConfig[subindex].name]"
-                                :outputFormat="itemConfig[subindex].outputFormat ? itemConfig[subindex].outputFormat : 'RGBAorHEX'">
+                                :outputFormat="itemConfig[subindex].outputFormat ? itemConfig[subindex].outputFormat : 'RGBAorHEX'"
+                                :customCssClasses="itemConfig[subindex].customCssClasses">
                             </color-picker>
 
                             <switcher
                                 v-if="itemConfig[subindex].type === 'checkbox'"
                                 v-model="content[index][itemConfig[subindex].name]"
                                 :lower-zindex="true"
-                                :label="itemConfig[subindex].label"></switcher>
+                                :label="itemConfig[subindex].label"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></switcher>
 
                             <radio-buttons
                                 v-if="itemConfig[subindex].type === 'radio'"
                                 :items="itemConfig[subindex].options"
                                 :name="itemConfig[subindex].name + '-' + index + '-' + subindex"
-                                v-model="content[index][itemConfig[subindex].name]" />
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :customCssClasses="itemConfig[subindex].customCssClasses" />
 
                             <posts-dropdown
                                 v-if="itemConfig[subindex].type === 'posts-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
                                 :allowed-post-status="itemConfig[subindex].allowedPostStatus || ['any']"
-                                :multiple="itemConfig[subindex].multiple"></posts-dropdown>
+                                :multiple="itemConfig[subindex].multiple"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></posts-dropdown>
 
                             <tags-dropdown
                                 v-if="itemConfig[subindex].type === 'tags-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
-                                :multiple="itemConfig[subindex].multiple"></tags-dropdown>
+                                :multiple="itemConfig[subindex].multiple"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></tags-dropdown>
 
                             <authors-dropdown
                                 v-if="itemConfig[subindex].type === 'authors-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
-                                :multiple="itemConfig[subindex].multiple"></authors-dropdown>
+                                :multiple="itemConfig[subindex].multiple"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></authors-dropdown>
 
                             <small
                                 v-if="itemConfig[subindex].note && (!hideLabels || (hideLabels && index === 0))"
@@ -195,12 +208,28 @@ export default {
         settings: {
             default: () => ({}),
             type: Object
+        },
+        customCssClasses: {
+            default: '',
+            type: String
         }
     },
     components: {
         'draggable': Draggable
     },
     computed: {
+        cssClasses () {
+            let cssClasses = {};
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
+        },
         itemStructure () {
             let output = {};
             let keys = this.structure.map(item => item.name);

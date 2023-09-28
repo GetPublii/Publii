@@ -4,7 +4,7 @@
         :multiple="multiple"
         :disabled="disabled"
         :readonly="readonly"
-        :class="{ 'no-border': noBorder }"
+        :class="cssClasses"
         @change="onChangeEvent">
         <slot name="first-choice"></slot>
         <template v-if="Array.isArray(items)">
@@ -106,6 +106,26 @@ export default {
         disabledValues: {
             default: () => [],
             type: Array
+        },
+        customCssClasses: {
+            default: '',
+            type: String
+        }
+    },
+    computed: {
+        cssClasses () {
+            let cssClasses = { 
+                'no-border': this.noBorder 
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     data: function() {

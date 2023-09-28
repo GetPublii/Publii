@@ -1,7 +1,7 @@
 <template>
     <span 
         :id="anchor"
-        :class="{ 'has-label': label }">
+        :class="wrapperCssClasses">
         <span
             :class="cssClasses"
             @click="toggle"></span>
@@ -39,6 +39,10 @@ export default {
         disabled: {
             default: false,
             type: Boolean
+        },
+        customCssClasses: {
+            default: '',
+            type: String
         }
     },
     data: function() {
@@ -55,6 +59,20 @@ export default {
                 'has-label': this.label,
                 'is-disabled': this.disabled
             };
+        },
+        wrapperCssClasses () {
+            let cssClasses = { 
+                'has-label': this.label 
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     watch: {

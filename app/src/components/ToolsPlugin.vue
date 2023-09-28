@@ -95,7 +95,8 @@
                                             :step="field.step"
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
-                                            slot="field"></range-slider>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></range-slider>
 
                                         <separator
                                             v-if="field.type === 'separator'"
@@ -103,7 +104,8 @@
                                             :type="field.size"
                                             :label="field.label"
                                             :anchor="field.anchor"
-                                            :note="field.note"></separator>
+                                            :note="field.note"
+                                            :customCssClasses="field.customCssClasses"></separator>
 
                                         <text-area
                                             v-if="field.type === 'textarea'"
@@ -112,7 +114,8 @@
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
                                             :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                            :cols="field.cols"></text-area>
+                                            :cols="field.cols"
+                                            :customCssClasses="field.customCssClasses"></text-area>
 
                                         <text-area
                                             v-if="field.type === 'wysiwyg'"
@@ -121,7 +124,8 @@
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
                                             :wysiwyg="true"
-                                            :miniEditorMode="true"></text-area>
+                                            :miniEditorMode="true"
+                                            :customCssClasses="field.customCssClasses"></text-area>
 
                                         <image-upload
                                             v-if="field.type === 'upload'"
@@ -131,7 +135,8 @@
                                             imageType="pluginImages"
                                             :pluginDir="$route.params.pluginname"
                                             :addMediaFolderPath="false"
-                                            :onBeforeRemove="removePluginImage"></image-upload>
+                                            :onBeforeRemove="removePluginImage"
+                                            :customCssClasses="field.customCssClasses"></image-upload>
 
                                         <small-image-upload
                                             v-if="field.type === 'smallupload'"
@@ -140,7 +145,8 @@
                                             imageType="pluginImages"
                                             :pluginDir="$route.params.pluginname"
                                             slot="field"
-                                            :onBeforeRemove="removePluginImage"></small-image-upload>
+                                            :onBeforeRemove="removePluginImage"
+                                            :customCssClasses="field.customCssClasses"></small-image-upload>
 
                                         <radio-buttons
                                             v-if="field.type === 'radio'"
@@ -148,7 +154,8 @@
                                             :name="field.name"
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
-                                            slot="field" />
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses" />
 
                                         <dropdown
                                             v-if="field.type === 'select'"
@@ -156,14 +163,16 @@
                                             :multiple="field.multiple"
                                             v-model="settingsValues[field.name]"
                                             :id="field.anchor"
-                                            :items="getDropdownOptions(field.options)"></dropdown>
+                                            :items="getDropdownOptions(field.options)"
+                                            :customCssClasses="field.customCssClasses"></dropdown>
 
                                         <switcher
                                             v-if="field.type === 'checkbox'"
                                             v-model="settingsValues[field.name]"
                                             :lower-zindex="true"
                                             :anchor="field.anchor"
-                                            slot="field"></switcher>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></switcher>
 
                                         <color-picker
                                             v-if="field.type === 'colorpicker'"
@@ -171,7 +180,8 @@
                                             :data-field="field.name"
                                             :anchor="field.anchor"
                                             :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
-                                            slot="field"></color-picker>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></color-picker>
 
                                         <posts-dropdown
                                             v-if="field.type === 'posts-dropdown'"
@@ -179,21 +189,24 @@
                                             :allowed-post-status="field.allowedPostStatus || ['any']"
                                             :multiple="field.multiple"
                                             :anchor="field.anchor"
-                                            slot="field"></posts-dropdown>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></posts-dropdown>
 
                                         <tags-dropdown
                                             v-if="field.type === 'tags-dropdown'"
                                             v-model="settingsValues[field.name]"
                                             :multiple="field.multiple"
                                             :anchor="field.anchor"
-                                            slot="field"></tags-dropdown>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></tags-dropdown>
 
                                         <authors-dropdown
                                             v-if="field.type === 'authors-dropdown'"
                                             v-model="settingsValues[field.name]"
                                             :multiple="field.multiple"
                                             :anchor="field.anchor"
-                                            slot="field"></authors-dropdown>
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></authors-dropdown>
 
                                         <text-input
                                             v-if="isNormalInput(field.type)"
@@ -207,7 +220,8 @@
                                             :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
-                                            :placeholder="field.placeholder"></text-input>
+                                            :placeholder="field.placeholder"
+                                            :customCssClasses="field.customCssClasses"></text-input>
 
                                         <repeater
                                             v-if="field.type === 'repeater'" 
@@ -219,7 +233,8 @@
                                             :hasEmptyState="field.hasEmptyState"
                                             :hideLabels="field.hideLabels"
                                             :anchor="field.anchor"
-                                            :settings="settingsValues" />
+                                            :settings="settingsValues"
+                                            :customCssClasses="field.customCssClasses" />
 
                                         <small
                                             v-if="field.note && field.type !== 'separator'"
@@ -254,7 +269,8 @@
                                     :step="field.step"
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
-                                    slot="field"></range-slider>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></range-slider>
 
                                 <separator
                                     v-if="field.type === 'separator'"
@@ -262,7 +278,8 @@
                                     :type="field.size"
                                     :label="field.label"
                                     :anchor="field.anchor"
-                                    :note="field.note"></separator>
+                                    :note="field.note"
+                                    :customCssClasses="field.customCssClasses"></separator>
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
@@ -272,7 +289,8 @@
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :disabled="field.disabled"
-                                    :cols="field.cols"></text-area>
+                                    :cols="field.cols"
+                                    :customCssClasses="field.customCssClasses"></text-area>
 
                                 <text-area
                                     v-if="field.type === 'wysiwyg'"
@@ -281,7 +299,8 @@
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
                                     :wysiwyg="true"
-                                    :miniEditorMode="true"></text-area>
+                                    :miniEditorMode="true"
+                                    :customCssClasses="field.customCssClasses"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"
@@ -291,7 +310,8 @@
                                     imageType="pluginImages"
                                     :pluginDir="$route.params.pluginname"
                                     :addMediaFolderPath="false"
-                                    :onBeforeRemove="removePluginImage"></image-upload>
+                                    :onBeforeRemove="removePluginImage"
+                                    :customCssClasses="field.customCssClasses"></image-upload>
 
                                 <small-image-upload
                                     v-if="field.type === 'smallupload'"
@@ -300,7 +320,8 @@
                                     imageType="pluginImages"
                                     :pluginDir="$route.params.pluginname"
                                     slot="field"
-                                    :onBeforeRemove="removePluginImage"></small-image-upload>
+                                    :onBeforeRemove="removePluginImage"
+                                    :customCssClasses="field.customCssClasses"></small-image-upload>
 
                                 <radio-buttons
                                     v-if="field.type === 'radio'"
@@ -308,7 +329,8 @@
                                     :name="field.name"
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
-                                    slot="field" />
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <dropdown
                                     v-if="field.type === 'select'"
@@ -316,14 +338,16 @@
                                     :multiple="field.multiple"
                                     v-model="settingsValues[field.name]"
                                     :id="field.anchor"
-                                    :items="getDropdownOptions(field.options)"></dropdown>
+                                    :items="getDropdownOptions(field.options)"
+                                    :customCssClasses="field.customCssClasses"></dropdown>
 
                                 <switcher
                                     v-if="field.type === 'checkbox'"
                                     v-model="settingsValues[field.name]"
                                     :lower-zindex="true"
                                     :anchor="field.anchor"
-                                    slot="field"></switcher>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></switcher>
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
@@ -331,7 +355,8 @@
                                     :data-field="field.name"
                                     :anchor="field.anchor"
                                     :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
-                                    slot="field"></color-picker>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></color-picker>
 
                                 <posts-dropdown
                                     v-if="field.type === 'posts-dropdown'"
@@ -339,21 +364,24 @@
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></posts-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="settingsValues[field.name]"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></tags-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="settingsValues[field.name]"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></authors-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></authors-dropdown>
 
                                 <text-input
                                     v-if="isNormalInput(field.type)"
@@ -368,7 +396,8 @@
                                     v-model="settingsValues[field.name]"
                                     :anchor="field.anchor"
                                     :disabled="field.disabled"
-                                    :placeholder="field.placeholder"></text-input>
+                                    :placeholder="field.placeholder"
+                                    :customCssClasses="field.customCssClasses"></text-input>
 
                                 <repeater
                                     v-if="field.type === 'repeater'" 
@@ -380,7 +409,8 @@
                                     :hasEmptyState="field.hasEmptyState"
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
-                                    :settings="settingsValues" />
+                                    :settings="settingsValues"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"

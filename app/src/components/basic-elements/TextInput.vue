@@ -145,8 +145,9 @@ export default {
                 'is-number': this.type === 'number'
             };
 
-            if(this.customCssClasses && this.customCssClasses.trim() !== '') {
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
                 this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
                     cssClasses[item] = true;
                 });
             }

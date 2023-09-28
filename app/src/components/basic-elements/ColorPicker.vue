@@ -1,10 +1,7 @@
 <template>
     <div 
         :id="anchor"
-        :class="{ 
-            'color-picker': true,
-            'has-disabled-toggle': outputFormat === 'RGBA' || outputFormat === 'HSLA'
-        }">
+        :class="cssClasses">
         <div
             class="color-picker-preview"
             @click="togglePicker"
@@ -44,6 +41,27 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        customCssClasses: {
+            default: '',
+            type: String
+        }
+    },
+    computed: {
+        cssClasses () {
+            let cssClasses = { 
+                'color-picker': true,
+                'has-disabled-toggle': this.outputFormat === 'RGBA' || this.outputFormat === 'HSLA'
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     data () {

@@ -1,7 +1,7 @@
 <template>
     <v-select
         ref="dropdown"
-        class="posts-dropdown"
+        :class="'posts-dropdown ' + customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
         :id="anchor"
         :options="postPages"
         v-model="selectedPost"
@@ -28,6 +28,10 @@ export default {
         value: {},
         allowedPostStatus: {
             default: ['any']
+        },
+        customCssClasses: {
+            default: '',
+            type: String
         }
     },
     data () {

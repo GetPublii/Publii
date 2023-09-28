@@ -37,11 +37,15 @@ export default {
         'note': {
             default: '',
             type: String
+        },
+        'customCssClasses': {
+            default: '',
+            type: String
         }
     },
     computed: {
         cssClasses () {
-            return {
+            let cssClasses = {
                 'separator': true,
                 'line': this.isLine,
                 'no-line': this.type.indexOf('no-line') > -1,
@@ -52,6 +56,15 @@ export default {
                 'big': this.type.indexOf('big') > -1,
                 'ultra': this.type.indexOf('ultra') > -1
             };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     }
 }

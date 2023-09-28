@@ -1,10 +1,7 @@
 <template>
     <div 
         :id="anchor"
-        :class="{ 
-            'wysiwyg-mini-editor': miniEditorMode, 
-            'has-simplified-toolbar': simplifiedToolbar 
-        }">
+        :class="cssClasses">
         <textarea
             :id="editorID"
             :data-id="editorID"
@@ -72,6 +69,27 @@ export default {
         simplifiedToolbar: {
             default: false,
             type: Boolean
+        },
+        customCssClasses: {
+            default: '',
+            type: String
+        }
+    },
+    computed: {
+        cssClasses () {
+            let cssClasses = { 
+                'wysiwyg-mini-editor': this.miniEditorMode, 
+                'has-simplified-toolbar': this.simplifiedToolbar 
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     data: function() {

@@ -1,7 +1,7 @@
 <template>
     <div 
         :id="anchor"
-        class="input-range-wrapper">
+        :class="'input-range-wrapper ' + cssClass.replace(/[^a-z0-9\-\_\s]/gmi, '')">
         <input
             type="range"
             v-model="content"
@@ -50,6 +50,10 @@ export default {
             type: [String, Number]
         },
         'anchor': {
+            default: '',
+            type: String
+        },
+        'cssClass': {
             default: '',
             type: String
         }
