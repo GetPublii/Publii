@@ -578,6 +578,11 @@ export default {
                     this.pluginPath = result.pluginData.path;
                 }
 
+                if (result.pluginData.useCustomCssForOptions) {
+                    this.pluginPath = result.pluginData.path;
+                    this.loadAdditionalCss();
+                }
+
                 this.loadSettings(result.pluginData.config, result.pluginConfig);
             });
         },
@@ -699,6 +704,13 @@ export default {
         getFieldsByGroupName (groupName) {
             return this.settings.filter(field => field.group === groupName);
         },
+        loadAdditionalCss () {
+            let customCssPath = this.pluginPath + '/plugin-options.css?v=' + (+new Date());
+
+            if (!document.querySelector('#custom-plugin-options-css')) {
+                $(document.body).append($('<link rel="stylesheet" id="custom-plugin-options-css" href="' + customCssPath + '" />'));
+            }
+        },
         loadSettings (config, savedConfig) {
             try {
                 this.settings = JSON.parse(JSON.stringify(config));
@@ -802,6 +814,11 @@ export default {
             if (filePath) {
                 mainProcessAPI.send('app-image-upload-remove', filePath, this.$route.params.name);
             }
+        }
+    },
+    beforeDestroy () {
+        if (document.querySelector('#custom-plugin-options-css')) {
+            $('#custom-plugin-options-css').remove();
         }
     }
 }

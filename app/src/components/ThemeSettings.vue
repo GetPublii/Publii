@@ -606,14 +606,37 @@ export default {
                     onClick: this.saveAndRender.bind(this, 'homepage')
                 }
             ];
+        },
+        extensionsPath () {
+            return [
+                'file:///',
+                this.$store.state.currentSite.siteDir,
+                '/input/themes/',
+                this.$store.state.currentSite.config.theme,
+                '/'
+            ].join('');
         }
     },
     mounted () {
         setTimeout (() => {
+            this.loadAdditionalCss();
             this.loadSettings();
         }, 0);
     },
     methods: {
+        loadAdditionalCss () {
+            if (
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.supportedFeatures.customThemeOptionsCss
+            ) {
+                let customCssPath = this.extensionsPath + 'theme-options.css?v=' + (+new Date());
+
+                if (!document.querySelector('#custom-theme-options-css')) {
+                    $(document.body).append($('<link rel="stylesheet" id="custom-theme-options-css" href="' + customCssPath + '" />'));
+                }
+            }
+        },
         loadSettings () {
             this.loadBasicSettings();
             this.loadCustomSettings();
@@ -938,6 +961,11 @@ export default {
                     lifeTime: 3
                 });
             });
+        }
+    },
+    beforeDestroy () {
+        if (document.querySelector('#custom-theme-options-css')) {
+            $('#custom-theme-options-css').remove();
         }
     }
 }
