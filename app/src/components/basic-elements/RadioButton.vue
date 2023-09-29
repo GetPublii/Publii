@@ -1,7 +1,7 @@
 <template>
     <div 
         :id="anchor"
-        class="radio-buttons">
+        :class="cssClasses">
         <template v-for="(item, index) in items">
             <input
                 type="radio"
@@ -44,6 +44,26 @@ export default {
         anchor: {
             default: '',
             type: String
+        },
+        customCssClass: {
+            default: '',
+            type: String
+        }
+    },
+    computed: {
+        cssClasses () {
+            let cssClasses = {
+                'radio-buttons': true 
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     data: function() {

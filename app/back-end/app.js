@@ -457,6 +457,31 @@ class App {
                 width: width,
                 height: height
             };
+        } else {
+            let screens = screen.getAllDisplays();
+            let isInsideScreenBounds = false;
+
+            for (let monitor of screens) {
+                if (
+                    this.windowBounds.x >= monitor.bounds.x && 
+                    this.windowBounds.y >= monitor.bounds.y && 
+                    this.windowBounds.x + this.windowBounds.width <= monitor.bounds.x + monitor.bounds.width && 
+                    this.windowBounds.y + this.windowBounds.height <= monitor.bounds.y + monitor.bounds.height
+                ) {
+                    isInsideScreenBounds = true;
+                    break
+                }
+            }
+
+            if (!isInsideScreenBounds) {
+                let width = screens[0].workAreaSize.width;
+                let height = screens[0].workAreaSize.height;
+                
+                this.windowBounds = {
+                    width: width,
+                    height: height
+                };
+            }
         }
 
         // Try to get application config
@@ -632,7 +657,8 @@ class App {
                 sites: self.sites,
                 themes: self.themes,
                 themesPath: self.themesPath,
-                dirs: self.dirPaths
+                dirs: self.dirPaths,
+                vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked'))
             };
 
             self.mainWindow.webContents.send('app-data-loaded', appData);

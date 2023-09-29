@@ -146,14 +146,6 @@ describe('URL helper', function() {
         it('should remove index.html from the website URL', function () {
             assert.equal('sites/media/posts/10/img.jpg', URLHelper.transformAssetURLIntoPath('sites', 'http://example.com/media/posts/10/img.jpg', 'http://example.com/index.html'));
         });
-
-        it('should remove amp directory from the website URL', function () {
-            assert.equal('sites/media/posts/10/img.jpg', URLHelper.transformAssetURLIntoPath('sites', 'http://example.com/media/posts/10/img.jpg', 'http://example.com/amp/'));
-        });
-
-        it('should remove index.html and amp directory from the website URL', function () {
-            assert.equal('sites/media/posts/10/img.jpg', URLHelper.transformAssetURLIntoPath('sites', 'http://example.com/media/posts/10/img.jpg', 'http://example.com/amp/index.html'));
-        });
     });
 
     describe('#URLHelper.fixProtocols', function() {

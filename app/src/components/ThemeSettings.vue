@@ -123,7 +123,8 @@
                                     :step="field.step"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
-                                    slot="field"></range-slider>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></range-slider>
 
                                 <separator
                                     v-if="field.type === 'separator'"
@@ -131,7 +132,8 @@
                                     :type="field.size"
                                     :label="field.label"
                                     :anchor="field.anchor"
-                                    :note="field.note"></separator>
+                                    :note="field.note"
+                                    :customCssClasses="field.customCssClasses"></separator>
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
@@ -141,7 +143,8 @@
                                     :anchor="field.anchor"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :cols="field.cols"
-                                    :disabled="field.disabled"></text-area>
+                                    :disabled="field.disabled"
+                                    :customCssClasses="field.customCssClasses"></text-area>
 
                                 <text-area
                                     v-if="field.type === 'wysiwyg'"
@@ -150,7 +153,8 @@
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
                                     :wysiwyg="true"
-                                    :miniEditorMode="true"></text-area>
+                                    :miniEditorMode="true"
+                                    :customCssClasses="field.customCssClasses"></text-area>
 
                                 <image-upload
                                     v-if="field.type === 'upload'"
@@ -158,14 +162,16 @@
                                     slot="field"
                                     :anchor="field.anchor"
                                     :addMediaFolderPath="true"
-                                    imageType="optionImages"></image-upload>
+                                    imageType="optionImages"
+                                    :customCssClasses="field.customCssClasses"></image-upload>
 
                                 <small-image-upload
                                     v-if="field.type === 'smallupload'"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
                                     imageType="optionImages"
-                                    slot="field"></small-image-upload>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></small-image-upload>
 
                                 <radio-buttons
                                     v-if="field.type === 'radio'"
@@ -173,7 +179,8 @@
                                     :name="field.name"
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
-                                    slot="field" />
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <dropdown
                                     v-if="field.type === 'select'"
@@ -181,21 +188,25 @@
                                     :multiple="field.multiple"
                                     v-model="custom[field.name]"
                                     :id="field.anchor"
-                                    :items="getDropdownOptions(field.options)"></dropdown>
+                                    :items="getDropdownOptions(field.options)"
+                                    :customCssClasses="field.customCssClasses"></dropdown>
 
                                 <switcher
                                     v-if="field.type === 'checkbox'"
                                     v-model="custom[field.name]"
                                     :lower-zindex="true"
                                     :anchor="field.anchor"
-                                    slot="field"></switcher>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></switcher>
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     v-model="custom[field.name]"
                                     :data-field="field.name"
                                     :anchor="field.anchor"
-                                    slot="field"></color-picker>
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></color-picker>
 
                                 <posts-dropdown
                                     v-if="field.type === 'posts-dropdown'"
@@ -203,21 +214,24 @@
                                     :allowed-post-status="field.allowedPostStatus || ['any']"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></posts-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></posts-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></tags-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></tags-dropdown>
 
                                 <authors-dropdown
                                     v-if="field.type === 'authors-dropdown'"
                                     v-model="custom[field.name]"
                                     :multiple="field.multiple"
                                     :anchor="field.anchor"
-                                    slot="field"></authors-dropdown>
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></authors-dropdown>
 
                                 <text-input
                                     v-if="isNormalInput(field.type)"
@@ -232,7 +246,21 @@
                                     v-model="custom[field.name]"
                                     :anchor="field.anchor"
                                     :disabled="field.disabled"
-                                    :placeholder="field.placeholder"></text-input>
+                                    :placeholder="field.placeholder"
+                                    :customCssClasses="field.customCssClasses"></text-input>
+
+                                <repeater
+                                    v-if="field.type === 'repeater'" 
+                                    slot="field"
+                                    :structure="field.structure"
+                                    v-model="settingsValues[field.name]"
+                                    :translations="field.translations"
+                                    :maxCount="field.maxCount"
+                                    :hasEmptyState="field.hasEmptyState"
+                                    :hideLabels="field.hideLabels"
+                                    :anchor="field.anchor"
+                                    :settings="settingsValues"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"
@@ -278,6 +306,7 @@
                                     :id="field.name + '-select'"
                                     :items="getDropdownViewOptions(field.options)"
                                     slot="field"
+                                    :customCssClasses="field.customCssClasses"
                                     v-model="postView[field.name]">
                                 </dropdown>
 
@@ -287,19 +316,23 @@
                                     slot="field"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
-                                    v-model="postView[field.name]" />
+                                    v-model="postView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    v-model="postView[field.name]" />
+                                    v-model="postView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="postView[field.name]">
+                                    v-model="postView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
+                                    :customCssClasses="field.customCssClasses">
                                 </color-picker>
 
                                 <small
@@ -329,7 +362,8 @@
                                     :id="field.name + '-select'"
                                     :items="getDropdownViewOptions(field.options)"
                                     slot="field"
-                                    v-model="tagView[field.name]">
+                                    v-model="tagView[field.name]"
+                                    :customCssClasses="field.customCssClasses">
                                 </dropdown>
 
                                 <text-input
@@ -338,19 +372,23 @@
                                     slot="field"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
-                                    v-model="tagView[field.name]" />
+                                    v-model="tagView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    v-model="tagView[field.name]" />
+                                    v-model="tagView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="tagView[field.name]">
+                                    v-model="tagView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
+                                    :customCssClasses="field.customCssClasses">
                                 </color-picker>
 
                                 <small
@@ -380,7 +418,8 @@
                                     :id="field.name + '-select'"
                                     :items="getDropdownViewOptions(field.options)"
                                     slot="field"
-                                    v-model="authorView[field.name]">
+                                    v-model="authorView[field.name]"
+                                    :customCssClasses="field.customCssClasses">
                                 </dropdown>
 
                                 <text-input
@@ -389,25 +428,30 @@
                                     slot="field"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
-                                    v-model="authorView[field.name]" />
+                                    v-model="authorView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <text-area
                                     v-if="field.type === 'textarea'"
                                     slot="field"
                                     :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
                                     :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
-                                    v-model="authorView[field.name]" />
+                                    v-model="authorView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
 
                                 <color-picker
                                     v-if="field.type === 'colorpicker'"
                                     slot="field"
-                                    v-model="authorView[field.name]">
+                                    v-model="authorView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
+                                    :customCssClasses="field.customCssClasses">
                                 </color-picker>
 
                                 <small
                                     v-if="field.note"
                                     slot="note"
-                                    class="note">
+                                    class="note"
+                                    :customCssClasses="field.customCssClasses">
                                     {{ field.note }}
                                 </small>
                             </field>
@@ -462,6 +506,7 @@ import Vue from 'vue';
 import PostsDropDown from './basic-elements/PostsDropDown';
 import TagsDropDown from './basic-elements/TagsDropDown';
 import AuthorsDropDown from './basic-elements/AuthorsDropDown';
+import Repeater from './basic-elements/Repeater';
 import Utils from './../helpers/utils.js';
 
 export default {
@@ -469,7 +514,8 @@ export default {
     components: {
         'authors-dropdown': AuthorsDropDown,
         'posts-dropdown': PostsDropDown,
-        'tags-dropdown': TagsDropDown
+        'tags-dropdown': TagsDropDown,
+        'repeater': Repeater
     },
     data: function() {
         return {
@@ -560,14 +606,37 @@ export default {
                     onClick: this.saveAndRender.bind(this, 'homepage')
                 }
             ];
+        },
+        extensionsPath () {
+            return [
+                'file:///',
+                this.$store.state.currentSite.siteDir,
+                '/input/themes/',
+                this.$store.state.currentSite.config.theme,
+                '/'
+            ].join('');
         }
     },
     mounted () {
         setTimeout (() => {
+            this.loadAdditionalCss();
             this.loadSettings();
         }, 0);
     },
     methods: {
+        loadAdditionalCss () {
+            if (
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                this.$store.state.currentSite.themeSettings.supportedFeatures.customThemeOptionsCss
+            ) {
+                let customCssPath = this.extensionsPath + 'theme-options.css?v=' + (+new Date());
+
+                if (!document.querySelector('#custom-theme-options-css')) {
+                    $(document.body).append($('<link rel="stylesheet" id="custom-theme-options-css" href="' + customCssPath + '" />'));
+                }
+            }
+        },
         loadSettings () {
             this.loadBasicSettings();
             this.loadCustomSettings();
@@ -674,10 +743,10 @@ export default {
 
                     for (let i = 0; i < values.length; i++) {
                         if (this.custom[dependencyName] === values[i]) {
-                            continue;
+                            return true;
                         }
                     }
-
+                    
                     return false;
                 }
 
@@ -720,7 +789,8 @@ export default {
                 'colorpicker',
                 'posts-dropdown',
                 'authors-dropdown',
-                'tags-dropdown'
+                'tags-dropdown',
+                'repeater'
             ].indexOf(type) === -1;
         },
         getDropdownOptions (inputOptions) {
@@ -891,6 +961,11 @@ export default {
                     lifeTime: 3
                 });
             });
+        }
+    },
+    beforeDestroy () {
+        if (document.querySelector('#custom-theme-options-css')) {
+            $('#custom-theme-options-css').remove();
         }
     }
 }

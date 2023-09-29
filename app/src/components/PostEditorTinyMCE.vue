@@ -149,6 +149,12 @@ export default {
                 this.$store.state.currentSite.config.theme,
                 '/'
             ].join('');
+        },
+        vendorPath () {
+            return [
+                'file:///',
+                this.$store.state.vendorPath
+            ].join('');
         }
     },
     mounted () {
@@ -174,6 +180,8 @@ export default {
             this.$refs['tinymceEditor'].init();
             this.setDataLossWatcher();
         }
+
+        this.loadAdditionalScripts();
 
         this.$bus.$on('date-changed', (timestamp) => {
             let format = 'MMM DD, YYYY  HH:mm';
@@ -219,23 +227,7 @@ export default {
                     $('#post-editor').val(this.postData.text);
                     this.$refs['tinymceEditor'].init();
                 }
-
-                // Add custom editor script
-                if(
-                    this.$store.state.currentSite.themeSettings &&
-                    this.$store.state.currentSite.themeSettings.extensions &&
-                    this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
-                ) {
-                    let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
-
-                    if (!document.querySelector('custom-post-editor-script')) {
-                        $(document.body).append(
-                            // It seems that Webpack goes crazy when it sees 'script' tag :)
-                            $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
-                        );
-                    }
-                }
-
+                
                 setTimeout(() => {
                     this.possibleDataLoss = false;
                     this.setDataLossWatcher();
@@ -331,8 +323,33 @@ export default {
         pasteTitle (e) {
             let text = (e.originalEvent || e).clipboardData.getData('text/plain').replace(/\n/gmi, '');
             document.execCommand('insertText', false, text);
+        },
+        loadAdditionalScripts () {
+            // Add custom editor script
+            if (
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.extensions &&
+                this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
+            ) {
+                let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
+
+                if (!document.querySelector('#custom-post-editor-script')) {
+                    $(document.body).append(
+                        // It seems that Webpack goes crazy when it sees 'script' tag :)
+                        $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
+                    );
+                }
+            }
+
+            // Add prism.js script
+            if (!document.querySelector('#custom-prismjs-script')) {
+                $(document.body).append(
+                    // It seems that Webpack goes crazy when it sees 'script' tag :)
+                    $('<' + 'script' + ' id="custom-prismjs-script" src="' + this.vendorPath + '/prism.js"></' + 'script' + '>')
+                );
+            }
         }
-    },
+    }, 
     beforeDestroy () {
         if (this.unwatchDataLoss) {
             this.unwatchDataLoss();

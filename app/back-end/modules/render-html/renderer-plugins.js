@@ -145,7 +145,11 @@ class RendererPlugins {
         let output = originalValue;
 
         for (let i = 0; i < modifiers.length; i++) {
-            output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, params)();
+            if (Array.isArray(params)) {
+                output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, ...params)();
+            } else {
+                output = modifiers[i].callback.bind(modifiers[i].pluginInstance, rendererInstance, output, params)();
+            }
         }
 
         return output;
@@ -172,17 +176,35 @@ class RendererPlugins {
      * Read file from input/config/plugins/PLUGIN_NAME/
      */
     readFile (fileName, pluginInstance) {
-        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
-        let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
-        let filePath = path.join(this.sitePath, 'input', 'config', 'plugins', pluginName, fileName);
+        let useRootFiles = false;
         let fileContent;
+        let filePath = false;
+
+        if (fileName.indexOf('[ROOT-FILES]/') === 0) {
+            useRootFiles = true;
+            fileName = fileName.replace('[ROOT-FILES]/', '');
+        }
+
+        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+
+        if (useRootFiles) {
+            let rootFilesDir = path.join(this.sitePath, 'input', 'root-files');
+            filePath = path.join(rootFilesDir, fileName);
+        } else {
+            let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+            filePath = path.join(this.sitePath, 'input', 'config', 'plugins', pluginName, fileName);
+        }
         
-        if (!fs.existsSync(filePath)) {
+        if (filePath && !fs.existsSync(filePath)) {
             return fileContent;
         }
 
         try {
-            fileContent = fs.readFileSync(filePath).toString();
+            if (filePath) {
+                fileContent = fs.readFileSync(filePath).toString();
+            } else {
+                return;
+            }
         } catch (e) {
             return;
         }
@@ -194,22 +216,42 @@ class RendererPlugins {
      * Create file in input/media/PLUGIN_NAME/
      */
     createFile (fileName, fileContent, pluginInstance) {
-        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
-        let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
-        let pluginsDir = path.join(this.sitePath, 'input', 'media', 'plugins');
-        let pluginDir = path.join(pluginsDir, pluginName);
-        let filePath = path.join(pluginDir, fileName);
-        
-        if (!fs.existsSync(pluginsDir)) {
-            fs.mkdirSync(pluginsDir);
+        let useRootFiles = false;
+        let filePath = false;
+
+        if (fileName.indexOf('[ROOT-FILES]/') === 0) {
+            useRootFiles = true;
+            fileName = fileName.replace('[ROOT-FILES]/', '');
         }
 
-        if (!fs.existsSync(pluginDir)) {
-            fs.mkdirSync(pluginDir);
+        fileName = fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+
+        if (useRootFiles) {
+            let rootFilesDir = path.join(this.sitePath, 'input', 'root-files');
+            filePath = path.join(rootFilesDir, fileName);
+        } else {
+            let pluginName = pluginInstance.name.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, '');
+            let pluginsDir = path.join(this.sitePath, 'input', 'media', 'plugins');
+            let pluginDir = path.join(pluginsDir, pluginName);
+            filePath = path.join(pluginDir, fileName);
+            
+            if (!fs.existsSync(pluginsDir)) {
+                fs.mkdirSync(pluginsDir);
+            }
+
+            if (!fs.existsSync(pluginDir)) {
+                fs.mkdirSync(pluginDir);
+            }
         }
 
         try {
-            fs.writeFileSync(filePath, fileContent);
+            if (filePath) {
+                fs.writeFileSync(filePath, fileContent);
+            } else {
+                return {
+                    status: 'FILE_NOT_SAVED'
+                };    
+            }
         } catch (e) {
             return {
                 status: 'FILE_NOT_SAVED'

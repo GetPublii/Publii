@@ -337,7 +337,8 @@
                                     <color-picker
                                         v-if="field.type === 'colorpicker'"
                                         class="author-view-settings"
-                                        v-model="authorData.additionalData.viewConfig[field.name]">
+                                        v-model="authorData.additionalData.viewConfig[field.name]"
+                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
                                     <small

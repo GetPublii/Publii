@@ -534,7 +534,7 @@
         "aboutPublii": "About Publii",
         "currentPubliiVersion": "Version",
         "accept": "Accept",
-        "copyright": "Copyright 2022 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. All rights reserved.<br>Publii is designed and maintained by core team and is made possible by the <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> Open Source project and other ",
+        "copyright": "Copyright 2023 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. All rights reserved.<br>Publii is designed and maintained by core team and is made possible by the <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> Open Source project and other ",
         "creditsIntro": "Publii uses the following third-party Open Source Software:",
         "dataCollectionInfo": "<strong>We do not collect any </strong>personal data while you use Publii app; we do not store, track, or allow third parties to collect, personally identifiable information about you. ",
         "homepage": "Homepage",
@@ -550,6 +550,12 @@
         "renderingErrorText": "An error occurred during the website rendering process.",
         "renderingPleaseWait": "Please wait while the rendering process is completed.",
         "selectThemeBeforeCreatingPreviewMsg": "You have to select a theme before trying to create a preview of your website. Please go to the website settings section and select a theme."
+    },
+    "repeater": {
+        "addItem": "Add item",
+        "duplicateItem": "Duplicate item",
+        "emptyState": "Click the button to add first element",
+        "removeItem": "Remove item"
     },
     "settings": {
         "addGDPRCookieBanner": "Enable banner",
@@ -612,6 +618,8 @@
         "disableAuthorsPaginationIndexing": "Disable authors pagination indexing",
         "disableAuthorsPaginationIndexingInfo": "When enabled, your authors pagination files will be excluded from the sitemap and will have the <strong>noindex, follow</strong> robots metatags added.",
         "disableAuthorsPaginationInfo": "When enabled, your authors pagination won't be generated.",
+        "disableHomepagePagination": "Disable homepage pagination",
+        "disableHomepagePaginationInfo": "When enabled, your homepage pagination won't be generated.",
         "disableHomepagePaginationIndexing": "Disable homepage pagination indexing",
         "disableTagsPagination": "Disable tags pagination",
         "disableTagsPaginationIndexing": "Disable tags pagination indexing",
@@ -718,6 +726,12 @@
         "loadAtStart": "Load at start:",
         "metaDescription": "Meta Description:",
         "metaRobots": "Meta Robots:",
+        "noIndexForChatGPTBot": "Block GPTBot bot",
+        "noIndexForChatGPTUser": "Block ChatGPT-User bot",
+        "noIndexForChatGPTBotInfo": "When enabled, this option prevents your site content from being indexed by GPTBot bot (<a href=\"https://platform.openai.com/docs/gptbot\" target=\"_blank\">used for crawling</a>). Please note that it will only take effect if you do not use your own robots.txt file.",
+        "noIndexForChatGPTUserInfo": "When enabled, this option prevents your site content from being indexed by ChatGPT-User bot (<a href=\"https://platform.openai.com/docs/plugins/bot\" target=\"_blank\">used in ChatGPT plugins</a>). Please note that it will only take effect if you do not use your own robots.txt file.",
+        "noIndexForCommonCrawlBots": "Block Common Crawl bots",
+        "noIndexForCommonCrawlBotsInfo": "When enabled, this option prevents your site content from being indexed by Common Crawl bots. Please note that it will only take effect if you do not use your own robots.txt file.",
         "noIndexWebsite": "Noindex website",
         "notSelected": "Not selected",
         "numberOfPostsInFeed": "Number of posts in feed",

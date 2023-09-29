@@ -534,7 +534,7 @@
         "aboutPublii": "O Publii",
         "currentPubliiVersion": "Wersja",
         "accept": "Akceptuj",
-        "copyright": "Prawa autorskie 2022 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. Wszelkie prawa zastrzeżone.<br>Publii jest zaprojektowane i utrzymywane przez główny zespół i powstało dzięki projektowi Open Source <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> i innemu ",
+        "copyright": "Prawa autorskie 2023 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. Wszelkie prawa zastrzeżone.<br>Publii jest zaprojektowane i utrzymywane przez główny zespół i powstało dzięki projektowi Open Source <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> i innemu ",
         "creditsIntro": "Publii korzysta z następującego oprogramowania Open Source stron trzecich:",
         "dataCollectionInfo": "<strong>Nie zbieramy żadnych </strong>danych osobowych podczas korzystania z aplikacji Publii; również nie przechowujemy, nie śledzimy, nie pozwalamy osobom trzecim na zbieranie danych osobowych o Tobie. ",
         "homepage": "Strona domowa",
@@ -550,6 +550,12 @@
         "renderingErrorText": "Wystąpił błąd podczas renderowania Twojej witryny.",
         "renderingPleaseWait": "Proszę czekać, aż proces renderowania zostanie zakończony.",
         "selectThemeBeforeCreatingPreviewMsg": "Musisz wybrać motyw, zanim spróbujesz utworzyć podgląd swojej witryny. Przejdź do ustawień strony i wybierz motyw."
+    },
+    "repeater": {
+        "addItem": "Dodaj element",
+        "duplicateItem": "Duplikuj element",
+        "emptyState": "Kliknij przycisk aby dodać pierwszy element",
+        "removeItem": "Usuń element"
     },
     "settings": {
         "addGDPRCookieBanner": "Dodaj cookie banner (GDPR)",
@@ -612,6 +618,8 @@
         "disableAuthorsPaginationIndexing": "Wyłącz indeksowanie stronicowania autorów",
         "disableAuthorsPaginationIndexingInfo": "Jeśli ta opcja jest włączona, pliki paginacji stron autorów zostaną wykluczone z mapy witryny i otrzymają <strong>noindex, follow</strong> metatag robotów.",
         "disableAuthorsPaginationInfo": "Jeśli ta opcja jest włączona, paginacja autorów nie zostanie wygenerowana.",
+        "disableHomepagePagination": "Wyłącz stronicowanie strony głównej",
+        "disableHomepagePaginationInfo": "Jeśli ta opcja jest włączona, paginacja strony głównej nie zostanie wygenerowana.",
         "disableHomepagePaginationIndexing": "Wyłącz indeksowanie paginacji strony głównej",
         "disableTagsPagination": "Wyłącz stronicowanie tagów",
         "disableTagsPaginationIndexing": "Wyłącz indeksowanie stronicowania tagów",
@@ -718,6 +726,12 @@
         "loadAtStart": "Załaduj na początku:",
         "metaDescription": "Opis Meta:",
         "metaRobots": "Meta Roboty:",
+        "noIndexForChatGPTBot": "Blokuj bota GPTBot",
+        "noIndexForChatGPTUser": "Blokuj bota ChatGPT-User",
+        "noIndexForChatGPTBotInfo": "Gdy ta opcja jest włączona, zapobiega indeksowaniu zawartości witryny przez bota GPTBot (<a href=\"https://platform.openai.com/docs/gptbot\" target=\"_blank\">używanego przez ChatGPT do indeksowania treści</a>). Pamiętaj, że zadziała tylko wtedy, gdy nie używasz własnego pliku robots.txt.",
+        "noIndexForChatGPTUserInfo": "Gdy ta opcja jest włączona, zapobiega skanowaniu zawartości witryny przez bota ChatGPT-User (<a href=\"https://platform.openai.com/docs/plugins/bot\" target=\"_blank\">używanego przez wtyczki ChatGPT</a>). Pamiętaj, że zadziała tylko wtedy, gdy nie używasz własnego pliku robots.txt.",
+        "noIndexForCommonCrawlBots": "Blokuj boty Common Crawl",
+        "noIndexForCommonCrawlBotsInfo": "Gdy ta opcja jest włączona, zapobiega indeksowaniu zawartości witryny przez boty Common Crawl. Pamiętaj, że zadziała tylko wtedy, gdy nie używasz własnego pliku robots.txt.",
         "noIndexWebsite": "Nieindeksowanie strony",
         "notSelected": "Nie wybrano",
         "numberOfPostsInFeed": "Liczba wpisów w kanale",

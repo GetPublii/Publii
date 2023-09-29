@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.6.2.0",
+    "version": "2.7.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -703,9 +703,99 @@
                     "group": "System"
                 },
                 {
+                    "label": "Aleo",
+                    "value": "aleo",
+                    "group": "Serif"
+                },
+                {
                     "label": "Andada Pro",
                     "value": "andadapro",
                     "group": "Serif"
+                },
+                {
+                    "label": "Besley",
+                    "value": "besley",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Bitter",
+                    "value": "bitter",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Brygada 1918",
+                    "value": "brygada1918",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Domine",
+                    "value": "domine",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Faustina",
+                    "value": "faustina",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Frank Ruhl Libre",
+                    "value": "frankruhllibre",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Imbue",
+                    "value": "imbue",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Kreon",
+                    "value": "kreon",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Labrada",
+                    "value": "labrada",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Lora",
+                    "value": "lora",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Manuale",
+                    "value": "manuale",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Petrona",
+                    "value": "petrona",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Playfair Display",
+                    "value": "playfairdisplay",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Roboto Slab",
+                    "value": "robotoslab",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Rokkitt",
+                    "value": "rokkitt",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Yrsa",
+                    "value": "yrsa",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Advent Pro",
+                    "value": "adventpro",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Antonio",
@@ -723,44 +813,19 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Besley",
-                    "value": "besley",
-                    "group": "Serif"
+                    "label": "Assistant",
+                    "value": "assistant",
+                    "group": "Sans Serif"
                 },
                 {
-                    "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Bitter",
-                    "value": "bitter",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Brygada 1918",
-                    "value": "brygada1918",
-                    "group": "Serif"
+                    "label": "Cabin",
+                    "value": "cabin",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Cairo",
                     "value": "cairo",
                     "group": "Sans Serif"
-                },
-                {
-                    "label": "Comfortaa",
-                    "value": "comfortaa",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Dancing Script",
-                    "value": "dancingscript",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Domine",
-                    "value": "domine",
-                    "group": "Serif"
                 },
                 {
                     "label": "Dosis",
@@ -773,9 +838,9 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Faustina",
-                    "value": "faustina",
-                    "group": "Serif"
+                    "label": "Figtree",
+                    "value": "figtree",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Glory",
@@ -783,19 +848,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Gluten",
-                    "value": "gluten",
-                    "group": "Cursive"
-                },
-                {
                     "label": "Heebo",
                     "value": "heebo",
                     "group": "Sans Serif"
                 },
-                {
-                    "label": "JetBrains Mono",
-                    "value": "jetbrainsmono",
-                    "group": "Monospace"
+                 {
+                    "label": "Instrument Sans",
+                    "value": "instrumentsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Jura",
@@ -808,14 +868,9 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Kreon",
-                    "value": "kreon",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Lemonada",
-                    "value": "lemonada",
-                    "group": "Cursive"
+                    "label": "Lexend",
+                    "value": "lexend",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Libre Franklin",
@@ -823,18 +878,13 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Lora",
-                    "value": "lora",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Manuale",
-                    "value": "manuale",
-                    "group": "Serif"
-                },
-                {
                     "label": "Manrope",
                     "value": "manrope",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Maven Pro",
+                    "value": "mavenpro",
                     "group": "Sans Serif"
                 },
                 {
@@ -853,19 +903,19 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Orbitron",
+                    "value": "orbitron",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Oswald",
                     "value": "oswald",
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Petrona",
-                    "value": "petrona",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Playfair Display",
-                    "value": "playfairdisplay",
-                    "group": "Serif"
+                    "label": "Plus Jakarta Sans",
+                    "value": "plusjakartasans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Public Sans",
@@ -883,14 +933,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Red Hat Mono",
-                    "value": "redhatmono",
-                    "group": "Monospace"
+                    "label": "Red Hat Display",
+                    "value": "redhatdisplay",
+                    "group": "Sans Serif"
                 },
                 {
-                    "label": "Roboto Slab",
-                    "value": "robotoslab",
-                    "group": "Serif"
+                    "label": "Roboto Flex",
+                    "value": "robotoflex",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Rubik",
@@ -908,11 +958,6 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Source Code Pro",
-                    "value": "sourcecodepro",
-                    "group": "Monospace"
-                },
-                {
                     "label": "Spartan",
                     "value": "spartan",
                     "group": "Sans Serif"
@@ -923,9 +968,54 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Work Sans",
+                    "value": "worksans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Yanone Kaffeesatz",
                     "value": "yanonekaffeesatz",
                     "group": "Sans Serif"
+                },
+                {
+                    "label": "Big Shoulders Display",
+                    "value": "bigshouldersdisplay",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Comfortaa",
+                    "value": "comfortaa",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Dancing Script",
+                    "value": "dancingscript",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Gluten",
+                    "value": "gluten",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Lemonada",
+                    "value": "lemonada",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "JetBrains Mono",
+                    "value": "jetbrainsmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Red Hat Mono",
+                    "value": "redhatmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Source Code Pro",
+                    "value": "sourcecodepro",
+                    "group": "Monospace"
                 }
             ]
         },  
@@ -942,9 +1032,99 @@
                     "group": "System"
                 },
                 {
+                    "label": "Aleo",
+                    "value": "aleo",
+                    "group": "Serif"
+                },
+                {
                     "label": "Andada Pro",
                     "value": "andadapro",
                     "group": "Serif"
+                },
+                {
+                    "label": "Besley",
+                    "value": "besley",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Bitter",
+                    "value": "bitter",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Brygada 1918",
+                    "value": "brygada1918",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Domine",
+                    "value": "domine",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Faustina",
+                    "value": "faustina",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Frank Ruhl Libre",
+                    "value": "frankruhllibre",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Imbue",
+                    "value": "imbue",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Kreon",
+                    "value": "kreon",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Labrada",
+                    "value": "labrada",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Lora",
+                    "value": "lora",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Manuale",
+                    "value": "manuale",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Petrona",
+                    "value": "petrona",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Playfair Display",
+                    "value": "playfairdisplay",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Roboto Slab",
+                    "value": "robotoslab",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Rokkitt",
+                    "value": "rokkitt",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Yrsa",
+                    "value": "yrsa",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Advent Pro",
+                    "value": "adventpro",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Antonio",
@@ -962,44 +1142,19 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Besley",
-                    "value": "besley",
-                    "group": "Serif"
+                    "label": "Assistant",
+                    "value": "assistant",
+                    "group": "Sans Serif"
                 },
                 {
-                    "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Bitter",
-                    "value": "bitter",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Brygada 1918",
-                    "value": "brygada1918",
-                    "group": "Serif"
+                    "label": "Cabin",
+                    "value": "cabin",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Cairo",
                     "value": "cairo",
                     "group": "Sans Serif"
-                },
-                {
-                    "label": "Comfortaa",
-                    "value": "comfortaa",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Dancing Script",
-                    "value": "dancingscript",
-                    "group": "Cursive"
-                },
-                {
-                    "label": "Domine",
-                    "value": "domine",
-                    "group": "Serif"
                 },
                 {
                     "label": "Dosis",
@@ -1012,9 +1167,9 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Faustina",
-                    "value": "faustina",
-                    "group": "Serif"
+                    "label": "Figtree",
+                    "value": "figtree",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Glory",
@@ -1022,19 +1177,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Gluten",
-                    "value": "gluten",
-                    "group": "Cursive"
-                },
-                {
                     "label": "Heebo",
                     "value": "heebo",
                     "group": "Sans Serif"
                 },
-                {
-                    "label": "JetBrains Mono",
-                    "value": "jetbrainsmono",
-                    "group": "Monospace"
+                 {
+                    "label": "Instrument Sans",
+                    "value": "instrumentsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Jura",
@@ -1047,14 +1197,9 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Kreon",
-                    "value": "kreon",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Lemonada",
-                    "value": "lemonada",
-                    "group": "Cursive"
+                    "label": "Lexend",
+                    "value": "lexend",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Libre Franklin",
@@ -1062,18 +1207,13 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Lora",
-                    "value": "lora",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Manuale",
-                    "value": "manuale",
-                    "group": "Serif"
-                },
-                {
                     "label": "Manrope",
                     "value": "manrope",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Maven Pro",
+                    "value": "mavenpro",
                     "group": "Sans Serif"
                 },
                 {
@@ -1092,19 +1232,19 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Orbitron",
+                    "value": "orbitron",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Oswald",
                     "value": "oswald",
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Petrona",
-                    "value": "petrona",
-                    "group": "Serif"
-                },
-                {
-                    "label": "Playfair Display",
-                    "value": "playfairdisplay",
-                    "group": "Serif"
+                    "label": "Plus Jakarta Sans",
+                    "value": "plusjakartasans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Public Sans",
@@ -1122,14 +1262,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Red Hat Mono",
-                    "value": "redhatmono",
-                    "group": "Monospace"
+                    "label": "Red Hat Display",
+                    "value": "redhatdisplay",
+                    "group": "Sans Serif"
                 },
                 {
-                    "label": "Roboto Slab",
-                    "value": "robotoslab",
-                    "group": "Serif"
+                    "label": "Roboto Flex",
+                    "value": "robotoflex",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Rubik",
@@ -1147,11 +1287,6 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Source Code Pro",
-                    "value": "sourcecodepro",
-                    "group": "Monospace"
-                },
-                {
                     "label": "Spartan",
                     "value": "spartan",
                     "group": "Sans Serif"
@@ -1162,9 +1297,54 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Work Sans",
+                    "value": "worksans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Yanone Kaffeesatz",
                     "value": "yanonekaffeesatz",
                     "group": "Sans Serif"
+                },
+                {
+                    "label": "Big Shoulders Display",
+                    "value": "bigshouldersdisplay",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Comfortaa",
+                    "value": "comfortaa",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Dancing Script",
+                    "value": "dancingscript",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Gluten",
+                    "value": "gluten",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Lemonada",
+                    "value": "lemonada",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "JetBrains Mono",
+                    "value": "jetbrainsmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Red Hat Mono",
+                    "value": "redhatmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Source Code Pro",
+                    "value": "sourcecodepro",
+                    "group": "Monospace"
                 }
             ]
         },  

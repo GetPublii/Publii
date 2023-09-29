@@ -2,7 +2,7 @@
     <div :class="cssClasses">
         <!-- Fields with separated label (most cases) -->
         <label
-            v-if="labelSeparated && label"
+            v-if="!labelHidden && labelSeparated && label"
             :for="id">
             {{ label }}
         </label>
@@ -16,7 +16,7 @@
         <!-- Fields with label around the field (mainly switchers) -->
         <label
             :class="labelCssClasses"
-            v-if="!labelSeparated"
+            v-if="!labelHidden && !labelSeparated"
             :for="id">
             <slot name="field"></slot>
             {{ label }}
@@ -36,6 +36,10 @@ export default {
         label: {
             default: '',
             type: String
+        },
+        labelHidden: {
+            default: false,
+            type: Boolean
         },
         labelSeparated: {
             default: true,

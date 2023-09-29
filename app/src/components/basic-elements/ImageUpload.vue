@@ -90,6 +90,10 @@ export default {
         pluginDir: {
             default: '',
             type: String
+        },
+        customCssClasses: {
+            default: '',
+            type: String
         }
     },
     data () {
@@ -152,11 +156,20 @@ export default {
             return label;
         },
         wrapperCssClasses () {
-            return {
+            let cssClasses = {
                 'is-small': this.type.indexOf('small') > -1,
                 'upload-image-wrapper': true,
                 'is-empty': this.isEmpty
             };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         },
         inputCssClasses () {
             return {

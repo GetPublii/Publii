@@ -338,6 +338,17 @@ class RendererContext {
         }
 
         this.renderer.globalContext = this.context;
+
+        if (itemContext) {
+            if (itemContext.post && itemContext.post.id) {
+                this.renderer.globalContext.itemID = itemContext.post.id;
+            } else if (itemContext.tag && itemContext.tag.id) {
+                this.renderer.globalContext.itemID = itemContext.tag.id;
+            } else if (itemContext.author && itemContext.author.id) {
+                this.renderer.globalContext.itemID = itemContext.author.id;
+            }
+        }
+
         this.context.headCustomCode = this.getCustomHTMLCode('customHeadCode', itemContext);
         this.context.bodyCustomCode = this.getCustomHTMLCode('customBodyCode', itemContext);
         this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode', itemContext);
@@ -378,6 +389,10 @@ class RendererContext {
             if (this.renderer.plugins.hasInsertions('customHTML.' + key)) {
                 code += "\n";
                 code += this.renderer.plugins.runInsertions('customHTML.' + key, this.renderer, context);
+            }
+
+            if (this.renderer.plugins.hasModifiers('customHTML.' + key)) {
+                code = this.renderer.plugins.runModifiers('customHTML.' + key, this.renderer, code, context);
             }
 
             object[key] = code.trim();

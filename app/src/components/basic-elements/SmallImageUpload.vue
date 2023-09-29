@@ -1,7 +1,7 @@
 <template>
     <div
         :id="anchor"
-        :class="{ 'small-image-upload': true, 'is-uploading': isUploading }">
+        :class="cssClasses">
         <span class="upload-path">
             <template v-if="!isUploading">{{ fileName }}</template>
             <template v-if="isUploading">{{ $t('image.loadingImage') }}</template>
@@ -53,6 +53,27 @@ export default {
         pluginDir: {
             default: '',
             type: String
+        },
+        customCssClasses: {
+            default: '',
+            type: String
+        }
+    },
+    computed: {
+        cssClasses () {
+            let cssClasses = { 
+                'small-image-upload': true, 
+                'is-uploading': this.isUploading 
+            };
+
+            if (this.customCssClasses && this.customCssClasses.trim() !== '') {
+                this.customCssClasses.split(' ').forEach(item => {
+                    item = item.replace(/[^a-z0-9\-\_\s]/gmi, '');
+                    cssClasses[item] = true;
+                });
+            }
+
+            return cssClasses;
         }
     },
     data () {

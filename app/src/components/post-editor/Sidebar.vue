@@ -464,7 +464,8 @@
                                     <color-picker
                                         v-if="field.type === 'colorpicker'"
                                         class="post-view-settings"
-                                        v-model="$parent.postData.postViewOptions[field.name]">
+                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
                                     <small

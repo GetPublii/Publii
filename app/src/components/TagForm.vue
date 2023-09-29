@@ -307,7 +307,8 @@
                                     <color-picker
                                         v-if="field.type === 'colorpicker'"
                                         class="tag-view-settings"
-                                        v-model="tagData.additionalData.viewConfig[field.name]">
+                                        v-model="tagData.additionalData.viewConfig[field.name]"
+                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
                                     <small

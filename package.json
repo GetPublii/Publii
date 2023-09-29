@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.42.1",
+  "version": "0.43.0",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -36,14 +36,14 @@
   "devDependencies": {
     "cross-env": "7.0.2",
     "css-loader": "0.28.7",
-    "electron": "22.3.6",
-    "electron-builder": "23.6.0",
+    "electron": "26.2.4",
+    "electron-builder": "24.6.4",
     "file-loader": "4.2.0",
     "glob": "7.1.6",
     "gulp": "4.0.2",
     "gulp-dart-sass": "1.0.2",
     "mocha": "8.1.0",
-    "node-abi": "3.33.0",
+    "node-abi": "3.47.0",
     "node-loader": "1.0.1",
     "node-sass": "npm:sass@1.43.4",
     "sass-loader": "10.2.0",
@@ -55,7 +55,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "22.3.6",
+    "electronVersion": "26.2.4",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2023 TidyCustoms. All rights reserved.",
     "asar": true,
@@ -64,6 +64,7 @@
       "default-files/default-themes/**/*",
       "default-files/default-languages/**/*",
       "default-files/gdpr-assets/**/*",
+      "default-files/vendor/**/*",
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*",

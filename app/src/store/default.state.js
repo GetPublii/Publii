@@ -31,6 +31,7 @@ export default {
     pluginsPath: '',
     wysiwygTranslation: {},
     dirs: {},
+    vendorPath: '',
     // Data about available sites
     sites: [],
     // Data about currently displayed site

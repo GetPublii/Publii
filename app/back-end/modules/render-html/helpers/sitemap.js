@@ -62,13 +62,20 @@ class Sitemap {
                 posts.text,
                 posts.modified_at,
                 posts_images.url,
-                posts_images.additional_data
+                posts_images.additional_data,
+                posts_additional_data.value AS core_post_data
             FROM
                 posts
             LEFT JOIN
                 posts_images
                 ON
                 posts.featured_image_id = posts_images.id
+            LEFT JOIN
+                posts_additional_data
+                on
+                posts.id = posts_additional_data.post_id
+            WHERE
+                posts_additional_data.key = '_core'
             ORDER BY
                 posts.id ASC
         `).all();
@@ -116,6 +123,48 @@ class Sitemap {
                             });
                         }
                     }
+                }
+
+                // detect block editor images
+                if (post.core_post_data.indexOf('"editor":"blockeditor"') > -1) {
+                    try {
+                        let parsedPostStructure = JSON.parse(post.text);
+
+                        for (let i = 0; i < parsedPostStructure.length; i++) {
+                            let block = parsedPostStructure[i];
+
+                            if (block.type === 'publii-image' && block.content) {
+                                images.push({
+                                    url: block.content.image.replace('#DOMAIN_NAME#', this.getMediaPath(post)),
+                                    alt: block.content.alt
+                                });
+                            } else if (block.type === 'publii-gallery' && block.content && block.content.images) {
+                                for (let j = 0; j < block.content.images.length; j++) {
+                                    let imageData = block.content.images[j];
+
+                                    images.push({
+                                        url: imageData.src.replace('#DOMAIN_NAME#', this.getMediaPath(post)),
+                                        alt: imageData.alt
+                                    });
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log('(!) An error occurred during parsing images in the block editor post');
+                    }
+                }
+
+                // detect markdown editor images
+                if (post.core_post_data.indexOf('"editor":"markdown"') > -1) {
+                    let imagesRegexp = /!\[([^\]]*)\]\(([^\)]*)\)/gmi;
+                    let foundedImages = [...post.text.matchAll(imagesRegexp)];
+                    
+                    for (let imageMatch of foundedImages) {
+                        images.push({
+                            url: imageMatch[2].replace('#DOMAIN_NAME#', this.getMediaPath(post)).replace(/\s=\d+x\d+$/, ''),
+                            alt: imageMatch[1]
+                        });
+                    }                
                 }
 
                 if (featuredImageUrl) {
@@ -175,7 +224,7 @@ class Sitemap {
 
             // Detect homepage pagination
             if (file === this.siteConfig.advanced.urls.pageName) {
-                if (!this.siteConfig.advanced.homepageNoIndexPagination) {
+                if (!this.siteConfig.advanced.homepageNoIndexPagination && !this.siteConfig.advanced.homepageNoPagination) {
                     await this.getHomepagePaginationFilesList();
                 }
 

@@ -145,8 +145,49 @@
                             </small>
                         </field>
 
-                        <separator
+                        <field
                             v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-chat-gpt-bot"
+                            :label="$t('settings.noIndexForChatGPTBot')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForChatGPTBot" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.noIndexForChatGPTBotInfo')">
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-chat-gpt-user"
+                            :label="$t('settings.noIndexForChatGPTUser')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForChatGPTUser" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.noIndexForChatGPTUserInfo')">
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="no-index-for-common-crawl-bots"
+                            :label="$t('settings.noIndexForCommonCrawlBots')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.noIndexForCommonCrawlBots" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.noIndexForCommonCrawlBotsInfo') }}
+                            </small>
+                        </field>
+
+                        <separator
                             type="medium"
                             :label="$t('settings.frontpage')" />
 
@@ -200,6 +241,20 @@
                                 slot="note"
                                 class="note"
                                 v-pure-html="$t('settings.homepageNoIndexPagination')">
+                            </small>
+                        </field>
+
+                        <field
+                            id="homepage-no-pagination"
+                            :label="$t('settings.disableHomepagePagination')">
+                            <switcher
+                                slot="field"
+                                id="homepage-no-pagination"
+                                v-model="advanced.homepageNoPagination" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.disableHomepagePaginationInfo')">
                             </small>
                         </field>
 
