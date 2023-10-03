@@ -81,6 +81,17 @@
                 </div>
 
                 <div
+                    @click="deploymentMethodSelected = 'git'"
+                    :title="$t('sync.git')"
+                    class="server-settings-grid-item">
+                    <icon
+                      customWidth="71"
+                      customHeight="42"
+                      name="git"
+                      iconset="svg-map-server"/>
+                </div>
+                
+                <div
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
                     class="server-settings-grid-item">
@@ -158,6 +169,11 @@
                             v-pure-html="$t('sync.deploymentMethodNetlifyMsg')">
                         </span>
 
+                        <span
+                            v-if="deploymentMethodSelected === 'git'"
+                            v-pure-html="$t('sync.deploymentMethodGitMsg')">
+                        </span>
+                        
                         <span
                             v-if="deploymentMethodSelected === 'github-pages'"
                             v-pure-html="$t('sync.deploymentMethodGithubPagesMsg')">
@@ -559,6 +575,137 @@
                         v-if="errors.indexOf('github-token') > -1"
                         class="note">
                         {{ $t('sync.tokenFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-url"
+                    :label="$t('sync.repositoryUrl')">
+                    <text-input
+                        slot="field"
+                        id="git-url"
+                        key="git-url"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-url') > -1 }"
+                        @keyup.native="cleanError('git-url')"
+                        v-model="deploymentSettings.git.url" />
+                    <small
+                        v-if="errors.indexOf('git-url') > -1"
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.repositoryUrlFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.repositoryUrlNote') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-branch"
+                    :label="$t('sync.branch')">
+                    <text-input
+                        slot="field"
+                        id="git-branch"
+                        key="git-branch"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-branch') > -1 }"
+                        @keyup.native="cleanError('git-branch')"
+                        v-model="deploymentSettings.git.branch" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('git-branch') > -1"
+                        class="note">
+                        {{ $t('sync.branchFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note"
+                        v-pure-html="$t('sync.branchExampleGitNote')">
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-user"
+                    :label="$t('sync.username')">
+                    <text-input
+                        slot="field"
+                        id="git-user"
+                        key="git-user"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-user') > -1 }"
+                        @keyup.native="cleanError('git-user')"
+                        v-model="deploymentSettings.git.user" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('github-user') > -1"
+                        class="note">
+                        {{ $t('sync.usernameFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-password"
+                    :label="$t('settings.password.password')">
+                    <text-input
+                        slot="field"
+                        id="git-password"
+                        type="password"
+                        key="git-password"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-password') > -1 }"
+                        @keyup.native="cleanError('git-password')"
+                        v-model="deploymentSettings.git.password" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('git-password') > -1"
+                        class="note">
+                        {{ $t('settings.password.passwordFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-commit-author"
+                    :label="$t('sync.commitAuthor')">
+                    <text-input
+                        slot="field"
+                        id="git-commit-author"
+                        key="git-commit-author"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-commitAuthor') > -1 }"
+                        @keyup.native="cleanError('git-commitAuthor')"
+                        v-model="deploymentSettings.git.commitAuthor" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('git-commitAuthor') > -1"
+                        class="note">
+                        {{ $t('sync.commitAuthorFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
+                    id="git-commit-message"
+                    :label="$t('sync.commitMessage')">
+                    <text-input
+                        slot="field"
+                        id="git-commit-message"
+                        key="git-commit-message"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('git-commitMessage') > -1 }"
+                        @keyup.native="cleanError('git-commitMessage')"
+                        v-model="deploymentSettings.git.commitMessage" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('git-commitMessage') > -1"
+                        class="note">
+                        {{ $t('sync.commitMessageFieldCantBeEmpty') }}
                     </small>
                 </field>
 
@@ -1027,6 +1174,7 @@ export default {
             },
             httpProtocolSelected: '',
             deploymentMethods: {
+                'git': this.$t('sync.git'),
                 'github-pages': this.$t('sync.githubPages'),
                 'gitlab-pages': this.$t('sync.gitlabPages'),
                 'netlify': this.$t('sync.netlify'),
@@ -1123,6 +1271,7 @@ export default {
                 case 'sftp+key':
                     this.deploymentSettings.port = '22'; break;
                 case 's3':
+                case 'git':
                 case 'github-pages':
                 case 'gitlab-pages':
                 case 'netlify':
@@ -1331,6 +1480,9 @@ export default {
                 case 's3':
                     this.validateS3();
                     break;
+                case 'git':
+                    this.validateGit();
+                    break;
                 case 'github-pages':
                     this.validateGithubPages();
                     break;
@@ -1400,6 +1552,10 @@ export default {
 
             return this.validateFields(fields);
         },
+        validateGit () {
+            let fields = ['git_url', 'git_user', 'git_password', 'git_branch', 'git_commitAuthor', 'git_commitMessage'];
+            return this.validateFields(fields);
+        },
         validateGithubPages () {
             let fields = ['github_server', 'github_user', 'github_repo', 'github_branch', 'github_token'];
             return this.validateFields(fields);
@@ -1451,6 +1607,7 @@ export default {
             switch (method) {
                 case 'github-pages': return this.$t('sync.githubPages');
                 case 'gitlab-pages': return this.$t('sync.gitlabPages');
+                case 'git': return this.$t('sync.git');
                 case 'netlify': return this.$t('sync.netlify');
                 case 's3': return this.$t('sync.s3CompatibleStorage');
                 case 'google-cloud': return this.$t('sync.googleCloud');
@@ -1484,6 +1641,10 @@ export default {
                 deploymentSettings.github.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gh-token', deploymentSettings.github.token);
             }
 
+            if (deploymentSettings.git) {
+                deploymentSettings.github.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-git-password', deploymentSettings.git.password);
+            }
+
             if (deploymentSettings.gitlab) {
                 deploymentSettings.gitlab.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
             }
@@ -1511,6 +1672,10 @@ export default {
             if (deploymentSettings.netlify) {
                 deploymentSettings.netlify.id = 'publii-netlify-id ' + passwordKey;
                 deploymentSettings.netlify.token = 'publii-netlify-token ' + passwordKey;
+            }
+
+            if (deploymentSettings.git) {
+                deploymentSettings.git.password = 'publii-git-password ' + passwordKey;
             }
 
             if (deploymentSettings.github) {

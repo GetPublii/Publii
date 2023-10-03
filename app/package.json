@@ -49,6 +49,7 @@
     "image-downloader": "4.3.0",
     "image-size": "1.0.2",
     "isbinaryfile": "5.0.0",
+    "isomorphic-git": "1.24.5",
     "jimp": "0.22.8",
     "js-beautify": "1.14.8",
     "keytar": "7.9.0",

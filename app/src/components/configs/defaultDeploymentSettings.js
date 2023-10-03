@@ -8,11 +8,29 @@ export default {
     passphrase: '',
     path: '',
     sftpkey: '',
-    github: {
+    git: {
+        url: '',
         branch: '',
+        user: '',
+        password: '',
+        commitAuthor: '',
+        commitMessage: 'Publii: update content'
+    },
+    github: {
+        server: 'api.github.com',
+        user: '',
         repo: '',
+        branch: '',
         token: '',
-        user: ''
+        parallelOperations: 1,
+        apiRateLimiting: 1
+    },
+    gitlab: {
+        server: 'https://gitlab.com/',
+        rejectUnauthorized: true,
+        repo: '',
+        branch: '',
+        token: ''
     },
     google: {
         bucket: '',
@@ -20,7 +38,7 @@ export default {
         prefix: ''
     },
     manual: {
-        output: '',
+        output: 'catalog',
         outputDirectory: ''
     },
     netlify: {
@@ -28,14 +46,14 @@ export default {
         token: ''
     },
     s3: {
-        customProvider: false, 
+        customProvider: false,
         provider: 'aws',
         endpoint: '',
-        bucket: '',
         id: '',
         key: '',
-        prefix: '',
+        bucket: '',
         region: '',
-        removeFiles: false
+        prefix: '',
+        acl: 'public-read'
     }
 };

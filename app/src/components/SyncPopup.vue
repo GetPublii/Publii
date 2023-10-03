@@ -294,33 +294,37 @@ export default {
         noServerConfig: function() {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;
 
-            if(deploymentConfig) {
-                if(deploymentConfig.protocol === 's3' && this.checkS3Config(deploymentConfig)) {
+            if (deploymentConfig) {
+                if (deploymentConfig.protocol === 's3' && this.checkS3Config(deploymentConfig)) {
                     return false;
                 }
 
-                if(deploymentConfig.protocol === 'github-pages' && this.checkGithubConfig(deploymentConfig)) {
+                if (deploymentConfig.protocol === 'git' && this.checkGitConfig(deploymentConfig)) {
                     return false;
                 }
 
-                if(deploymentConfig.protocol === 'gitlab-pages' && this.checkGitlabConfig(deploymentConfig)) {
+                if (deploymentConfig.protocol === 'github-pages' && this.checkGithubConfig(deploymentConfig)) {
                     return false;
                 }
 
-                if(deploymentConfig.protocol === 'netlify' && this.checkNetlify(deploymentConfig)) {
+                if (deploymentConfig.protocol === 'gitlab-pages' && this.checkGitlabConfig(deploymentConfig)) {
                     return false;
                 }
 
-                if(deploymentConfig.protocol === 'google-cloud' && this.checkGoogleCloud(deploymentConfig)) {
+                if (deploymentConfig.protocol === 'netlify' && this.checkNetlify(deploymentConfig)) {
                     return false;
                 }
 
-                if(deploymentConfig.protocol === 'manual' && deploymentConfig.manual.output !== '') {
+                if (deploymentConfig.protocol === 'google-cloud' && this.checkGoogleCloud(deploymentConfig)) {
+                    return false;
+                }
+
+                if (deploymentConfig.protocol === 'manual' && deploymentConfig.manual.output !== '') {
                     return false;
                 }
             }
 
-            if(
+            if (
                 !deploymentConfig ||
                 deploymentConfig.server === '' ||
                 deploymentConfig.username === '' ||
@@ -682,6 +686,21 @@ export default {
                         deploymentConfig.s3.id !== '' &&
                         deploymentConfig.s3.key !== '' &&
                         deploymentConfig.s3.bucket !== '';
+            }
+
+            return false;
+        },
+        checkGitConfig: function(deploymentConfig) {
+            if (
+                deploymentConfig.git &&
+                deploymentConfig.git.url !== '' &&
+                deploymentConfig.git.branch !== '' &&
+                deploymentConfig.git.user !== '' &&
+                deploymentConfig.git.password !== '' &&
+                deploymentConfig.git.commitAuthor !== '' &&
+                deploymentConfig.git.commitMessage !== ''
+            ) {
+                return true;
             }
 
             return false;

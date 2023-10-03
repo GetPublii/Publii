@@ -8,6 +8,7 @@ const slug = require('./../../helpers/slug');
 const FTP = require('./ftp.js');
 const SFTP = require('./sftp.js');
 const S3 = require('./s3.js');
+const Git = require('./git.js');
 const GithubPages = require('./github-pages.js');
 const GitlabPages = require('./gitlab-pages.js');
 const Netlify = require('./netlify.js');
@@ -20,8 +21,9 @@ const ManualDeployment = require('./manual.js');
  *
  * (S)FTP(S),
  * S3 server,
- * Github Pages,
- * Gitlab Pages,
+ * Git
+ * Github Pages (deprecated),
+ * Gitlab Pages (deprecated),
  * Netlify,
  * Google Cloud,
  * Manually
@@ -64,6 +66,7 @@ class Deployment {
             case 's3':              connection = new S3();                          break;
             case 'netlify':         connection = new Netlify();                     break;
             case 'google-cloud':    connection = new GoogleCloud();                 break;
+            case 'git':             connection = new Git();                         break;
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
             default:                connection = new FTP();                         break;
@@ -82,6 +85,7 @@ class Deployment {
             case 'sftp':
             case 'sftp+key':        this.client = new SFTP(this);               break;
             case 's3':              this.client = new S3(this);                 break;
+            case 'git':             this.client = new Git(this);                break;
             case 'github-pages':    this.client = new GithubPages(this);        break;
             case 'gitlab-pages':    this.client = new GitlabPages(this);        break;
             case 'netlify':         this.client = new Netlify(this);            break;
@@ -121,8 +125,8 @@ class Deployment {
         let tempFileList = this.readDirRecursiveSync(this.inputDir);
         let fileList = [];
 
-        for(let filePath of tempFileList) {
-            if(filePath === '.htaccess' || filePath === '_redirects') {
+        for (let filePath of tempFileList) {
+            if (filePath === '.htaccess' || filePath === '_redirects') {
                 let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify'];
 
                 if(excludedProtocols.indexOf(this.siteConfig.deployment.protocol) === -1) {
@@ -137,7 +141,7 @@ class Deployment {
             }
 
             // Put directory
-            if(fs.lstatSync(path.join(this.inputDir, filePath)).isDirectory()) {
+            if (fs.lstatSync(path.join(this.inputDir, filePath)).isDirectory()) {
                 if (filePath.indexOf('/') === 0) {
                     filePath = filePath.substr(1);
                 }

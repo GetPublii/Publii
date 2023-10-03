@@ -171,6 +171,14 @@ const AstCurrentSiteConfig = {
             prefix: '',
             acl: 'public-read'
         },
+        git: {
+            url: '',
+            branch: '',
+            user: '',
+            password: '',
+            commitAuthor: '',
+            commitMessage: 'Publii: update content'
+        },
         github: {
             server: 'api.github.com',
             user: '',
