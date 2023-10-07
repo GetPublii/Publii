@@ -1,5 +1,6 @@
 module.exports = {
   'publii-code': require('./components/default-blocks/publii-code/render.js'),
+  'publii-columns': require('./components/default-blocks/publii-columns/render.js'),
   'publii-embed': require('./components/default-blocks/publii-embed/render.js'),
   'publii-gallery': require('./components/default-blocks/publii-gallery/render.js'),
   'publii-header': require('./components/default-blocks/publii-header/render.js'),

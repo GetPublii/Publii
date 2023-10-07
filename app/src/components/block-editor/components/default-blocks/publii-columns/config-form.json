@@ -1,0 +1,29 @@
+[
+    {
+        "name": "cssClasses",
+        "type": "text",
+        "label": "editor.blocks.cssClassesLabel",
+        "tooltip": "editor.blocks.cssClassesTooltip",
+        "defaultValue": ""
+    },
+    {
+        "name": "customId",
+        "type": "checkbox",
+        "label": "editor.blocks.header.customIdLabel",
+        "tooltip": "editor.blocks.header.customIdTooltip",
+        "defaultValue": false
+    },
+    {
+        "name": "id",
+        "type": "text",
+        "label": "editor.blocks.idLabel",
+        "tooltip": "editor.blocks.header.idTooltip",
+        "defaultValue": "",
+        "disabled": [
+            {
+                "field": "customId",
+                "value": false
+            }
+        ]
+    }
+]

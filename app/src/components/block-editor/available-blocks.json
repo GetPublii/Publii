@@ -53,5 +53,10 @@
         "blockName": "publii-toc",
         "icon": "toc",
         "label": "editor.toc"
+    },
+    {
+        "blockName": "publii-columns",
+        "icon": "columns",
+        "label": "editor.columns"
     }
 ]
