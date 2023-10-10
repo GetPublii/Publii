@@ -91,6 +91,7 @@ export default {
                 this.$t('customHTML.tabs.comments'),
                 this.$t('customHTML.tabs.searchInput'),
                 this.$t('customHTML.tabs.searchContent'),
+                this.$t('customHTML.tabs.socialSharing'),
                 this.$t('customHTML.tabs.footer'),
             ],
             requiredFeatures: {
@@ -99,6 +100,7 @@ export default {
                 'custom-comments-code': ['customComments'],
                 'custom-search-input': ['customSearch'],
                 'custom-search-content': ['customSearch'],
+                'custom-social-sharing': ['customSharing'],
                 'custom-footer-code': []
             },
             editors: {},
@@ -168,6 +170,7 @@ export default {
                 'custom-comments-code': this.$store.state.currentSite.config.advanced.customCommentsCode,
                 'custom-search-input': this.$store.state.currentSite.config.advanced.customSearchInput,
                 'custom-search-content': this.$store.state.currentSite.config.advanced.customSearchContent,
+                'custom-social-sharing': this.$store.state.currentSite.config.advanced.customSocialSharing,
                 'custom-footer-code': this.$store.state.currentSite.config.advanced.customFooterCode
             };
 

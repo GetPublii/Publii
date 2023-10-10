@@ -354,6 +354,7 @@ class RendererContext {
         this.context.commentsCustomCode = this.getCustomHTMLCode('customCommentsCode', itemContext);
         this.context.customSearchInput = this.getCustomHTMLCode('customSearchInput', itemContext);
         this.context.customSearchContent = this.getCustomHTMLCode('customSearchContent', itemContext);
+        this.context.customSocialSharing = this.getCustomHTMLCode('customSocialSharing', itemContext);
         this.context.footerCustomCode = this.getCustomHTMLCode('customFooterCode', itemContext);
         this.context.customHTML = this.getCustomHTMLCodeObject(this.siteConfig.advanced.customHTML, itemContext);
 
