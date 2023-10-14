@@ -691,6 +691,18 @@
 
                 <field
                     v-if="deploymentMethodSelected === 'git'"
+                    id="git-commit-email"
+                    :label="$t('sync.commitEmail')">
+                    <text-input
+                        slot="field"
+                        id="git-commit-email"
+                        key="git-commit-email"
+                        :spellcheck="false"
+                        v-model="deploymentSettings.git.commitEmail" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'git'"
                     id="git-commit-message"
                     :label="$t('sync.commitMessage')">
                     <text-input
@@ -1449,12 +1461,13 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-deploy-test-error', (data) => {
+                console.log(data);
                 if(data && data.message) {
                     if (data.message.translation) {
                         data.message = this.$t(data.message.translation);
                     }
                     this.$bus.$emit('alert-display', {
-                        message: this.$t('sync.connectToServerCantStoreFilesErrorMsg') + ': ' + data.message,
+                        message: data.noAdditionalMessage ? data.message : this.$t('sync.connectToServerCantStoreFilesErrorMsg') + ': ' + data.message,
                         buttonStyle: 'danger'
                     });
                 } else {

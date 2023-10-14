@@ -121,15 +121,19 @@ class Deployment {
     /**
      * Prepares list of local files
      */
-    prepareLocalFilesList() {
+    prepareLocalFilesList () {
         let tempFileList = this.readDirRecursiveSync(this.inputDir);
         let fileList = [];
 
         for (let filePath of tempFileList) {
+            if (filePath === '.git') {
+                continue;
+            }
+            
             if (filePath === '.htaccess' || filePath === '_redirects') {
                 let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify'];
 
-                if(excludedProtocols.indexOf(this.siteConfig.deployment.protocol) === -1) {
+                if (excludedProtocols.indexOf(this.siteConfig.deployment.protocol) === -1) {
                     fileList.push({
                         path: filePath,
                         type: 'file',

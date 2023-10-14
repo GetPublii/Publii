@@ -14,6 +14,7 @@ export default {
         user: '',
         password: '',
         commitAuthor: '',
+        commitEmail: '',
         commitMessage: 'Publii: update content'
     },
     github: {

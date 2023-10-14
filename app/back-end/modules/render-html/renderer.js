@@ -30,6 +30,7 @@ const themeConfigValidator = require('./validators/theme-config.js');
 const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
 const Gdpr = require('./helpers/gdpr.js');
+const Git = require('./../deploy/git.js');
 
 // Default config
 const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.config');
@@ -100,7 +101,7 @@ class Renderer {
         this.tagOnlyMode = mode === 'tag';
         this.authorOnlyMode = mode === 'author';
         this.setIO();
-        this.emptyOutputDir();
+        await this.emptyOutputDir();
         let themeValidationResults = this.themeIsValid();
 
         if (themeValidationResults === true) {
@@ -384,12 +385,17 @@ class Renderer {
     /*
      * Make sure the output dir exists and is empty before generating the output files
      */
-    emptyOutputDir() {
+    async emptyOutputDir() {
         if (UtilsHelper.dirExists(this.outputDir)) {
+            if (this.previewMode === false && this.siteConfig.deployment.protocol === 'git') {
+                let gitClient = new Git(false);
+                await gitClient.prepareToSync(this.siteConfig, this.siteName, this.outputDir, this.sendProgress);
+            }
+
             let files = fs.readdirSync(this.outputDir);
             
             for (let file of files) {
-                if (file === '.' || file === '..' || file === 'media') {
+                if (file === '.git' || file === '.' || file === '..' || file === 'media') {
                     continue;
                 }
 
@@ -397,6 +403,17 @@ class Renderer {
             }
         } else {
             fs.mkdirSync(this.outputDir);
+
+            if (this.previewMode === false && this.siteConfig.deployment.protocol === 'git') {
+                let gitClient = new Git(false);
+                let result = await gitClient.prepareToSync(this.siteConfig, this.siteName, this.outputDir, this.sendProgress);
+
+                if (result === 'merge-error') {
+                    fs.rmSync(path.join(this.outputDir, '.git'), { recursive: true });
+                    console.log('[i] Git Debug: remove .git folder due merge errors');
+                    await gitClient.prepareToSync(this.siteConfig, this.siteName, this.outputDir, this.sendProgress);
+                }
+            }
         }
     }
 

@@ -71,7 +71,7 @@
             "requestTimeout": "Request timeout.",
             "retrievingHandlerOfRemoteFilesTree": "Retrieving remote file tree handler...",
             "retrievingRemoteFilesTree": "Retrieving the remote file tree...",
-            "tokenOrServerAddressInvalid": "Provided token or server address is invalid.",
+            "tokenOrServerAddressInvalid": "Provided credentials or server/repository address are invalid.",
             "tooManyFilesInfo": "Your website contains over 4000 items ({numberOfFiles} files and directories). Currently our Github Pages implementation only supports websites with up to 4000 items."
         },
         "site": {
@@ -956,6 +956,7 @@
         "clickToChangeDeploymentMethod": "Click to change the currently used deployment method",
         "commitAuthor": "Commit author",
         "commitAuthorFieldCantBeEmpty": "Commit author field cannot be empty",
+        "commitEmail": "Commit author e-mail",
         "commitMessage": "Commit message",
         "commitMessageFieldCantBeEmpty": "Commit message field cannot be empty",
         "configureServer": "Configure Server",

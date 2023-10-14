@@ -177,6 +177,7 @@ const AstCurrentSiteConfig = {
             user: '',
             password: '',
             commitAuthor: '',
+            commitEmail: '',
             commitMessage: 'Publii: update content'
         },
         github: {
