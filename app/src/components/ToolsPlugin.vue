@@ -629,8 +629,6 @@ export default {
                             valueToCompare = 'false';
                         }
 
-                        console.log('COMPARE', acceptedValues, valueToCompare);
-
                         if (acceptedValues.indexOf(valueToCompare) > -1) {
                             isValidDependency = true;
                         }
