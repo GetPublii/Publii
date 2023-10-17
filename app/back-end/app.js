@@ -58,7 +58,6 @@ class App {
         this.app.sitesDir = null;
         this.db = false;
         this.pluginsAPI = new PluginsAPI();
-        this.pluginsHelper = new Plugins(this);
 
         /*
          * Run the app
@@ -361,7 +360,7 @@ class App {
 
     // Load plugins
     loadPlugins() {
-        let pluginsLoader = new Plugins(this);
+        let pluginsLoader = new Plugins(this.appDir, this.sitesDir);
         this.plugins = pluginsLoader.loadPlugins();
         this.pluginsPath = normalizePath(path.join(this.appDir, 'plugins'));
     }
@@ -525,6 +524,8 @@ class App {
             this.sitesDir = path.join(this.appDir, 'sites');
             this.app.sitesDir = path.join(this.appDir, 'sites');
         }
+
+        this.pluginsHelper = new Plugins(this.appDir, this.sitesDir);
     }
 
     // Check permissions errors

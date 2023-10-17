@@ -9,7 +9,7 @@ class PluginEvents {
     constructor(appInstance) {
         // Get plugins status
         ipcMain.on('app-site-get-plugins-state', function (event, data) {
-            let pluginsInstance = new Plugins(appInstance);
+            let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginsStatus = pluginsInstance.getSiteSpecificPluginsState(siteName);
             event.sender.send('app-site-plugins-state-loaded', pluginsStatus);
@@ -17,7 +17,7 @@ class PluginEvents {
 
         // Activate
         ipcMain.on('app-site-plugin-activate', function (event, data) {
-            let pluginsInstance = new Plugins(appInstance);
+            let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
             let result = pluginsInstance.activatePlugin(siteName, pluginName);
@@ -26,7 +26,7 @@ class PluginEvents {
 
         // Deactivate
         ipcMain.on('app-site-plugin-deactivate', function (event, data) {
-            let pluginsInstance = new Plugins(appInstance);
+            let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
             let result = pluginsInstance.deactivatePlugin(siteName, pluginName);
@@ -35,7 +35,7 @@ class PluginEvents {
 
         // Get plugin info and config
         ipcMain.on('app-site-get-plugin-config', function (event, data) {
-            let pluginsInstance = new Plugins(appInstance);
+            let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
             let result = pluginsInstance.getPluginConfig(siteName, pluginName);
@@ -44,7 +44,7 @@ class PluginEvents {
 
         // Save plugin config
         ipcMain.on('app-site-save-plugin-config', function (event, data) {
-            let pluginsInstance = new Plugins(appInstance);
+            let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let siteName = data.siteName.replace(/[\/\\]/gmi, '');
             let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
             let result = pluginsInstance.savePluginConfig(siteName, pluginName, data.newConfig);

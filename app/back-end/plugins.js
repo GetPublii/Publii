@@ -8,10 +8,10 @@ const UtilsHelper = require('./helpers/utils.js');
 const pluginConfigValidator = require('./helpers/validators/plugin-config.js');
 
 class Plugins {
-    constructor(appInstance) {
-        this.basePath = appInstance.appDir;
-        this.pluginsPath = path.join(this.basePath, 'plugins');
-        this.appInstance = appInstance;
+    constructor(appDir, sitesDir) {
+        this.appDir = appDir;
+        this.sitesDir = sitesDir;
+        this.pluginsPath = path.join(this.appDir, 'plugins');
     }
 
     /*
@@ -96,7 +96,7 @@ class Plugins {
      * Load plugins config for specific site
      */
     loadSitePluginsConfig (siteName) {
-        let sitePath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config'); 
+        let sitePath = path.join(this.sitesDir, siteName, 'input', 'config'); 
         let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
 
         if (!fs.existsSync(sitePluginsConfigPath)) {
@@ -154,7 +154,7 @@ class Plugins {
      * Save plugins config 
      */
     saveSitePluginsConfig (siteName, config) {
-        let sitePath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config'); 
+        let sitePath = path.join(this.sitesDir, siteName, 'input', 'config'); 
         let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
 
         try {
@@ -192,8 +192,8 @@ class Plugins {
     }
 
     getPluginConfig (siteName, pluginName) {
-        let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'plugin.json');
-        let pluginConfigPath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'plugin.json');
+        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
         let output = {
             pluginData: null,
             pluginConfig: null
@@ -203,7 +203,7 @@ class Plugins {
             try {
                 let pluginData = fs.readFileSync(pluginPath, 'utf8');
                 output.pluginData = JSON.parse(pluginData);
-                output.pluginData.path = path.join(this.appInstance.appDir, 'plugins', pluginName);
+                output.pluginData.path = path.join(this.appDir, 'plugins', pluginName);
             } catch (e) {
                 return 0;
             }
@@ -224,7 +224,7 @@ class Plugins {
     }
 
     savePluginConfig (siteName, pluginName, newConfig) {
-        let pluginConfigPath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
 
         try {
             fs.writeFileSync(pluginConfigPath, JSON.stringify(newConfig, null, 4));
@@ -236,8 +236,8 @@ class Plugins {
     }
 
     loadPluginConfig (pluginName, siteName) {
-        let pluginPath = path.join(this.appInstance.appDir, 'plugins', pluginName, 'plugin.json');
-        let pluginConfigPath = path.join(this.appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'plugin.json');
+        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
         let pluginData = null;
         let pluginSavedConfig = null;
         let output = {};
