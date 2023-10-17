@@ -2,7 +2,7 @@
 	"name": "Polish - default",
 	"version": "1.4.0",
 	"author": "Publii Team",
-	"publiiSupport": "0.43.0",
+	"publiiSupport": "0.44.0",
     "momentLocale": "pl",
     "wysiwygTranslation": true
 }
