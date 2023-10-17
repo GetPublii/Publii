@@ -12,7 +12,7 @@
 
 {{#if @config.custom.shareTwitter}}
    <a
-      href="https://twitter.com/share?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}"
+      href="https://twitter.com/intent/tweet?url={{encodeUrlFragment url}}&amp;via={{#if @config.custom.shareTwitterName}}{{encodeUrlFragment @config.custom.shareTwitterName}}{{else}}{{encodeUrlFragment @website.name}}{{/if}}&amp;text={{encodeUrlFragment title}}"
       class="js-share twitter"
       rel="nofollow noopener noreferrer">
       <svg class="icon" aria-hidden="true" focusable="false">
