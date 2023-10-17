@@ -253,13 +253,13 @@
                                     v-if="field.type === 'repeater'" 
                                     slot="field"
                                     :structure="field.structure"
-                                    v-model="settingsValues[field.name]"
+                                    v-model="custom[field.name]"
                                     :translations="field.translations"
                                     :maxCount="field.maxCount"
                                     :hasEmptyState="field.hasEmptyState"
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
-                                    :settings="settingsValues"
+                                    :settings="custom"
                                     :customCssClasses="field.customCssClasses" />
 
                                 <small
@@ -727,10 +727,10 @@ export default {
                 let dependencyValue = dependencies[i].value;
 
                 if (
-                    Array.isArray(this.settingsValues[dependencyName]) && 
+                    Array.isArray(this.custom[dependencyName]) && 
                     dependencyValue.indexOf('=') > -1
                 ) {
-                    let dependencyData = this.settingsValues[dependencyName];
+                    let dependencyData = this.custom[dependencyName];
                     let fieldName = dependencyValue.split('=')[0];
                     let acceptedValues = [];
                     let isValidDependency = false;
