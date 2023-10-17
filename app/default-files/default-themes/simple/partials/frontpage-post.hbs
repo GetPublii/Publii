@@ -115,9 +115,13 @@
                {{/if}}
 
                {{#if postViewConfig.displayShareButtons}}
-                  <div class="post__share">
-                     {{> share-buttons}}
-                  </div>
+                  {{#checkIf @plugins.socialSharing '&&' @plugins.socialSharing.state}}
+                     {{{@customSocialSharing}}}
+                  {{else}}
+                     <div class="post__share">
+                        {{> share-buttons}}
+                     </div>
+                  {{/checkIf}} 
                {{/if}}
 
                {{#if postViewConfig.displayAuthorBio}}
