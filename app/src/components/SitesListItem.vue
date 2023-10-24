@@ -136,7 +136,8 @@ export default {
                 this.$store.commit('cloneWebsite', {
                     clonedWebsiteCatalog: this.site,
                     newSiteName: clonedWebsiteData.siteName,
-                    newSiteCatalog: clonedWebsiteData.siteCatalog
+                    newSiteCatalog: clonedWebsiteData.siteCatalog,
+                    newSiteConfig: clonedWebsiteData.siteConfig
                 });
 
                 this.$router.push(`/site/${clonedWebsiteData.siteCatalog}`);

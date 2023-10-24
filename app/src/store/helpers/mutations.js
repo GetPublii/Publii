@@ -100,10 +100,7 @@ export default {
         Vue.delete(state.sites, name);
     },
     cloneWebsite (state, data) {
-        let copiedData = JSON.parse(JSON.stringify(state.sites[data.clonedWebsiteCatalog]));
-        copiedData.name = data.newSiteCatalog;
-        copiedData.displayName = data.newSiteName;
-        copiedData.deployment = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig.deployment));
+        let copiedData = JSON.parse(JSON.stringify(data.newSiteConfig));
         Vue.set(state.sites, data.newSiteCatalog, copiedData);
     },
     addNewSite (state, siteData) {

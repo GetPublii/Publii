@@ -459,7 +459,8 @@ class Site {
 
         return {
             siteName: siteName,
-            siteCatalog: newCatalogName
+            siteCatalog: newCatalogFreeName,
+            siteConfig: siteConfig
         };
     }
 
