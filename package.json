@@ -15,6 +15,7 @@
     "prod": "cross-env NODE_ENV=production webpack --mode=production --progress --colors --hide-modules",
     "build": "gulp build && cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
     "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
+    "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/back-end/**/*.spec.js --reporter dot",
     "prepare-editor": "npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
