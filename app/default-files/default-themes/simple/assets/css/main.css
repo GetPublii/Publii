@@ -39,46 +39,6 @@ address {
   font-style: normal;
 }
 
-.facebook {
-  background: #3b5998;
-}
-
-.twitter {
-  background: #55acee;
-}
-
-.mix {
-  background: #fd8235;
-}
-
-.instagram {
-  background: #405de6;
-}
-
-.vimeo {
-  background: #1ab7ea;
-}
-
-.pinterest {
-  background: #bd081c;
-}
-
-.youtube {
-  background: #cd201f;
-}
-
-.linkedin {
-  background: #007bb6;
-}
-
-.buffer {
-  background: #333333;
-}
-
-.whatsapp {
-  background: #25D366;
-}
-
 ::-moz-selection {
   background: var(--color);
   color: var(--white);
@@ -237,7 +197,6 @@ blockquote::before {
   position: absolute;
   left: 50%;
   -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
           transform: translate(-50%, 0);
 }
 blockquote > :nth-child(1) {
@@ -309,7 +268,7 @@ table td {
 
 figcaption {
   clear: both;
-  color: gray-2;
+  color: var(--gray);
   font-style: italic;
   font-size: 0.7241964329rem;
   margin: 0.85rem 0 0;
@@ -426,7 +385,6 @@ button:focus {
           box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
   color: var(--white);
   -webkit-transform: translateY(-2px);
-      -ms-transform: translateY(-2px);
           transform: translateY(-2px);
 }
 @media all and (min-width: 20em) {
@@ -643,7 +601,6 @@ textarea {
   opacity: 1;
   position: fixed;
   -webkit-transform: translate(0, 0);
-      -ms-transform: translate(0, 0);
           transform: translate(0, 0);
   -webkit-transition: height 0.3s, background 0.3s, opacity 0.24s, -webkit-transform 0.24s;
   transition: height 0.3s, background 0.3s, opacity 0.24s, -webkit-transform 0.24s;
@@ -655,7 +612,6 @@ textarea {
   .top.is-hidden {
     opacity: 0;
     -webkit-transform: translate(0, -86px);
-        -ms-transform: translate(0, -86px);
             transform: translate(0, -86px);
     -webkit-transition: background 0.3s, color 0.3s, opacity 0.24s, -webkit-transform 0.24s;
     transition: background 0.3s, color 0.3s, opacity 0.24s, -webkit-transform 0.24s;
@@ -705,7 +661,6 @@ textarea {
 }
 .search__btn:hover, .search__btn:focus {
   -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
           transform: translateY(0);
 }
 .search__btn:hover > svg, .search__btn:focus > svg {
@@ -760,19 +715,16 @@ textarea {
   width: 1px;
   top: 0;
   -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
           transform: rotate(45deg);
   -webkit-transition: all 0.14s ease-out;
   transition: all 0.14s ease-out;
 }
 .search__close:after {
   -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
           transform: rotate(-45deg);
 }
 .search__close:hover {
   -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
           transform: translateY(0);
 }
 .search__close:hover:before, .search__close:hover:after {
@@ -812,7 +764,6 @@ textarea {
 }
 .search__overlay.expanded {
   -webkit-transform: translate(0, 0);
-      -ms-transform: translate(0, 0);
           transform: translate(0, 0);
   opacity: 1;
   display: block;
@@ -920,7 +871,6 @@ textarea {
   left: 0;
   opacity: 1;
   -webkit-transform: scale(1);
-      -ms-transform: scale(1);
           transform: scale(1);
   visibility: visible;
   margin-top: 0.85rem;
@@ -940,7 +890,6 @@ textarea {
   left: auto;
   right: 0;
   -webkit-transform-origin: right top;
-      -ms-transform-origin: right top;
           transform-origin: right top;
 }
 .navbar .has-submenu .has-submenu:active > .navbar__submenu,
@@ -970,10 +919,8 @@ textarea {
   z-index: 1;
   opacity: 0;
   -webkit-transform: scale(0.8);
-      -ms-transform: scale(0.8);
           transform: scale(0.8);
   -webkit-transform-origin: 0 top;
-      -ms-transform-origin: 0 top;
           transform-origin: 0 top;
   -webkit-transition: opacity 0.15s, -webkit-transform 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
   transition: opacity 0.15s, -webkit-transform 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
@@ -1035,7 +982,6 @@ textarea {
           box-shadow: none;
   outline: none;
   -webkit-transform: none;
-      -ms-transform: none;
           transform: none;
 }
 .navbar .navbar__toggle-box {
@@ -1087,7 +1033,6 @@ textarea {
 }
 .navbar .navbar__toggle.is-active .navbar__toggle-inner {
   -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
           transform: rotate(45deg);
   -webkit-transition-delay: 0.12s;
           transition-delay: 0.12s;
@@ -1103,7 +1048,6 @@ textarea {
 .navbar .navbar__toggle.is-active .navbar__toggle-inner::after {
   bottom: 0;
   -webkit-transform: rotate(-90deg);
-      -ms-transform: rotate(-90deg);
           transform: rotate(-90deg);
   -webkit-transition: bottom 0.075s ease, -webkit-transform 0.075s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
   transition: bottom 0.075s ease, -webkit-transform 0.075s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
@@ -1310,7 +1254,6 @@ textarea {
   left: 50%;
   position: absolute;
   -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
           transform: translate(-50%, 0);
   width: 100%;
   z-index: 2;
@@ -1396,7 +1339,7 @@ textarea {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: gray-2;
+  color: var(--gray);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1506,7 +1449,7 @@ textarea {
   width: 100%;
 }
 .post__meta {
-  color: gray-2;
+  color: var(--gray);
   font-size: 0.8239746086rem;
   font-style: italic;
   margin-bottom: calc(-1.4166666667rem - 1vw);
@@ -1604,7 +1547,6 @@ textarea {
 }
 .post__share > a:hover {
   -webkit-transform: translateY(-2px);
-      -ms-transform: translateY(-2px);
           transform: translateY(-2px);
 }
 .post__share > a span {
@@ -2030,6 +1972,46 @@ textarea {
   margin: 0 0 1rem;
 }
 
+.facebook {
+  background: #3b5998;
+}
+
+.twitter {
+  background: #55acee;
+}
+
+.instagram {
+  background: #405de6;
+}
+
+.vimeo {
+  background: #1ab7ea;
+}
+
+.pinterest {
+  background: #bd081c;
+}
+
+.youtube {
+  background: #cd201f;
+}
+
+.linkedin {
+  background: #007bb6;
+}
+
+.buffer {
+  background: #333333;
+}
+
+.mix {
+  background: #fd8235;
+}
+
+.whatsapp {
+  background: #25D366;
+}
+
 /* Pagination ------------------------ */
 .pagination {
   display: -webkit-box;
@@ -2261,7 +2243,6 @@ textarea {
   position: absolute;
   text-align: center;
   -webkit-transform: translate(-50%, 1.2rem);
-      -ms-transform: translate(-50%, 1.2rem);
           transform: translate(-50%, 1.2rem);
   -webkit-transition: all 0.24s ease-out;
   transition: all 0.24s ease-out;
@@ -2269,7 +2250,6 @@ textarea {
 .gallery__item:hover figcaption {
   opacity: 1;
   -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
           transform: translate(-50%, 0);
 }
 
@@ -2289,6 +2269,5 @@ textarea {
   -webkit-box-shadow: none;
           box-shadow: none;
   -webkit-transform: none;
-      -ms-transform: none;
           transform: none;
 }
