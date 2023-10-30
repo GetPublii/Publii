@@ -161,6 +161,7 @@ class SiteEvents {
             }
 
             let passwordData = false;
+            let passwordGitData = false;
             let passphraseData = false;
             let s3IdData = false;
             let s3KeyData = false;
@@ -187,6 +188,18 @@ class SiteEvents {
                             config.settings.deployment.password
                         );
                         config.settings.deployment.password = passwordData.toSave;
+                    }
+
+                    if (
+                        config.settings.deployment.git.password !== '' && 
+                        config.settings.deployment.git.password !== 'publii-git-password ' + siteID
+                    ) {
+                        passwordGitData = await self.loadPassword(
+                            config.settings,
+                            'publii-git-password',
+                            config.settings.deployment.git.password
+                        );
+                        config.settings.deployment.git.password = passwordGitData.toSave;
                     }
 
                     if (
@@ -277,6 +290,10 @@ class SiteEvents {
 
             if(passwordData && passwordData.newPassword) {
                 config.settings.deployment.password = passwordData.newPassword;
+            }
+
+            if(passwordGitData && passwordGitData.newPassword) {
+                config.settings.deployment.git.password = passwordGitData.newPassword;
             }
 
             if(passphraseData && passphraseData.newPassword) {
