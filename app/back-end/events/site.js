@@ -77,6 +77,9 @@ class SiteEvents {
                         path.join(appInstance.sitesDir, config.settings.name)
                     );
 
+                    let dbPath = path.join(appInstance.sitesDir, config.settings.name, 'input', 'db.sqlite');
+                    appInstance.db = new sqlite(dbPath);
+
                     // Rename also the backups directory
                     let backupsDir = appInstance.appConfig.backupsLocation;
 
