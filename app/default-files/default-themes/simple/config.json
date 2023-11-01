@@ -1512,14 +1512,14 @@
         {
             "name": "shareTwitter",
             "group": "Share Buttons",
-            "label": "Twitter",
+            "label": "X (formerly Twitter)",
             "value": false,
             "type": "checkbox"
         },
         {
             "name": "shareTwitterName",
             "group": "Share Buttons",
-            "note": "Enter your Twitter account's handle here; it will be used when the Twitter share button is clicked on your site e.g. 'via @TwitterHandle'. If left blank, the default username of @SiteName will be used",
+            "note": "Enter your X account's handle here; it will be used when the X share button is clicked on your site e.g. 'via @XHandle'. If left blank, the default username of @SiteName will be used",
             "value": "",
             "type": "text",
             "dependencies": [{
@@ -1584,9 +1584,9 @@
         },
         {
             "name": "socialTwitter",
-            "label": "Twitter",
+            "label": "X (formerly Twitter)",
             "group": "Footer",
-            "placeholder": "Please enter your Twitter URL",
+            "placeholder": "Please enter your X URL",
             "value": "",
             "type": "text",
             "dependencies": [{
