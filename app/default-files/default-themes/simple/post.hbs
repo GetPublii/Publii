@@ -117,15 +117,13 @@
                {{/if}}
 
                {{#if @config.post.displayShareButtons}}
-                  {{#checkIfAll @plugins.socialSharing @plugins.socialSharing.state}}
-                     <div class="post__share">
-                        {{{@customSocialSharing}}}
-                     </div>
+                  {{#checkIf @plugins.socialSharing '&&' @plugins.socialSharing.state}}
+                     {{{@customSocialSharing}}}
                   {{else}}
                      <div class="post__share">
                         {{> share-buttons}}
                      </div>
-                  {{/checkIfAll}}          
+                  {{/checkIf}}          
                {{/if}}
 
                {{#if @config.post.displayAuthorBio}}

@@ -148,7 +148,7 @@ class AppEvents {
          * Delete plugin
          */
         ipcMain.on('app-plugin-delete', function(event, config) {
-            let pluginsLoader = new Plugins(appInstance);
+            let pluginsLoader = new Plugins(appInstance.appDir, appInstance.sitesDir);
 
             if(config.directory !== '') {
                 pluginsLoader.removePlugin(config.directory);
@@ -329,7 +329,7 @@ class AppEvents {
          * Add new plugin
          */
         ipcMain.on('app-plugin-upload', function(event, config) {
-            let pluginsLoader = new Plugins(appInstance);
+            let pluginsLoader = new Plugins(appInstance.appDir, appInstance.sitesDir);
             let newPluginDir = path.parse(config.sourcePath).name;
             let extension = path.parse(config.sourcePath).ext;
             let status = '';

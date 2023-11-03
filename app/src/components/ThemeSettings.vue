@@ -253,13 +253,13 @@
                                     v-if="field.type === 'repeater'" 
                                     slot="field"
                                     :structure="field.structure"
-                                    v-model="settingsValues[field.name]"
+                                    v-model="custom[field.name]"
                                     :translations="field.translations"
                                     :maxCount="field.maxCount"
                                     :hasEmptyState="field.hasEmptyState"
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
-                                    :settings="settingsValues"
+                                    :settings="custom"
                                     :customCssClasses="field.customCssClasses" />
 
                                 <small
@@ -726,6 +726,41 @@ export default {
                 let dependencyName = dependencies[i].field;
                 let dependencyValue = dependencies[i].value;
 
+                if (
+                    Array.isArray(this.custom[dependencyName]) && 
+                    dependencyValue.indexOf('=') > -1
+                ) {
+                    let dependencyData = this.custom[dependencyName];
+                    let fieldName = dependencyValue.split('=')[0];
+                    let acceptedValues = [];
+                    let isValidDependency = false;
+
+                    if (dependencyValue.split('=')[1]) {
+                        acceptedValues = dependencyValue.split('=')[1].split(',');
+                    }
+
+                    for (let i = 0; i < dependencyData.length; i++) {
+                        let dataRow = dependencyData[i];
+                        let valueToCompare = dataRow[fieldName];
+
+                        if (valueToCompare === true) {
+                            valueToCompare = 'true';
+                        } else if (valueToCompare === false) {
+                            valueToCompare = 'false';
+                        }
+
+                        if (acceptedValues.indexOf(valueToCompare) > -1) {
+                            isValidDependency = true;
+                        }
+                    }
+
+                    if (!isValidDependency) {
+                        return false;
+                    }
+
+                    continue;
+                }
+
                 if (dependencyValue === "true" && this.custom[dependencyName] !== true) {
                     return false;
                 } else if (dependencyValue === "true") {
@@ -740,14 +775,17 @@ export default {
 
                 if (typeof dependencyValue === 'string' && dependencyValue.indexOf(',') > -1) {
                     let values = dependencyValue.split(',');
+                    let isValidDependency = false;
 
                     for (let i = 0; i < values.length; i++) {
                         if (this.custom[dependencyName] === values[i]) {
-                            return true;
+                            isValidDependency = true;
                         }
                     }
                     
-                    return false;
+                    if (!isValidDependency) {
+                        return false;
+                    }
                 }
 
                 if (dependencyValue !== this.custom[dependencyName]) {

@@ -138,12 +138,17 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
         if (allowedStatus !== 'any') {
             allowedStatus = allowedStatus.split(',');
-            excludedStatus = excludedStatus.split(',');
+
+            if (excludedStatus !== '') {
+                excludedStatus = excludedStatus.split(',');
+            }
 
             filteredPosts = filteredPosts.filter(post => {
-                for (let i = 0; i < excludedStatus.length; i++) {
-                    if (post.status.indexOf(excludedStatus[i]) > -1) {
-                        return false;
+                if (excludedStatus) {
+                    for (let i = 0; i < excludedStatus.length; i++) {
+                        if (post.status.indexOf(excludedStatus[i]) > -1) {
+                            return false;
+                        }
                     }
                 }
                 

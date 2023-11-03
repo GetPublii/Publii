@@ -692,11 +692,13 @@ body {
            }
            
            .tox-checkbox-icon__unchecked svg {
-               fill: var(--input-border-color); 
+               fill: none;
+               stroke: currentColor;
            }
            
            .tox-checkbox-icon__checked svg {
-               fill: var(--color-primary); 
+               fill: none; 
+               stroke: currentColor;
            }
         }
         
