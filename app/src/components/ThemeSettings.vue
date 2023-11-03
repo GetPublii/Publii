@@ -783,9 +783,7 @@ export default {
                         }
                     }
                     
-                    if (!isValidDependency) {
-                        return false;
-                    }
+                    return isValidDependency;
                 }
 
                 if (dependencyValue !== this.custom[dependencyName]) {
