@@ -11,7 +11,7 @@
                      <img
                         src="{{url}}"
                         {{#if @config.site.responsiveImages}}                           
-                            {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                            {{responsiveImageAttributes 'featuredImage' srcset sizes}}
                         {{/if}}
                         {{ lazyload "eager" }}
                         height="{{height}}"
