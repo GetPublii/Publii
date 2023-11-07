@@ -50,14 +50,7 @@ class S3 {
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key
             },
-
-            // The key sslEnabled is renamed to tls.
             tls: true,
-
-            // The key signatureVersion is no longer supported in v3, and can be removed.
-            // @deprecated SDK v3 only supports signature v4.
-            signatureVersion: 'v4',
-
             ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
         })
 
@@ -446,14 +439,7 @@ class S3 {
                 accessKeyId: s3Id,
                 secretAccessKey: s3Key
             },
-
-            // The key sslEnabled is renamed to tls.
             tls: true,
-
-            // The key signatureVersion is no longer supported in v3, and can be removed.
-            // @deprecated SDK v3 only supports signature v4.
-            signatureVersion: 'v4',
-
             ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
         });
 
