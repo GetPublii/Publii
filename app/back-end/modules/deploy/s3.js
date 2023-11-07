@@ -43,27 +43,13 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connectionParams
-
-        if (s3Provider === 'aws') {
-            connectionParams = {
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                region: region,
-                sslEnabled: true,
-                signatureVersion: 'v4'
-            }
-        } else {
-            connectionParams = {
-                endpoint: s3Endpoint,
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                sslEnabled: true,
-                signatureVersion: 'v4'
-            }
-        }
-
-        this.connection = new AWS.S3(connectionParams);
+        this.connection = new AWS.S3({
+            accessKeyId: s3Id,
+            secretAccessKey: s3Key,
+            sslEnabled: true,
+            signatureVersion: 'v4',
+            ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
+        })
 
         process.send({
             type: 'web-contents',
@@ -445,27 +431,13 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connectionParams;
-
-        if (s3Provider === 'aws') {
-            connectionParams = {
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                region: region,
-                sslEnabled: true,
-                signatureVersion: 'v4'
-            }
-        } else {
-            connectionParams = {
-                endpoint: s3Endpoint,
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                sslEnabled: true,
-                signatureVersion: 'v4'
-            }
-        }
-
-        let connection = new AWS.S3(connectionParams);
+        let connection = new AWS.S3({
+            accessKeyId: s3Id,
+            secretAccessKey: s3Key,
+            sslEnabled: true,
+            signatureVersion: 'v4',
+            ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
+        });
 
         let testParams = {
             Bucket: bucket,
