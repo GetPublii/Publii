@@ -4,9 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const {
-    S3
-} = require("@aws-sdk/client-s3");
+const { S3 } = require('@aws-sdk/client-s3');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
