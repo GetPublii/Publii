@@ -4,7 +4,9 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const AWS = require('aws-sdk');
+const {
+    S3
+} = require("@aws-sdk/client-s3");
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
@@ -43,11 +45,19 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        this.connection = new AWS.S3({
-            accessKeyId: s3Id,
-            secretAccessKey: s3Key,
-            sslEnabled: true,
+        this.connection = new S3({
+            credentials: {
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key
+            },
+
+            // The key sslEnabled is renamed to tls.
+            tls: true,
+
+            // The key signatureVersion is no longer supported in v3, and can be removed.
+            // @deprecated SDK v3 only supports signature v4.
             signatureVersion: 'v4',
+
             ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
         })
 
@@ -431,11 +441,19 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connection = new AWS.S3({
-            accessKeyId: s3Id,
-            secretAccessKey: s3Key,
-            sslEnabled: true,
+        let connection = new S3({
+            credentials: {
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key
+            },
+
+            // The key sslEnabled is renamed to tls.
+            tls: true,
+
+            // The key signatureVersion is no longer supported in v3, and can be removed.
+            // @deprecated SDK v3 only supports signature v4.
             signatureVersion: 'v4',
+
             ...(s3Provider === 'aws' ? { region } : { endpoint: s3Endpoint })
         });
 
