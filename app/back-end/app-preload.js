@@ -89,7 +89,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugin-deactivate',
             'app-site-get-plugin-config',
             'app-site-save-plugin-config',
-            'app-close'
+            'app-close',
+            'app-set-ui-zoom-level'
         ];
 
         if (validChannels.includes(channel)) {

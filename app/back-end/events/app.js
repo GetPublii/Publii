@@ -442,6 +442,30 @@ class AppEvents {
                 fileContent: fileContent
             });
         });
+
+        /*
+         * Set zoom level 
+         */
+        ipcMain.on('app-set-ui-zoom-level', function(event, zoomLevel) {
+            zoomLevel = parseFloat(zoomLevel);
+
+            if (!zoomLevel || zoomLevel < 0 || zoomLevel > 2.5) {
+                console.log('(!) Invalid zoom level: ', parseFloat(zoomLevel));
+                return;
+            }
+
+            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+
+            try {
+                appConfig = JSON.parse(appConfig);
+                appConfig.uiZoomLevel = zoomLevel;
+                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+            } catch (e) {
+                console.log('(!) App was unable to save the UI zoom level');
+            }
+
+            appInstance.mainWindow.webContents.setZoomFactor(zoomLevel);
+        });
     }
 }
 

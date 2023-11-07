@@ -663,12 +663,19 @@ class App {
             };
 
             self.mainWindow.webContents.send('app-data-loaded', appData);
-
+            
             // Open Dev Tools
             if (self.appConfig.openDevToolsInMain) {
                 self.mainWindow.webContents.openDevTools();
             }
+
+            self.setCurrentZoomLevel();
         });
+
+        this.mainWindow.on('resize', () => this.setCurrentZoomLevel());
+        this.mainWindow.on('maximize', () => this.setCurrentZoomLevel());
+        this.mainWindow.on('unmaximize', () => this.setCurrentZoomLevel());
+        this.mainWindow.on('restore', () => this.setCurrentZoomLevel());
 
         if (process.platform === 'linux') {
             this.mainWindow.webContents.on('before-input-event', (event, input) => {
@@ -725,6 +732,15 @@ class App {
     // Function used to add sites to the back-end sites list
     addSite (siteCatalog, siteData) {
         this.sites[siteCatalog] = siteData;
+    }
+
+    // Function used to restore current zoom level of window, because it is lost if zoom is changed after windo load
+    setCurrentZoomLevel () {
+        let zoom = parseFloat(this.appConfig.uiZoomLevel);
+        
+        if (zoom && zoom > 0 && zoom <= 2.5) {
+            this.mainWindow.webContents.setZoomFactor(zoom);
+        }
     }
 }
 

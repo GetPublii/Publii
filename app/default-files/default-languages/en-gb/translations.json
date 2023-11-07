@@ -569,6 +569,7 @@
         "appSettings": "App settings",
         "appSettingsSavedMsg": "App settings have been successfully saved.",
         "appSettingsSaveErrorMsg": "An error occurred during saving of the App Settings. Please try again.",
+        "appUIZoomLevel": "UI zoom level",
         "ascending": "Ascending",
         "authorPage": "Author page",
         "authorPages": "Author pages",

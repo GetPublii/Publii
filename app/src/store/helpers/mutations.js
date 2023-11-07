@@ -457,6 +457,9 @@ export default {
     },
     setWysiwygTranslation (state, translations) {
         state.wysiwygTranslation = translations;
+    },
+    setAppUIZoomLevel (state, zoomLevel) {
+        state.app.config.uiZoomLevel = parseFloat(zoomLevel);
     }
 };
 

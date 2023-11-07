@@ -11,7 +11,12 @@
             :max="max"
             :step="step" />
         <span>
-            {{ content }}
+            <template v-if="contentModifier">
+                {{ contentModifier(content) }}
+            </template>
+            <template v-else>
+                {{ content }}
+            </template>
         </span>
     </div>
 </template>
@@ -56,14 +61,18 @@ export default {
         'cssClass': {
             default: '',
             type: String
+        },
+        'contentModifier': {
+            default: false,
+            type: [Boolean, Function]
         }
     },
     watch: {
-        value (newValue, oldValue) { 
+        value (newValue) { 
             this.content = newValue;
         },
-        content: function(newValue) {
-            if(this.changeEventName) {
+        content (newValue) {
+            if (this.changeEventName) {
                 this.$bus.$emit(this.changeEventName, newValue);
             }
 

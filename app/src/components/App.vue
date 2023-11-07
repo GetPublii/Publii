@@ -108,6 +108,7 @@ export default {
         // Set initial application state tree
         setState () {
             this.$store.commit('init', this.initialData);
+            document.documentElement.style.setProperty('--ui-zoom-level', parseInt(this.$store.state.app.config.uiZoomLevel * 100.0, 10) + '%');
         },
 
         // Show site screen when there is only one website

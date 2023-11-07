@@ -569,6 +569,7 @@
         "appSettings": "Ustawienia aplikacji",
         "appSettingsSavedMsg": "Ustawienia aplikacji zostały pomyślnie zapisane.",
         "appSettingsSaveErrorMsg": "Wystąpił błąd podczas zapisywania ustawień aplikacji. Proszę spróbować ponownie.",
+        "appUIZoomLevel": "Poziom powiększenia interfejsu",
         "ascending": "Rosnąco",
         "authorPage": "Strona autora",
         "authorPages": "Strony autora",

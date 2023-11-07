@@ -68,7 +68,19 @@
                         class="note">
                         {{ $t('settings.imageResizeEngineInfo') }}
                     </small>
-                </field>      
+                </field>  
+                
+                <field
+                    id="app-ui-zoom-level"
+                    :label="$t('settings.appUIZoomLevel')">
+                    <range-slider
+                        :min="0.75"
+                        :max="2.5"
+                        :step="0.05"
+                        v-model="uiZoomLevel"
+                        :contentModifier="(value) => parseInt(value * 100.0, 10) + '%'"
+                        slot="field"></range-slider>
+                </field>
 
                 <field
                     id="always-save-search-state"
@@ -365,6 +377,7 @@ export default {
             screensSelected: '',
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
+            uiZoomLevel: 1.0,
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
             closeEditorOnSave: true,
@@ -487,6 +500,9 @@ export default {
         },
         'locations.preview': async function (newValue) {
             this.checkPreviewCatalog();
+        },
+        'uiZoomLevel': async function (newValue) {
+            await this.setUIZoomLevel();
         }
     },
     mounted () {
@@ -512,6 +528,7 @@ export default {
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
+        this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
         this.theme = this.getAppTheme();
 
         Vue.nextTick(() => {
@@ -560,6 +577,7 @@ export default {
                 openDevToolsInMain: this.openDevToolsInMainWindow,
                 timeFormat: this.timeFormatsSelected,
                 resizeEngine: this.imageResizeEnginesSelected,
+                uiZoomLevel: this.uiZoomLevel,
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
@@ -656,6 +674,11 @@ export default {
         async checkPreviewCatalog () {
             return await mainProcessAPI.existsSync(this.locations.preview);
         },
+        async setUIZoomLevel () {
+            this.$store.commit('setAppUIZoomLevel', this.uiZoomLevel);
+            document.documentElement.style.setProperty('--ui-zoom-level', parseInt(this.uiZoomLevel * 100.0, 10) + '%');
+            return await mainProcessAPI.send('app-set-ui-zoom-level', this.uiZoomLevel);
+        }
     }
 }
 </script>
