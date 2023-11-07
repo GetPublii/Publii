@@ -25,11 +25,11 @@
   ],
   "homepage": "https://getpublii.com",
   "dependencies": {
+    "@aws-sdk/client-s3": "3.445.0",
     "@gitbeaker/node": "35.8.1",
     "@google-cloud/storage": "6.11.0",
     "adm-zip": "0.5.10",
     "archiver": "5.3.1",
-    "aws-sdk": "2.1413.0",
     "better-sqlite3": "8.4.0",
     "clean-css": "5.3.2",
     "codemirror": "5.65.13",
