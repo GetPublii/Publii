@@ -129,7 +129,7 @@ class Deployment {
             if (filePath === '.git') {
                 continue;
             }
-            
+
             if (filePath === '.htaccess' || filePath === '_redirects') {
                 let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify'];
 
@@ -509,6 +509,10 @@ class Deployment {
         filelist = filelist || [];
 
         files.forEach(function(file) {
+            if (file === '.git') {
+                return;
+            }
+
             if (fs.statSync(path.join(dir, file)).isDirectory()) {
                 filelist.push(normalizePath(path.join(dir.replace(self.inputDir, ''), file)));
                 filelist = self.readDirRecursiveSync(path.join(dir, file), filelist);
