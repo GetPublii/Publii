@@ -4,7 +4,13 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const AWS = require('aws-sdk');
+const { 
+    S3Client, 
+    ListObjectsCommand, 
+    GetObjectCommand, 
+    PutObjectCommand, 
+    DeleteObjectCommand 
+} = require("@aws-sdk/client-s3");
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
@@ -20,7 +26,6 @@ class S3 {
     }
 
     async initConnection() {
-        let self = this;
         let s3Provider = this.deployment.siteConfig.deployment.s3.provider;
         let s3Endpoint = this.deployment.siteConfig.deployment.s3.endpoint;
         let s3Id = this.deployment.siteConfig.deployment.s3.id;
@@ -35,44 +40,36 @@ class S3 {
             account = this.deployment.siteConfig.uuid;
         }
 
-        if(s3Id === 'publii-s3-id ' + account) {
+        if (s3Id === 'publii-s3-id ' + account) {
             s3Id = await passwordSafeStorage.getPassword('publii-s3-id', account);
         }
 
-        if(s3Key === 'publii-s3-key ' + account) {
+        if (s3Key === 'publii-s3-key ' + account) {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
-        let connectionParams
+        let connectionParams;
 
         if (s3Provider === 'aws') {
             connectionParams = {
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                region: region,
-                sslEnabled: true,
-                signatureVersion: 'v4'
+                credentials: {
+                    accessKeyId: s3Id,
+                    secretAccessKey: s3Key,
+                },
+                region: region
             }
         } else {
             connectionParams = {
-                endpoint: s3Endpoint,
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                sslEnabled: true,
-                signatureVersion: 'v4'
+                credentials: {
+                    accessKeyId: s3Id,
+                    secretAccessKey: s3Key,
+                },
+                endpoint: s3Endpoint
             }
         }
 
-        this.connection = new AWS.S3(connectionParams);
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 6,
-                operations: false
-            }
-        });
+        this.connection = new S3Client(connectionParams);
+        this.sendProgress(6, false);
 
         process.send({
             type: 'web-contents',
@@ -85,316 +82,233 @@ class S3 {
             MaxKeys: 1
         };
 
-        this.connection.listObjects(params, function(err, data) {
-            if(err) {
-                self.onError(err);
-                return;
-            }
-
-            self.waitForTimeout = false;
-
+        try {
+            await this.connection.send(new ListObjectsCommand(params));
+            this.waitForTimeout = false;
+          
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-success'
             });
+          
+            this.deployment.setInput();
+            this.deployment.setOutput(true);
+            this.deployment.prepareLocalFilesList();
+            this.sendProgress(7, false);
+          
+            await this.downloadFilesList();
+        } catch (err) {
+            this.onError(err);
+        }
 
-            self.deployment.setInput();
-            self.deployment.setOutput(true);
-            self.deployment.prepareLocalFilesList();
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 7,
-                    operations: false
-                }
-            });
-
-            self.downloadFilesList();
-        });
-
-        setTimeout(function() {
-            if(self.waitForTimeout === true) {
+        setTimeout(() => {
+            if(this.waitForTimeout === true) {
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error'
                 });
 
-                setTimeout(function () {
+                setTimeout(() => {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }
         }, 20000);
     }
 
-    downloadFilesList() {
-        let self = this;
+    async downloadFilesList() {
         let fileName = 'files.publii.json';
 
-        if(typeof this.prefix === 'string' && this.prefix !== '') {
+        if (typeof this.prefix === 'string' && this.prefix !== '') {
             fileName = this.prefix + fileName;
         }
 
         let params = {
             Bucket: this.bucket,
-            Key: fileName
+            Key: typeof this.prefix === 'string' && this.prefix !== '' ? this.prefix + fileName : fileName,
         };
 
-        this.connection.getObject(params, function(err, data) {
-            console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
-
-            if (err && err.code !== 'NoSuchKey') {
-                self.onError(err);
+        try {
+            let data = await this.connection.send(new GetObjectCommand(params));
+            console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
+            this.sendProgress(8, false);
+            let remoteFile = await this.s3streamToString(data.Body);
+            this.deployment.checkLocalListWithRemoteList(remoteFile);
+          } catch (err) {
+            console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
+        
+            if (err.name !== 'NoSuchKey') {
+                this.onError(err);
                 return;
             }
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 8,
-                    operations: false
-                }
-            });
-
-            if (err && err.code === 'NoSuchKey') {
-                self.deployment.compareFilesList(false);
-            } else {
-                self.deployment.checkLocalListWithRemoteList(data.Body);
-            }
-        });
+        
+            this.sendProgress(8, false);
+            this.deployment.compareFilesList(false);
+        }
     }
 
-    uploadNewFileList() {
-        let self = this;
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 99,
-                operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
+    async uploadNewFileList() {    
+        this.sendProgress(99);
+        this.deployment.replaceSyncInfoFiles();
+        let fileName = 'files.publii.json';
+        
+        if (typeof this.prefix === 'string' && this.prefix !== '') {
+            fileName = this.prefix + fileName;
+        }
+        
+        let filePath = path.join(this.deployment.inputDir, fileName);
+    
+        fs.readFile(filePath, async (err, fileContent) => {
+            if (err) {
+                this.onError(err);
+                return;
             }
-        });
-
-        self.deployment.replaceSyncInfoFiles();
-
-        fs.readFile(path.join(this.deployment.inputDir, 'files.publii.json'), (err, fileContent) => {
-            let fileName = 'files.publii.json';
-            let fileACL = 'public-read';
-
-            if (this.deployment.siteConfig.deployment.s3.acl) {
-                fileACL = this.deployment.siteConfig.deployment.s3.acl;
-            }
-
-            if(typeof this.prefix === 'string' && this.prefix !== '') {
-                fileName = this.prefix + fileName;
-            }
-
+        
+            let fileACL = this.deployment.siteConfig.deployment.s3.acl || 'public-read';
+        
             let params = {
                 ACL: fileACL,
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,
-                ContentType: mime.getType('json')
+                ContentType: mime.getType(fileName) || 'application/json'
             };
-
-            this.connection.putObject(params, function(err) {
-                console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
-
-                if (err) {
-                    self.onError(err, true);
-                }
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 100,
-                        operations: false
-                    }
-                });
-
+    
+            try {
+                await this.connection.send(new PutObjectCommand(params));
+                console.log(`[${new Date().toUTCString()}] -> ${fileName}`);
+                this.sendProgress(100, false);
+        
                 process.send({
                     type: 'sender',
                     message: 'app-deploy-uploaded',
                     value: {
                         status: true,
-                        issues: self.hardUploadErrors.length > 0
+                        issues: this.hardUploadErrors.length > 0
                     }
                 });
-
-                setTimeout(function () {
+        
+                setTimeout(() => {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
-            });
+            } catch (uploadErr) {
+                console.log(`[${new Date().toUTCString()}] -> ${fileName}`);
+                this.onError(uploadErr);
+            }
         });
     }
 
     /**
      * Uploads file
      */
-    uploadFile() {
-        let self = this;
-
-        if(this.deployment.filesToUpload.length > 0) {
+    async uploadFile() {
+        if (this.deployment.filesToUpload.length > 0) {
             let fileToUpload = this.deployment.filesToUpload.pop();
             fileToUpload.path = this.prepareFilePath(fileToUpload.path);
 
-            if(fileToUpload.type === 'file') {
-                this.uploadFileObject(fileToUpload.path);
+            if (fileToUpload.type === 'file') {
+                await this.uploadFileObject(fileToUpload.path);
             } else {
-                this.uploadFile();
+                await this.uploadFile();
             }
         } else {
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 98,
-                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                }
-            });
-
-            this.uploadNewFileList();
+            this.sendProgress(98);
+            await this.uploadNewFileList();
         }
     }
 
-    uploadFileObject(input) {
-        let self = this;
-
-        fs.readFile(path.join(this.deployment.inputDir, input), (err, fileContent) => {
-            let fileName = input;
-            let fileExtension = path.parse(fileName).ext.substr(1);
-            let fileACL = 'public-read';
-
-            if (this.deployment.siteConfig.deployment.s3.acl) {
-                fileACL = this.deployment.siteConfig.deployment.s3.acl;
+    async uploadFileObject(input) {
+        let filePath = path.join(this.deployment.inputDir, input);
+        
+        fs.readFile(filePath, async (err, fileContent) => {
+            if (err) {
+                this.onError(err);
+                return;
             }
 
-            if(typeof this.prefix === 'string' && this.prefix !== '') {
+            let fileName = input;
+            
+            if (typeof this.prefix === 'string' && this.prefix !== '') {
                 fileName = this.prefix + fileName;
             }
 
+            let fileACL = this.deployment.siteConfig.deployment.s3.acl || 'public-read';
+            let fileExtension = path.extname(fileName).substring(1);
+            let cacheControl = fileExtension === 'html' ? 'no-cache, no-store' : 'public, max-age=2592000';
             let params = {
                 ACL: fileACL,
                 Body: fileContent,
                 Bucket: this.bucket,
                 Key: fileName,
-                CacheControl: fileExtension === 'html' ? 'no-cache, no-store' : 'public, max-age=2592000',
-                ContentType: mime.getType(fileExtension)
+                CacheControl: cacheControl,
+                ContentType: mime.getType(fileExtension) || 'application/octet-stream'
             };
 
-            this.connection.putObject(params, function (err) {
-                if (err) {
-                    self.onError(err, true);
+            try {
+                await this.connection.send(new PutObjectCommand(params));
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
+                this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                this.sendProgress(8 + Math.floor(this.deployment.progressOfUploading));
+                await this.uploadFile();
+            } catch (uploadErr) {
+                this.onError(uploadErr, true);
 
-                    setTimeout(() => {
-                        if(!self.softUploadErrors[input]) {
-                            self.softUploadErrors[input] = 1;
-                        } else {
-                            self.softUploadErrors[input]++;
-                        }
+                setTimeout(async () => {
+                    if (!this.softUploadErrors[input]) {
+                        this.softUploadErrors[input] = 1;
+                    } else {
+                        this.softUploadErrors[input]++;
+                    }
 
-                        if(self.softUploadErrors[input] <= 5) {
-                            self.uploadFileObject(input);
-                        } else {
-                            self.hardUploadErrors.push(input);
-
-                            self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${fileName}`);
-                            self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                            process.send({
-                                type: 'web-contents',
-                                message: 'app-uploading-progress',
-                                value: {
-                                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                                }
-                            });
-
-                            self.uploadFile();
-                        }
-                    }, 500);
-                } else {
-                    self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
-                    self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-uploading-progress',
-                        value: {
-                            progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                            operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                        }
-                    });
-
-                    self.uploadFile();
-                }
-            });
+                    if (this.softUploadErrors[input] <= 5) {
+                        await this.uploadFileObject(input);
+                    } else {
+                        this.hardUploadErrors.push(input);
+                        this.deployment.currentOperationNumber++;
+                        console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${fileName}`);
+                        this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                        this.sendProgress(8 + Math.floor(this.deployment.progressOfUploading));
+                        await this.uploadFile();
+                    }
+                }, 500);
+            }
         });
     }
 
-    removeFile() {
-        let self = this;
-
-        if(this.deployment.filesToRemove.length > 0) {
+    async removeFile() {
+        if (this.deployment.filesToRemove.length > 0) {
             let fileToRemove = this.deployment.filesToRemove.pop();
             fileToRemove.path = this.prepareFilePath(fileToRemove.path);
 
             if(fileToRemove.type === 'file') {
-                this.removeFileObject(fileToRemove.path);
+                await this.removeFileObject(fileToRemove.path);
             } else {
-                this.removeFile();
+                await this.removeFile();
             }
         } else {
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                }
-            });
-
-            this.uploadFile();
+            this.sendProgress(8 + Math.floor(this.deployment.progressOfUploading));
+            await this.uploadFile();
         }
     }
 
-    removeFileObject(input) {
-        let self = this;
+    async removeFileObject(input) {
         let params = {
             Bucket: this.bucket,
             Key: input
         };
-
-        this.connection.deleteObject(
-            params,
-            function (err) {
-                self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
-
-                if (err) {
-                    self.onError(err, true);
-                }
-
-                self.deployment.progressOfDeleting += self.deployment.progressPerFile;
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 8 + Math.floor(self.deployment.progressOfDeleting),
-                        operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
-                    }
-                });
-
-                self.removeFile();
-            }
-        );
+    
+        try {
+            await this.connection.send(new DeleteObjectCommand(params));
+            console.log(`[${new Date().toUTCString()}] DEL ${input}`);
+            this.deployment.currentOperationNumber++;
+            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
+            this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+            this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
+            await this.removeFile();
+        } catch (err) {
+            console.error(`[${new Date().toUTCString()}] Error deleting ${input}`, err);
+            this.onError(err, true);
+        }
     }
 
     onError(err, silentMode = false) {
@@ -415,7 +329,7 @@ class S3 {
     }
 
     prepareFilePath(filePath) {
-        if(filePath[0] && filePath[0] === '/') {
+        if (filePath[0] && filePath[0] === '/') {
             filePath = filePath.substr(1);
         }
 
@@ -449,23 +363,23 @@ class S3 {
 
         if (s3Provider === 'aws') {
             connectionParams = {
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                region: region,
-                sslEnabled: true,
-                signatureVersion: 'v4'
+                credentials: {
+                    accessKeyId: s3Id,
+                    secretAccessKey: s3Key,
+                },
+                region: region
             }
         } else {
             connectionParams = {
-                endpoint: s3Endpoint,
-                accessKeyId: s3Id,
-                secretAccessKey: s3Key,
-                sslEnabled: true,
-                signatureVersion: 'v4'
+                credentials: {
+                    accessKeyId: s3Id,
+                    secretAccessKey: s3Key,
+                },
+                endpoint: s3Endpoint
             }
         }
 
-        let connection = new AWS.S3(connectionParams);
+        this.connection = new S3Client(connectionParams);
 
         let testParams = {
             Bucket: bucket,
@@ -473,22 +387,22 @@ class S3 {
             MaxKeys: 1
         };
 
-        connection.listObjects(testParams, function(err, data) {
-            if(err) {
-                waitForTimeout = false;
-                app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: err.message
-                });
-
-                return;
-            }
-
+        try {
+            await this.connection.send(new ListObjectsCommand(testParams));
+        } catch (err) {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
-        });
+            app.mainWindow.webContents.send('app-deploy-test-error', {
+                message: err.message
+            });
+
+            return;
+        }
+
+        waitForTimeout = false;
+        app.mainWindow.webContents.send('app-deploy-test-success');
 
         setTimeout(function() {
-            if(waitForTimeout === true) {
+            if (waitForTimeout === true) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
@@ -496,6 +410,33 @@ class S3 {
                 });
             }
         }, 10000);
+    }
+
+    sendProgress (progress, showOperations = true) {
+        let operations = [this.deployment.currentOperationNumber, this.deployment.operationsCounter];
+
+        if (!showOperations) {
+            operations = false;
+        }
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress,
+                operations
+            }
+        });
+    }
+
+    async s3streamToString (stream) {
+        let chunks = [];
+        
+        for await (let chunk of stream) {
+            chunks.push(chunk);
+        }
+
+        return Buffer.concat(chunks).toString('utf-8');
     }
 }
 
