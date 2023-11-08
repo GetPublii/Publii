@@ -80,6 +80,11 @@
                         v-model="uiZoomLevel"
                         :contentModifier="(value) => parseInt(value * 100.0, 10) + '%'"
                         slot="field"></range-slider>
+                    <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.appUIZoomLevelInfo') }}
+                    </span>
                 </field>
 
                 <field
