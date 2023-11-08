@@ -100,6 +100,13 @@
                       customHeight="42"
                       name="githubpages"
                       iconset="svg-map-server"/>
+                    <span class="deprecated">
+                        <icon 
+                            name="warning" 
+                            customWidth="14" 
+                            customHeight="14" />
+                        <span>{{ $t('sync.deprecated') }}</span>
+                    </span>
                 </div>
 
                 <div
@@ -111,6 +118,13 @@
                       customHeight="40"
                       name="gitlab"
                       iconset="svg-map-server"/>
+                    <span class="deprecated">
+                        <icon 
+                            name="warning" 
+                            customWidth="14" 
+                            customHeight="14" />
+                        <span>{{ $t('sync.deprecated') }}</span>
+                    </span>
                 </div>
 
                 <div
@@ -156,7 +170,26 @@
 
             </div>
 
-            <fields-group v-if="deploymentMethodSelected !== ''" :title="$t('sync.settings')">
+            <fields-group 
+                v-if="deploymentMethodSelected !== ''" 
+                :title="$t('sync.settings')">
+                <div 
+                    v-if="deploymentMethodSelected === 'github-pages' || deploymentMethodSelected === 'gitlab-pages'"
+                    class="msg msg-icon msg-alert">
+                    <icon name="warning" customWidth="28" customHeight="28" />
+                    <p>
+                        <span
+                            v-if="deploymentMethodSelected === 'github-pages'"
+                            v-pure-html="$t('sync.deploymentMethodGithubPagesDeprecated')">
+                        </span>
+
+                        <span
+                            v-if="deploymentMethodSelected === 'gitlab-pages'"
+                            v-pure-html="$t('sync.deploymentMethodGitlabPagesDeprecated')">
+                        </span>
+                    </p>
+                </div>
+                
                 <div class="msg msg-icon msg-info">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
@@ -1757,6 +1790,7 @@ export default {
             display: flex;
             justify-content: center;
             min-height: calc(8rem + 8vh);
+            position: relative;
             transition: var(--transition);
 
             &:hover {
@@ -1781,6 +1815,25 @@ export default {
                     font-size: 1.9rem;
                     font-weight: var(--font-weight-semibold);
                     margin-left: 1rem;
+                }
+            }
+
+            .deprecated {
+                align-items: center;
+                background: var(--warning);
+                border-radius: 5px;
+                bottom: 10px;
+                color: var(--white);
+                display: flex;
+                font-size: 14px;
+                left: 50%;
+                padding: 2px 8px;
+                position: absolute;
+                transform: translateX(-50%);
+
+                .icon {
+                    fill: var(--white);
+                    margin-right: 5px;
                 }
             }
         }

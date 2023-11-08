@@ -10,6 +10,11 @@
                     size="s"
                     :name="item.icon" />
                 {{ item.label }}
+                <icon
+                    v-if="item.icon === 'server' && $store && $store.state.currentSite && $store.state.currentSite.config && ($store.state.currentSite.config.deployment.protocol === 'github-pages' || $store.state.currentSite.config.deployment.protocol === 'gitlab-pages')"
+                    size="s"
+                    name="warning"
+                    class="old-git-warning" />
             </router-link>
         </li>
     </ul>
@@ -130,12 +135,21 @@ export default {
     &-item {
         margin: 0 0 .2rem;
 
+        a {
+            display: flex;
+        }
+
         &.is-active {
             a {
                 background: var(--sidebar-link-bg-active);
                 color: var(--sidebar-link-color-active);
                 opacity: 1;
             }
+        }
+
+        .old-git-warning {
+            fill: var(--warning);
+            margin-left: auto;
         }
     }
 }
