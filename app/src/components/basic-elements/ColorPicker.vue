@@ -105,7 +105,7 @@ export default {
             } else if (this.outputFormat === 'RGBA') {
                 this.content = 'rgba(' + color.rgba.r + ',' + color.rgba.g + ',' + color.rgba.b + ',' + color.rgba.a + ')';
             } else if (this.outputFormat === 'HSLA') {
-                this.content = 'hsla(' + color.hsl.h + ', ' + color.hsl.s + ', ' + color.hsl.l + ', ' + color.hsl.a + ')';
+                this.content = 'hsla(' + parseInt(color.hsl.h, 10) + ', ' + parseInt(color.hsl.s, 10) + '%, ' + parseInt(color.hsl.l, 10) + '%, ' + color.hsl.a + ')';
             } else if (this.outputFormat === 'HEX') {
                 this.content = color.hex;   
             } else {
