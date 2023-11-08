@@ -33,6 +33,7 @@
         "authorImages": true,
         "searchPage": true,
         "errorPage": true,
+        "customSharing": true,
         "customSearch": true,
         "customComments": true,
         "embedConsents": true

@@ -95,6 +95,7 @@
             "comments": "Comments",
             "searchInput": "Search input",
             "searchContent": "Search content",
+            "socialSharing": "Social sharing",
             "footer": "Footer",
             "beforePost": "Before every post",
             "afterPost": "After every post"
@@ -569,7 +570,8 @@
         "appSettings": "App settings",
         "appSettingsSavedMsg": "App settings have been successfully saved.",
         "appSettingsSaveErrorMsg": "An error occurred during saving of the App Settings. Please try again.",
-        "appUIZoomLevel": "UI zoom level",
+        "appUIZoomLevel": "Interface scale",
+        "appUIZoomLevelInfo": "Adjust the interface scale to enhance your visibility and comfort while managing your content. This option allows you to scale the user interface to your preferred size, ensuring that text, icons, and other UI elements are easily readable and accessible.",
         "ascending": "Ascending",
         "authorPage": "Author page",
         "authorPages": "Author pages",

@@ -95,6 +95,7 @@
             "comments": "Komentarze",
             "searchInput": "Pole wyszukiwarki",
             "searchContent": "Wyniki wyszukiwania",
+            "socialSharing": "Udostępnianie Społecznościowe",
             "footer": "Stopka strony",
             "beforePost": "Przed każdym wpisem",
             "afterPost": "Po każdym wpisie"
@@ -569,7 +570,8 @@
         "appSettings": "Ustawienia aplikacji",
         "appSettingsSavedMsg": "Ustawienia aplikacji zostały pomyślnie zapisane.",
         "appSettingsSaveErrorMsg": "Wystąpił błąd podczas zapisywania ustawień aplikacji. Proszę spróbować ponownie.",
-        "appUIZoomLevel": "Poziom powiększenia interfejsu",
+        "appUIZoomLevel": "Dostosowanie skali interfejsu",
+        "appUIZoomLevelInfo": "Dostosuj skalę interfejsu użytkownika, aby zwiększyć widoczność i komfort podczas zarządzania treścią. Ta opcja pozwala dostosować rozmiar interfejsu użytkownika do preferowanego rozmiaru, zapewniając, że tekst, ikony i inne elementy UI są łatwo czytelne i dostępne.",
         "ascending": "Rosnąco",
         "authorPage": "Strona autora",
         "authorPages": "Strony autora",
