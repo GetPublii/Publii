@@ -94,17 +94,17 @@
                 <div
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
-                    class="server-settings-grid-item">
+                    class="server-settings-grid-item  deprecated">
                     <icon
                       customWidth="71"
                       customHeight="42"
                       name="githubpages"
                       iconset="svg-map-server"/>
-                    <span class="deprecated">
+                    <span class="deprecated-info">
                         <icon 
                             name="warning" 
-                            customWidth="14" 
-                            customHeight="14" />
+                            customWidth="16" 
+                            customHeight="16" />
                         <span>{{ $t('sync.deprecated') }}</span>
                     </span>
                 </div>
@@ -112,17 +112,17 @@
                 <div
                     @click="deploymentMethodSelected = 'gitlab-pages'"
                     :title="$t('sync.gitlabPages')"
-                    class="server-settings-grid-item">
+                    class="server-settings-grid-item deprecated">
                     <icon
                       customWidth="108"
                       customHeight="40"
                       name="gitlab"
                       iconset="svg-map-server"/>
-                    <span class="deprecated">
+                    <span class="deprecated-info">
                         <icon 
                             name="warning" 
-                            customWidth="14" 
-                            customHeight="14" />
+                            customWidth="16" 
+                            customHeight="16" />
                         <span>{{ $t('sync.deprecated') }}</span>
                     </span>
                 </div>
@@ -1788,6 +1788,7 @@ export default {
             box-shadow: var(--box-shadow-small);
             color: var(--link-primary-color-hover);
             display: flex;
+            fill: var(--icon-primary-color);
             justify-content: center;
             min-height: calc(8rem + 8vh);
             position: relative;
@@ -1799,14 +1800,10 @@ export default {
                 box-shadow: var(--box-shadow-medium);
                 color: var(--color-primary);
                 cursor: pointer;
-
-                & > svg {
-                    fill: var(--color-primary);
-                }
+                fill: var(--color-primary);  
             }
 
             & > svg {
-                fill: var(--icon-primary-color);
                 transition: inherit;
             }
 
@@ -1818,22 +1815,31 @@ export default {
                 }
             }
 
-            .deprecated {
-                align-items: center;
-                background: var(--warning);
-                border-radius: 5px;
-                bottom: 10px;
-                color: var(--white);
-                display: flex;
-                font-size: 14px;
-                left: 50%;
-                padding: 2px 8px;
-                position: absolute;
-                transform: translateX(-50%);
+            &:hover.deprecated {
+                border-color: var(--warning);
+                color: var(--warning);
+                fill: var(--warning);
+            }
 
-                .icon {
-                    fill: var(--white);
-                    margin-right: 5px;
+            .deprecated {
+                
+                &-info {
+                    align-items: center;
+                    background: var(--warning);
+                    border-radius: 0 0 var(--border-radius) var(--border-radius);
+                    bottom: 0;
+                    color: var(--white);
+                    display: flex;
+                    font-size: 14px;
+                    justify-content: center;
+                    left: 0;
+                    padding: 3px 8px;
+                    position: absolute;
+                    width: 100%;
+                    .icon {
+                        fill: var(--white);
+                        margin-right: 5px;
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@
                 {{ item.label }}
                 <icon
                     v-if="item.icon === 'server' && $store && $store.state.currentSite && $store.state.currentSite.config && ($store.state.currentSite.config.deployment.protocol === 'github-pages' || $store.state.currentSite.config.deployment.protocol === 'gitlab-pages')"
-                    size="s"
+                    size="m"
                     name="warning"
                     class="old-git-warning" />
             </router-link>
@@ -148,8 +148,11 @@ export default {
         }
 
         .old-git-warning {
-            fill: var(--warning);
+            background: var(--warning);
+            border-radius: 50px;
+            fill: var(--white);
             margin-left: auto;
+            padding: 2px;
         }
     }
 }
