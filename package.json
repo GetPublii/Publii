@@ -72,9 +72,7 @@
       "default-files/vendor/**/*",
       "node_modules/sharp/**/*",
       "node_modules/keytar/**/*",
-      "node_modules/better-sqlite3/**/*",
-      "node_modules/integer/**/*",
-      "node_modules/node-expat/**/*"
+      "node_modules/better-sqlite3/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
