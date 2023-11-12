@@ -1,25 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   entry: './app/src/main.js',
   target: 'electron-renderer',
   output: {
     path: path.resolve(__dirname, './app/dist/'),
-    publicPath: './',
+    publicPath: 'auto',
     filename: 'build.js',
     chunkFilename: '[name].bundle.js',
   },
   plugins: [
-    // new DashboardPlugin() //,
-    // new BundleAnalyzerPlugin(),
     new VueLoaderPlugin()
   ],
-  node: {
-    __dirname: false,
-    __filename: false
-  },
   module: {
     rules: [
       {
@@ -50,9 +44,6 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
-            // the "scss" and "sass" values for the lang attribute to the right configs here.
-            // other preprocessors should work out of the box, no loader config like this necessary.
             'scss': [
               'vue-style-loader',
               'css-loader',
@@ -64,19 +55,18 @@ module.exports = {
               'sass-loader?indentedSyntax'
             ]
           }
-          // other vue-loader options go here
         }
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/images/[name].[hash][ext][query]'
         }
       },
       {
         test: /\.node$/,
-        use: 'node-loader'
+        loader: 'node-loader',
       }
     ]
   },
@@ -94,25 +84,15 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
-}
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
+};
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map';
-
-  // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
     })
   ]);
-
-  module.exports.optimization = {
-      minimize: true
-  };
 }
