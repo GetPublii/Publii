@@ -100,7 +100,7 @@ class Plugins {
         let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
 
         if (!fs.existsSync(sitePluginsConfigPath)) {
-            return;
+            return {};
         }
 
         let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
