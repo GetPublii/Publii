@@ -259,6 +259,12 @@
                         slot="note"
                         v-pure-html="$t('sync.deploymentMethodGithubPagesNote')">
                     </small>
+                    <small
+                        v-if="deploymentMethodSelected === 'git'"
+                        class="note"
+                        slot="note"
+                        v-pure-html="$t('sync.deploymentMethodGitNote')">
+                    </small>
 
                     <small
                         v-if="!deploymentSettings.relativeUrls && httpProtocolSelected === 'file'"
@@ -684,7 +690,7 @@
                 <field
                     v-if="deploymentMethodSelected === 'git'"
                     id="git-password"
-                    :label="$t('settings.password.password')">
+                    :label="$t('sync.gitPassword')">
                     <text-input
                         slot="field"
                         id="git-password"
@@ -699,6 +705,11 @@
                         v-if="errors.indexOf('git-password') > -1"
                         class="note">
                         {{ $t('settings.password.passwordFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.gitPasswordNote') }}
                     </small>
                 </field>
 
@@ -1688,7 +1699,7 @@ export default {
             }
 
             if (deploymentSettings.git) {
-                deploymentSettings.github.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-git-password', deploymentSettings.git.password);
+                deploymentSettings.git.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-git-password', deploymentSettings.git.password);
             }
 
             if (deploymentSettings.gitlab) {
