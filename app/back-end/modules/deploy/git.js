@@ -111,6 +111,16 @@ class Git {
             });
         } catch (e) {
             console.log('Cannot connect to the git repository: ', e);
+
+            if (e.data && e.data.response) {
+                app.mainWindow.webContents.send('app-deploy-test-error', {
+                    message: e.data.response
+                });
+            } else {
+                app.mainWindow.webContents.send('app-deploy-test-error', {
+                    message: e
+                });
+            }
         }
     }
 
