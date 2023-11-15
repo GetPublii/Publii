@@ -1048,15 +1048,15 @@
                     <text-input
                         v-if="deploymentSettings.s3.customProvider"
                         slot="field"
-                        id="s3-custom-region"
-                        key="s3-custom-region"
+                        id="s3-customRegion"
+                        key="s3-customRegion"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-custom-region') > -1 }"
-                        @keyup.native="cleanError('s3-custom-region')"
+                        :class="{ 'is-invalid': errors.indexOf('s3-customRegion') > -1 }"
+                        @keyup.native="cleanError('s3-customRegion')"
                         v-model="deploymentSettings.s3.customRegion" />
                     <small
                         slot="note"
-                        v-if="errors.indexOf('s3-region') > -1 || errors.indexOf('s3-custom-region') > -1"
+                        v-if="errors.indexOf('s3-region') > -1 || errors.indexOf('s3-customRegion') > -1"
                         class="note">
                         {{ $t('sync.regionFieldCantBeEmpty') }}
                     </small>
@@ -1614,7 +1614,7 @@ export default {
             let fields = ['s3_id', 's3_key', 's3_bucket', 's3_region'];
 
             if (this.deploymentSettings.s3.customProvider) {
-                fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket', 's3_custom_region'];
+                fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket', 's3_customRegion'];
             }
 
             return this.validateFields(fields);
