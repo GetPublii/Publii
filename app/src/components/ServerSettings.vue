@@ -1033,10 +1033,11 @@
                 </field>
 
                 <field
-                    v-if="deploymentMethodSelected === 's3' && !deploymentSettings.s3.customProvider"
+                    v-if="deploymentMethodSelected === 's3'"
                     id="s3-region"
                     :label="$t('sync.region')">
                     <dropdown
+                        v-if="!deploymentSettings.s3.customProvider"
                         slot="field"
                         id="s3-region"
                         :items="s3Regions"
@@ -1044,9 +1045,18 @@
                         :class="{ 'is-invalid': errors.indexOf('s3-region') > -1 }"
                         @click.native="cleanError('s3-region')"
                         v-model="deploymentSettings.s3.region"></dropdown>
+                    <text-input
+                        v-if="deploymentSettings.s3.customProvider"
+                        slot="field"
+                        id="s3-custom-region"
+                        key="s3-custom-region"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('s3-custom-region') > -1 }"
+                        @keyup.native="cleanError('s3-custom-region')"
+                        v-model="deploymentSettings.s3.customRegion" />
                     <small
                         slot="note"
-                        v-if="errors.indexOf('s3-region') > -1"
+                        v-if="errors.indexOf('s3-region') > -1 || errors.indexOf('s3-custom-region') > -1"
                         class="note">
                         {{ $t('sync.regionFieldCantBeEmpty') }}
                     </small>
@@ -1604,7 +1614,7 @@ export default {
             let fields = ['s3_id', 's3_key', 's3_bucket', 's3_region'];
 
             if (this.deploymentSettings.s3.customProvider) {
-                fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket'];
+                fields = ['s3_endpoint', 's3_id', 's3_key', 's3_bucket', 's3_custom_region'];
             }
 
             return this.validateFields(fields);

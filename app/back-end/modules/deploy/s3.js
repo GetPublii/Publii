@@ -31,6 +31,7 @@ class S3 {
         let s3Id = this.deployment.siteConfig.deployment.s3.id;
         let s3Key = this.deployment.siteConfig.deployment.s3.key;
         let region = this.deployment.siteConfig.deployment.s3.region;
+        let customRegion = this.deployment.siteConfig.deployment.s3.customRegion;
         let account = slug(this.deployment.siteConfig.name);
         this.bucket = this.deployment.siteConfig.deployment.s3.bucket;
         this.prefix = this.deployment.siteConfig.deployment.s3.prefix;
@@ -64,7 +65,8 @@ class S3 {
                     accessKeyId: s3Id,
                     secretAccessKey: s3Key,
                 },
-                endpoint: s3Endpoint
+                endpoint: s3Endpoint,
+                region: customRegion
             }
         }
 

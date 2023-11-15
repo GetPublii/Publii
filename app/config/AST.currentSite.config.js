@@ -168,6 +168,7 @@ const AstCurrentSiteConfig = {
             key: '',
             bucket: '',
             region: '',
+            customRegion: '',
             prefix: '',
             acl: 'public-read'
         },
