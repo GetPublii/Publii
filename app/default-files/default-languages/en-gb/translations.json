@@ -769,10 +769,8 @@
         "paginationPhraseInfo": "Defines the phrase used before the page number in a URL e.g. <strong>https://example.com/tags/tag-slug/page/2</strong>.<br>",
         "password": {
             "alwaysAskForPassword": "Always ask for password",
-            "hidePassword": "Hide password",
             "password": "Password",
-            "passwordFieldCantBeEmpty": "The password field cannot be empty.",
-            "showPassword": "Show password"
+            "passwordFieldCantBeEmpty": "The password field cannot be empty."
         },
         "pinterest": "Pinterest",
         "postCreationDate": "Post creation date",

@@ -24,20 +24,6 @@
             @keydown="keyboardEvent"
             @keypress="keyboardEvent" />
 
-        <span
-            v-if="type === 'password' && fieldType === 'password'"
-            class="password-show"
-            @click="showPassword">
-            {{ $t('settings.password.showPassword') }}
-        </span>
-
-        <span
-            v-if="type === 'password' && fieldType === 'text'"
-            class="password-hide"
-            @click="hidePassword">
-            {{ $t('settings.password.hidePassword') }}
-        </span>
-
         <char-counter
             v-if="charCounter"
             v-model="content"
@@ -179,12 +165,6 @@ export default {
                 e.preventDefault();
             }
         },
-        showPassword: function () {
-            this.fieldType = 'text';
-        },
-        hidePassword: function () {
-            this.fieldType = 'password';
-        },
         getValue: function () {
             return this.content;
         },
@@ -279,18 +259,6 @@ export default {
                 padding-left: 4rem;
             }
         }
-    }
-
-    .password-show,
-    .password-hide {
-        color: var(--link-primary-color);
-        cursor: pointer;
-        font-size: 1.4rem;
-        position: absolute;
-        right: 2rem;
-        user-select: none;
-        top: 1.4rem;
-        z-index: 1;
     }
 }
 </style>

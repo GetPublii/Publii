@@ -769,10 +769,8 @@
         "paginationPhraseInfo": "Definiuje frazę używaną przed numerem strony w adresie URL np. <strong>https://example.com/tags/tag-slug/page/2</strong>.<br>",
         "password": {
             "alwaysAskForPassword": "Zawsze proś o hasło",
-            "hidePassword": "Ukryj hasło",
             "password": "Hasło",
             "passwordFieldCantBeEmpty": "Pole hasła nie może być puste.",
-            "showPassword": "Pokaż hasło"
         },
         "pinterest": "Pinterest",
         "postCreationDate": "Data utworzenia wpisu",
