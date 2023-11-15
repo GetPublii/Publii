@@ -770,7 +770,7 @@
         "password": {
             "alwaysAskForPassword": "Zawsze proś o hasło",
             "password": "Hasło",
-            "passwordFieldCantBeEmpty": "Pole hasła nie może być puste.",
+            "passwordFieldCantBeEmpty": "Pole hasła nie może być puste."
         },
         "pinterest": "Pinterest",
         "postCreationDate": "Data utworzenia wpisu",
