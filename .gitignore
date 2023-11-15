@@ -9,6 +9,7 @@ npm-debug.log
 /app/dist/css
 /app/dist/vendor
 /app/dist/*.js
+/app/dist/*.txt
 /app/dist/*.js.map
 /app/dist/*.png
 /app/dist/*.svg
