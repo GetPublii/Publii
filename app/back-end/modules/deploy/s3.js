@@ -346,6 +346,7 @@ class S3 {
         let bucket = deploymentConfig.s3.bucket;
         let prefix = deploymentConfig.s3.prefix;
         let region = deploymentConfig.s3.region;
+        let customRegion = deploymentConfig.s3.customRegion;
         let account = slug(siteName);
         let waitForTimeout = true;
 
@@ -377,7 +378,8 @@ class S3 {
                     accessKeyId: s3Id,
                     secretAccessKey: s3Key,
                 },
-                endpoint: s3Endpoint
+                endpoint: s3Endpoint,
+                region: customRegion
             }
         }
 
