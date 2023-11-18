@@ -49,6 +49,10 @@ class S3 {
             s3Key = await passwordSafeStorage.getPassword('publii-s3-key', account);
         }
 
+        if (s3Provider !== 'aws' && typeof s3Endpoint === 'string' && s3Endpoint.indexOf('://') === -1) {
+            s3Endpoint = 'https://' + s3Endpoint;
+        }
+
         let connectionParams;
 
         if (s3Provider === 'aws') {
