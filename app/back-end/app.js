@@ -5,7 +5,7 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
-const sqlite = require('better-sqlite3');
+const { Database } = require('node-sqlite3-wasm');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 const url = require('url');
@@ -19,6 +19,7 @@ const Themes = require('./themes.js');
 const Languages = require('./languages.js');
 const Plugins = require('./plugins.js');
 // Helper classes
+const DBUtils = require('./helpers/db.utils.js');
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
 // List of the Event classes
@@ -215,7 +216,7 @@ class App {
             this.db.close();
         }
 
-        this.db = new sqlite(dbPath);
+        this.db = new DBUtils(new Database(dbPath));
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
         let authors = new Authors(this, {site});

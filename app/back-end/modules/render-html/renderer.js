@@ -7,8 +7,8 @@ const CleanCSS = require('clean-css');
 const normalizePath = require('normalize-path');
 
 // Internal packages
-const slug = require('./../../helpers/slug');
-const sqlite = require('better-sqlite3');
+const DBUtils = require('./../../helpers/db.utils.js');
+const { Database } = require('node-sqlite3-wasm');
 const URLHelper = require('./helpers/url.js');
 const FilesHelper = require('./helpers/files.js');
 const ViewSettingsHelper = require('./helpers/view-settings.js');
@@ -584,7 +584,7 @@ class Renderer {
      */
     loadDataFromDB() {
         const dbPath = path.join(this.inputDir, 'db.sqlite');
-        this.db = new sqlite(dbPath);
+        this.db = new DBUtils(new Database(dbPath));
     }
 
     /*

@@ -5,7 +5,8 @@ const passwordSafeStorage = require('keytar');
 const ipcMain = require('electron').ipcMain;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
-const sqlite = require('better-sqlite3');
+const { Database } = require('node-sqlite3-wasm');
+const DBUtils = require('../helpers/db.utils.js');
 const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');
 const URLHelper = require('../modules/render-html/helpers/url.js');
@@ -78,7 +79,7 @@ class SiteEvents {
                     );
 
                     let dbPath = path.join(appInstance.sitesDir, config.settings.name, 'input', 'db.sqlite');
-                    appInstance.db = new sqlite(dbPath);
+                    appInstance.db = new DBUtils(new Database(dbPath));
 
                     // Rename also the backups directory
                     let backupsDir = appInstance.appConfig.backupsLocation;
@@ -430,7 +431,7 @@ class SiteEvents {
                 appInstance.db.close();
             }
 
-            appInstance.db = new sqlite(dbPath);
+            appInstance.db = new DBUtils(new Database(dbPath));
 
             result = {
                 siteConfig: appInstance.sites[config.name],

@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const slug = require('./../helpers/slug');
-const sqlite = require('better-sqlite3');
+const { Database } = require('node-sqlite3-wasm');
+const DBUtils = require('../helpers/db.utils.js');
 
 class SiteConfigMigrator {
     static moveOldAuthorData(appInstance, siteConfig) {
@@ -16,7 +17,7 @@ class SiteConfigMigrator {
         // If yes - save them in database as author with ID = 1
         let siteDir = path.join(appInstance.sitesDir, siteConfig.name);
         let dbPath = path.join(siteDir, 'input', 'db.sqlite');
-        let db = new sqlite(dbPath);
+        let db = new DBUtils(new Database(dbPath));
         let newAuthorName = siteConfig.author.name;
         let newAuthorUsername = slug(newAuthorName);
         let newAuthorConfig = {

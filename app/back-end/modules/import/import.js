@@ -5,7 +5,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const WxrParser = require('./wxr-parser');
-const sqlite = require('better-sqlite3');
+const { Database } = require('node-sqlite3-wasm');
+const DBUtils = require('../../helpers/db.utils.js');
 
 class Import {
     /**
@@ -39,7 +40,7 @@ class Import {
             this.appInstance.db.close();
         }
 
-        this.appInstance.db = new sqlite(dbPath);
+        this.appInstance.db = new DBUtils(new Database(dbPath));
     }
 
     /**
