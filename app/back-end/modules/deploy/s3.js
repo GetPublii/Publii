@@ -130,7 +130,7 @@ class S3 {
 
         let params = {
             Bucket: this.bucket,
-            Key: typeof this.prefix === 'string' && this.prefix !== '' ? this.prefix + fileName : fileName,
+            Key: fileName,
         };
 
         try {
@@ -161,7 +161,7 @@ class S3 {
             fileName = this.prefix + fileName;
         }
         
-        let filePath = path.join(this.deployment.inputDir, fileName);
+        let filePath = path.join(this.deployment.inputDir, 'files.publii.json');
     
         fs.readFile(filePath, async (err, fileContent) => {
             if (err) {
