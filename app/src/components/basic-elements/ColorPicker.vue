@@ -209,8 +209,9 @@ export default {
 
     &.has-disabled-toggle {
         .vc-chrome {
-            ::v-deep .vc-chrome-toggle-icon {
+            ::v-deep .vc-chrome-toggle-btn {
                 display: none;
+                pointer-events: none;
             }
         }
     }
