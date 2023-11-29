@@ -48,6 +48,7 @@ class Deployment {
         this.filesToRemove = [];
         this.filesToUpload = [];
         this.operationsCounter = 0;
+        this.syncRevision = crypto.randomUUID();
     }
 
     /**
@@ -203,16 +204,32 @@ class Deployment {
                 fileContent = fileContent.toString();
             }
 
+            let syncRevisionPath = path.join(this.configDir, 'sync-revision.json');
             let content = JSON.parse(fileContent);
+            let revisionID = false;
+
+            if (fs.existsSync(syncRevisionPath)) {
+                let syncRevisionContent = fs.readFileSync(syncRevisionPath);
+                syncRevisionContent = JSON.parse(syncRevisionContent);
+                revisionID = syncRevisionContent.revision;
+            }
 
             if (content.revision) {
                 let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
-                let checkSum = crypto.createHash('md5').update(filesToCheck).digest('hex');
-                let isExpectedCopy = checkSum === content.revision;
-                this.compareFilesList(isExpectedCopy);    
+                
+                if (revisionID) {
+                    let isExpectedCopy = revisionID === content.revision;
+                    this.compareFilesList(isExpectedCopy);
+                } else {
+                    let checkSum = crypto.createHash('md5').update(filesToCheck).digest('hex');
+                    let isExpectedCopy = checkSum === content.revision;
+                    this.compareFilesList(isExpectedCopy);
+                }
+                    
                 return;
             }
             
+            // when files on server uses old format - download it and use as remote files list
             fs.writeFileSync(path.join(this.configDir, 'files-remote.json'), fileContent);
             this.compareFilesList(true);
         } catch (e) {
@@ -226,11 +243,12 @@ class Deployment {
     replaceSyncInfoFiles () {
         let inputListPath = path.join(this.inputDir, 'files.publii.json');
         let remoteListPath = path.join(this.configDir, 'files-remote.json');
+        let syncRevisionPath = path.join(this.configDir, 'sync-revision.json');
         let contentToSave = fs.readFileSync(inputListPath);
-        let checkSum = crypto.createHash('md5').update(contentToSave).digest('hex');
-        let newContent = `{ "revision": "${checkSum}" }`;
+        let newContent = `{ "revision": "${this.syncRevision}" }`;
         fs.writeFileSync(remoteListPath, contentToSave);
         fs.writeFileSync(inputListPath, newContent);
+        fs.writeFileSync(syncRevisionPath, newContent);
     }
 
     /**
