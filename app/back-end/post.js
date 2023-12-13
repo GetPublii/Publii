@@ -459,7 +459,11 @@ class Post extends Model {
 
             // Remove empty tags
             tagsToSave = tagsToSave.filter(function (item) {
-                return item.replace(/\s/g, '') !== '';
+                if (typeof item === 'string') {
+                    return item.replace(/\s/g, '') !== '';
+                }
+
+                return false;
             });
 
             for (let tagName of tagsToSave) {
