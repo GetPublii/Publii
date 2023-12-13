@@ -2316,6 +2316,7 @@ export default {
                     });
 
                     siteName = data.siteName;
+                    this.$router.push('/site/' + siteName + '/settings/');
                     window.localStorage.setItem('publii-last-opened-website', siteName);
                 }
 
