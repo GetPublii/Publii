@@ -7,6 +7,11 @@
       class="block-link-popup">
       <div class="block-link-popup-link-type">
         <div
+          :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'external' }"
+          @click="setLinkType('external')">
+          {{ $t('editor.custom') }}
+        </div>
+        <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'post' }"
           @click="setLinkType('post')">
           {{ $t('post.post') }}
@@ -20,11 +25,6 @@
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'author' }"
           @click="setLinkType('author')">
           {{ $t('author.author') }}
-        </div>
-        <div
-          :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'external' }"
-          @click="setLinkType('external')">
-          {{ $t('editor.custom') }}
         </div>
         <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'file' }"
@@ -127,7 +127,7 @@ export default {
     return {
       isVisible: false,
       currentBlockID: '',
-      linkType: 'post',
+      linkType: 'external',
       linkSelectedAuthor: '',
       linkSelectedPost: '',
       linkSelectedTag: '',
@@ -156,7 +156,7 @@ export default {
     show (blockID, link) {
       this.isVisible = true;
       this.currentBlockID = blockID;
-      this.linkType = 'post';
+      this.linkType = 'external';
       this.linkSelectedAuthor = '';
       this.linkSelectedPost = '';
       this.linkSelectedTag = '';
@@ -182,7 +182,7 @@ export default {
     },
     parseLink () {
       if (this.link.url === '') {
-        this.linkType = 'post';
+        this.linkType = 'external';
         return;
       }
 

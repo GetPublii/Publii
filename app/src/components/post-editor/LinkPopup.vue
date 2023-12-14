@@ -179,7 +179,7 @@ export default {
             postID: 0,
             isVisible: false,
             easymdeInstance: null,
-            type: 'post',
+            type: 'external',
             post: null,
             tag: null,
             author: null,
@@ -199,7 +199,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'post', 'tag', 'tags', 'author', 'frontpage', 'external', 'file' ];
+            return [ 'external', 'post', 'tag', 'tags', 'author', 'frontpage', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1).map(tag => tag.id);
@@ -268,7 +268,7 @@ export default {
             this.$refs[refID].isOpen = false;
         },
         cleanPopup () {
-            this.type = 'post';
+            this.type = 'external';
             this.post = null;
             this.tag = null;
             this.author = null;
@@ -303,7 +303,7 @@ export default {
             let relContent = content.match(/rel="(.*?)"/);
             let downloadContent = content.match(/<a.*?(download="download").*?>/);
 
-            this.type = 'post';
+            this.type = 'external';
 
             if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
@@ -336,7 +336,7 @@ export default {
         parseMarkdownContent (content) {
             let linkContent = content.match(/\[(.*?)\]/);
             let urlContent = content.match(/\((.*?)\)/);
-            this.type = 'post';
+            this.type = 'external';
 
             if (linkContent && linkContent[1]) {
                 this.label = linkContent[1];
