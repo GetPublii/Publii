@@ -61,7 +61,7 @@ class ManualDeployment {
 
             fs.copy(this.deployment.inputDir, outputPath, {
                 filter: (src, dest) => {
-                    if (src.substring(-9) === '.DS_Store' || src.substring(-9) === 'Thumbs.db') {
+                    if (src.substr(-9) === '.DS_Store' || src.substr(-9) === 'Thumbs.db') {
                         return false;
                     }
 

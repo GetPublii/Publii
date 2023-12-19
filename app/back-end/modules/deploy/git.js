@@ -258,7 +258,7 @@ class Git {
             await gitClient.statusMatrix(repo).then((status) =>
                 Promise.all(
                     status.map(([filepath, , worktreeStatus]) => {
-                        if (filepath.substring(-9) === '.DS_Store' || filepath.substring(-9) === 'Thumbs.db') {
+                        if (filepath.substr(-9) === '.DS_Store' || filepath.substr(-9) === 'Thumbs.db') {
                             console.log('[i] Git debug: skip system files');
                         } else {
                             if (worktreeStatus) {
@@ -280,7 +280,7 @@ class Git {
                 return row[1] !== 1 || row[2] !== 1;
             });
 
-            console.log('[i] Git debug: changes exists = ', hasChanges);
+            console.log('[i] Git debug: changes exists = ', hasChanges, changesMatrix);
 
             if (hasChanges) {
                 await gitClient.commit({ 
