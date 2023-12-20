@@ -60,6 +60,7 @@ import 'prismjs/components/prism-css.min.js';
 import 'prismjs/components/prism-dart.min.js';
 import 'prismjs/components/prism-docker.min.js';
 import 'prismjs/components/prism-elm.min.js';
+import 'prismjs/components/prism-gdscript.min.js';
 import 'prismjs/components/prism-git.min.js';
 import 'prismjs/components/prism-glsl.min.js';
 import 'prismjs/components/prism-go.min.js';

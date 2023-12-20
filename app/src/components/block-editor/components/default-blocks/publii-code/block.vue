@@ -83,6 +83,7 @@ export default {
         'dart',
         'docker',
         'elm',
+        'gdscript',
         'git',
         'glsl',
         'go',

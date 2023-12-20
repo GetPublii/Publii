@@ -48,6 +48,7 @@ export default {
         { text: 'Dart', value: 'dart' },
         { text: 'Docker', value: 'docker' },
         { text: 'Elm', value: 'elm' },
+        { text: 'GDScript', value: 'gdscript' },
         { text: 'Git', value: 'git' },
         { text: 'GLSL', value: 'glsl' },
         { text: 'Go', value: 'go' },
