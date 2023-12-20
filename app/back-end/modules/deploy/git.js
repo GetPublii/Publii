@@ -280,7 +280,7 @@ class Git {
                 return row[1] !== 1 || row[2] !== 1;
             });
 
-            console.log('[i] Git debug: changes exists = ', hasChanges, changesMatrix);
+            console.log('[i] Git debug: changes exists = ', hasChanges);
 
             if (hasChanges) {
                 await gitClient.commit({ 
