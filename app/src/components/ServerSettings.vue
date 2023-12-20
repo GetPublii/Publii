@@ -1401,7 +1401,8 @@ export default {
 
             mainProcessAPI.send('app-site-config-save', {
                 "site": this.$store.state.currentSite.config.name,
-                "settings": newSettings
+                "settings": newSettings,
+                "source": "server"
             });
 
             mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {

@@ -47,6 +47,10 @@ class SiteEvents {
                 });
             }
 
+            if (config.source === 'server') {
+                self.removeGitConfigDirectory(appInstance, config.site);
+            }
+
             // Prepare settings
             config.settings.name = slug(config.settings.name);
             config.settings.advanced.urls.tagsPrefix = slug(config.settings.advanced.urls.tagsPrefix);
@@ -639,6 +643,14 @@ class SiteEvents {
         }
 
         console.log('(!) Unable to set spellchecker to use selected language - ' + language);
+    }
+
+    removeGitConfigDirectory (appInstance, siteName) {
+        let gitDirPath = path.join(appInstance.sitesDir, siteName, 'output', '.git');
+
+        if (UtilsHelper.dirExists(gitDirPath)) {
+            fs.removeSync(gitDirPath);
+        }
     }
 }
 

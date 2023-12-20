@@ -264,7 +264,8 @@ export default {
             // Send request to the back-end
             mainProcessAPI.send('app-site-config-save', {
                 site: this.$store.state.currentSite.config.name,
-                settings: newSettings
+                settings: newSettings,
+                source: "custom-html"
             });
 
             // Settings saved
