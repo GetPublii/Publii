@@ -241,17 +241,8 @@ class Author extends Model {
             };
         }
 
-        let authorsSqlQuery = this.db.prepare(`DELETE FROM authors WHERE id = @id`);
-        let postsSqlQuery = this.db.prepare(`UPDATE posts SET authors = '1' WHERE authors LIKE @id`);
-        
-        authorsSqlQuery.run({
-            id: this.id.toString()
-        });
-
-        postsSqlQuery.run({
-            id: this.id.toString()
-        });
-
+        this.db.exec(`DELETE FROM authors WHERE id = ${parseInt(this.id, 10)}`);
+        this.db.prepare(`UPDATE posts SET authors = '1' WHERE authors LIKE @id`).run({ id: this.id.toString() });
         ImageHelper.deleteImagesDirectory(this.siteDir, 'authors', this.id);
 
         return {

@@ -221,17 +221,8 @@ class Tag extends Model {
      * Delete tag
      */
     delete() {
-        let tagsSqlQuery = this.db.prepare(`DELETE FROM tags WHERE id = @id`);
-        let postTagsSqlQuery = this.db.prepare(`DELETE FROM posts_tags WHERE tag_id = @id`);
-        
-        tagsSqlQuery.run({
-            id: this.id
-        });
-
-        postTagsSqlQuery.run({
-            id: this.id
-        });
-
+        this.db.exec(`DELETE FROM tags WHERE id = ${parseInt(this.id, 10)}`);
+        this.db.exec(`DELETE FROM posts_tags WHERE tag_id = ${parseInt(this.id, 10)}`);
         ImageHelper.deleteImagesDirectory(this.siteDir, 'tags', this.id);
         
         return {

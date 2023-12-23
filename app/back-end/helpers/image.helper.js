@@ -55,16 +55,8 @@ class ImageHelper {
      */
     delete() {
         if(this.postID > 0) {
-            let updateSqlQuery = this.db.prepare(`UPDATE posts SET featured_image_id = 0 WHERE id = @id`);
-            let updateRefsSqlQuery = this.db.prepare(`DELETE FROM posts_images WHERE post_id = @id`);
-            
-            updateSqlQuery.run({
-                id: this.postID
-            });
-
-            updateRefsSqlQuery.run({
-                id: this.postID
-            });
+            this.db.prepare(`UPDATE posts SET featured_image_id = 0 WHERE id = @id`).run({ id: this.postID });
+            this.db.exec(`DELETE FROM posts_images WHERE post_id = ${parseInt(this.postID, 10)}`);
         }
     }
 

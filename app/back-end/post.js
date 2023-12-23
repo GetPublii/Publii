@@ -281,14 +281,10 @@ class Post extends Model {
      * Delete post
      */
     delete() {
-        let postSqlQuery = this.db.prepare(`DELETE FROM posts WHERE id = @id`);
-        let tagsSqlQuery = this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`);
-        let imagesSqlQuery = this.db.prepare(`DELETE FROM posts_images WHERE post_id = @id`);
-        let additionalDataSqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id`);
-        postSqlQuery.run({ id: this.id });
-        tagsSqlQuery.run({ id: this.id });
-        imagesSqlQuery.run({ id: this.id });
-        additionalDataSqlQuery.run({ id: this.id });
+        this.db.exec(`DELETE FROM posts WHERE id = ${parseInt(this.id, 10)}`);
+        this.db.exec(`DELETE FROM posts_tags WHERE post_id = ${parseInt(this.id, 10)}`);
+        this.db.exec(`DELETE FROM posts_images WHERE post_id = ${parseInt(this.id, 10)}`);
+        this.db.exec(`DELETE FROM posts_additional_data WHERE post_id = ${parseInt(this.id, 10)}`);
         ImageHelper.deleteImagesDirectory(this.siteDir, 'posts', this.id);
 
         return true;
@@ -450,7 +446,7 @@ class Post extends Model {
      */
     saveTags() {
         // Remove tags connected previously with an item
-        this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`).run({ id: this.id });
+        this.db.exec(`DELETE FROM posts_tags WHERE post_id = ${parseInt(this.id, 10)}`);
 
         // For case when there is no tags - check it
         if (this.tags) {
@@ -722,8 +718,7 @@ class Post extends Model {
      */
     saveAdditionalData() {
         // Remove old _core additional data
-        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = '_core'`);
-        sqlQuery.run({ id: this.id })
+        this.db.exec(`DELETE FROM posts_additional_data WHERE post_id = ${parseInt(this.id, 10)} AND key = '_core'`);
 
         // Convert data to JSON string
         if (typeof this.additionalData !== 'object') {
@@ -762,8 +757,7 @@ class Post extends Model {
      */
     savePostViewSettings() {
         // Remove old _core additional data
-        let sqlQuery = this.db.prepare(`DELETE FROM posts_additional_data WHERE post_id = @id AND key = 'postViewSettings'`);
-        sqlQuery.run({ id: this.id })
+        this.db.exec(`DELETE FROM posts_additional_data WHERE post_id = ${parseInt(this.id, 10)} AND key = 'postViewSettings'`);
 
         // Convert data to JSON string
         if(typeof this.postViewSettings !== 'object') {
