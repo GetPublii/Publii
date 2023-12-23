@@ -192,10 +192,13 @@ class Author extends Model {
             name: this.escape(this.name),
             id: this.id
         };
+        let foundedAuthors = query.all(queryParams);
 
-        for (const author of query.iterate(queryParams)) {
-            if (author.name === this.name) {
-                return false;
+        if (foundedAuthors.length) {
+            for (const author of foundedAuthors) {
+                if (author.name === this.name) {
+                    return false;
+                }
             }
         }
 
@@ -212,10 +215,13 @@ class Author extends Model {
         let queryParams = {
             id: this.id
         };
+        let foundedAuthors = query.all(queryParams);
 
-        for (const author of query.iterate(queryParams)) {
-            if (slug(this.username) === slug(author.username)) {
-                return false;
+        if (foundedAuthors.length) {
+            for (const author of foundedAuthors) {
+                if (slug(this.username) === slug(author.username)) {
+                    return false;
+                }
             }
         }
 

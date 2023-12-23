@@ -166,10 +166,13 @@ class Tag extends Model {
             name: this.escape(this.name),
             id: this.id
         };
+        let foundedTags = query.all(queryParams);
 
-        for (const tag of query.iterate(queryParams)) {
-            if (tag.name === this.name) {
-                return false;
+        if (foundedTags.length) {
+            for (const tag of foundedTags) {
+                if (tag.name === this.name) {
+                    return false;
+                }
             }
         }
 
@@ -181,10 +184,13 @@ class Tag extends Model {
         let queryParams = {
             id: this.id
         };
+        let foundedSlugs = query.all(queryParams);
 
-        for (const tag of query.iterate(queryParams)) {
-            if (this.slug === tag.slug) {
-                return false;
+        if (foundedSlugs.length) {
+            for (const tag of foundedSlugs) {
+                if (this.slug === tag.slug) {
+                    return false;
+                }
             }
         }
 
