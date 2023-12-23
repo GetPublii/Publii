@@ -56,7 +56,7 @@
     "marked": "5.1.1",
     "mime": "3.0.0",
     "moment": "2.29.4",
-    "node-sqlite3-wasm": "0.8.2",
+    "node-sqlite3-wasm": "0.8.5",
     "node-version-compare": "1.0.3",
     "normalize-path": "3.0.0",
     "prismjs": "1.29.0",
@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "devtron": "1.4.0",
-    "electron": "26.5.0",
+    "electron": "26.6.3",
     "node-abi": "3.45.0"
   }
 }
