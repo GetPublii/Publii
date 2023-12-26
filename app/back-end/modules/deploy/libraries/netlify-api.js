@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const request = require('request');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
-const asyncRequest = util.promisify(request);
 const asyncReadFile = util.promisify(fs.readFile);
 
 class NetlifyAPI {
@@ -25,8 +23,8 @@ class NetlifyAPI {
     async deploy () {
         let localFilesList = await this.prepareLocalFilesList();
         let deployData = await this.makeApiRequest('POST', 'sites/:site_id/deploys', localFilesList);
-        let deployID = deployData.body.id;
-        let hashesOfFilesToUpload = deployData.body.required;
+        let deployID = deployData.id;
+        let hashesOfFilesToUpload = deployData.required;
         let filesToUpload = this.getFilesToUpload(localFilesList, hashesOfFilesToUpload);
         this.events.onStart(filesToUpload.length);
         
@@ -36,14 +34,14 @@ class NetlifyAPI {
             try {
                 let apiResponse = await this.uploadFile(filePath, deployID);
 
-                if (apiResponse.statusCode === 422) {
+                if (!apiResponse) {
                     return Promise.reject(apiResponse);
                 }
             } catch (e) {
                 try {
                     let apiResponse = await this.uploadFile(filePath, deployID);
 
-                    if (apiResponse.statusCode === 422) {
+                    if (!apiResponse) {
                         return Promise.reject(apiResponse);
                     }
                 } catch (e) {
@@ -79,41 +77,83 @@ class NetlifyAPI {
 
     async makeApiRequest (method, endpoint, data) {
         let endpointUrl = this.apiUrl + endpoint.replace(':site_id', this.siteID);
-        
-        return asyncRequest({
-            method: method,
-            uri: endpointUrl,
-            json: true,
-            headers: {
-                'User-Agent': 'Publii'
-            },
-            body: data,
-            auth: {
-                'bearer': this.accessToken
-            },
-            timeout: 15000
+        let headers = new Headers({
+            'User-Agent': 'Publii',
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Content-Type': 'application/json'
         });
+    
+        let options = {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(data),
+        };
+    
+        if (method.toUpperCase() === 'GET') {
+            delete options.body;
+        }
+
+        let fetchTimeoutPromise = new Promise((resolve, reject) => {
+            let timeoutId = setTimeout(() => {
+                clearTimeout(timeoutId);
+                reject(new Error('Fetch request timeout'));
+            }, 15000);
+        });
+
+        try {
+            let response = await Promise.race([fetch(endpointUrl, options), fetchTimeoutPromise]);
+
+            if (response.ok) {
+                return await response.json();
+            } else {
+                let error = new Error(`Fetch HTTP Error: ${response.status}`);
+                error.response = response;
+                throw error;
+            }
+        } catch (error) {
+            console.log(`Request failed (URL: ${endpointUrl}): ${error.message}`);
+        }
     }
 
     async uploadFile (filePath, deployID) {
         let endpointUrl = this.apiUrl + 'deploys/' + deployID + '/files' + filePath;
         let fullFilePath = this.getFilePath(this.inputDir, filePath, true);
         let fileContent = await asyncReadFile(fullFilePath);
-        
-        return asyncRequest({
-            method: 'PUT',
-            uri: endpointUrl,
-            headers: {
-                'User-Agent': 'Publii',
-                'Content-Type': 'application/octet-stream',
-                'Content-Length': fileContent.length
-            },
-            body: fileContent,
-            auth: {
-                'bearer': this.accessToken
-            },
-            timeout: 15000
+        let headers = new Headers({
+            'User-Agent': 'Publii',
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': fileContent.length
         });
+    
+        let options = {
+            method: 'PUT',
+            headers: headers,
+            body: fileContent,
+        };
+
+        let fetchTimeoutPromise = new Promise((resolve, reject) => {
+            let timeoutId = setTimeout(() => {
+                clearTimeout(timeoutId);
+                reject(new Error('Fetch request timeout'));
+            }, 15000);
+        });
+
+        try {
+            let response = await Promise.race([fetch(endpointUrl, options), fetchTimeoutPromise]);
+
+            if (response.ok) {
+                return await response.json();
+            } else {
+                let error = new Error(`Fetch HTTP Error: ${response.status}`);
+                error.response = response;
+                throw error;
+            }
+        } catch (error) {
+            console.log(`Request failed (URL: ${endpointUrl}): ${error.message}`);
+        }
+
+        return false;
     }
 
     getFilesToUpload (filesList, hashesToUpload) {
@@ -188,7 +228,7 @@ class NetlifyAPI {
     async testConnection () {
         let testData = await this.makeApiRequest('GET', 'sites/:site_id/');
 
-        if (testData.body && testData.body.id) {
+        if (testData.body && testData.id) {
             return Promise.resolve(true);
         }
 
