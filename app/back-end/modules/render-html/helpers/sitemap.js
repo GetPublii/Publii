@@ -10,6 +10,7 @@ const util = require('util');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
 const RendererHelpers = require('./../helpers/helpers.js');
+const UtilsHelper = require('./../../../helpers/utils');
 
 /**
  * Class used to generate sitemap.xml file
@@ -598,6 +599,13 @@ class Sitemap {
         let xslContent = fs.readFileSync(__dirname + '/../../../../default-files/theme-files/sitemap.xsl');
         let xslFilePath = path.join(this.baseDirectory, 'sitemap.xsl');
         let sitemapFilePath = path.join(this.baseDirectory, 'sitemap.xml');
+
+        // Check if sitemap.xsl exists - if yes, generate only sitemap
+        if (UtilsHelper.fileExists(xslFilePath)) {
+            fs.writeFileSync(sitemapFilePath, this.outputXML, 'utf8');
+            return;
+        }
+
         fs.writeFileSync(sitemapFilePath, this.outputXML, 'utf8');
         fs.writeFileSync(xslFilePath, xslContent, 'utf8');
     }
