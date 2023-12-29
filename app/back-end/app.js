@@ -212,7 +212,7 @@ class App {
             return { status: false };
         }
 
-        if (this.db) {
+        if (this.db && this.db.isOpen) {
             this.db.close();
         }
 

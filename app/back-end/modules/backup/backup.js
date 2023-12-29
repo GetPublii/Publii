@@ -277,7 +277,7 @@ class Backup {
                     }
         
                     // Close DB connection and remove site dir contents
-                    if (appInstance.db) {
+                    if (appInstance.db && appInstance.db.isOpen) {
                         appInstance.db.close();
                     }
         

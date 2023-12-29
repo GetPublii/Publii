@@ -70,7 +70,7 @@ class SiteEvents {
                     !fs.existsSync(path.join(appInstance.sitesDir, config.settings.name)) &&
                     slug(config.settings.displayName) === config.settings.name
                 ) {
-                    if (appInstance.db) {
+                    if (appInstance.db && appInstance.db.isOpen) {
                         appInstance.db.close();
                     }
 
@@ -431,7 +431,7 @@ class SiteEvents {
             let siteDir = path.join(appInstance.sitesDir, config.name);
             let dbPath = path.join(siteDir, 'input', 'db.sqlite');
 
-            if (appInstance.db) {
+            if (appInstance.db && appInstance.db.isOpen) {
                 appInstance.db.close();
             }
 
