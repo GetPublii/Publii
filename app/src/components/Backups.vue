@@ -115,6 +115,7 @@
                     </p-button>
 
                     <p-button
+                        v-if="document.body.getAttribute('data-os') !== 'win'"
                         :type="operationInProgress ? 'disabled secondary small' : 'secondary small'"
                         :onClick="restoreFile.bind(this, item.name)"
                         :disabled="operationInProgress">
