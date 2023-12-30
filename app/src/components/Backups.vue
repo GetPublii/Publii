@@ -115,7 +115,7 @@
                     </p-button>
 
                     <p-button
-                        v-if="document.body.getAttribute('data-os') !== 'win'"
+                        v-if="!isWin"
                         :type="operationInProgress ? 'disabled secondary small' : 'secondary small'"
                         :onClick="restoreFile.bind(this, item.name)"
                         :disabled="operationInProgress">
@@ -148,7 +148,10 @@ export default {
         };
     },
     computed: {
-        noBackups: function() {
+        isWin () {
+            return document.body.getAttribute('data-os') === 'win';
+        },
+        noBackups () {
             return this.items.length === 0;
         }
     },
