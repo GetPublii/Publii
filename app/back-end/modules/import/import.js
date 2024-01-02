@@ -36,8 +36,12 @@ class Import {
 
         const dbPath = path.join(this.appInstance.sitesDir, this.siteName, 'input', 'db.sqlite');
 
-        if (this.appInstance.db && this.appInstance.db.isOpen) {
-            this.appInstance.db.close();
+        if (this.appInstance.db) {
+            try {
+                this.appInstance.db.close();
+            } catch (e) {
+                console.log('[WP IMPORT] DB already closed');
+            }
         }
 
         this.appInstance.db = new DBUtils(new Database(dbPath));

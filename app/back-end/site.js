@@ -434,8 +434,12 @@ class Site {
     static delete(appInstance, name) {
         let sitePath = path.join(appInstance.sitesDir, name);
 
-        if (appInstance.db && appInstance.db.isOpen) {
-            appInstance.db.close();
+        if (appInstance.db) {
+            try {
+                appInstance.db.close();
+            } catch (e) {
+                console.log('[SITE DELETE] DB already closed');
+            }
         }
 
         setTimeout(async () => {

@@ -212,8 +212,12 @@ class App {
             return { status: false };
         }
 
-        if (this.db && this.db.isOpen) {
-            this.db.close();
+        if (this.db) {
+            try {
+                this.db.close();
+            } catch (e) {
+                console.log('[SWITCH WEBSITE] DB already closed');
+            }
         }
 
         this.db = new DBUtils(new Database(dbPath));

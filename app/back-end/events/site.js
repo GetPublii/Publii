@@ -70,8 +70,12 @@ class SiteEvents {
                     !fs.existsSync(path.join(appInstance.sitesDir, config.settings.name)) &&
                     slug(config.settings.displayName) === config.settings.name
                 ) {
-                    if (appInstance.db && appInstance.db.isOpen) {
-                        appInstance.db.close();
+                    if (appInstance.db) {
+                        try {
+                            appInstance.db.close();
+                        } catch (e) {
+                            console.log('[SITE NAME CHANGE] DB already closed');
+                        }
                     }
 
                     // If yes - rename the dir
@@ -431,8 +435,12 @@ class SiteEvents {
             let siteDir = path.join(appInstance.sitesDir, config.name);
             let dbPath = path.join(siteDir, 'input', 'db.sqlite');
 
-            if (appInstance.db && appInstance.db.isOpen) {
-                appInstance.db.close();
+            if (appInstance.db) {
+                try {
+                    appInstance.db.close();
+                } catch (e) {
+                    console.log('[SITE CREATION] DB already closed');
+                }
             }
 
             appInstance.db = new DBUtils(new Database(dbPath));
