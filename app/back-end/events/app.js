@@ -44,7 +44,7 @@ class AppEvents {
                 if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
                     
-                    if (appInstance.db) {
+                    if (appInstance.db && appInstance.db.isOpen) {
                         appInstance.db.close();
                     }
 

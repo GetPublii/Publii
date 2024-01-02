@@ -36,7 +36,7 @@ class Import {
 
         const dbPath = path.join(this.appInstance.sitesDir, this.siteName, 'input', 'db.sqlite');
 
-        if (this.appInstance.db) {
+        if (this.appInstance.db && this.appInstance.db.isOpen) {
             this.appInstance.db.close();
         }
 

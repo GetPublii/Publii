@@ -434,7 +434,7 @@ class Site {
     static delete(appInstance, name) {
         let sitePath = path.join(appInstance.sitesDir, name);
 
-        if (appInstance.db) {
+        if (appInstance.db && appInstance.db.isOpen) {
             appInstance.db.close();
         }
 
