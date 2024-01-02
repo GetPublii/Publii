@@ -44,8 +44,12 @@ class AppEvents {
                 if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
                     
-                    if (appInstance.db && appInstance.db.isOpen) {
-                        appInstance.db.close();
+                    if (appInstance.db) {
+                        try {
+                            appInstance.db.close();
+                        } catch (e) {
+                            console.log('[SITE LOCATION CHANGE] DB already closed');
+                        }
                     }
 
                     setTimeout(() => {
