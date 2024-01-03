@@ -295,8 +295,13 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
-        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        if (this.previewMode !== false) {
+            this.createMediaSymlink();
+        } else {
+            FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
+            FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+        }
 
         this.triggerEvent('afterRender');
     }
@@ -310,8 +315,13 @@ class Renderer {
         let postIDs = Object.keys(this.cachedItems.posts);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
-        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        if (this.previewMode !== false) {
+            this.createMediaSymlink();
+        } else {
+            FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+            FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+        }
 
         this.triggerEvent('afterRender');
     }
@@ -336,8 +346,13 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
-        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        if (this.previewMode !== false) {
+            this.createMediaSymlink();
+        } else {
+            FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+            FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+        }
 
         this.triggerEvent('afterRender');
     }
@@ -362,8 +377,13 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
-        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        if (this.previewMode !== false) {
+            this.createMediaSymlink();
+        } else {
+            FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+            FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+        }
 
         this.triggerEvent('afterRender');
     }
@@ -1713,9 +1733,15 @@ class Renderer {
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
-        await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
-        await FilesHelper.removeEmptyDirectories(this.outputDir);
+
+        if (this.previewMode !== false) {
+            this.createMediaSymlink();
+        } else {
+            await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+            await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+            await FilesHelper.removeEmptyDirectories(this.outputDir);
+        }
+
         console.timeEnd("FILES");
     }
 
@@ -2002,6 +2028,25 @@ class Renderer {
     triggerEvent (eventName) {
         if (this.plugins.hasEvents(eventName)) {
             this.plugins.runEvents(eventName, this); 
+        }
+    }
+
+    /**
+     * Create media folder symlink for the preview purpose
+     */
+    createMediaSymlink () {
+        let symlinkPath = path.join(this.outputDir, 'media');
+        let targetPath = path.join(this.inputDir, 'media');
+
+        try {
+            if (fs.existsSync(symlinkPath)) {
+                fs.unlinkSync(symlinkPath);
+            }
+            
+            fs.symlinkSync(targetPath, symlinkPath);
+            console.log(`Symlink created: ${symlinkPath} -> ${targetPath}`);
+        } catch (error) {
+            console.error("Symlink creation error:", error);
         }
     }
 }
