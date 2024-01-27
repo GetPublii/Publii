@@ -5,10 +5,11 @@ const path = require('path');
 const Handlebars = require('handlebars');
 const CleanCSS = require('clean-css');
 const normalizePath = require('normalize-path');
+const os = require('os');
 
 // Internal packages
 const DBUtils = require('./../../helpers/db.utils.js');
-const { Database } = require('node-sqlite3-wasm');
+const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
 const URLHelper = require('./helpers/url.js');
 const FilesHelper = require('./helpers/files.js');
 const ViewSettingsHelper = require('./helpers/view-settings.js');

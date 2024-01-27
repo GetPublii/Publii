@@ -70,7 +70,8 @@
       "default-files/gdpr-assets/**/*",
       "default-files/vendor/**/*",
       "node_modules/sharp/**/*",
-      "node_modules/keytar/**/*"
+      "node_modules/keytar/**/*",
+      "node_modules/better-sqlite3/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
