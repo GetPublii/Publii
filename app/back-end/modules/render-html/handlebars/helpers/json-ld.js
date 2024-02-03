@@ -15,6 +15,8 @@ function jsonLDHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('jsonLD', function(context) {
         let output = '';
         let jsonLDObject = {};
+        let momentOriginalLocale = moment.locale();
+        moment.locale('en');
         jsonLDObject['@context'] = 'http://schema.org';
 
         // Detect if the page is not a post page
@@ -177,7 +179,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
         output += '<script type="application/ld+json">';
         output += JSON.stringify(jsonLDObject);
         output += '</script>';
-
+        moment.locale(momentOriginalLocale);
         return new Handlebars.SafeString(output);
     });
 }
