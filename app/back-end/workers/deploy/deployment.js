@@ -22,7 +22,11 @@ process.on('message', function(msg){
             deploymentInstance.siteConfig.deployment.protocol === 'ftp' ||
             deploymentInstance.siteConfig.deployment.protocol === 'ftp+tls'
         ) {
-            deploymentInstance.client.connection.destroy();
+            if (deploymentInstance.client.connection.close) {
+                deploymentInstance.client.connection.close();
+            } else {
+                deploymentInstance.client.connection.destroy();
+            }
         }
 
         setTimeout(function() {

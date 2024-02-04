@@ -6,6 +6,7 @@ const normalizePath = require('normalize-path');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 const slug = require('./../../helpers/slug');
 const FTP = require('./ftp.js');
+const FTPAlt = require('./ftp-alt.js');
 const SFTP = require('./sftp.js');
 const S3 = require('./s3.js');
 const Git = require('./git.js');
@@ -58,7 +59,7 @@ class Deployment {
      * @param deploymentConfig
      * @param siteName
      */
-    testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid) {
         let connection = false;
 
         switch(deploymentConfig.protocol) {
@@ -70,11 +71,11 @@ class Deployment {
             case 'git':             connection = new Git();                         break;
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
-            default:                connection = new FTP();                         break;
+            default:                connection = new FTPAlt();                      break;
         }
 
         if (connection) {
-            connection.testConnection(app, deploymentConfig, siteName, uuid).then(() => true);
+            await connection.testConnection(app, deploymentConfig, siteName, uuid);
         }
     }
 
@@ -92,7 +93,7 @@ class Deployment {
             case 'netlify':         this.client = new Netlify(this);            break;
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
-            default:                this.client = new FTP(this);                break;
+            default:                this.client = new FTPAlt(this);             break;
         }
 
         await this.client.initConnection();

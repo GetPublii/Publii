@@ -174,9 +174,9 @@ class DeployEvents {
         });
     }
 
-    testConnection(deploymentConfig, siteName, uuid) {
+    async testConnection(deploymentConfig, siteName, uuid) {
         let deployment = new Deployment(this.app.app.getPath('logs'), this.app.sitesDir, deploymentConfig);
-        deployment.testConnection(this.app, deploymentConfig, siteName, uuid);
+        await deployment.testConnection(this.app, deploymentConfig, siteName, uuid);
     }
 }
 

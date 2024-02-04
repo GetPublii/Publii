@@ -4,22 +4,20 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const ftpClient = require('./../custom-changes/ftp');
+const ftp = require('basic-ftp');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const normalizePath = require('normalize-path');
 
-class FTP {
+class FTPAlt {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.econnresetCounter = 0;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
     }
 
     async initConnection() {
-        let self = this;
         let waitForTimeout = true;
         let ftpPassword = this.deployment.siteConfig.deployment.password;
         let account = slug(this.deployment.siteConfig.name);
@@ -29,13 +27,15 @@ class FTP {
             account = this.deployment.siteConfig.uuid;
         }
 
-        this.connection = new ftpClient();
+        this.connection = new ftp.Client(15000);
+        this.connection.ftp.verbose = true;
+        this.connection.ftp.log = this.connectionDebugger;
 
-        if(ftpPassword === 'publii ' + account) {
+        if (ftpPassword === 'publii ' + account) {
             ftpPassword = await passwordSafeStorage.getPassword('publii', account);
         }
 
-        if(this.deployment.siteConfig.deployment.protocol !== 'ftp') {
+        if (this.deployment.siteConfig.deployment.protocol !== 'ftp') {
             secureConnection = true;
         }
 
@@ -51,10 +51,7 @@ class FTP {
                 user: this.deployment.siteConfig.deployment.username,
                 password: ftpPassword,
                 rejectUnauthorized: this.deployment.siteConfig.deployment.rejectUnauthorized
-            },
-            connTimeout: 15000,
-            pasvTimeout: 15000,
-            debug: self.connectionDebugger.bind(self)
+            }
         };
 
         process.send({
@@ -71,72 +68,32 @@ class FTP {
             message: 'app-connection-in-progress'
         });
 
-        this.connection.connect(connectionParams);
+        await this.connection.access(connectionParams);
+        waitForTimeout = false;
 
-        this.connection.on('ready', function() {
-            waitForTimeout = false;
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-success'
-            });
-
-            self.deployment.setInput();
-            self.deployment.setOutput();
-            self.deployment.prepareLocalFilesList();
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 7,
-                    operations: false
-                }
-            });
-
-            self.downloadFilesList();
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-success'
         });
 
-        this.connection.on('error', function(err) {
-            console.log(`[${ new Date().toUTCString() }] FTP ERROR: ${err}`);
+        this.deployment.setInput();
+        this.deployment.setOutput();
+        this.deployment.prepareLocalFilesList();
 
-            if(typeof err === "string" && err.indexOf('ECONNRESET') > -1) {
-                self.econnresetCounter++;
-
-                if(self.econnresetCounter <= 5) {
-                    return;
-                }
-            }
-
-            if(waitForTimeout) {
-                waitForTimeout = false;
-                self.connection.destroy();
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: err.message
-                    }
-                });
-
-                setTimeout(function () {
-                    process.kill(process.pid, 'SIGTERM');
-                }, 1000);
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 7,
+                operations: false
             }
         });
 
-        this.connection.on('close', function(err) {
-            console.log(`[${ new Date().toUTCString() }] FTP CONNECTION CLOSED: ${err}`);
-
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
-        });
+        this.downloadFilesList();
 
         setTimeout(function() {
-            if(waitForTimeout === true) {
-                self.connection.destroy();
+            if (waitForTimeout === true) {
+                this.connection.close();
                 console.log(`[${ new Date().toUTCString() }] Request timeout...`);
 
                 process.send({
@@ -151,282 +108,209 @@ class FTP {
         }, 20000);
     }
 
-    downloadFilesList() {
-        let self = this;
-
-        this.connection.get(
-            normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
-            function(err, fileStream) {
-                console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 8,
-                        operations: false
-                    }
-                });
-
-                if (!err) {
-                    let fileStreamChunks = [];
-
-                    fileStream.on('data', (chunk) => {
-                        fileStreamChunks.push(chunk.toString());
-                    });
-
-                    fileStream.on('end', () => {
-                        let completeFile = fileStreamChunks.join('');
-                        self.deployment.checkLocalListWithRemoteList(completeFile);
-                    });
-                } else {
-                    console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
-                    self.deployment.compareFilesList(false);
+    async downloadFilesList() {
+        try {
+            await this.connection.downloadTo(
+                normalizePath(path.join(this.deployment.configDir, 'remote-files.json')), 
+                normalizePath(path.join(this.deployment.outputDir, 'files.publii.json'))
+            );
+            let fileToCompare = fs.readFileSync(normalizePath(path.join(this.deployment.configDir, 'remote-files.json')));
+            this.deployment.checkLocalListWithRemoteList(fileToCompare);
+            console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
+            process.send({
+                type: 'web-contents',
+                message: 'app-uploading-progress',
+                value: {
+                    progress: 8,
+                    operations: false
                 }
-            }
-        );
+            });
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
+            this.deployment.compareFilesList(false);
+        }
     }
 
-    uploadNewFileList() {
-        let self = this;
-
+    async uploadNewFileList() {
         process.send({
             type: 'web-contents',
             message: 'app-uploading-progress',
             value: {
                 progress: 99,
-                operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
+                operations: [this.deployment.currentOperationNumber, this.deployment.operationsCounter]
             }
         });
 
         this.deployment.replaceSyncInfoFiles();
 
-        this.connection.put(
-            normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
-            normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
-            function(err) {
-                console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
+        try {
+            await this.connection.uploadFrom(
+                normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
+                normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
+            );
 
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
-                }
+            console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
+        }
 
-                self.connection.logout(function(err) {
-                    if (err) {
-                        console.log(`[${ new Date().toUTCString() }] ${err}`);
-                    }
+        this.connection.close();
+        console.log(`[${ new Date().toUTCString() }] FTP CONNECTION CLOSED`);
 
-                    self.connection.end();
-                    self.connection.destroy();
-                });
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 100,
-                        operations: false
-                    }
-                });
-
-                process.send({
-                    type: 'sender',
-                    message: 'app-deploy-uploaded',
-                    value: {
-                        status: true,
-                        issues: self.hardUploadErrors.length > 0
-                    }
-                });
-
-                setTimeout(function () {
-                    process.kill(process.pid, 'SIGTERM');
-                }, 1000);
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 100,
+                operations: false
             }
-        );
+        });
+
+        process.send({
+            type: 'sender',
+            message: 'app-deploy-uploaded',
+            value: {
+                status: true,
+                issues: this.hardUploadErrors.length > 0
+            }
+        });
+
+        setTimeout(function () {
+            process.kill(process.pid, 'SIGTERM');
+        }, 1000);
     }
 
-    uploadFile(input, output) {
-        let self = this;
+    async uploadFile(input, output) {
+        try {
+            await this.connection.uploadFrom(input, output)
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
 
-        this.connection.put(
-            input,
-            output,
-            function (err) {
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
-
-                    setTimeout(() => {
-                        if(!self.softUploadErrors[input]) {
-                            self.softUploadErrors[input] = 1;
-                        } else {
-                            self.softUploadErrors[input]++;
-                        }
-
-                        if(self.softUploadErrors[input] <= 5) {
-                            self.uploadFile(input, output);
-                        } else {
-                            self.hardUploadErrors.push(input);
-
-                            self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
-                            self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                            process.send({
-                                type: 'web-contents',
-                                message: 'app-uploading-progress',
-                                value: {
-                                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                                }
-                            });
-
-                            self.deployment.uploadFile();
-                        }
-                    }, 500);
+            setTimeout(() => {
+                if (!this.softUploadErrors[input]) {
+                    this.softUploadErrors[input] = 1;
                 } else {
-                    self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
-                    self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-uploading-progress',
-                        value: {
-                            progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                            operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                        }
-                    });
-
-                    self.deployment.uploadFile();
+                    this.softUploadErrors[input]++;
                 }
-            }
-        );
-    }
 
-    uploadDirectory(input, output) {
-        let self = this;
-
-        this.connection.mkdir(
-            output,
-            true,
-            function (err) {
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
-
-                    setTimeout(() => {
-                        if(!self.softUploadErrors[input]) {
-                            self.softUploadErrors[input] = 1;
-                        } else {
-                            self.softUploadErrors[input]++;
-                        }
-
-                        if(self.softUploadErrors[input] <= 5) {
-                            self.uploadDirectory(input, output);
-                        } else {
-                            self.hardUploadErrors.push(input);
-
-                            self.deployment.currentOperationNumber++;
-                            console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
-                            self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                            process.send({
-                                type: 'web-contents',
-                                message: 'app-uploading-progress',
-                                value: {
-                                    progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                                    operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                                }
-                            });
-
-                            self.deployment.uploadFile();
-                        }
-                    }, 500);
+                if (this.softUploadErrors[input] <= 5) {
+                    this.uploadFile(input, output);
                 } else {
-                    self.deployment.currentOperationNumber++;
-                    console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
-                    self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                    process.send({
-                        type: 'web-contents',
-                        message: 'app-uploading-progress',
-                        value: {
-                            progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                            operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                        }
-                    });
-
-                    self.deployment.uploadFile();
+                    this.hardUploadErrors.push(input);
+                    this.deployment.currentOperationNumber++;
+                    console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
+                    this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                    this.updateProgress('progressOfUploading');
+                    this.deployment.uploadFile();
                 }
-            }
-        );
+            }, 500);
+
+            return;
+        }
+
+        this.deployment.currentOperationNumber++;
+        console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
+        this.deployment.progressOfUploading += this.deployment.progressPerFile;
+        this.updateProgress('progressOfUploading');
+        this.deployment.uploadFile();
     }
 
-    removeFile(input) {
-        let self = this;
+    async uploadDirectory(input, output) {
+        try {
+            await this.connection.ensureDir(output);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
 
-        this.connection.delete(
-            input,
-            function (err) {
-                self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
-
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
+            setTimeout(async () => {
+                if(!this.softUploadErrors[input]) {
+                    this.softUploadErrors[input] = 1;
+                } else {
+                    this.softUploadErrors[input]++;
                 }
 
-                self.deployment.progressOfDeleting += self.deployment.progressPerFile;
+                if (this.softUploadErrors[input] <= 5) {
+                    await this.uploadDirectory(input, output);
+                } else {
+                    this.hardUploadErrors.push(input);
+                    this.deployment.currentOperationNumber++;
+                    console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
+                    this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                    this.updateProgress('progressOfUploading');
+                    this.deployment.uploadFile();
+                }
+            }, 500);
 
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 8 + Math.floor(self.deployment.progressOfDeleting),
-                        operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                    }
-                });
+            return;
+        }
 
-                self.deployment.removeFile();
+        try {
+            let rootPath = this.deployment.outputDir;
+
+            if (!rootPath) {
+                rootPath = '/';
             }
-        );
+
+            await this.connection.cd(rootPath);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] CD error ${err.message}`);
+        }
+
+        this.deployment.currentOperationNumber++;
+        console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
+        this.deployment.progressOfUploading += this.deployment.progressPerFile;
+        this.updateProgress('progressOfUploading');
+        this.deployment.uploadFile();
     }
 
-    removeDirectory(input) {
-        let self = this;
+    async removeFile(input) {
+        try {
+            await this.connection.remove(input);
+            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);            
+        }
 
-        this.connection.rmdir(
-            input,
-            true,
-            function (err) {
-                self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
+        this.deployment.currentOperationNumber++;
+        this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+        this.updateProgress('progressOfDeleting');
+        this.deployment.removeFile();
+    }
 
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] ERROR REMOVE DIR: ${input}`);
-                    console.log(`[${ new Date().toUTCString() }] ${err}`);
-                }
-                
-                self.deployment.progressOfDeleting += self.deployment.progressPerFile;
+    async removeDirectory(input) {
+        try {
+            await this.connection.removeDir(input);
+            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] ERROR REMOVE DIR: ${input}`);
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
+        }
 
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
-                    value: {
-                        progress: 8 + Math.floor(self.deployment.progressOfDeleting),
-                        operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                    }
-                });
+        this.deployment.currentOperationNumber++;
+        this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+        this.updateProgress('progressOfDeleting');
+        this.deployment.removeFile();
+    }
 
-                self.deployment.removeFile();
+    updateProgress (progressType) {
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 8 + Math.floor(this.deployment[progressType]),
+                operations: [this.deployment.currentOperationNumber, this.deployment.operationsCounter]
             }
-        );
+        });
     }
 
     async testConnection(app, deploymentConfig, siteName, uuid) {
-        let client = new ftpClient();
+        let client = new ftp.Client(15000);
+        client.ftp.verbose = true;
+        client.ftp.log = this.connectionDebugger;
+
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
         let account = slug(siteName);
@@ -456,83 +340,65 @@ class FTP {
                 user: deploymentConfig.username,
                 password: ftpPassword,
                 rejectUnauthorized: deploymentConfig.rejectUnauthorized
-            },
-            connTimeout: 10000,
-            pasvTimeout: 10000
+            }
         };
 
         let testFilePath = normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test'));
         fs.writeFileSync(testFilePath, 'It is a test file. You can remove it.');
-        client.connect(connectionParams);
 
-        client.on('ready', () => {
+        try {
+            await client.access(connectionParams);
             waitForTimeout = false;
+        } catch (err) {
+            client.close();
+            app.mainWindow.webContents.send('app-deploy-test-error', { message: err.message });
+        }
 
-            client.put(
-                normalizePath(testFilePath),
-                normalizePath(path.join(deploymentConfig.path, 'publii.test')),
-                (err) => {   
-                    if (err) {
-                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+        try {
+            await client.uploadFrom(normalizePath(testFilePath), normalizePath(path.join(deploymentConfig.path, 'publii.test')));
+        } catch (err) {
+            app.mainWindow.webContents.send('app-deploy-test-write-error');
 
-                        if (fs.existsSync(testFilePath)) {
-                            fs.unlinkSync(testFilePath);
-                        }
+            if (fs.existsSync(testFilePath)) {
+                fs.unlinkSync(testFilePath);
+            }
 
-                        client.destroy();
-                        return;   
-                    }
-                    
-                    client.delete(
-                        normalizePath(path.join(deploymentConfig.path, 'publii.test')),
-                        (err) => {
-                            if (err) {
-                                app.mainWindow.webContents.send('app-deploy-test-write-error');
-                                
-                                if (fs.existsSync(testFilePath)) {
-                                    fs.unlinkSync(testFilePath);
-                                }
+            client.close();
+            return; 
+        }
 
-                                client.destroy();
-                                return;
-                            }
+        try {
+            await client.remove(normalizePath(path.join(deploymentConfig.path, 'publii.test')));
+        } catch (err) {
+            app.mainWindow.webContents.send('app-deploy-test-write-error');
+            
+            if (fs.existsSync(testFilePath)) {
+                fs.unlinkSync(testFilePath);
+            }
 
-                            app.mainWindow.webContents.send('app-deploy-test-success');
-                            
-                            if (fs.existsSync(testFilePath)) {
-                                fs.unlinkSync(testFilePath);
-                            }
+            client.close();
+            return;
+        }
 
-                            client.destroy();
-                        }
-                    );
-                }
-            );
-        });
-
+        app.mainWindow.webContents.send('app-deploy-test-success');
+            
         if (fs.existsSync(testFilePath)) {
             fs.unlinkSync(testFilePath);
         }
 
-        client.on('error', function(err) {
-            if(waitForTimeout) {
-                waitForTimeout = false;
-                client.destroy();
-                app.mainWindow.webContents.send('app-deploy-test-error', { message: err.message });
-            }
-        });
+        client.close();
 
         setTimeout(function() {
-            if(waitForTimeout === true) {
-                client.destroy();
+            if (waitForTimeout === true) {
+                client.close();
                 app.mainWindow.webContents.send('app-deploy-test-error');
             }
         }, 15000);
     }
 
     connectionDebugger(message) {
-        if(message.indexOf("[connection] > 'PASS ") > -1) {
-            message = '[connection] > PASS ******************************';
+        if(message.indexOf("PASS ") > -1) {
+            message = '> PASS ******************************';
         }
 
         message = `[${ new Date().toUTCString() }] ${message}`;
@@ -540,4 +406,4 @@ class FTP {
     }
 }
 
-module.exports = FTP;
+module.exports = FTPAlt;
