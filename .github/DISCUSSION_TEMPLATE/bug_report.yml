@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-         Before reporting a bug, please explore the existing topics in our [GitHub Discussions](https://github.com/GetPublii/Publii/discussions). If you can't find a discussion that addresses your concern, feel free to initiate a new discussion.
+        Before reporting a bug, please explore the existing topics in our [GitHub Discussions](https://github.com/GetPublii/Publii/discussions). If you can't find a discussion that addresses your concern, feel free to initiate a new discussion.
         If you encounter issues with premium products purchased on the [Publii Marketplace](https://marketplace.getpublii.com/), please use the dedicated support platform provided on the marketplace for assistance.
         
         ---
