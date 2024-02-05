@@ -1,0 +1,60 @@
+name: "Bug report"
+description: "Thank you for reporting a bug!"
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+         Before reporting a bug, please explore the existing topics in our [GitHub Discussions](https://github.com/GetPublii/Publii/discussions). If you can't find a discussion that addresses your concern, feel free to initiate a new discussion.
+        If you encounter issues with premium products purchased on the [Publii Marketplace](https://marketplace.getpublii.com/), please use the dedicated support platform provided on the marketplace for assistance.
+        
+        ---
+        
+        Thank you for reporting a bug. We need some information to assist us in promptly investigating and resolving the issue.
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: "Which operating system do you use to run the Publii app? Please provide the version as well."
+      placeholder: "macOS Monterey 12.2"
+    validations:
+      required: true  
+  - type: input
+    id: publii
+    attributes:
+      label: Publii version
+      description: "Which Publii version do you use?"
+      placeholder: "0.38.3 (build 14239)"
+    validations:
+      required: true
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      description: "What does the problem relate to?"
+      options:
+        - Application
+        - Free theme
+        - Free plugin
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Which steps do we need to take to reproduce this error?
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: If applicable, provide relevant log output that can be generated with the Publii "Log Viewer" tool.
+      render: shell
+
