@@ -55,7 +55,7 @@ function returnSrcSetAttribute (url, group) {
     }
 
     if(!dimensions) {
-        return false;
+        return;
     }
 
     let srcset = [];

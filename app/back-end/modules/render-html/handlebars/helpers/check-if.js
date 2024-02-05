@@ -13,7 +13,7 @@
  */
 function checkIf(v1, operator, v2, options) {
     if(v1 === undefined || v2 === undefined) {
-        return false;
+        return;
     }
 
     switch (operator) {
@@ -53,7 +53,7 @@ function checkIf(v1, operator, v2, options) {
             return (v1.indexOf(v2) === -1) ? options.fn(this) : options.inverse(this);
     }
 
-    return false;
+    return;
 }
 
 module.exports = checkIf;

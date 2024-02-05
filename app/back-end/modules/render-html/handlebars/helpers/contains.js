@@ -7,7 +7,7 @@
  */
 function contains (needle, haystack, options) {
     if (needle === undefined || haystack === undefined) {
-        return false;
+        return;
     }
 
     if (typeof haystack === 'object' && haystack.string) {
