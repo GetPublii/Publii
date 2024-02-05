@@ -1,6 +1,5 @@
-name: "Bug report"
-description: Thank you for reporting a bug!
-title: "[Bug]: "
+title: "[Bug report] "
+labels: ["Thank you for reporting a bug!"]
 body:
   - type: markdown
     attributes:
