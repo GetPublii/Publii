@@ -1666,6 +1666,22 @@
                         </field>
 
                         <field
+                            v-if="advanced.feed.enableRss"
+                            id="feed-updated-date-type"
+                            :label="$t('settings.feedUpdatedDateType')">
+                            <dropdown
+                                slot="field"
+                                id="feed-updated-date-type"
+                                key="feed-updated-date-type"
+                                v-model="advanced.feed.updatedDateType"
+                                :items="{ 
+                                    'createdAt': $t('settings.postCreationDate'), 
+                                    'modifiedAt': $t('settings.postModificationDate') 
+                                }">
+                            </dropdown>
+                        </field>
+
+                        <field
                             id="feed-show-only-featured"
                             :label="$t('settings.showOnlyFeaturedPosts')">
                             <switcher

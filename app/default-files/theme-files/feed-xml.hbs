@@ -28,7 +28,12 @@
             <category term="{{name}}"/>
         {{/each}}
 
+        {{#checkIf ../updatedDateType "==" "createdAt"}}
+        <updated>{{date createdAt "YYYY-MM-DDTHH:mm:ssZ"}}</updated>
+        {{/checkIf}}
+        {{#checkIf ../updatedDateType "==" "modifiedAt"}}
         <updated>{{date modifiedAt "YYYY-MM-DDTHH:mm:ssZ"}}</updated>
+        {{/checkIf}}
         {{#if excerpt}}
             <summary>
                 <![CDATA[

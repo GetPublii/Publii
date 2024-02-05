@@ -94,6 +94,7 @@ class RendererContextFeed extends RendererContext {
             siteAuthor: siteOwnerData,
             siteDomain: this.siteConfig.domain,
             siteLogo: logoUrl,
+            updatedDateType: this.siteConfig.advanced.feed.updatedDateType,
             siteLastUpdate: this.getLastUpdateDate(),
             posts: this.posts
         };

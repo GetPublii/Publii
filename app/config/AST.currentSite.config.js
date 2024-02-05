@@ -81,6 +81,7 @@ const AstCurrentSiteConfig = {
             showFeaturedImage: 1,
             enableRss: 1,
             enableJson: 1,
+            updatedDateType: 'createdAt',
             showOnlyFeatured: 0,
             excludeFeatured: 0
         },
