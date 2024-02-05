@@ -7,6 +7,8 @@ const moment = require('moment');
  * {{date timestamp "format"}}
  * 
  * {{date timestamp "format" true}}
+ * 
+ * {{date timestamp "format" false "en"}}
  *
  * Format compatible with moment().js: http://momentjs.com/
  * 
@@ -16,11 +18,17 @@ const moment = require('moment');
  *
  */
 function dateHelper(rendererInstance, Handlebars) {
-    Handlebars.registerHelper('date', function (timestamp, dateFormat, returnRawText = false) {
+    Handlebars.registerHelper('date', function (timestamp, dateFormat, returnRawText = false, overrideDateLanguage = false) {
         // If date format is not a string - then it is empty or is an object with
         // options for the helper
         if(typeof dateFormat !== 'string') {
             dateFormat = 'MMM Do YYYY';
+        }
+
+        let originalMomentLanguage = moment.locale();
+
+        if (overrideDateLanguage) {
+            moment.locale(overrideDateLanguage);
         }
 
         if(!rendererInstance.siteConfig.language || (rendererInstance.siteConfig.domain !== '' && rendererInstance.siteConfig.domain !== 'en-us')) {
@@ -28,6 +36,10 @@ function dateHelper(rendererInstance, Handlebars) {
         }
 
         let output = moment(timestamp).format(dateFormat);
+
+        if (overrideDateLanguage) {
+            moment.locale(originalMomentLanguage);
+        }
 
         if (returnRawText) {
             return output;
