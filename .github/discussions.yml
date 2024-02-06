@@ -1,0 +1,7 @@
+categories:
+  - name: Moje linki
+    links:
+      - name: Wskazówki dotyczące społeczności
+        url: https://docs.github.com/en/discussions/managing-discussions-for-your-organization/community-guidelines-for-discussions
+      - name: Pomoc dla dyskusji
+        url: https://docs.github.com/en/discussions/getting-started-with-discussions/using-discussions
