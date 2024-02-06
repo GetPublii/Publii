@@ -41,7 +41,7 @@ If you want to build newest version of Publii or contribute to the Publii code, 
 ## Getting Started
 You can learn more about getting started in our [User documentation](https://getpublii.com/docs/) or [Developer documentation](https://getpublii.com/dev/).
 If you have any questions or suggestions, or just need some help with using Publii, you can
-visit our [Community Hub](https://getpublii.com/forum) or follow us on [Twitter](https://twitter.com/GetPublii)
+visit our [Community Hub](https://github.com/GetPublii/Publii/discussions) or follow us on [Twitter](https://twitter.com/GetPublii)
 
 ### Learn More
 
