@@ -62,6 +62,7 @@ class Renderer {
         this.contentStructure = {};
         this.commonData = {
             tags: [],
+            mainTags: [],
             authors: [],
             menus: [],
             featuredPosts: {
@@ -75,6 +76,7 @@ class Renderer {
             postTags: {},
             posts: {},
             tags: {},
+            mainTags: {},
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
@@ -1753,6 +1755,7 @@ class Renderer {
             postTags: {},
             posts: {},
             tags: {},
+            mainTags: {},
             tagsPostCounts: {},
             authors: {},
             authorsPostCounts: {},
@@ -1777,6 +1780,7 @@ class Renderer {
 
         this.commonData = {
             tags: globalContextGenerator.getAllTags(),
+            mainTags: globalContextGenerator.getAllMainTags(),
             authors: globalContextGenerator.getAuthors(),
             menus: menus,
             unassignedMenus: unassignedMenus,

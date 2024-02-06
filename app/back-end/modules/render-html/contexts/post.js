@@ -14,6 +14,7 @@ class RendererContextPost extends RendererContext {
         let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @postID AND key = '_core'`);
         this.metaData = metaDataQuery.get({ postID: this.postID});
         this.allTags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
+        this.mainTags = this.renderer.commonData.mainTags.filter(maintag => maintag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -407,6 +408,7 @@ class RendererContextPost extends RendererContext {
             hiddenPosts: this.hiddenPosts,
             relatedPosts: this.relatedPosts,
             tags: this.allTags,
+            mainTags: this.mainTags,
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,

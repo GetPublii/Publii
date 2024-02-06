@@ -10,13 +10,14 @@ class TagItem {
      * @param tagData
      * @param rendererInstance
      */
-    constructor(tag, rendererInstance) {
+    constructor(tag, rendererInstance, mainTagIDs = []) {
         this.tag = tag;
         this.tagID = parseInt(tag.id, 10);
         this.renderer = rendererInstance;
         this.db = this.renderer.db;
         this.themeConfig = this.renderer.themeConfig;
         this.tagData = {};
+        this.mainTagIDs = mainTagIDs;
 
         this.prepareData();
         this.storeData();
@@ -61,6 +62,10 @@ class TagItem {
 
         // Store tag data without references
         this.renderer.cachedItems.tags[this.tagID] = JSON.parse(JSON.stringify(this.tagData));
+
+        if (this.mainTagIDs.indexOf(this.tagID) > -1) {
+            this.renderer.cachedItems.mainTags[this.tagID] = JSON.parse(JSON.stringify(this.tagData));
+        }
     }
 
     /**
