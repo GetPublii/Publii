@@ -9,12 +9,12 @@ describe('Handlebars - checkIf block helper', function() {
     };
 
     it('should return false for too few arguments', function() {
-        assert.equal(false, checkIf('a'));
-        assert.equal(false, checkIf('a', '=='));
+        assert.equal(undefined, checkIf('a'));
+        assert.equal(undefined, checkIf('a', '=='));
     });
 
     it('should return false for non-existing operator', function() {
-        assert.equal(false, checkIf('a', 'LOL', 'b'));
+        assert.equal(undefined, checkIf('a', 'LOL', 'b'));
     });
 
     it('should return proper value for the `==` operator', function() {
@@ -146,16 +146,24 @@ describe('Handlebars - checkIf block helper', function() {
     });
 
     it('should return proper values for the `contains` operator', function() {
-        assert.equal(false, checkIf([10], 'contains', 11, optionsParam));
-        assert.equal(false, checkIf([10, 11], 'contains', 12, optionsParam));
-        assert.equal(true, checkIf([10, 11], 'contains', 11, optionsParam));
-        assert.equal(true, checkIf([10, 11, 12], 'contains', 12, optionsParam));
+        assert.equal(false, checkIf('10', 'contains', 11, optionsParam));
+        assert.equal(false, checkIf('10,11', 'contains', 12, optionsParam));
+        assert.equal(true, checkIf('10,11', 'contains', 11, optionsParam));
+        assert.equal(true, checkIf('10,11,12', 'contains', 12, optionsParam));
+        assert.equal(false, checkIf('10', 'contains', '11', optionsParam));
+        assert.equal(false, checkIf('10,11', 'contains', '12', optionsParam));
+        assert.equal(true, checkIf('10,11', 'contains', '11', optionsParam));
+        assert.equal(true, checkIf('10,11,12', 'contains', '12', optionsParam));
     });
 
     it('should return proper values for the `notContains` operator', function() {
-        assert.equal(true, checkIf([10], 'notContains', 11, optionsParam));
-        assert.equal(true, checkIf([10, 11], 'notContains', 12, optionsParam));
-        assert.equal(false, checkIf([10, 11], 'notContains', 11, optionsParam));
-        assert.equal(false, checkIf([10, 11, 12], 'notContains', 12, optionsParam));
+        assert.equal(true, checkIf('10', 'notContains', 11, optionsParam));
+        assert.equal(true, checkIf('10,11', 'notContains', 12, optionsParam));
+        assert.equal(false, checkIf('10,11', 'notContains', 11, optionsParam));
+        assert.equal(false, checkIf('10,11,12', 'notContains', 12, optionsParam));
+        assert.equal(true, checkIf('10', 'notContains', '11', optionsParam));
+        assert.equal(true, checkIf('10,11', 'notContains', '12', optionsParam));
+        assert.equal(false, checkIf('10,11', 'notContains', '11', optionsParam));
+        assert.equal(false, checkIf('10,11,12', 'notContains', '12', optionsParam));
     });
 });
