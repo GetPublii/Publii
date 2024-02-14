@@ -4,27 +4,24 @@
  * @param collection
  * @param field
  * @param direction
+ * @param langForLocaleCompare
  */
 
-function orderby (collection, field, direction) {
+function orderby (collection, field, direction, langForLocaleCompare = false) {
     collection.sort((itemA, itemB) => {
-        if(typeof itemA[field] === 'string') {
+        if (typeof itemA[field] === 'string') {
+            if (langForLocaleCompare) {
+                if (direction === 'ASC') {
+                    return itemA[field].localeCompare(itemB[field], langForLocaleCompare);
+                } else {
+                    return -1 * itemA[field].localeCompare(itemB[field], langForLocaleCompare);
+                }
+            }
+
             if (direction === 'ASC') {
-                if(itemA[field] < itemB[field]) {
-                    return -1;
-                } else if(itemA[field] === itemB[field]) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+                return itemA[field].localeCompare(itemB[field]);
             } else {
-                if(itemA[field] > itemB[field]) {
-                    return -1;
-                } else if(itemA[field] === itemB[field]) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+                return -1 * itemA[field].localeCompare(itemB[field]);
             }
         } else {
             if (direction === 'ASC') {
