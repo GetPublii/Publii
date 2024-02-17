@@ -108,6 +108,11 @@ class WxrParser {
         let categories = this.parsedContent.rss.channel['wp:category'];
         let tags = this.parsedContent.rss.channel['wp:tag'];
         let items = this.parsedContent.rss.channel['item'];
+
+        if (!Array.isArray(items)) {
+            items = [items];
+        }
+
         let postTypes = this.getPostTypes(items);
 
         let stats = {
