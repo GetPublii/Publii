@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const ipcMain = require('electron').ipcMain;
 const Deployment = require('../modules/deploy/deployment.js');
 const childProcess = require('child_process');
+const stripTags = require('striptags');
 
 class DeployEvents {
     constructor(appInstance) {
@@ -123,14 +124,14 @@ class DeployEvents {
                     event.sender.send('app-deploy-render-error', {
                         message: [{
                             message: errorTitle,
-                            desc: errorDesc
+                            desc: stripTags(errorDesc)
                         }]
                     });
                 }
             } else {
                 event.sender.send(data.type, {
                     progress: data.progress,
-                    message: data.message
+                    message: stripTags((data.message).toString())
                 });
             }
         });

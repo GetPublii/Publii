@@ -6,6 +6,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const { Storage } = require('@google-cloud/storage');
 const normalizePath = require('normalize-path');
+const stripTags = require('striptags');
 
 class GoogleCloud {
     constructor(deploymentInstance = false) {
@@ -296,7 +297,7 @@ class GoogleCloud {
         }).catch(err => {
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: err.message
+                message: stripTags((err.message).toString())
             });
         });
 

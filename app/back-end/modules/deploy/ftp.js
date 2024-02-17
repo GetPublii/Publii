@@ -8,6 +8,7 @@ const ftpClient = require('./../custom-changes/ftp');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const normalizePath = require('normalize-path');
+const stripTags = require('striptags');
 
 class FTP {
     constructor(deploymentInstance = false) {
@@ -116,7 +117,7 @@ class FTP {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: err.message
+                        additionalMessage: stripTags((err.message).toString())
                     }
                 });
 
@@ -518,7 +519,9 @@ class FTP {
             if(waitForTimeout) {
                 waitForTimeout = false;
                 client.destroy();
-                app.mainWindow.webContents.send('app-deploy-test-error', { message: err.message });
+                app.mainWindow.webContents.send('app-deploy-test-error', { 
+                    message: stripTags((err.message).toString())
+                });
             }
         });
 

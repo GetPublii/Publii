@@ -7,6 +7,7 @@ const gitClient = require('isomorphic-git')
 const http = require('isomorphic-git/http/node')
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
+const stripTags = require('striptags');
 
 class Git {
     constructor(deploymentInstance = false) {
@@ -114,11 +115,11 @@ class Git {
 
             if (e.data && e.data.response) {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: e.data.response
+                    message: stripTags((e.data.response).toString())
                 });
             } else {
                 app.mainWindow.webContents.send('app-deploy-test-error', {
-                    message: e
+                    message: stripTags((e).toString())
                 });
             }
         }
@@ -361,7 +362,7 @@ class Git {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'Critical error: ' + err
+                    additionalMessage: 'Critical error: ' + stripTags((err).toString())
                 }
             });
 

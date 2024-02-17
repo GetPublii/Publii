@@ -8,6 +8,7 @@ const ftp = require('basic-ftp');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const normalizePath = require('normalize-path');
+const stripTags = require('striptags');
 
 class FTPAlt {
     constructor(deploymentInstance = false) {
@@ -351,7 +352,9 @@ class FTPAlt {
             waitForTimeout = false;
         } catch (err) {
             client.close();
-            app.mainWindow.webContents.send('app-deploy-test-error', { message: err.message });
+            app.mainWindow.webContents.send('app-deploy-test-error', { 
+                message: stripTags((err.message).toString())
+            });
         }
 
         try {
