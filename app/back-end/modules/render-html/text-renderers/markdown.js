@@ -30,6 +30,15 @@ class MarkdownToHtml {
         
             return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions} />${title}</figure>`;
         };
+
+        // Solve issues with rendering <figure> elements inside paragraphs
+        overridedRenderer.paragraph = function(text) {
+            if (text.startsWith('<figure') && text.endsWith('</figure>')) {
+                return text;
+            } else {
+                return '<p>' + text + '</p>';
+            }
+        };
         
         marked.setOptions({
             smartLists: true,
