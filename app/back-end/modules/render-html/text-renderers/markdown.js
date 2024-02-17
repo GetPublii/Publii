@@ -21,8 +21,14 @@ class MarkdownToHtml {
                 href = href.substring(0, href.length - size[0].length);
                 dimensions = ` width="${size[1]}" height="${size[2]}"`;
             }
+
+            if (typeof title === 'string' && title.trim() !== '') {
+                title = '<figcaption>' + title + '</figcaption>';
+            } else {
+                title = '';
+            }
         
-            return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions} /></figure>`;
+            return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions} />${title}</figure>`;
         };
         
         marked.setOptions({
