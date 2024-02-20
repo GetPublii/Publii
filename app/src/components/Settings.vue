@@ -848,7 +848,12 @@
                             :labelFullWidth="true" />
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="siteUsesRelativeUrls"
+                            :label="$t('settings.sitemapRelativeUrlsInfo')"
+                            :labelFullWidth="true" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && !siteUsesRelativeUrls"
                             id="sitemap-enabled"
                             :label="$t('settings.createXMLSitemap')">
                             <switcher
@@ -864,7 +869,7 @@
 
                         <field
                             class="multiple-checkboxes field-with-switcher"
-                            v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
+                            v-if="!advanced.noIndexThisPage && !siteUsesRelativeUrls && advanced.sitemapEnabled"
                             :label="$t('settings.content')">
                             <label
                                 v-if="advanced.sitemapEnabled"
@@ -876,7 +881,7 @@
                             </label>
 
                             <label
-                                v-if="advanced.sitemapEnabled"
+                                v-if="advanced.sitemapEnabled && !siteUsesRelativeUrls"
                                 slot="field">
                                 <switcher 
                                     v-model="advanced.sitemapAddAuthors"
@@ -885,14 +890,14 @@
                             </label>
 
                             <label
-                                v-if="advanced.sitemapEnabled"
+                                v-if="advanced.sitemapEnabled && !siteUsesRelativeUrls"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddHomepage" />
                                 {{ $t('settings.homepagePagination') }}
                             </label>
 
                             <label
-                                v-if="advanced.sitemapEnabled"
+                                v-if="advanced.sitemapEnabled && !siteUsesRelativeUrls"
                                 slot="field">
                                 <switcher v-model="advanced.sitemapAddExternalImages" />
                                 {{ $t('settings.externalImages') }}
@@ -900,7 +905,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.sitemapEnabled"
+                            v-if="!advanced.noIndexThisPage && !siteUsesRelativeUrls && advanced.sitemapEnabled"
                             :label="$t('settings.excludedFiles')">
                             <text-area
                                 slot="field"
@@ -1608,6 +1613,12 @@
 
                     <div slot="tab-7">
                         <field
+                            v-if="siteUsesRelativeUrls"
+                            :label="$t('settings.feedsRelativeUrlsInfo')"
+                            :labelFullWidth="true" />
+
+                        <field
+                            v-if="!siteUsesRelativeUrls"
                             id="feed-enable-rss"
                             :label="$t('settings.enableRSSFeed')">
                             <switcher
@@ -1617,6 +1628,7 @@
                         </field>
 
                         <field
+                            v-if="!siteUsesRelativeUrls"
                             id="feed-enable-json"
                             :label="$t('settings.enableJSONFeed')">
                             <switcher
@@ -1626,7 +1638,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
+                            v-if="!siteUsesRelativeUrls && (advanced.feed.enableRss || advanced.feed.enableJson)"
                             id="feed-title"
                             :label="$t('settings.feedTitle')">
                             <dropdown
@@ -1638,7 +1650,7 @@
                         </field>
 
                         <field
-                            v-if="(advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
+                            v-if="!siteUsesRelativeUrls && (advanced.feed.enableRss || advanced.feed.enableJson) && advanced.feed.title === 'customTitle'"
                             id="feed-title-value"
                             :label="$t('settings.customFeedTitle')">
                             <text-input
@@ -1650,7 +1662,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
+                            v-if="!siteUsesRelativeUrls && (advanced.feed.enableRss || advanced.feed.enableJson)"
                             id="feed-show-full-text"
                             :label="$t('settings.showFullText')">
                             <switcher
@@ -1666,7 +1678,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.enableRss"
+                            v-if="!siteUsesRelativeUrls && advanced.feed.enableRss"
                             id="feed-updated-date-type"
                             :label="$t('settings.feedUpdatedDateType')">
                             <dropdown
@@ -1682,6 +1694,7 @@
                         </field>
 
                         <field
+                            v-if="!siteUsesRelativeUrls"
                             id="feed-show-only-featured"
                             :label="$t('settings.showOnlyFeaturedPosts')">
                             <switcher
@@ -1691,7 +1704,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.feed.showOnlyFeatured"
+                            v-if="!siteUsesRelativeUrls && !advanced.feed.showOnlyFeatured"
                             id="feed-exclude-featured"
                             :label="$t('settings.excludeFeaturedPosts')">
                             <switcher
@@ -1701,7 +1714,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
+                            v-if="!siteUsesRelativeUrls && (advanced.feed.enableRss || advanced.feed.enableJson)"
                             id="feed-number-of-posts"
                             :label="$t('settings.numberOfPostsInFeed')">
                             <text-input
@@ -1715,7 +1728,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.feed.enableRss || advanced.feed.enableJson"
+                            v-if="!siteUsesRelativeUrls && (advanced.feed.enableRss || advanced.feed.enableJson)"
                             id="feed-show-featured-image"
                             :label="$t('settings.showFeaturedImage')">
                             <switcher
@@ -2097,7 +2110,9 @@ export default {
             return {
                 'titles': this.$t('settings.useOnlyTitles'),
                 'tags': this.$t('settings.useOnlyTags'),
-                'titles-and-tags': this.$t('settings.useTitlesAndTags')
+                'mainTags': this.$t('settings.useOnlyMainTags'),
+                'titles-and-tags': this.$t('settings.useTitlesAndTags'),
+                'titles-and-maintags': this.$t('settings.useTitlesAndMainTags'),
             };
         },
         siteHasTheme () {
@@ -2117,6 +2132,9 @@ export default {
             }
 
             return true;
+        },
+        siteUsesRelativeUrls () {
+            return !!this.$store.state.currentSite.config.deployment.relativeUrls;
         },
         websiteName () {
             return this.$store.state.currentSite.config.name;
