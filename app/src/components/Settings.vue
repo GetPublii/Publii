@@ -1437,6 +1437,78 @@
                             v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
                             type="ultra thin"
                             :is-line="true"
+                            :label="$t('settings.gConsentMode.title')"
+                            :note="$t('settings.gConsentMode.description')" />
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            id="g-consent-mode-enabled"
+                            :label="$t('settings.gConsentModeEnabled')">
+                            <switcher
+                                id="g-consent-mode-enabled"
+                                v-model="advanced.gdpr.gConsentModeEnabled"
+                                slot="field" />
+                        </field>
+
+                        <field
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.gConsentModeEnabled"
+                            id="g-consent-mode-default-state"
+                            :label="$t('settings.gConsentModeDefaultState')">
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-1"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.ad_storage"
+                                label="ad_storage"
+                                slot="field" />
+                            
+                            <switcher 
+                            key="g-consent-mode-default-state-switcher-2"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.ad_personalization"
+                                label="ad_personalization"
+                                slot="field" />
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-3"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.ad_user_data"
+                                label="ad_user_data"
+                                slot="field" />
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-4"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.analytics_storage"
+                                label="analytics_storage"
+                                slot="field" />
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-5"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.personalization_storage"
+                                label="personalization_storage"
+                                slot="field" />
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-6"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.functionality_storage"
+                                label="functionality_storage"
+                                slot="field" />
+
+                            <switcher 
+                                key="g-consent-mode-default-state-switcher-7"
+                                v-model="advanced.gdpr.gConsentModeDefaultState.security_storage"
+                                label="security_storage"
+                                slot="field" />
+                        </field>
+
+                        <g-consent-mode-groups
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration && advanced.gdpr.gConsentModeEnabled"
+                            id="g-consent-mode-groups"
+                            v-model="advanced.gdpr.gConsentModeGroups"
+                            :cookieGroups="advanced.gdpr.groups"
+                            slot="field" />
+
+                        <separator
+                            v-if="advanced.gdpr.enabled && advanced.gdpr.allowAdvancedConfiguration"
+                            type="ultra thin"
+                            :is-line="true"
                             :label="$t('settings.embedConsents')"
                             :note="$t('settings.embedConsentsDescription')" />
 
@@ -1943,6 +2015,7 @@
 import Utils from './../helpers/utils.js';
 import AvailableLanguagesList from './../config/langs.js';
 import EmbedConsentsGroups from './basic-elements/EmbedConsentsGroups';
+import GConsentModeGroups from './basic-elements/GConsentModeGroups';
 import GdprGroups from './basic-elements/GdprGroups';
 import ThemesDropdown from './basic-elements/ThemesDropdown';
 
@@ -1950,6 +2023,7 @@ export default {
     name: 'site-settings',
     components: {
         'embed-consents-groups': EmbedConsentsGroups,
+        'g-consent-mode-groups': GConsentModeGroups,
         'gdpr-groups': GdprGroups,
         'themes-dropdown': ThemesDropdown
     },
@@ -2672,5 +2746,10 @@ export default {
 }
 .msg-bm {
    margin-bottom:3rem;
+}
+
+label[for="g-consent-mode-default-state"] + div > .has-label {
+    display: block;
+    margin: 0 0 10px 0;
 }
 </style>

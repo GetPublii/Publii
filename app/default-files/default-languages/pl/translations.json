@@ -679,6 +679,14 @@
         "filesLocation": "Lokalizacja plików",
         "footerText": "Tekst w stopce",
         "frontpage": "Pierwsza strona",
+        "gConsentModeDefaultState": "Stan domyślny",
+        "gConsentModeEnabled": "Włącz Google Consent Mode",
+        "gConsentMode": {
+            "addGroup": "Dodaj ustawienia grupy cookies",
+            "cookieGroup": "Grupa cookies",
+            "description": "Ta sekcja pozwala na określenie domyślnego stanu Google Consent Mode oraz określenie sygnałów, które będa wysyłane w momencie gdy konkretna grupa plików cookies zostanie zaakceptowana przez użytkownika. Użyj tych opcji jeśli potrzebujesz kompatybilności z Google Consent Mode. Jeśli nie używasz Google Analytics, Google Ads lub podobnych narzędzi, najprawdopodobniej nie potrzebujesz włączać tych funkcji.",
+            "title": "Google Consent Mode"
+        },
         "GDPR": "Ustawienia prywatności",
         "gdprBannerPosition": {
             "centered": "Wycentrowany",

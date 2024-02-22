@@ -679,6 +679,14 @@
         "filesLocation": "Files location",
         "footerText": "Footer text",
         "frontpage": "Frontpage",
+        "gConsentModeDefaultState": "Default state",
+        "gConsentModeEnabled": "Enable Google Consent Mode",
+        "gConsentMode": {
+            "addGroup": "Add cookies group settings",
+            "cookieGroup": "Cookies group",
+            "description": "This section allows you to specify the default state of the Google Consent Mode and specify signals which will be sent when specific cookies group will be accepted by user. Use these options if you need compatibility with Google Consent Mode. If you are not using Google Analytics, Google Ads or similar tools, most probably you do not need to enable this feature.",
+            "title": "Google Consent Mode"
+        },
         "GDPR": "Privacy Settings",
         "gdprBannerPosition": {
             "centered": "Centered",

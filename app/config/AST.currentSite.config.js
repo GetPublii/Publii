@@ -117,6 +117,17 @@ const AstCurrentSiteConfig = {
                 }
             ],
             embedConsents: [],
+            gConsentModeEnabled: false,
+            gConsentModeDefaultState: {
+                ad_storage: false,
+                ad_personalization: false,
+                ad_user_data: false,
+                analytics_storage: false,
+                personalization_storage: false,
+                functionality_storage: false,
+                security_storage: false
+            },
+            gConsentModeGroups: [],
             saveButtonLabel: 'Accept all',
             behaviour: 'badge',
             badgeLabel: 'Cookie Policy',
