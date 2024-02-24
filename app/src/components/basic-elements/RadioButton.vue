@@ -45,7 +45,7 @@ export default {
             default: '',
             type: String
         },
-        customCssClass: {
+        customCssClasses: {
             default: '',
             type: String
         }
