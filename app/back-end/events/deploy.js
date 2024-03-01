@@ -157,7 +157,8 @@ class DeployEvents {
             type: 'dependencies',
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
-            siteConfig: deploymentConfig
+            siteConfig: deploymentConfig,
+            useFtpAlt: this.app.appConfig.experimentalFeatureAppAutoBeautifySourceCode
         });
 
         this.deploymentProcess.on('message', function(data) {
@@ -176,7 +177,12 @@ class DeployEvents {
     }
 
     async testConnection(deploymentConfig, siteName, uuid) {
-        let deployment = new Deployment(this.app.app.getPath('logs'), this.app.sitesDir, deploymentConfig);
+        let deployment = new Deployment(
+            this.app.app.getPath('logs'), 
+            this.app.sitesDir, 
+            deploymentConfig, 
+            this.app.appConfig.experimentalFeatureAppFtpAlt
+        );
         await deployment.testConnection(this.app, deploymentConfig, siteName, uuid);
     }
 }

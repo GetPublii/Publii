@@ -25,6 +25,7 @@ const AstAppConfig = {
     editorFontSize: 18,
     editorFontFamily: 'sans-serif',
     experimentalFeatureAppAutoBeautifySourceCode: false,
+    experimentalFeatureAppFtpAlt: false,
     uiZoomLevel: 1.0
 };
 

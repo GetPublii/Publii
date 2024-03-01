@@ -351,6 +351,20 @@
                         {{ $t('settings.experimentalFeatureAppAutoBeautifySourceCodeDesc') }}
                     </small>
                 </field>
+                <field
+                    id="experimental-feature-app-alt-ftp"
+                    :label="$t('settings.experimentalFeatureAppFtpAlt')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-alt-ftp"
+                        v-model="experimentalFeatureAppFtpAlt" />
+                    <small 
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.experimentalFeatureAppFtpAltDesc') }}
+                    </small>
+                </field>
             </fields-group>
 
             <p-footer>
@@ -406,6 +420,7 @@ export default {
             editorFontSize: 18,
             editorFontFamily: 'serif',
             experimentalFeatureAppAutoBeautifySourceCode: false,
+            experimentalFeatureAppFtpAlt: false,
             changeSitesLocationWithoutCopying: false,
             sitesLocationExists: false,
             backupsLocationExists: false,
@@ -533,6 +548,7 @@ export default {
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
+        this.experimentalFeatureAppFtpAlt = this.$store.state.app.config.experimentalFeatureAppFtpAlt;
         this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
         this.theme = this.getAppTheme();
 
@@ -600,6 +616,7 @@ export default {
                 editorFontFamily: this.editorFontFamily,
                 editorFontSize: this.editorFontSize,
                 experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
+                experimentalFeatureAppFtpAlt: this.experimentalFeatureAppFtpAlt,
                 changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };
 

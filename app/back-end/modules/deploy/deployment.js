@@ -38,11 +38,12 @@ class Deployment {
      * @param sitesDir
      * @param siteConfig
      */
-    constructor(appDir, sitesDir, siteConfig) {
+    constructor(appDir, sitesDir, siteConfig, useAltFtp) {
         this.appDir = appDir;
         this.siteConfig = siteConfig;
         this.siteName = this.siteConfig.name;
         this.sitesDir = sitesDir;
+        this.useAltFtp = useAltFtp;
         this.progressOfDeleting = 0;
         this.progressOfUploading = 0;
         this.client = false;
@@ -71,7 +72,13 @@ class Deployment {
             case 'git':             connection = new Git();                         break;
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
-            default:                connection = new FTPAlt();                      break;
+            default:   
+                if (this.useAltFtp) {             
+                    connection = new FTPAlt();    
+                } else {
+                    connection = new FTP();
+                }               
+                break;
         }
 
         if (connection) {
@@ -93,7 +100,13 @@ class Deployment {
             case 'netlify':         this.client = new Netlify(this);            break;
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
-            default:                this.client = new FTPAlt(this);             break;
+            default:                
+                if (this.useAltFtp) {             
+                    this.client = new FTPAlt(this); 
+                } else {
+                    this.client = new FTP(this);
+                }                
+                break;
         }
 
         await this.client.initConnection();

@@ -6,7 +6,8 @@ process.on('message', function(msg){
         let appDir = msg.appDir;
         let sitesDir = msg.sitesDir;
         let siteConfig = msg.siteConfig;
-        deploymentInstance = new Deployment(appDir, sitesDir, siteConfig);
+        let useFtpAlt = msg.useFtpAlt;
+        deploymentInstance = new Deployment(appDir, sitesDir, siteConfig, useFtpAlt);
         deploymentInstance.initSession().then(() => true);
     }
 

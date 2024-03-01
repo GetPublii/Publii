@@ -663,6 +663,8 @@
         "experimentalFeaturesWarning": "We're always looking for ways to improve our app. This section contains experimental features designed to extend Publii's functionality. Since they're experimental we can't guarantee they will work properly; activate them at your own risk.",
         "experimentalFeatureAppAutoBeautifySourceCode": "Auto-beautify source code in WYSIWYG editor",
         "experimentalFeatureAppAutoBeautifySourceCodeDesc": "This function enable automatic beautify for source code in the WYSIWYG editor",
+        "experimentalFeatureAppFtpAlt": "Use alternative FTP library for deployment",
+        "experimentalFeatureAppFtpAltDesc": "Try this, especially if your hosting uses IPv6 for server address",
         "externalImages": "External images",
         "externalPage": "External page",
         "facebook": "Facebook",
