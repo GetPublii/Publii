@@ -134,8 +134,23 @@ class Gdpr {
 
     static popupJsOutput (configuration) {
         let scriptCode = fs.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/gdpr.js', 'utf8');
+        let consentModeScripts = '';
+
+        if (configuration.gConsentModeEnabled) {
+            consentModeScripts = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+
+                window.publiiCBGCM = {
+                    defaultState: ${JSON.stringify(configuration.gConsentModeDefaultState)},
+                    groups: ${JSON.stringify(configuration.gConsentModeGroups)}
+                };
+            `;
+        }
+
         let output = `
         <script>
+            ${consentModeScripts}
             ${scriptCode}
         </script>`;
 
