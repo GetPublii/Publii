@@ -69,7 +69,7 @@
     "sharp": "0.33.1",
     "slug": "0.9.4",
     "sqlstring": "2.3.3",
-    "ssh2-sftp-client": "9.1.0",
+    "ssh2-sftp-client": "10.0.3",
     "striptags": "3.2.0",
     "tar-fs": "3.0.4",
     "transliteration": "2.3.5",
@@ -84,7 +84,7 @@
   },
   "devDependencies": {
     "devtron": "1.4.0",
-    "electron": "29.1.0",
-    "node-abi": "3.45.0"
+    "electron": "28.2.5",
+    "node-abi": "3.56.0"
   }
 }
