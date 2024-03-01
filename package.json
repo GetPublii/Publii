@@ -42,7 +42,7 @@
   "devDependencies": {
     "cross-env": "7.0.3",
     "css-loader": "6.8.1",
-    "electron": "26.6.3",
+    "electron": "29.1.0",
     "electron-builder": "24.6.4",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
@@ -59,9 +59,9 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "26.6.3",
+    "electronVersion": "29.1.0",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018-2023 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2024 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",
