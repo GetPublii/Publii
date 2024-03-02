@@ -190,7 +190,9 @@ export default {
     &-switchers {
         display: grid;
         grid-template-columns: repeat(3, auto);
-        gap: 10px;
+        gap: .8rem 1rem;
+        margin: 1.5rem 0 2rem .5rem;
+        width: calc(100% - 51px);
     }
 
     &-btn {
@@ -253,17 +255,18 @@ export default {
         width: calc(100% - 56px);
     }
 
-    div:last-child {
-        margin-bottom: 3rem;
-        margin-top: 1rem;
-        width: calc(100% - 56px);
-    }
-
     .has-label {
         align-items: center;
         display: flex;
         font-size: 1.4rem;
+        letter-spacing: -.01em;
         margin: 0;
+
+        ::v-deep .switcher {
+            top: 0;
+            transform: scale(.88);
+        }
     }
+    
 }
 </style>
