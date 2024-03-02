@@ -29,12 +29,14 @@
  * * excluded - which posts should be excluded
  * * excluded_status - which posts statuses should be excluded
  * * offset - how many posts to skip
- * * orderby - order field
+ * * orderby - order field or customField
  * * ordering - order direction - asc, desc, random
+ * * customField - use when orderby=customField - name of the field to be used for ordering
+ * * orderbyCompareLanguage - if orderby=customField, you can specify in which language ordering will be done.
  * * tag_as - specify if we select by tag id or slug
  * * operator - (OR or AND as value) - defines how the tags should be selected (post must have all tags at once time - AND, or one of them - OR)
  * 
- * {{#getPostsByTags "count=5&allowed=hidden,featured&tag_as=id&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=asc&operator=AND"}}
+ * {{#getPostsByTags "count=5&allowed=hidden,featured&tag_as=id&tags=1,2,3&excluded=1,2&offset=10&orderby=modified_at&ordering=desc&operator=AND"}}
  *    <h2>{{ title }}</h2>
  *    <div>{{{ excerpt }}}</div>
  * {{/getPostsByTags}}
@@ -53,6 +55,8 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         let excludedStatus = '';
         let orderby = false;
         let ordering = 'desc';
+        let customField = false;
+        let compareLanguage = 'en';
         let tagAs = 'slug';
         let operator = 'OR';
 
@@ -101,6 +105,14 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
             if (queryStringData['ordering']) {
                 ordering = queryStringData['ordering'];
+            }
+
+            if (queryStringData['customField']) {
+                customField = queryStringData['customField'];
+            }
+
+            if (queryStringData['orderbyCompareLanguage']) {
+                compareLanguage = queryStringData['orderbyCompareLanguage'];
             }
 
             if (queryStringData['tag_as']) {
@@ -201,17 +213,43 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
 
         if (orderby && ordering && ordering !== 'random') {
             postsData.sort((itemA, itemB) => {
-                if(typeof itemA[orderby] === 'string') {
-                    if (ordering === 'asc') {
-                        return itemA[orderby].localeCompare(itemB[orderby]);
+                if (orderby === 'customField' && customField) {
+                    if (isNaN(itemA.postViewConfig[customField]) && isNaN(itemB.postViewConfig[customField])) {
+                        if (ordering === 'asc') {
+                            if (compareLanguage) {
+                                return itemA.postViewConfig[customField].localeCompare(itemB.postViewConfig[customField], compareLanguage);
+                            } else {
+                                return itemA.postViewConfig[customField].localeCompare(itemB.postViewConfig[customField]);
+                            }
+                        } else {
+                            if (compareLanguage) {
+                                return -(itemA.postViewConfig[customField].localeCompare(itemB.postViewConfig[customField], compareLanguage));
+                            } else {
+                                return -(itemA.postViewConfig[customField].localeCompare(itemB.postViewConfig[customField]));
+                            }
+                        }
                     } else {
-                        return -(itemA[orderby].localeCompare(itemB[orderby]));
+                        if (ordering === 'asc') {
+                            return parseInt(itemA.postViewConfig[customField], 10) - parseInt(itemB.postViewConfig[customField], 10);
+                        } else {
+                            return parseInt(itemB.postViewConfig[customField], 10) - parseInt(itemA.postViewConfig[customField], 10);
+                        }
                     }
-                } else {
-                    if (ordering === 'asc') {
-                        return itemA[orderby] - itemB[orderby];
+                }
+
+                if (orderby !== 'customField') {
+                    if(typeof itemA[orderby] === 'string') {
+                        if (ordering === 'asc') {
+                            return itemA[orderby].localeCompare(itemB[orderby]);
+                        } else {
+                            return -(itemA[orderby].localeCompare(itemB[orderby]));
+                        }
                     } else {
-                        return itemB[orderby] - itemA[orderby];
+                        if (ordering === 'asc') {
+                            return itemA[orderby] - itemB[orderby];
+                        } else {
+                            return itemB[orderby] - itemA[orderby];
+                        }
                     }
                 }
             });
