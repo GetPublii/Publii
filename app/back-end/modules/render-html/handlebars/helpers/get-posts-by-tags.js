@@ -56,7 +56,7 @@ function getPostsByTagsHelper (rendererInstance, Handlebars) {
         let orderby = false;
         let ordering = 'desc';
         let customField = false;
-        let compareLanguage = 'en';
+        let compareLanguage = false;
         let tagAs = 'slug';
         let operator = 'OR';
 
