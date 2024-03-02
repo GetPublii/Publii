@@ -2184,9 +2184,7 @@ export default {
             return {
                 'titles': this.$t('settings.useOnlyTitles'),
                 'tags': this.$t('settings.useOnlyTags'),
-                'mainTags': this.$t('settings.useOnlyMainTags'),
-                'titles-and-tags': this.$t('settings.useTitlesAndTags'),
-                'titles-and-maintags': this.$t('settings.useTitlesAndMainTags'),
+                'titles-and-tags': this.$t('settings.useTitlesAndTags')
             };
         },
         siteHasTheme () {
