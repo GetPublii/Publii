@@ -193,14 +193,13 @@ class RendererContextFeed extends RendererContext {
      *
      */
     getAuthor(dataType, id) {
-        let postSqlQuery;
         let authorID = id;
 
         if(dataType === 'post') {
             let result = this.db.prepare(`SELECT authors FROM posts WHERE id = @id LIMIT 1;`).get({ id: id });
             
-            if (result && result.id) {
-                authorID = result.id;
+            if (result && result.authors) {
+                authorID = parseInt(result.authors, 10);
             } else {
                 authorID = 1;
             }
