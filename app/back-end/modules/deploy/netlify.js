@@ -7,6 +7,7 @@ const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const NetlifyAPI = require('./libraries/netlify-api');
+const stripTags = require('striptags');
 
 class Netlify {
     constructor(deploymentInstance = false) {
@@ -112,7 +113,7 @@ class Netlify {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: JSON.parse(apiResponse.body).message
+                    additionalMessage: stripTags((JSON.parse(apiResponse.body).message).toString())
                 }
             });
         }
@@ -172,7 +173,7 @@ class Netlify {
         } catch (err) {
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: err.message
+                message: stripTags((err.message).toString())
             });
         }
 

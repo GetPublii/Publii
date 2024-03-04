@@ -6,7 +6,8 @@ process.on('message', function(msg){
         let appDir = msg.appDir;
         let sitesDir = msg.sitesDir;
         let siteConfig = msg.siteConfig;
-        deploymentInstance = new Deployment(appDir, sitesDir, siteConfig);
+        let useFtpAlt = msg.useFtpAlt;
+        deploymentInstance = new Deployment(appDir, sitesDir, siteConfig, useFtpAlt);
         deploymentInstance.initSession().then(() => true);
     }
 
@@ -22,7 +23,11 @@ process.on('message', function(msg){
             deploymentInstance.siteConfig.deployment.protocol === 'ftp' ||
             deploymentInstance.siteConfig.deployment.protocol === 'ftp+tls'
         ) {
-            deploymentInstance.client.connection.destroy();
+            if (deploymentInstance.client.connection.close) {
+                deploymentInstance.client.connection.close();
+            } else {
+                deploymentInstance.client.connection.destroy();
+            }
         }
 
         setTimeout(function() {

@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.44.4",
+  "version": "0.45.0",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -42,12 +42,12 @@
   "devDependencies": {
     "cross-env": "7.0.3",
     "css-loader": "6.8.1",
-    "electron": "26.6.3",
-    "electron-builder": "24.6.4",
+    "electron": "28.2.5",
+    "electron-builder": "24.12.0",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
     "mocha": "10.2.0",
-    "node-abi": "3.51.0",
+    "node-abi": "3.56.0",
     "node-loader": "2.0.0",
     "node-sass": "9.0.0",
     "sass-loader": "13.3.2",
@@ -59,9 +59,9 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "26.6.3",
+    "electronVersion": "28.2.5",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018-2023 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2024 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",
@@ -70,7 +70,8 @@
       "default-files/gdpr-assets/**/*",
       "default-files/vendor/**/*",
       "node_modules/sharp/**/*",
-      "node_modules/keytar/**/*"
+      "node_modules/keytar/**/*",
+      "node_modules/better-sqlite3/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
     "files": [

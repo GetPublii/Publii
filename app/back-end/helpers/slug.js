@@ -55,7 +55,10 @@ function createSlug(textToSlugify, filenameMode = false, saveLowerChars = false)
         ['ü', 'ue'], 
         ['Ü', 'UE'], 
         ['ß', 'ss'], 
-        ['ẞ', 'SS']
+        ['ẞ', 'SS'],
+        ['«', ''],
+        ['»', ''],
+        ['$', '']
     ] });
 
     if(!filenameMode) {

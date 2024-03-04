@@ -42,6 +42,7 @@ module.exports = {
     getPostsHelper: require('./get-posts.js'),
     getPostByTagsHelper: require('./get-post-by-tags.js'),
     getPostsByTagsHelper: require('./get-posts-by-tags.js'),
+    getPostsByCustomFieldsHelper: require('./get-posts-by-custom-field.js'),
     getTagHelper: require('./get-tag.js'),
     getTagsHelper: require('./get-tags.js'),
     concatenate: require('./concatenate.js'),

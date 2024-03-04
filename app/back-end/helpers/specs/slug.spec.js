@@ -52,4 +52,17 @@ describe('Slug creation', function() {
         assert.strictEqual('indexhtml', slug('index.html', false));
         assert.strictEqual('index.html', slug('index.html', true));
     });
+
+    it('should remove some special characters', function() {
+        assert.strictEqual('title-with-and-arrows', slug('Title with « and » arrows'));
+        assert.strictEqual('title-with-typoraphical-quotes-and-normal-quotes', slug('Title with „typoraphical quotes“ and "normal quotes"'));
+        assert.strictEqual('title-with-brackets-in-different-forms', slug('Title (with) [brackets] {in} ⟨different forms⟩'));
+        assert.strictEqual('title-with-different-types-of-dashes', slug('Title with different - types – of — dashes'));
+        assert.strictEqual('title-with-many-apostrophes-many-many', slug('Title with many \' apostrophes \‘ many \’ many'));
+        assert.strictEqual('title-with-dots-and-commas', slug('Title with dots . and commas,'));
+        assert.strictEqual('and-another-characters', slug('And another characters ; : ? !'));
+        assert.strictEqual('also-ellipsis', slug('Also ellipsis…'));
+        assert.strictEqual('and-slashes', slug('And slashes \/ \\'));
+        assert.strictEqual('and-other-chars', slug('And other chars * # $ @ ^ % ♥ ☆'));
+    });
 });

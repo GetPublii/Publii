@@ -7,6 +7,7 @@ const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const { Gitlab } = require('@gitbeaker/node');
+const stripTags = require('striptags');
 
 class GitlabPages {
     constructor (deploymentInstance = false) {
@@ -219,7 +220,7 @@ class GitlabPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: err.message
+                    additionalMessage: stripTags((err.message).toString())
                 }
             });
         });
@@ -472,7 +473,7 @@ class GitlabPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: err.message
+                    additionalMessage: stripTags((err.message).toString())
                 }
             });
         });

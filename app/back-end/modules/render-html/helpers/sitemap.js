@@ -56,6 +56,9 @@ class Sitemap {
      * Get post data
      */
     getPostData () {
+        let momentOriginalLocale = moment.locale();
+        moment.locale('en');
+
         let postDbData = this.db.prepare(`
             SELECT
                 posts.id,
@@ -181,6 +184,8 @@ class Sitemap {
                 };
             });
         }
+
+        moment.locale(momentOriginalLocale);
     }
 
     /**

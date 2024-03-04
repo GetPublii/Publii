@@ -14,6 +14,7 @@ const {
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
+const stripTags = require('striptags');
 
 class S3 {
     constructor(deploymentInstance = false) {
@@ -400,7 +401,7 @@ class S3 {
         } catch (err) {
             waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: err.message
+                message: stripTags((err.message).toString())
             });
 
             return;

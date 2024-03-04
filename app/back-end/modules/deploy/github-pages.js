@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const countFiles = require('count-files');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
+const stripTags = require('striptags');
 
 class GithubPages {
     constructor(deploymentInstance = false) {
@@ -158,7 +159,7 @@ class GithubPages {
                     type: 'web-contents',
                     message: 'app-connection-error',
                     value: {
-                        additionalMessage: 'E2 ' + err
+                        additionalMessage: 'E2 ' + stripTags((err).toString())
                     }
                 });
 
@@ -236,7 +237,7 @@ class GithubPages {
             err = JSON.parse(err);
             this.waitForTimeout = false;
             app.mainWindow.webContents.send('app-deploy-test-error', {
-                message: err.message
+                message: stripTags((err.message).toString())
             });
         });
 
@@ -306,7 +307,7 @@ class GithubPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: 'E1 ' + JSON.stringify(err)
+                    additionalMessage: 'E1 ' + stripTags(JSON.stringify(err))
                 }
             });
 

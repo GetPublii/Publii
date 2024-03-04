@@ -503,20 +503,9 @@
 
 <script>
 import Vue from 'vue';
-import PostsDropDown from './basic-elements/PostsDropDown';
-import TagsDropDown from './basic-elements/TagsDropDown';
-import AuthorsDropDown from './basic-elements/AuthorsDropDown';
-import Repeater from './basic-elements/Repeater';
-import Utils from './../helpers/utils.js';
 
 export default {
     name: 'site-settings',
-    components: {
-        'authors-dropdown': AuthorsDropDown,
-        'posts-dropdown': PostsDropDown,
-        'tags-dropdown': TagsDropDown,
-        'repeater': Repeater
-    },
     data: function() {
         return {
             buttonsLocked: false,

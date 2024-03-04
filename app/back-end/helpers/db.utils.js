@@ -1,3 +1,5 @@
+const os = require('os');
+
 /*
  * Other helper functions
  */
@@ -5,6 +7,7 @@ class DBUtils {
     constructor (dbInstance) {
         this.DB = dbInstance; 
         this.statement = '';
+        this.useWASM = os.platform() === 'linux';
     }
 
     prepare (sqlStatement) {
@@ -13,30 +16,54 @@ class DBUtils {
     }
 
     get (paramsObject = null) {
-        if (paramsObject) {
-            paramsObject = this.transformParams(paramsObject);
-            return this.DB.get(this.statement, paramsObject);
+        if (this.useWASM) {
+            if (paramsObject) {
+                paramsObject = this.transformParams(paramsObject);
+                return this.DB.get(this.statement, paramsObject);
+            }
+
+            return this.DB.get(this.statement);
         }
 
-        return this.DB.get(this.statement);
+        if (paramsObject !== null) {
+            return this.DB.prepare(this.statement).get(paramsObject);
+        }
+
+        return this.DB.prepare(this.statement).get();
     }
 
     run (paramsObject = null) {
-        if (paramsObject) {
-            paramsObject = this.transformParams(paramsObject);
-            return this.DB.run(this.statement, paramsObject);
+        if (this.useWASM) {
+            if (paramsObject) {
+                paramsObject = this.transformParams(paramsObject);
+                return this.DB.run(this.statement, paramsObject);
+            }
+
+            return this.DB.run(this.statement);
         }
 
-        return this.DB.run(this.statement);
+        if (paramsObject !== null) {
+            return this.DB.prepare(this.statement).run(paramsObject);
+        }
+
+        return this.DB.prepare(this.statement).run();
     }
 
     all (paramsObject = null) {
-        if (paramsObject) {
-            paramsObject = this.transformParams(paramsObject);
-            return this.DB.all(this.statement, paramsObject);
+        if (this.useWASM) {
+            if (paramsObject) {
+                paramsObject = this.transformParams(paramsObject);
+                return this.DB.all(this.statement, paramsObject);
+            }
+
+            return this.DB.all(this.statement);
         }
 
-        return this.DB.all(this.statement);
+        if (paramsObject !== null) {
+            return this.DB.prepare(this.statement).all(paramsObject);
+        }
+
+        return this.DB.prepare(this.statement).all();
     }
 
     exec (sqlQueries) {

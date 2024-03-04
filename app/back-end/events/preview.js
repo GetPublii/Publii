@@ -5,6 +5,7 @@ const shell = electron.shell;
 const ipcMain = electron.ipcMain;
 const childProcess = require('child_process');
 const UtilsHelper = require('../helpers/utils.js');
+const stripTags = require('striptags');
 
 class PreviewEvents {
     /**
@@ -90,7 +91,7 @@ class PreviewEvents {
                     event.sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
-                            desc: errorDesc
+                            desc: stripTags(errorDesc)
                         }]
                     });
                 }
@@ -142,7 +143,7 @@ class PreviewEvents {
             } else {
                 event.sender.send(data.type, {
                     progress: data.progress,
-                    message: data.message
+                    message: stripTags((data.message).toString())
                 });
             }
         });

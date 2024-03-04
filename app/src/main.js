@@ -9,6 +9,7 @@ import 'prismjs';
 
 // Basic elements
 import Alert from './components/basic-elements/Alert';
+import AuthorsDropDown from './components/basic-elements/AuthorsDropDown';
 import Button from './components/basic-elements/Button';
 import ButtonDropdown from './components/basic-elements/ButtonDropdown';
 import CharCounter from './components/basic-elements/CharCounter';
@@ -33,13 +34,16 @@ import Icon from './components/basic-elements/Icon';
 import ImageUpload from './components/basic-elements/ImageUpload';
 import LogoCreator from './components/basic-elements/LogoCreator';
 import Overlay from './components/basic-elements/Overlay';
+import PostsDropDown from './components/basic-elements/PostsDropDown';
 import ProgressBar from './components/basic-elements/ProgressBar';
 import RadioButtons from './components/basic-elements/RadioButton';
 import RangeSlider from './components/basic-elements/RangeSlider';
+import Repeater from './components/basic-elements/Repeater';
 import Separator from './components/basic-elements/Separator';
 import SmallImageUpload from './components/basic-elements/SmallImageUpload';
 import Switcher from './components/basic-elements/Switcher';
 import Tabs from './components/basic-elements/Tabs';
+import TagsDropDown from './components/basic-elements/TagsDropDown';
 import TextArea from './components/basic-elements/TextArea';
 import TextInput from './components/basic-elements/TextInput';
 import vSelect from '../node_modules/vue-multiselect/dist/vue-multiselect.min.js';
@@ -196,6 +200,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.component('text-input', TextInput);
     Vue.component('v-select', vSelect);
     Vue.component('prism-editor', VuePrismEditor);
+    Vue.component('posts-dropdown', PostsDropDown);
+    Vue.component('authors-dropdown', AuthorsDropDown);
+    Vue.component('tags-dropdown', TagsDropDown);
+    Vue.component('repeater', Repeater);
 
     const i18n = new VueI18n({
         locale: initialData.currentLanguage.name,

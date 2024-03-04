@@ -215,6 +215,30 @@ class RendererContext {
         return tags;
     }
 
+    getAllMainTags() {
+        // Retrieve post main tags
+        let mainTags = this.db.prepare(`
+            SELECT DISTINCT 
+                json_extract(value, '$.mainTag') AS id
+            FROM 
+                posts_additional_data
+            WHERE 
+                key = '_core' AND 
+                json_extract(value, '$.mainTag') IS NOT NULL AND 
+                json_extract(value, '$.mainTag') != '';
+        `).all();
+
+        mainTags = mainTags.map(mainTag => JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTag.id])));
+
+        if(!this.siteConfig.advanced.displayEmptyTags) {
+            mainTags = mainTags.filter(mainTag => mainTag.postsNumber > 0);
+        }
+
+        mainTags.sort((mainTagA, mainTagB) => mainTagA.name.localeCompare(mainTagB.name));
+
+        return mainTags;
+    }
+
     getAuthors() {
         let authorData = this.db.prepare(`SELECT id FROM authors ORDER BY id ASC;`).all();
         let authors = [];

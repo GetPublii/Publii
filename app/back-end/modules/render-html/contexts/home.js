@@ -61,6 +61,7 @@ class RendererContextHome extends RendererContext {
         this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
 
         this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
+        this.mainTags = this.renderer.commonData.mainTags.filter(maintag => maintag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -102,6 +103,7 @@ class RendererContextHome extends RendererContext {
             featuredPosts: this.featuredPosts,
             hiddenPosts: this.hiddenPosts,
             tags: this.tags,
+            mainTags: this.mainTags,
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,

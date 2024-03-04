@@ -42,6 +42,21 @@ class RendererCache {
      * Retrieves tags data
      */
     getTags() {
+        console.time('MAINTAGS - QUERY');
+        let mainTagIDs = this.db.prepare(`
+            SELECT DISTINCT 
+                json_extract(value, '$.mainTag') AS mainTagID
+            FROM 
+                posts_additional_data
+            WHERE 
+                key = '_core' AND 
+                json_extract(value, '$.mainTag') IS NOT NULL AND 
+                json_extract(value, '$.mainTag') != '';
+        `).all();
+
+        mainTagIDs = mainTagIDs.map(mainTag => mainTag.mainTagID);
+        console.timeEnd('MAINTAGS - QUERY');
+
         console.time('TAGS - QUERY');
         let tags = this.db.prepare(`
             SELECT
@@ -62,7 +77,7 @@ class RendererCache {
         
         tags = tags.map(tag => {
             let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag);
-            let newTag = new Tag(tag, this.renderer);
+            let newTag = new Tag(tag, this.renderer, mainTagIDs);
             newTag.setTagViewConfig(tagViewConfig);
             return newTag;
         });
