@@ -295,7 +295,7 @@
     "path": "/node_modules/@aws-sdk/util-endpoints",
     "licenseFile": "/node_modules/@aws-sdk/util-endpoints/LICENSE"
   },
-  "aws-sdk/util-locate-window@3.310.0": {
+  "aws-sdk/util-locate-window@3.495.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/aws/aws-sdk-js-v3",
     "publisher": "AWS SDK for JavaScript Team",
@@ -384,13 +384,13 @@
     "path": "/node_modules/@google-cloud/storage",
     "licenseFile": "/node_modules/@google-cloud/storage/LICENSE"
   },
-  "jimp/bmp@0.22.8": {
+  "jimp/bmp@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/bmp",
     "licenseFile": "/node_modules/@jimp/bmp/LICENSE"
   },
-  "jimp/core@0.22.8": {
+  "jimp/core@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "publisher": "Oliver Moran",
@@ -398,181 +398,73 @@
     "path": "/node_modules/@jimp/core",
     "licenseFile": "/node_modules/@jimp/core/LICENSE"
   },
-  "jimp/custom@0.22.8": {
+  "jimp/custom@0.22.10": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/custom",
     "licenseFile": "/node_modules/@jimp/custom/LICENSE"
   },
-  "jimp/gif@0.22.8": {
+  "jimp/gif@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/gif",
     "licenseFile": "/node_modules/@jimp/gif/LICENSE"
   },
-  "jimp/jpeg@0.22.8": {
+  "jimp/jpeg@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/jpeg",
     "licenseFile": "/node_modules/@jimp/jpeg/LICENSE"
   },
-  "jimp/plugin-blit@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-blit",
-    "licenseFile": "/node_modules/@jimp/plugin-blit/LICENSE"
-  },
-  "jimp/plugin-blur@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-blur",
-    "licenseFile": "/node_modules/@jimp/plugin-blur/LICENSE"
-  },
-  "jimp/plugin-circle@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-circle",
-    "licenseFile": "/node_modules/@jimp/plugin-circle/LICENSE"
-  },
-  "jimp/plugin-color@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-color",
-    "licenseFile": "/node_modules/@jimp/plugin-color/LICENSE"
-  },
-  "jimp/plugin-contain@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-contain",
-    "licenseFile": "/node_modules/@jimp/plugin-contain/LICENSE"
-  },
-  "jimp/plugin-cover@0.22.8": {
+  "jimp/plugin-cover@0.22.10": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/plugin-cover",
     "licenseFile": "/node_modules/@jimp/plugin-cover/LICENSE"
   },
-  "jimp/plugin-crop@0.22.8": {
+  "jimp/plugin-crop@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/plugin-crop",
     "licenseFile": "/node_modules/@jimp/plugin-crop/LICENSE"
   },
-  "jimp/plugin-displace@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-displace",
-    "licenseFile": "/node_modules/@jimp/plugin-displace/LICENSE"
-  },
-  "jimp/plugin-dither@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-dither",
-    "licenseFile": "/node_modules/@jimp/plugin-dither/LICENSE"
-  },
-  "jimp/plugin-fisheye@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-fisheye",
-    "licenseFile": "/node_modules/@jimp/plugin-fisheye/LICENSE"
-  },
-  "jimp/plugin-flip@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-flip",
-    "licenseFile": "/node_modules/@jimp/plugin-flip/LICENSE"
-  },
-  "jimp/plugin-gaussian@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-gaussian",
-    "licenseFile": "/node_modules/@jimp/plugin-gaussian/LICENSE"
-  },
-  "jimp/plugin-invert@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-invert",
-    "licenseFile": "/node_modules/@jimp/plugin-invert/LICENSE"
-  },
-  "jimp/plugin-mask@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-mask",
-    "licenseFile": "/node_modules/@jimp/plugin-mask/LICENSE"
-  },
-  "jimp/plugin-normalize@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-normalize",
-    "licenseFile": "/node_modules/@jimp/plugin-normalize/LICENSE"
-  },
-  "jimp/plugin-print@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-print",
-    "licenseFile": "/node_modules/@jimp/plugin-print/LICENSE"
-  },
-  "jimp/plugin-resize@0.22.8": {
+  "jimp/plugin-resize@0.22.10": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/plugin-resize",
     "licenseFile": "/node_modules/@jimp/plugin-resize/LICENSE"
   },
-  "jimp/plugin-rotate@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-rotate",
-    "licenseFile": "/node_modules/@jimp/plugin-rotate/LICENSE"
-  },
-  "jimp/plugin-scale@0.22.8": {
+  "jimp/plugin-scale@0.22.10": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/plugin-scale",
     "licenseFile": "/node_modules/@jimp/plugin-scale/LICENSE"
   },
-  "jimp/plugin-shadow@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-shadow",
-    "licenseFile": "/node_modules/@jimp/plugin-shadow/LICENSE"
-  },
-  "jimp/plugin-threshold@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugin-threshold",
-    "licenseFile": "/node_modules/@jimp/plugin-threshold/LICENSE"
-  },
-  "jimp/plugins@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "path": "/node_modules/@jimp/plugins",
-    "licenseFile": "/node_modules/@jimp/plugins/LICENSE"
-  },
-  "jimp/png@0.22.8": {
+  "jimp/png@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/png",
     "licenseFile": "/node_modules/@jimp/png/LICENSE"
   },
-  "jimp/tiff@0.22.8": {
+  "jimp/tiff@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/tiff",
     "licenseFile": "/node_modules/@jimp/tiff/LICENSE"
   },
-  "jimp/types@0.22.8": {
+  "jimp/types@0.22.10": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/types",
     "licenseFile": "/node_modules/@jimp/types/LICENSE"
   },
-  "jimp/utils@0.22.8": {
+  "jimp/utils@0.22.12": {
     "licenses": "MIT",
     "repository": "https://github.com/jimp-dev/jimp",
     "path": "/node_modules/@jimp/utils",
     "licenseFile": "/node_modules/@jimp/utils/LICENSE"
   },
-  "sindresorhus/is@4.2.0": {
+  "sindresorhus/is@4.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/is",
     "publisher": "Sindre Sorhus",
@@ -581,7 +473,7 @@
     "path": "/node_modules/@sindresorhus/is",
     "licenseFile": "/node_modules/@sindresorhus/is/license"
   },
-  "smithy/abort-controller@2.0.12": {
+  "smithy/abort-controller@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -589,7 +481,7 @@
     "path": "/node_modules/@smithy/abort-controller",
     "licenseFile": "/node_modules/@smithy/abort-controller/LICENSE"
   },
-  "smithy/chunked-blob-reader-native@2.0.0": {
+  "smithy/chunked-blob-reader-native@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -597,7 +489,7 @@
     "path": "/node_modules/@smithy/chunked-blob-reader-native",
     "licenseFile": "/node_modules/@smithy/chunked-blob-reader-native/LICENSE"
   },
-  "smithy/chunked-blob-reader@2.0.0": {
+  "smithy/chunked-blob-reader@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -605,7 +497,7 @@
     "path": "/node_modules/@smithy/chunked-blob-reader",
     "licenseFile": "/node_modules/@smithy/chunked-blob-reader/LICENSE"
   },
-  "smithy/config-resolver@2.0.16": {
+  "smithy/config-resolver@2.1.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -613,7 +505,7 @@
     "path": "/node_modules/@smithy/config-resolver",
     "licenseFile": "/node_modules/@smithy/config-resolver/LICENSE"
   },
-  "smithy/credential-provider-imds@2.0.18": {
+  "smithy/credential-provider-imds@2.2.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -621,7 +513,7 @@
     "path": "/node_modules/@smithy/credential-provider-imds",
     "licenseFile": "/node_modules/@smithy/credential-provider-imds/LICENSE"
   },
-  "smithy/eventstream-codec@2.0.12": {
+  "smithy/eventstream-codec@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -629,7 +521,7 @@
     "path": "/node_modules/@smithy/eventstream-codec",
     "licenseFile": "/node_modules/@smithy/eventstream-codec/LICENSE"
   },
-  "smithy/eventstream-serde-browser@2.0.12": {
+  "smithy/eventstream-serde-browser@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -637,7 +529,7 @@
     "path": "/node_modules/@smithy/eventstream-serde-browser",
     "licenseFile": "/node_modules/@smithy/eventstream-serde-browser/LICENSE"
   },
-  "smithy/eventstream-serde-config-resolver@2.0.12": {
+  "smithy/eventstream-serde-config-resolver@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -645,7 +537,7 @@
     "path": "/node_modules/@smithy/eventstream-serde-config-resolver",
     "licenseFile": "/node_modules/@smithy/eventstream-serde-config-resolver/LICENSE"
   },
-  "smithy/eventstream-serde-node@2.0.12": {
+  "smithy/eventstream-serde-node@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -653,7 +545,7 @@
     "path": "/node_modules/@smithy/eventstream-serde-node",
     "licenseFile": "/node_modules/@smithy/eventstream-serde-node/LICENSE"
   },
-  "smithy/eventstream-serde-universal@2.0.12": {
+  "smithy/eventstream-serde-universal@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -661,7 +553,7 @@
     "path": "/node_modules/@smithy/eventstream-serde-universal",
     "licenseFile": "/node_modules/@smithy/eventstream-serde-universal/LICENSE"
   },
-  "smithy/fetch-http-handler@2.2.4": {
+  "smithy/fetch-http-handler@2.4.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -669,7 +561,7 @@
     "path": "/node_modules/@smithy/fetch-http-handler",
     "licenseFile": "/node_modules/@smithy/fetch-http-handler/LICENSE"
   },
-  "smithy/hash-blob-browser@2.0.12": {
+  "smithy/hash-blob-browser@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -677,7 +569,7 @@
     "path": "/node_modules/@smithy/hash-blob-browser",
     "licenseFile": "/node_modules/@smithy/hash-blob-browser/LICENSE"
   },
-  "smithy/hash-node@2.0.12": {
+  "smithy/hash-node@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -685,7 +577,7 @@
     "path": "/node_modules/@smithy/hash-node",
     "licenseFile": "/node_modules/@smithy/hash-node/LICENSE"
   },
-  "smithy/hash-stream-node@2.0.12": {
+  "smithy/hash-stream-node@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -693,7 +585,7 @@
     "path": "/node_modules/@smithy/hash-stream-node",
     "licenseFile": "/node_modules/@smithy/hash-stream-node/LICENSE"
   },
-  "smithy/invalid-dependency@2.0.12": {
+  "smithy/invalid-dependency@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -701,7 +593,7 @@
     "path": "/node_modules/@smithy/invalid-dependency",
     "licenseFile": "/node_modules/@smithy/invalid-dependency/LICENSE"
   },
-  "smithy/is-array-buffer@2.0.0": {
+  "smithy/is-array-buffer@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -709,7 +601,7 @@
     "path": "/node_modules/@smithy/is-array-buffer",
     "licenseFile": "/node_modules/@smithy/is-array-buffer/LICENSE"
   },
-  "smithy/md5-js@2.0.12": {
+  "smithy/md5-js@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -717,7 +609,7 @@
     "path": "/node_modules/@smithy/md5-js",
     "licenseFile": "/node_modules/@smithy/md5-js/LICENSE"
   },
-  "smithy/middleware-content-length@2.0.14": {
+  "smithy/middleware-content-length@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -725,7 +617,7 @@
     "path": "/node_modules/@smithy/middleware-content-length",
     "licenseFile": "/node_modules/@smithy/middleware-content-length/LICENSE"
   },
-  "smithy/middleware-endpoint@2.1.3": {
+  "smithy/middleware-endpoint@2.4.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -733,7 +625,7 @@
     "path": "/node_modules/@smithy/middleware-endpoint",
     "licenseFile": "/node_modules/@smithy/middleware-endpoint/LICENSE"
   },
-  "smithy/middleware-retry@2.0.18": {
+  "smithy/middleware-retry@2.1.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -741,7 +633,7 @@
     "path": "/node_modules/@smithy/middleware-retry",
     "licenseFile": "/node_modules/@smithy/middleware-retry/LICENSE"
   },
-  "smithy/middleware-serde@2.0.12": {
+  "smithy/middleware-serde@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -749,7 +641,7 @@
     "path": "/node_modules/@smithy/middleware-serde",
     "licenseFile": "/node_modules/@smithy/middleware-serde/LICENSE"
   },
-  "smithy/middleware-stack@2.0.6": {
+  "smithy/middleware-stack@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -757,7 +649,7 @@
     "path": "/node_modules/@smithy/middleware-stack",
     "licenseFile": "/node_modules/@smithy/middleware-stack/LICENSE"
   },
-  "smithy/node-config-provider@2.1.3": {
+  "smithy/node-config-provider@2.2.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -765,7 +657,7 @@
     "path": "/node_modules/@smithy/node-config-provider",
     "licenseFile": "/node_modules/@smithy/node-config-provider/LICENSE"
   },
-  "smithy/node-http-handler@2.1.8": {
+  "smithy/node-http-handler@2.4.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -773,7 +665,7 @@
     "path": "/node_modules/@smithy/node-http-handler",
     "licenseFile": "/node_modules/@smithy/node-http-handler/LICENSE"
   },
-  "smithy/property-provider@2.0.13": {
+  "smithy/property-provider@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -781,7 +673,7 @@
     "path": "/node_modules/@smithy/property-provider",
     "licenseFile": "/node_modules/@smithy/property-provider/LICENSE"
   },
-  "smithy/protocol-http@3.0.8": {
+  "smithy/protocol-http@3.2.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS Smithy Team",
@@ -789,7 +681,7 @@
     "path": "/node_modules/@smithy/protocol-http",
     "licenseFile": "/node_modules/@smithy/protocol-http/LICENSE"
   },
-  "smithy/querystring-builder@2.0.12": {
+  "smithy/querystring-builder@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -797,7 +689,7 @@
     "path": "/node_modules/@smithy/querystring-builder",
     "licenseFile": "/node_modules/@smithy/querystring-builder/LICENSE"
   },
-  "smithy/querystring-parser@2.0.12": {
+  "smithy/querystring-parser@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -805,7 +697,7 @@
     "path": "/node_modules/@smithy/querystring-parser",
     "licenseFile": "/node_modules/@smithy/querystring-parser/LICENSE"
   },
-  "smithy/service-error-classification@2.0.5": {
+  "smithy/service-error-classification@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -813,7 +705,7 @@
     "path": "/node_modules/@smithy/service-error-classification",
     "licenseFile": "/node_modules/@smithy/service-error-classification/LICENSE"
   },
-  "smithy/shared-ini-file-loader@2.2.2": {
+  "smithy/shared-ini-file-loader@2.3.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -821,7 +713,7 @@
     "path": "/node_modules/@smithy/shared-ini-file-loader",
     "licenseFile": "/node_modules/@smithy/shared-ini-file-loader/LICENSE"
   },
-  "smithy/signature-v4@2.0.12": {
+  "smithy/signature-v4@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -829,7 +721,7 @@
     "path": "/node_modules/@smithy/signature-v4",
     "licenseFile": "/node_modules/@smithy/signature-v4/LICENSE"
   },
-  "smithy/smithy-client@2.1.12": {
+  "smithy/smithy-client@2.4.2": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -837,7 +729,7 @@
     "path": "/node_modules/@smithy/smithy-client",
     "licenseFile": "/node_modules/@smithy/smithy-client/LICENSE"
   },
-  "smithy/types@2.4.0": {
+  "smithy/types@2.10.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS Smithy Team",
@@ -845,7 +737,7 @@
     "path": "/node_modules/@smithy/types",
     "licenseFile": "/node_modules/@smithy/types/LICENSE"
   },
-  "smithy/url-parser@2.0.12": {
+  "smithy/url-parser@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -853,7 +745,7 @@
     "path": "/node_modules/@smithy/url-parser",
     "licenseFile": "/node_modules/@smithy/url-parser/LICENSE"
   },
-  "smithy/util-base64@2.0.0": {
+  "smithy/util-base64@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -861,7 +753,7 @@
     "path": "/node_modules/@smithy/util-base64",
     "licenseFile": "/node_modules/@smithy/util-base64/LICENSE"
   },
-  "smithy/util-body-length-browser@2.0.0": {
+  "smithy/util-body-length-browser@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -869,7 +761,7 @@
     "path": "/node_modules/@smithy/util-body-length-browser",
     "licenseFile": "/node_modules/@smithy/util-body-length-browser/LICENSE"
   },
-  "smithy/util-body-length-node@2.1.0": {
+  "smithy/util-body-length-node@2.2.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -877,7 +769,7 @@
     "path": "/node_modules/@smithy/util-body-length-node",
     "licenseFile": "/node_modules/@smithy/util-body-length-node/LICENSE"
   },
-  "smithy/util-buffer-from@2.0.0": {
+  "smithy/util-buffer-from@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -885,7 +777,7 @@
     "path": "/node_modules/@smithy/util-buffer-from",
     "licenseFile": "/node_modules/@smithy/util-buffer-from/LICENSE"
   },
-  "smithy/util-config-provider@2.0.0": {
+  "smithy/util-config-provider@2.2.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -893,7 +785,7 @@
     "path": "/node_modules/@smithy/util-config-provider",
     "licenseFile": "/node_modules/@smithy/util-config-provider/LICENSE"
   },
-  "smithy/util-defaults-mode-browser@2.0.16": {
+  "smithy/util-defaults-mode-browser@2.1.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -901,7 +793,7 @@
     "path": "/node_modules/@smithy/util-defaults-mode-browser",
     "licenseFile": "/node_modules/@smithy/util-defaults-mode-browser/LICENSE"
   },
-  "smithy/util-defaults-mode-node@2.0.21": {
+  "smithy/util-defaults-mode-node@2.2.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -909,7 +801,7 @@
     "path": "/node_modules/@smithy/util-defaults-mode-node",
     "licenseFile": "/node_modules/@smithy/util-defaults-mode-node/LICENSE"
   },
-  "smithy/util-endpoints@1.0.2": {
+  "smithy/util-endpoints@1.1.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -917,7 +809,7 @@
     "path": "/node_modules/@smithy/util-endpoints",
     "licenseFile": "/node_modules/@smithy/util-endpoints/LICENSE"
   },
-  "smithy/util-hex-encoding@2.0.0": {
+  "smithy/util-hex-encoding@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -925,7 +817,7 @@
     "path": "/node_modules/@smithy/util-hex-encoding",
     "licenseFile": "/node_modules/@smithy/util-hex-encoding/LICENSE"
   },
-  "smithy/util-middleware@2.0.5": {
+  "smithy/util-middleware@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -933,7 +825,7 @@
     "path": "/node_modules/@smithy/util-middleware",
     "licenseFile": "/node_modules/@smithy/util-middleware/LICENSE"
   },
-  "smithy/util-retry@2.0.5": {
+  "smithy/util-retry@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -941,7 +833,7 @@
     "path": "/node_modules/@smithy/util-retry",
     "licenseFile": "/node_modules/@smithy/util-retry/LICENSE"
   },
-  "smithy/util-stream@2.0.17": {
+  "smithy/util-stream@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -949,7 +841,7 @@
     "path": "/node_modules/@smithy/util-stream",
     "licenseFile": "/node_modules/@smithy/util-stream/LICENSE"
   },
-  "smithy/util-uri-escape@2.0.0": {
+  "smithy/util-uri-escape@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -957,7 +849,7 @@
     "path": "/node_modules/@smithy/util-uri-escape",
     "licenseFile": "/node_modules/@smithy/util-uri-escape/LICENSE"
   },
-  "smithy/util-utf8@2.0.0": {
+  "smithy/util-utf8@2.1.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -965,7 +857,7 @@
     "path": "/node_modules/@smithy/util-utf8",
     "licenseFile": "/node_modules/@smithy/util-utf8/LICENSE"
   },
-  "smithy/util-waiter@2.0.12": {
+  "smithy/util-waiter@2.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/awslabs/smithy-typescript",
     "publisher": "AWS SDK for JavaScript Team",
@@ -997,37 +889,37 @@
     "path": "/node_modules/@tootallnate/once",
     "licenseFile": "/node_modules/@tootallnate/once/LICENSE"
   },
-  "types/cacheable-request@6.0.2": {
+  "types/cacheable-request@6.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/cacheable-request",
     "licenseFile": "/node_modules/@types/cacheable-request/LICENSE"
   },
-  "types/codemirror@5.60.5": {
+  "types/codemirror@5.60.15": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/codemirror",
     "licenseFile": "/node_modules/@types/codemirror/LICENSE"
   },
-  "types/estree@0.0.51": {
+  "types/estree@1.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/estree",
     "licenseFile": "/node_modules/@types/estree/LICENSE"
   },
-  "types/http-cache-semantics@4.0.1": {
+  "types/http-cache-semantics@4.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/http-cache-semantics",
     "licenseFile": "/node_modules/@types/http-cache-semantics/LICENSE"
   },
-  "types/keyv@3.1.3": {
+  "types/keyv@3.1.4": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/keyv",
     "licenseFile": "/node_modules/@types/keyv/LICENSE"
   },
-  "types/marked@4.0.7": {
+  "types/marked@4.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/marked",
@@ -1039,19 +931,19 @@
     "path": "/node_modules/image-q/node_modules/@types/node",
     "licenseFile": "/node_modules/image-q/node_modules/@types/node/LICENSE"
   },
-  "types/node@18.16.19": {
+  "types/node@18.19.21": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/node",
     "licenseFile": "/node_modules/@types/node/LICENSE"
   },
-  "types/responselike@1.0.0": {
+  "types/responselike@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/responselike",
     "licenseFile": "/node_modules/@types/responselike/LICENSE"
   },
-  "types/tern@0.23.4": {
+  "types/tern@0.23.9": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/node_modules/@types/tern",
@@ -1100,14 +992,7 @@
     "path": "/node_modules/agent-base",
     "licenseFile": "/node_modules/agent-base/README.md"
   },
-  "ajv@6.12.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ajv-validator/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/node_modules/ajv",
-    "licenseFile": "/node_modules/ajv/LICENSE"
-  },
-  "ansi-colors@4.1.1": {
+  "ansi-colors@4.1.3": {
     "licenses": "MIT",
     "repository": "https://github.com/doowb/ansi-colors",
     "publisher": "Brian Woodward",
@@ -1138,8 +1023,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/wrap-ansi/node_modules/ansi-regex",
-    "licenseFile": "/node_modules/wrap-ansi/node_modules/ansi-regex/license"
+    "path": "/node_modules/strip-ansi/node_modules/ansi-regex",
+    "licenseFile": "/node_modules/strip-ansi/node_modules/ansi-regex/license"
   },
   "ansi-regex@5.0.1": {
     "licenses": "MIT",
@@ -1147,8 +1032,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/strip-ansi/node_modules/ansi-regex",
-    "licenseFile": "/node_modules/strip-ansi/node_modules/ansi-regex/license"
+    "path": "/node_modules/cliui/node_modules/ansi-regex",
+    "licenseFile": "/node_modules/cliui/node_modules/ansi-regex/license"
   },
   "ansi-styles@4.3.0": {
     "licenses": "MIT",
@@ -1174,6 +1059,14 @@
     "url": "http://christalkington.com/",
     "path": "/node_modules/archiver-utils",
     "licenseFile": "/node_modules/archiver-utils/LICENSE"
+  },
+  "archiver-utils@3.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/archiverjs/archiver-utils",
+    "publisher": "Chris Talkington",
+    "url": "http://christalkington.com/",
+    "path": "/node_modules/zip-stream/node_modules/archiver-utils",
+    "licenseFile": "/node_modules/zip-stream/node_modules/archiver-utils/LICENSE"
   },
   "archiver@5.3.1": {
     "licenses": "MIT",
@@ -1209,15 +1102,7 @@
     "path": "/node_modules/asn1",
     "licenseFile": "/node_modules/asn1/LICENSE"
   },
-  "assert-plus@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mcavage/node-assert-plus",
-    "publisher": "Mark Cavage",
-    "email": "mcavage@gmail.com",
-    "path": "/node_modules/assert-plus",
-    "licenseFile": "/node_modules/assert-plus/README.md"
-  },
-  "async-lock@1.4.0": {
+  "async-lock@1.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/rogierschouten/async-lock",
     "publisher": "Rogier Schouten",
@@ -1232,7 +1117,7 @@
     "path": "/node_modules/async-retry",
     "licenseFile": "/node_modules/async-retry/LICENSE.md"
   },
-  "async@3.2.4": {
+  "async@3.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
@@ -1247,29 +1132,10 @@
     "path": "/node_modules/asynckit",
     "licenseFile": "/node_modules/asynckit/LICENSE"
   },
-  "aws-sign2@0.7.0": {
+  "b4a@1.6.6": {
     "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/aws-sign",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "url": "http://www.futurealoof.com",
-    "path": "/node_modules/aws-sign2",
-    "licenseFile": "/node_modules/aws-sign2/LICENSE"
-  },
-  "aws4@1.11.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mhart/aws4",
-    "publisher": "Michael Hart",
-    "email": "michael.hart.au@gmail.com",
-    "url": "https://github.com/mhart",
-    "path": "/node_modules/aws4",
-    "licenseFile": "/node_modules/aws4/LICENSE"
-  },
-  "b4a@1.6.4": {
-    "licenses": "ISC",
     "repository": "https://github.com/holepunchto/b4a",
-    "publisher": "Kasper Isager Dalsgarð",
-    "email": "kasper@funktionel.co",
+    "publisher": "Holepunch",
     "path": "/node_modules/b4a",
     "licenseFile": "/node_modules/b4a/LICENSE"
   },
@@ -1282,6 +1148,13 @@
     "path": "/node_modules/balanced-match",
     "licenseFile": "/node_modules/balanced-match/LICENSE.md"
   },
+  "bare-events@2.2.1": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/holepunchto/bare-events",
+    "publisher": "Holepunch",
+    "path": "/node_modules/bare-events",
+    "licenseFile": "/node_modules/bare-events/LICENSE"
+  },
   "base64-js@1.5.1": {
     "licenses": "MIT",
     "repository": "https://github.com/beatgammit/base64-js",
@@ -1290,13 +1163,21 @@
     "path": "/node_modules/base64-js",
     "licenseFile": "/node_modules/base64-js/LICENSE"
   },
+  "basic-ftp@5.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/patrickjuchli/basic-ftp",
+    "publisher": "Patrick Juchli",
+    "email": "patrickjuchli@gmail.com",
+    "path": "/node_modules/basic-ftp",
+    "licenseFile": "/node_modules/basic-ftp/LICENSE.txt"
+  },
   "bcrypt-pbkdf@1.0.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/joyent/node-bcrypt-pbkdf",
     "path": "/node_modules/bcrypt-pbkdf",
     "licenseFile": "/node_modules/bcrypt-pbkdf/LICENSE"
   },
-  "better-sqlite3@8.2.0": {
+  "better-sqlite3@9.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/WiseLibs/better-sqlite3",
     "publisher": "Joshua Wise",
@@ -1304,7 +1185,7 @@
     "path": "/node_modules/better-sqlite3",
     "licenseFile": "/node_modules/better-sqlite3/LICENSE"
   },
-  "bignumber.js@9.1.1": {
+  "bignumber.js@9.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/MikeMcl/bignumber.js",
     "publisher": "Michael Mclaughlin",
@@ -1359,8 +1240,8 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
-    "path": "/node_modules/js-beautify/node_modules/brace-expansion",
-    "licenseFile": "/node_modules/js-beautify/node_modules/brace-expansion/LICENSE"
+    "path": "/node_modules/readdir-glob/node_modules/brace-expansion",
+    "licenseFile": "/node_modules/readdir-glob/node_modules/brace-expansion/LICENSE"
   },
   "buffer-crc32@0.2.13": {
     "licenses": "MIT",
@@ -1377,15 +1258,6 @@
     "path": "/node_modules/buffer-equal-constant-time",
     "licenseFile": "/node_modules/buffer-equal-constant-time/LICENSE.txt"
   },
-  "buffer-equal@0.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/substack/node-buffer-equal",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/node_modules/buffer-equal",
-    "licenseFile": "/node_modules/buffer-equal/README.markdown"
-  },
   "buffer-from@1.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/LinusU/buffer-from",
@@ -1398,8 +1270,8 @@
     "publisher": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
     "url": "https://feross.org",
-    "path": "/node_modules/bl/node_modules/buffer",
-    "licenseFile": "/node_modules/bl/node_modules/buffer/LICENSE"
+    "path": "/node_modules/buffer",
+    "licenseFile": "/node_modules/buffer/LICENSE"
   },
   "buildcheck@0.0.6": {
     "licenses": "MIT",
@@ -1416,7 +1288,7 @@
     "path": "/node_modules/cacheable-lookup",
     "licenseFile": "/node_modules/cacheable-lookup/LICENSE"
   },
-  "cacheable-request@7.0.2": {
+  "cacheable-request@7.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/lukechilds/cacheable-request",
     "publisher": "Luke Childs",
@@ -1425,7 +1297,7 @@
     "path": "/node_modules/cacheable-request",
     "licenseFile": "/node_modules/cacheable-request/LICENSE"
   },
-  "call-bind@1.0.2": {
+  "call-bind@1.0.7": {
     "licenses": "MIT",
     "repository": "https://github.com/ljharb/call-bind",
     "publisher": "Jordan Harband",
@@ -1459,14 +1331,6 @@
     "url": "http://sindresorhus.com",
     "path": "/node_modules/camelcase",
     "licenseFile": "/node_modules/camelcase/license"
-  },
-  "caseless@0.12.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/caseless",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "path": "/node_modules/caseless",
-    "licenseFile": "/node_modules/caseless/LICENSE"
   },
   "chownr@1.1.4": {
     "licenses": "ISC",
@@ -1510,9 +1374,9 @@
     "path": "/node_modules/cliui",
     "licenseFile": "/node_modules/cliui/LICENSE.txt"
   },
-  "clone-response@1.0.2": {
+  "clone-response@1.0.3": {
     "licenses": "MIT",
-    "repository": "https://github.com/lukechilds/clone-response",
+    "repository": "https://github.com/sindresorhus/clone-response",
     "publisher": "Luke Childs",
     "email": "lukechilds123@gmail.com",
     "url": "http://lukechilds.co.uk",
@@ -1617,7 +1481,7 @@
     "path": "/node_modules/component-xor",
     "licenseFile": "/node_modules/component-xor/Readme.md"
   },
-  "compress-commons@4.1.1": {
+  "compress-commons@4.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/archiverjs/node-compress-commons",
     "publisher": "Chris Talkington",
@@ -1645,8 +1509,8 @@
     "repository": "https://github.com/maxogden/concat-stream",
     "publisher": "Max Ogden",
     "email": "max@maxogden.com",
-    "path": "/node_modules/ssh2-sftp-client/node_modules/concat-stream",
-    "licenseFile": "/node_modules/ssh2-sftp-client/node_modules/concat-stream/LICENSE"
+    "path": "/node_modules/concat-stream",
+    "licenseFile": "/node_modules/concat-stream/LICENSE"
   },
   "config-chain@1.1.13": {
     "licenses": "MIT",
@@ -1657,7 +1521,7 @@
     "path": "/node_modules/config-chain",
     "licenseFile": "/node_modules/config-chain/LICENCE"
   },
-  "core-util-is@1.0.2": {
+  "core-util-is@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/isaacs/core-util-is",
     "publisher": "Isaac Z. Schlueter",
@@ -1675,7 +1539,7 @@
     "path": "/node_modules/count-files",
     "licenseFile": "/node_modules/count-files/readme.md"
   },
-  "cpu-features@0.0.8": {
+  "cpu-features@0.0.9": {
     "licenses": "MIT",
     "repository": "https://github.com/mscdex/cpu-features",
     "publisher": "Brian White",
@@ -1683,14 +1547,14 @@
     "path": "/node_modules/cpu-features",
     "licenseFile": "/node_modules/cpu-features/LICENSE"
   },
-  "crc-32@1.2.0": {
+  "crc-32@1.2.2": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/SheetJS/js-crc32",
     "publisher": "sheetjs",
     "path": "/node_modules/crc-32",
     "licenseFile": "/node_modules/crc-32/LICENSE"
   },
-  "crc32-stream@4.0.2": {
+  "crc32-stream@4.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/archiverjs/node-crc32-stream",
     "publisher": "Chris Talkington",
@@ -1706,15 +1570,6 @@
     "url": "github.com/jamestalmage",
     "path": "/node_modules/currently-unhandled",
     "licenseFile": "/node_modules/currently-unhandled/license"
-  },
-  "dashdash@1.14.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/trentm/node-dashdash",
-    "publisher": "Trent Mick",
-    "email": "trentm@gmail.com",
-    "url": "http://trentm.com",
-    "path": "/node_modules/dashdash",
-    "licenseFile": "/node_modules/dashdash/LICENSE.txt"
   },
   "debug@2.6.9": {
     "licenses": "MIT",
@@ -1774,6 +1629,14 @@
     "path": "/node_modules/defer-to-connect",
     "licenseFile": "/node_modules/defer-to-connect/LICENSE"
   },
+  "define-data-property@1.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/define-data-property",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/define-data-property",
+    "licenseFile": "/node_modules/define-data-property/LICENSE"
+  },
   "delay@5.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/delay",
@@ -1822,14 +1685,6 @@
     "path": "/node_modules/dom-iterator",
     "licenseFile": "/node_modules/dom-iterator/Readme.md"
   },
-  "dom-walk@0.1.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Raynos/dom-walk",
-    "publisher": "Raynos",
-    "email": "raynos2@gmail.com",
-    "path": "/node_modules/dom-walk",
-    "licenseFile": "/node_modules/dom-walk/LICENCE"
-  },
   "dompurify@3.0.4": {
     "licenses": "(MPL-2.0 OR Apache-2.0)",
     "repository": "https://github.com/cure53/DOMPurify",
@@ -1852,15 +1707,6 @@
     "publisher": "Jeroen Akkerman",
     "path": "/node_modules/easymde",
     "licenseFile": "/node_modules/easymde/LICENSE"
-  },
-  "ecc-jsbn@0.1.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/quartzjer/ecc-jsbn",
-    "publisher": "Jeremie Miller",
-    "email": "jeremie@jabber.org",
-    "url": "http://jeremie.com/",
-    "path": "/node_modules/ecc-jsbn",
-    "licenseFile": "/node_modules/ecc-jsbn/LICENSE"
   },
   "ecdsa-sig-formatter@1.0.11": {
     "licenses": "Apache-2.0",
@@ -1892,13 +1738,6 @@
     "url": "https://mathiasbynens.be/",
     "path": "/node_modules/emoji-regex",
     "licenseFile": "/node_modules/emoji-regex/LICENSE-MIT.txt"
-  },
-  "encoding@0.1.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/andris9/encoding",
-    "publisher": "Andris Reinman",
-    "path": "/node_modules/encoding",
-    "licenseFile": "/node_modules/encoding/LICENSE"
   },
   "end-of-stream@1.4.4": {
     "licenses": "MIT",
@@ -1932,7 +1771,23 @@
     "path": "/node_modules/error-ex",
     "licenseFile": "/node_modules/error-ex/LICENSE"
   },
-  "escalade@3.1.1": {
+  "es-define-property@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-define-property",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/es-define-property",
+    "licenseFile": "/node_modules/es-define-property/LICENSE"
+  },
+  "es-errors@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-errors",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/es-errors",
+    "licenseFile": "/node_modules/es-errors/LICENSE"
+  },
+  "escalade@3.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/lukeed/escalade",
     "publisher": "Luke Edwards",
@@ -1962,13 +1817,6 @@
     "path": "/node_modules/exif-parser",
     "licenseFile": "/node_modules/exif-parser/LICENSE.md"
   },
-  "exit-on-epipe@1.0.1": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/SheetJS/node-exit-on-epipe",
-    "publisher": "sheetjs",
-    "path": "/node_modules/exit-on-epipe",
-    "licenseFile": "/node_modules/exit-on-epipe/LICENSE"
-  },
   "expand-template@2.0.3": {
     "licenses": "(MIT OR WTFPL)",
     "repository": "https://github.com/ralphtheninja/expand-template",
@@ -1994,35 +1842,13 @@
     "path": "/node_modules/extend",
     "licenseFile": "/node_modules/extend/LICENSE"
   },
-  "extsprintf@1.3.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/davepacheco/node-extsprintf",
-    "path": "/node_modules/extsprintf",
-    "licenseFile": "/node_modules/extsprintf/LICENSE"
-  },
-  "fast-deep-equal@3.1.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/fast-deep-equal",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/node_modules/fast-deep-equal",
-    "licenseFile": "/node_modules/fast-deep-equal/LICENSE"
-  },
-  "fast-fifo@1.3.0": {
+  "fast-fifo@1.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/fast-fifo",
     "publisher": "Mathias Buus",
     "url": "@mafintosh",
     "path": "/node_modules/fast-fifo",
     "licenseFile": "/node_modules/fast-fifo/LICENSE"
-  },
-  "fast-json-stable-stringify@2.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/fast-json-stable-stringify",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/node_modules/fast-json-stable-stringify",
-    "licenseFile": "/node_modules/fast-json-stable-stringify/LICENSE"
   },
   "fast-memoize@2.5.2": {
     "licenses": "MIT",
@@ -2094,7 +1920,7 @@
     "path": "/node_modules/follow-redirects",
     "licenseFile": "/node_modules/follow-redirects/README.md"
   },
-  "follow-redirects@1.15.2": {
+  "follow-redirects@1.15.5": {
     "licenses": "MIT",
     "repository": "https://github.com/follow-redirects/follow-redirects",
     "publisher": "Ruben Verborgh",
@@ -2102,24 +1928,6 @@
     "url": "https://ruben.verborgh.org/",
     "path": "/node_modules/image-downloader/node_modules/follow-redirects",
     "licenseFile": "/node_modules/image-downloader/node_modules/follow-redirects/LICENSE"
-  },
-  "forever-agent@0.6.1": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/forever-agent",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "url": "http://www.futurealoof.com",
-    "path": "/node_modules/forever-agent",
-    "licenseFile": "/node_modules/forever-agent/LICENSE"
-  },
-  "form-data@2.3.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/form-data/form-data",
-    "publisher": "Felix Geisendörfer",
-    "email": "felix@debuggable.com",
-    "url": "http://debuggable.com/",
-    "path": "/node_modules/request/node_modules/form-data",
-    "licenseFile": "/node_modules/request/node_modules/form-data/License"
   },
   "form-data@4.0.0": {
     "licenses": "MIT",
@@ -2163,7 +1971,7 @@
     "path": "/node_modules/ftp",
     "licenseFile": "/node_modules/ftp/LICENSE"
   },
-  "function-bind@1.1.1": {
+  "function-bind@1.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/Raynos/function-bind",
     "publisher": "Raynos",
@@ -2192,7 +2000,7 @@
     "path": "/node_modules/get-caller-file",
     "licenseFile": "/node_modules/get-caller-file/LICENSE.md"
   },
-  "get-intrinsic@1.2.0": {
+  "get-intrinsic@1.2.4": {
     "licenses": "MIT",
     "repository": "https://github.com/ljharb/get-intrinsic",
     "publisher": "Jordan Harband",
@@ -2215,18 +2023,10 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "https://sindresorhus.com",
-    "path": "/node_modules/cacheable-request/node_modules/get-stream",
-    "licenseFile": "/node_modules/cacheable-request/node_modules/get-stream/license"
+    "path": "/node_modules/get-stream",
+    "licenseFile": "/node_modules/get-stream/license"
   },
-  "getpass@0.1.7": {
-    "licenses": "MIT",
-    "repository": "https://github.com/arekinath/node-getpass",
-    "publisher": "Alex Wilson",
-    "email": "alex.wilson@joyent.com",
-    "path": "/node_modules/getpass",
-    "licenseFile": "/node_modules/getpass/LICENSE"
-  },
-  "gifwrap@0.9.4": {
+  "gifwrap@0.10.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jtlapp/gifwrap",
     "publisher": "Joseph T. Lapp",
@@ -2250,7 +2050,7 @@
     "path": "/node_modules/github",
     "licenseFile": "/node_modules/github/LICENSE"
   },
-  "glob@7.2.0": {
+  "glob@7.2.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-glob",
     "publisher": "Isaac Z. Schlueter",
@@ -2268,14 +2068,6 @@
     "path": "/node_modules/js-beautify/node_modules/glob",
     "licenseFile": "/node_modules/js-beautify/node_modules/glob/LICENSE"
   },
-  "global@4.4.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Raynos/global",
-    "publisher": "Raynos",
-    "email": "raynos2@gmail.com",
-    "path": "/node_modules/global",
-    "licenseFile": "/node_modules/global/LICENSE"
-  },
   "google-auth-library@8.9.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/googleapis/google-auth-library-nodejs",
@@ -2290,13 +2082,21 @@
     "path": "/node_modules/google-p12-pem",
     "licenseFile": "/node_modules/google-p12-pem/LICENSE"
   },
+  "gopd@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/gopd",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/gopd",
+    "licenseFile": "/node_modules/gopd/LICENSE"
+  },
   "got@11.8.6": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/got",
     "path": "/node_modules/got",
     "licenseFile": "/node_modules/got/license"
   },
-  "graceful-fs@4.2.8": {
+  "graceful-fs@4.2.11": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-graceful-fs",
     "path": "/node_modules/graceful-fs",
@@ -2316,23 +2116,21 @@
     "path": "/node_modules/handlebars",
     "licenseFile": "/node_modules/handlebars/LICENSE"
   },
-  "har-schema@2.0.0": {
-    "licenses": "ISC",
-    "repository": "https://github.com/ahmadnassri/har-schema",
-    "publisher": "Ahmad Nassri",
-    "email": "ahmad@ahmadnassri.com",
-    "url": "https://www.ahmadnassri.com/",
-    "path": "/node_modules/har-schema",
-    "licenseFile": "/node_modules/har-schema/LICENSE"
-  },
-  "har-validator@5.1.5": {
+  "has-property-descriptors@1.0.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/ahmadnassri/node-har-validator",
-    "publisher": "Ahmad Nassri",
-    "email": "ahmad@ahmadnassri.com",
-    "url": "https://www.ahmadnassri.com/",
-    "path": "/node_modules/har-validator",
-    "licenseFile": "/node_modules/har-validator/LICENSE"
+    "repository": "https://github.com/inspect-js/has-property-descriptors",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/has-property-descriptors",
+    "licenseFile": "/node_modules/has-property-descriptors/LICENSE"
+  },
+  "has-proto@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-proto",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/has-proto",
+    "licenseFile": "/node_modules/has-proto/LICENSE"
   },
   "has-symbols@1.0.3": {
     "licenses": "MIT",
@@ -2343,13 +2141,13 @@
     "path": "/node_modules/has-symbols",
     "licenseFile": "/node_modules/has-symbols/LICENSE"
   },
-  "has@1.0.3": {
+  "hasown@2.0.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/tarruda/has",
-    "publisher": "Thiago de Arruda",
-    "email": "tpadilha84@gmail.com",
-    "path": "/node_modules/has",
-    "licenseFile": "/node_modules/has/LICENSE-MIT"
+    "repository": "https://github.com/inspect-js/hasOwn",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/hasown",
+    "licenseFile": "/node_modules/hasown/LICENSE"
   },
   "he@1.2.0": {
     "licenses": "MIT",
@@ -2375,7 +2173,7 @@
     "path": "/node_modules/html-minifier",
     "licenseFile": "/node_modules/html-minifier/LICENSE"
   },
-  "http-cache-semantics@4.1.0": {
+  "http-cache-semantics@4.1.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/kornelski/http-cache-semantics",
     "publisher": "Kornel Lesiński",
@@ -2392,13 +2190,6 @@
     "url": "http://n8.io/",
     "path": "/node_modules/http-proxy-agent",
     "licenseFile": "/node_modules/http-proxy-agent/README.md"
-  },
-  "http-signature@1.2.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/joyent/node-http-signature",
-    "publisher": "Joyent, Inc",
-    "path": "/node_modules/http-signature",
-    "licenseFile": "/node_modules/http-signature/LICENSE"
   },
   "http2-wrapper@1.0.3": {
     "licenses": "MIT",
@@ -2425,33 +2216,16 @@
     "path": "/node_modules/https-proxy-agent",
     "licenseFile": "/node_modules/https-proxy-agent/README.md"
   },
-  "iconv-lite@0.6.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ashtuchkin/iconv-lite",
-    "publisher": "Alexander Shtuchkin",
-    "email": "ashtuchkin@gmail.com",
-    "path": "/node_modules/iconv-lite",
-    "licenseFile": "/node_modules/iconv-lite/LICENSE"
-  },
-  "ieee754@1.1.13": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/feross/ieee754",
-    "publisher": "Feross Aboukhadijeh",
-    "email": "feross@feross.org",
-    "url": "http://feross.org",
-    "path": "/node_modules/ieee754",
-    "licenseFile": "/node_modules/ieee754/LICENSE"
-  },
   "ieee754@1.2.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/feross/ieee754",
     "publisher": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
     "url": "https://feross.org",
-    "path": "/node_modules/token-types/node_modules/ieee754",
-    "licenseFile": "/node_modules/token-types/node_modules/ieee754/LICENSE"
+    "path": "/node_modules/ieee754",
+    "licenseFile": "/node_modules/ieee754/LICENSE"
   },
-  "ignore@5.2.4": {
+  "ignore@5.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/kaelzhang/node-ignore",
     "publisher": "kael",
@@ -2535,7 +2309,7 @@
     "path": "/node_modules/simple-swizzle/node_modules/is-arrayish",
     "licenseFile": "/node_modules/simple-swizzle/node_modules/is-arrayish/LICENSE"
   },
-  "is-core-module@2.8.0": {
+  "is-core-module@2.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/inspect-js/is-core-module",
     "publisher": "Jordan Harband",
@@ -2566,8 +2340,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/wrap-ansi/node_modules/is-fullwidth-code-point",
-    "licenseFile": "/node_modules/wrap-ansi/node_modules/is-fullwidth-code-point/license"
+    "path": "/node_modules/is-fullwidth-code-point",
+    "licenseFile": "/node_modules/is-fullwidth-code-point/license"
   },
   "is-fullwidth-code-point@3.0.0": {
     "licenses": "MIT",
@@ -2575,16 +2349,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/is-fullwidth-code-point",
-    "licenseFile": "/node_modules/is-fullwidth-code-point/license"
-  },
-  "is-function@1.0.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/grncdr/js-is-function",
-    "publisher": "Stephen Sugden",
-    "email": "me@stephensugden.com",
-    "path": "/node_modules/is-function",
-    "licenseFile": "/node_modules/is-function/LICENSE"
+    "path": "/node_modules/cliui/node_modules/is-fullwidth-code-point",
+    "licenseFile": "/node_modules/cliui/node_modules/is-fullwidth-code-point/license"
   },
   "is-stream@2.0.1": {
     "licenses": "MIT",
@@ -2594,15 +2360,6 @@
     "url": "https://sindresorhus.com",
     "path": "/node_modules/is-stream",
     "licenseFile": "/node_modules/is-stream/license"
-  },
-  "is-typedarray@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/hughsk/is-typedarray",
-    "publisher": "Hugh Kennedy",
-    "email": "hughskennedy@gmail.com",
-    "url": "http://hughsk.io/",
-    "path": "/node_modules/is-typedarray",
-    "licenseFile": "/node_modules/is-typedarray/LICENSE.md"
   },
   "is-utf8@0.2.1": {
     "licenses": "MIT",
@@ -2651,22 +2408,6 @@
     "path": "/node_modules/isomorphic-git",
     "licenseFile": "/node_modules/isomorphic-git/LICENSE.md"
   },
-  "isstream@0.1.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/rvagg/isstream",
-    "publisher": "Rod Vagg",
-    "email": "rod@vagg.org",
-    "path": "/node_modules/isstream",
-    "licenseFile": "/node_modules/isstream/LICENSE.md"
-  },
-  "jimp@0.22.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jimp-dev/jimp",
-    "publisher": "Oliver Moran",
-    "email": "oliver.moran@gmail.com",
-    "path": "/node_modules/jimp",
-    "licenseFile": "/node_modules/jimp/LICENSE"
-  },
   "jpeg-js@0.4.4": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/eugeneware/jpeg-js",
@@ -2682,13 +2423,6 @@
     "email": "einar@beautifier.io",
     "path": "/node_modules/js-beautify",
     "licenseFile": "/node_modules/js-beautify/LICENSE"
-  },
-  "jsbn@0.1.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/andyperlitch/jsbn",
-    "publisher": "Tom Wu",
-    "path": "/node_modules/jsbn",
-    "licenseFile": "/node_modules/jsbn/LICENSE"
   },
   "json-bigint@1.0.0": {
     "licenses": "MIT",
@@ -2707,42 +2441,13 @@
     "path": "/node_modules/json-buffer",
     "licenseFile": "/node_modules/json-buffer/LICENSE"
   },
-  "json-schema-traverse@0.4.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/json-schema-traverse",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/node_modules/json-schema-traverse",
-    "licenseFile": "/node_modules/json-schema-traverse/LICENSE"
-  },
-  "json-schema@0.4.0": {
-    "licenses": "(AFL-2.1 OR BSD-3-Clause)",
-    "repository": "https://github.com/kriszyp/json-schema",
-    "publisher": "Kris Zyp",
-    "path": "/node_modules/json-schema",
-    "licenseFile": "/node_modules/json-schema/LICENSE"
-  },
-  "json-stringify-safe@5.0.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/json-stringify-safe",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me",
-    "path": "/node_modules/json-stringify-safe",
-    "licenseFile": "/node_modules/json-stringify-safe/LICENSE"
-  },
   "jsonfile@6.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/node_modules/fs-extra/node_modules/jsonfile",
-    "licenseFile": "/node_modules/fs-extra/node_modules/jsonfile/LICENSE"
-  },
-  "jsprim@1.4.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/joyent/node-jsprim",
-    "path": "/node_modules/jsprim",
-    "licenseFile": "/node_modules/jsprim/LICENSE"
+    "path": "/node_modules/jsonfile",
+    "licenseFile": "/node_modules/jsonfile/LICENSE"
   },
   "jszip@3.10.1": {
     "licenses": "(MIT OR GPL-3.0-or-later)",
@@ -2773,14 +2478,14 @@
     "path": "/node_modules/keytar",
     "licenseFile": "/node_modules/keytar/LICENSE.md"
   },
-  "keyv@4.0.4": {
+  "keyv@4.5.4": {
     "licenses": "MIT",
     "repository": "https://github.com/jaredwray/keyv",
     "publisher": "Jared Wray",
     "email": "me@jaredwray.com",
     "url": "http://jaredwray.com",
     "path": "/node_modules/keyv",
-    "licenseFile": "/node_modules/keyv/LICENSE"
+    "licenseFile": "/node_modules/keyv/README.md"
   },
   "lazystream@1.0.1": {
     "licenses": "MIT",
@@ -2805,15 +2510,6 @@
     "repository": "https://github.com/calvinmetcalf/lie",
     "path": "/node_modules/lie",
     "licenseFile": "/node_modules/lie/license.md"
-  },
-  "load-bmfont@1.4.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Jam3/load-bmfont",
-    "publisher": "Matt DesLauriers",
-    "email": "dave.des@gmail.com",
-    "url": "https://github.com/mattdesl",
-    "path": "/node_modules/load-bmfont",
-    "licenseFile": "/node_modules/load-bmfont/LICENSE.md"
   },
   "load-json-file@1.1.0": {
     "licenses": "MIT",
@@ -2978,13 +2674,13 @@
     "path": "/node_modules/meow",
     "licenseFile": "/node_modules/meow/license"
   },
-  "mime-db@1.51.0": {
+  "mime-db@1.52.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-db",
     "path": "/node_modules/mime-db",
     "licenseFile": "/node_modules/mime-db/LICENSE"
   },
-  "mime-types@2.1.34": {
+  "mime-types@2.1.35": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
     "path": "/node_modules/mime-types",
@@ -3026,14 +2722,6 @@
     "path": "/node_modules/decompress-response/node_modules/mimic-response",
     "licenseFile": "/node_modules/decompress-response/node_modules/mimic-response/license"
   },
-  "min-document@2.19.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Raynos/min-document",
-    "publisher": "Raynos",
-    "email": "raynos2@gmail.com",
-    "path": "/node_modules/min-document",
-    "licenseFile": "/node_modules/min-document/LICENCE"
-  },
   "minimatch@3.1.2": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/minimatch",
@@ -3049,12 +2737,12 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me",
-    "path": "/node_modules/js-beautify/node_modules/minimatch",
-    "licenseFile": "/node_modules/js-beautify/node_modules/minimatch/LICENSE"
+    "path": "/node_modules/readdir-glob/node_modules/minimatch",
+    "licenseFile": "/node_modules/readdir-glob/node_modules/minimatch/LICENSE"
   },
-  "minimist@1.2.6": {
+  "minimist@1.2.8": {
     "licenses": "MIT",
-    "repository": "https://github.com/substack/minimist",
+    "repository": "https://github.com/minimistjs/minimist",
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
@@ -3078,7 +2766,7 @@
     "path": "/node_modules/mkdirp-classic",
     "licenseFile": "/node_modules/mkdirp-classic/LICENSE"
   },
-  "mkdirp@0.5.5": {
+  "mkdirp@0.5.6": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/node-mkdirp",
     "publisher": "James Halliday",
@@ -3086,12 +2774,6 @@
     "url": "http://substack.net",
     "path": "/node_modules/mkdirp",
     "licenseFile": "/node_modules/mkdirp/LICENSE"
-  },
-  "mkdirp@2.1.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/isaacs/node-mkdirp",
-    "path": "/node_modules/@jimp/core/node_modules/mkdirp",
-    "licenseFile": "/node_modules/@jimp/core/node_modules/mkdirp/LICENSE"
   },
   "moment@2.29.4": {
     "licenses": "MIT",
@@ -3114,7 +2796,7 @@
     "path": "/node_modules/ms",
     "licenseFile": "/node_modules/ms/license.md"
   },
-  "nan@2.17.0": {
+  "nan@2.18.0": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/nan",
     "path": "/node_modules/nan",
@@ -3170,7 +2852,7 @@
     "path": "/node_modules/no-case",
     "licenseFile": "/node_modules/no-case/LICENSE"
   },
-  "node-abi@3.45.0": {
+  "node-abi@3.56.0": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/node-abi",
     "publisher": "Lukas Geiger",
@@ -3189,7 +2871,7 @@
     "path": "/node_modules/sharp/node_modules/node-addon-api",
     "licenseFile": "/node_modules/sharp/node_modules/node-addon-api/LICENSE.md"
   },
-  "node-fetch@2.6.12": {
+  "node-fetch@2.7.0": {
     "licenses": "MIT",
     "repository": "https://github.com/bitinn/node-fetch",
     "publisher": "David Frank",
@@ -3204,6 +2886,12 @@
     "url": "http://digitalbazaar.com/",
     "path": "/node_modules/node-forge",
     "licenseFile": "/node_modules/node-forge/LICENSE"
+  },
+  "node-sqlite3-wasm@0.8.7": {
+    "licenses": "MIT",
+    "publisher": "Tobias Enderle",
+    "path": "/node_modules/node-sqlite3-wasm",
+    "licenseFile": "/node_modules/node-sqlite3-wasm/LICENSE"
   },
   "node-version-compare@1.0.3": {
     "licenses": "MIT",
@@ -3245,15 +2933,6 @@
     "path": "/node_modules/normalize-url",
     "licenseFile": "/node_modules/normalize-url/license"
   },
-  "oauth-sign@0.9.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/oauth-sign",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "url": "http://www.futurealoof.com",
-    "path": "/node_modules/oauth-sign",
-    "licenseFile": "/node_modules/oauth-sign/LICENSE"
-  },
   "object-assign@4.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/object-assign",
@@ -3263,7 +2942,7 @@
     "path": "/node_modules/object-assign",
     "licenseFile": "/node_modules/object-assign/license"
   },
-  "object-inspect@1.12.3": {
+  "object-inspect@1.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/inspect-js/object-inspect",
     "publisher": "James Halliday",
@@ -3322,41 +3001,6 @@
     "path": "/node_modules/param-case",
     "licenseFile": "/node_modules/param-case/LICENSE"
   },
-  "parse-bmfont-ascii@1.0.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mattdesl/parse-bmfont-ascii",
-    "publisher": "Matt DesLauriers",
-    "email": "dave.des@gmail.com",
-    "url": "https://github.com/mattdesl",
-    "path": "/node_modules/parse-bmfont-ascii",
-    "licenseFile": "/node_modules/parse-bmfont-ascii/README.md"
-  },
-  "parse-bmfont-binary@1.0.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Jam3/parse-bmfont-binary",
-    "publisher": "Matt DesLauriers",
-    "email": "dave.des@gmail.com",
-    "url": "https://github.com/mattdesl",
-    "path": "/node_modules/parse-bmfont-binary",
-    "licenseFile": "/node_modules/parse-bmfont-binary/LICENSE.md"
-  },
-  "parse-bmfont-xml@1.1.4": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mattdesl/parse-bmfont-xml",
-    "publisher": "Matt DesLauriers",
-    "email": "dave.des@gmail.com",
-    "url": "https://github.com/mattdesl",
-    "path": "/node_modules/parse-bmfont-xml",
-    "licenseFile": "/node_modules/parse-bmfont-xml/LICENSE.md"
-  },
-  "parse-headers@2.0.5": {
-    "licenses": "MIT",
-    "repository": "https://github.com/kesla/parse-headers",
-    "publisher": "David Björklund",
-    "email": "david.bjorklund@gmail.com",
-    "path": "/node_modules/parse-headers",
-    "licenseFile": "/node_modules/parse-headers/LICENCE"
-  },
   "parse-json@2.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/parse-json",
@@ -3392,7 +3036,7 @@
     "path": "/node_modules/path-parse",
     "licenseFile": "/node_modules/path-parse/LICENSE"
   },
-  "path-starts-with@2.0.0": {
+  "path-starts-with@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/path-starts-with",
     "publisher": "Jon Schlinkert",
@@ -3416,21 +3060,6 @@
     "url": "https://github.com/Borewit",
     "path": "/node_modules/peek-readable",
     "licenseFile": "/node_modules/peek-readable/LICENSE"
-  },
-  "performance-now@2.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/braveg1rl/performance-now",
-    "publisher": "Braveg1rl",
-    "email": "braveg1rl@outlook.com",
-    "path": "/node_modules/performance-now",
-    "licenseFile": "/node_modules/performance-now/license.txt"
-  },
-  "phin@2.9.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ethanent/phin",
-    "publisher": "Ethan Davis",
-    "path": "/node_modules/phin",
-    "licenseFile": "/node_modules/phin/LICENSE"
   },
   "pify@2.3.0": {
     "licenses": "MIT",
@@ -3487,7 +3116,7 @@
     "path": "/node_modules/pngjs",
     "licenseFile": "/node_modules/pngjs/LICENSE"
   },
-  "prebuild-install@7.1.1": {
+  "prebuild-install@7.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/prebuild/prebuild-install",
     "publisher": "Mathias Buus",
@@ -3503,13 +3132,6 @@
     "path": "/node_modules/prettier-bytes",
     "licenseFile": "/node_modules/prettier-bytes/LICENSE"
   },
-  "printj@1.1.2": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/SheetJS/printj",
-    "publisher": "sheetjs",
-    "path": "/node_modules/printj",
-    "licenseFile": "/node_modules/printj/LICENSE"
-  },
   "prismjs@1.29.0": {
     "licenses": "MIT",
     "repository": "https://github.com/PrismJS/prism",
@@ -3522,14 +3144,6 @@
     "repository": "https://github.com/calvinmetcalf/process-nextick-args",
     "path": "/node_modules/process-nextick-args",
     "licenseFile": "/node_modules/process-nextick-args/license.md"
-  },
-  "process@0.11.10": {
-    "licenses": "MIT",
-    "repository": "https://github.com/shtylman/node-process",
-    "publisher": "Roman Shtylman",
-    "email": "shtylman@gmail.com",
-    "path": "/node_modules/process",
-    "licenseFile": "/node_modules/process/LICENSE"
   },
   "promise-retry@2.0.1": {
     "licenses": "MIT",
@@ -3558,15 +3172,6 @@
     "path": "/node_modules/pseudomap",
     "licenseFile": "/node_modules/pseudomap/LICENSE"
   },
-  "psl@1.8.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/lupomontero/psl",
-    "publisher": "Lupo Montero",
-    "email": "lupomontero@gmail.com",
-    "url": "https://lupomontero.com/",
-    "path": "/node_modules/psl",
-    "licenseFile": "/node_modules/psl/LICENSE"
-  },
   "pump@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/pump",
@@ -3575,33 +3180,11 @@
     "path": "/node_modules/pump",
     "licenseFile": "/node_modules/pump/LICENSE"
   },
-  "punycode@1.4.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/bestiejs/punycode.js",
-    "publisher": "Mathias Bynens",
-    "url": "https://mathiasbynens.be/",
-    "path": "/node_modules/tough-cookie/node_modules/punycode",
-    "licenseFile": "/node_modules/tough-cookie/node_modules/punycode/LICENSE-MIT.txt"
-  },
-  "punycode@2.1.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/bestiejs/punycode.js",
-    "publisher": "Mathias Bynens",
-    "url": "https://mathiasbynens.be/",
-    "path": "/node_modules/punycode",
-    "licenseFile": "/node_modules/punycode/LICENSE-MIT.txt"
-  },
   "qs@6.11.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/ljharb/qs",
-    "path": "/node_modules/@gitbeaker/requester-utils/node_modules/qs",
-    "licenseFile": "/node_modules/@gitbeaker/requester-utils/node_modules/qs/LICENSE.md"
-  },
-  "qs@6.5.2": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/ljharb/qs",
     "path": "/node_modules/qs",
-    "licenseFile": "/node_modules/qs/LICENSE"
+    "licenseFile": "/node_modules/qs/LICENSE.md"
   },
   "query-string@7.1.3": {
     "licenses": "MIT",
@@ -3673,13 +3256,13 @@
     "path": "/node_modules/ftp/node_modules/readable-stream",
     "licenseFile": "/node_modules/ftp/node_modules/readable-stream/LICENSE"
   },
-  "readable-stream@2.3.7": {
+  "readable-stream@2.3.8": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/readable-stream",
     "path": "/node_modules/lazystream/node_modules/readable-stream",
     "licenseFile": "/node_modules/lazystream/node_modules/readable-stream/LICENSE"
   },
-  "readable-stream@3.6.0": {
+  "readable-stream@3.6.2": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/readable-stream",
     "path": "/node_modules/readable-stream",
@@ -3693,7 +3276,7 @@
     "path": "/node_modules/readable-web-to-node-stream",
     "licenseFile": "/node_modules/readable-web-to-node-stream/README.md"
   },
-  "readdir-glob@1.1.1": {
+  "readdir-glob@1.1.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/Yqnn/node-readdir-glob",
     "publisher": "Yann Armelin",
@@ -3735,14 +3318,6 @@
     "path": "/node_modules/repeating",
     "licenseFile": "/node_modules/repeating/license"
   },
-  "request@2.88.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/request/request",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "path": "/node_modules/request",
-    "licenseFile": "/node_modules/request/LICENSE"
-  },
   "require-directory@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/troygoode/node-require-directory",
@@ -3759,7 +3334,7 @@
     "path": "/node_modules/resolve-alpn",
     "licenseFile": "/node_modules/resolve-alpn/LICENSE"
   },
-  "resolve@1.20.0": {
+  "resolve@1.22.8": {
     "licenses": "MIT",
     "repository": "https://github.com/browserify/resolve",
     "publisher": "James Halliday",
@@ -3768,9 +3343,9 @@
     "path": "/node_modules/resolve",
     "licenseFile": "/node_modules/resolve/LICENSE"
   },
-  "responselike@2.0.0": {
+  "responselike@2.0.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/lukechilds/responselike",
+    "repository": "https://github.com/sindresorhus/responselike",
     "publisher": "lukechilds",
     "path": "/node_modules/responselike",
     "licenseFile": "/node_modules/responselike/LICENSE"
@@ -3846,39 +3421,33 @@
     "path": "/node_modules/safer-buffer",
     "licenseFile": "/node_modules/safer-buffer/LICENSE"
   },
-  "sax@1.2.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/sax-js",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/node_modules/sax",
-    "licenseFile": "/node_modules/sax/LICENSE"
-  },
   "semver@5.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
     "path": "/node_modules/github/node_modules/semver",
     "licenseFile": "/node_modules/github/node_modules/semver/LICENSE"
   },
-  "semver@5.7.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/npm/node-semver",
-    "path": "/node_modules/editorconfig/node_modules/semver",
-    "licenseFile": "/node_modules/editorconfig/node_modules/semver/LICENSE"
-  },
-  "semver@7.3.5": {
-    "licenses": "ISC",
-    "repository": "https://github.com/npm/node-semver",
-    "path": "/node_modules/node-abi/node_modules/semver",
-    "licenseFile": "/node_modules/node-abi/node_modules/semver/LICENSE"
-  },
-  "semver@7.5.4": {
+  "semver@5.7.2": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
     "publisher": "GitHub Inc.",
-    "path": "/node_modules/sharp/node_modules/semver",
-    "licenseFile": "/node_modules/sharp/node_modules/semver/LICENSE"
+    "path": "/node_modules/editorconfig/node_modules/semver",
+    "licenseFile": "/node_modules/editorconfig/node_modules/semver/LICENSE"
+  },
+  "semver@7.6.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/node-semver",
+    "publisher": "GitHub Inc.",
+    "path": "/node_modules/node-abi/node_modules/semver",
+    "licenseFile": "/node_modules/node-abi/node_modules/semver/LICENSE"
+  },
+  "set-function-length@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/set-function-length",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/set-function-length",
+    "licenseFile": "/node_modules/set-function-length/LICENSE"
   },
   "setimmediate@1.0.5": {
     "licenses": "MIT",
@@ -3904,7 +3473,7 @@
     "path": "/node_modules/sharp",
     "licenseFile": "/node_modules/sharp/LICENSE"
   },
-  "side-channel@1.0.4": {
+  "side-channel@1.0.6": {
     "licenses": "MIT",
     "repository": "https://github.com/ljharb/side-channel",
     "publisher": "Jordan Harband",
@@ -3921,7 +3490,7 @@
     "path": "/node_modules/sigmund",
     "licenseFile": "/node_modules/sigmund/LICENSE"
   },
-  "signal-exit@3.0.5": {
+  "signal-exit@3.0.7": {
     "licenses": "ISC",
     "repository": "https://github.com/tapjs/signal-exit",
     "publisher": "Ben Coe",
@@ -3977,16 +3546,13 @@
     "path": "/node_modules/source-map",
     "licenseFile": "/node_modules/source-map/LICENSE"
   },
-  "spdx-correct@3.1.1": {
+  "spdx-correct@3.2.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/jslicense/spdx-correct.js",
-    "publisher": "Kyle E. Mitchell",
-    "email": "kyle@kemitchell.com",
-    "url": "https://kemitchell.com",
     "path": "/node_modules/spdx-correct",
     "licenseFile": "/node_modules/spdx-correct/LICENSE"
   },
-  "spdx-exceptions@2.3.0": {
+  "spdx-exceptions@2.5.0": {
     "licenses": "CC-BY-3.0",
     "repository": "https://github.com/kemitchell/spdx-exceptions.json",
     "publisher": "The Linux Foundation",
@@ -4002,7 +3568,7 @@
     "path": "/node_modules/spdx-expression-parse",
     "licenseFile": "/node_modules/spdx-expression-parse/LICENSE"
   },
-  "spdx-license-ids@3.0.11": {
+  "spdx-license-ids@3.0.17": {
     "licenses": "CC0-1.0",
     "repository": "https://github.com/jslicense/spdx-license-ids",
     "publisher": "Shinnosuke Watanabe",
@@ -4025,27 +3591,20 @@
     "path": "/node_modules/sqlstring",
     "licenseFile": "/node_modules/sqlstring/LICENSE"
   },
-  "ssh2-sftp-client@9.1.0": {
+  "ssh2-sftp-client@10.0.3": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/theophilusx/ssh2-sftp-client",
     "publisher": "Tim Cross",
     "path": "/node_modules/ssh2-sftp-client",
     "licenseFile": "/node_modules/ssh2-sftp-client/LICENSE"
   },
-  "ssh2@1.14.0": {
+  "ssh2@1.15.0": {
     "licenses": "MIT",
     "repository": "https://github.com/mscdex/ssh2",
     "publisher": "Brian White",
     "email": "mscdex@mscdex.net",
     "path": "/node_modules/ssh2",
     "licenseFile": "/node_modules/ssh2/LICENSE"
-  },
-  "sshpk@1.16.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/joyent/node-sshpk",
-    "publisher": "Joyent, Inc",
-    "path": "/node_modules/sshpk",
-    "licenseFile": "/node_modules/sshpk/LICENSE"
   },
   "status-logger@3.1.1": {
     "licenses": "MIT",
@@ -4070,7 +3629,7 @@
     "path": "/node_modules/stream-events",
     "licenseFile": "/node_modules/stream-events/readme.md"
   },
-  "stream-shift@1.0.1": {
+  "stream-shift@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/stream-shift",
     "publisher": "Mathias Buus",
@@ -4078,7 +3637,7 @@
     "path": "/node_modules/stream-shift",
     "licenseFile": "/node_modules/stream-shift/LICENSE"
   },
-  "streamx@2.15.0": {
+  "streamx@2.16.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/streamx",
     "publisher": "Mathias Buus",
@@ -4101,8 +3660,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/wrap-ansi/node_modules/string-width",
-    "licenseFile": "/node_modules/wrap-ansi/node_modules/string-width/license"
+    "path": "/node_modules/string-width",
+    "licenseFile": "/node_modules/string-width/license"
   },
   "string-width@4.2.3": {
     "licenses": "MIT",
@@ -4110,8 +3669,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/string-width",
-    "licenseFile": "/node_modules/string-width/license"
+    "path": "/node_modules/cliui/node_modules/string-width",
+    "licenseFile": "/node_modules/cliui/node_modules/string-width/license"
   },
   "string_decoder@0.10.31": {
     "licenses": "MIT",
@@ -4137,8 +3696,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/wrap-ansi/node_modules/strip-ansi",
-    "licenseFile": "/node_modules/wrap-ansi/node_modules/strip-ansi/license"
+    "path": "/node_modules/strip-ansi",
+    "licenseFile": "/node_modules/strip-ansi/license"
   },
   "strip-ansi@6.0.1": {
     "licenses": "MIT",
@@ -4146,8 +3705,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/node_modules/strip-ansi",
-    "licenseFile": "/node_modules/strip-ansi/license"
+    "path": "/node_modules/cliui/node_modules/strip-ansi",
+    "licenseFile": "/node_modules/cliui/node_modules/strip-ansi/license"
   },
   "strip-bom@2.0.0": {
     "licenses": "MIT",
@@ -4207,6 +3766,14 @@
     "path": "/node_modules/stubs",
     "licenseFile": "/node_modules/stubs/readme.md"
   },
+  "supports-preserve-symlinks-flag@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/node-supports-preserve-symlinks-flag",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/node_modules/supports-preserve-symlinks-flag",
+    "licenseFile": "/node_modules/supports-preserve-symlinks-flag/LICENSE"
+  },
   "tar-fs@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/tar-fs",
@@ -4229,7 +3796,7 @@
     "path": "/node_modules/tar-stream",
     "licenseFile": "/node_modules/tar-stream/LICENSE"
   },
-  "tar-stream@3.1.6": {
+  "tar-stream@3.1.7": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/tar-stream",
     "publisher": "Mathias Buus",
@@ -4276,14 +3843,6 @@
     "url": "https://github.com/Borewit",
     "path": "/node_modules/token-types",
     "licenseFile": "/node_modules/token-types/LICENSE"
-  },
-  "tough-cookie@2.4.3": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/salesforce/tough-cookie",
-    "publisher": "Jeremy Stashewsky",
-    "email": "jstash@gmail.com",
-    "path": "/node_modules/tough-cookie",
-    "licenseFile": "/node_modules/tough-cookie/LICENSE"
   },
   "tr46@0.0.3": {
     "licenses": "MIT",
@@ -4354,7 +3913,7 @@
     "path": "/node_modules/typedarray",
     "licenseFile": "/node_modules/typedarray/LICENSE"
   },
-  "typo-js@1.2.1": {
+  "typo-js@1.2.4": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/cfinke/Typo.js",
     "publisher": "Christopher Finke",
@@ -4363,7 +3922,7 @@
     "path": "/node_modules/typo-js",
     "licenseFile": "/node_modules/typo-js/README.md"
   },
-  "uglify-js@3.14.3": {
+  "uglify-js@3.17.4": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/mishoo/UglifyJS",
     "publisher": "Mihai Bazon",
@@ -4371,6 +3930,12 @@
     "url": "http://lisperator.net/",
     "path": "/node_modules/uglify-js",
     "licenseFile": "/node_modules/uglify-js/LICENSE"
+  },
+  "undici-types@5.26.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/undici",
+    "path": "/node_modules/undici-types",
+    "licenseFile": "/node_modules/undici-types/README.md"
   },
   "unescape@1.0.1": {
     "licenses": "MIT",
@@ -4388,13 +3953,13 @@
     "path": "/node_modules/unicode",
     "licenseFile": "/node_modules/unicode/LICENSE"
   },
-  "universalify@2.0.0": {
+  "universalify@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/RyanZim/universalify",
     "publisher": "Ryan Zimmerman",
     "email": "opensrc@ryanzim.com",
-    "path": "/node_modules/fs-extra/node_modules/universalify",
-    "licenseFile": "/node_modules/fs-extra/node_modules/universalify/LICENSE"
+    "path": "/node_modules/universalify",
+    "licenseFile": "/node_modules/universalify/LICENSE"
   },
   "unzip-crx-3@0.2.0": {
     "licenses": "MIT",
@@ -4413,14 +3978,6 @@
     "path": "/node_modules/upper-case",
     "licenseFile": "/node_modules/upper-case/LICENSE"
   },
-  "uri-js@4.4.1": {
-    "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/garycourt/uri-js",
-    "publisher": "Gary Court",
-    "email": "gary.court@gmail.com",
-    "path": "/node_modules/uri-js",
-    "licenseFile": "/node_modules/uri-js/LICENSE"
-  },
   "utif2@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/photopea/UTIF.js",
@@ -4438,19 +3995,13 @@
     "path": "/node_modules/util-deprecate",
     "licenseFile": "/node_modules/util-deprecate/LICENSE"
   },
-  "uuid@3.3.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/kelektiv/node-uuid",
-    "path": "/node_modules/uuid",
-    "licenseFile": "/node_modules/uuid/LICENSE.md"
-  },
   "uuid@8.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/uuidjs/uuid",
-    "path": "/node_modules/@smithy/middleware-retry/node_modules/uuid",
-    "licenseFile": "/node_modules/@smithy/middleware-retry/node_modules/uuid/LICENSE.md"
+    "path": "/node_modules/uuid",
+    "licenseFile": "/node_modules/uuid/LICENSE.md"
   },
-  "uuid@9.0.0": {
+  "uuid@9.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/uuidjs/uuid",
     "path": "/node_modules/teeny-request/node_modules/uuid",
@@ -4464,12 +4015,6 @@
     "url": "https://kemitchell.com",
     "path": "/node_modules/validate-npm-package-license",
     "licenseFile": "/node_modules/validate-npm-package-license/LICENSE"
-  },
-  "verror@1.10.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/davepacheco/node-verror",
-    "path": "/node_modules/verror",
-    "licenseFile": "/node_modules/verror/LICENSE"
   },
   "vue-color@2.4.5": {
     "licenses": "MIT",
@@ -4539,7 +4084,7 @@
     "path": "/node_modules/webidl-conversions",
     "licenseFile": "/node_modules/webidl-conversions/LICENSE.md"
   },
-  "whatwg-fetch@3.6.2": {
+  "whatwg-fetch@3.6.20": {
     "licenses": "MIT",
     "repository": "https://github.com/github/fetch",
     "path": "/node_modules/whatwg-fetch",
@@ -4596,40 +4141,6 @@
     "email": "damian@codecharm.co.uk",
     "path": "/node_modules/xcase",
     "licenseFile": "/node_modules/xcase/LICENSE"
-  },
-  "xhr@2.6.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/naugtur/xhr",
-    "publisher": "Raynos",
-    "email": "raynos2@gmail.com",
-    "path": "/node_modules/xhr",
-    "licenseFile": "/node_modules/xhr/LICENCE"
-  },
-  "xml-parse-from-string@1.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Jam3/xml-parse-from-string",
-    "publisher": "Matt DesLauriers",
-    "email": "dave.des@gmail.com",
-    "url": "https://github.com/mattdesl",
-    "path": "/node_modules/xml-parse-from-string",
-    "licenseFile": "/node_modules/xml-parse-from-string/LICENSE.md"
-  },
-  "xml2js@0.4.19": {
-    "licenses": "MIT",
-    "repository": "https://github.com/Leonidas-from-XIV/node-xml2js",
-    "publisher": "Marek Kubica",
-    "email": "marek@xivilization.net",
-    "url": "https://xivilization.net",
-    "path": "/node_modules/xml2js",
-    "licenseFile": "/node_modules/xml2js/LICENSE"
-  },
-  "xmlbuilder@9.0.7": {
-    "licenses": "MIT",
-    "repository": "https://github.com/oozcitak/xmlbuilder-js",
-    "publisher": "Ozgur Ozcitak",
-    "email": "oozcitak@gmail.com",
-    "path": "/node_modules/xmlbuilder",
-    "licenseFile": "/node_modules/xmlbuilder/LICENSE"
   },
   "xregexp@2.0.0": {
     "licenses": "MIT",
@@ -4688,7 +4199,7 @@
     "path": "/node_modules/yargs-parser",
     "licenseFile": "/node_modules/yargs-parser/LICENSE.txt"
   },
-  "yargs@17.6.0": {
+  "yargs@17.7.2": {
     "licenses": "MIT",
     "repository": "https://github.com/yargs/yargs",
     "path": "/node_modules/yargs",
@@ -4703,7 +4214,7 @@
     "path": "/node_modules/yocto-queue",
     "licenseFile": "/node_modules/yocto-queue/license"
   },
-  "zip-stream@4.1.0": {
+  "zip-stream@4.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/archiverjs/node-zip-stream",
     "publisher": "Chris Talkington",
