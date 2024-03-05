@@ -2045,7 +2045,7 @@ class Renderer {
 
         try {
             if (fs.existsSync(symlinkPath)) {
-                fs.unlinkSync(symlinkPath);
+                fs.removeSync(symlinkPath);
             }
             
             fs.symlinkSync(targetPath, symlinkPath);
