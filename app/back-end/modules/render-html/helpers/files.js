@@ -177,6 +177,18 @@ class Files {
             dirs.push('posts/' + postIDs[i]);
         }
 
+        try {
+            if (fs.existsSync(basePathOutput)) {
+                const stats = fs.lstatSync(basePathOutput);
+
+                if (stats.isSymbolicLink()) {
+                    fs.unlinkSync(basePathOutput);
+                }
+            }
+        } catch (err) {
+            console.log('[Error] Symlink removal problem: ' + err);
+        }
+
         if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
             fs.mkdirSync(path.join(basePathOutput));
         }
