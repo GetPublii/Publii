@@ -228,7 +228,13 @@ class RendererContext {
                 json_extract(value, '$.mainTag') != '';
         `).all();
 
-        mainTags = mainTags.map(mainTag => JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTag.id])));
+        mainTags = mainTags.map(mainTag => {
+            if (this.renderer.cachedItems.tags[mainTag.id]) {
+                return JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTag.id]));
+            }
+
+            return false;
+        }).filter(mainTag => !!mainTag);
 
         if(!this.siteConfig.advanced.displayEmptyTags) {
             mainTags = mainTags.filter(mainTag => mainTag.postsNumber > 0);
