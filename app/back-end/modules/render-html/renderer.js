@@ -1719,15 +1719,9 @@ class Renderer {
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-
-        if (this.previewMode !== false) {
-            this.createMediaSymlink();
-        } else {
-            await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
-            await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
-            await FilesHelper.removeEmptyDirectories(this.outputDir);
-        }
-
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+        await FilesHelper.removeEmptyDirectories(this.outputDir);
         console.timeEnd("FILES");
     }
 
@@ -2016,25 +2010,6 @@ class Renderer {
     triggerEvent (eventName) {
         if (this.plugins.hasEvents(eventName)) {
             this.plugins.runEvents(eventName, this); 
-        }
-    }
-
-    /**
-     * Create media folder symlink for the preview purpose
-     */
-    createMediaSymlink () {
-        let symlinkPath = path.join(this.outputDir, 'media');
-        let targetPath = path.join(this.inputDir, 'media');
-
-        try {
-            if (fs.existsSync(symlinkPath)) {
-                fs.unlinkSync(symlinkPath);
-            }
-            
-            fs.symlinkSync(targetPath, symlinkPath);
-            console.log(`Symlink created: ${symlinkPath} -> ${targetPath}`);
-        } catch (error) {
-            console.error("Symlink creation error:", error);
         }
     }
 }
