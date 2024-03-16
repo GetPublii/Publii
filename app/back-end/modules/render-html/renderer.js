@@ -976,7 +976,7 @@ class Renderer {
         return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
             type: 'post',
             id: postID
-        });
+        }, this);
     }
 
     /*
