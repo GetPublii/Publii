@@ -1,5 +1,7 @@
+const sizeOf = require('image-size');
+
 class ViewSettings {
-    static override(viewSettings, defaultViewConfig) {
+    static override(viewSettings, defaultViewConfig, itemData, rendererInstance) {
         let outputConfig = {};
 
         // Generate default settings structure
@@ -31,6 +33,36 @@ class ViewSettings {
                         outputConfig[defaultViewFields[i]] = defaultField;
                     }
                 }
+            } else if (typeof field !== 'undefined' && field.type === 'image') {
+                let dirName = 'posts';
+
+                if (itemData.type === 'tag') {
+                    dirName = 'tags';
+                } else if (itemData.type === 'author') {
+                    dirName = 'authors';
+                }
+
+                let imageDimensions = false;
+                let imagePath = '/media/' + dirName + '/defaults/' + defaultField;
+
+                if (defaultField) {
+                    try {
+                        imageDimensions = sizeOf(rendererInstance.inputDir + imagePath);
+                    } catch(e) {
+                        imageDimensions = {
+                            height: false,
+                            width: false
+                        };
+                    }
+
+                    outputConfig[defaultViewFields[i]] = {
+                        url: rendererInstance.siteConfig.domain + imagePath,
+                        width: imageDimensions.width,
+                        height: imageDimensions.height
+                    };
+                } else {
+                    outputConfig[defaultViewFields[i]] = false;
+                }
             } else {
                 if (defaultField === '0') {
                     defaultField = 0;
@@ -50,34 +82,64 @@ class ViewSettings {
         for(let i = 0; i < viewFields.length; i++) {
             let field = viewSettings[viewFields[i]];
 
-            if(typeof field !== 'undefined' && field.value) {
-                if(field.value !== "") {
-                    outputConfig[viewFields[i]] = field.value;
-                }
-            } else if(typeof field === 'string' && field !== "") {
-                outputConfig[viewFields[i]] = field;
-            }
+            if (field.type === 'image') {
+                if (field.value) {
+                    let dirName = 'posts';
 
-            if((field.type && field.type === 'select') || !field.type) {
-                if(
-                    field === 0 ||
-                    field === '0' ||
-                    field.value === 0 ||
-                    field.value === '0'
-                ) {
-                    outputConfig[viewFields[i]] = false;
-                } else if(
-                    field === 1 ||
-                    field === '1' ||
-                    field.value === 1 ||
-                    field.value === '1'
-                ) {
-                    outputConfig[viewFields[i]] = true;
-                } else {
-                    if (typeof field.value !== 'undefined' && field.value !== '') {
-                        outputConfig[viewFields[i]] = JSON.stringify(field.value).replace(/"/g, '');
-                    } else if (typeof field !== 'object' && field !== '') {
-                        outputConfig[viewFields[i]] = JSON.stringify(field).replace(/"/g, '');
+                    if (itemData.type === 'tag') {
+                        dirName = 'tags';
+                    } else if (itemData.type === 'author') {
+                        dirName = 'authors';
+                    }
+
+                    let imageDimensions = false;
+                    let imagePath = '/media/' + dirName + '/' + itemData.id + '/' + field.value;
+
+                    try {
+                        imageDimensions = sizeOf(rendererInstance.inputDir + imagePath);
+                    } catch(e) {
+                        imageDimensions = {
+                            height: false,
+                            width: false
+                        };
+                    }
+
+                    outputConfig[defaultViewFields[i]] = {
+                        url: rendererInstance.siteConfig.domain + imagePath,
+                        width: imageDimensions.width,
+                        height: imageDimensions.height
+                    };
+                }
+            } else {
+                if(typeof field !== 'undefined' && field.value) {
+                    if(field.value !== "") {
+                        outputConfig[viewFields[i]] = field.value;
+                    }
+                } else if(typeof field === 'string' && field !== "") {
+                    outputConfig[viewFields[i]] = field;
+                }
+
+                if((field.type && field.type === 'select') || !field.type) {
+                    if(
+                        field === 0 ||
+                        field === '0' ||
+                        field.value === 0 ||
+                        field.value === '0'
+                    ) {
+                        outputConfig[viewFields[i]] = false;
+                    } else if(
+                        field === 1 ||
+                        field === '1' ||
+                        field.value === 1 ||
+                        field.value === '1'
+                    ) {
+                        outputConfig[viewFields[i]] = true;
+                    } else {
+                        if (typeof field.value !== 'undefined' && field.value !== '') {
+                            outputConfig[viewFields[i]] = JSON.stringify(field.value).replace(/"/g, '');
+                        } else if (typeof field !== 'object' && field !== '') {
+                            outputConfig[viewFields[i]] = JSON.stringify(field).replace(/"/g, '');
+                        }
                     }
                 }
             }

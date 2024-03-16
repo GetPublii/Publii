@@ -468,6 +468,13 @@
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
+                                    <image-upload
+                                        v-if="field.type === 'image'"
+                                        slot="field"
+                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        :item-id="$parent.postID"
+                                        imageType="contentImages" />
+
                                     <small
                                         v-if="field.note"
                                         class="note">

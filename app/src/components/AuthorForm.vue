@@ -341,6 +341,13 @@
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
+                                    <image-upload
+                                        v-if="field.type === 'image'"
+                                        class="author-view-settings"
+                                        v-model="authorData.additionalData.viewConfig[field.name]"
+                                        :item-id="authorData.id"
+                                        imageType="authorImages" />
+
                                     <small
                                         v-if="field.note"
                                         class="note">

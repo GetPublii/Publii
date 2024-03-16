@@ -521,6 +521,60 @@ class Themes {
                 this.removeResponsiveImages(fullPath);
             }
         }
+
+        // clean up unnecessary default images
+        let assetsToCheck = [
+            {
+                dir: 'posts', 
+                configType: 'postConfig'
+            },
+            {
+                dir: 'tags', 
+                configType: 'tagConfig'
+            },
+            {
+                dir: 'authors', 
+                configType: 'authorConfig'
+            }
+        ];
+
+        let configObject = JSON.parse(configString);
+
+        for (let i = 0; i < assetsToCheck.length; i++) {
+            let dirToCheck = assetsToCheck[i].dir;
+            let configToCheck = assetsToCheck[i].configType;
+            let viewImagesDir = path.join(this.siteInputPath, 'media', dirToCheck, 'defaults');
+
+            if(!UtilsHelper.dirExists(viewImagesDir)) {
+                return;
+            }
+
+            let viewImages = fs.readdirSync(viewImagesDir);
+            let configImages = Object.values(configObject[configToCheck]);
+
+            // Iterate through images
+            for (let i in viewImages) {
+                let imagePath = viewImages[i];
+                let fullPath = path.join(viewImagesDir, imagePath);
+
+                // Skip dirs and symlinks
+                if (imagePath === '.' || imagePath === '..' || imagePath === 'responsive' || imagePath === 'gallery') {
+                    continue;
+                }
+
+                // Remove files which does not exist in the post text
+                if (configImages.indexOf(imagePath) === -1) {
+                    try {
+                        fs.unlinkSync(fullPath);
+                    } catch(e) {
+                        console.error(e);
+                    }
+
+                    // Remove responsive images
+                    this.removeResponsiveImages(fullPath);
+                }
+            }
+        }
     }
 
     /*

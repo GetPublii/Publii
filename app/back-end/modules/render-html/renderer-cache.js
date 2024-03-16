@@ -76,7 +76,10 @@ class RendererCache {
         let tagViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.tagConfig));
         
         tags = tags.map(tag => {
-            let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag);
+            let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag, {
+                type: 'tag',
+                id: tag.id
+            });
             let newTag = new Tag(tag, this.renderer, mainTagIDs);
             newTag.setTagViewConfig(tagViewConfig);
             return newTag;
@@ -186,7 +189,10 @@ class RendererCache {
         let authorViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.authorConfig));
         
         authors = authors.map(author => {
-            let authorViewConfig = this.getViewSettings(authorViewConfigObject, author);
+            let authorViewConfig = this.getViewSettings(authorViewConfigObject, author, {
+                type: 'author',
+                id: author.id
+            });
             let newAuthor = new Author(author, this.renderer);
             newAuthor.setAuthorViewConfig(authorViewConfig);
             return newAuthor;
@@ -397,7 +403,10 @@ class RendererCache {
             postViewSettings = JSON.parse(postViewData.value);
         }
 
-        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
+            type: 'post',
+            id: postID
+        }, this.renderer);
     }
 
     /**
@@ -408,7 +417,7 @@ class RendererCache {
      *
      * @returns {object}
      */
-    getViewSettings(defaultViewConfig, itemData) {
+    getViewSettings(defaultViewConfig, itemData, itemConfig) {
         let viewSettings = {};
 
         if (itemData && itemData.additional_data) {
@@ -423,7 +432,7 @@ class RendererCache {
             }
         }
 
-        return ViewSettingsHelper.override(viewSettings, defaultViewConfig);
+        return ViewSettingsHelper.override(viewSettings, defaultViewConfig, itemConfig, this.renderer);
     }
 }
 

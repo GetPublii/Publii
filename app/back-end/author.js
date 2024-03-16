@@ -292,7 +292,7 @@ class Author extends Model {
             featuredImage = path.parse(this.additionalData.featuredImage).base;
         }
 
-        // If post is cancelled - get the previous featured image
+        // If author is cancelled - get the previous featured image
         if (cancelEvent && this.id !== 0) {
             let featuredImageSqlQuery = `SELECT additional_data FROM authors WHERE id = @id`;
 
@@ -313,6 +313,12 @@ class Author extends Model {
             authorDir = 'temp';
         }
 
+        let imagesInAuthorViewSettings = [];
+        
+        if (this.additionalData && this.additionalData.viewConfig) {
+            imagesInAuthorViewSettings = Object.values(this.additionalData.viewConfig).filter(item => item.type === "image").map(item => item.value);
+        }
+
         // Iterate through images
         for (let i in images) {
             let imagePath = images[i];
@@ -323,7 +329,14 @@ class Author extends Model {
                 continue;
             }
 
-            if ((cancelEvent && authorDir === 'temp') || featuredImage !== imagePath) {
+            // Remove files which does not exist as featured image and authorViewSettings
+            if(
+                (cancelEvent && authorDir === 'temp') ||
+                (
+                    imagesInAuthorViewSettings.indexOf(imagePath) === -1 &&
+                    featuredImage !== imagePath
+                )
+            ) {
                 try {
                     fs.unlinkSync(fullPath);
                 } catch(e) {

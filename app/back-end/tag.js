@@ -293,6 +293,12 @@ class Tag extends Model {
             tagDir = 'temp';
         }
 
+        let imagesInTagViewSettings = [];
+        
+        if (this.additionalData && this.additionalData.viewConfig) {
+            imagesInTagViewSettings = Object.values(this.additionalData.viewConfig).filter(item => item.type === "image").map(item => item.value);
+        }
+
         // Iterate through images
         for (let i in images) {
             let imagePath = images[i];
@@ -303,7 +309,14 @@ class Tag extends Model {
                 continue;
             }
 
-            if ((cancelEvent && tagDir === 'temp') || featuredImage !== imagePath) {
+            // Remove files which does not exist as featured image and authorViewSettings
+            if(
+                (cancelEvent && tagDir === 'temp') ||
+                (
+                    imagesInTagViewSettings.indexOf(imagePath) === -1 &&
+                    featuredImage !== imagePath
+                )
+            ) {
                 try {
                     fs.unlinkSync(fullPath);
                 } catch(e) {
