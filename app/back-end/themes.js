@@ -483,6 +483,8 @@ class Themes {
             ogFallbackImage = siteData.advanced.openGraphImage;
         }
 
+        // Parse json before slashes normalization
+        let configObject = JSON.parse(configString);
         // Make sure that all slashes are in the same direction
         configString = normalizePath(configString);
 
@@ -538,8 +540,6 @@ class Themes {
                 configType: 'authorConfig'
             }
         ];
-
-        let configObject = JSON.parse(configString);
 
         for (let i = 0; i < assetsToCheck.length; i++) {
             let dirToCheck = assetsToCheck[i].dir;
