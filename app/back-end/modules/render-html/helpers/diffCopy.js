@@ -117,7 +117,7 @@ class DiffCopy {
         postIDs = postIDs.map(id => (id).toString());
 
         for (let i = 0; i < allPostFolders.length; i++) {
-            if (allPostFolders[i] === '.' || allPostFolders[i] === '..') {
+            if (allPostFolders[i] === '.' || allPostFolders[i] === '..' || allPostFolders[i] === 'defaults') {
                 continue;
             }
 

@@ -203,6 +203,12 @@ export default {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             } else if (this.itemId === 0) {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'contentImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/defaults/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'authorImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/defaults/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'tagImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/defaults/';
             } else if (this.itemId) {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
@@ -258,7 +264,10 @@ export default {
                 imageType: 'optionImages'
             };
 
-            if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
+            if (this.itemId && this.itemId === 'defaults') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = this.imageType;
+            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'tagImages';
             } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {

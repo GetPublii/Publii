@@ -298,7 +298,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -313,7 +313,7 @@ class Renderer {
         let postIDs = Object.keys(this.cachedItems.posts);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -339,7 +339,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -365,7 +365,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -973,7 +973,10 @@ class Renderer {
             }
         }
 
-        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
+            type: 'post',
+            id: postID
+        });
     }
 
     /*

@@ -311,6 +311,13 @@
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
+                                    <image-upload
+                                        v-if="field.type === 'image'"
+                                        class="tag-view-settings"
+                                        v-model="tagData.additionalData.viewConfig[field.name]"
+                                        :item-id="tagData.id"
+                                        imageType="tagImages" />
+
                                     <small
                                         v-if="field.note"
                                         class="note">
