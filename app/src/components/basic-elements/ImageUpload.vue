@@ -276,6 +276,9 @@ export default {
             } else if (this.imageType === 'pluginImages') {
                 uploadData.imageType = 'pluginImages';
                 uploadData.pluginDir = this.pluginDir;
+            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = 'contentImages';
             } else if ((this.itemId || this.itemId === 0)) {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
