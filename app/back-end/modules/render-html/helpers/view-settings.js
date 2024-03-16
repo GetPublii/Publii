@@ -1,5 +1,3 @@
-const sizeOf = require('image-size');
-
 class ViewSettings {
     static override(viewSettings, defaultViewConfig, itemData, rendererInstance) {
         let outputConfig = {};
@@ -42,24 +40,9 @@ class ViewSettings {
                     dirName = 'authors';
                 }
 
-                let imageDimensions = false;
-                let imagePath = '/media/' + dirName + '/defaults/' + defaultField;
-
                 if (defaultField) {
-                    try {
-                        imageDimensions = sizeOf(rendererInstance.inputDir + imagePath);
-                    } catch(e) {
-                        imageDimensions = {
-                            height: false,
-                            width: false
-                        };
-                    }
-
-                    outputConfig[defaultViewFields[i]] = {
-                        url: rendererInstance.siteConfig.domain + imagePath,
-                        width: imageDimensions.width,
-                        height: imageDimensions.height
-                    };
+                    let imagePath = '/media/' + dirName + '/defaults/' + defaultField;
+                    outputConfig[defaultViewFields[i]] = rendererInstance.siteConfig.domain + imagePath;
                 } else {
                     outputConfig[defaultViewFields[i]] = false;
                 }
@@ -92,23 +75,8 @@ class ViewSettings {
                         dirName = 'authors';
                     }
 
-                    let imageDimensions = false;
                     let imagePath = '/media/' + dirName + '/' + itemData.id + '/' + field.value;
-
-                    try {
-                        imageDimensions = sizeOf(rendererInstance.inputDir + imagePath);
-                    } catch(e) {
-                        imageDimensions = {
-                            height: false,
-                            width: false
-                        };
-                    }
-
-                    outputConfig[defaultViewFields[i]] = {
-                        url: rendererInstance.siteConfig.domain + imagePath,
-                        width: imageDimensions.width,
-                        height: imageDimensions.height
-                    };
+                    outputConfig[defaultViewFields[i]] = rendererInstance.siteConfig.domain + imagePath;
                 }
             } else {
                 if(typeof field !== 'undefined' && field.value) {
