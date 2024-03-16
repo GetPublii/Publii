@@ -335,13 +335,6 @@
                                     :customCssClasses="field.customCssClasses">
                                 </color-picker>
 
-                                <image-upload
-                                    v-if="field.type === 'image'"
-                                    slot="field"
-                                    v-model="postView[field.name]"
-                                    item-id="defaults"
-                                    imageType="contentImages" />
-
                                 <small
                                     v-if="field.note"
                                     slot="note"
@@ -398,13 +391,6 @@
                                     :customCssClasses="field.customCssClasses">
                                 </color-picker>
 
-                                <image-upload
-                                    v-if="field.type === 'image'"
-                                    slot="field"
-                                    v-model="tagView[field.name]"
-                                    item-id="defaults"
-                                    imageType="tagImages" />
-
                                 <small
                                     v-if="field.note"
                                     slot="note"
@@ -460,13 +446,6 @@
                                     :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
                                     :customCssClasses="field.customCssClasses">
                                 </color-picker>
-
-                                <image-upload
-                                    v-if="field.type === 'image'"
-                                    slot="field"
-                                    v-model="authorView[field.name]"
-                                    item-id="defaults"
-                                    imageType="authorImages" />
 
                                 <small
                                     v-if="field.note"

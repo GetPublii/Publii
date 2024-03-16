@@ -167,7 +167,7 @@ class Files {
     static async copyMediaFiles (inputDir, outputDir, postIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        let dirs = ['website', 'files', 'tags', 'authors', 'posts/defaults'];
+        let dirs = ['website', 'files', 'tags', 'authors'];
 
         if (postIDs[0] === 0) {
             postIDs[0] = 'temp';
