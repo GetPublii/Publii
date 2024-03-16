@@ -260,6 +260,7 @@
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
                                     :settings="custom"
+                                    imageType="optionImages"
                                     :customCssClasses="field.customCssClasses" />
 
                                 <small

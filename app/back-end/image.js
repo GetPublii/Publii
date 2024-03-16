@@ -108,7 +108,7 @@ class Image extends Model {
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'authors', 'defaults', 'responsive');
         } else if (this.imageType === 'pluginImages') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'plugins', this.pluginDir); 
-        } else if (this.id === 'website') {
+        } else if (this.id === 'website' || this.imageType === 'optionImages') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'website');
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'website', 'responsive');
         } else if (this.imageType === 'tagImages' && this.id) {

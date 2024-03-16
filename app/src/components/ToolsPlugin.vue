@@ -234,7 +234,8 @@
                                             :hideLabels="field.hideLabels"
                                             :anchor="field.anchor"
                                             :settings="settingsValues"
-                                            :customCssClasses="field.customCssClasses" />
+                                            :customCssClasses="field.customCssClasses"
+                                            imageType="pluginImages" />
 
                                         <small
                                             v-if="field.note && field.type !== 'separator'"
@@ -410,7 +411,9 @@
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
                                     :settings="settingsValues"
-                                    :customCssClasses="field.customCssClasses" />
+                                    :customCssClasses="field.customCssClasses"
+                                    imageType="pluginImages"
+                                    :pluginDir="$route.params.pluginname" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"

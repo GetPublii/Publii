@@ -125,6 +125,24 @@
                                 :multiple="itemConfig[subindex].multiple"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></authors-dropdown>
 
+                            <template v-if="pluginDir">
+                                <image-upload
+                                    v-if="itemConfig[subindex].type === 'upload'"
+                                    slot="field"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :imageType="imageType"
+                                    :pluginDir="pluginDir"
+                                    :addMediaFolderPath="false" />
+                            </template>
+                            <template v-else>
+                                <image-upload
+                                    v-if="itemConfig[subindex].type === 'upload'"
+                                    slot="field"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :imageType="imageType"
+                                    :addMediaFolderPath="true" />   
+                            </template>
+                            
                             <small
                                 v-if="itemConfig[subindex].note && (!hideLabels || (hideLabels && index === 0))"
                                 slot="note"
@@ -210,6 +228,14 @@ export default {
             type: Object
         },
         customCssClasses: {
+            default: '',
+            type: String
+        },
+        imageType: {
+            default: 'optionImages',
+            type: String
+        },
+        pluginDir: {
             default: '',
             type: String
         }

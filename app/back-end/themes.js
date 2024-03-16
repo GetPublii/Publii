@@ -505,9 +505,10 @@ class Themes {
                 continue;
             }
 
-            // Remove files which does not exist in the post text
+            // Remove files which does not exist in the config string and as avatars/OG fallback image
             if(
                 configString.indexOf('/' + imagePath) === -1 &&
+                configString.indexOf('"' + imagePath + '"') === -1 &&
                 authorAvatars.indexOf(imagePath) === -1 &&
                 imagePath !== ogFallbackImage
             ) {

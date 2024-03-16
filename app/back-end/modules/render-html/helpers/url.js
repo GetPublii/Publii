@@ -176,15 +176,35 @@ class URLHelper {
     static prepareSettingsImages(domain, settings) {
         let groups = Object.keys(settings);
 
-        for(let i = 0; i < groups.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             let options = Object.keys(settings[groups[i]]);
 
-            for(let j = 0; j < options.length; j++) {
-                if(typeof settings[groups[i]][options[j]] !== "string") {
+            for (let j = 0; j < options.length; j++) {
+                if (Array.isArray(settings[groups[i]][options[j]])) {
+                    let items = settings[groups[i]][options[j]];
+
+                    for (let k = 0; k < items.length; k++) {
+                        let item = items[k];
+                        
+                        if (typeof item === 'object') {
+                            let keys = Object.keys(item);
+
+                            for (let l = 0; l < keys.length; l++) {
+                                let key = keys[l];
+
+                                if (typeof item[key] === 'string' && item[key].indexOf('media/website') > -1) {
+                                    item[key] = URLHelper.fixProtocols(normalizePath(domain + '/' + item[key]));
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (typeof settings[groups[i]][options[j]] !== "string") {
                     continue;
                 }
 
-                if(settings[groups[i]][options[j]].indexOf('media/website') > -1) {
+                if (settings[groups[i]][options[j]].indexOf('media/website') > -1) {
                     settings[groups[i]][options[j]] = URLHelper.fixProtocols(normalizePath(domain + '/' + settings[groups[i]][options[j]]));
                 }
             }
