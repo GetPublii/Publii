@@ -597,35 +597,22 @@ class Renderer {
         let themeConfigPath = path.join(this.inputDir, 'config', 'theme.config.json');
         let tempThemeConfig = Themes.loadThemeConfig(themeConfigPath, this.themeDir);
         this.themeConfig = JSON.parse(JSON.stringify(tempThemeConfig));
-        this.themeConfig.config = {};
-        this.themeConfig.customConfig = {};
-        this.themeConfig.postConfig = {};
-        this.themeConfig.tagConfig = {};
-        this.themeConfig.authorConfig = {};
-
-        for (let i = 0; i < tempThemeConfig.config.length; i++) {
-            let key = tempThemeConfig.config[i].name;
-            this.themeConfig.config[key] = tempThemeConfig.config[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.customConfig.length; i++) {
-            let key = tempThemeConfig.customConfig[i].name;
-            this.themeConfig.customConfig[key] = tempThemeConfig.customConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.postConfig.length; i++) {
-            let key = tempThemeConfig.postConfig[i].name;
-            this.themeConfig.postConfig[key] = tempThemeConfig.postConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.tagConfig.length; i++) {
-            let key = tempThemeConfig.tagConfig[i].name;
-            this.themeConfig.tagConfig[key] = tempThemeConfig.tagConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.authorConfig.length; i++) {
-            let key = tempThemeConfig.authorConfig[i].name;
-            this.themeConfig.authorConfig[key] = tempThemeConfig.authorConfig[i].value;
+        
+        let configNames = [
+            'config',
+            'customConfig',
+            'postConfig',
+            'tagConfig',
+            'authorConfig'
+        ];
+        
+        for (let configName of configNames) {
+            this.themeConfig[configName] = {};
+        
+            for (let i = 0; i < tempThemeConfig[configName].length; i++) {
+                let key = tempThemeConfig[configName][i].name;
+                this.themeConfig[configName][key] = tempThemeConfig[configName][i].value;
+            }
         }
     }
 

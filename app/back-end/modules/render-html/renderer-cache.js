@@ -1,6 +1,7 @@
 const Post = require('./items/post');
 const Author = require('./items/author');
 const Tag = require('./items/tag');
+const ContentHelper = require('./helpers/content.js');
 const FeaturedImage = require('./items/featured-image');
 const ViewSettingsHelper = require('./helpers/view-settings.js');
 const RendererHelpers = require('./helpers/helpers.js');
@@ -36,6 +37,8 @@ class RendererCache {
         this.getPostTags();
         // At the end we get posts as it uses other cached items
         this.getPosts();
+        // Now we can set internal links
+        this.setInternalLinks();
     }
 
     /**
@@ -433,6 +436,42 @@ class RendererCache {
         }
 
         return ViewSettingsHelper.override(viewSettings, defaultViewConfig, itemConfig, this.renderer);
+    }
+
+    /**
+     * Set internal links for tags and authors
+     */
+    setInternalLinks () {
+        let authorIDs = Object.keys(this.renderer.cachedItems.authors);
+        let tagIDs = Object.keys(this.renderer.cachedItems.tags);
+
+        for (let i = 0; i < authorIDs.length; i++) {
+            let authorID = authorIDs[i];
+
+            if (typeof this.renderer.cachedItems.authors[authorID].description === 'string') {
+                let description =  this.renderer.cachedItems.authors[authorID].description;
+                this.renderer.cachedItems.authors[authorID].description = ContentHelper.setInternalLinks(description, this.renderer);
+            }
+
+            if (typeof this.renderer.cachedItems.authors[authorID].authorViewConfig === 'object') {
+                let viewConfig = this.renderer.cachedItems.authors[authorID].authorViewConfig;
+                this.renderer.cachedItems.authors[authorID].authorViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+            }
+        }
+
+        for (let i = 0; i < tagIDs.length; i++) {
+            let tagID = tagIDs[i];
+
+            if (typeof this.renderer.cachedItems.tags[tagID].description === 'string') {
+                let description =  this.renderer.cachedItems.tags[tagID].description;
+                this.renderer.cachedItems.tags[tagID].description = ContentHelper.setInternalLinks(description, this.renderer);
+            }
+
+            if (typeof this.renderer.cachedItems.tags[tagID].tagViewConfig === 'object') {
+                let viewConfig = this.renderer.cachedItems.tags[tagID].tagViewConfig;
+                this.renderer.cachedItems.tags[tagID].tagViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+            }
+        }
     }
 }
 
