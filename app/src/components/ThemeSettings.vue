@@ -115,7 +115,7 @@
                                 :label="getFieldLabel(field)"
                                 :key="'tab-' + index + '-field-' + subindex"
                                 :noLabelSpace="field.type === 'separator'"
-                                :labelFullWidth="field.type === 'wysiwyg'">
+                                :labelFullWidth="field.type === 'wysiwyg' || field.type === 'repeater'">
                                 <range-slider
                                     v-if="field.type === 'range'"
                                     :min="field.min"
