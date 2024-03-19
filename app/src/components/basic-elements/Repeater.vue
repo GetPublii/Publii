@@ -142,6 +142,17 @@
                                     :imageType="imageType"
                                     :addMediaFolderPath="true" />   
                             </template>
+
+                            <vue-select
+                                v-if="itemConfig[subindex].type === 'file-dropdown'"
+                                slot="field"
+                                :ref="'file-dropdown-' + index"
+                                :options="filesList"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :close-on-select="true"
+                                :show-labels="false"
+                                :placeholder="$t('file.selectFileFromFileManager')"
+                                @select="closeFileDropdown('file-dropdown-' + index)"></vue-select>
                             
                             <small
                                 v-if="itemConfig[subindex].note && (!hideLabels || (hideLabels && index === 0))"
@@ -191,6 +202,8 @@
 
 <script>
 import Draggable from 'vuedraggable';
+import vSelect from 'vue-multiselect/dist/vue-multiselect.min.js';
+import Vue from 'vue';
 
 export default {
     name: 'repeater',
@@ -241,7 +254,8 @@ export default {
         }
     },
     components: {
-        'draggable': Draggable
+        'draggable': Draggable,
+        'vue-select': vSelect
     },
     computed: {
         cssClasses () {
@@ -269,15 +283,39 @@ export default {
         },
         itemConfig () {
             return this.structure;
+        },
+        hasFileManagerField () {
+            return this.itemConfig.filter(item => item.type === 'file-dropdown').length > 0;
         }
     },
     data () {
         return {
-            content: this.value
+            content: this.value,
+            filesList: ['']
         };
     },
     mounted () {
         this.content = this.value;
+
+        if (this.hasFileManagerField) {
+            mainProcessAPI.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                this.filesList = data.map(file => file.name);
+
+                mainProcessAPI.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'media/files'
+                }); 
+
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+                });
+            });
+        }
     },
     watch: {
         value (newValue, oldValue) {
@@ -376,6 +414,11 @@ export default {
             }
 
             return true;
+        },
+        closeFileDropdown (refID) {
+            if (this.$refs[refID] && this.$refs[refID][0]) {
+                this.$refs[refID][0].isOpen = false;
+            }
         }
     }
 }
