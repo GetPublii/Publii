@@ -352,11 +352,25 @@ export default {
 
         &.is-empty {
             box-shadow: inset 0 0 0 5px var(--bg-primary);
-        }
+            container-type: inline-size;
 
-        &.is-empty {
             .upload-overlay {
                 display: block;
+            }
+
+            @container (max-width: 200px) {
+                .upload-overlay svg {
+                    display: none;
+                }
+            }
+
+            @container (max-width: 160px) {
+                .upload-overlay div {
+                    display: none;
+                }
+                .upload-image-input {
+                    margin-top: 0 !important;
+                }
             }
         }
 

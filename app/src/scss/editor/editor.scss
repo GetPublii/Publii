@@ -879,8 +879,8 @@ pre[class*="language-"] > code {
 
 /* Code blocks */
 pre[class*="language-"] {
-    padding: 1em;
-    margin: .5em 0;
+    padding: baseline(6);
+    margin: baseline(7) 0;
     overflow: auto;
     border-radius: 0.3em;
 }
