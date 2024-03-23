@@ -378,7 +378,7 @@ export default {
                 let dependencyValue = itemConfig.dependencies[i].value;
                 let valueToCompare;
 
-                if (dependencyType === 'pluginOption') {
+                if (dependencyType === 'externalOption') {
                     valueToCompare = this.settings[dependencyName];
                 } else {
                     valueToCompare = this.content[index][dependencyName];
