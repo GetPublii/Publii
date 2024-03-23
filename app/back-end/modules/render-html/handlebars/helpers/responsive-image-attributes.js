@@ -15,7 +15,11 @@ const responsiveSizes = require('./responsive-sizes.js');
  */
 function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveImageAttributes', function (firstParam, secondParam, thirdParam) {
-        if (firstParam === 'featuredImage' || firstParam === 'tagImage' || firstParam === 'authorImage') {
+        if (
+            firstParam === 'featuredImage' || 
+            firstParam === 'tagImage' || 
+            firstParam === 'authorImage'
+        ) {
             if (secondParam && thirdParam) {
                 return new Handlebars.SafeString('srcset="' + secondParam + '" sizes="' + thirdParam + '"');
             }
@@ -24,6 +28,19 @@ function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
         }
 
         let srcSet = responsiveSrcSet.returnSrcSetAttribute.bind(rendererInstance)(firstParam, secondParam, thirdParam);
+
+        if (!secondParam) {
+            if (firstParam.indexOf('/media/authors/') > -1) {
+                secondParam = 'authorImages';
+            } else if (firstParam.indexOf('/media/tags/') > -1) {
+                secondParam = 'tagImages';
+            } else if (firstParam.indexOf('/media/posts/') > -1) {
+                secondParam = 'contentImages';
+            } else if (firstParam.indexOf('/media/website/') > -1) {
+                secondParam = 'optionImages';
+            }
+        }
+
         let sizes = responsiveSizes.returnSizesAttribute.bind(rendererInstance)(secondParam, thirdParam);
 
         if (srcSet) {
