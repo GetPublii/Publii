@@ -5,7 +5,7 @@ const responsiveSizes = require('./responsive-sizes.js');
 /**
  * Helper for sizes attribute for the images from options
  *
- * {{responsiveImageAttributes @config.custom.imageOptionName [group]}}
+ * {{responsiveImageAttributes @config.custom.imageOptionName [type] [group]}}
  * 
  * {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
  * {{responsiveImageAttributes 'tagImage' srcset.post sizes.post}}
@@ -23,8 +23,8 @@ function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
             return '';
         }
 
-        let srcSet = responsiveSrcSet.returnSrcSetAttribute.bind(rendererInstance)(firstParam);
-        let sizes = responsiveSizes.returnSizesAttribute.bind(rendererInstance)(secondParam);
+        let srcSet = responsiveSrcSet.returnSrcSetAttribute.bind(rendererInstance)(firstParam, secondParam, thirdParam);
+        let sizes = responsiveSizes.returnSizesAttribute.bind(rendererInstance)(secondParam, thirdParam);
 
         if (srcSet) {
             return new Handlebars.SafeString(srcSet + ' ' + sizes);

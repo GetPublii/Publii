@@ -7,7 +7,7 @@ const URLHelper = require('./../../helpers/url.js');
 /**
  * Helper for srcset attribute from the provided image
  *
- * {{responsiveSrcSet @config.custom.imageOptionName [group]}}
+ * {{responsiveSrcSet @config.custom.imageOptionName [type] [group]}}
  *
  * @returns {string} - string with the srcset attribute
  */
@@ -15,7 +15,7 @@ function responsiveSrcSetHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveSrcSet', returnSrcSetAttribute.bind(rendererInstance));
 }
 
-function returnSrcSetAttribute (url, group) {
+function returnSrcSetAttribute (url, type) {
     if (!url) {
         return;
     }
@@ -25,36 +25,37 @@ function returnSrcSetAttribute (url, group) {
     let dimensions = false;
     let dimensionsData = false;
 
-    // Check if the responsive config exists
-    if(!UtilsHelper.responsiveImagesConfigExists(this.themeConfig)) {
+    if (!UtilsHelper.responsiveImagesConfigExists(this.themeConfig)) {
         return output;
     }
 
     // skip GIF and SVG images
-    if(url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
+    if (url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
         return output;
     }
 
-    if(typeof group !== "string") {
-        group = false;
+    if (typeof type !== "string") {
+        type = false;
     }
 
-    // Check for the config
-    if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'optionImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'optionImages', group);
-        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'optionImages', group);
-    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'tagImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'tagImages', group);
-        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'tagImages', group);
-    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'authorImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'authorImages', group);
-        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'authorImages', group);
-    } else if(UtilsHelper.responsiveImagesConfigExists(this.themeConfig, 'contentImages')) {
-        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, 'contentImages');
-        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, 'contentImages');
+    if (!type) {
+        if (url.indexOf('/media/authors/') > -1) {
+            type = 'authorImages';
+        } else if (url.indexOf('/media/tags/') > -1) {
+            type = 'tagImages';
+        } else if (url.indexOf('/media/posts/') > -1) {
+            type = 'contentImages';
+        } else if (url.indexOf('/media/website/') > -1) {
+            type = 'optionImages';
+        }
     }
 
-    if(!dimensions) {
+    if (UtilsHelper.responsiveImagesConfigExists(this.themeConfig, type)) {
+        dimensions = UtilsHelper.responsiveImagesDimensions(this.themeConfig, type, group);
+        dimensionsData = UtilsHelper.responsiveImagesData(this.themeConfig, type, group);
+    }
+
+    if (!dimensions) {
         return;
     }
 
