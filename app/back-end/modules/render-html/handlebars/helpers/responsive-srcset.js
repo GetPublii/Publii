@@ -38,6 +38,10 @@ function returnSrcSetAttribute (url, type, group) {
         type = false;
     }
 
+    if (typeof group !== "string") {
+        group = false;
+    }
+
     if (!type) {
         if (url.indexOf('/media/authors/') > -1) {
             type = 'authorImages';
