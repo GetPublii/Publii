@@ -29,7 +29,7 @@ function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
 
         let srcSet = responsiveSrcSet.returnSrcSetAttribute.bind(rendererInstance)(firstParam, secondParam, thirdParam);
 
-        if (!secondParam) {
+        if (typeof secondParam !== 'string') {
             if (firstParam.indexOf('/media/authors/') > -1) {
                 secondParam = 'authorImages';
             } else if (firstParam.indexOf('/media/tags/') > -1) {

@@ -15,7 +15,7 @@ function responsiveSrcSetHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveSrcSet', returnSrcSetAttribute.bind(rendererInstance));
 }
 
-function returnSrcSetAttribute (url, type) {
+function returnSrcSetAttribute (url, type, group) {
     if (!url) {
         return;
     }
