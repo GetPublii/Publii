@@ -59,6 +59,7 @@ class Renderer {
             user: false,
             theme: false
         };
+        this.viewConfigStructure = {};
         this.contentStructure = {};
         this.commonData = {
             tags: [],
@@ -608,10 +609,12 @@ class Renderer {
         
         for (let configName of configNames) {
             this.themeConfig[configName] = {};
+            this.viewConfigStructure[configName] = {};
         
             for (let i = 0; i < tempThemeConfig[configName].length; i++) {
                 let key = tempThemeConfig[configName][i].name;
                 this.themeConfig[configName][key] = tempThemeConfig[configName][i].value;
+                this.viewConfigStructure[configName][key] = { type: tempThemeConfig[configName][i].type };
             }
         }
     }

@@ -2,11 +2,20 @@ class ViewSettings {
     static override(viewSettings, defaultViewConfig, itemData, rendererInstance) {
         let outputConfig = {};
 
+        // Get default config structure
+        let viewType = itemData.type;
+        let viewConfigObject = {}
+
+        if (viewType && (viewType === 'author' || viewType === 'post' || viewType === 'tag')) {
+            let configField = viewType + 'Config';
+            viewConfigObject = JSON.parse(JSON.stringify(rendererInstance.viewConfigStructure[configField]));
+        }
+
         // Generate default settings structure
         let defaultViewFields = Object.keys(defaultViewConfig);
 
         for(let i = 0; i < defaultViewFields.length; i++) {
-            let field = viewSettings[defaultViewFields[i]];
+            let field = viewConfigObject[defaultViewFields[i]];
             let defaultField = defaultViewConfig[defaultViewFields[i]];
 
             if(typeof field !== 'undefined' && (!field.type || (field.type && field.type === 'select'))) {
