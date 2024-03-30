@@ -161,10 +161,10 @@ class Renderer {
             } else {
                 await this.renderFullPreview();
             }
-        } catch (err) {
+        } catch (e) {
             this.errorLog.push({
                 message: 'An error occurred during rendering process:',
-                desc: err.message
+                desc: e.message + "\n\n" + e.stack
             });
         }
 
@@ -653,7 +653,7 @@ class Renderer {
             } catch (e) {
                 this.errorLog.push({
                     message: 'An error (1001) occurred during parsing ' + allPartials[i] + '.hbs partial file.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -699,7 +699,7 @@ class Renderer {
             } catch (e) {
                 this.errorLog.push({
                     message: 'An error (1002) occurred during parsing ' + inputFile + ' file.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
                 return;
             }
@@ -1557,7 +1557,7 @@ class Renderer {
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS theme variables.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -1612,7 +1612,7 @@ class Renderer {
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS overrides.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -1785,7 +1785,7 @@ class Renderer {
         } catch(e) {
             this.errorLog.push({
                 message: 'An error (1001) occurred during parsing ' + inputFile + ' file.',
-                desc: e.message
+                desc: e.message + "\n\n" + e.stack
             });
 
             return false;
@@ -1804,7 +1804,7 @@ class Renderer {
         } catch(e) {
             this.errorLog.push({
                 message: 'An error (1002) occurred during parsing ' + inputFile + ' file.',
-                desc: e.message
+                desc: e.message + "\n\n" + e.stack
             });
 
             return '';
