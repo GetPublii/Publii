@@ -15,6 +15,10 @@ const responsiveSizes = require('./responsive-sizes.js');
  */
 function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('responsiveImageAttributes', function (firstParam, secondParam, thirdParam) {
+        if (!firstParam) { 
+            return '';
+        }
+        
         if (
             firstParam === 'featuredImage' || 
             firstParam === 'tagImage' || 
