@@ -155,7 +155,6 @@ class S3 {
 
     async uploadNewFileList() {    
         this.sendProgress(99);
-        this.deployment.replaceSyncInfoFiles();
         let fileName = 'files.publii.json';
         
         if (typeof this.prefix === 'string' && this.prefix !== '') {

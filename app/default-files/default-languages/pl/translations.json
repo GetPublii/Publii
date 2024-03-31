@@ -596,6 +596,8 @@
         "codeEditor": "Edytor kodu (CodeMirror)",
         "colorTheme": "Motyw kolorystyczny",
         "content": "Treść",
+        "continueSync": "Kontynuuj i synchronizuj",
+        "continueSyncNoRemoteFiles": "Publii nie może znaleźć listy plików na twoim serwerze. Jeśli będziesz kontynuować proces synchronizacji, WSZYSTKIE wygenerowane pliki strony internetowej zostaną przesłane na twój serwer. Możesz anulować proces synchronizacji, aby sprawdzić przyczynę problemu, a następnie spróbować ponownie.",
         "convertToWebp": "Konwertuj do WebP",
         "convertToWebpInfo": "Włącz tę opcję, jeśli chcesz konwertować wszystkie grafiki w formatach JPG, JPEG oraz PNG do formatu WebP. Po włączeniu tej opcji konieczna jest ponowna regeneracja miniaturek. Opcja ta zadziała tylko gdy używasz biblioteki Sharp do tworzenia miniaturek.",
         "convertToWebpJimpWarning": "Ta opcja nie działa z obecnie używanym silnikiem tworzenia miniaturek - Jimp. Proszę użyć silnika Sharp aby móc używać tej opcji.",

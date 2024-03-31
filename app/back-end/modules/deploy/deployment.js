@@ -38,7 +38,7 @@ class Deployment {
      * @param sitesDir
      * @param siteConfig
      */
-    constructor(appDir, sitesDir, siteConfig, useAltFtp) {
+    constructor (appDir, sitesDir, siteConfig, useAltFtp) {
         this.appDir = appDir;
         this.siteConfig = siteConfig;
         this.siteName = this.siteConfig.name;
@@ -60,7 +60,7 @@ class Deployment {
      * @param deploymentConfig
      * @param siteName
      */
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection (app, deploymentConfig, siteName, uuid) {
         let connection = false;
 
         switch(deploymentConfig.protocol) {
@@ -89,7 +89,7 @@ class Deployment {
     /**
      * Inits connection
      */
-    async initSession() {
+    async initSession () {
         switch(this.siteConfig.deployment.protocol) {
             case 'sftp':
             case 'sftp+key':        this.client = new SFTP(this);               break;
@@ -115,7 +115,7 @@ class Deployment {
     /**
      * Set input directory on local machine
      */
-    setInput() {
+    setInput () {
         // Set the output dir as a source of the files to upload
         let basePath = path.join(this.sitesDir, this.siteName);
         this.inputDir = path.join(basePath, 'output');
@@ -125,8 +125,8 @@ class Deployment {
     /**
      * Sets output directory on the server
      */
-    setOutput(useEmpty = false) {
-        if(useEmpty) {
+    setOutput (useEmpty = false) {
+        if (useEmpty) {
             this.outputDir = '';
         } else {
             this.outputDir = this.siteConfig.deployment.path;
@@ -218,51 +218,34 @@ class Deployment {
                 fileContent = fileContent.toString();
             }
 
-            let syncRevisionPath = path.join(this.configDir, 'sync-revision.json');
             let content = JSON.parse(fileContent);
-            let revisionID = false;
-
-            if (fs.existsSync(syncRevisionPath)) {
-                let syncRevisionContent = fs.readFileSync(syncRevisionPath);
-                syncRevisionContent = JSON.parse(syncRevisionContent);
-                revisionID = syncRevisionContent.revision;
-            }
 
             if (content.revision) {
-                let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
+                let syncRevisionPath = path.join(this.configDir, 'sync-revision.json'); 
+                let revisionID = false;
+
+                if (fs.existsSync(syncRevisionPath)) {
+                    let syncRevisionContent = fs.readFileSync(syncRevisionPath);
+                    syncRevisionContent = JSON.parse(syncRevisionContent);
+                    revisionID = syncRevisionContent.revision;
+                }
                 
                 if (revisionID) {
                     let isExpectedCopy = revisionID === content.revision;
                     this.compareFilesList(isExpectedCopy);
                 } else {
+                    let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
                     let checkSum = crypto.createHash('md5').update(filesToCheck).digest('hex');
                     let isExpectedCopy = checkSum === content.revision;
                     this.compareFilesList(isExpectedCopy);
                 }
-                    
-                return;
+            } else {
+                fs.writeFileSync(path.join(this.configDir, 'files-remote.json'), fileContent);
+                this.compareFilesList(true);
             }
-            
-            // when files on server uses old format - download it and use as remote files list
-            fs.writeFileSync(path.join(this.configDir, 'files-remote.json'), fileContent);
-            this.compareFilesList(true);
         } catch (e) {
             this.compareFilesList(false);
         }
-    }
-
-    /**
-     * Save files.publii.json as files-remote.json and store checksum in the file
-     */
-    replaceSyncInfoFiles () {
-        let inputListPath = path.join(this.inputDir, 'files.publii.json');
-        let remoteListPath = path.join(this.configDir, 'files-remote.json');
-        let syncRevisionPath = path.join(this.configDir, 'sync-revision.json');
-        let contentToSave = fs.readFileSync(inputListPath);
-        let newContent = `{ "revision": "${this.syncRevision}" }`;
-        fs.writeFileSync(remoteListPath, contentToSave);
-        fs.writeFileSync(inputListPath, newContent);
-        fs.writeFileSync(syncRevisionPath, newContent);
     }
 
     /**
@@ -270,18 +253,13 @@ class Deployment {
      *
      * @param remoteFileListExists
      */
-    compareFilesList(remoteFileListExists = false) {
-        let localFiles = fs.readFileSync(path.join(this.inputDir, 'files.publii.json'), 'utf8');
+    compareFilesList (remoteFileListExists = false) {
         let remoteFiles = false;
 
-        if(localFiles) {
-            localFiles = JSON.parse(localFiles);
-        }
-
-        if(remoteFileListExists) {
+        if (remoteFileListExists) {
             remoteFiles = fs.readFileSync(path.join(this.configDir, 'files-remote.json'), 'utf8');
 
-            if(remoteFiles) {
+            if (remoteFiles) {
                 try {
                     remoteFiles = JSON.parse(remoteFiles);
 
@@ -297,24 +275,43 @@ class Deployment {
             }
         }
 
-        if(!remoteFiles) {
-            remoteFiles = [];
+        // wait for user interaction if there are no remote files list and syncDate exists under site configuration
+        if (!remoteFiles && this.siteConfig.syncDate) {
+            process.send({
+                type: 'web-contents',
+                message: 'no-remote-files',
+                value: false
+            });
+            return;
+        }
+        
+        this.continueSync(remoteFiles);
+    }
+
+    /**
+     * Wait for user answer or just continue sync if remote files list exists
+     */
+    continueSync (remoteFiles) {
+        let localFiles = fs.readFileSync(path.join(this.inputDir, 'files.publii.json'), 'utf8');
+        
+        if (localFiles) {
+            localFiles = JSON.parse(localFiles);
         }
 
         // Detect files to remove
         let filesToRemove = [];
 
-        for(let remoteFile of remoteFiles) {
+        for (let remoteFile of remoteFiles) {
             let fileFounded = false;
 
-            for(let localFile of localFiles) {
-                if(localFile.path === remoteFile.path) {
+            for (let localFile of localFiles) {
+                if (localFile.path === remoteFile.path) {
                     fileFounded = true;
                     break;
                 }
             }
 
-            if(!fileFounded) {
+            if (!fileFounded) {
                 if (
                     (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
                     remoteFile.type === 'directory'
@@ -332,10 +329,10 @@ class Deployment {
         // Detect files to upload
         let filesToUpload = [];
 
-        for(let localFile of localFiles) {
+        for (let localFile of localFiles) {
             let fileShouldBeUploaded = true;
 
-            for(let remoteFile of remoteFiles) {
+            for (let remoteFile of remoteFiles) {
                 if(
                     localFile.path === remoteFile.path &&
                     localFile.md5 === remoteFile.md5
@@ -347,7 +344,10 @@ class Deployment {
 
             if (fileShouldBeUploaded) {
                 if (
-                    (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
+                    (
+                        this.siteConfig.deployment.protocol === 'google-cloud' || 
+                        this.siteConfig.deployment.protocol === 'gitlab-pages'
+                    ) &&
                     localFile.type === 'directory'
                 ) {
                     continue;
@@ -363,7 +363,7 @@ class Deployment {
         this.filesToRemove = filesToRemove;
         this.filesToUpload = filesToUpload;
 
-        if(this.siteConfig.deployment.protocol === 's3') {
+        if (this.siteConfig.deployment.protocol === 's3') {
             this.operationsCounter = this.filesToRemove.filter(file => file.type === 'file').length +
                                      this.filesToUpload.filter(file => file.type === 'file').length + 1;
         } else {
@@ -390,9 +390,7 @@ class Deployment {
     /**
      * Move files or directories to the beginning
      */
-    sortFiles() {
-        let self = this;
-
+    sortFiles () {
         this.filesToRemove = this.filesToRemove.sort(function(fileA, fileB) {
             if(fileA.type === 'directory') {
                 return -1;
@@ -428,19 +426,19 @@ class Deployment {
 
         // Reorder directories to put higher order directories at the beginning
         this.filesToUpload = this.filesToUpload.sort(function(fileA, fileB) {
-            if(fileA.type === 'directory' && fileB.type === 'directory') {
-                if(fileA.path.length <= fileB.path.length) {
+            if (fileA.type === 'directory' && fileB.type === 'directory') {
+                if (fileA.path.length <= fileB.path.length) {
                     return 1;
                 } else {
                     return -1;
                 }
             }
 
-            if(fileA.type === 'directory') {
+            if (fileA.type === 'directory') {
                 return 1;
             }
 
-            if(fileB.type === 'directory') {
+            if (fileB.type === 'directory') {
                 return -1;
             }
 
@@ -455,23 +453,23 @@ class Deployment {
     /**
      * Removes file
      */
-    removeFile() {
-        if(this.siteConfig.deployment.protocol === 's3') {
+    removeFile () {
+        if (this.siteConfig.deployment.protocol === 's3') {
             this.client.removeFile();
             return;
         }
 
-        if(this.siteConfig.deployment.protocol === 'gitlab-pages') {
+        if (this.siteConfig.deployment.protocol === 'gitlab-pages') {
             this.client.startSync();
             return;
         }
 
         let self = this;
 
-        if(this.filesToRemove.length > 0) {
+        if (this.filesToRemove.length > 0) {
             let fileToRemove = this.filesToRemove.pop();
 
-            if(fileToRemove.type === 'file') {
+            if (fileToRemove.type === 'file') {
                 this.client.removeFile(normalizePath(path.join(this.outputDir, fileToRemove.path)));
             } else {
                 this.client.removeDirectory(normalizePath(path.join(this.outputDir, fileToRemove.path)));
@@ -495,13 +493,13 @@ class Deployment {
     /**
      * Uploads file
      */
-    uploadFile() {
+    uploadFile () {
         let self = this;
 
-        if(this.filesToUpload.length > 0) {
+        if (this.filesToUpload.length > 0) {
             let fileToUpload = this.filesToUpload.pop();
 
-            if(fileToUpload.type === 'file') {
+            if (fileToUpload.type === 'file') {
                 this.client.uploadFile(
                     normalizePath(path.join(this.inputDir, fileToUpload.path)),
                     normalizePath(path.join(this.outputDir, fileToUpload.path))
@@ -518,7 +516,10 @@ class Deployment {
                 message: 'app-uploading-progress',
                 value: {
                     progress: 98,
-                    operations: [self.currentOperationNumber ,self.operationsCounter]
+                    operations: [
+                        self.currentOperationNumber,
+                        self.operationsCounter
+                    ]
                 }
             });
 
@@ -535,7 +536,7 @@ class Deployment {
      *
      * @returns {Array}
      */
-    readDirRecursiveSync(dir, filelist) {
+    readDirRecursiveSync (dir, filelist) {
         let self = this;
         let files = fs.readdirSync(dir);
         filelist = filelist || [];
@@ -564,7 +565,7 @@ class Deployment {
      * @param files
      * @param suffix
      */
-    saveConnectionFilesLog(files, suffix = '') {
+    saveConnectionFilesLog (files, suffix = '') {
         if (suffix !== '') {
             suffix = '-' + suffix;
         }

@@ -201,8 +201,6 @@ class FTP {
             }
         });
 
-        this.deployment.replaceSyncInfoFiles();
-
         this.connection.put(
             normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),

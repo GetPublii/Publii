@@ -67,6 +67,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-license-accept',
             'app-deploy-render-abort',
             'app-deploy-abort',
+            'app-deploy-continue',
             'app-deploy-render',
             'app-deploy-upload',
             'app-sync-is-done',
@@ -115,7 +116,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-wxr-import-progress',
             'app-show-search-form',
             'block-editor-undo',
-            'block-editor-redo'
+            'block-editor-redo',
+            'no-remote-files'
         ];
 
         if (validChannels.includes(channel)) {

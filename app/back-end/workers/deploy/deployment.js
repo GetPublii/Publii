@@ -11,7 +11,11 @@ process.on('message', function(msg){
         deploymentInstance.initSession().then(() => true);
     }
 
-    if(msg.type === 'abort' && deploymentInstance) {
+    if (msg.type === 'continue-sync' && deploymentInstance) {
+        deploymentInstance.continueSync([]);
+    }
+
+    if ((msg.type === 'abort' || msg.type === 'cancel-sync') && deploymentInstance) {
         if(
             deploymentInstance.siteConfig.deployment.protocol === 'sftp' ||
             deploymentInstance.siteConfig.deployment.protocol === 'sftp+key'

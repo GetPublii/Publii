@@ -143,8 +143,6 @@ class FTPAlt {
             }
         });
 
-        this.deployment.replaceSyncInfoFiles();
-
         try {
             await this.connection.uploadFrom(
                 normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),

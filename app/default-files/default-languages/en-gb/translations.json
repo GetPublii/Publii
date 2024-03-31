@@ -596,6 +596,8 @@
         "codeEditor": "Code editor (CodeMirror)",
         "colorTheme": "Color theme",
         "content": "Content",
+        "continueSync": "Continue and sync",
+        "continueSyncNoRemoteFiles": "Publii is unable to find remote files list on your server. If you will continue the sync process, ALL generated website files will be uploaded to your server. You can cancel the sync process to check the reason of your issue and then try again.",
         "convertToWebp": "Convert to WebP format",
         "convertToWebpInfo": "Enable this option if you want to convert all JPG, JPEG and PNG images to WebP format. Once enabled, your image thumbnails will need to be regenerated. Note, this feature works only if you’re using the Sharp library for generating thumbnails.",
         "convertToWebpJimpWarning": "This option does not work with the currently used image resizing engine, Jimp. Instead, switch to Sharp in the app's settings.",
