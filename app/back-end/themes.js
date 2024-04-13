@@ -262,6 +262,34 @@ class Themes {
     }
 
     /*
+     * Load available page templates
+     */
+    loadPageTemplates() {
+        let pageTemplates = [];
+        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        siteData = JSON.parse(siteData);
+
+        if(siteData.theme) {
+            let themeDir = path.join(this.sitePath, siteData.theme);
+            let themeConfigPath = path.join(this.sitePath, 'input', 'config', 'theme.config.json');
+            let themeData = Themes.loadThemeConfig(themeConfigPath, themeDir);
+
+            if(themeData.pageTemplates) {
+                let templateFiles = Object.keys(themeData.pageTemplates);
+
+                for(let i = 0; i < templateFiles.length; i++) {
+                    let fileName = templateFiles[i];
+                    pageTemplates.push(
+                        [fileName, themeData.pageTemplates[fileName]]
+                    );
+                }
+            }
+        }
+
+        return pageTemplates;
+    }
+
+    /*
      * Load available tag templates
      */
     loadTagTemplates() {

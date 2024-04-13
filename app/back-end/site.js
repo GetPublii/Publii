@@ -76,6 +76,7 @@ class Site {
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'temp'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'website'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'posts'));
+        fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'pages'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'files'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'tags'));
         fs.mkdirSync(path.join(this.siteDir, 'input', 'media', 'authors'));
@@ -539,6 +540,7 @@ class Site {
      * Adds (if missing):
      * - input/root-files directory
      * - input/media/files directory
+     * - input/media/pages directory
      * - input/media/tags directory
      * - input/media/authors directory
      * - input/config/plugins directory
@@ -553,6 +555,7 @@ class Site {
         let rootFilesPath = path.join(siteBasePath, 'root-files');
         let tagImagesPath = path.join(siteBasePath, 'media', 'tags');
         let authorImagesPath = path.join(siteBasePath, 'media', 'authors');
+        let pageImagesPath = path.join(siteBasePath, 'media', 'pages');
         let mediaFilesPath = path.join(siteBasePath, 'media', 'files');
         let pluginsPath = path.join(siteBasePath, 'config', 'plugins');
         let pluginsConfigPath = path.join(siteBasePath, 'config', 'site.plugins.json');
@@ -575,6 +578,10 @@ class Site {
 
         if(!UtilsHelper.dirExists(pluginsPath)) {
             fs.mkdirSync(pluginsPath);
+        }
+
+        if(!UtilsHelper.dirExists(pageImagesPath)) {
+            fs.mkdirSync(pageImagesPath);
         }
 
         // Create site.plugins.json if not exists

@@ -4,7 +4,12 @@
         class="overlay">
         <div class="popup">
             <p class="message">
-                {{ $t('author.changePostAuthor') }}:
+                <template v-if="itemType === 'post'">
+                    {{ $t('author.changePostAuthor') }}
+                </template>
+                <template v-else-if="itemType === 'page'">
+                    {{ $t('author.changePageAuthor') }}
+                </template>
             </p>
 
             <dropdown
@@ -32,6 +37,9 @@
 <script>
 export default {
     name: 'author-popup',
+    props: [
+        'itemType'
+    ],
     data () {
         return {
             isVisible: false,

@@ -1,5 +1,6 @@
 {
     "postTemplates": {},
+    "pageTemplates": {},
     "tagTemplates": {},
     "authorTemplates": {},
     "defaultTemplates": {
@@ -64,6 +65,7 @@
     ],
     "customConfig": [],
     "postConfig": [],
+    "pageConfig": [],
     "tagConfig": [],
     "authorConfig": [],
     "files": {

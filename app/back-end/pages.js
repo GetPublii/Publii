@@ -1,18 +1,18 @@
 /*
- * Posts instance
+ * Pages instance
  */
 
 const Model = require('./model.js');
 
-class Posts extends Model {
-    constructor(appInstance, postsData) {
-        super(appInstance, postsData);
+class Pages extends Model {
+    constructor(appInstance, pagesData) {
+        super(appInstance, pagesData);
     }
 
     /*
-     * Load posts
+     * Load pages
      */
-    load() {
+    load () {
         let sqlQuery = `
             SELECT 
                 p.id AS id, 
@@ -30,8 +30,8 @@ class Posts extends Model {
                 ON
                 pad.post_id = p.id
             WHERE
-                p.status NOT LIKE '%is-page%"'
-                AND (
+                p.status LIKE '%is-page%' AND
+                (
                     pad.key = '_core' OR
                     pad.key IS NULL
                 )
@@ -42,28 +42,12 @@ class Posts extends Model {
     }
 
     /*
-     * Load references between posts and tags
-     */
-    loadTagsXRef() {
-        let sqlQuery = `
-            SELECT 
-                post_id AS postID, 
-                tag_id AS tagID
-            FROM 
-                posts_tags 
-            ORDER BY 
-                post_id DESC`;
-
-        return this.db.prepare(sqlQuery).all();
-    }
-
-    /*
-     * Load references between posts and authors
+     * Load references between pages and authors
      */
     loadAuthorsXRef() {
         let sqlQuery = `
             SELECT 
-                p.id AS postID,
+                p.id AS pageID,
                 a.id AS authorID,
                 a.name AS authorName
             FROM 
@@ -73,7 +57,7 @@ class Posts extends Model {
             ON
                 p.authors = a.id 
             WHERE
-                p.status NOT LIKE '%is-page%'
+                p.status LIKE '%is-page%'
             ORDER BY 
                 p.id DESC`;
 
@@ -81,4 +65,4 @@ class Posts extends Model {
     }
 }
 
-module.exports = Posts;
+module.exports = Pages;

@@ -4,16 +4,21 @@
         class="overlay">
         <div class="popup">
             <p class="message">
-                {{ $t('date.changePostPublicationDate') }}:
+                <template v-if="itemType === 'post'">
+                    {{ $t('date.changePostPublicationDate') }}:
+                </template>
+                <template v-else-if="itemType === 'page'">
+                    {{ $t('date.changePagePublicationDate') }}:  
+                </template>
             </p>
 
-            <div class="post-date-picker">
+            <div class="item-date-picker">
                 <input
                     type="date"
-                    v-model="postDateTime.date" />
+                    v-model="itemDateTime.date" />
                 <input 
                     type="time"
-                    v-model="postDateTime.time" />
+                    v-model="itemDateTime.time" />
             </div>
 
             <div class="buttons">
@@ -36,11 +41,14 @@
 <script>
 export default {
     name: 'date-popup',
+    props: [
+        'itemType'
+    ],
     data () {
         return {
             isVisible: false,
             timestamp: 0,
-            postDateTime: {
+            itemDateTime: {
                 date: '',
                 time: ''
             }
@@ -78,11 +86,11 @@ export default {
             let hours = date.getHours();
             let minutes = date.getMinutes();
 
-            this.postDateTime.date = [year, month, day].map(n => n < 10 ? '0' + n : n).join('-');
-            this.postDateTime.time = [hours, minutes].map(n => n < 10 ? '0' + n : n).join(':');
+            this.itemDateTime.date = [year, month, day].map(n => n < 10 ? '0' + n : n).join('-');
+            this.itemDateTime.time = [hours, minutes].map(n => n < 10 ? '0' + n : n).join(':');
         },
         calculateTimestampFromTime () {
-            this.timestamp = new Date(this.postDateTime.date + ' ' + this.postDateTime.time).getTime();
+            this.timestamp = new Date(this.itemDateTime.date + ' ' + this.itemDateTime.time).getTime();
         }
     },
     beforeDestroy () {
@@ -118,7 +126,7 @@ export default {
     top: 1px;
 }
 
-.post-date-picker {
+.item-date-picker {
     display: flex;
     justify-content: space-between;
     margin-top: -1rem;

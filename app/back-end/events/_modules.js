@@ -5,6 +5,7 @@ module.exports = {
     AppEvents: require('./app.js'),
     CreditsEvents: require('./credits'),
     ImageUploaderEvents: require('./image-uploader.js'),
+    PageEvents: require('./page.js'),
     PostEvents: require('./post.js'),
     SiteEvents: require('./site.js'),
     TagEvents: require('./tag.js'),

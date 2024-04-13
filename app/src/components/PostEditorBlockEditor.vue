@@ -1,7 +1,8 @@
 <template>
     <div class="post-editor post-block-editor" ref="post-editor">
         <topbar-appbar />
-        <post-editor-top-bar />
+        <post-editor-top-bar 
+            :itemType="itemType" />
 
         <div class="post-editor-wrapper">
             <div :class="{
@@ -23,25 +24,27 @@
                 <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
-            <sidebar :isVisible="sidebarVisible" />
-            <author-popup />
-            <date-popup />
-            <help-panel-block-editor :isOpen="helpPanelOpen" />
-            <!--<search-popup />-->
+            <sidebar 
+                :isVisible="sidebarVisible"
+                :itemType="itemType" />
+            <author-popup 
+                :itemType="itemType" />
+            <date-popup 
+                :itemType="itemType" />
+            <help-panel-block-editor 
+                :isOpen="helpPanelOpen" />
         </div>
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import PostEditorSidebar from './post-editor/Sidebar';
 import AuthorPopup from './post-editor/AuthorPopup';
 import DatePopup from './post-editor/DatePopup';
 import HelpPanelBlockEditor from './post-editor/HelpPanelBlockEditor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
-import PostHelper from './post-editor/PostHelper';
-// import SearchPopup from './post-editor/SearchPopup';
+import ItemHelper from './post-editor/ItemHelper';
 import Utils from './../helpers/utils';
 import PostEditorsCommon from './mixins/PostEditorsCommon';
 import PubliiBlockEditor from './block-editor/PubliiBlockEditor';
@@ -58,7 +61,6 @@ export default {
         'sidebar': PostEditorSidebar,
         'topbar-appbar': TopBarAppBar,
         'post-editor-top-bar': PostEditorTopBar,
-        // 'search-popup': SearchPopup,
         'help-panel-block-editor': HelpPanelBlockEditor,
         'publii-block-editor': PubliiBlockEditor
     },
@@ -103,7 +105,7 @@ export default {
                     caption: '',
                     credits: ''
                 },
-                postViewOptions: {}
+                viewOptions: {}
             },
             saveAction: {
                 status: '',
@@ -113,11 +115,22 @@ export default {
         };
     },
     computed: {
+        itemType () {
+            return this.$route.path.indexOf('/pages/') > -1 ? 'page' : 'post';
+        },
         isEdit () {
             return !!this.postID;
         }
     },
     mounted () {
+        if (this.itemType === 'page') {
+            delete this.postData.tags;
+            delete this.postData.mainTag;
+            delete this.postData.isExcludedOnHomepage;
+            delete this.postData.isHidden;
+            delete this.postData.isFeatured;
+        }
+
         window.onbeforeunload = e => {
             if (this.possibleDataLoss) {
                 e.returnValue = false;
@@ -190,7 +203,7 @@ export default {
             this.possibleDataLoss = true;
         },
         async editorPostSaved () {
-            let postData = await PostHelper.preparePostData(this.saveAction.status, this.postID, this.$store, this.postData);
+            let postData = await ItemHelper.prepareItemData(this.saveAction.status, this.postID, this.$store, this.postData, this.itemType);
 
             if (!this.saveAction.preview) {
                 this.savingPost(this.saveAction.status, postData, this.saveAction.closeEditor);
@@ -208,15 +221,23 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            mainProcessAPI.send('app-post-load', {
+            let requestType = 'app-post-load';
+            let responseType = 'app-post-loaded';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-load';
+                responseType = 'app-page-loaded';
+            }
+
+            mainProcessAPI.send(requestType, {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if (data !== false && this.postID !== 0) {
-                    let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
+                    let loadedPostData = ItemHelper.loadItemData(data, this.$store, this.$moment, this.itemType);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     this.$bus.$emit('block-editor-set-post-text', this.postData.text);
                     this.$bus.$emit('block-editor-set-post-title', this.postData.title);
@@ -237,7 +258,7 @@ export default {
         savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('editor.cantSavePostWithEmptyTitle')
+                    message: this.itemType === 'page' ? this.$t('editor.cantSavePageWithEmptyTitle') : this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
@@ -250,10 +271,18 @@ export default {
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            mainProcessAPI.send('app-post-save', postData);
+            let requestType = 'app-post-save';
+            let responseType = 'app-post-saved';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-save';
+                responseType = 'app-page-saved';
+            }
+
+            mainProcessAPI.send(requestType, postData);
 
             // Post save
-            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
@@ -266,7 +295,11 @@ export default {
             });
         },
         savedPost (newStatus, updatedData, closeEditor = false) {
-            this.$store.commit('refreshAfterPostUpdate', updatedData);
+            if (this.itemType === 'post') {
+                this.$store.commit('refreshAfterPostUpdate', updatedData);
+            } else {
+                this.$store.commit('refreshAfterPageUpdate', updatedData);
+            }
 
             if (closeEditor) {
                 this.closeEditor();
@@ -275,7 +308,7 @@ export default {
                 this.$bus.$emit('block-editor-set-post-id', this.postID);
             }
 
-            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/blockeditor/' + this.postID);
+            this.$router.push('/site/' + this.$route.params.name + '/' + this.itemType + 's/editor/blockeditor/' + this.postID);
             let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
@@ -284,7 +317,11 @@ export default {
                 if (newStatus === 'draft') {
                     message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = this.$t('editor.newPostCreated');
+                    if (this.itemType === 'page') {
+                        message = this.$t('editor.newPageCreated');
+                    } else {
+                        message = this.$t('editor.newPostCreated');
+                    }
                 }
             }
 

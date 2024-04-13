@@ -95,17 +95,17 @@ class TemplateHelper {
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
-    saveOutputPostFile(postSlug, content) {
+    saveOutputPostFile (postSlug, content) {
         let suffix = '.html';
 
-        if(this.siteConfig.advanced.urls.cleanUrls) {
+        if (this.siteConfig.advanced.urls.cleanUrls) {
             suffix = '/index.html';
         }
 
         let filePath = path.join(this.outputDir, postSlug + suffix);
         content = this.compressHTML(content);
 
-        if(this.siteConfig.advanced.urls.cleanUrls) {
+        if (this.siteConfig.advanced.urls.cleanUrls) {
             let dirPath = path.join(this.outputDir, postSlug);
 
             if(!Utils.dirExists(dirPath)) {

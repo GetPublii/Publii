@@ -8,9 +8,10 @@ const AboutCredits = () => import('../components/AboutCredits');
 const Site = () => import('../components/Site');
 const AppSettings = () => import('../components/AppSettings');
 const Posts = () => import('../components/Posts');
-const PostEditorBlockEditor = () => import('../components/PostEditorBlockEditor');
-const PostEditorMarkdown = () => import('../components/PostEditorMarkdown');
-const PostEditorTinyMCE = () => import('../components/PostEditorTinyMCE');
+const Pages = () => import('../components/Pages');
+const EditorBlockEditor = () => import('../components/PostEditorBlockEditor');
+const EditorMarkdown = () => import('../components/PostEditorMarkdown');
+const EditorTinyMCE = () => import('../components/PostEditorTinyMCE');
 const Tags = () => import('../components/Tags');
 const Menus = () => import('../components/Menus');
 const Authors = () => import('../components/Authors');
@@ -85,6 +86,14 @@ export default new Router({
                 {
                     path: 'posts/:filter',
                     component: Posts
+                },
+                {
+                    path: 'pages',
+                    component: Pages
+                },
+                {
+                    path: 'pages/:filter',
+                    component: Pages
                 },
                 {
                     path: 'menus',
@@ -170,15 +179,27 @@ export default new Router({
         },
         {
             path: '/site/:name/posts/editor/blockeditor/:post_id?',
-            component: PostEditorBlockEditor
+            component: EditorBlockEditor
         },
         {
             path: '/site/:name/posts/editor/markdown/:post_id?',
-            component: PostEditorMarkdown
+            component: EditorMarkdown
         },
         {
             path: '/site/:name/posts/editor/tinymce/:post_id?',
-            component: PostEditorTinyMCE
+            component: EditorTinyMCE
+        },
+        {
+            path: '/site/:name/pages/editor/blockeditor/:page_id?',
+            component: EditorBlockEditor
+        },
+        {
+            path: '/site/:name/pages/editor/markdown/:page_id?',
+            component: EditorMarkdown
+        },
+        {
+            path: '/site/:name/pages/editor/tinymce/:page_id?',
+            component: EditorTinyMCE
         }
     ]
 });

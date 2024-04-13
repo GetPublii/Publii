@@ -2,8 +2,9 @@ import EditorConfig from './../configs/postEditor.config.js';
 import Utils from './../../helpers/utils';
 
 class EditorBridge {
-    constructor(postID) {
-        this.postID = postID;
+    constructor(itemID, itemType = 'post') {
+        this.itemID = itemID;
+        this.itemType = itemType;
         this.tinyMCECSSFiles = this.getTinyMCECSSFiles();
         this.customThemeEditorConfig = this.getCustomThemeEditorConfig();
         this.tinymceEditor = false;
@@ -13,10 +14,16 @@ class EditorBridge {
         this.init();
     }
 
-    updatePostID (newPostID) {
-        this.postID = newPostID;
-        let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.postID + '/');
-        this.tinymceEditor.setContent(contentToUpdate);
+    updateItemID (newItemID) {
+        this.itemID = newItemID;
+
+        if (this.itemType === 'post') {
+            let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
+            this.tinymceEditor.setContent(contentToUpdate);
+        } else {
+            let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/pages\/temp/gmi, 'media/pages/' + this.itemID + '/');
+            this.tinymceEditor.setContent(contentToUpdate);
+        }
     }
 
     init() {
@@ -234,7 +241,7 @@ class EditorBridge {
                     clickedElement.getAttribute('class').indexOf('gallery') !== -1
                 ) {
                     window.app.updateGalleryPopup({
-                        postID: this.postID,
+                        postID: this.itemID,
                         galleryElement: clickedElement
                     });
 
@@ -281,7 +288,7 @@ class EditorBridge {
                         }
 
                         mainProcessAPI.send('app-image-upload', {
-                            id: this.postID,
+                            id: this.itemID,
                             site: window.app.getSiteName(),
                             path: filePath,
                             imageType: 'contentImages'
@@ -457,12 +464,12 @@ class EditorBridge {
 
                 if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
                     window.app.initLinkPopup({
-                        postID: this.postID,
+                        postID: this.itemID,
                         selection: selectedNode.parentNode.outerHTML
                     });
                 } else {
                     window.app.initLinkPopup({
-                        postID: this.postID,
+                        postID: this.itemID,
                         selection: tinymce.activeEditor.selection.getContent()
                     });
                 }
@@ -641,7 +648,7 @@ class EditorBridge {
         $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
 
         mainProcessAPI.send('app-image-upload', {
-            "id": this.postID,
+            "id": this.itemID,
             "site": siteName,
             "path": files[0].path
         });

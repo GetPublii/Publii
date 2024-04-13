@@ -1,5 +1,9 @@
 <template>
-    <div :class="{ 'options-sidebar-container': true, 'post-editor-sidebar': true, 'is-visible': isVisible }" >
+    <div :class="{ 
+        'options-sidebar-container': true, 
+        'post-editor-sidebar': true, 
+        'is-visible': isVisible 
+    }">
         <div class="options-sidebar">
 
             <div class="options-sidebar-item">
@@ -106,7 +110,9 @@
                             </dl>
                         </div>
 
-                        <div class="post-action">
+                        <div 
+                            v-if="itemType === 'post'"
+                            class="post-action">
                             <label id="post-featured-wrapper">
                                 <switcher
                                     v-model="$parent.postData.isFeatured" />
@@ -209,9 +215,14 @@
                     </div>
                 </div>
 
-                <div class="options-sidebar-item">
+                <div 
+                    v-if="itemType === 'post'"
+                    class="options-sidebar-item">
                     <div
-                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'tags' }"
+                        :class="{ 
+                            'options-sidebar-header': true, 
+                            'is-open': openedItem === 'tags' 
+                        }"
                         @click="openItem('tags')">
                         <icon
                             class="options-sidebar-icon"
@@ -386,46 +397,63 @@
                         ref="other-content">
                         <div class="post-other" id="post-view-settings">
                             <label id="post-template-wrapper">
-                                {{ $t('post.postTemplate') }}:
+                                <template v-if="itemType === 'post'">
+                                    {{ $t('post.postTemplate') }}:
+                                </template>
+                                <template v-if="itemType === 'page'">
+                                    {{ $t('page.pageTemplate') }}:
+                                </template>
 
                                 <dropdown
-                                    :items="postTemplates"
-                                    :disabled="!hasPostTemplates"
+                                    :items="itemType === 'post' ? postTemplates : pageTemplates"
+                                    :disabled="!hasTemplates"
                                     v-model="$parent.postData.template"
                                     id="post-template">
                                     <option
-                                        v-if="hasPostTemplates"
+                                        v-if="hasTemplates"
                                         value="*"
                                         :selected="$parent.postData.template === '*'"
                                         slot="first-choice">
                                         {{ $t('settings.useGlobalConfiguration') }}
                                     </option>
                                     <option
-                                        v-if="hasPostTemplates"
+                                        v-if="hasTemplates"
                                         value=""
                                         :selected="$parent.postData.template === ''"
                                         slot="first-choice">
                                         {{ $t('theme.defaultTemplate') }}
                                     </option>
                                     <option
-                                        v-if="!hasPostTemplates"
+                                        v-if="!hasTemplates"
                                         value=""
                                         slot="first-choice">
                                         {{ $t('ui.notAvailableInYourTheme') }}
                                     </option>
                                 </dropdown>
 
-                                <small
-                                    v-if="$parent.postData.template === '*'"
-                                    slot="note">
-                                    {{ $t('post.currentDefaultTemplate') }}:
-                                    <strong>
-                                        {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
-                                    </strong>
-                                </small>
+                                <template v-if="itemType === 'post'">
+                                    <small
+                                        v-if="$parent.postData.template === '*'"
+                                        slot="note">
+                                        {{ $t('post.currentDefaultTemplate') }}:
+                                        <strong>
+                                            {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                        </strong>
+                                    </small>
+                                </template>
+                                <template v-else-if="itemType === 'page'">
+                                    <small
+                                        v-if="$parent.postData.template === '*'"
+                                        slot="note">
+                                        {{ $t('page.currentDefaultTemplate') }}:
+                                        <strong>
+                                            {{ $store.state.currentSite.themeSettings.pageTemplates[$store.state.currentSite.themeSettings.defaultTemplates.page] }}
+                                        </strong>
+                                    </small>
+                                </template>
                             </label>
 
-                            <template v-for="(field, index) of postViewThemeSettings">
+                            <template v-for="(field, index) of viewThemeSettings">
                                 <separator
                                     v-if="displayField(field) && field.type === 'separator'"
                                     :label="field.label"
@@ -441,7 +469,7 @@
                                         v-if="!field.type || field.type === 'select'"
                                         :id="field.name + '-select'"
                                         class="post-view-settings"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :items="generateItems(field.options)">
                                         <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
                                     </dropdown>
@@ -452,26 +480,26 @@
                                         class="post-view-settings"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :placeholder="fieldPlaceholder(field)"
-                                        v-model="$parent.postData.postViewOptions[field.name]" />
+                                        v-model="$parent.postData.viewOptions[field.name]" />
 
                                     <text-area
                                         v-if="field.type === 'textarea'"
                                         class="post-view-settings"
                                         :placeholder="fieldPlaceholder(field)"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="$parent.postData.postViewOptions[field.name]" />
+                                        v-model="$parent.postData.viewOptions[field.name]" />
 
                                     <color-picker
                                         v-if="field.type === 'colorpicker'"
                                         class="post-view-settings"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
                                     <image-upload
                                         v-if="field.type === 'image'"
                                         slot="field"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :item-id="$parent.postID"
                                         imageType="contentImages" />
 
@@ -494,6 +522,10 @@
 export default {
     name: 'post-editor-sidebar',
     props: {
+        'itemType': {
+            default: 'post',
+            type: String
+        },
         'isVisible': {
             default: false,
             type: Boolean
@@ -557,13 +589,37 @@ export default {
 
             return '';
         },
-        postTemplates () {
-            return this.$store.state.currentSite.themeSettings.postTemplates;
+        defaultPageTemplate () {
+            let defaultTemplate = this.$store.state.currentSite.themeSettings.defaultTemplates.page;
+
+            if (Object.keys(this.pageTemplates).indexOf(defaultTemplate) > -1) {
+                return defaultTemplate;
+            }
+
+            return '';
         },
-        hasPostTemplates () {
+        postTemplates () {
+            return this.$store.state.currentSite.themeSettings.postTemplates || [];
+        },
+        pageTemplates () {
+            return this.$store.state.currentSite.themeSettings.pageTemplates || [];
+        },
+        hasTemplates () {
+            if (this.itemType === 'page') {
+                if (!this.pageTemplates) {
+                    return false;
+                }
+
+                return !!Object.keys(this.pageTemplates).length;
+            }
+
             return !!Object.keys(this.postTemplates).length;
         },
-        postViewThemeSettings () {
+        viewThemeSettings () {
+            if (this.itemType === 'page') {
+                return this.$store.state.currentSite.themeSettings.pageConfig;
+            }
+
             return this.$store.state.currentSite.themeSettings.postConfig;
         },
         tagsForDropdown () {
@@ -583,7 +639,7 @@ export default {
 
         if (!this.isEdit) {
             this.$parent.postData.template = this.defaultPostTemplate;
-        } else if (!!this.$parent.postData.mainTag) {
+        } else if (!!this.$parent.postData.mainTag && this.itemType === 'post') {
             let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === this.$parent.postData.mainTag);
 
             if (!foundedTag.length) {

@@ -37,6 +37,10 @@ export default {
                 label: this.$t('ui.posts'),
                 url: '/site/' + siteName + '/posts/'
             }, {
+                icon: 'pages',
+                label: this.$t('ui.pages'),
+                url: '/site/' + siteName + '/pages/'
+            }, {
                 icon: 'tags',
                 label: this.$t('ui.tags'),
                 url: '/site/' + siteName + '/tags/'

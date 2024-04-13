@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import defaultAstAppConfig from './../../../config/AST.app.config';
-import defaultAstCurrentSiteConfig from './../../../config/AST.currentSite.config';
 import Utils from './../../helpers/utils.js';
 
 export default {
@@ -23,6 +22,7 @@ export default {
 
         // Set default ordering based on the app config
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
+        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
@@ -30,6 +30,10 @@ export default {
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]
+            },
+            pages: {
+                orderBy: pagesOrdering[0],
+                order: pagesOrdering[1]
             },
             tags: {
                 orderBy: tagsOrdering[0],
@@ -61,10 +65,13 @@ export default {
         state.currentSite = {
             config: {},
             posts: [],
+            pages: [],
             tags: [],
             postsTags: [],
             postsAuthors: [],
             postTemplates: [],
+            pagesAuthors: [],
+            pageTemplates: [],
             themes: [],
             images: [],
             menuStructure: [],
@@ -107,11 +114,14 @@ export default {
         state.currentSite = {
             config: JSON.parse(JSON.stringify(siteData.siteConfig)),
             posts: [],
+            pages: [],
             tags: [],
             authors: JSON.parse(JSON.stringify(siteData.authors)),
             postsTags: [],
             postsAuthors: [],
             postTemplates: [],
+            pagesAuthors: [],
+            pageTemplates: [],
             themes: [],
             images: [],
             menuStructure: [],
@@ -128,11 +138,14 @@ export default {
 
         Utils.deepMerge(state.currentSite, {
             posts: data ? data.posts : [],
+            pages: data ? data.pages : [],
             tags: data ? data.tags : [],
             postsTags: data ? data.postsTags: [],
             authors: data ? data.authors : [],
             postsAuthors: data ? data.postsAuthors : [],
             postTemplates: data ? data.postTemplates : [],
+            pagesAuthors: data ? data.pagesAuthors : [],
+            pageTemplates: data ? data.pageTemplates : [],
             tagTemplates: data ? data.tagTemplates : [],
             authorTemplates: data ? data.authorTemplates : [],
             themes: data ? data.themes : AST.themes,
@@ -149,6 +162,7 @@ export default {
         
         // Reset ordering after website switch
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
+        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
@@ -156,6 +170,10 @@ export default {
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]
+            },
+            pages: {
+                orderBy: pagesOrdering[0],
+                order: pagesOrdering[1]
             },
             tags: {
                 orderBy: tagsOrdering[0],
@@ -212,12 +230,19 @@ export default {
     setPostAuthors (state, postsAuthors) {
         Vue.set(state.currentSite, 'postsAuthors', postsAuthors.slice());
     },
+    setPageAuthors (state, pagesAuthors) {
+        Vue.set(state.currentSite, 'pagesAuthors', pagesAuthors.slice());
+    },
     removeAuthors (state, authorIDs) {
         state.currentSite.authors = state.currentSite.authors.filter(author => authorIDs.indexOf(author.id) === -1);
         state.currentSite.postsAuthors = state.currentSite.postsAuthors.filter(postAuthor => authorIDs.indexOf(postAuthor.authorID) === -1);
+        state.currentSite.pagesAuthors = state.currentSite.pagesAuthors.filter(pageAuthor => authorIDs.indexOf(pageAuthor.authorID) === -1);
     },
     removePosts (state, postIDs) {
         state.currentSite.posts = state.currentSite.posts.filter(post => postIDs.indexOf(post.id) === -1);
+    },
+    removePages (state, pageIDs) {
+        state.currentSite.pages = state.currentSite.pages.filter(page => pageIDs.indexOf(page.id) === -1);
     },
     changePostsStatus (state, config) {
         state.currentSite.posts = state.currentSite.posts.map(function(post) {
@@ -238,6 +263,27 @@ export default {
             }
 
             return post;
+        });
+    },
+    changePagesStatus (state, config) {
+        state.currentSite.pages = state.currentSite.pages.map(function(page) {
+            if(config.pageIDs.indexOf(page.id) !== -1) {
+                let currentStatus = page.status.split(',');
+
+                if(!config.inverse) {
+                    if(currentStatus.indexOf(config.status) === -1) {
+                        currentStatus.push(config.status);
+                    }
+                } else {
+                    if(currentStatus.indexOf(config.status) > -1) {
+                        currentStatus = currentStatus.filter(pageStatus => pageStatus !== config.status);
+                    }
+                }
+
+                page.status = currentStatus.join(',');
+            }
+
+            return page;
         });
     },
     changeTagsVisibility (state, config) {
@@ -426,10 +472,16 @@ export default {
         state.currentSite.postsAuthors = data.postsAuthors;
         state.currentSite.authors = data.authors;
     },
+    refreshAfterPageUpdate (state, data) {
+        state.currentSite.pages = data.pages;
+        state.currentSite.pagesAuthors = data.pagesAuthors;
+        state.currentSite.authors = data.authors;
+    },
     setThemeConfig (state, data) {
         state.currentSite.themeSettings.config = data.newConfig.config.slice();
         state.currentSite.themeSettings.customConfig = data.newConfig.customConfig.slice();
         state.currentSite.themeSettings.postConfig = data.newConfig.postConfig.slice();
+        state.currentSite.themeSettings.pageConfig = data.newConfig.pageConfig.slice();
         state.currentSite.themeSettings.tagConfig = data.newConfig.tagConfig.slice();
         state.currentSite.themeSettings.authorConfig = data.newConfig.authorConfig.slice();
         state.currentSite.themeSettings.defaultTemplates = JSON.parse(JSON.stringify(data.newConfig.defaultTemplates));
