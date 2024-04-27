@@ -111,7 +111,7 @@ class DiffCopy {
         }
     }
 
-    static removeUnusedPostFolders (postIDs, baseOutputPath) {
+    static removeUnusedItemFolders (postIDs, baseOutputPath) {
         let allPostFolders = fs.readdirSync(baseOutputPath);
         postIDs = JSON.parse(JSON.stringify(postIDs));
         postIDs = postIDs.map(id => (id).toString());

@@ -38,6 +38,7 @@ class RendererContextHome extends RendererContext {
                     status LIKE '%published%' AND
                     status NOT LIKE '%hidden%' AND
                     status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%is-page%' AND
                     status NOT LIKE '%excluded_homepage%'
                 ORDER BY
                     ${this.postsOrdering}
@@ -65,6 +66,7 @@ class RendererContextHome extends RendererContext {
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
+        this.pages = this.renderer.commonData.pages;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
     }
@@ -77,6 +79,8 @@ class RendererContextHome extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('includeFeaturedInPosts', this.themeConfig) == false;
         let featuredPostsNumber = RendererHelpers.getRendererOptionValue('featuredPostsNumber', this.themeConfig);
 
@@ -104,6 +108,7 @@ class RendererContextHome extends RendererContext {
             hiddenPosts: this.hiddenPosts,
             tags: this.tags,
             mainTags: this.mainTags,
+            pages: this.pages,
             authors: this.authors,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
@@ -136,12 +141,10 @@ class RendererContextHome extends RendererContext {
             FROM
                 posts
             WHERE
-                status LIKE '%published%'
-                AND
-                status NOT LIKE '%hidden%'
-                AND
-                status NOT LIKE '%trashed%'
-                AND 
+                status LIKE '%published%' AND
+                status NOT LIKE '%hidden%' AND
+                status NOT LIKE '%trashed%' AND 
+                status NOT LIKE '%is-page%' AND 
                 status NOT LIKE '%excluded_homepage%'
                 ${includeFeaturedPosts}
             GROUP BY

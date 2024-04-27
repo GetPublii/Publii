@@ -24,6 +24,7 @@ class RendererContext404 extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+        this.pages = this.renderer.commonData.pages;
         this.metaTitle = this.siteConfig.advanced.errorMetaTitle.replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.errorMetaDescription.replace(/%sitename/g, siteName);
 
@@ -40,12 +41,13 @@ class RendererContext404 extends RendererContext {
      * Preparing the loaded data
      */
     prepareData() {
-        let self = this;
         this.title = this.siteConfig.name;
         this.featuredPosts = this.featuredPosts || [];
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
     }
 
     /**
@@ -66,6 +68,7 @@ class RendererContext404 extends RendererContext {
             featuredPosts: this.featuredPosts,
             hiddenPosts: this.hiddenPosts,
             tags: this.tags,
+            pages: this.pages,
             mainTags: this.mainTags,
             authors: this.authors,
             metaTitleRaw: this.metaTitle,

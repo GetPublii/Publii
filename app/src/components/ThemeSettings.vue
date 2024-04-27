@@ -570,6 +570,9 @@ export default {
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');
         },
+        pageViewThemeSettings () {
+            return this.$store.state.currentSite.themeSettings.pageConfig.filter(field => field.type !== 'separator');
+        },
         postTemplates () {
             return this.$store.state.currentSite.themeSettings.postTemplates;
         },
@@ -651,6 +654,7 @@ export default {
         loadSettings () {
             this.loadBasicSettings();
             this.loadCustomSettings();
+            this.loadPageViewSettings();
             this.loadPostViewSettings();
             this.loadTagViewSettings();
             this.loadAuthorViewSettings();
@@ -675,6 +679,21 @@ export default {
             for (let setting of settings) {
                 if (setting) {
                     Vue.set(this.custom, setting[0], setting[1]);
+                }
+            }
+        },
+        loadPageViewSettings () {
+            let settings = this.$store.state.currentSite.themeSettings.pageConfig.map(field => {
+                if (field.type !== 'separator') {
+                    return [field.name, field.value]
+                }
+
+                return false;
+            });
+
+            for (let setting of settings) {
+                if (setting) {
+                    Vue.set(this.pageView, setting[0], setting[1]);
                 }
             }
         },
@@ -925,6 +944,7 @@ export default {
                 config: Object.assign({}, this.basic),
                 customConfig: Object.assign({}, this.custom),
                 postConfig: Object.assign({}, this.postView),
+                pageConfig: Object.assign({}, this.pageView),
                 tagConfig: Object.assign({}, this.tagView),
                 authorConfig: Object.assign({}, this.authorView),
                 defaultTemplates: Object.assign({}, this.defaultTemplates)

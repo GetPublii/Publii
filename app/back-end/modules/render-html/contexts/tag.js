@@ -43,6 +43,7 @@ class RendererContextTag extends RendererContext {
                     p.status LIKE '%published%' AND
                     p.status NOT LIKE '%hidden%' AND
                     p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%is-page%' AND
                     ${includeFeaturedPosts}
                     pt.tag_id = @tagID
                 ORDER BY
@@ -65,6 +66,7 @@ class RendererContextTag extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.tag;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+        this.pages = this.renderer.commonData.pages;
     }
 
     prepareData() {
@@ -84,6 +86,8 @@ class RendererContextTag extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
         let shouldSkipFeaturedPosts = RendererHelpers.getRendererOptionValue('tagsIncludeFeaturedInPosts', this.themeConfig) === false;
         let featuredPostsNumber = RendererHelpers.getRendererOptionValue('tagsFeaturedPostsNumber', this.themeConfig);
 
@@ -151,6 +155,7 @@ class RendererContextTag extends RendererContext {
             title: this.metaTitle !== '' ? this.metaTitle : this.title,
             tag: this.tag,
             posts: this.posts,
+            pages: this.pages,
             featuredPosts: this.featuredPosts,
             hiddenPosts: this.hiddenPosts,
             tags: this.tags,

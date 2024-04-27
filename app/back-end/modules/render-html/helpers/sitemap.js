@@ -44,7 +44,7 @@ class Sitemap {
      * Creates sitemap.xml file
      */
     async create () {
-        this.getPostData();
+        this.getData();
 
         await this.getFilesList().then(() => {
             this.renderXML();
@@ -55,7 +55,7 @@ class Sitemap {
     /**
      * Get post data
      */
-    getPostData () {
+    getData () {
         let momentOriginalLocale = moment.locale();
         moment.locale('en');
 

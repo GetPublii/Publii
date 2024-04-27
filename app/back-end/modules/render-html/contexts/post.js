@@ -20,6 +20,7 @@ class RendererContextPost extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+        this.pages = this.renderer.commonData.pages;
     }
 
     prepareData() {
@@ -29,6 +30,8 @@ class RendererContextPost extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
         this.metaTitle = this.siteConfig.advanced.postMetaTitle;
         this.metaDescription = this.siteConfig.advanced.postMetaDescription;
         this.canonicalUrl = this.post.url;
@@ -171,6 +174,7 @@ class RendererContextPost extends RendererContext {
                     p.id != @postID AND
                     p.status LIKE '%published%' AND
                     p.status NOT LIKE '%trashed%'AND
+                    p.status NOT LIKE '%is-page%' AND
                     p.status NOT LIKE '%hidden%'
                     ${tagsCondition}
                 GROUP BY
@@ -200,6 +204,7 @@ class RendererContextPost extends RendererContext {
                         id != @postID AND
                         status LIKE '%published%' AND
                         status NOT LIKE '%trashed%' AND
+                        status NOT LIKE '%is-page%' AND
                         status NOT LIKE '%hidden%'
                     ORDER BY
                         ${temporaryPostsOrdering}
@@ -307,6 +312,7 @@ class RendererContextPost extends RendererContext {
                     p.id != @postID AND
                     p.status LIKE '%published%' AND
                     p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%is-page%' AND
                     p.status NOT LIKE '%hidden%'
                     ${conditionsLowerPriority}
             `;
@@ -331,6 +337,7 @@ class RendererContextPost extends RendererContext {
                         p.id != @postID AND
                         p.status LIKE '%published%' AND
                         p.status NOT LIKE '%trashed%' AND
+                        p.status NOT LIKE '%is-page%' AND
                         p.status NOT LIKE '%hidden%'
                         ${conditions}
                     ${secondQuery}
@@ -410,6 +417,7 @@ class RendererContextPost extends RendererContext {
             tags: this.allTags,
             mainTags: this.mainTags,
             authors: this.authors,
+            pages: this.pages,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,

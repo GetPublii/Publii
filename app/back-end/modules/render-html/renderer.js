@@ -16,6 +16,7 @@ const ViewSettingsHelper = require('./helpers/view-settings.js');
 const Themes = require('../../themes.js');
 const TemplateHelper = require('./helpers/template.js');
 const RendererContext = require('./renderer-context.js');
+const RendererContextPage = require('./contexts/page.js');
 const RendererContextPost = require('./contexts/post.js');
 const RendererContextPostPreview = require('./contexts/post-preview.js');
 const RendererContextTag = require('./contexts/tag.js');
@@ -66,6 +67,7 @@ class Renderer {
             mainTags: [],
             authors: [],
             menus: [],
+            pages: [],
             featuredPosts: {
                 homepage: [],
                 tag: [],
@@ -74,6 +76,7 @@ class Renderer {
             hiddenPosts: []
         };
         this.cachedItems = {
+            pages: {},
             postTags: {},
             posts: {},
             tags: {},
@@ -83,6 +86,7 @@ class Renderer {
             authorsPostCounts: {},
             featuredImages: {
                 authors: {},
+                pages: {},
                 posts: {},
                 tags: {}
             }
@@ -226,6 +230,8 @@ class Renderer {
         this.generateFrontpage();
         this.sendProgress(20, 'Generating posts');
         this.generatePosts();
+        this.sendProgress(50, 'Generating pages');
+        this.generatePages();
 
         if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
             this.sendProgress(60, 'Generating tag pages');
@@ -299,7 +305,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID], []);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -312,9 +318,10 @@ class Renderer {
         this.preparePreview('frontpage');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -327,6 +334,7 @@ class Renderer {
         this.preparePreview('tag');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         let postIDsToRender = [];
 
         for (let i = 0; i < postIDs.length; i++) {
@@ -340,7 +348,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -353,6 +361,7 @@ class Renderer {
         this.preparePreview('author');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         let postIDsToRender = [];
 
         for (let i = 0; i < postIDs.length; i++) {
@@ -366,7 +375,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -603,6 +612,7 @@ class Renderer {
             'config',
             'customConfig',
             'postConfig',
+            'pageConfig',
             'tagConfig',
             'authorConfig'
         ];
@@ -796,6 +806,7 @@ class Renderer {
                 posts
             WHERE
                 status LIKE '%published%' AND
+                status NOT LIKE '%is-page%' AND
                 status NOT LIKE '%trashed%'
             ORDER BY
                 id ASC
@@ -967,6 +978,102 @@ class Renderer {
             type: 'post',
             id: postID
         }, this);
+    }
+
+    /*
+     * Create page sites
+     */
+    generatePages() {
+        console.time('PAGES');
+        let pageIDs = [];
+        let pageSlugs = [];
+        let pageTemplates = [];
+        let inputFile = 'page.hbs';
+
+        // Get pages
+        let pageData = this.db.prepare(`
+            SELECT
+                id,
+                slug,
+                template
+            FROM
+                posts
+            WHERE
+                status LIKE '%published%' AND
+                status LIKE '%is-page%' AND
+                status NOT LIKE '%trashed%'
+            ORDER BY
+                id ASC
+        `).all();
+
+        if (pageData && pageData.length) { 
+            pageIDs = pageData.map(row => row.id);
+            pageSlugs = pageData.map(row => row.slug);
+            pageTemplates = pageData.map(row => {
+                if (row.template === '*') {
+                    return this.themeConfig.defaultTemplates.page
+                }
+
+                return row.template;
+            });
+        } else {
+            pageIDs = [];
+            pageSlugs = [];
+            pageTemplates = [];
+        }
+
+        // Load templates
+        let compiledTemplates = {};
+        compiledTemplates['DEFAULT'] = this.compileTemplate(inputFile);
+
+        if (!compiledTemplates['DEFAULT']) {
+            return false;
+        }
+
+        for (let i = 0; i < pageTemplates.length; i++) {
+            let fileSlug = pageTemplates[i];
+
+            // When we meet default template - skip the compilation process
+            if (fileSlug === '' || !this.themeConfig.pageTemplates[fileSlug]) {
+                continue;
+            }
+
+            compiledTemplates[fileSlug] = this.compileTemplate('page-' + fileSlug + '.hbs');
+
+            if (!compiledTemplates[fileSlug]) {
+                return false;
+            }
+        }
+
+        // Create global context
+        let progressIncrease = 40 / pageIDs.length;
+
+        // Render post sites
+        for (let i = 0; i < pageIDs.length; i++) {
+            let contextGenerator = new RendererContextPage(this);
+            let context = contextGenerator.getContext(pageIDs[i]);
+            let fileSlug = 'DEFAULT';
+            fileSlug = pageTemplates[i] === '' ? 'DEFAULT' : pageTemplates[i];
+
+            this.menuContext = ['page', pageSlugs[i]];    
+            
+            if (!compiledTemplates[fileSlug]) {
+                fileSlug = 'DEFAULT';
+            }
+
+            inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+            let pageViewConfig = this.cachedItems.pages[pageIDs[i]].pageViewConfig;
+            this.globalContext = this.createGlobalContext('page', [], false, pageSlugs[i], pageViewConfig, context);
+            let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+            if (this.plugins.hasModifiers('htmlOutput')) {
+                output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+            }
+
+            this.templateHelper.saveOutputPostFile(pageSlugs[i], output);
+            this.sendProgress(Math.ceil(20 + (progressIncrease * i)), 'Generating pages (' + (i + 1) + '/' + pageIDs.length + ')');
+        }
+        console.timeEnd('PAGES');
     }
 
     /*
@@ -1554,9 +1661,10 @@ class Renderer {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
                 let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
                 let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
                 let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
-                return generateOverride(customConfig, postConfig, commonConfig);
+                return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS theme variables.',
@@ -1609,9 +1717,10 @@ class Renderer {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
                 let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
                 let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
                 let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
-                return generateOverride(customConfig, postConfig, commonConfig);
+                return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS overrides.',
@@ -1706,10 +1815,11 @@ class Renderer {
     async copyFiles() {
         console.time("FILES");
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs, pageIDs);
         await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
         await FilesHelper.removeEmptyDirectories(this.outputDir);
         console.timeEnd("FILES");
@@ -1719,6 +1829,7 @@ class Renderer {
         console.time("CONTENT DATA");
         let globalContextGenerator = new RendererContext(this);
         this.cachedItems = {
+            pages: {},
             postTags: {},
             posts: {},
             tags: {},
@@ -1728,6 +1839,7 @@ class Renderer {
             authorsPostCounts: {},
             featuredImages: {
                 authors: {},
+                pages: {},
                 posts: {},
                 tags: {}
             }
@@ -1749,6 +1861,7 @@ class Renderer {
             tags: globalContextGenerator.getAllTags(),
             mainTags: globalContextGenerator.getAllMainTags(),
             authors: globalContextGenerator.getAuthors(),
+            pages: globalContextGenerator.getPages(),
             menus: menus,
             unassignedMenus: unassignedMenus,
             featuredPosts: {

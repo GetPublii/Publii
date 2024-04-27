@@ -47,7 +47,7 @@ function returnSrcSetAttribute (url, type, group) {
             type = 'authorImages';
         } else if (url.indexOf('/media/tags/') > -1) {
             type = 'tagImages';
-        } else if (url.indexOf('/media/posts/') > -1) {
+        } else if (url.indexOf('/media/posts/') > -1 || url.indexOf('/media/pages/') > -1) {
             type = 'contentImages';
         } else if (url.indexOf('/media/website/') > -1) {
             type = 'optionImages';

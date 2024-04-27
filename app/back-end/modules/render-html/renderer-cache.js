@@ -35,8 +35,9 @@ class RendererCache {
         // Set post-related items
         this.getFeaturedPostImages();
         this.getPostTags();
-        // At the end we get posts as it uses other cached items
+        // At the end we get posts and pages as it uses other cached items
         this.getPosts();
+        this.getPages();
         // Now we can set internal links
         this.setInternalLinks();
     }
@@ -229,7 +230,8 @@ class RendererCache {
             WHERE
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%hidden%' AND
-                p.status NOT LIKE '%trashed%'
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%' AND
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id
@@ -260,6 +262,10 @@ class RendererCache {
                 posts_images as pi
                 ON
                 p.featured_image_id = pi.id
+            WHERE
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%'
             ORDER BY
                 pi.id DESC
         `).all();
@@ -355,7 +361,8 @@ class RendererCache {
                 posts
             WHERE
                 status NOT LIKE '%trashed%' AND
-                status NOT LIKE '%draft%'
+                status NOT LIKE '%draft%' AND
+                status NOT LIKE '%is-page%'
             ORDER BY
                 id ASC;
         `).all();
@@ -375,6 +382,41 @@ class RendererCache {
             post.setInternalLinks();
         });
         console.timeEnd('POSTS - STORE');
+    }
+
+    /**
+     * Retrieves pages data
+     */
+    getPages() {
+        console.time('PAGES - QUERY');
+        let pages = this.db.prepare(`
+            SELECT
+                *
+            FROM
+                posts
+            WHERE
+                status LIKE '%is-page%' AND
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%draft%'
+            ORDER BY
+                id ASC;
+        `).all();
+        console.timeEnd('PAGES - QUERY');
+
+        console.time('PAGES - STORE');
+        let pageViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
+        
+        pages = pages.map(page => {
+            let pageViewConfig = this.getPageViewSettings(pageViewConfigObject, page.id);
+            let newPage = new Page(page, this.renderer);
+            newPage.setPageViewConfig(pageViewConfig);
+            return newPage;
+        });
+
+        pages.map(page => {
+            page.setInternalLinks();
+        });
+        console.timeEnd('PAGES - STORE');
     }
 
     /**
@@ -409,6 +451,41 @@ class RendererCache {
         return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
             type: 'post',
             id: postID
+        }, this.renderer);
+    }
+
+    /**
+     * Retrieve page view settings
+     *
+     * @param defaultPageViewConfig
+     * @param pageID
+     *
+     * @returns {object}
+     */
+    getPageViewSettings(defaultPageViewConfig, pageID) {
+        let pageViewData = false;
+        let pageViewSettings = {};
+
+        pageViewData = this.db.prepare(`
+            SELECT
+                value
+            FROM
+                posts_additional_data
+            WHERE
+                post_id = @id
+                AND
+                key = 'pageViewSettings'
+        `).get({
+            id: pageID
+        });
+
+        if (pageViewData && pageViewData.value) {
+            pageViewSettings = JSON.parse(pageViewData.value);
+        }
+
+        return ViewSettingsHelper.override(pageViewSettings, defaultPageViewConfig, {
+            type: 'page',
+            id: pageID
         }, this.renderer);
     }
 

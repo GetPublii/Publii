@@ -6,7 +6,7 @@ class ViewSettings {
         let viewType = itemData.type;
         let viewConfigObject = {}
 
-        if (viewType && (viewType === 'author' || viewType === 'post' || viewType === 'tag')) {
+        if (viewType && (viewType === 'author' || viewType === 'post' || viewType === 'page' || viewType === 'tag')) {
             let configField = viewType + 'Config';
             viewConfigObject = JSON.parse(JSON.stringify(rendererInstance.viewConfigStructure[configField]));
         }
@@ -47,6 +47,8 @@ class ViewSettings {
                     dirName = 'tags';
                 } else if (itemData.type === 'author') {
                     dirName = 'authors';
+                } else if (itemData.type === 'page') {
+                    dirName = 'pages';
                 }
 
                 if (defaultField) {
@@ -82,6 +84,8 @@ class ViewSettings {
                         dirName = 'tags';
                     } else if (itemData.type === 'author') {
                         dirName = 'authors';
+                    } else if (itemData.type === 'page') {
+                        dirName = 'pages';
                     }
 
                     let imagePath = '/media/' + dirName + '/' + itemData.id + '/' + field.value;

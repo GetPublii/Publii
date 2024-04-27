@@ -43,7 +43,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         }
 
         // Get tag values according to the current context - listing or single post page
-        if(contextData.data.context.indexOf('post') === -1) {
+        if(contextData.data.context.indexOf('post') === -1 && contextData.data.context.indexOf('page') === -1) {
             // Data for the index/tag listing page
             image = contextData.data.website.logo;
             title = siteName;

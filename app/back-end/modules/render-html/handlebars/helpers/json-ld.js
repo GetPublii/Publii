@@ -20,7 +20,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
         jsonLDObject['@context'] = 'http://schema.org';
 
         // Detect if the page is not a post page
-        if(context.data.context.indexOf('post') === -1) {
+        if (context.data.context.indexOf('post') === -1 && context.data.context.indexOf('page') === -1) {
             jsonLDObject['@type'] = 'Organization';
             jsonLDObject['name'] = context.data.website.name;
 

@@ -511,6 +511,7 @@ class ContentHelper {
      */
     static setInternalLinks(text, renderer) {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'page');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tags');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');

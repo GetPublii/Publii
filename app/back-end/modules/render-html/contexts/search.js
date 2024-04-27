@@ -35,6 +35,7 @@ class RendererContextSearch extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+        this.pages = this.renderer.commonData.pages;
     }
 
     /**
@@ -46,6 +47,8 @@ class RendererContextSearch extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
     }
 
     /**
@@ -68,6 +71,7 @@ class RendererContextSearch extends RendererContext {
             tags: this.tags,
             mainTags: this.mainTags,
             authors: this.authors,
+            pages: this.pages,
             metaTitleRaw: this.metaTitle,
             metaDescriptionRaw: this.metaDescription,
             metaRobotsRaw: metaRobotsValue,
