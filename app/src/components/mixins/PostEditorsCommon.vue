@@ -30,11 +30,12 @@ export default {
         },
         closeEditor () {
             let siteName = this.$route.params.name;
+            let itemType = this.itemType === 'page' ? 'pages' : 'posts'; 
 
             if (this.postData.isTrashed) {
-                this.$router.push('/site/' + siteName + '/posts/trashed');
+                this.$router.push('/site/' + siteName + '/' + itemType + '/trashed');
             } else {
-                this.$router.push('/site/' + siteName + '/posts/');
+                this.$router.push('/site/' + siteName + '/' + itemType + '/');
             }
         }
     },

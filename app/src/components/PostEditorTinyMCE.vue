@@ -147,7 +147,7 @@ export default {
     },
     computed: {
         itemType () {
-            return this.$route.path.indexOf('/pages/') > -1 ? 'page' : 'post';
+            return this.$route.path.indexOf('/pages/editor/tinymce/') > -1 ? 'page' : 'post';
         },
         isEdit () {
             return !!this.postID;
@@ -307,7 +307,7 @@ export default {
                     this.postID = data.postID;
                 }
 
-                if (data.posts) {
+                if (data.posts || data.pages) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
                     alert(this.$t('editor.errorOccurred'));

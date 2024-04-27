@@ -23,9 +23,11 @@
 <script>
 export default {
     name: 'sidebar-menu',
-    data: function() {
+    data () {
+        let activeMenuItem = this.$route.path.endsWith('/pages/') ? 'pages' : 'posts';
+
         return {
-            activeMenuItem: 'posts'
+            activeMenuItem
         };
     },
     computed: {

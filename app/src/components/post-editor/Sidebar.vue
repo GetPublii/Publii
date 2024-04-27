@@ -30,7 +30,8 @@
                             v-if="isEdit"
                             class="post-info">
                             <dl>
-                                <dt>{{ $t('post.postState') }}</dt>
+                                <dt v-if="itemType === 'post'">{{ $t('post.postState') }}</dt>
+                                <dt v-if="itemType === 'page'">{{ $t('page.pageState') }}</dt>
                                 <dd id="post-status">
                                     {{ $parent.postData.status }}
                                 </dd>
@@ -71,7 +72,8 @@
                             class="post-info post-info--nogrid">
 
                             <dl>
-                                <dt>{{ $t('post.postAuthor') }}</dt>
+                                <dt v-if="itemType === 'post'">{{ $t('post.postAuthor') }}</dt>
+                                <dt v-if="itemType === 'page'">{{ $t('page.pageAuthor') }}</dt>
                                 <dd>
                                     <dropdown
                                         id="post-author-id"
@@ -88,7 +90,12 @@
                                         @click.prevent="changeDate">
 
                                         <template v-if="!$parent.postData.creationDate.text">
-                                            {{ $t('post.setCustomPostDate') }}
+                                            <template v-if="itemType === 'post'">
+                                                {{ $t('post.setCustomPostDate') }}
+                                            </template>
+                                            <template v-if="itemType === 'page'">
+                                                {{ $t('page.setCustomPageDate') }}
+                                            </template>
                                         </template>
 
                                         <template v-if="$parent.postData.creationDate.text">
@@ -295,7 +302,8 @@
                             <span
                                 v-if="$parent.postData.slug.length > 250"
                                 class="options-sidebar-label-warning">
-                                {{ $t('post.postSlugTooLong') }}
+                                <template v-if="itemType === 'post'">{{ $t('post.postSlugTooLong') }}</template>
+                                <template v-if="itemType === 'page'">{{ $t('page.pageSlugTooLong') }}</template>
                             </span>
                         </span>
                     </div>
@@ -307,7 +315,9 @@
                             class="post-editor-settings-content"
                             ref="seo-content">
                             <div class="post-seo">
-                                <label>{{ $t('post.postSlug') }}:
+                                <label>
+                                    <template v-if="itemType === 'post'">{{ $t('post.postSlug') }}:</template>
+                                    <template v-if="itemType === 'page'">{{ $t('page.pageSlug') }}:</template>
                                     <div class="options-sidebar-item-slug">
                                         <input
                                             type="text"

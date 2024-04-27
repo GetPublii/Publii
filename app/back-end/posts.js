@@ -30,7 +30,7 @@ class Posts extends Model {
                 ON
                 pad.post_id = p.id
             WHERE
-                p.status NOT LIKE '%is-page%"'
+                p.status NOT LIKE '%is-page%'
                 AND (
                     pad.key = '_core' OR
                     pad.key IS NULL

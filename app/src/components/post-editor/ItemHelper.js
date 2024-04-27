@@ -160,9 +160,9 @@ class ItemHelper {
         }
 
         // Set post elements
-        itemData.title = data.posts[0].title;
-        let mediaPath = ItemHelper.getMediaPath($store, data.posts[0].id, itemType);
-        let preparedText = data.posts[0].text;
+        itemData.title = data[itemType + 's'][0].title;
+        let mediaPath = ItemHelper.getMediaPath($store, data[itemType + 's'][0].id, itemType);
+        let preparedText = data[itemType + 's'][0].text;
         preparedText = preparedText.split('#DOMAIN_NAME#').join('file:///' + mediaPath);
         preparedText = ItemHelper.setWebpCompatibility($store, preparedText);
         itemData.text = preparedText;
@@ -190,17 +190,17 @@ class ItemHelper {
             format = 'MMM DD, YYYY  hh:mm a';
         }
 
-        itemData.creationDate.text = $moment(data.posts[0].created_at).format(format);
-        itemData.modificationDate.text = $moment(data.posts[0].modified_at).format(format);
-        itemData.creationDate.timestamp = data.posts[0].created_at;
-        itemData.modificationDate.timestamp = data.posts[0].modified_at;
-        itemData.status = data.posts[0].status.split(',').join(', ');
-        itemData.isTrashed = data.posts[0].status.indexOf('trashed') > -1;
+        itemData.creationDate.text = $moment(data[itemType + 's'][0].created_at).format(format);
+        itemData.modificationDate.text = $moment(data[itemType + 's'][0].modified_at).format(format);
+        itemData.creationDate.timestamp = data[itemType + 's'][0].created_at;
+        itemData.modificationDate.timestamp = data[itemType + 's'][0].modified_at;
+        itemData.status = data[itemType + 's'][0].status.split(',').join(', ');
+        itemData.isTrashed = data[itemType + 's'][0].status.indexOf('trashed') > -1;
 
         if (itemType === 'post') {
-            itemData.isHidden = data.posts[0].status.indexOf('hidden') > -1;
-            itemData.isFeatured = data.posts[0].status.indexOf('featured') > -1;
-            itemData.isExcludedOnHomepage = data.posts[0].status.indexOf('excluded_homepage') > -1;
+            itemData.isHidden = data[itemType + 's'][0].status.indexOf('hidden') > -1;
+            itemData.isFeatured = data[itemType + 's'][0].status.indexOf('featured') > -1;
+            itemData.isExcludedOnHomepage = data[itemType + 's'][0].status.indexOf('excluded_homepage') > -1;
         }
 
         // Set image
@@ -221,14 +221,14 @@ class ItemHelper {
         }
 
         // Set SEO
-        itemData.slug = data.posts[0].slug;
+        itemData.slug = data[itemType + 's'][0].slug;
         itemData.metaTitle = data.additionalData.metaTitle || "";
         itemData.metaDescription = data.additionalData.metaDesc || "";
         itemData.metaRobots = data.additionalData.metaRobots || "";
         itemData.canonicalUrl = data.additionalData.canonicalUrl || "";
 
         // Update post template
-        itemData.template = data.posts[0].template;
+        itemData.template = data[itemType + 's'][0].template;
 
         // Update item view settings
         if (itemType === 'post' || itemType === 'page') {
@@ -238,7 +238,7 @@ class ItemHelper {
         return itemData;
     }
 
-    static updateItemViewSettings(itemType, data, itemData) {
+    static updateViewSettings(itemType, data, itemData) {
         let settingsKey = itemType + 'ViewSettings';
         let optionsKey = itemType + 'ViewOptions';
         let viewSettings = data[settingsKey];

@@ -45,6 +45,8 @@ const AstCurrentSiteConfig = {
         metaRobotsIndex: 'index, follow',
         postMetaTitle: '%posttitle - %sitename ',
         postMetaDescription: '',
+        pageMetaTitle: '%pagetitle - %sitename ',
+        pageMetaDescription: '',
         postUseTextWithoutCustomExcerpt: false,
         tagMetaTitle: 'Tag: %tagname - %sitename',
         tagMetaDescription: '',

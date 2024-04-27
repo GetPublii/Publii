@@ -190,15 +190,15 @@ export default new Router({
             component: EditorTinyMCE
         },
         {
-            path: '/site/:name/pages/editor/blockeditor/:page_id?',
+            path: '/site/:name/pages/editor/blockeditor/:post_id?',
             component: EditorBlockEditor
         },
         {
-            path: '/site/:name/pages/editor/markdown/:page_id?',
+            path: '/site/:name/pages/editor/markdown/:post_id?',
             component: EditorMarkdown
         },
         {
-            path: '/site/:name/pages/editor/tinymce/:page_id?',
+            path: '/site/:name/pages/editor/tinymce/:post_id?',
             component: EditorTinyMCE
         }
     ]
