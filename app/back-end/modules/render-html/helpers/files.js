@@ -193,10 +193,6 @@ class Files {
             fs.mkdirSync(path.join(basePathOutput, 'posts'));
         }
 
-        if (!UtilsHelper.dirExists(path.join(basePathOutput, 'pages'))) {
-            fs.mkdirSync(path.join(basePathOutput, 'pages'));
-        }
-
         for (let i = 0; i < dirs.length; i++) {
             if (!UtilsHelper.dirExists(path.join(basePathInput, dirs[i]))) {
                 continue;
@@ -224,7 +220,6 @@ class Files {
         }
 
         DiffCopy.removeUnusedItemFolders(postIDs, path.join(basePathOutput, 'posts'));
-        DiffCopy.removeUnusedItemFolders(pageIDs, path.join(basePathOutput, 'pages'));
     }
 
     /**

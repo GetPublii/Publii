@@ -47,7 +47,7 @@ class Page extends Model {
         let results = {
             "pages": [],
             "featuredImage": '',
-            "mediaPath": path.join(this.siteDir, 'input', 'media', 'pages'),
+            "mediaPath": path.join(this.siteDir, 'input', 'media', 'posts'),
             "author": ''
         };
         // Get page data
@@ -188,7 +188,7 @@ class Page extends Model {
 
             // Move images from the temp directory
             let tempDirectoryExists = true;
-            let tempImagesDir = path.join(this.siteDir, 'input', 'media', 'pages', 'temp');
+            let tempImagesDir = path.join(this.siteDir, 'input', 'media', 'posts', 'temp');
 
             try {
                 fs.statSync(tempImagesDir).isDirectory();
@@ -197,7 +197,7 @@ class Page extends Model {
             }
 
             if (tempDirectoryExists) {
-                let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'pages', (this.id).toString());
+                let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'posts', (this.id).toString());
                 fs.copySync(tempImagesDir, finalImagesDir);
                 fs.removeSync(tempImagesDir);
 
@@ -256,7 +256,7 @@ class Page extends Model {
         this.db.exec(`DELETE FROM posts_tags WHERE post_id = ${parseInt(this.id, 10)}`);
         this.db.exec(`DELETE FROM posts_images WHERE post_id = ${parseInt(this.id, 10)}`);
         this.db.exec(`DELETE FROM posts_additional_data WHERE post_id = ${parseInt(this.id, 10)}`);
-        ImageHelper.deleteImagesDirectory(this.siteDir, 'pages', this.id);
+        ImageHelper.deleteImagesDirectory(this.siteDir, 'posts', this.id);
 
         return true;
     }
@@ -458,7 +458,7 @@ class Page extends Model {
             pageDir = 'temp';
         }
 
-        let imagesDir = path.join(this.siteDir, 'input', 'media', 'pages', (pageDir).toString());
+        let imagesDir = path.join(this.siteDir, 'input', 'media', 'posts', (pageDir).toString());
         let galleryImagesDir = path.join(imagesDir, 'gallery');
         let pageDirectoryExists = true;
 

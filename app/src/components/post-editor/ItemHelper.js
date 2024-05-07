@@ -240,10 +240,9 @@ class ItemHelper {
 
     static updateViewSettings(itemType, data, itemData) {
         let settingsKey = itemType + 'ViewSettings';
-        let optionsKey = itemType + 'ViewOptions';
         let viewSettings = data[settingsKey];
         let viewFields = Object.keys(viewSettings);
-    
+
         for (let i = 0; i < viewFields.length; i++) {
             let newValue = '';
     
@@ -253,7 +252,7 @@ class ItemHelper {
                 newValue = viewSettings[viewFields[i]];
             }
     
-            itemData[optionsKey][viewFields[i]] = newValue;
+            itemData.viewOptions[viewFields[i]] = newValue;
         }
     }
 

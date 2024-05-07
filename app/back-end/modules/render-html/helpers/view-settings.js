@@ -47,8 +47,6 @@ class ViewSettings {
                     dirName = 'tags';
                 } else if (itemData.type === 'author') {
                     dirName = 'authors';
-                } else if (itemData.type === 'page') {
-                    dirName = 'pages';
                 }
 
                 if (defaultField) {
@@ -84,8 +82,6 @@ class ViewSettings {
                         dirName = 'tags';
                     } else if (itemData.type === 'author') {
                         dirName = 'authors';
-                    } else if (itemData.type === 'page') {
-                        dirName = 'pages';
                     }
 
                     let imagePath = '/media/' + dirName + '/' + itemData.id + '/' + field.value;
