@@ -115,6 +115,23 @@
                     :placeholder="$t('post.selectPostPage')"></v-select>
             </label>
 
+            <label
+                v-if="type === 'page'"
+                :class="{ 'is-invalid': errors.indexOf('pagePage') > -1 }"
+                key="menu-item-editor-field-post">
+                <span>{{ $t('page.page') }}</span>
+                <v-select
+                    ref="pagePagesSelect"
+                    :options="pagePages"
+                    @click.native="cleanError('pagePage')"
+                    v-model="pagePage"
+                    :custom-label="customPageLabels"
+                    :close-on-select="true"
+                    :show-labels="false"
+                    @select="closeDropdown('pagePagesSelect')"
+                    :placeholder="$t('page.selectPage')"></v-select>
+            </label>
+
             <label key="menu-item-editor-field-title">
                 <span>{{ $t('link.linkTitleAttribute') }}</span>
                 <input
@@ -197,6 +214,7 @@ export default {
             tagPage: '',
             authorPage: '',
             postPage: '',
+            pagePage: '',
             errors: []
         };
     },
@@ -204,6 +222,7 @@ export default {
         linkTypes () {
             return [
                 'post',
+                'page',
                 'tag',
                 'tags',
                 'author',
@@ -231,6 +250,9 @@ export default {
 
                 return 0;
             });
+        },
+        pagePages () {
+            return this.$store.state.currentSite.pages.filter(page => page.status.indexOf('published') > -1).map(page => page.id);
         },
         postPages () {
             return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
@@ -266,6 +288,7 @@ export default {
         customTypeLabels (value) {
             switch (value) {
                 case 'post': return this.$t('post.postLink');
+                case 'page': return this.$t('page.pageLink');
                 case 'tag': return this.$t('tag.tagLink');
                 case 'tags': return this.$t('tag.tagsListLink');
                 case 'author': return this.$t('author.authorLink');
@@ -280,6 +303,9 @@ export default {
         },
         customAuthorsLabels (value) {
             return this.$store.state.currentSite.authors.filter(author => author.username === value).map(author => author.name)[0];
+        },
+        customPageLabels (value) {
+            return this.$store.state.currentSite.pages.filter(page => page.id === value).map(page => page.title)[0];
         },
         customPostLabels (value) {
             return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
@@ -308,6 +334,7 @@ export default {
             this.externalLink = '';
             this.tagPage = '';
             this.authorPage = '';
+            this.pagePage = '';
             this.postPage = '';
             this.errors = [];
         },
@@ -328,6 +355,10 @@ export default {
 
             if(this.type === 'post' && !(!!this.postPage)) {
                 this.errors.push('postPage');
+            }
+
+            if(this.type === 'page' && !(!!this.pagePage)) {
+                this.errors.push('pagePage');
             }
 
             if(this.type === 'tag' && !(!!this.tagPage)) {
@@ -426,6 +457,7 @@ export default {
             let type = this.type;
 
             switch (type) {
+                case 'page':      return parseInt(this.pagePage, 10);
                 case 'post':      return parseInt(this.postPage, 10);
                 case 'tag':       return parseInt(this.tagPage, 10);
                 case 'tags':      return 'empty';
@@ -441,6 +473,7 @@ export default {
             this.externalLink = this.type === 'external' ? value : '';
             this.tagPage = this.type === 'tag' ? parseInt(value, 10) : '';
             this.authorPage = this.type === 'author' ? value : '';
+            this.pagePage = this.type === 'page' ? parseInt(value, 10) : '';
             this.postPage = this.type === 'post' ? parseInt(value, 10) : '';
         }
     },
