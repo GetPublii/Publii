@@ -180,6 +180,7 @@ export default {
 
                     this.$bus.$emit('block-editor-set-current-site-data', {
                         tags: this.$store.state.currentSite.tags,
+                        pages: this.$store.state.currentSite.pages,
                         posts: this.$store.state.currentSite.posts,
                         authors: this.$store.state.currentSite.authors,
                         files: this.filesList
