@@ -587,11 +587,11 @@ class ContentHelper {
         let ids = urls.map(url => url.replace('#INTERNAL_LINK#/' + type + '/', ''));
         let links = {};
 
-        for(let id of ids) {
+        for (let id of ids) {
             let baseUrl = '#INTERNAL_LINK#/' + type + '/' + id;
             let pluralName = type + 's';
 
-            if(renderer.cachedItems[pluralName][id]) {
+            if (renderer.cachedItems[pluralName][id]) {
                 links[baseUrl] = renderer.cachedItems[pluralName][id].url;
             } else {
                 console.log('(i) Non-existing link: ' + pluralName + ' (' + id + ')');

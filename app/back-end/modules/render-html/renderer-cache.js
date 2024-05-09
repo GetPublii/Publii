@@ -1,3 +1,4 @@
+const Page = require('./items/page');
 const Post = require('./items/post');
 const Author = require('./items/author');
 const Tag = require('./items/tag');
@@ -36,10 +37,10 @@ class RendererCache {
         this.getFeaturedPostImages();
         this.getPostTags();
         // At the end we get posts and pages as it uses other cached items
-        this.getPosts();
-        this.getPages();
+        let posts = this.getPosts();
+        let pages = this.getPages();
         // Now we can set internal links
-        this.setInternalLinks();
+        this.setInternalLinks(posts, pages);
     }
 
     /**
@@ -231,7 +232,7 @@ class RendererCache {
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%hidden%' AND
                 p.status NOT LIKE '%trashed%' AND
-                p.status NOT LIKE '%is-page%' AND
+                p.status NOT LIKE '%is-page%'
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id
@@ -378,10 +379,8 @@ class RendererCache {
             return newPost;
         });
 
-        posts.map(post => {
-            post.setInternalLinks();
-        });
         console.timeEnd('POSTS - STORE');
+        return posts;
     }
 
     /**
@@ -413,10 +412,8 @@ class RendererCache {
             return newPage;
         });
 
-        pages.map(page => {
-            page.setInternalLinks();
-        });
         console.timeEnd('PAGES - STORE');
+        return pages;
     }
 
     /**
@@ -518,7 +515,15 @@ class RendererCache {
     /**
      * Set internal links for tags and authors
      */
-    setInternalLinks () {
+    setInternalLinks (posts, pages) {
+        posts.map(post => {
+            post.setInternalLinks();
+        });
+
+        pages.map(page => {
+            page.setInternalLinks();
+        });
+
         let authorIDs = Object.keys(this.renderer.cachedItems.authors);
         let tagIDs = Object.keys(this.renderer.cachedItems.tags);
 

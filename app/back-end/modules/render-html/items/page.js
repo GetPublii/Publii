@@ -22,7 +22,7 @@ class PageItem {
     }
 
     getMetaData () {
-        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @ageID AND key = '_core'`);
+        let metaDataQuery = this.db.prepare(`SELECT value FROM posts_additional_data WHERE post_id = @pageID AND key = '_core'`);
         let metaData = metaDataQuery.get({ pageID: this.page.id});
 
         if (metaData && metaData.value) {

@@ -17,6 +17,11 @@
           {{ $t('post.post') }}
         </div>
         <div
+          :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'page' }"
+          @click="setLinkType('page')">
+          {{ $t('page.page') }}
+        </div>
+        <div
           :class="{ 'block-link-popup-link-type-item': true, 'is-active': linkType === 'tag' }"
           @click="setLinkType('tag')">
           {{ $t('tag.tag') }}
@@ -42,6 +47,16 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('post.selectPostPage')"></vue-select>
+      <vue-select
+        v-if="linkType === 'page'"
+        slot="field"
+        ref="pagesSelect"
+        :options="pages"
+        v-model="linkSelectedPage"
+        :custom-label="customPageLabels"
+        :close-on-select="true"
+        :show-labels="false"
+        :placeholder="$t('page.selectPage')"></vue-select>
       <vue-select
         v-if="linkType === 'tag'"
         slot="field"
@@ -130,6 +145,7 @@ export default {
       linkType: 'external',
       linkSelectedAuthor: '',
       linkSelectedPost: '',
+      linkSelectedPage: '',
       linkSelectedTag: '',
       linkSelectedFile: '',
       link: {
@@ -159,6 +175,7 @@ export default {
       this.linkType = 'external';
       this.linkSelectedAuthor = '';
       this.linkSelectedPost = '';
+      this.linkSelectedPage = '';
       this.linkSelectedTag = '';
       this.linkSelectedFile = '';
       this.link = {
@@ -190,6 +207,9 @@ export default {
         if (this.link.url.indexOf('post') > -1) {
           this.linkType = 'post';
           this.linkSelectedPost = parseInt(this.link.url.split('/').pop(), 10);
+        } else if (this.link.url.indexOf('page') > -1) {
+          this.linkType = 'page';
+          this.linkSelectedPage = parseInt(this.link.url.split('/').pop(), 10);
         } else if (this.link.url.indexOf('tag') > -1) {
           this.linkType = 'tag';
           this.linkSelectedTag = parseInt(this.link.url.split('/').pop(), 10);
@@ -215,6 +235,12 @@ export default {
       if (this.linkType === 'post') {
         if (this.linkSelectedPost) {
           return '#INTERNAL_LINK#/post/' + this.linkSelectedPost;
+        } else {
+          return '';
+        }
+      } else if (this.linkType === 'page') {
+        if (this.linkSelectedPage) {
+          return '#INTERNAL_LINK#/page/' + this.linkSelectedPage;
         } else {
           return '';
         }
