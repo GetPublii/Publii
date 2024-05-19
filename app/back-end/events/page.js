@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Page = require('../page.js');
 
@@ -7,6 +9,8 @@ const Page = require('../page.js');
 
 class PageEvents {
     constructor(appInstance) {
+        this.app = appInstance;
+
         // Load
         ipcMain.on('app-page-load', function (event, pageData) {
             let page = new Page(appInstance, pageData);
@@ -74,6 +78,23 @@ class PageEvents {
             let page = new Page(appInstance, pageData);
             let result = page.checkAndCleanImages(true);
             event.sender.send('app-page-cancelled', result);
+        });
+
+        // Load pages hierarchy
+        ipcMain.on('app-pages-hierarchy-load', (event, siteName) => {
+            let pagesFile = path.join(this.app.sitesDir, siteName, 'input', 'config', 'pages.config.json');
+
+            if (fs.existsSync(pagesFile)) {
+                event.sender.send('app-pages-hierarchy-loaded', JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' })));
+            } else {
+                event.sender.send('app-pages-hierarchy-loaded', null);
+            }
+        });
+
+        // Save pages hierarchy
+        ipcMain.on('app-pages-hierarchy-save', (event, pagesData) => {
+            let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
+            fs.writeFileSync(pagesFile, JSON.stringify(pagesData.hierarchy, null, 4), { encoding: 'utf8' });
         });
     }
 }

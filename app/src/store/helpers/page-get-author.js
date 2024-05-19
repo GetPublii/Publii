@@ -1,6 +1,6 @@
-export default (state, postID) => {
+export default (state, pageID) => {
     let authorName = state.currentSite.pagesAuthors.filter(pageAuthor => {
-        return pageAuthor.postID === postID;
+        return pageAuthor.pageID === pageID;
     });
 
     if (authorName.length) {

@@ -22,7 +22,6 @@ export default {
 
         // Set default ordering based on the app config
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
-        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
@@ -30,10 +29,6 @@ export default {
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]
-            },
-            pages: {
-                orderBy: pagesOrdering[0],
-                order: pagesOrdering[1]
             },
             tags: {
                 orderBy: tagsOrdering[0],
@@ -162,7 +157,6 @@ export default {
         
         // Reset ordering after website switch
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
-        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
@@ -170,10 +164,6 @@ export default {
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]
-            },
-            pages: {
-                orderBy: pagesOrdering[0],
-                order: pagesOrdering[1]
             },
             tags: {
                 orderBy: tagsOrdering[0],

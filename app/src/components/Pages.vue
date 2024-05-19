@@ -4,12 +4,14 @@
             v-if="hasPages"
             :title="$t('ui.pages')">
             <header-search
+                v-if="!hierarchyMode"
                 slot="search"
                 ref="search"
                 :placeholder="$t('page.filterOrSearchPages')"
                 onChangeEventName="pages-filter-value-changed" />
 
             <btn-dropdown
+                v-if="!hierarchyMode"
                 slot="buttons"
                 buttonColor="green"
                 localStorageKey="publii-current-page-editor"
@@ -46,8 +48,22 @@
                 @click="setFilter('is:trashed')">
                 {{ $t('page.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
             </li>
-        </ul>
 
+            <li
+                :class="{
+                   'filter-value': true,
+                   'is-hierarchy': true,
+                   'is-hierarchy-active': !!hierarchyMode
+                }"
+                @click="toggleHierarchyMode">
+                <template v-if="hierarchyMode">
+                    {{ $t('page.closeHierarchy') }}
+                </template>
+                <template v-else>
+                    {{ $t('page.configurePagesHierarchy') }}
+                </template>
+            </li>
+        </ul>
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPages"
@@ -55,6 +71,7 @@
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
+                        v-if="!hierarchyMode"
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, false)"
@@ -62,74 +79,24 @@
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('title')">
-                        <template v-if="orderBy === 'title'">
-                            <strong>{{ $t('page.title') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.title') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    </span>
+                    {{ $t('page.title') }}
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('created')">
-                        <template v-if="orderBy === 'created'">
-                            <strong>{{ $t('page.publicationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.publicationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    </span>
+                    {{ $t('page.publicationDate') }}
                 </collection-cell>
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('modified')">
-                        <template v-if="orderBy === 'modified'">
-                            <strong>{{ $t('page.modificationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.modificationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                    </span>
+                    {{ $t('page.modificationDate') }}
                 </collection-cell>
 
                 <collection-cell min-width="110px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('author')">
-                        <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('author.author') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('author.author') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    </span>
+                    {{ $t('author.author') }}
                 </collection-cell>
 
                 <collection-cell min-width="35px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('id')">
-                        <template v-if="orderBy === 'id'">
-                            <strong>{{ $t('ui.id') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('ui.id') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    </span>
+                    {{ $t('ui.id') }}
                 </collection-cell>
 
                 <div
@@ -210,14 +177,29 @@
                 :key="'collection-row-' + index">
                 <collection-cell>
                     <checkbox
+                        v-if="!hierarchyMode"
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
                         :key="'collection-row-checkbox-' + index" />
+
+                    <a 
+                        v-if="hierarchyMode && !item.isFirst"
+                        href="#move-up"
+                        @click.prevent="hierarchyPageUp(item.id)">
+                        &#9650;
+                    </a>
+                    <a 
+                        v-if="hierarchyMode && !item.isLast"
+                        href="#mode-down"
+                        @click.prevent="hierarchyPageDown(item.id)">
+                        &#9660;
+                    </a>
                 </collection-cell>
 
                 <collection-cell
-                    type="titles">
+                    type="titles"
+                    :style="'--item-depth: ' + item.depth">
                     <h2 class="title">
                         <a
                             href="#"
@@ -235,10 +217,27 @@
                     </h2>
 
                     <div
-                        v-if="showPageSlugs"
+                        v-if="showPageSlugs && !hierarchyMode"
                         class="page-slug">
                         {{ $t('page.url') }}: /{{ item.slug }}
                     </div>
+
+                    <a 
+                        v-if="hierarchyMode && (!subpageSelected || subpageSelected === item.id)"
+                        href="#set-as-subpage"
+                        :class="{
+                            'is-active': item.id === subpageSelected
+                        }"
+                        @click.prevent="hierarchySetAsSubpage(item.id)">
+                        {{ $t('page.setAsSubpage') }} 
+                    </a>
+
+                    <a 
+                        v-if="hierarchyMode && subpageSelected && subpageSelected !== item.id"
+                        href="#set-as-parent"
+                        @click.prevent="hierarchySetAsParent(item.id)">
+                        {{ $t('page.setAsParent') }} 
+                    </a>
                 </collection-cell>
 
                 <collection-cell
@@ -326,6 +325,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
 export default {
@@ -340,15 +340,29 @@ export default {
             dataLoaded: false,
             filterValue: '',
             selectedItems: [],
-            orderBy: 'id',
-            order: 'DESC'
+            pagesHierarchy: null,
+            hierarchyMode: false,
+            subpageSelected: false
         };
     },
     computed: {
         items () {
-            let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order);
-            items = items.filter(item => item.title !== null);
-            return items;
+            let items = this.$store.getters.sitePages(this.filterValue).filter(item => item.title !== null);
+            let itemsMap = new Map(items.map(item => [item.id, item]));
+            let flatItems = this.hierarchyFlatten();
+
+            flatItems.forEach(flatItem => {
+                let item = itemsMap.get(flatItem.id);
+
+                if (item) {
+                    item.isFirst = flatItem.isFirst;
+                    item.isLast = flatItem.isLast;
+                    item.depth = flatItem.depth;
+                    item.parentIds = flatItem.parentIds;
+                }
+            });
+
+            return flatItems.map(flatItem => itemsMap.get(flatItem.id));
         },
         hasPages () {
             return this.$store.state.currentSite.pages && !!this.$store.state.currentSite.pages.length;
@@ -416,8 +430,6 @@ export default {
     },
     async mounted () {
         this.appTheme = await this.$root.getCurrentAppTheme();
-        this.orderBy = this.$store.state.ordering.pages.orderBy;
-        this.order = this.$store.state.ordering.pages.order;
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('pages-filter-value-changed', (newValue) => {
@@ -436,19 +448,6 @@ export default {
             }, 0);
         }
 
-        this.$bus.$on('site-switched', () => {
-            setTimeout(() => {
-                this.saveOrdering(this.$store.state.ordering.pages.orderBy, this.$store.state.ordering.pages.order);
-            }, 500);
-        });
-
-        this.$bus.$on('app-settings-saved', newSettings => {
-            if (this.orderBy + ' ' + this.order !== newSettings.pagesOrdering) {
-                let order = newSettings.pagesOrdering.split(' ');
-                this.saveOrdering(order[0], order[1]);
-            }
-        });
-
         if (this.$store.state.currentSite.pages) {
             this.dataLoaded = true;
         }
@@ -456,6 +455,21 @@ export default {
         if (this.$route.params.filter === 'trashed') {
             this.setFilter('is:trashed');
         }
+
+        mainProcessAPI.send('app-pages-hierarchy-load', this.$store.state.currentSite.config.name);
+
+        mainProcessAPI.receiveOnce('app-pages-hierarchy-loaded', (data) => {
+            if (!data) {
+                this.pagesHierarchy = this.$store.getters.sitePages(this.filterValue)
+                                                            .filter(item => item.title !== null)
+                                                            .map(item => ({id: item.id, subpages: []}));
+                this.hierarchySetup(this.pagesHierarchy, true);
+                return;
+            }
+
+            this.pagesHierarchy = JSON.parse(JSON.stringify(data));
+            this.hierarchySetup(this.pagesHierarchy, false);
+        });
     },
     methods: {
         addNewPage (editorType) {
@@ -520,13 +534,15 @@ export default {
             if(type !== 'all') {
                 return {
                     'filter-value': true,
-                    'filter-active': this.filterValue.indexOf('is:' + type) === 0
+                    'filter-active': this.filterValue.indexOf('is:' + type) === 0,
+                    'filter-inactive': !!this.hierarchyMode
                 };
             }
 
             return {
                 'filter-value': true,
-                'filter-active': this.filterValue.indexOf('is:') === -1
+                'filter-active': this.filterValue.indexOf('is:') === -1,
+                'filter-inactive': !!this.hierarchyMode
             };
         },
         getModificationDate (timestamp) {
@@ -653,30 +669,6 @@ export default {
                 this.setFilter('');
             }, 0);
         },
-        ordering (field) {
-            if (field !== this.orderBy) {
-                this.orderBy = field;
-                this.order = 'DESC';
-            } else {
-                if (this.order === 'DESC') {
-                    this.order = 'ASC';
-                } else {
-                    this.order = 'DESC';
-                }
-            }
-
-            this.saveOrdering(this.orderBy, this.order);
-        },
-        saveOrdering (orderBy, order) {
-            this.orderBy = orderBy;
-            this.order = order;
-
-            this.$store.commit('setOrdering', {
-                type: 'pages',
-                orderBy: this.orderBy,
-                order: this.order
-            });
-        },
         toggleBulkDropdown () {
             this.bulkDropdownVisible = !this.bulkDropdownVisible;
         },
@@ -704,6 +696,118 @@ export default {
             let pagesWithGivenStatus = selectedPages.filter(item => item.status.indexOf(status) > -1);
 
             return !!pagesWithGivenStatus.length;
+        },
+        toggleHierarchyMode () {
+            this.subpageSelected = false;
+            this.hierarchyMode = !this.hierarchyMode;  
+
+            if (this.hierarchyMode) {
+                this.filterValue = '';
+            }
+        },
+        hierarchyFindParentAndIndex (pages, id, parent = null) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === id) {
+                    return { parent, index: i };
+                }
+
+                if (pages[i].subpages && pages[i].subpages.length > 0) {
+                    let found = this.hierarchyFindParentAndIndex(pages[i].subpages, id, pages);
+
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+
+            return null;
+        },
+        hierarchyPageDown (id) {
+            let { parent, index } = this.hierarchyFindParentAndIndex(this.pagesHierarchy, id);
+            
+            if (index === null || index === undefined) {
+                return;
+            }
+
+            let levelPages = parent ? parent.subpages : this.pagesHierarchy;
+            let tempItem = JSON.parse(JSON.stringify(levelPages[index]));
+            Vue.set(levelPages, index, levelPages[index + 1]);
+            Vue.set(levelPages, index + 1, tempItem);
+            this.hierarchySetup(this.pagesHierarchy);
+        },
+        hierarchyPageUp (id) {
+            let { parent, index } = this.hierarchyFindParentAndIndex(this.pagesHierarchy, id);
+            
+            if (index === null || index === undefined) {
+                return;
+            }
+
+            let levelPages = parent ? parent.subpages : this.pagesHierarchy;
+            let tempItem = JSON.parse(JSON.stringify(levelPages[index]));
+            Vue.set(levelPages, index, levelPages[index - 1]);
+            Vue.set(levelPages, index - 1, tempItem);
+            this.hierarchySetup(this.pagesHierarchy);
+        },
+        hierarchySetAsSubpage (id) {
+            if (this.subpageSelected === id) {
+                this.subpageSelected = false;
+                return;
+            }
+
+            this.subpageSelected = id;
+        },
+        hierarchySetAsParent (id) {
+            this.subpageSelected = false;
+        },
+        hierarchySetup (pages, saveStructure = true) {
+            this.hierarchySetupRecursive(pages);
+
+            if (saveStructure) {
+                mainProcessAPI.send('app-pages-hierarchy-save', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    hierarchy: pages
+                });
+            }
+        },
+        hierarchySetupRecursive (subpages) {
+            if (!Array.isArray(subpages) || subpages.length === 0) {
+                return;
+            }
+
+            subpages.forEach((page, index) => {
+                page.isFirst = (index === 0);
+                page.isLast = (index === subpages.length - 1);
+
+                if (Array.isArray(page.subpages) && page.subpages.length > 0) {
+                    this.hierarchySetupRecursive(page.subpages);
+                }
+            });
+        },
+        hierarchyFlatten () {
+            let flatStructure = [];
+            let pagesHierarchy = JSON.parse(JSON.stringify(this.pagesHierarchy));
+            this.hierarchyRecursiveFlatten(flatStructure, pagesHierarchy);
+            return flatStructure;
+        },
+        hierarchyRecursiveFlatten (flatStructure, subpages, depth = 0, parentIds = []) {
+            if (!Array.isArray(subpages) || subpages.length === 0) {
+                return;
+            }
+
+            subpages.forEach((page) => {
+                let currentSubpage = {
+                    id: page.id,
+                    isFirst: page.isFirst,
+                    isLast: page.isLast,
+                    depth: depth,
+                    parentIds: [...parentIds]
+                };
+                flatStructure.push(currentSubpage);
+
+                if (Array.isArray(page.subpages) && page.subpages.length > 0) {
+                    this.hierarchyRecursiveFlatten (flatStructure, page.subpages, depth + 1, [...parentIds, page.id]);
+                }
+            });
         }
     },
     beforeDestroy () {
@@ -722,41 +826,6 @@ export default {
     .col {
         align-items: center;
         display: flex;
-
-        .col-sortable-title {
-            cursor: pointer;
-        }
-    }
-}
-
-.order-ascending,
-.order-descending {
-    margin-left: 3px;
-    position: relative;
-    &:after {
-        border-top: solid 5px var(--icon-secondary-color);
-        border-left: solid 5px transparent;
-        border-right: solid 5px transparent;
-        content: "";
-        cursor: pointer;
-        display: inline-block;
-        height: 4px;
-        left: 0;
-        line-height: 1.1;
-        opacity: 1;
-        padding: 0;
-        position: relative;
-        text-align: center;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 8px;
-    }
-}
-
-.order-descending {
-    &:after {
-        border-top-color: transparent;
-        border-bottom: solid 5px var(--icon-secondary-color);
     }
 }
 
@@ -770,9 +839,14 @@ export default {
         font-size: 11px;
         margin-top: .2rem;
     }
+
+    .col.titles {
+        padding-left: calc(2rem + (2rem * var(--item-depth)));
+    }
 }
 
 .filters {
+    display: flex;
     font-size: 1.35rem;
     list-style-type: none;
     margin: -2.2rem 0 0 0;
@@ -805,6 +879,16 @@ export default {
         &:last-child {
             border-right: none;
         }
+
+        &.is-hierarchy {
+            margin-left: auto;
+            margin-right: 0;
+        }
+    }
+
+    .filter-inactive {
+        opacity: 0.25;
+        pointer-events: none;
     }
 }
 
