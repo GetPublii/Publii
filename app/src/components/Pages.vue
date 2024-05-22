@@ -182,19 +182,6 @@
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
                         :key="'collection-row-checkbox-' + index" />
-
-                    <a 
-                        v-if="hierarchyMode && !item.isFirst"
-                        href="#move-up"
-                        @click.prevent="hierarchyPageUp(item.id)">
-                        &#9650;
-                    </a>
-                    <a 
-                        v-if="hierarchyMode && !item.isLast"
-                        href="#mode-down"
-                        @click.prevent="hierarchyPageDown(item.id)">
-                        &#9660;
-                    </a>
                 </collection-cell>
 
                 <collection-cell
@@ -219,25 +206,74 @@
                     <div
                         v-if="showPageSlugs && !hierarchyMode"
                         class="page-slug">
-                        {{ $t('page.url') }}: /{{ item.slug }}
+                        {{ $t('page.url') }}: {{ item.fullSlug }}
                     </div>
 
-                    <a 
-                        v-if="hierarchyMode && (!subpageSelected || subpageSelected === item.id)"
-                        href="#set-as-subpage"
-                        :class="{
-                            'is-active': item.id === subpageSelected
-                        }"
-                        @click.prevent="hierarchySetAsSubpage(item.id)">
-                        {{ $t('page.setAsSubpage') }} 
-                    </a>
+                    <div v-if="hierarchyMode">
+                        <a
+                            v-if="!subpageSelected"
+                            href="#"
+                            class="menu-item-select"
+                            :title="$t('menu.moveItem')"
+                            @click.prevent="selectItem(item.id)">
+                            {{ $t('menu.moveItem') }}
+                        </a>
+                        
+                        <a
+                            v-if="subpageSelected && item.id === subpageSelected"
+                            href="#"
+                            class="menu-item-unselect"
+                            :title="$t('menu.unselectItem')"
+                            @click.prevent="unselectItem()">
+                            <icon
+                                class="menu-item-move-icon"
+                                customWidth="22"
+                                customHeight="22"
+                                name="sidebar-close"/> 
+                            {{ $t('menu.unselectItem') }}
+                        </a>
 
-                    <a 
-                        v-if="hierarchyMode && subpageSelected && subpageSelected !== item.id"
-                        href="#set-as-parent"
-                        @click.prevent="hierarchySetAsParent(item.id)">
-                        {{ $t('page.setAsParent') }} 
-                    </a>
+                        <span 
+                            v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
+                            class="menu-item-insert-actions">
+                            {{ $t('menu.insertActions') }}
+                        </span>
+
+                        <a
+                            v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
+                            href="#"
+                            class="menu-item-insert-before"
+                            :title="$t('menu.insertBefore')"
+                            @click.prevent="moveSelectedItem('before', item.id)">
+                            <icon
+                                class="menu-item-move-icon"
+                                size="xs"
+                                name="move-up"/> 
+                            {{ $t('menu.insertBefore') }}
+                        </a>
+
+                        <a
+                            v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
+                            href="#"
+                            class="menu-item-insert-after"
+                            :title="$t('menu.insertAfter')"
+                            @click.prevent="moveSelectedItem('after', item.id)">
+                            <icon
+                                class="menu-item-move-icon"
+                                size="xs"
+                                name="move-down"/> 
+                            {{ $t('menu.insertAfter') }}
+                        </a>
+
+                        <a
+                            v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
+                            href="#"
+                            class="menu-item-insert-as-child"
+                            :title="$t('menu.insertAsChild')"
+                            @click.prevent="moveSelectedItem('child', item.id)">
+                            {{ $t('menu.insertAsChild') }} 
+                        </a>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -342,7 +378,8 @@ export default {
             selectedItems: [],
             pagesHierarchy: null,
             hierarchyMode: false,
-            subpageSelected: false
+            subpageSelected: false,
+            subpageSelectedChildren: []
         };
     },
     computed: {
@@ -355,10 +392,9 @@ export default {
                 let item = itemsMap.get(flatItem.id);
 
                 if (item) {
-                    item.isFirst = flatItem.isFirst;
-                    item.isLast = flatItem.isLast;
                     item.depth = flatItem.depth;
                     item.parentIds = flatItem.parentIds;
+                    item.fullSlug = this.generateSlug(item, itemsMap);
                 }
             });
 
@@ -463,12 +499,11 @@ export default {
                 this.pagesHierarchy = this.$store.getters.sitePages(this.filterValue)
                                                             .filter(item => item.title !== null)
                                                             .map(item => ({id: item.id, subpages: []}));
-                this.hierarchySetup(this.pagesHierarchy, true);
+                this.hierarchySave();
                 return;
             }
 
             this.pagesHierarchy = JSON.parse(JSON.stringify(data));
-            this.hierarchySetup(this.pagesHierarchy, false);
         });
     },
     methods: {
@@ -699,20 +734,21 @@ export default {
         },
         toggleHierarchyMode () {
             this.subpageSelected = false;
+            this.subpageSelectedChildren = [];
             this.hierarchyMode = !this.hierarchyMode;  
 
             if (this.hierarchyMode) {
                 this.filterValue = '';
             }
         },
-        hierarchyFindParentAndIndex (pages, id, parent = null) {
+        hierarchyFindParentAndIndex (pages, id, parent = null, parentIndex = null) {
             for (let i = 0; i < pages.length; i++) {
                 if (pages[i].id === id) {
-                    return { parent, index: i };
+                    return { parent, parentIndex, index: i };
                 }
 
                 if (pages[i].subpages && pages[i].subpages.length > 0) {
-                    let found = this.hierarchyFindParentAndIndex(pages[i].subpages, id, pages);
+                    let found = this.hierarchyFindParentAndIndex(pages[i].subpages, id, pages, i);
 
                     if (found) {
                         return found;
@@ -722,65 +758,66 @@ export default {
 
             return null;
         },
-        hierarchyPageDown (id) {
-            let { parent, index } = this.hierarchyFindParentAndIndex(this.pagesHierarchy, id);
-            
-            if (index === null || index === undefined) {
-                return;
-            }
-
-            let levelPages = parent ? parent.subpages : this.pagesHierarchy;
-            let tempItem = JSON.parse(JSON.stringify(levelPages[index]));
-            Vue.set(levelPages, index, levelPages[index + 1]);
-            Vue.set(levelPages, index + 1, tempItem);
-            this.hierarchySetup(this.pagesHierarchy);
-        },
-        hierarchyPageUp (id) {
-            let { parent, index } = this.hierarchyFindParentAndIndex(this.pagesHierarchy, id);
-            
-            if (index === null || index === undefined) {
-                return;
-            }
-
-            let levelPages = parent ? parent.subpages : this.pagesHierarchy;
-            let tempItem = JSON.parse(JSON.stringify(levelPages[index]));
-            Vue.set(levelPages, index, levelPages[index - 1]);
-            Vue.set(levelPages, index - 1, tempItem);
-            this.hierarchySetup(this.pagesHierarchy);
-        },
-        hierarchySetAsSubpage (id) {
-            if (this.subpageSelected === id) {
-                this.subpageSelected = false;
-                return;
-            }
-
+        selectItem (id) {
             this.subpageSelected = id;
+            this.subpageSelectedChildren = this.items.filter(item => item.parentIds.indexOf(id) > -1).map(item => item.id);
         },
-        hierarchySetAsParent (id) {
+        unselectItem () {
             this.subpageSelected = false;
+            this.subpageSelectedChildren = [];
         },
-        hierarchySetup (pages, saveStructure = true) {
-            this.hierarchySetupRecursive(pages);
-
-            if (saveStructure) {
-                mainProcessAPI.send('app-pages-hierarchy-save', {
-                    siteName: this.$store.state.currentSite.config.name,
-                    hierarchy: pages
-                });
-            }
-        },
-        hierarchySetupRecursive (subpages) {
-            if (!Array.isArray(subpages) || subpages.length === 0) {
-                return;
-            }
-
-            subpages.forEach((page, index) => {
-                page.isFirst = (index === 0);
-                page.isLast = (index === subpages.length - 1);
-
-                if (Array.isArray(page.subpages) && page.subpages.length > 0) {
-                    this.hierarchySetupRecursive(page.subpages);
+        findAndRemoveItem(pages, selectedItem) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === selectedItem) {
+                    return pages.splice(i, 1)[0];
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findAndRemoveItem(pages[i].subpages, selectedItem);
+                    
+                    if (result) {
+                        return result;
+                    }
                 }
+            }
+
+            return null;
+        },
+        findItemAndParent(pages, id) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === id) {
+                    return { 
+                        item: pages[i], 
+                        parent: pages 
+                    };
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findItemAndParent(pages[i].subpages, id);
+                    
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        },
+        moveSelectedItem (position, id) {
+            let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, this.subpageSelected);
+            let target = this.findItemAndParent(this.pagesHierarchy, id);
+            let { item: targetItem, parent: targetParent } = target;
+
+            switch (position) {
+                case 'before': targetParent.splice(targetParent.indexOf(targetItem), 0, selectedItem); break;
+                case 'after': targetParent.splice(targetParent.indexOf(targetItem) + 1, 0, selectedItem); break;
+                case 'child': targetItem.subpages.push(selectedItem); break;
+                default: break;
+            }
+
+            this.hierarchySave();
+            this.unselectItem();
+        },
+        hierarchySave () {
+            mainProcessAPI.send('app-pages-hierarchy-save', {
+                siteName: this.$store.state.currentSite.config.name,
+                hierarchy: this.pagesHierarchy
             });
         },
         hierarchyFlatten () {
@@ -797,8 +834,6 @@ export default {
             subpages.forEach((page) => {
                 let currentSubpage = {
                     id: page.id,
-                    isFirst: page.isFirst,
-                    isLast: page.isLast,
                     depth: depth,
                     parentIds: [...parentIds]
                 };
@@ -808,6 +843,22 @@ export default {
                     this.hierarchyRecursiveFlatten (flatStructure, page.subpages, depth + 1, [...parentIds, page.id]);
                 }
             });
+        },
+        generateSlug (item, items) {
+            if (!item.parentIds || item.parentIds.length === 0) {
+                return `/${item.slug}`;
+            }
+
+            let slugs = [];
+            item.parentIds.forEach(parentId => {
+                let parentItem = items.get(parentId);
+
+                if (parentItem) {
+                    slugs.push(parentItem.slug);
+                }
+            });
+
+            return `/${slugs.join('/')}/${item.slug}`;
         }
     },
     beforeDestroy () {
