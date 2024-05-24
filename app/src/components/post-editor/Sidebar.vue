@@ -65,6 +65,20 @@
                                     {{ $parent.postData.modificationDate.text }}
                                 </dd>
                             </dl>
+
+                            <dl 
+                                v-if="itemType === 'page' && pagesStructureLoaded"
+                                class="page-parent-page-wrapper">
+                                <dt>{{ $t('page.parentPage') }}</dt>
+                                <dd id="page-parent-page">
+                                    <dropdown
+                                        key="page-parent-dropdown"
+                                        id="page-parent-page-dropdown"
+                                        :value="parentPage"
+                                        :onChange="changeParentPage"
+                                        :items="flatPagesList"></dropdown>
+                                </dd>
+                            </dl>
                         </div>
 
                         <div
@@ -113,6 +127,18 @@
 
                                         </template>
                                     </a>
+                                </dd>
+                            </dl>
+
+                            <dl v-if="itemType === 'page' && pagesStructureLoaded">
+                                <dt>{{ $t('page.parentPage') }}</dt>
+                                <dd id="page-parent-page">
+                                    <dropdown
+                                        key="page-parent-dropdown"
+                                        id="page-parent-page-dropdown"
+                                        :value="parentPage"
+                                        :onChange="changeParentPage"
+                                        :items="flatPagesList"></dropdown>
                                 </dd>
                             </dl>
                         </div>
@@ -529,6 +555,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'post-editor-sidebar',
     props: {
@@ -544,7 +572,12 @@ export default {
     data () {
         return {
             openedItem: 'status',
-            tagIsRestricted: false
+            tagIsRestricted: false,
+            initialParentPage: null,
+            parentPage: 0,
+            pagesStructureLoaded: false,
+            pagesHierarchy: [],
+            flatStructure: []
         };
     },
     computed: {
@@ -640,6 +673,22 @@ export default {
                 value: this.getTagIdByName(tag),
                 label: tag
             })));
+        },
+        flatPagesList () {
+            let pages = this.$store.getters.sitePages('');
+            let flatPages = this.flatStructure.map(pageItem => {
+                let pageData = pages.find(page => page.id === pageItem.id);
+                return {
+                    value: pageItem.id,
+                    label: pageData ? '—'.repeat(pageItem.depth) + ' ' + pageData.title : '??'
+                };
+            });
+
+            let noParentLabel = this.$t('page.noParentPage');
+            return [{
+                value: 0, 
+                label: noParentLabel, 
+            }].concat(flatPages);
         }
     },
     mounted () {
@@ -656,6 +705,28 @@ export default {
                 this.$parent.postData.mainTag = '';
             }
         }
+
+        if (this.itemType === 'page') {
+            mainProcessAPI.send('app-pages-hierarchy-load', this.$store.state.currentSite.config.name);
+
+            mainProcessAPI.receiveOnce('app-pages-hierarchy-loaded', (data) => {
+                if (!data) {
+                    this.pagesHierarchy = this.$store.getters.sitePages('')
+                                                                .filter(item => item.title !== null)
+                                                                .map(item => ({id: item.id, subpages: []}));
+                    this.hierarchySave();
+                    this.flatStructure = this.flattenPages(0, this.pagesHierarchy, 0);
+                    this.pagesStructureLoaded = true;
+                    return;
+                }
+
+                this.pagesHierarchy = JSON.parse(JSON.stringify(data));
+                this.flatStructure = this.flattenPages(0, this.pagesHierarchy, 0);
+                this.pagesStructureLoaded = true;
+            });
+        }
+
+        this.$bus.$on('page-data-updated', this.prepareStructureBeforeSave);
     },
     methods: {
         openItem (itemName) {
@@ -789,10 +860,110 @@ export default {
         },
         updateSlug () {
             this.$bus.$emit('update-post-slug', true);
+        },
+        hierarchySave () {
+            mainProcessAPI.send('app-pages-hierarchy-save', {
+                siteName: this.$store.state.currentSite.config.name,
+                hierarchy: this.pagesHierarchy
+            });
+        },
+        flattenPages(parentID = 0, pages, depth = 0) {
+            let result = [];
+            
+            pages.forEach(page => {
+                if (this.$parent.postID && parseInt(page.id, 10) === parseInt(this.$parent.postID, 10)) {
+                    this.parentPage = parseInt(parentID, 10);
+
+                    if (this.initialParentPage === null) {
+                        this.initialParentPage = this.parentPage;
+                    }
+
+                    return result;
+                }
+
+                result.push({ id: parseInt(page.id, 10), depth });
+
+                if (page.subpages && page.subpages.length > 0) {
+                    result = result.concat(this.flattenPages(page.id, page.subpages, depth + 1));
+                }
+            });
+
+            return result;
+        },
+        findAndRemoveItem(pages, selectedItem) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === selectedItem) {
+                    return pages.splice(i, 1)[0];
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findAndRemoveItem(pages[i].subpages, selectedItem);
+                    
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        },
+        findItemAndParent(pages, id) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === id) {
+                    return { 
+                        item: pages[i], 
+                        parent: pages 
+                    };
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findItemAndParent(pages[i].subpages, id);
+                    
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        },
+        prepareStructureBeforeSave (pageID) {
+            pageID = parseInt(pageID, 10);
+
+            if (this.initialParentPage === this.parentPage) {
+                return;
+            }
+
+            if (this.initialParentPage === null && this.parentPage === 0) {
+                this.pagesHierarchy.push({ id: pageID, subpages: [] });
+                this.hierarchySave();
+                return;
+            }
+
+            if (this.initialParentPage === null && this.parentPage > 0) {
+                let target = this.findItemAndParent(this.pagesHierarchy, this.parentPage);
+                let { item: targetItem, parent: targetParent } = target;
+                targetItem.subpages.push({ id: pageID, subpages: [] });
+                this.hierarchySave();
+                return;
+            }
+
+            if (this.initialParentPage !== null && this.parentPage === 0) {
+                let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, pageID);
+                this.pagesHierarchy.push(selectedItem);
+                this.hierarchySave();
+                return 0;
+            }
+
+            let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, pageID);
+            let target = this.findItemAndParent(this.pagesHierarchy, this.parentPage);
+            let { item: targetItem, parent: targetParent } = target;
+            targetItem.subpages.push(selectedItem);
+            this.hierarchySave();
+        },
+        changeParentPage (newParentPage) {
+            Vue.set(this, 'parentPage', parseInt(newParentPage, 10));
         }
     },
     beforeDestroy () {
         this.$bus.$off('post-editor-featured-image-loaded');
+        this.$bus.$off('page-data-updated');
         this.$bus.$off('author-changed');
     }
 };
@@ -853,6 +1024,10 @@ export default {
 
             dl {
                 margin: 0 0 3rem 0;
+
+                &.page-parent-page-wrapper {
+                    grid-column: span 2;
+                }
             }
 
             dt {

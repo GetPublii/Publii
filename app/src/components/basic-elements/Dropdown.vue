@@ -11,7 +11,7 @@
             <option
                 v-for="(item, index) in items"
                 :value="item.value"
-                :key="'author-' + index"
+                :key="id + '-dropdown-item-' + index"
                 :disabled="(disabledValues.indexOf(item.value) > -1 && item.value !== selectedValue && item.value !== '') || item.disabled"
                 :selected="item.value == selectedValue">
                 {{item.label}}
@@ -68,7 +68,7 @@ export default {
     name: 'dropdown',
     props: {
         id: {
-            default: '',
+            default: 'dropdown-default',
             type: String
         },
         items: {

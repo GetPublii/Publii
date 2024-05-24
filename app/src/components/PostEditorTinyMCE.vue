@@ -318,6 +318,7 @@ export default {
             if (this.itemType === 'post') {
                 this.$store.commit('refreshAfterPostUpdate', updatedData);
             } else {
+                this.$bus.$emit('page-data-updated', updatedData.pageID);
                 this.$store.commit('refreshAfterPageUpdate', updatedData);
             }
 

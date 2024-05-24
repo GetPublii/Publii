@@ -30,19 +30,6 @@
             </li>
 
             <li
-                :class="filterCssClasses('published')"
-                @click="setFilter('is:published')">
-                {{ $t('page.published') }} <span class="filter-count">({{ counters.published }})</span>
-            </li>
-
-            <li
-                v-if="counters.drafts"
-                :class="filterCssClasses('draft')"
-                @click="setFilter('is:draft')">
-                {{ $t('page.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
-            </li>
-
-            <li
                 v-if="counters.trashed"
                 :class="filterCssClasses('trashed')"
                 @click="setFilter('is:trashed')">
@@ -151,18 +138,18 @@
                                 v-if="selectedPagesNeedsStatus('published')"
                                 @click="bulkPublish">
                                 <icon
-                                size="xs"
-                                name="draft-page"
-                                primaryColor="color-8" />
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-8" />
                                 {{ $t('page.publish') }}
                             </li>
                             <li
                                 v-if="selectedPagesNeedsStatus('draft')"
                                 @click="bulkUnpublish">
                                 <icon
-                                size="xs"
-                                name="draft-page"
-                                primaryColor="color-7" />
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-7" />
                                 {{ $t('page.markAsDraft') }}
                             </li>
                         </ul>
@@ -186,7 +173,7 @@
 
                 <collection-cell
                     type="titles"
-                    :style="'--item-depth: ' + item.depth">
+                    :style="'--item-depth: ' + (item.depth || 0)">
                     <h2 class="title">
                         <a
                             href="#"
@@ -204,7 +191,7 @@
                     </h2>
 
                     <div
-                        v-if="showPageSlugs && !hierarchyMode"
+                        v-if="showPageSlugs && !hierarchyMode && !item.isTrashed && !item.isDraft"
                         class="page-slug">
                         {{ $t('page.url') }}: {{ item.fullSlug }}
                     </div>
@@ -213,65 +200,65 @@
                         <a
                             v-if="!subpageSelected"
                             href="#"
-                            class="menu-item-select"
-                            :title="$t('menu.moveItem')"
+                            class="page-item-select"
+                            :title="$t('page.moveItem')"
                             @click.prevent="selectItem(item.id)">
-                            {{ $t('menu.moveItem') }}
+                            {{ $t('page.moveItem') }}
                         </a>
                         
                         <a
                             v-if="subpageSelected && item.id === subpageSelected"
                             href="#"
-                            class="menu-item-unselect"
-                            :title="$t('menu.unselectItem')"
+                            class="page-item-unselect"
+                            :title="$t('page.unselectItem')"
                             @click.prevent="unselectItem()">
                             <icon
-                                class="menu-item-move-icon"
+                                class="page-item-move-icon"
                                 customWidth="22"
                                 customHeight="22"
                                 name="sidebar-close"/> 
-                            {{ $t('menu.unselectItem') }}
+                            {{ $t('page.unselectItem') }}
                         </a>
 
                         <span 
                             v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
-                            class="menu-item-insert-actions">
-                            {{ $t('menu.insertActions') }}
+                            class="page-item-insert-actions">
+                            {{ $t('page.insertActions') }}:
                         </span>
 
                         <a
                             v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
                             href="#"
-                            class="menu-item-insert-before"
-                            :title="$t('menu.insertBefore')"
+                            class="page-item-insert-before"
+                            :title="$t('page.insertBefore')"
                             @click.prevent="moveSelectedItem('before', item.id)">
                             <icon
-                                class="menu-item-move-icon"
+                                class="page-item-move-icon"
                                 size="xs"
                                 name="move-up"/> 
-                            {{ $t('menu.insertBefore') }}
+                            {{ $t('page.insertBefore') }}
                         </a>
 
                         <a
                             v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
                             href="#"
-                            class="menu-item-insert-after"
-                            :title="$t('menu.insertAfter')"
+                            class="page-item-insert-after"
+                            :title="$t('page.insertAfter')"
                             @click.prevent="moveSelectedItem('after', item.id)">
                             <icon
-                                class="menu-item-move-icon"
+                                class="page-item-move-icon"
                                 size="xs"
                                 name="move-down"/> 
-                            {{ $t('menu.insertAfter') }}
+                            {{ $t('page.insertAfter') }}
                         </a>
 
                         <a
                             v-if="subpageSelected && subpageSelected !== item.id && subpageSelectedChildren.indexOf(item.id) === -1"
                             href="#"
-                            class="menu-item-insert-as-child"
-                            :title="$t('menu.insertAsChild')"
+                            class="page-item-insert-as-child"
+                            :title="$t('page.insertAsChild')"
                             @click.prevent="moveSelectedItem('child', item.id)">
-                            {{ $t('menu.insertAsChild') }} 
+                            {{ $t('page.insertAsChild') }} 
                         </a>
                     </div>
                 </collection-cell>
@@ -385,11 +372,23 @@ export default {
     computed: {
         items () {
             let items = this.$store.getters.sitePages(this.filterValue).filter(item => item.title !== null);
+
+            if (this.filterValue !== '') {
+                return items;
+            }
+
             let itemsMap = new Map(items.map(item => [item.id, item]));
             let flatItems = this.hierarchyFlatten();
+            let usedItems = [];
 
             flatItems.forEach(flatItem => {
                 let item = itemsMap.get(flatItem.id);
+
+                if (!item) {
+                    return;
+                }
+
+                usedItems.push(flatItem.id);
 
                 if (item) {
                     item.depth = flatItem.depth;
@@ -398,7 +397,19 @@ export default {
                 }
             });
 
-            return flatItems.map(flatItem => itemsMap.get(flatItem.id));
+            let results = flatItems.map(flatItem => itemsMap.get(flatItem.id));
+
+            // restore items that are not in hierarchy
+            items.forEach(item => {
+                if (usedItems.indexOf(item.id) === -1) {
+                    item.depth = 0;
+                    item.parentIds = [];
+                    item.fullSlug = `/` + item.slug;
+                    results.push(item);
+                }
+            });
+
+            return results;
         },
         hasPages () {
             return this.$store.state.currentSite.pages && !!this.$store.state.currentSite.pages.length;
@@ -413,16 +424,12 @@ export default {
             if(!this.$store.state.currentSite || !this.$store.state.currentSite.pages) {
                 return {
                     all: 0,
-                    published: 0,
-                    drafts: 0,
                     trashed: 0
                 };
             }
 
             return {
                 all: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1).length,
-                published: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') === -1).length,
-                drafts: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') > -1).length
             }
         },
@@ -575,6 +582,7 @@ export default {
             }
 
             return {
+                'filter-all': true,
                 'filter-value': true,
                 'filter-active': this.filterValue.indexOf('is:') === -1,
                 'filter-inactive': !!this.hierarchyMode
@@ -680,6 +688,19 @@ export default {
                 inverse: inverse
             });
 
+            if (status === 'trashed' && !inverse) {
+                this.updateHierarchyForTrashedPages(itemsToChange);
+            } else if (status === 'trashed' && inverse) {
+                this.updateHierarchyForRestoredPages(itemsToChange);
+
+                // Skip to the "All" filter when trash is emptied
+                Vue.nextTick(() => {
+                    if (this.counters.trashed === 0) {
+                        Vue.set(this, 'filterValue', '');
+                    }
+                });
+            }
+
             mainProcessAPI.send('app-page-status-change', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToChange,
@@ -740,23 +761,6 @@ export default {
             if (this.hierarchyMode) {
                 this.filterValue = '';
             }
-        },
-        hierarchyFindParentAndIndex (pages, id, parent = null, parentIndex = null) {
-            for (let i = 0; i < pages.length; i++) {
-                if (pages[i].id === id) {
-                    return { parent, parentIndex, index: i };
-                }
-
-                if (pages[i].subpages && pages[i].subpages.length > 0) {
-                    let found = this.hierarchyFindParentAndIndex(pages[i].subpages, id, pages, i);
-
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
-
-            return null;
         },
         selectItem (id) {
             this.subpageSelected = id;
@@ -859,6 +863,52 @@ export default {
             });
 
             return `/${slugs.join('/')}/${item.slug}`;
+        },
+        findAllChildrenIdsInItems (parentID) {
+            let children = this.hierarchyFlatten().filter(item => item.parentIds.indexOf(parentID) > -1);
+            let childrenIDs = children.map(child => child.id);
+            return childrenIDs;
+        },
+        updateHierarchyForRestoredPages (restoredPages) {
+            restoredPages.forEach(restoredPage => {
+                this.pagesHierarchy.push({ 
+                    id: restoredPage, 
+                    subpages: []
+                });
+                this.hierarchySave();
+            });
+        },
+        updateHierarchyForTrashedPages (trashedPages) {
+            let childrenIDs = trashedPages.map(trashedPage => this.findAllChildrenIdsInItems(trashedPage));
+            let childrenIDsFlat = childrenIDs.flat();
+            let childrenIDsUnique = [...new Set(childrenIDsFlat)];
+            let childrenToAdd = childrenIDsUnique.filter(childID => !trashedPages.includes(childID));
+
+            trashedPages.forEach(trashedPage => {
+                let item = this.findAndRemoveItem(this.pagesHierarchy, trashedPage);
+
+                if (item) {
+                    this.hierarchySave();
+                }
+            });
+
+            childrenToAdd.forEach(childID => {
+                this.pagesHierarchy.push({ 
+                    id: childID, 
+                    subpages: []
+                });
+            });
+        
+            this.hierarchySave();
+        },
+        updateHierarchyForPublishPages () {
+
+        },
+        updateHierarchyForDraftPages () {
+
+        },
+        updateHierarchyForDuplicatedPages () {
+
         }
     },
     beforeDestroy () {
@@ -893,6 +943,64 @@ export default {
 
     .col.titles {
         padding-left: calc(2rem + (2rem * var(--item-depth)));
+    }
+
+    .page-item-select,
+    .page-item-submenu,
+    .page-item-insert-before,
+    .page-item-insert-after,
+    .page-item-insert-as-child,
+    .page-item-unselect {
+        color: var(--link-primary-color);
+        display: inline-block;
+        font-size: 1.4rem;
+        padding: .25rem .5rem;
+
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-primary-color-hover);
+        }
+    }
+
+    .page-item-insert-actions {
+        color: var(--text-light-color);
+        font-size: 1.4rem;
+        padding: 1rem .5rem;
+    }
+
+    .page-item-unselect {
+        color: var(--warning);
+
+        & > svg {
+            fill: var(--warning);
+            position: relative;
+            right: 3px;
+            top: 3px;
+        }
+    }
+
+    .page-item-submenu,
+    .page-item-insert-before,
+    .page-item-insert-after {
+        padding-right: 1rem;
+        position: relative;
+
+        &::after {
+            background: var(--input-border-color);
+            content: "";
+            display: block;
+            height: 14px;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+            width: 1px;
+        }
+    }
+
+    .page-item-move-icon {
+        vertical-align: text-bottom;
     }
 }
 
@@ -940,6 +1048,10 @@ export default {
     .filter-inactive {
         opacity: 0.25;
         pointer-events: none;
+    }
+
+    .filter-all::first-letter {
+        text-transform: capitalize;
     }
 }
 

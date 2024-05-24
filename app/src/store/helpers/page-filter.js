@@ -22,42 +22,14 @@ export default (state, page, filterValue) => {
         return false;
     }
 
-    let searchPhrase = filterValue.replace('is:published', '')
-                                  .replace('is:trashed', '')
-                                  .replace('is:draft', '')
+    let searchPhrase = filterValue.replace('is:trashed', '')
                                   .trim();
     searchPhrase = searchPhrase.toLowerCase();
-
-    // Check for published pages
-    if(
-        filterValue.indexOf('is:published') === 0 &&
-        page.status.indexOf('draft') === -1 &&
-        page.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
-        }
-
-        return true;
-    }
 
     // Check for trashed pages
     if(
         filterValue.indexOf('is:trashed') === 0 &&
         page.status.indexOf('trashed') > -1
-    ) {
-        if(searchPhrase !== '') {
-            return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
-        }
-
-        return true;
-    }
-
-    // Check for draft pages
-    if(
-        filterValue.indexOf('is:draft') === 0 &&
-        page.status.indexOf('draft') > -1 &&
-        page.status.indexOf('trashed') === -1
     ) {
         if(searchPhrase !== '') {
             return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
