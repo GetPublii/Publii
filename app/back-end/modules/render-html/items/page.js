@@ -54,7 +54,7 @@ class PageItem {
             hasCustomExcerpt = true;
 
             // Detect if hide of the custom excerpt is enabled
-            if (this.renderer.siteConfig.advanced.postUseTextWithoutCustomExcerpt) {
+            if (this.renderer.siteConfig.advanced.pageUseTextWithoutCustomExcerpt) {
                 preparedText = preparedText.split(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
                 preparedText = preparedText[1];
             } else {

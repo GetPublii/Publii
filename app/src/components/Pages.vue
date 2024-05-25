@@ -184,7 +184,7 @@
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"
-                                name="draft-page"
+                                name="draft-post"
                                 primaryColor="color-7"
                                 :title="$t('page.thisPageIsADraft')" />
                         </a>
@@ -673,6 +673,7 @@ export default {
                 mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                     this.$store.commit('setSiteConfig', result);
                     this.$store.commit('switchSite', result.data);
+                    this.updateHierarchyForDuplicatedPages();
                 });
             });
         },
@@ -696,7 +697,8 @@ export default {
                 // Skip to the "All" filter when trash is emptied
                 Vue.nextTick(() => {
                     if (this.counters.trashed === 0) {
-                        Vue.set(this, 'filterValue', '');
+                        this.filterValue = '';
+                        this.$refs['search'].close();
                     }
                 });
             }
@@ -908,7 +910,18 @@ export default {
 
         },
         updateHierarchyForDuplicatedPages () {
+            let rootHierarchyItems = this.pagesHierarchy.map(item => item.id);
+            let rootItems = this.items.filter(item => item.depth === 0).map(item => item.id);
+            let itemsToAdd = rootItems.filter(item => !rootHierarchyItems.includes(item));
 
+            itemsToAdd.forEach(item => {
+                this.pagesHierarchy.push({ 
+                    id: item, 
+                    subpages: []
+                });
+            });
+
+            this.hierarchySave();
         }
     },
     beforeDestroy () {

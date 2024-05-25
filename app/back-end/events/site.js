@@ -54,6 +54,7 @@ class SiteEvents {
 
             // Prepare settings
             config.settings.name = slug(config.settings.name);
+            config.settings.advanced.urls.postsPrefix = slug(config.settings.advanced.urls.postsPrefix);
             config.settings.advanced.urls.tagsPrefix = slug(config.settings.advanced.urls.tagsPrefix);
             config.settings.advanced.urls.authorsPrefix = slug(config.settings.advanced.urls.authorsPrefix);
             config.settings.advanced.urls.pageName = slug(config.settings.advanced.urls.pageName);

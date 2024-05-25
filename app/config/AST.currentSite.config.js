@@ -47,6 +47,7 @@ const AstCurrentSiteConfig = {
         postMetaDescription: '',
         pageMetaTitle: '%pagetitle - %sitename ',
         pageMetaDescription: '',
+        pageUseTextWithoutCustomExcerpt: false,
         postUseTextWithoutCustomExcerpt: false,
         tagMetaTitle: 'Tag: %tagname - %sitename',
         tagMetaDescription: '',
@@ -90,6 +91,7 @@ const AstCurrentSiteConfig = {
         urls: {
             cleanUrls: false,
             addIndex: false,
+            postsPrefix: '',
             tagsPrefix: 'tags',
             authorsPrefix: 'authors',
             pageName: 'page',

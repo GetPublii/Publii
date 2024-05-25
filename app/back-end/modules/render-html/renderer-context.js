@@ -681,18 +681,23 @@ class RendererContext {
 
     getPageUrl (context, paginationData, itemSlug) {
         let pagePart = this.siteConfig.advanced.urls.pageName;
+        let blogBaseUrl = this.siteConfig.domain;
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            blogBaseUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix;
+        }
 
         if (context === 'index' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
-                return this.siteConfig.domain + '/';
+                return blogBaseUrl + '/';
             } else {
-                return this.siteConfig.domain + '/' + pagePart +  '/' + paginationData.currentPage + '/';
+                return blogBaseUrl + '/' + pagePart +  '/' + paginationData.currentPage + '/';
             }
         } else if (context === 'tags') {
             if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
-                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+                return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
             } else {
-                return this.siteConfig.domain + '/';
+                return blogBaseUrl + '/';
             }
         } else if (context === 'author') {
             if (!paginationData || paginationData.currentPage === 1) {
@@ -703,30 +708,22 @@ class RendererContext {
         } else if (context === 'tag') {
             if (!paginationData || paginationData.currentPage === 1) {
                 if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
                 } else {
-                    return this.siteConfig.domain + '/' + itemSlug + '/';
+                    return blogBaseUrl + '/' + itemSlug + '/';
                 }
             } else {
                 if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
                 } else {
-                    return this.siteConfig.domain + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                    return blogBaseUrl + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
                 }
             }
         } else if (context === 'post') {
             if (!this.siteConfig.advanced.urls.cleanUrls) { 
-                if (this.siteConfig.advanced.urls.postsPrefix) {
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '.html';    
-                }
-
-                return this.siteConfig.domain + '/' + itemSlug + '.html';
+                return blogBaseUrl + '/' + itemSlug + '.html';
             } else {
-                if (this.siteConfig.advanced.urls.postsPrefix) {
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';    
-                }
-
-                return this.siteConfig.domain + '/' + itemSlug + '/';
+                return blogBaseUrl + '/' + itemSlug + '/';
             }
         } else if (context === 'page') {
             if (!this.siteConfig.advanced.urls.cleanUrls) { 

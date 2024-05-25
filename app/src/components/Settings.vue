@@ -314,6 +314,61 @@
                         </field>
 
                         <separator
+                            type="medium"
+                            :label="$t('page.pages')" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="page-meta-title"
+                            :withCharCounter="true"
+                            :label="$t('settings.pageTitle')">
+                            <text-input
+                                id="page-meta-title"
+                                slot="field"
+                                v-model="advanced.pageMetaTitle"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.pageTitleVariables') }}
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="page-meta-description"
+                            :label="$t('settings.metaDescription')">
+                            <text-area
+                                id="page-meta-description"
+                                v-model="advanced.pageMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.pageTitleVariables') }}
+                            </small>
+                        </field>
+
+                        <field
+                            id="page-use-text-without-custom-excerpt"
+                            :label="$t('settings.hideCustomExcerptsOnPagePages')">
+                            <switcher
+                                slot="field"
+                                id="page-use-text-without-custom-excerpt"
+                                v-model="advanced.pageUseTextWithoutCustomExcerpt" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.hideCustomExcerptsOnPagePagesInfo') }}
+                            </small>
+                        </field>
+
+                        <separator
                             v-if="advanced.urls.tagsPrefix !== '' && !advanced.noIndexThisPage"
                             type="medium"
                             :label="$t('settings.tagsListPage')" />
@@ -730,6 +785,23 @@
                                 slot="note"
                                 class="note">
                                 {{ $t('settings.cannotAddIndexHTMLInURLsInfo') }}
+                            </small>
+                        </field>
+
+                        <field
+                            id="url-posts-prefix"
+                            :label="$t('settings.postsPrefix')">
+                            <text-input
+                                id="url-posts-prefix"
+                                :class="{ 'is-invalid': errors.indexOf('posts-prefix') > -1 }"
+                                @click.native="clearErrors('posts-prefix')"
+                                v-model="advanced.urls.postsPrefix"
+                                :spellcheck="false"
+                                slot="field" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.postPrefixInfo')">
                             </small>
                         </field>
 
