@@ -116,7 +116,7 @@ export default {
     },
     computed: {
         itemType () {
-            return this.$route.path.indexOf('/pages/editor/block/') > -1 ? 'page' : 'post';
+            return this.$route.path.indexOf('/pages/editor/blockeditor/') > -1 ? 'page' : 'post';
         },
         isEdit () {
             return !!this.postID;

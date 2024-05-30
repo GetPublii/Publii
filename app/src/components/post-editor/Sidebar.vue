@@ -5,7 +5,6 @@
         'is-visible': isVisible 
     }">
         <div class="options-sidebar">
-
             <div class="options-sidebar-item">
                 <div
                     :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'status' }"

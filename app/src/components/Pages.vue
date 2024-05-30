@@ -1,17 +1,18 @@
 <template>
-    <section class="content">
+    <section :class="{ 
+        'content': true, 
+        'hierarchy-mode-enabled': hierarchyMode 
+    }">
         <p-header
             v-if="hasPages"
             :title="$t('ui.pages')">
             <header-search
-                v-if="!hierarchyMode"
                 slot="search"
                 ref="search"
                 :placeholder="$t('page.filterOrSearchPages')"
                 onChangeEventName="pages-filter-value-changed" />
 
             <btn-dropdown
-                v-if="!hierarchyMode"
                 slot="buttons"
                 buttonColor="green"
                 localStorageKey="publii-current-page-editor"
@@ -58,7 +59,6 @@
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
-                        v-if="!hierarchyMode"
                         value="all"
                         :checked="anyCheckboxIsSelected"
                         :onClick="toggleAllCheckboxes.bind(this, false)"
@@ -164,7 +164,6 @@
                 :key="'collection-row-' + index">
                 <collection-cell>
                     <checkbox
-                        v-if="!hierarchyMode"
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
@@ -173,7 +172,8 @@
 
                 <collection-cell
                     type="titles"
-                    :style="'--item-depth: ' + (item.depth || 0)">
+                    :style="'--item-depth: ' + (item.depth || 0)"
+                    :data-item-depth="item.depth || 0">
                     <h2 class="title">
                         <a
                             href="#"
@@ -762,6 +762,7 @@ export default {
 
             if (this.hierarchyMode) {
                 this.filterValue = '';
+                this.selectedItems = [];
             }
         },
         selectItem (id) {
@@ -940,6 +941,23 @@ export default {
     .col {
         align-items: center;
         display: flex;
+    }
+}
+
+.content.hierarchy-mode-enabled {
+    .heading {
+        .search,
+        ::v-deep .buttons {
+            opacity: .25;
+            pointer-events: none;
+        }
+    }
+
+    .collection-wrapper {
+        input[type="checkbox"] {
+            opacity: .25;
+            pointer-events: none;
+        }
     }
 }
 
