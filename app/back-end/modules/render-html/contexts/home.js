@@ -69,6 +69,13 @@ class RendererContextHome extends RendererContext {
         this.pages = this.renderer.commonData.pages;
         this.featuredPosts = this.renderer.commonData.featuredPosts.homepage;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+
+        // mark tags as main tags
+        let mainTagsIds = this.mainTags.map(tag => tag.id);
+        this.tags = this.tags.map(tag => {
+            tag.isMainTag = mainTagsIds.includes(tag.id);
+            return tag;
+        });
     }
 
     prepareData() {

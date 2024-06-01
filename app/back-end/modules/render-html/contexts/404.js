@@ -35,6 +35,13 @@ class RendererContext404 extends RendererContext {
         if (this.metaDescription === '') {
             this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
         }
+
+        // mark tags as main tags
+        let mainTagsIds = this.mainTags.map(tag => tag.id);
+        this.tags = this.tags.map(tag => {
+            tag.isMainTag = mainTagsIds.includes(tag.id);
+            return tag;
+        });
     }
 
     /**
