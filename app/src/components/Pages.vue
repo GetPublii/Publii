@@ -174,7 +174,12 @@
                     type="titles"
                     :style="'--item-depth: ' + (item.depth || 0)"
                     :data-item-depth="item.depth || 0">
-                    <h2 class="title">
+
+                    <template v-if="item.depth > 0">
+                        <span class="collection-nested-arrow"></span>
+                    </template>
+
+                    <h2 class="title"> 
                         <a
                             href="#"
                             @click.prevent.stop="editPage(item.id, item.editor)">
@@ -973,7 +978,8 @@ export default {
     }
 
     .col.titles {
-        padding-left: calc(2rem + (2rem * var(--item-depth)));
+        padding-left: calc(2rem + (2.4rem * var(--item-depth)));
+        position: relative;
     }
 
     .page-item-select,
@@ -1124,5 +1130,19 @@ export default {
             }
         }
     }
+}
+.collection-nested-arrow {
+    display: block;
+    border-radius: 0 0 0 2px;
+    width: 11px; 
+    height: 8px;
+    border-left: 1px solid var(--gray-4);
+    border-bottom: 1px solid var(--gray-4);
+    position: absolute;
+    left: calc(-.6rem + (2.4rem * var(--item-depth)));
+    top: 50%;
+	transform: translate(0, -50%);
+
+  
 }
 </style>
