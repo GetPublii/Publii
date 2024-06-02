@@ -818,7 +818,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsTagPages"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportTagPages') }}
                             </small>
@@ -843,7 +843,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsAuthorPages"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportAuthorPages') }}
                             </small>
@@ -886,7 +886,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsErrorPage"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportErrorPages') }}
                             </small>
@@ -906,7 +906,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsSearchPage"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportSearchPages') }}
                             </small>
