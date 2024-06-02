@@ -381,7 +381,7 @@
                         </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="tags-list-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -400,7 +400,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="tags-list-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -418,7 +418,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="meta-robots-tags-list"
                             :label="$t('settings.metaRobots')">
                             <dropdown
