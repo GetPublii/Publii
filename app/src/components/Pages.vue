@@ -964,6 +964,14 @@ export default {
             pointer-events: none;
         }
     }
+
+    .col.titles .title {
+        pointer-events: none;
+
+        a {
+            color: var(--text-primary-color);
+        }
+    }
 }
 
 .header {
@@ -991,12 +999,21 @@ export default {
         color: var(--link-primary-color);
         display: inline-block;
         font-size: 1.4rem;
-        padding: .25rem .5rem;
+        padding: 0 .5rem;
 
         &:active,
         &:focus,
         &:hover {
             color: var(--link-primary-color-hover);
+        }
+        
+    }
+
+    .page-item-select,
+    .page-item-unselect,
+    .page-item-insert-actions{
+        &:first-child {
+           padding-left: 0;
         }
     }
 
@@ -1008,11 +1025,13 @@ export default {
 
     .page-item-unselect {
         color: var(--warning);
+        left: -9px;
+        position: relative;
 
         & > svg {
             fill: var(--warning);
             position: relative;
-            right: 3px;
+            left: -3px;
             top: 3px;
         }
     }
