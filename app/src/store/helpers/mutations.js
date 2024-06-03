@@ -21,11 +21,16 @@ export default {
         state.wysiwygTranslation = initialData.currentLanguage.wysiwygTranslation;
 
         // Set default ordering based on the app config
+        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['', 'DESC'];
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
         Vue.set(state, 'ordering', {
+            pages: {
+                orderBy: pagesOrdering[0],
+                order: pagesOrdering[1]
+            },
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]
@@ -156,11 +161,16 @@ export default {
         state.components.sidebar.status = state.currentSite.config.synced;
         
         // Reset ordering after website switch
+        let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['', 'DESC'];
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
         let tagsOrdering = state.app.config.tagsOrdering ? state.app.config.tagsOrdering.split(' ') : ['id', 'DESC'];
         let authorsOrdering = state.app.config.authorsOrdering ? state.app.config.authorsOrdering.split(' ') : ['id', 'DESC'];
 
         Vue.set(state, 'ordering', {
+            pages: {
+                orderBy: pagesOrdering[0],
+                order: pagesOrdering[1]
+            },
             posts: {
                 orderBy: postsOrdering[0],
                 order: postsOrdering[1]

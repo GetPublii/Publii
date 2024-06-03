@@ -31,6 +31,19 @@
             </li>
 
             <li
+                :class="filterCssClasses('published')"
+                @click="setFilter('is:published')">
+                {{ $t('page.published') }} <span class="filter-count">({{ counters.published }})</span>
+            </li>
+
+            <li
+                v-if="counters.drafts"
+                :class="filterCssClasses('draft')"
+                @click="setFilter('is:draft')">
+                {{ $t('page.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
+            </li>
+
+            <li
                 v-if="counters.trashed"
                 :class="filterCssClasses('trashed')"
                 @click="setFilter('is:trashed')">
@@ -68,24 +81,74 @@
                 </collection-cell>
 
                 <collection-cell>
-                    {{ $t('page.title') }}
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('title')">
+                        <template v-if="orderBy === 'title'">
+                            <strong>{{ $t('page.title') }}</strong>
+                        </template>
+                        <template v-else>{{ $t('page.title') }}</template>
+
+                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell>
-                    {{ $t('page.publicationDate') }}
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('created')">
+                        <template v-if="orderBy === 'created'">
+                            <strong>{{ $t('page.publicationDate') }}</strong>
+                        </template>
+                        <template v-else>{{ $t('page.publicationDate') }}</template>
+
+                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn">
-                    {{ $t('page.modificationDate') }}
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('modified')">
+                        <template v-if="orderBy === 'modified'">
+                            <strong>{{ $t('page.modificationDate') }}</strong>
+                        </template>
+                        <template v-else>{{ $t('page.modificationDate') }}</template>
+
+                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell min-width="110px">
-                    {{ $t('author.author') }}
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('author')">
+                        <template v-if="orderBy === 'author'">
+                            <strong>{{ $t('author.author') }}</strong>
+                        </template>
+                        <template v-else>{{ $t('author.author') }}</template>
+
+                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
+                    </span>
                 </collection-cell>
 
                 <collection-cell min-width="35px">
-                    {{ $t('ui.id') }}
+                    <span
+                        class="col-sortable-title"
+                        @click="ordering('id')">
+                        <template v-if="orderBy === 'id'">
+                            <strong>{{ $t('ui.id') }}</strong>
+                        </template>
+                        <template v-else>{{ $t('ui.id') }}</template>
+
+                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
+                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
+                    </span>
                 </collection-cell>
 
                 <div
@@ -373,14 +436,16 @@ export default {
             pagesHierarchy: null,
             hierarchyMode: false,
             subpageSelected: false,
+            order: 'DESC',
+            orderBy: '',
             subpageSelectedChildren: []
         };
     },
     computed: {
         items () {
-            let items = this.$store.getters.sitePages(this.filterValue).filter(item => item.title !== null);
+            let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order).filter(item => item.title !== null);
 
-            if (this.filterValue !== '') {
+            if (this.filterValue !== '' || this.orderBy !== '') {
                 return items;
             }
 
@@ -431,12 +496,15 @@ export default {
             if(!this.$store.state.currentSite || !this.$store.state.currentSite.pages) {
                 return {
                     all: 0,
+                    published: 0,
+                    drafts: 0,
                     trashed: 0
                 };
             }
-
             return {
                 all: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1).length,
+                published: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') === -1).length,
+                drafts: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') > -1).length,
                 trashed: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') > -1).length
             }
         },
@@ -498,6 +566,19 @@ export default {
             }, 0);
         }
 
+        this.$bus.$on('site-switched', () => {
+            setTimeout(() => {
+                this.saveOrdering(this.$store.state.ordering.pages.orderBy, this.$store.state.ordering.pages.order);
+            }, 500);
+        });
+
+        this.$bus.$on('app-settings-saved', newSettings => {
+            if (this.orderBy + ' ' + this.order !== newSettings.pagesOrdering) {
+                let order = newSettings.pagesOrdering.split(' ');
+                this.saveOrdering(order[0], order[1]);
+            }
+        });
+
         if (this.$store.state.currentSite.pages) {
             this.dataLoaded = true;
         }
@@ -510,7 +591,7 @@ export default {
 
         mainProcessAPI.receiveOnce('app-pages-hierarchy-loaded', (data) => {
             if (!data) {
-                this.pagesHierarchy = this.$store.getters.sitePages(this.filterValue)
+                this.pagesHierarchy = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order)
                                                             .filter(item => item.title !== null)
                                                             .map(item => ({id: item.id, subpages: []}));
                 this.hierarchySave();
@@ -734,6 +815,28 @@ export default {
                 this.setFilter('');
             }, 0);
         },
+        ordering (field) {
+            if (field !== this.orderBy) {
+                this.orderBy = field;
+                this.order = 'DESC';
+            } else {
+                if (this.order === 'DESC') {
+                    this.order = 'ASC';
+                } else {
+                    this.order = 'DESC';
+                }
+            }
+            this.saveOrdering(this.orderBy, this.order);
+        },
+        saveOrdering (orderBy, order) {
+            this.orderBy = orderBy;
+            this.order = order;
+            this.$store.commit('setOrdering', {
+                type: 'pages',
+                orderBy: this.orderBy,
+                order: this.order
+            });
+        },
         toggleBulkDropdown () {
             this.bulkDropdownVisible = !this.bulkDropdownVisible;
         },
@@ -770,6 +873,10 @@ export default {
             if (this.hierarchyMode) {
                 this.filterValue = '';
                 this.selectedItems = [];
+                this.orderBy = '';
+                this.order = 'DESC';
+                this.setFilter('');
+                this.saveOrdering(this.orderBy, this.order);
             }
         },
         selectItem (id) {
@@ -948,6 +1055,41 @@ export default {
     .col {
         align-items: center;
         display: flex;
+
+        .col-sortable-title {
+            cursor: pointer;
+        }
+    }
+}
+
+.order-ascending,
+.order-descending {
+    margin-left: 3px;
+    position: relative;
+    &:after {
+        border-top: solid 5px var(--icon-secondary-color);
+        border-left: solid 5px transparent;
+        border-right: solid 5px transparent;
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        height: 4px;
+        left: 0;
+        line-height: 1.1;
+        opacity: 1;
+        padding: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+    }
+}
+
+.order-descending {
+    &:after {
+        border-top-color: transparent;
+        border-bottom: solid 5px var(--icon-secondary-color);
     }
 }
 

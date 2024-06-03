@@ -10,7 +10,7 @@ import pageGetAuthor from '../helpers/page-get-author.js';
  * @returns {array}
  */
 
-export default (state, getters) => (filterValue) => {
+export default (state, getters) => (filterValue, orderBy = '', order = 'DESC') => {
     if (!state.currentSite.pages) {
         return [];
     }
@@ -45,7 +45,27 @@ export default (state, getters) => (filterValue) => {
     });
 
     pages.sort((pageA, pageB) => {
-        return pageB.id - pageA.id;
+        if (orderBy === 'title') {
+            if (order === 'DESC') {
+                return -(pageA.title.localeCompare(pageB.title))
+            }
+
+            return pageA.title.localeCompare(pageB.title);
+        }
+
+        if (orderBy === 'author') {
+            if (order === 'DESC') {
+                return -(pageA.author.localeCompare(pageB.author))
+            }
+
+            return pageA.author.localeCompare(pageB.author);
+        }
+
+        if (orderBy !== '' && order === 'DESC') {
+            return pageB[orderBy] - pageA[orderBy];
+        }
+
+        return pageA[orderBy] - pageB[orderBy];
     });
 
     return pages;
