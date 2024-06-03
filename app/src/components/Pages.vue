@@ -1021,7 +1021,7 @@ export default {
     .page-item-insert-actions {
         color: var(--text-light-color);
         font-size: 1.4rem;
-        padding: 1rem .5rem;
+        padding: 0 .5rem;
     }
 
     .page-item-unselect {
@@ -1169,5 +1169,20 @@ export default {
     left: calc(-.6rem + (2.4rem * var(--item-depth)));
     top: 50%;
 	transform: translate(0, -50%);
+}
+
+/*
+ * Responsive improvements
+ */
+
+@media (max-width: 1300px) {
+    .item .page-item-insert-actions {
+        display: block;
+        padding-bottom: 0!important;
+    }
+    .item .page-item-insert-before {
+        margin-left: -4px;
+        padding-left: 0;
+    }
 }
 </style>
