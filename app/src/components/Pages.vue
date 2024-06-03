@@ -42,14 +42,16 @@
                    'filter-value': true,
                    'is-hierarchy': true,
                    'is-hierarchy-active': !!hierarchyMode
-                }"
-                @click="toggleHierarchyMode">
-                <template v-if="hierarchyMode">
-                    {{ $t('page.closeHierarchy') }}
-                </template>
-                <template v-else>
-                    {{ $t('page.configurePagesHierarchy') }}
-                </template>
+                }">
+                <a
+                    href="#"
+                    class="edit-page-hierarchy"
+                    @click="toggleHierarchyMode">
+                    <icon
+                        name="settings"
+                        size="xs" />
+                    {{ hierarchyMode ? $t('page.closeHierarchy') : $t('page.editHierarchy') }}
+                </a>
             </li>
         </ul>
 
@@ -953,14 +955,13 @@ export default {
     .heading {
         .search,
         ::v-deep .buttons {
-            opacity: .25;
+            opacity: .5;
             pointer-events: none;
         }
     }
 
     .collection-wrapper {
         input[type="checkbox"] {
-            opacity: .25;
             pointer-events: none;
         }
     }
@@ -969,7 +970,7 @@ export default {
         pointer-events: none;
 
         a {
-            color: var(--text-primary-color);
+            color: var(--text-light-color);
         }
     }
 }
@@ -1098,11 +1099,18 @@ export default {
         &.is-hierarchy {
             margin-left: auto;
             margin-right: 0;
+
+            a {
+                align-items: center;
+                display: inline-flex;
+                gap: 6px;
+                margin-top: 8px;
+            }
         }
     }
 
     .filter-inactive {
-        opacity: 0.25;
+        opacity: 0.5;
         pointer-events: none;
     }
 
@@ -1161,7 +1169,5 @@ export default {
     left: calc(-.6rem + (2.4rem * var(--item-depth)));
     top: 50%;
 	transform: translate(0, -50%);
-
-  
 }
 </style>
