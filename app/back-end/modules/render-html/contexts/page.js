@@ -22,7 +22,7 @@ class RendererContextPage extends RendererContext {
 
         // mark tags as main tags
         let mainTagsIds = this.mainTags.map(tag => tag.id);
-        this.tags = this.tags.map(tag => {
+        this.allTags = this.allTags.map(tag => {
             tag.isMainTag = mainTagsIds.includes(tag.id);
             return tag;
         });

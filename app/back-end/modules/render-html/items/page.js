@@ -15,6 +15,7 @@ class PageItem {
         this.pageData = {};
         this.metaData = {};
         this.metaDescription = '';
+        this.subpages = this.renderer.cachedItems.pagesStructure[page.id] || [];
 
         this.getMetaData();
         this.prepareData();
@@ -85,7 +86,8 @@ class PageItem {
             template: this.page.template,
             hasCustomExcerpt: hasCustomExcerpt,
             editor: this.metaData.editor || 'tinymce',
-            metaDescription: this.metaDescription
+            metaDescription: this.metaDescription,
+            subpages: this.subpages
         };
 
         if (this.pageData.template === '*') {

@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Page = require('./items/page');
 const Post = require('./items/post');
 const Author = require('./items/author');
@@ -36,6 +38,8 @@ class RendererCache {
         // Set post-related items
         this.getFeaturedPostImages();
         this.getPostTags();
+        // Get pages structure
+        this.getPagesStructure();
         // At the end we get posts and pages as it uses other cached items
         let posts = this.getPosts();
         let pages = this.getPages();
@@ -348,6 +352,35 @@ class RendererCache {
         }
 
         console.timeEnd('POST TAGS - STORE');
+    }
+
+    /**
+     * 
+     */
+    getPagesStructure () {
+        // Pages structure
+        let pagesConfigPath = path.join(this.renderer.inputDir, 'config', 'pages.config.json');
+
+        if (fs.existsSync(pagesConfigPath)) {
+            let pagesStructure = JSON.parse(fs.readFileSync(pagesConfigPath));
+            let flatPagesStructure = {};
+            let pagesStack = [...pagesStructure];
+
+            while (pagesStack.length > 0) {
+                let page = pagesStack.pop();
+                
+                if (!flatPagesStructure[page.id]) {
+                    flatPagesStructure[page.id] = [];
+                }
+
+                page.subpages.forEach(subpage => {
+                    flatPagesStructure[page.id].push(subpage.id);
+                    pagesStack.push(subpage);
+                });
+            }
+
+            this.renderer.cachedItems.pagesStructure = flatPagesStructure;
+        }
     }
 
     /**

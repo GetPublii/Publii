@@ -525,8 +525,10 @@ class RendererContext {
             authors[i].posts = this.getContentStructureAuthorPosts(authors[i].id);
         }
 
+        let pagesStructure = this.renderer.cachedItems.pagesStructure;
         let finalContentStructure = {
             pages,
+            pagesStructure,
             posts,
             tags,
             authors

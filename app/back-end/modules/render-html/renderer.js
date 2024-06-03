@@ -77,6 +77,7 @@ class Renderer {
         };
         this.cachedItems = {
             pages: {},
+            pagesStructure: {},
             postTags: {},
             posts: {},
             tags: {},
@@ -1830,6 +1831,7 @@ class Renderer {
         let globalContextGenerator = new RendererContext(this);
         this.cachedItems = {
             pages: {},
+            pagesStructure: {},
             postTags: {},
             posts: {},
             tags: {},
