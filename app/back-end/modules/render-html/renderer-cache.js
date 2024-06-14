@@ -355,7 +355,7 @@ class RendererCache {
     }
 
     /**
-     * 
+     * Prepare two hierarchies
      */
     getPagesStructure () {
         // Pages structure
@@ -363,8 +363,10 @@ class RendererCache {
 
         if (fs.existsSync(pagesConfigPath)) {
             let pagesStructure = JSON.parse(fs.readFileSync(pagesConfigPath));
+            let pagesStructureForHierarchy = JSON.parse(JSON.stringify(pagesStructure));
             let flatPagesStructure = {};
             let pagesStack = [...pagesStructure];
+            let hierarchyStructure = {};
 
             while (pagesStack.length > 0) {
                 let page = pagesStack.pop();
@@ -379,7 +381,15 @@ class RendererCache {
                 });
             }
 
+            let hierarchyTraverse = (node, path = []) => {
+                node.subpages.forEach(subpage => hierarchyTraverse(subpage, [node.id, ...path]));
+                hierarchyStructure[node.id] = path.reverse();
+            };
+
+            pagesStructureForHierarchy.forEach(page => hierarchyTraverse(page));
+
             this.renderer.cachedItems.pagesStructure = flatPagesStructure;
+            this.renderer.cachedItems.pagesStructureHierarchy = hierarchyStructure;
         }
     }
 

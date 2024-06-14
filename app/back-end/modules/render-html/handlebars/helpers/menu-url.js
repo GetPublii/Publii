@@ -48,8 +48,22 @@ function menuURLHelper(rendererInstance, Handlebars) {
 
         // Link to the single page
         if (this.type === 'page') {
+            let parentItems = rendererInstance.cachedItems.pagesStructureHierarchy[this.linkID];
+            let pageSlug = this.link;
+
+            if (parentItems && parentItems.length) {
+                let slugs = [];
+
+                for (let i = 0; i < parentItems.length; i++) {
+                    slugs.push(rendererInstance.cachedItems.pages[parentItems[i]].slug);
+                }
+
+                slugs.push(this.link);
+                pageSlug = slugs.join('/');
+            }
+
             if (rendererInstance.siteConfig.advanced.urls.cleanUrls) {
-                output = baseUrl + '/' + this.link + '/';
+                output = baseUrl + '/' + pageSlug + '/';
                 // In the preview mode we have to load URLs with
                 // index.html as filesystem on OS doesn't behave
                 // as the server environment and not redirect to
@@ -58,7 +72,7 @@ function menuURLHelper(rendererInstance, Handlebars) {
                     output += 'index.html';
                 }
             } else {
-                output = baseUrl + '/' + this.link + '.html';
+                output = baseUrl + '/' + pageSlug + '.html';
             }
         }
 

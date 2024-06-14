@@ -129,6 +129,7 @@ class RendererContext {
 
         for (let i = 0; i < items.length; i++) {
             items[i].level = level;
+            items[i].linkID = items[i].link;
 
             if (items[i].type === 'post') {
                 let foundedPost = postsData.filter(post => post.id == items[i].link);

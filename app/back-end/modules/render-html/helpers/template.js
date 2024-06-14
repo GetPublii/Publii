@@ -140,6 +140,39 @@ class TemplateHelper {
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
+    saveOutputPageFile (pageID, pageSlug, content, renderer) {
+        let suffix = '.html';
+        let parentItems = renderer.cachedItems.pagesStructureHierarchy[pageID];
+        
+        if (this.siteConfig.advanced.urls.cleanUrls) {
+            suffix = '/index.html';
+        }
+
+        if (parentItems && parentItems.length) {
+            let slugs = [];
+
+            for (let i = 0; i < parentItems.length; i++) {
+                slugs.push(renderer.cachedItems.pages[parentItems[i]].slug);
+            }
+
+            slugs.push(pageSlug);
+            pageSlug = slugs.join('/');
+        }
+
+        let filePath = path.join(this.outputDir, pageSlug + suffix);
+        content = this.compressHTML(content);
+
+        if (this.siteConfig.advanced.urls.cleanUrls) {
+            let dirPath = path.join(this.outputDir, pageSlug);
+
+            if (!Utils.dirExists(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+        }
+
+        fs.writeFile(filePath, content, {'flags': 'w'});
+    }
+
     /*
      * Save a compiled Handlebars template for tags list
      */

@@ -88,6 +88,10 @@ class PreviewEvents {
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }
 
+                    if (typeof errorDesc === 'object') {
+                        errorDesc = errorDesc.translation;
+                    }
+
                     event.sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,

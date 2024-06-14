@@ -1049,7 +1049,7 @@ class Renderer {
         // Create global context
         let progressIncrease = 40 / pageIDs.length;
 
-        // Render post sites
+        // Render page sites
         for (let i = 0; i < pageIDs.length; i++) {
             let contextGenerator = new RendererContextPage(this);
             let context = contextGenerator.getContext(pageIDs[i]);
@@ -1071,7 +1071,7 @@ class Renderer {
                 output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
             }
 
-            this.templateHelper.saveOutputPostFile(pageSlugs[i], output);
+            this.templateHelper.saveOutputPageFile(pageIDs[i], pageSlugs[i], output, this);
             this.sendProgress(Math.ceil(20 + (progressIncrease * i)), 'Generating pages (' + (i + 1) + '/' + pageIDs.length + ')');
         }
         console.timeEnd('PAGES');
