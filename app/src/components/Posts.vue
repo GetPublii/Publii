@@ -330,7 +330,7 @@
                     <div
                         v-if="showPostSlugs"
                         class="post-slug">
-                        {{ $t('post.url') }}: /{{ item.slug }}
+                        {{ $t('post.url') }}: /{{ item.slug }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
                     </div>
 
                     <div

@@ -56,6 +56,13 @@
                    'is-hierarchy': true,
                    'is-hierarchy-active': !!hierarchyMode
                 }">
+
+                <span 
+                    v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls"
+                    class="edit-page-hierarchy-warning">
+                    {{ $t('page.cleanUrlsDisabled') }}
+                </span>
+
                 <a
                     href="#"
                     class="edit-page-hierarchy"
@@ -476,7 +483,13 @@ export default {
                 if (usedItems.indexOf(item.id) === -1) {
                     item.depth = 0;
                     item.parentIds = [];
-                    item.fullSlug = `/` + item.slug;
+
+                    if (this.$store.state.currentSite.config.advanced.urls.cleanUrls) {
+                        item.fullSlug = `/` + item.slug;
+                    } else {
+                        item.fullSlug = `/${item.slug}.html`;
+                    }
+
                     results.push(item);
                 }
             });
@@ -966,7 +979,11 @@ export default {
             });
         },
         generateSlug (item, items) {
-            if (!item.parentIds || item.parentIds.length === 0) {
+            if (!item.parentIds || item.parentIds.length === 0 || !this.$store.state.currentSite.config.advanced.urls.cleanUrls) {
+                if (!this.$store.state.currentSite.config.advanced.urls.cleanUrls) {
+                    return `/${item.slug}.html`;
+                }
+
                 return `/${item.slug}`;
             }
 
@@ -1311,6 +1328,13 @@ export default {
     left: calc(-.6rem + (2.4rem * var(--item-depth)));
     top: 50%;
 	transform: translate(0, -50%);
+}
+
+.edit-page-hierarchy-warning {
+    color: var(--warning);
+    padding-right: 1rem;
+    position: relative;
+    top: -4px;
 }
 
 /*

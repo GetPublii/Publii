@@ -51,7 +51,7 @@ function menuURLHelper(rendererInstance, Handlebars) {
             let parentItems = rendererInstance.cachedItems.pagesStructureHierarchy[this.linkID];
             let pageSlug = this.link;
 
-            if (parentItems && parentItems.length) {
+            if (rendererInstance.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
                 let slugs = [];
 
                 for (let i = 0; i < parentItems.length; i++) {

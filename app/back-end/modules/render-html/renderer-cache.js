@@ -388,6 +388,15 @@ class RendererCache {
 
             pagesStructureForHierarchy.forEach(page => hierarchyTraverse(page));
 
+            // Flat hierarchy structure of parents when clean URLs are disabled
+            if (!this.renderer.siteConfig.advanced.urls.cleanUrls) {
+                let IDs = Object.keys(hierarchyStructure);
+
+                for (let i = 0; i < IDs.length; i++) {
+                    hierarchyStructure[IDs[i]] = [];
+                }
+            }
+
             this.renderer.cachedItems.pagesStructure = flatPagesStructure;
             this.renderer.cachedItems.pagesStructureHierarchy = hierarchyStructure;
         }
