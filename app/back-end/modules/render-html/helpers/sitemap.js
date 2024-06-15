@@ -249,15 +249,15 @@ class Sitemap {
                 continue;
             }
 
-            // Detect post files
+            // Detect post/pages files with clean URLs disabled
             if (!this.siteConfig.advanced.urls.cleanUrls && file.indexOf('.html') > 0) {
-                await this.getPostsFilesList(file);
+                await this.getPostsAndPagesFilesList(file);
                 continue;
             }
 
-            // Detect post files
+            // Detect post/pages files
             if (this.siteConfig.advanced.urls.cleanUrls) {
-                await this.getPostsFilesList(file, true);
+                await this.getPostsAndPagesFilesList(file, true);
             }
         }
     }
@@ -490,7 +490,7 @@ class Sitemap {
      * @param file
      * @param cleanUrlsEnabled
      */
-    async getPostsFilesList (file, cleanUrlsEnabled = false) {
+    async getPostsAndPagesFilesList (file, cleanUrlsEnabled = false) {
         const readFile = util.promisify(fs.readFile);
 
         if (!cleanUrlsEnabled) {
@@ -539,7 +539,46 @@ class Sitemap {
             }
         }
 
+        // Look for subpages
+        let baseDir = path.join(this.baseDirectory, file);
+
+        if (fs.lstatSync(baseDir).isDirectory()) {
+            let subpages = fs.readdirSync(baseDir);
+            this.scanSubpages(subpages, file);
+        }
+
         return Promise.resolve()
+    }
+
+    // recusive function to scan subpages
+    scanSubpages (subpages, currentPath) {
+        for (let subpage of subpages) {
+            if (subpage.indexOf('.') > -1) {
+                continue;
+            }
+
+            let filePath = path.join(this.baseDirectory, currentPath, subpage, 'index.html');
+
+            if (fs.existsSync(filePath)) {
+                let postFileContent = fs.readFileSync(filePath, 'utf8');
+
+                if (postFileContent.indexOf('name="robots" content="noindex') === -1) {
+                    this.fileList.push(currentPath + '/' + subpage + '/');
+                }
+            }
+
+            let pathToScan = path.join(this.baseDirectory, currentPath, subpage);
+            
+            if (!fs.lstatSync(pathToScan).isDirectory()) {
+                continue;
+            }
+
+            let subpagesList = fs.readdirSync(pathToScan);
+
+            if (subpagesList.length) {
+                this.scanSubpages(subpagesList, path.join(currentPath, subpage));
+            }
+        }
     }
 
     /**
