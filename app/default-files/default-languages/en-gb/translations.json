@@ -99,7 +99,8 @@
             "socialSharing": "Social sharing",
             "footer": "Footer",
             "beforePost": "Before every post",
-            "afterPost": "After every post"
+            "afterPost": "After every post",
+            "afterPage": "After every page"
         }
     },
     "date": {

@@ -99,7 +99,8 @@
             "socialSharing": "Udostępnianie Społecznościowe",
             "footer": "Stopka strony",
             "beforePost": "Przed każdym wpisem",
-            "afterPost": "Po każdym wpisie"
+            "afterPost": "Po każdym wpisie",
+            "afterPage": "Po każdej podstronie"
         }
     },
     "date": {
