@@ -97,45 +97,43 @@ class TemplateHelper {
 
     saveOutputPostFile (postSlug, content) {
         let suffix = '.html';
+        let baseDir = this.outputDir;
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            baseDir += '/' + this.siteConfig.advanced.urls.postsPrefix;
+        }
 
         if (this.siteConfig.advanced.urls.cleanUrls) {
             suffix = '/index.html';
         }
 
-        let filePath = path.join(this.outputDir, postSlug + suffix);
+        let filePath = path.join(baseDir, postSlug + suffix);
         content = this.compressHTML(content);
 
         if (this.siteConfig.advanced.urls.cleanUrls) {
-            let dirPath = path.join(this.outputDir, postSlug);
-
-            if(!Utils.dirExists(dirPath)) {
-                fs.mkdirSync(dirPath);
-            }
+            let dirPath = path.join(baseDir, postSlug);
+            fs.ensureDirSync(dirPath);
         }
 
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
     saveOutputHomePaginationFile(pageNumber, content) {
-        let filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.pageName, pageNumber.toString(), 'index.html');
-        let pageDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.pageName);
+        let baseDir = this.outputDir;
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            baseDir += '/' + this.siteConfig.advanced.urls.postsPrefix;
+        }
+
+        let filePath = path.join(baseDir, this.siteConfig.advanced.urls.pageName, pageNumber.toString(), 'index.html');
+        let pageDirPath = path.join(baseDir, this.siteConfig.advanced.urls.pageName);
         let dirPath = path.join(pageDirPath, pageNumber.toString());
         content = this.compressHTML(content);
 
         // Create page directory if not exists
-        let pageDirStat = false;
-
-        try {
-            pageDirStat = fs.statSync(pageDirPath);
-        } catch(e) {}
-
-        if(!pageDirStat) {
-            fs.mkdirSync(pageDirPath);
-        }
-
+        fs.ensureDirSync(pageDirPath);
         // Create dir for specific page
-        fs.mkdirSync(dirPath);
-
+        fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
@@ -164,10 +162,7 @@ class TemplateHelper {
 
         if (this.siteConfig.advanced.urls.cleanUrls) {
             let dirPath = path.join(this.outputDir, pageSlug);
-
-            if (!Utils.dirExists(dirPath)) {
-                fs.mkdirSync(dirPath, { recursive: true });
-            }
+            fs.ensureDirSync(dirPath);
         }
 
         fs.writeFile(filePath, content, {'flags': 'w'});
@@ -177,16 +172,13 @@ class TemplateHelper {
      * Save a compiled Handlebars template for tags list
      */
     saveOutputTagsListFile(content) {
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix;
         let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
-        let baseDir = postsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
+        let baseDir = usePostsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
         let tagsPrefix = this.siteConfig.advanced.urls.tagsPrefix;
         let filePath = path.join(baseDir, tagsPrefix, 'index.html');
         let dirPath = path.join(baseDir, tagsPrefix);
-
-        if(!Utils.dirExists(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
-        }
-
+        fs.ensureDirSync(dirPath);
         content = this.compressHTML(content);
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
@@ -196,11 +188,12 @@ class TemplateHelper {
      * a specified tag filename
      */
     saveOutputTagFile(tagSlug, content, isTagPreview = false) {
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix;
         let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
-        let baseDir = postsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
+        let baseDir = usePostsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
         let filePath = path.join(baseDir, tagSlug, 'index.html');
         let dirPath = path.join(baseDir, tagSlug);
-        let tagsPath = postsPrefix ? baseDir : false;
+        let tagsPath = usePostsPrefix ? baseDir : false;
         let tagsPrefix = this.siteConfig.advanced.urls.tagsPrefix;
 
         if (isTagPreview) {
@@ -215,22 +208,23 @@ class TemplateHelper {
         }
 
         if (tagsPath && !Utils.dirExists(tagsPath)) {
-            fs.mkdirSync(tagsPath, { recursive: true });
+            fs.ensureDirSync(tagsPath);
         }
 
         content = this.compressHTML(content);
-        fs.mkdirSync(dirPath);
+        fs.ensureDirSync(dirPath);
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
     saveOutputTagPaginationFile(tagSlug, pageNumber, content) {
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix;
         let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
-        let baseDir = postsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
+        let baseDir = usePostsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
         let pageName = this.siteConfig.advanced.urls.pageName;
         let filePath = path.join(baseDir, tagSlug, pageName, pageNumber.toString(), 'index.html');
         let pageDirPath = path.join(baseDir, tagSlug, pageName);
         let dirPath = path.join(pageDirPath, pageNumber.toString());
-        let tagsPath = postsPrefix ? baseDir : false;
+        let tagsPath = usePostsPrefix ? baseDir : false;
         let tagsPrefix = this.siteConfig.advanced.urls.tagsPrefix;
 
         if (tagsPrefix) {
@@ -241,19 +235,19 @@ class TemplateHelper {
         }
 
         if (tagsPath && !Utils.dirExists(tagsPath)) {
-            fs.mkdirSync(tagsPath, { recursive: true });
+            fs.ensureDirSync(tagsPath);
         }
 
         content = this.compressHTML(content);
 
         // Create page directory if not exists
         if(!Utils.dirExists(pageDirPath)) {
-            fs.mkdirSync(pageDirPath, { recursive: true });
+            fs.ensureDirSync(pageDirPath);
         }
 
         // Create dir for specific page
         if(!Utils.dirExists(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
+            fs.ensureDirSync(dirPath);
         }
 
         // Create index.html file in the created dir
@@ -265,8 +259,11 @@ class TemplateHelper {
      * a specified author filename
      */
     saveOutputAuthorFile(authorSlug, content, isAuthorPreview = false) {
-        let filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, 'index.html');
-        let dirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug);
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix;
+        let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
+        let baseDir = usePostsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
+        let filePath = path.join(baseDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, 'index.html');
+        let dirPath = path.join(baseDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug);
         
         if (isAuthorPreview) {
             filePath = path.join(this.outputDir, 'preview.html');
@@ -276,30 +273,23 @@ class TemplateHelper {
         }
 
         content = this.compressHTML(content);
-        fs.mkdirSync(dirPath);
+        fs.ensureDirSync(dirPath);
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
     saveOutputAuthorPaginationFile(authorSlug, pageNumber, content) {
-        let filePath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, this.siteConfig.advanced.urls.pageName, pageNumber.toString(), 'index.html');
-        let pageDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, this.siteConfig.advanced.urls.pageName);
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix;
+        let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
+        let baseDir = usePostsPrefix ? path.join(this.outputDir, postsPrefix) : this.outputDir;
+        let filePath = path.join(baseDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, this.siteConfig.advanced.urls.pageName, pageNumber.toString(), 'index.html');
+        let pageDirPath = path.join(baseDir, this.siteConfig.advanced.urls.authorsPrefix, authorSlug, this.siteConfig.advanced.urls.pageName);
         let dirPath = path.join(pageDirPath, pageNumber.toString());
         content = this.compressHTML(content);
 
         // Create page directory if not exists
-        let pageDirStat = false;
-
-        try {
-            pageDirStat = fs.statSync(pageDirPath);
-        } catch(e) {}
-
-        if(!pageDirStat) {
-            fs.mkdirSync(pageDirPath);
-        }
-
+        fs.ensureDirSync(pageDirPath);
         // Create dir for specific page
-        fs.mkdirSync(dirPath);
-
+        fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
         fs.writeFile(filePath, content, {'flags': 'w'});
     }

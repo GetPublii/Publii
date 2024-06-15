@@ -826,8 +826,17 @@
                                 v-else
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.tagPrefixInfo')">
+                                v-pure-html="advanced.urls.postsPrefix && advanced.urls.tagsPrefixAfterPostsPrefix ? $t('settings.tagPrefixInfoExtended') : $t('settings.tagPrefixInfo')">
                             </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.urls.postsPrefix"
+                            id="tags-prefix-after-posts-prefix"
+                            :label="$t('settings.tagsPrefixAfterPostsPrefix')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.urls.tagsPrefixAfterPostsPrefix" />
                         </field>
 
                         <field
@@ -851,8 +860,17 @@
                                 v-else
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.authorPrefixInfo')">
+                                v-pure-html="advanced.urls.postsPrefix && advanced.urls.authorsPrefixAfterPostsPrefix ? $t('settings.authorPrefixInfoExtended') : $t('settings.authorPrefixInfo')">
                             </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.urls.postsPrefix"
+                            id="authors-prefix-after-posts-prefix"
+                            :label="$t('settings.authorsPrefixAfterPostsPrefix')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.urls.authorsPrefixAfterPostsPrefix" />
                         </field>
 
                         <field

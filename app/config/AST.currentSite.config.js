@@ -93,7 +93,9 @@ const AstCurrentSiteConfig = {
             addIndex: false,
             postsPrefix: '',
             tagsPrefix: 'tags',
+            tagsPrefixAfterPostsPrefix: false,
             authorsPrefix: 'authors',
+            authorsPrefixAfterPostsPrefix: false,
             pageName: 'page',
             errorPage: '404.html',
             searchPage: 'search.html'

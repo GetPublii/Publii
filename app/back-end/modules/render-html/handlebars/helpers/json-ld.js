@@ -131,6 +131,10 @@ function jsonLDHelper(rendererInstance, Handlebars) {
 
             if (itemData.author && itemData.author.name) {
                 let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+
+                if (context.data.config.site.urls.postsPrefix && context.data.config.site.urls.authorsPrefixAfterPostsPrefix) {
+                    authorUrl = context.data.website.baseUrl + context.data.config.site.urls.postsPrefix + '/' + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+                }
                 
                 jsonLDObject['author'] = {
                     "@type": "Person",

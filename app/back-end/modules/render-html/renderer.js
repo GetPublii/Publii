@@ -1340,9 +1340,15 @@ class Renderer {
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
 
-        if (!UtilsHelper.dirExists(authorsDirPath)) {
-            fs.mkdirSync(authorsDirPath);
+        if (this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix && this.siteConfig.advanced.urls.postsPrefix) {
+            authorsDirPath = path.join(
+                this.outputDir, 
+                this.siteConfig.advanced.urls.postsPrefix, 
+                this.siteConfig.advanced.urls.authorsPrefix
+            );
         }
+
+        fs.ensureDirSync(authorsDirPath);
 
         // Get authors
         let authorsIDs = [];

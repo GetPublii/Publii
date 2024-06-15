@@ -84,6 +84,10 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/' + this.link + '/';
             }
 
+            if (rendererInstance.siteConfig.advanced.urls.postsPrefix && rendererInstance.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/' + this.link + '/';
+            }
+
             // In the preview mode we have to load URLs with
             // index.html as filesystem on OS doesn't behave
             // as the server environment and not redirect to
@@ -96,6 +100,10 @@ function menuURLHelper(rendererInstance, Handlebars) {
         // Link to the author pages
         if (this.type === 'author') {
             output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.authorsPrefix + '/' + slug(this.link) + '/';
+
+            if (rendererInstance.siteConfig.advanced.urls.postsPrefix && rendererInstance.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.authorsPrefix + '/' + slug(this.link) + '/';
+            }
 
             // In the preview mode we have to load URLs with
             // index.html as filesystem on OS doesn't behave
@@ -122,6 +130,10 @@ function menuURLHelper(rendererInstance, Handlebars) {
         // Link to the tags list - just the page domain name with tags prefix
         if (this.type === 'tags') {
             output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/';
+
+            if (rendererInstance.siteConfig.advanced.urls.postsPrefix && rendererInstance.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/';
+            }
 
             // In the preview mode we have to load URLs with
             // index.html as filesystem on OS doesn't behave

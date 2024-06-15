@@ -564,6 +564,10 @@ class ContentHelper {
             let url = '#INTERNAL_LINK#/tags/1';
             let link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
 
+            if (renderer.siteConfig.advanced.urls.postsPrefix && renderer.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
+            }
+
             if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
                 link = link + 'index.html';
             }
