@@ -789,6 +789,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.urls.cleanUrls"
                             id="url-posts-prefix"
                             :label="$t('settings.postsPrefix')">
                             <text-input
@@ -2415,6 +2416,15 @@ export default {
 
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
+    },
+    watch: {
+        'advanced.urls.cleanUrls': function (newValue, oldValue) {
+            if (newValue === false && oldValue === true) {
+                this.advanced.urls.postsPrefix = '';
+                this.advanced.urls.tagsPrefixAfterPostsPrefix = false;
+                this.advanced.urls.authorsPrefixAfterPostsPrefix = false;
+            }
+        }
     },
     async mounted () {
         setTimeout(() => {

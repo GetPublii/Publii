@@ -1269,6 +1269,10 @@ class Renderer {
                         tagsContextInUrl = this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug;
                     }
 
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        tagsContextInUrl = this.siteConfig.advanced.urls.postsPrefix + '/' + tagsContextInUrl;
+                    }
+
                     let pagination = {
                         context: tagsContextInUrl,
                         pages: Array.from({length: totalPages}, (v, k) => k + 1),
@@ -1494,6 +1498,10 @@ class Renderer {
                     let nextPage = (currentPage < totalPages) ? currentPage + 1 : false;
                     let previousPage = (currentPage > 1) ? currentPage - 1 : false;
                     let authorsContextInUrl = this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername;
+
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                        authorsContextInUrl = this.siteConfig.advanced.urls.postsPrefix + '/' + authorsContextInUrl;
+                    }
 
                     let pagination = {
                         context: authorsContextInUrl,
