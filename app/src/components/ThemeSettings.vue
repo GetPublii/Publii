@@ -352,6 +352,86 @@
                             </field>
                         </div>
 
+                        <div v-if="groupName === $t('theme.pageOptions')">
+                            <field>
+                                <small
+                                    slot="note"
+                                    class="note">
+                                    {{ $t('theme.pageOptionsInfo') }}<br><br>
+                                </small>
+                            </field>
+
+                            <field
+                                v-if="hasPageTemplates"
+                                :label="$t('theme.defaultPageTemplate')"
+                                key="tab-last-field-0">
+                                <dropdown
+                                    :items="pageTemplates"
+                                    v-model="defaultTemplates.page"
+                                    id="post-template"
+                                    slot="field">
+                                    <option
+                                        value=""
+                                        slot="first-choice">
+                                        {{ $t('theme.defaultTemplate') }}
+                                    </option>
+                                </dropdown>
+                            </field>
+
+                            <field
+                                v-for="(field, subindex) of pageViewThemeSettings"
+                                :label="field.label"
+                                :key="'tab-' + index + '-field-' + subindex">
+                                <dropdown
+                                    v-if="!field.type || field.type === 'select'"
+                                    :id="field.name + '-select'"
+                                    :items="getDropdownViewOptions(field.options)"
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"
+                                    v-model="pageView[field.name]">
+                                </dropdown>
+
+                                <text-input
+                                    v-if="field.type === 'text' || field.type === 'number'"
+                                    :type="field.type"
+                                    slot="field"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    v-model="pageView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
+
+                                <text-area
+                                    v-if="field.type === 'textarea'"
+                                    slot="field"
+                                    :placeholder="field.placeholder ? field.placeholder : $t('theme.leaveBlankToUseDefault')"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
+                                    v-model="pageView[field.name]"
+                                    :customCssClasses="field.customCssClasses" />
+
+                                <color-picker
+                                    v-if="field.type === 'colorpicker'"
+                                    slot="field"
+                                    v-model="pageView[field.name]"
+                                    :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'"
+                                    :customCssClasses="field.customCssClasses">
+                                </color-picker>
+
+                                <image-upload
+                                    v-if="field.type === 'image'"
+                                    slot="field"
+                                    v-model="pageView[field.name]"
+                                    item-id="defaults"
+                                    imageType="contentImages" />
+
+                                <small
+                                    v-if="field.note"
+                                    slot="note"
+                                    class="note">
+                                    {{ field.note }}
+                                </small>
+                            </field>
+                        </div>
+
                         <div v-if="groupName === $t('theme.tagOptions')">
                             <field>
                                 <small
@@ -542,6 +622,7 @@ export default {
                 logo: ''
             },
             custom: {},
+            pageView: {},
             postView: {},
             tagView: {},
             authorView: {}
@@ -562,6 +643,7 @@ export default {
 
             tabs.push(this.$t('theme.authorOptions'));
             tabs.push(this.$t('theme.postOptions'));
+            tabs.push(this.$t('theme.pageOptions'));
             tabs.push(this.$t('theme.tagOptions'));
             tabs.push(this.$t('theme.translations'));
 
@@ -571,13 +653,20 @@ export default {
             return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');
         },
         pageViewThemeSettings () {
+            console.log(this.$store.state.currentSite.themeSettings);
             return this.$store.state.currentSite.themeSettings.pageConfig.filter(field => field.type !== 'separator');
         },
         postTemplates () {
             return this.$store.state.currentSite.themeSettings.postTemplates;
         },
+        pageTemplates () {
+            return this.$store.state.currentSite.themeSettings.pageTemplates;
+        },
         hasPostTemplates () {
             return !!Object.keys(this.postTemplates).length;
+        },
+        hasPageTemplates () {
+            return !!Object.keys(this.pageTemplates).length;
         },
         tagViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.tagConfig.filter(field => field.type !== 'separator');

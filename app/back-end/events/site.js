@@ -393,6 +393,7 @@ class SiteEvents {
                 newConfig: {
                     config: themeConfig.config,
                     customConfig: themeConfig.customConfig,
+                    pageConfig: themeConfig.pageConfig,
                     postConfig: themeConfig.postConfig,
                     tagConfig: themeConfig.tagConfig,
                     authorConfig: themeConfig.authorConfig,

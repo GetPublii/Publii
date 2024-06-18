@@ -66,7 +66,7 @@ class ItemHelper {
 
                 itemViewSettings[field.name] = {
                     type: fieldType,
-                    value: itemData.pageViewOptions[field.name]
+                    value: itemData.viewOptions[field.name]
                 };
             });
         }
@@ -156,7 +156,7 @@ class ItemHelper {
             itemData.isHidden = false;
             itemData.isExcludedOnHomepage = false;
         } else if (itemType === 'page') {
-            itemData.pageViewOptions = {};
+            itemData.viewOptions = {};
         }
 
         // Set post elements

@@ -1257,6 +1257,8 @@
         "goToThemesManager": "Przejdż do menadżera motywów",
         "installTheme": "Zainstaluj motyw",
         "leaveBlankToUseDefault": "Pozostaw puste aby użyć wartości domyślnej",
+        "pageOptions": "Opcje stron",
+        "pageOptionsInfo": "Sekcja opcji stron pozwala na ustawienie globalnych opcji dla dodatkowych informacji zawartych w stronach. Zmiany wrpowadzone w tej sekcji będą miały wpływ na wszystkie strony na Twojej stronie ale możesz również, jeśli tego potrzebujesz, nadpisać ustawienia aplikacji, dla każdej ze stron osobno, w widoku edycji strony.",
         "postOptions": "Opcje wpisów",
         "postOptionsInfo": "Sekcja opcji wpisu pozwala na ustawienie globalnych opcji dla dodatkowych informacji zawartych we wpisach. Zmiany wrpowadzone w tej sekcji będą miały wpływ na wszystkie wpisy na Twojej stronie ale możesz również, jeśli tego potrzebujesz, nadpisać ustawienia aplikacji, dla każdego z wpisów osobno, w widoku edycji wpisu.",
         "postsPerPage": "Wpisy na stronie:",

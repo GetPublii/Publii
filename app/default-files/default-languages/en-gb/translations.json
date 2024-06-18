@@ -1259,6 +1259,8 @@
         "goToThemesManager": "Go to the themes manager",
         "installTheme": "Install theme",
         "leaveBlankToUseDefault": "Leave blank to use the default value",
+        "pageOptions": "Page options",
+        "pageOptionsInfo": "The Page options section allows you to set global options for what extra information should be included in your pages. Changes made in this section will affect all pages on your site, but you can also override the App Settings on the Page Edit screen for each individual page if necessary.",
         "postOptions": "Post options",
         "postOptionsInfo": "The Post options section allows you to set global options for what extra information should be included in your posts. Changes made in this section will affect all posts on your site, but you can also override the App Settings on the Post Edit screen for each individual post if necessary.",
         "postsPerPage": "Posts per page:",
