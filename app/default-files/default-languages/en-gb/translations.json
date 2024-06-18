@@ -1409,6 +1409,7 @@
         "ok": "OK",
         "otherOptions": "Other options",
         "pages": "Pages",
+        "pagesSupportNotEnabledMessage": "Your current theme does not support pages. Please select a theme that supports pages or modify your current theme.",
         "pageTitle": "Page Title",
         "pleaseFillAllRequiredFields": "Please fill all required fields",
         "posts": "Posts",
@@ -1446,6 +1447,7 @@
         "unhide": "Unhide",
         "updateSlug": "Update slug",
         "uploadInProgress": "Upload in progress...",
+        "whatsChanged": "What's changed?",
         "whatsNew": "What's new?"
     }
 }

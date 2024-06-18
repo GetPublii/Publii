@@ -613,6 +613,8 @@ export default {
 
             this.pagesHierarchy = JSON.parse(JSON.stringify(data));
         });
+
+        this.checkPagesSupport();
     },
     methods: {
         addNewPage (editorType) {
@@ -1054,6 +1056,26 @@ export default {
             });
 
             this.hierarchySave();
+        },
+        checkPagesSupport () {
+            if (
+                !this.$store.state.currentSite.themeSettings.supportedFeatures ||
+                !this.$store.state.currentSite.themeSettings.supportedFeatures.pages
+            ) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: this.$t('ui.pagesSupportNotEnabledMessage'),
+                    isDanger: true,
+                    okClick: () => false,
+                    cancelClick: this.checkWhatsChanged,
+                    okLabel: this.$t('ui.ok'),
+                    cancelLabel: this.$t('ui.whatsChanged'),
+                    cancelNotClosePopup: true
+                });
+            }
+        },
+        checkWhatsChanged () {
+            mainProcessAPI.shellOpenExternal('https://getpublii.com/dev/how-to-add-pages-support-to-your-theme/');
         }
     },
     beforeDestroy () {

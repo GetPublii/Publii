@@ -985,6 +985,11 @@ class Renderer {
      * Create page sites
      */
     generatePages() {
+        if (!this.themeConfig.supportedFeatures || !this.themeConfig.supportedFeatures.pages) {
+            console.log('[i] Pages are not supported by the theme');
+            return;
+        }
+
         console.time('PAGES');
         let pageIDs = [];
         let pageSlugs = [];
