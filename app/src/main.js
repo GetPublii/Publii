@@ -34,6 +34,7 @@ import Icon from './components/basic-elements/Icon';
 import ImageUpload from './components/basic-elements/ImageUpload';
 import LogoCreator from './components/basic-elements/LogoCreator';
 import Overlay from './components/basic-elements/Overlay';
+import PagesDropDown from './components/basic-elements/PagesDropDown';
 import PostsDropDown from './components/basic-elements/PostsDropDown';
 import ProgressBar from './components/basic-elements/ProgressBar';
 import RadioButtons from './components/basic-elements/RadioButton';
@@ -201,6 +202,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.component('v-select', vSelect);
     Vue.component('prism-editor', VuePrismEditor);
     Vue.component('posts-dropdown', PostsDropDown);
+    Vue.component('pages-dropdown', PagesDropDown);
     Vue.component('authors-dropdown', AuthorsDropDown);
     Vue.component('tags-dropdown', TagsDropDown);
     Vue.component('repeater', Repeater);

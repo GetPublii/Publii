@@ -191,6 +191,14 @@
                                             :anchor="field.anchor"
                                             slot="field"
                                             :customCssClasses="field.customCssClasses"></posts-dropdown>
+                                        
+                                        <pages-dropdown
+                                            v-if="field.type === 'pages-dropdown'"
+                                            v-model="settingsValues[field.name]"
+                                            :multiple="field.multiple"
+                                            :anchor="field.anchor"
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></pages-dropdown>
 
                                         <tags-dropdown
                                             v-if="field.type === 'tags-dropdown'"
@@ -367,6 +375,14 @@
                                     :anchor="field.anchor"
                                     slot="field"
                                     :customCssClasses="field.customCssClasses"></posts-dropdown>
+
+                                <pages-dropdown
+                                    v-if="field.type === 'pages-dropdown'"
+                                    v-model="settingsValues[field.name]"
+                                    :multiple="field.multiple"
+                                    :anchor="field.anchor"
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></pages-dropdown>
 
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"

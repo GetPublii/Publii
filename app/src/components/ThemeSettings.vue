@@ -217,6 +217,14 @@
                                     slot="field"
                                     :customCssClasses="field.customCssClasses"></posts-dropdown>
 
+                                <pages-dropdown
+                                    v-if="field.type === 'pages-dropdown'"
+                                    v-model="custom[field.name]"
+                                    :multiple="field.multiple"
+                                    :anchor="field.anchor"
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></pages-dropdown>
+
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="custom[field.name]"
@@ -943,6 +951,7 @@ export default {
                 'checkbox',
                 'colorpicker',
                 'posts-dropdown',
+                'pages-dropdown',
                 'authors-dropdown',
                 'tags-dropdown',
                 'repeater'

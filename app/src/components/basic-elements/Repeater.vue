@@ -113,6 +113,12 @@
                                 :multiple="itemConfig[subindex].multiple"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></posts-dropdown>
 
+                            <pages-dropdown
+                                v-if="itemConfig[subindex].type === 'pages-dropdown'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :multiple="itemConfig[subindex].multiple"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></pages-dropdown>
+
                             <tags-dropdown
                                 v-if="itemConfig[subindex].type === 'tags-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
