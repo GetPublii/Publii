@@ -92,6 +92,7 @@ class TemplateHelper {
             content = this.compressHTML(content);
         }
 
+        fs.ensureDirSync(path.parse(filePath).dir);
         fs.writeFile(filePath, content, {'flags': 'w'});
     }
 
@@ -144,6 +145,14 @@ class TemplateHelper {
         
         if (this.siteConfig.advanced.urls.cleanUrls) {
             suffix = '/index.html';
+        }
+
+        // If page is set as frontpage - render it in the root directory
+        if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === pageID) {
+            let filePath = path.join(this.outputDir, 'index.html');
+            content = this.compressHTML(content);
+            fs.writeFile(filePath, content, {'flags': 'w'});
+            return;
         }
 
         if (parentItems && parentItems.length) {

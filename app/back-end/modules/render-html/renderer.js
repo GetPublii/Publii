@@ -685,6 +685,13 @@ class Renderer {
         let compiledTemplate = this.compileTemplate(inputFile);
 
         if (!compiledTemplate) {
+            console.timeEnd('HOME');
+            return false;
+        }
+
+        // Don't render homepage and it's pagination if we use page as frontpage and posts prefix is empty
+        if (this.siteConfig.advanced.usePageAsFrontpage && !this.siteConfig.advanced.urls.postsPrefix) {
+            console.timeEnd('HOME');
             return false;
         }
 
@@ -722,7 +729,11 @@ class Renderer {
                 output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
             }
 
-            this.templateHelper.saveOutputFile('index.html', output);
+            if (this.siteConfig.advanced.urls.postsPrefix === '') {
+                this.templateHelper.saveOutputFile('index.html', output);
+            } else {
+                this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+            }
         } else {
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
@@ -777,7 +788,11 @@ class Renderer {
                 }
 
                 if (offset === 0) {
-                    this.templateHelper.saveOutputFile('index.html', output);
+                    if (this.siteConfig.advanced.urls.postsPrefix === '') {
+                        this.templateHelper.saveOutputFile('index.html', output);
+                    } else {
+                        this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+                    }
                 } else {
                     // We increase the current page number as we need to start URLs from page/2
                     this.templateHelper.saveOutputHomePaginationFile(currentPage, output);
