@@ -76,6 +76,8 @@ const AstCurrentSiteConfig = {
         featuredPostsListingOrder: 'DESC',
         hiddenPostsListingOrderBy: 'created_at',
         hiddenPostsListingOrder: 'DESC',
+        usePageAsFrontpage: false,
+        pageAsFrontpage: 0,
         feed: {
             title: 'displayName',
             titleValue: '',

@@ -121,12 +121,13 @@
             </fields-group>
             
             <fields-group :title="$t('settings.advancedOptions')">
-            <div
-                v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
-                class="msg msg-icon msg-alert msg-bm">
-                <icon name="warning" customWidth="28" customHeight="28" />
-                <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
-            </div>
+                <div
+                    v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
+                    class="msg msg-icon msg-alert msg-bm">
+                    <icon name="warning" customWidth="28" customHeight="28" />
+                    <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
+                </div>
+
                 <tabs
                     ref="advanced-tabs"
                     id="advanced-basic-settings-tabs"
@@ -190,6 +191,37 @@
                         <separator
                             type="medium"
                             :label="$t('settings.frontpage')" />
+
+                        <field
+                            id="homepage-as-page"
+                            :label="$t('settings.usePageAsFrontpage')">
+                            <switcher
+                                slot="field"
+                                id="homepage-as-page"
+                                v-model="advanced.usePageAsFrontpage"
+                                :disabled="!currentThemeSupportsPages" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.usePageAsFrontpageNotice')">
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.usePageAsFrontpage"
+                            id="page-as-frontpage"
+                            :label="$t('settings.pageAsFrontpage')">
+                            <pages-dropdown
+                                v-model="advanced.pageAsFrontpage"
+                                :multiple="false"
+                                slot="field"></pages-dropdown>
+                            <small
+                                v-if="errors.indexOf('page-as-frontpage') > -1"
+                                class="note is-warning"
+                                slot="note">
+                                {{ $t('settings.youMustSelectFrontpage') }}
+                            </small>
+                        </field>
 
                         <field
                             v-if="!advanced.noIndexThisPage"
@@ -2145,6 +2177,9 @@ export default {
         currentThemeSupportsEmbedConsents () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.embedConsents;
         },
+        currentThemeSupportsPages () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.pages;
+        },
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
         },
@@ -2714,6 +2749,19 @@ export default {
 
                 this.errors.push('authors-prefix');
                 this.$refs['advanced-tabs'].toggle('URLs');
+
+                return false;
+            }
+
+            if (this.advanced.usePageAsFrontpage && !this.advanced.pageAsFrontpage) {
+                this.$bus.$emit('message-display', {
+                    message: this.$t('settings.frontpagePageCannotBeEmpty'),
+                    type: 'warning',
+                    lifeTime: 3
+                });
+
+                this.errors.push('page-as-frontpage');
+                this.$refs['advanced-tabs'].toggle('SEO');
 
                 return false;
             }

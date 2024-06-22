@@ -762,6 +762,7 @@
         "filesLocation": "Files location",
         "footerText": "Footer text",
         "frontpage": "Frontpage",
+        "frontpagePageCannotBeEmpty": "Frontpage page selection cannot be empty.",
         "gConsentModeDefaultState": "Default state",
         "gConsentModeEnabled": "Enable Google Consent Mode",
         "gConsentMode": {
@@ -856,6 +857,7 @@
             "titleASC": "By title (ascending)",
             "titleDESC": "By title (descending)"
         },
+        "pageAsFrontpage": "Page used as frontpage",
         "pageName": "Page name",
         "pageTitle": "Page Title",
         "pageTitleVariables": "The following variables can be used in the Page Title: %pagetitle, %sitename, %authorname",
@@ -961,6 +963,8 @@
         "useGlobalConfiguration": "Use global configuration",
         "useOnlyTags": "Use only tags",
         "useOnlyTitles": "Use only titles",
+        "usePageAsFrontpage": "Use page as frontpage",
+        "usePageAsFrontpageNotice": "When enabled, the selected page will be used as the frontpage of your website. The page will be available under the root URL of your website. Please remember that if Posts prefix is empty, the posts pagination won't be available.",
         "usePrettyURLs": "Use pretty URLs",
         "usePrettyURLsInfo": "When enabled, your post URLs won't contain the .html suffix e.g. it will change URLs from <strong>https://example.com/post.html</strong> to <strong>https://example.com/post/</strong>. For pages hierarchy wont't be visible in the URL if this option is disabled",
         "useSiteGlobalSettings": "Use global site settings",
@@ -973,6 +977,7 @@
         "websiteSpeed": "Website Speed",
         "whatsApp": "WhatsApp",
         "youMustReviewGdprSettings": "Make sure to check and review your Privacy Settings, especially the Cookie Banner settings due to some significant changes in Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Read more...</a>",
+        "youMustSelectFrontpage": "You must specify page used as frontpage",
         "ytNoCookies": "Enable Privacy-Enhanced mode for YouTube videos"
     },
     "site": {

@@ -762,6 +762,7 @@
         "filesLocation": "Lokalizacja plików",
         "footerText": "Tekst w stopce",
         "frontpage": "Pierwsza strona",
+        "frontpagePageCannotBeEmpty": "Wybór strony głównej nie może być pusty.",
         "gConsentModeDefaultState": "Stan domyślny",
         "gConsentModeEnabled": "Włącz Google Consent Mode",
         "gConsentMode": {
@@ -856,6 +857,7 @@
             "titleASC": "Po tytule (rosnąco)",
             "titleDESC": "Po tytule (malejąco)"
         },
+        "pageAsFrontpage": "Podstrona używana jako strona główna",
         "pageName": "Nazwa strony",
         "pageTitle": "Tytuł Strony",
         "pageTitleVariables": "Następujące zmienne mogą być używane w tytule strony: %pagetitle, %sitename, %authorname",
@@ -961,6 +963,8 @@
         "useOnlyTitles": "Używaj tylko tytułów",
         "usePrettyURLs": "Użyj ładnych URLi",
         "usePrettyURLsInfo": "Jeśli ta opcja jest włączona URLe Twoich wspisów nie będą zawierały przyrostka np. URL <strong>https://example.com/post.html</strong> zostanie zamieniony na <strong>https://example.com/post/</strong>. Dla podstron hierarchia nie będzie uwzględniana w URL, jeśli ta opcja jest wyłączona.",
+        "usePageAsFrontpage": "Użyj podstrony jako strony głównej",
+        "usePageAsFrontpageNotice": "Uwaga: Ta opcja spowoduje, że strona główna będzie wyświetlać zawartość wybranej podstrony. Wszystkie wpisy na stronie głównej zostaną zastąpione zawartością tej podstrony.Jeśli nie określisz prefiksu postów, listing wpisów nie zostanie wygenerowany.",
         "useSiteGlobalSettings": "Użyj globalnych ustawień strony",
         "useTitlesAndTags": "Używaj tytułów i tagów",
         "useWideScrollbars": "Użyj szerszych pasków przewijania",
