@@ -18,6 +18,7 @@ const TemplateHelper = require('./helpers/template.js');
 const RendererContext = require('./renderer-context.js');
 const RendererContextPage = require('./contexts/page.js');
 const RendererContextPost = require('./contexts/post.js');
+const RendererContextPagePreview = require('./contexts/page-preview.js');
 const RendererContextPostPreview = require('./contexts/post-preview.js');
 const RendererContextTag = require('./contexts/tag.js');
 const RendererContextTags = require('./contexts/tags.js');
@@ -105,7 +106,8 @@ class Renderer {
     async render(previewMode = false, previewLocation = '', mode = 'full') {
         this.previewMode = previewMode;
         this.previewLocation = previewLocation;
-        this.singlePageMode = mode === 'post';
+        this.singlePageMode = mode === 'post' || mode === 'page';
+        this.itemType = mode;
         this.homepageOnlyMode = mode === 'home';
         this.tagOnlyMode = mode === 'tag';
         this.authorOnlyMode = mode === 'author';
@@ -157,7 +159,11 @@ class Renderer {
     async renderSite() {
         try {
             if (this.singlePageMode) {
-                await this.renderPostPreview();
+                if (this.itemType === 'post') {
+                    await this.renderPostPreview();
+                } else if (this.itemType === 'page') {
+                    await this.renderPagePreview();
+                }
             } else if (this.homepageOnlyMode) {
                 await this.renderHomepagePreview();
             } else if (this.tagOnlyMode) {
@@ -287,6 +293,8 @@ class Renderer {
 
         if (type === 'post') {
             this.generatePost();
+        } else if (type === 'page') {
+            this.generatePage();
         } else if (type === 'frontpage') {
             this.generateFrontpage();
         } else if (type === 'tag') {
@@ -303,6 +311,20 @@ class Renderer {
      */
     async renderPostPreview () {
         this.preparePreview('post');
+
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID], []);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        this.triggerEvent('afterRender');
+    }
+
+    /**
+     * Renders page preview
+     */
+    async renderPagePreview () {
+        this.preparePreview('page');
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
@@ -951,7 +973,7 @@ class Renderer {
         }
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-        let postConfig = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
+        let postConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, 'post', true);
         this.globalContext = this.createGlobalContext('post', [], false, postSlug, postConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
@@ -963,36 +985,101 @@ class Renderer {
     }
 
     /*
+     * Create page preview
+     */
+    generatePage() {
+        let pageID = this.itemID;
+        let pageSlug = 'preview';
+        let pageTemplate = this.postData.template;
+        let inputFile = 'page.hbs';
+
+        if (pageTemplate === '*') {
+            pageTemplate = this.themeConfig.defaultTemplates.page;
+        }
+
+        // Load templates
+        let compiledTemplates = {};
+        compiledTemplates['DEFAULT'] = this.compileTemplate(inputFile);
+
+        if(!compiledTemplates['DEFAULT']) {
+            return false;
+        }
+
+        if(typeof pageTemplate === "string" && pageTemplate !== '') {
+            pageTemplate = [pageTemplate];
+        }
+
+        for (let i = 0; i < pageTemplate.length; i++) {
+            let fileSlug = pageTemplate[i];
+
+            // When we meet default template - skip the compilation process
+            if (fileSlug === '') {
+                continue;
+            }
+
+            compiledTemplates[fileSlug] = this.compileTemplate('page-' + fileSlug + '.hbs');
+
+            if (!compiledTemplates[fileSlug]) {
+                return false;
+            }
+        }
+
+        // Render page site
+        let contextGenerator = new RendererContextPagePreview(this);
+        let context = contextGenerator.getContext(pageID);
+        let fileSlug = 'DEFAULT';
+        fileSlug = pageTemplate === '' ? 'DEFAULT' : pageTemplate;
+
+        this.menuContext = ['page', pageSlug];
+
+        if(!compiledTemplates[fileSlug]) {
+            fileSlug = 'DEFAULT';
+        }
+
+        inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+        let pageConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.pageConfig)), pageID, 'page', true);
+        this.globalContext = this.createGlobalContext('page', [], false, pageSlug, pageConfig, context);
+        let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+        }
+
+        this.templateHelper.saveOutputFile(pageSlug + '.html', output);
+    }
+
+    /*
      * Override post view settings with the settings of the posts
      */
-    overridePostViewSettings(defaultPostViewConfig, postID, postPreview = false) {
-        let postViewData = false;
-        let postViewSettings = {};
+    overrideItemViewSettings(defaultViewConfig, itemID, itemType, itemPreview = false) {
+        let itemViewData = false;
+        let itemViewSettings = {};
 
-        if(postPreview) {
-            postViewSettings = this.postData.postViewSettings;
+        if (itemPreview) {
+            itemViewSettings = this.postData[itemType === 'post' ? 'postViewSettings' : 'pageViewSettings'];
         } else {
-            postViewData = this.db.prepare(`
+            itemViewData = this.db.prepare(`
                 SELECT
                     value
                 FROM
                     posts_additional_data
                 WHERE
-                    post_id = @postID
+                    post_id = @itemID
                     AND
-                    key = 'postViewSettings'
+                    key = @itemType
             `).get({
-                postID: postID
+                itemID: itemID,
+                itemType: itemType + 'ViewSettings'
             });
 
-            if (postViewData && postViewData.length) {
-                postViewSettings = JSON.parse(postViewData.value);
+            if (itemViewData && itemViewData.length) {
+                itemViewSettings = JSON.parse(itemViewData.value);
             }
         }
 
-        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
-            type: 'post',
-            id: postID
+        return ViewSettingsHelper.override(itemViewSettings, defaultViewConfig, {
+            type: itemType,
+            id: itemID
         }, this);
     }
 

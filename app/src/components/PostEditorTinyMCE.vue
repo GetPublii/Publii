@@ -285,7 +285,8 @@ export default {
                 this.$bus.$emit('rendering-popup-display', {
                     itemID: this.postID,
                     postData: postData,
-                    postOnly: true
+                    postOnly: true,
+                    itemType: this.itemType
                 });
             }
         },

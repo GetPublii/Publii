@@ -174,7 +174,7 @@ class PreviewEvents {
 
         url = path.join(basePath, 'index.html');
 
-        if (mode === 'tag' || mode === 'post' || mode === 'author') {
+        if (mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author') {
             url = path.join(basePath, 'preview.html');
         }
 
