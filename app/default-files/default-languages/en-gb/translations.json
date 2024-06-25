@@ -475,6 +475,7 @@
         "insertAfter": "after",
         "insertAsChild": "as subpage",
         "insertBefore": "before",
+        "isHomepage": "Homepage",
         "markAsDraft": "Mark as draft",
         "markAsFeatured": "Mark as featured",
         "markAsUnfeatured": "Mark as unfeatured",

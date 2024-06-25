@@ -251,12 +251,19 @@
                         <span class="collection-nested-arrow"></span>
                     </template>
 
-                    <h2 class="title"> 
+                    <h2 :class="{
+                        'title': true,
+                        'is-homepage': homepageID === item.id
+                    }"> 
                         <a
                             href="#"
                             @click.prevent.stop="editPage(item.id, item.editor)">
 
                             {{ item.title }}
+
+                            <strong v-if="homepageID === item.id">
+                                &ndash; {{ $t('page.isHomepage') }}
+                            </strong>
 
                             <icon
                                 v-if="item.isDraft"
@@ -557,6 +564,13 @@ export default {
         },
         showPageSlugs () {
             return this.$store.state.app.config.showPostSlugs;
+        },
+        homepageID () {
+            if (this.$store.state.currentSite.config.advanced.usePageAsFrontpage) {
+                return this.$store.state.currentSite.config.advanced.pageAsFrontpage;
+            }
+            
+            return false;
         }
     },
     async mounted () {
