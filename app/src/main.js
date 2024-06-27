@@ -99,6 +99,7 @@ import 'prismjs/components/prism-python.min.js';
 import 'prismjs/components/prism-r.min.js';
 import 'prismjs/components/prism-regex.min.js';
 import 'prismjs/components/prism-ruby.min.js';
+import 'prismjs/components/prism-rust.min.js';
 import 'prismjs/components/prism-sass.min.js';
 import 'prismjs/components/prism-scss.min.js';
 import 'prismjs/components/prism-scala.min.js';

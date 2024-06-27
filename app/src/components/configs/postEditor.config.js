@@ -83,6 +83,7 @@ export default {
         { text: 'R', value: 'r' },
         { text: 'Regex', value: 'regex' },
         { text: 'Ruby', value: 'ruby' },
+        { text: 'Rust', value: 'rust' },
         { text: 'Sass', value: 'sass' },
         { text: 'SCSS', value: 'scss' },
         { text: 'Scala', value: 'scala' },
