@@ -403,6 +403,10 @@ class RendererContext {
             this.context.config.post = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
         }
 
+        if (context === 'page' && itemConfig) {
+            this.context.config.page = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
+        }
+
         this.renderer.globalContext = this.context;
 
         if (itemContext) {
