@@ -2311,6 +2311,22 @@
                     "value": 0
                 }
             ]
+        },
+        {
+            "name": "displayChildPages",
+            "label": "Display child pages",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
         }
     ],
     "authorConfig": [

@@ -120,6 +120,19 @@
          {{/checkIfAny}}
       </div>
 
+      {{#if @config.page.displayChildPages}}
+         {{#if subpages}}
+            <div class="subpages">
+               <div class="wrapper">
+                  <h2 class="h5 subpages__title">{{ translate 'page.childPages' }}</h2>
+                  <ul class="subpages__list">
+                     {{> subpages-list}}
+                  </ul>
+               </div>
+            </div>
+         {{/if}}
+      {{/if}}
+
       {{#if @config.page.displayComments}}
          <div class="post__comments">
             <div class="wrapper">
@@ -136,6 +149,7 @@
          </div>
       {{/if}}
 
-   {{/page}}
+  {{/page}}
+
 </main>
 {{> footer}}
