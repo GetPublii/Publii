@@ -35,8 +35,9 @@ class RendererCache {
         // We need author posts count before storing tags
         this.getAuthorPostCounts();
         this.getAuthors();
-        // Set post-related items
+        // Set post/page-related items
         this.getFeaturedPostImages();
+        this.getFeaturedPageImages();
         this.getPostTags();
         // Get pages structure
         this.getPagesStructure();
@@ -170,7 +171,7 @@ class RendererCache {
                         caption: additionalData.featuredImageCaption,
                         credits: additionalData.featuredImageCredits
                     })
-                }, this.renderer, 'authorImages');
+                }, this.renderer, 'authorImages', 'author');
             }
         }
         console.timeEnd('FEATURED AUTHOR IMAGES - STORE');
@@ -251,7 +252,7 @@ class RendererCache {
     }
 
     /**
-     * Retrieves featured images data
+     * Retrieves featured images data for posts
      */
     getFeaturedPostImages() {
         console.time('FEATURED POST IMAGES - QUERY');
@@ -277,8 +278,39 @@ class RendererCache {
         console.timeEnd('FEATURED POST IMAGES - QUERY');
 
         console.time('FEATURED POST IMAGES - STORE');
-        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages'));
+        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages', 'post'));
         console.timeEnd('FEATURED POST IMAGES - STORE');
+    }
+
+    /**
+     * Retrieves featured images data for pages
+     */
+    getFeaturedPageImages() {
+        console.time('FEATURED PAGE IMAGES - QUERY');
+        let featuredImages = this.db.prepare(`
+            SELECT
+                pi.id AS id,
+                pi.post_id AS item_id,
+                pi.url AS url,
+                pi.additional_data AS additional_data
+            FROM
+                posts as p
+            LEFT JOIN
+                posts_images as pi
+                ON
+                p.featured_image_id = pi.id
+            WHERE
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%trashed%' AND
+                p.status LIKE '%is-page%'
+            ORDER BY
+                pi.id DESC
+        `).all();
+        console.timeEnd('FEATURED PAGE IMAGES - QUERY');
+
+        console.time('FEATURED PAFE IMAGES - STORE');
+        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages', 'page'));
+        console.timeEnd('FEATURED PAGE IMAGES - STORE');
     }
 
     /**
@@ -315,7 +347,7 @@ class RendererCache {
                         caption: additionalData.featuredImageCaption,
                         credits: additionalData.featuredImageCredits
                     })
-                }, this.renderer, 'tagImages');
+                }, this.renderer, 'tagImages', 'tag');
             }
         }
         console.timeEnd('FEATURED TAG IMAGES - STORE');

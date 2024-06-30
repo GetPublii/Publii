@@ -8,7 +8,7 @@ const UtilsHelper = require('./../../../helpers/utils');
  * Featured image item for the renderer
  */
 class FeaturedImageItem {
-    constructor(image, rendererInstance, type = 'featuredImages') {
+    constructor(image, rendererInstance, type = 'featuredImages', cacheItemType = 'post') {
         this.image = image;
         this.itemID = parseInt(image.item_id, 10);
         this.renderer = rendererInstance;
@@ -17,6 +17,7 @@ class FeaturedImageItem {
         this.imageData = {};
         this.imageType = type;
         this.itemType = 'post';
+        this.cacheItemType = cacheItemType;
 
         if (type === 'tagImages') {
             this.itemType = 'tag';
@@ -148,11 +149,11 @@ class FeaturedImageItem {
      */
     storeData() {
         if (this.renderer.plugins.hasModifiers('featuredImageItemData')) {
-            this.imageData = this.renderer.plugins.runModifiers('featuredImageItemData', this.renderer, this.imageData, this.itemType); 
+            this.imageData = this.renderer.plugins.runModifiers('featuredImageItemData', this.renderer, this.imageData, this.itemType, this.cacheItemType); 
         }
 
         // Store tag data without references
-        this.renderer.cachedItems.featuredImages[this.itemType + 's'][this.itemID] = JSON.parse(JSON.stringify(this.imageData));
+        this.renderer.cachedItems.featuredImages[this.cacheItemType + 's'][this.itemID] = JSON.parse(JSON.stringify(this.imageData));
     }
 
     /**

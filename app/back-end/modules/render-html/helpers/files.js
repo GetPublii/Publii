@@ -167,7 +167,7 @@ class Files {
     static async copyMediaFiles (inputDir, outputDir, postIDs, pageIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        let dirs = ['website', 'files', 'tags', 'authors', 'posts/defaults', 'pages/defaults'];
+        let dirs = ['website', 'files', 'tags', 'authors', 'posts/defaults'];
 
         if (postIDs[0] === 0) {
             postIDs[0] = 'temp';
@@ -182,16 +182,10 @@ class Files {
         }
 
         for (let i = 0; i < pageIDs.length; i++) {
-            dirs.push('pages/' + pageIDs[i]);
+            dirs.push('posts/' + pageIDs[i]);
         }
 
-        if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
-            fs.mkdirSync(path.join(basePathOutput));
-        }
-
-        if (!UtilsHelper.dirExists(path.join(basePathOutput, 'posts'))) {
-            fs.mkdirSync(path.join(basePathOutput, 'posts'));
-        }
+        fs.ensureDirSync(path.join(basePathOutput, 'posts'));
 
         for (let i = 0; i < dirs.length; i++) {
             if (!UtilsHelper.dirExists(path.join(basePathInput, dirs[i]))) {
@@ -219,7 +213,7 @@ class Files {
             fs.removeSync(path.join(basePathOutput, 'authors', 'temp'));
         }
 
-        DiffCopy.removeUnusedItemFolders(postIDs, path.join(basePathOutput, 'posts'));
+        DiffCopy.removeUnusedItemFolders(postIDs, pageIDs, path.join(basePathOutput, 'posts'));
     }
 
     /**

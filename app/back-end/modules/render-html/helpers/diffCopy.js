@@ -111,17 +111,22 @@ class DiffCopy {
         }
     }
 
-    static removeUnusedItemFolders (postIDs, baseOutputPath) {
+    static removeUnusedItemFolders (postIDs, pageIDs, baseOutputPath) {
         let allPostFolders = fs.readdirSync(baseOutputPath);
         postIDs = JSON.parse(JSON.stringify(postIDs));
         postIDs = postIDs.map(id => (id).toString());
+        pageIDs = JSON.parse(JSON.stringify(pageIDs));
+        pageIDs = pageIDs.map(id => (id).toString());
 
         for (let i = 0; i < allPostFolders.length; i++) {
             if (allPostFolders[i] === '.' || allPostFolders[i] === '..' || allPostFolders[i] === 'defaults') {
                 continue;
             }
 
-            if (postIDs.indexOf((allPostFolders[i]).toString()) === -1) {
+            if (
+                postIDs.indexOf((allPostFolders[i]).toString()) === -1 && 
+                pageIDs.indexOf((allPostFolders[i]).toString()) === -1
+            ) {
                 fs.removeSync(path.join(baseOutputPath, allPostFolders[i]));
                 console.log('[DIFF REMOVE CATALOG]', path.join(baseOutputPath, allPostFolders[i]));
             }

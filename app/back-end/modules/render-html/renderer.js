@@ -1938,6 +1938,7 @@ class Renderer {
         console.time("FILES");
         let postIDs = Object.keys(this.cachedItems.posts);
         let pageIDs = Object.keys(this.cachedItems.pages);
+
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
