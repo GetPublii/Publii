@@ -1,10 +1,12 @@
 # Changelog
 
 ## [2.9.0.0] - 2024-06-30
-### Fixed
+### Added
 - Added support for Pages
 - Added new typography options: now you can adjust letter spacing or line height for both body and heading elements.
 - Added a new baseline optin to defines a core vertical rhythm unit for consistent spacing across the website
+
+### Improved
 - Minor CSS enhancements
 
 ## [2.8.3.0] - 2023-11-03
