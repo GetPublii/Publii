@@ -308,7 +308,7 @@ export default {
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
   user-select: none;
-  width: 580px;
+  width: 720px;
 
   &-overlay {
     align-items: center;
