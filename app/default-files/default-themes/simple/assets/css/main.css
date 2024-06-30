@@ -206,12 +206,12 @@ blockquote > :nth-child(1) {
 
 ul,
 ol {
-  margin-left: 2rem;
+  margin-left: 3ch;
 }
 ul > li,
 ol > li {
   list-style: inherit;
-  padding: 0 0 var(--baseline) calc(var(--baseline) * 3);
+  padding: 0 0 var(--baseline) 1ch;
 }
 
 dl dt {
@@ -1814,6 +1814,18 @@ textarea {
   .page--search button {
     width: 100%;
   }
+}
+
+.subpages__list {
+  list-style: initial;
+  margin-left: 2ch;
+}
+.subpages__list ul {
+  list-style: initial;
+  margin: 0 0 0 2ch;
+}
+.subpages__list li {
+  padding: 0;
 }
 
 .align-left {
