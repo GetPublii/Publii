@@ -32,7 +32,7 @@
                                 <dt v-if="itemType === 'post'">{{ $t('post.postState') }}</dt>
                                 <dt v-if="itemType === 'page'">{{ $t('page.pageState') }}</dt>
                                 <dd id="post-status">
-                                    {{ $parent.postData.status }}
+                                    {{ filteredStatus }}
                                 </dd>
                             </dl>
 
@@ -688,6 +688,14 @@ export default {
                 value: 0, 
                 label: noParentLabel, 
             }].concat(flatPages);
+        },
+        filteredStatus () {
+            let originalStatus = this.$parent.postData.status;
+            originalStatus = originalStatus.split(',');
+            originalStatus = originalStatus.map(status => status.trim());
+            originalStatus = originalStatus.filter(status => status !== 'is-page');
+            
+            return originalStatus.join(', ');
         }
     },
     mounted () {
