@@ -1,15 +1,17 @@
+{{> head}}
+{{> top}}
 <main>
-   {{#getPost @config.custom.frontPost}}
-      <article class="post">
+   {{#page}}
+      <div class="page">
          <div class="hero">
+             
             {{#featuredImage}}
                {{#if url}}
-                  <figure class="hero__image hero__image--overlay">
-                      
+                  <figure class="hero__image hero__image--overlay">                      
                      <img
                         src="{{url}}"
                         {{#if @config.site.responsiveImages}}                           
-                            {{responsiveImageAttributes 'featuredImage' srcset.post sizes.post}}
+                            {{responsiveImageAttributes 'featuredImage' srcset sizes}}
                         {{/if}}
                         {{ lazyload "eager" }}
                         height="{{height}}"
@@ -21,8 +23,7 @@
                            {{caption}}
                            {{credits}}
                         </figcaption>                      
-                     {{/checkIfAny}}
-                      
+                     {{/checkIfAny}}                      
                   </figure>
                {{else}}
                   {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
@@ -46,9 +47,10 @@
                   {{/checkIfAll}}
                {{/if}}
             {{/featuredImage}}
+             
             <header class="hero__content">
                <div class="wrapper">
-                  {{#if postViewConfig.displayDate}}
+                  {{#if @config.page.displayDate}}
                      <div class="post__meta">
                         <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}">
                            {{#checkIf @config.custom.formatDate '!=' 'custom'}}
@@ -62,7 +64,7 @@
                   <h1>
                      {{title}}
                   </h1>
-                  {{#if postViewConfig.displayAuthor}}
+                  {{#if @config.page.displayAuthor}}
                      <div class="post__meta post__meta--author">
                         {{#author}}
                            {{#if avatar}}
@@ -82,14 +84,14 @@
             </header>
          </div>
 
-         <div class="wrapper post__entry">
-            {{{text}}}  
+         <div class="wrapper post__entry">           
+            {{{text}}}            
          </div>
 
-         {{#checkIfAny postViewConfig.displayLastUpdatedDate postViewConfig.displayTags postViewConfig.displayAuthorBio}}
+         {{#checkIfAny @config.page.displayLastUpdatedDate @config.page.displayShareButtons}}
             <footer class="wrapper post__footer">
 
-               {{#if postViewConfig.displayLastUpdatedDate}}
+               {{#if @config.page.displayLastUpdatedDate}}
                   {{#if modifiedAt}}
                      <p class="post__last-updated">
                         {{ translate 'post.lastUpdatedDate' }}
@@ -102,48 +104,23 @@
                   {{/if}}
                {{/if}}
 
-               {{#if postViewConfig.displayTags}}
-                  {{#if tags}}
-                     <ul class="post__tag">
-                        {{#each tags}}
-                           <li>
-                              <a href="{{url}}">{{name}}</a>
-                           </li>
-                        {{/each}}
-                     </ul>
-                  {{/if}}
+               {{#if @config.page.displayShareButtons}}
+                  {{#checkIfAll @plugins.socialSharing @plugins.socialSharing.state}}
+                     <div class="post__share">
+                        {{{@customSocialSharing}}}
+                     </div>
+                  {{else}}
+                     <div class="post__share">
+                        {{> share-buttons}}
+                     </div>
+                  {{/checkIfAll}}          
                {{/if}}
 
-               {{#if postViewConfig.displayAuthorBio}}
-                  <div class="post__bio bio">
-                     {{#author}}
-                        {{#if avatar}}                          
-                           <img 
-                              src="{{avatarImage.url}}" 
-                              {{ lazyload "lazy" }}
-                              height="{{avatarImage.height}}"
-                              width="{{avatarImage.width}}" 
-                              class="bio__avatar" 
-                              alt="{{avatarImage.alt}}">                          
-                        {{/if}}
-                        <div>
-                           <h3 class="bio__name">
-                              <a href="{{url}}" rel="author">{{name}}</a>
-                           </h3>
-                           {{#if description}}
-                              <div  class="bio__desc">
-                                 {{{description}}}
-                              </div>
-                           {{/if}}
-                        </div>
-                     {{/author}}
-                  </div>
-               {{/if}}
             </footer>
          {{/checkIfAny}}
-      </article>
+      </div>
 
-      {{#if postViewConfig.displayComments}}
+      {{#if @config.page.displayComments}}
          <div class="post__comments">
             <div class="wrapper">
                {{{@commentsCustomCode}}}
@@ -151,13 +128,14 @@
          </div>
       {{/if}}
 
-      {{#if @customHTML.afterPost}}
+      {{#if @customHTML.afterPage}}
          <div class="banner banner--after-post">
             <div class="wrapper">
-               {{{@customHTML.afterPost}}}
+               {{{@customHTML.afterPage}}}
             </div>
          </div>
       {{/if}}
-    
-   {{/getPost}}
+
+   {{/page}}
 </main>
+{{> footer}}

@@ -335,6 +335,7 @@ var generateThemeVariables = function (params) {
   let fontHeadingsName = fontParams[params.fontHeadings]?.name;
   let fontHeadingsFamily = fontParams[params.fontHeadings]?.family;
   let fontHeadingsWeight = fontParams[params.fontHeadings]?.weight;
+  
 
   if (params.fontMenu === 'system-ui') {
     params.fontMenu = fontParams['system-ui'].family;
@@ -372,22 +373,38 @@ var generateThemeVariables = function (params) {
     `;
   }
 
+   // Fluid base font-size
+   const minScreen = 20; // rem
+   const maxScreen = 70; // rem
+   const screenRange = maxScreen - minScreen;
+   const minFontSize = params.minFontSize;
+   const maxFontSize = params.maxFontSize;
+   const fontSizeRange = maxFontSize - minFontSize;
+   const fontSizeValue = `clamp(${minFontSize}rem, ${minFontSize}rem + (${fontSizeRange} * ((100vw - ${minScreen}rem) / ${screenRange})), ${maxFontSize}rem)`;
+   
+
   output += `    
     :root {
       --page-margin:        ${params.pageMargin};
       --entry-width:        ${params.pageWidth}; 
       --navbar-height:      4.4rem; 
       --border-radius:      6px;
+      --baseline:           ${params.baseline};
       --gallery-gap:        ${params.galleryItemGap}; 
       --body-font:          ${fontBodyFamily};
       --heading-font:       ${fontHeadingsFamily};
       --logo-font:          ${params.fontLogo};
       --menu-font:          ${params.fontMenu};
+      --font-size:          ${fontSizeValue};
       --font-weight-normal: ${params.fontBodyWeight}; 
       --font-weight-bold:   ${params.fontBoldWeight}; 
       --headings-weight:    ${params.fontHeadignsWeight};
       --headings-transform: ${params.fontHeadingsTransform};
+      --headings-style:     ${params.fontHeadingsStyle};
+      --headings-letter-spacing: ${params.fontHeadingsletterSpacing}px;
+      --headings-line-height: ${params.fontHeadingsLineHeight};
       --line-height:        ${params.lineHeight};
+      --letter-spacing:     ${params.letterSpacing}px;  
       --hero-height:        ${params.heightHero};
       --hero-bg:            ${params.heroBackground};
       --hero-heading-color: ${params.heroHeadingColor};
