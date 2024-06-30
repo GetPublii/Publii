@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "2.8.3.0",
+    "version": "2.9.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -21,7 +21,8 @@
         "createSearchPage": false,
         "create404page": true,
         "customHTML": {
-            "afterPost": "After every post"
+            "afterPost": "After every post",
+            "afterPage": "After every page"
         }
     },
     "supportedFeatures": {
@@ -36,10 +37,10 @@
         "customSharing": true,
         "customSearch": true,
         "customComments": true,
-        "embedConsents": true
+        "embedConsents": true,
+        "pages": true
     },
     "config": [
-
         {
             "name": "postsPerPage",
             "label": "Posts per page",
@@ -82,10 +83,18 @@
         },
         {
             "name": "pageWidth",
-            "label": "Post entry width",
+            "label": "Page width",
             "group": "Layout",
-            "note": "For full-screen width, set to 100%",
+            "note": "Adjust the width for both posts and pages. Set to 100% for full-screen width.",
             "value": "42rem",
+            "type": "text"
+        },
+        {
+            "name": "baseline",
+            "label": "Baseline",
+            "group": "Layout",
+            "note": "Defines a core vertical rhythm unit for consistent spacing across the website, used as a multiplier for margins and paddings. Increasing this value enhances spacing, creating an airier layout, while decreasing it compacts content, for tighter visual appeal.",
+            "value": "0.28333rem",
             "type": "text"
         },
         {
@@ -93,12 +102,13 @@
             "type": "separator",
             "label": "Front page",
             "group": "Layout",
+            "note": "<span style=\"color: red\">This option will be removed in the next theme update. You can now set your homepage natively within the Site Settings!</span>",
             "size": "small"
         },
         {
             "name": "frontSource",
             "label": "Front page displays",
-            "group": "Layout",            
+            "group": "Layout",
             "value": "default",
             "type": "radio",
             "options": [
@@ -111,19 +121,20 @@
                     "value": "post"
                 }
             ]
-        },  
+        },
         {
             "name": "frontPost",
             "label": "Select a post",
             "group": "Layout",
-            "note": "This option allows you to display the selected post on the front page. We strongly recommended 'hide' and 'noindex' the selected post to avoid the duplicate content issue.",            
+            "note": "This option allows you to modify the height of the hero section. Use of VH units is recommended; set to 100vh for full-screen height.",
             "value": "",
-            "type": "posts-dropdown", 
+            "type": "posts-dropdown",
             "dependencies": [
-            {
-                "field": "frontSource",
-                "value": "post"
-            }]
+                {
+                    "field": "frontSource",
+                    "value": "post"
+                }
+            ]
         },
         {
             "name": "frontGallery",
@@ -131,12 +142,13 @@
             "label": "",
             "note": "Enable if you want to display a post with image gallery",
             "value": false,
-            "type": "checkbox", 
+            "type": "checkbox",
             "dependencies": [
-            {
-                "field": "frontSource",
-                "value": "post"
-            }]
+                {
+                    "field": "frontSource",
+                    "value": "post"
+                }
+            ]
         },
         {
             "name": "separator",
@@ -152,7 +164,7 @@
             "note": "This option allows you to modify the height of the hero section. Use of VH units recommended; for full-screen set to 100vh",
             "value": "80vh",
             "type": "text"
-        },        
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -218,7 +230,7 @@
             "name": "separator",
             "type": "separator",
             "label": "",
-            "group": "Layout",           
+            "group": "Layout",
             "note": "The appearance settings for the hero section can be found under the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
             "size": "thin"
         },
@@ -226,7 +238,7 @@
             "name": "separator",
             "type": "separator",
             "label": "Tags Page",
-            "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab." ,
+            "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab.",
             "group": "Layout",
             "size": "big"
         },
@@ -302,7 +314,6 @@
             "value": true,
             "type": "checkbox"
         },
-       
         {
             "name": "separator",
             "type": "separator",
@@ -388,14 +399,14 @@
             "label": "Show 'Read more' button",
             "value": true,
             "type": "checkbox"
-        },  
+        },
         {
             "name": "separator",
             "type": "separator",
             "label": "Post page",
             "group": "Layout",
             "size": "big"
-        }, 
+        },
         {
             "name": "relatedPostsNumber",
             "label": "Related post",
@@ -403,15 +414,14 @@
             "note": "Specify number of related posts to show. Zero '0' means no posts.",
             "value": "3",
             "type": "text"
-        },  
-
+        },
         {
             "name": "navbarHeight",
             "group": "Navbar",
             "label": "Navbar height",
             "value": "6rem",
             "type": "text"
-        },  
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -429,12 +439,10 @@
                 {
                     "label": "Auto",
                     "value": "auto"
-
                 },
                 {
                     "label": "Custom",
                     "value": "custom"
-
                 }
             ]
         },
@@ -448,11 +456,13 @@
             "min": 0,
             "max": 1000,
             "step": 10,
-            "dependencies": [{
-                "field": "submenu",
-                "value": "custom"
-            }]
-        },              
+            "dependencies": [
+                {
+                    "field": "submenu",
+                    "value": "custom"
+                }
+            ]
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -484,7 +494,6 @@
             "value": true,
             "type": "checkbox"
         },
-        
         {
             "name": "colorScheme",
             "label": "Select color scheme",
@@ -520,7 +529,7 @@
             "group": "Colors",
             "value": "#D73A42",
             "type": "colorpicker"
-        },             
+        },
         {
             "name": "headingColor",
             "label": "Headings color",
@@ -548,7 +557,7 @@
             "group": "Colors",
             "value": "#FFC074",
             "type": "colorpicker"
-        },             
+        },
         {
             "name": "headingDarkColor",
             "label": "Headings color",
@@ -577,7 +586,7 @@
             "group": "Colors",
             "value": "#17181E",
             "type": "colorpicker"
-        },  
+        },
         {
             "name": "heroOverlay",
             "label": "Overlay",
@@ -595,17 +604,19 @@
                     "value": "gradient"
                 }
             ]
-        },        
+        },
         {
             "name": "heroOverlayColor",
             "label": "",
             "group": "Colors",
             "value": "rgba(0, 0, 0, 0.64)",
             "type": "colorpicker",
-            "dependencies": [{
-                "field": "heroOverlay",
-                "value": "color"
-            }]
+            "dependencies": [
+                {
+                    "field": "heroOverlay",
+                    "value": "color"
+                }
+            ]
         },
         {
             "name": "heroOverlayGradient",
@@ -613,10 +624,12 @@
             "group": "Colors",
             "value": "rgba(0, 0, 0, 0.64)",
             "type": "colorpicker",
-            "dependencies": [{
-                "field": "heroOverlay",
-                "value": "gradient"
-            }]
+            "dependencies": [
+                {
+                    "field": "heroOverlay",
+                    "value": "gradient"
+                }
+            ]
         },
         {
             "name": "heroOverlayGradientDirection",
@@ -643,10 +656,12 @@
                     "value": "left"
                 }
             ],
-            "dependencies": [{
-                "field": "heroOverlay",
-                "value": "gradient"
-            }]
+            "dependencies": [
+                {
+                    "field": "heroOverlay",
+                    "value": "gradient"
+                }
+            ]
         },
         {
             "name": "heroHeadingColor",
@@ -690,7 +705,7 @@
             "group": "Fonts",
             "note": "To explore an extensive list of available fonts, along with detailed information about their typefaces, complete range of weights, and other specifications, please visit our <a href='https://getpublii.com/docs/fonts.html' target='_blank'>documentation</a>.",
             "size": "small"
-        },    
+        },
         {
             "name": "fontBody",
             "label": "Body font",
@@ -853,7 +868,7 @@
                     "value": "heebo",
                     "group": "Sans Serif"
                 },
-                 {
+                {
                     "label": "Instrument Sans",
                     "value": "instrumentsans",
                     "group": "Sans Serif"
@@ -1019,7 +1034,7 @@
                     "group": "Monospace"
                 }
             ]
-        },  
+        },
         {
             "name": "fontHeadings",
             "label": "Headings font (H1-H6)",
@@ -1182,7 +1197,7 @@
                     "value": "heebo",
                     "group": "Sans Serif"
                 },
-                 {
+                {
                     "label": "Instrument Sans",
                     "value": "instrumentsans",
                     "group": "Sans Serif"
@@ -1348,7 +1363,7 @@
                     "group": "Monospace"
                 }
             ]
-        },  
+        },
         {
             "name": "fontMenu",
             "label": "Menu font",
@@ -1369,7 +1384,7 @@
                     "value": "var(--heading-font)"
                 }
             ]
-        }, 
+        },
         {
             "name": "fontLogo",
             "label": "Logo font",
@@ -1390,8 +1405,7 @@
                     "value": "var(--heading-font)"
                 }
             ]
-        }, 
-        
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -1420,18 +1434,29 @@
             "min": 1,
             "max": 3,
             "step": 0.05
-        }, 
+        },
         {
             "name": "lineHeight",
             "label": "Line height",
             "group": "Fonts",
-            "note": "The default line-height for the entire website",
+            "note": "The default line-height for text within body elements, excluding headings.",
             "value": "1.7",
             "type": "range",
             "min": 1,
             "max": 3,
             "step": 0.1
-        },  
+        },
+        {
+            "name": "letterSpacing",
+            "label": "Letter spacing",
+            "group": "Fonts",
+            "note": "Adjusts the spacing between characters for body text elements, excluding headings, in pixels.",
+            "value": "0",
+            "type": "range",
+            "min": -6,
+            "max": 6,
+            "step": 1
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -1443,7 +1468,7 @@
         {
             "name": "fontBodyWeight",
             "label": "Normal font weight",
-            "group": "Fonts",            
+            "group": "Fonts",
             "value": "400",
             "type": "range",
             "min": 100,
@@ -1453,7 +1478,7 @@
         {
             "name": "fontBoldWeight",
             "label": "Bold font weight",
-            "group": "Fonts",            
+            "group": "Fonts",
             "value": "700",
             "type": "range",
             "min": 100,
@@ -1466,11 +1491,11 @@
             "label": "Headings",
             "group": "Fonts",
             "size": "big"
-        },  
+        },
         {
             "name": "fontHeadignsWeight",
             "label": "H1-H6 font weight",
-            "group": "Fonts",         
+            "group": "Fonts",
             "value": "700",
             "type": "range",
             "min": 100,
@@ -1478,9 +1503,31 @@
             "step": 1
         },
         {
+            "name": "fontHeadingsLineHeight",
+            "label": "H1-H6 line height",
+            "group": "Fonts",
+            "note": "The default line-height for heading elements (h1, h2, h3, etc.).",
+            "value": "1.2",
+            "type": "range",
+            "min": 1,
+            "max": 3,
+            "step": 0.1
+        },
+        {
+            "name": "fontHeadingsletterSpacing",
+            "label": "H1-H6 letter spacing",
+            "group": "Fonts",
+            "note": "Adjusts the spacing between characters for heading elements (h1, h2, h3, etc.) in pixels.",
+            "value": "0",
+            "type": "range",
+            "min": -6,
+            "max": 6,
+            "step": 1
+        },
+        {
             "name": "fontHeadingsTransform",
             "label": "H1-H6 text transform",
-            "group": "Fonts",            
+            "group": "Fonts",
             "value": "none",
             "type": "select",
             "options": [
@@ -1502,7 +1549,27 @@
                 }
             ]
         },
-
+        {
+            "name": "fontHeadingsStyle",
+            "label": "H1-H6 font style",
+            "group": "Fonts",
+            "value": "normal",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Normal",
+                    "value": "normal"
+                },
+                {
+                    "label": "Italic",
+                    "value": "italic"
+                },
+                {
+                    "label": "Oblique",
+                    "value": "oblique"
+                }
+            ]
+        },
         {
             "name": "shareFacebook",
             "group": "Share Buttons",
@@ -1523,10 +1590,12 @@
             "note": "Enter your X account's handle here; it will be used when the X share button is clicked on your site e.g. 'via @XHandle'. If left blank, the default username of @SiteName will be used",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "shareTwitter",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "shareTwitter",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "sharePinterest",
@@ -1563,7 +1632,6 @@
             "value": false,
             "type": "checkbox"
         },
-       
         {
             "name": "socialButtons",
             "group": "Footer",
@@ -1578,10 +1646,12 @@
             "placeholder": "Please enter your Facebook URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "socialTwitter",
@@ -1590,12 +1660,13 @@
             "placeholder": "Please enter your X URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
-
         {
             "name": "socialInstagram",
             "label": "Instagram",
@@ -1603,10 +1674,12 @@
             "placeholder": "Please enter your Instagram URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "socialLinkedin",
@@ -1615,10 +1688,12 @@
             "placeholder": "Please enter your LinkedIn URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "socialVimeo",
@@ -1627,10 +1702,12 @@
             "placeholder": "Please enter your Vimeo URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "socialPinterest",
@@ -1639,10 +1716,12 @@
             "placeholder": "Please enter your Pinterest URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "socialYoutube",
@@ -1651,10 +1730,12 @@
             "placeholder": "Please enter your Youtube URL",
             "value": "",
             "type": "text",
-            "dependencies": [{
-                "field": "socialButtons",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "socialButtons",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "separator",
@@ -1670,7 +1751,6 @@
             "value": "Powered by Publii",
             "type": "wysiwyg"
         },
-
         {
             "name": "searchFeature",
             "label": "Search",
@@ -1687,7 +1767,6 @@
             "value": false,
             "type": "checkbox"
         },
-
         {
             "name": "galleryItemGap",
             "label": "Item spacing",
@@ -1696,14 +1775,13 @@
             "value": "0.28333rem",
             "type": "text"
         },
-
         {
             "name": "separator",
             "type": "separator",
             "label": "",
             "group": "Gallery",
             "size": "small thin"
-         },
+        },
         {
             "name": "galleryLightboxStyle",
             "label": "Lightbox style",
@@ -1739,7 +1817,7 @@
             "label": "",
             "group": "Gallery",
             "size": "small thin"
-         },
+        },
         {
             "name": "galleryAdvanced",
             "label": "Advanced lightbox settings",
@@ -1753,10 +1831,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryZoom",
@@ -1764,10 +1844,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryFullscreen",
@@ -1775,10 +1857,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryShare",
@@ -1786,10 +1870,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryClose",
@@ -1797,10 +1883,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryArrows",
@@ -1808,10 +1896,12 @@
             "group": "Gallery",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryPreloader",
@@ -1820,10 +1910,12 @@
             "note": "Loading indicator is displayed with 1s delay, so if the photo loads faster it will be invisible.",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryCloseOnScroll",
@@ -1832,10 +1924,12 @@
             "note": "Option works just for devices without hardware touch support.",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "galleryArrowKeys",
@@ -1844,10 +1938,12 @@
             "note": "Keyboard left or right arrow key navigation.",
             "value": true,
             "type": "checkbox",
-            "dependencies": [{
-                "field": "galleryAdvanced",
-                "value": "true"
-            }]
+            "dependencies": [
+                {
+                    "field": "galleryAdvanced",
+                    "value": "true"
+                }
+            ]
         },
         {
             "name": "backToTopButton",
@@ -1855,7 +1951,7 @@
             "label": "\"Back to top\" button",
             "value": true,
             "type": "checkbox"
-        },  
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -1863,7 +1959,6 @@
             "group": "Additional",
             "size": "small"
         },
-       
         {
             "name": "formatDate",
             "label": "Date format",
@@ -1874,54 +1969,49 @@
                 {
                     "label": "Nov 1, 2016",
                     "value": "MMM D, YYYY"
-
-            },
+                },
                 {
                     "label": "1 Nov 2016",
                     "value": "D MMM YYYY"
-
-            },
+                },
                 {
                     "label": "November 1, 2016",
                     "value": "MMMM D, YYYY"
-            },
+                },
                 {
                     "label": "1 November 2016",
                     "value": "D MMMM YYYY"
-            },
+                },
                 {
                     "label": "Sunday, November 1, 2016",
                     "value": "dddd, MMMM D, YYYY"
-            },
+                },
                 {
                     "label": "Sunday, 1 November 2016",
                     "value": "dddd, D MMMM YYYY"
-            },
+                },
                 {
                     "label": "November 1, 2016 10:02:05",
                     "value": "MMMM D, YYYY HH:mm:ss"
-
-            },
+                },
                 {
                     "label": "1 November 2016 10:02:05",
                     "value": "D MMMM YYYY HH:mm:ss"
-
-            },
+                },
                 {
                     "label": "01/21/2016",
                     "value": "MM/DD/YYYY"
-            },
+                },
                 {
                     "label": "21/01/2016",
                     "value": "DD/MM/YYYY"
-            },
+                },
                 {
                     "label": "Custom - create your own date format",
                     "value": "custom"
-            }
+                }
             ]
         },
-
         {
             "name": "formatDateCustom",
             "group": "Additional",
@@ -1929,10 +2019,12 @@
             "note": "More details you can find <a href='https://github.com/taylorhakes/fecha' target='_blank'>here.</a>",
             "value": "HH:mm:ss YY/MM/DD",
             "type": "text",
-            "dependencies": [{
-                "field": "formatDate",
-                "value": "custom"
-            }]
+            "dependencies": [
+                {
+                    "field": "formatDate",
+                    "value": "custom"
+                }
+            ]
         },
         {
             "name": "separator",
@@ -1940,7 +2032,7 @@
             "label": "",
             "group": "Additional",
             "size": "small"
-         },       
+        },
         {
             "name": "lazyLoadEffect",
             "label": "Lazy load effects",
@@ -1955,8 +2047,9 @@
                 },
                 {
                     "label": "None",
-                    "value": "none"                
-            }]
+                    "value": "none"
+                }
+            ]
         },
         {
             "name": "separator",
@@ -1964,7 +2057,7 @@
             "label": "",
             "group": "Additional",
             "size": "small"
-         },
+        },
         {
             "name": "faviconUpload",
             "label": "Upload favicon file",
@@ -1988,11 +2081,12 @@
                 {
                     "label": ".png",
                     "value": "image/png"
-                }]
+                }
+            ]
         }
     ],
     "postConfig": [
-         {
+        {
             "name": "displayDate",
             "label": "Display date",
             "value": 1,
@@ -2023,7 +2117,7 @@
                     "value": 0
                 }
             ]
-        },       
+        },
         {
             "name": "displayLastUpdatedDate",
             "label": "Display last updated date",
@@ -2072,7 +2166,6 @@
                 }
             ]
         },
-        
         {
             "name": "displayAuthorBio",
             "label": "Display author bio",
@@ -2105,11 +2198,92 @@
                 }
             ]
         },
-
         {
             "name": "displayRelatedPosts",
             "label": "Display related posts",
             "value": 1,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayComments",
+            "label": "Display comments",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        }
+    ],
+    "pageConfig": [
+        {
+            "name": "displayDate",
+            "label": "Display date",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayAuthor",
+            "label": "Display author",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayLastUpdatedDate",
+            "label": "Display last updated date",
+            "value": 0,
+            "type": "select",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayShareButtons",
+            "label": "Display share buttons",
+            "value": 0,
             "type": "select",
             "options": [
                 {
@@ -2306,7 +2480,10 @@
         }
     ],
     "files": {
-        "ignoreAssets": ["scss", ".DS_Store"],
+        "ignoreAssets": [
+            "scss",
+            ".DS_Store"
+        ],
         "assetsPath": "assets",
         "useDynamicAssets": true,
         "partialsPath": "partials",
@@ -2340,7 +2517,6 @@
                     }
                 }
             },
-
             "featuredImages": {
                 "sizes": "(max-width: 1600px) 100vw, 1600px",
                 "dimensions": {
@@ -2370,7 +2546,6 @@
                     }
                 }
             },
-
             "tagImages": {
                 "sizes": "100vw",
                 "dimensions": {
@@ -2400,7 +2575,6 @@
                     }
                 }
             },
-
             "authorImages": {
                 "sizes": "100vw",
                 "dimensions": {
@@ -2430,7 +2604,6 @@
                     }
                 }
             },
-
             "optionImages": {
                 "sizes": "100vw",
                 "dimensions": {
@@ -2461,20 +2634,19 @@
                     }
                 }
             },
-            
             "galleryImages": {
                 "sizes": "",
                 "dimensions": {
                     "thumbnail": {
-                         "width": 720,
-                         "height": "auto"                       
+                        "width": 720,
+                        "height": "auto"
                     }
                 }
             }
         }
     },
     "customElements": [
-         {
+        {
             "label": "Ordered list",
             "cssClasses": "ordered-list",
             "selector": "ol"
@@ -2483,7 +2655,7 @@
             "label": "Drop cap",
             "cssClasses": "dropcap",
             "selector": "p"
-        },        
+        },
         {
             "label": "Info",
             "cssClasses": "msg msg--info",
