@@ -1825,7 +1825,7 @@ textarea {
   margin: 0 0 0 2ch;
 }
 .subpages__list li {
-  padding: 0;
+  padding-bottom: 0;
 }
 
 .align-left {
