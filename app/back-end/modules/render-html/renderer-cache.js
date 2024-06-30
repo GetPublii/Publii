@@ -308,7 +308,7 @@ class RendererCache {
         `).all();
         console.timeEnd('FEATURED PAGE IMAGES - QUERY');
 
-        console.time('FEATURED PAFE IMAGES - STORE');
+        console.time('FEATURED PAGE IMAGES - STORE');
         featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages', 'page'));
         console.timeEnd('FEATURED PAGE IMAGES - STORE');
     }
