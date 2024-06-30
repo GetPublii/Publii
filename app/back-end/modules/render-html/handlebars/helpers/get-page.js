@@ -9,7 +9,7 @@
  * IMPORTANT: It requires availability of the @website.contentStructure global variable
  */
 function getPageHelper(rendererInstance, Handlebars) {
-    Handlebars.registerHelper('getPage', function (postID, options) {
+    Handlebars.registerHelper('getPage', function (pageID, options) {
         if (!rendererInstance.contentStructure.pages) {
             return 'Error: @website.contentStructure global variable is not available.';
         }
