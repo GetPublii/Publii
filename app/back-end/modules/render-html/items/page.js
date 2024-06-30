@@ -64,7 +64,21 @@ class PageItem {
         }
 
         if (this.siteConfig.advanced.urls.cleanUrls) {
-            pageURL = this.siteConfig.domain + '/' + this.page.slug + '/';
+            let parentItems = this.renderer.cachedItems.pagesStructureHierarchy[this.page.id];
+            let pageSlug = this.page.slug;
+
+            if (this.renderer.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
+                let slugs = [];
+
+                for (let i = 0; i < parentItems.length; i++) {
+                    slugs.push(this.renderer.cachedItems.pages[parentItems[i]].slug);
+                }
+
+                slugs.push(this.page.slug);
+                pageSlug = slugs.join('/');
+            }
+
+            pageURL = this.siteConfig.domain + '/' + pageSlug + '/';
 
             if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
                 pageURL += 'index.html';
