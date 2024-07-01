@@ -71,7 +71,9 @@ class PageItem {
                 let slugs = [];
 
                 for (let i = 0; i < parentItems.length; i++) {
-                    slugs.push(this.renderer.cachedItems.pages[parentItems[i]].slug);
+                    if (this.renderer.cachedItems.pages[parentItems[i]]) {
+                        slugs.push(this.renderer.cachedItems.pages[parentItems[i]].slug);
+                    }
                 }
 
                 slugs.push(this.page.slug);
