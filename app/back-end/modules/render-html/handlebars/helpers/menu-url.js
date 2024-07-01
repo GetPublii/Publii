@@ -55,7 +55,9 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 let slugs = [];
 
                 for (let i = 0; i < parentItems.length; i++) {
-                    slugs.push(rendererInstance.cachedItems.pages[parentItems[i]].slug);
+                    if (rendererInstance.cachedItems.pages[parentItems[i]]) {
+                        slugs.push(rendererInstance.cachedItems.pages[parentItems[i]].slug);
+                    }
                 }
 
                 slugs.push(this.link);
