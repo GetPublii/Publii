@@ -689,6 +689,7 @@
         "cookieAdvancedDescription": "This section contains options for displaying a modal pop-up with advanced cookie settings, which lets visitors manage consents for a specific group of cookies.",
         "createXMLSitemap": "Create XML Sitemap",
         "currentTheme": "Current theme:",
+        "currentThemeHasOverrides": "You are updating your currently used theme. It seems that you have custom overrides which can require updates. Click 'OK' to continue or cancel to go back and check your theme overrides.",
         "customElementsInWYSIWYGEditor": "Custom elements available in the WYSIWYG editor",
         "customElementsInWYSIWYGEditorInfo": "If the WYSIWYG editor automatically removes some tags from your HTML code, you may add them here as custom elements.<br> For example: <strong>v-select,v-dropdown</strong>",
         "customFeedTitle": "Custom feed title",

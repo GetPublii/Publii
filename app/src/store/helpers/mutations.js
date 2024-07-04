@@ -149,6 +149,7 @@ export default {
             tagTemplates: data ? data.tagTemplates : [],
             authorTemplates: data ? data.authorTemplates : [],
             themes: data ? data.themes : AST.themes,
+            themeHasOverrides: data ? data.themeHasOverrides : false,
             themeSettings: data ? data.themeSettings : {},
             menuStructure: data ? data.menuStructure : [],
             siteDir: data ? data.siteDir : '',

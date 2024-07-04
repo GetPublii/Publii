@@ -229,6 +229,7 @@ class App {
         let authors = new Authors(this, {site});
         let themes = new Themes(this, {site});
         let themeDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true));
+        let themeOverridesDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true) + '-override');
         let themeConfig = Themes.loadThemeConfig(themeConfigPath, themeDir);
         let menuStructure = fs.readFileSync(menuConfigPath, 'utf8');
         let parsedMenuStructure = {};
@@ -253,6 +254,7 @@ class App {
             tagTemplates: themes.loadTagTemplates(),
             authorTemplates: themes.loadAuthorTemplates(),
             themes: themes.load(),
+            themeHasOverrides: Utils.dirExists(themeOverridesDir),
             themeSettings: themeConfig,
             menuStructure: parsedMenuStructure,
             siteDir: siteDir

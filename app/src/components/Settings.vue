@@ -5,7 +5,7 @@
         <div class="site-settings">
             <p-header :title="$t('settings.siteSettings')">
                 <p-button
-                    @click.prevent.native="save(false)"
+                    @click.prevent.native="checkBeforeSave(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -2123,7 +2123,7 @@
                     defaultValue="full-site-preview" />
 
                 <p-button
-                    @click.native="save(false)"
+                    @click.native="this.checkBeforeSave(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -2475,11 +2475,32 @@ export default {
         }
     },
     methods: {
+        checkBeforeSave (showPreview, renderingType, renderFiles) {
+            if (
+                this.$store.state.currentSite.config.theme && (
+                    this.theme === 'use-' + this.$store.state.currentSite.config.theme ||
+                    this.theme === 'install-use-' + this.$store.state.currentSite.config.theme
+                ) && 
+                this.$store.state.currentSite.themeHasOverrides
+            ) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: this.$t('settings.currentThemeHasOverrides'),
+                    okClick: () => {
+                        this.save(showPreview, renderingType, renderFiles);
+                    },
+                    okLabel: this.$t('ui.ok'),
+                    cancelLabel: this.$t('ui.cancel')
+                });
+            } else {
+                this.save(showPreview, renderingType, renderFiles);
+            }
+        },
         saveAndPreview (renderingType = false) {
-            this.save(true, renderingType, false);
+            this.checkBeforeSave(true, renderingType, false);
         },
         saveAndRender (renderingType = false) {
-            this.save(true, renderingType, true);
+            this.checkBeforeSave(true, renderingType, true);
         },
         save (showPreview = false, renderingType = false, renderFiles = false) {
             this.buttonsLocked = true;
