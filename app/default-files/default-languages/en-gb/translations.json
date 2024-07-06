@@ -1257,6 +1257,7 @@
         "authorsPostsPerPageInfo": "Use -1 as value if you need to display all authors' posts on the page.",
         "changeAppTheme": "Change application theme",
         "customSettings": "Custom settings",
+        "defaultPageTemplate": "Default page template",
         "defaultPostTemplate": "Default post template",
         "defaultTemplate": "Default template",
         "deleteTheme": "Delete theme",

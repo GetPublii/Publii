@@ -1254,6 +1254,7 @@
         "authorsPostsPerPageInfo": "Podaj wartość -1 jeśli chcesz wyświetlać wszystkich autorów na stronie.",
         "changeAppTheme": "Zmień motyw aplikacji",
         "customSettings": "Ustawienia własne",
+        "defaultPageTemplate": "Domyślny szablon podstrony",
         "defaultPostTemplate": "Domyślny szablon wpisu",
         "defaultTemplate": "Szablon domyślny",
         "deleteTheme": "Usuń motyw",
