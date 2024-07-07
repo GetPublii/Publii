@@ -1,43 +1,25 @@
 {{> head}}
-{{> top}}
+{{> navbar}}
 <main class="page page--error">
-   <article class="post">
+  <div class="content">
       <div class="hero">
-         {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-            <figure class="hero__image hero__image--overlay">
-                <img
-                   src="{{@config.custom.uploadHero}}"
-                   {{#if @config.site.responsiveImages}}
-                      {{responsiveImageAttributes @config.custom.uploadHero}}
-                   {{/if}}
-                   {{ lazyload "eager" }}
-                   {{imageDimensions @config.custom.uploadHero}}
-                   alt="{{@config.custom.uploadHeroAlt}}">
-
-                {{#if @config.custom.uploadHeroCaption}}
-                   <figcaption>
-                      {{@config.custom.uploadHeroCaption}}
-                   </figcaption>
-                {{/if}}
-            </figure>
-         {{/checkIfAll}}
          <header class="hero__content">
             <div class="wrapper">
                <h1>{{ translate 'error.404' }}</h1>
-               <p>{{ translate 'error.message-1' }}</p>
+
+               <div class="page__desc">
+                  <p>{{ translate 'error.message' }}</p>
+               </div>
+               
+               <a href="{{@website.url}}" class="btn hero__cta btn--icon">
+                  <svg width="18" height="18" aria-hidden="true">
+                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+                  </svg>
+                  <span>{{ translate 'error.button' }}</span>
+               </a>
             </div>
          </header>
       </div>
-      <div class="wrapper post__entry">
-         <p>{{ translate 'error.message-2' }}</p>
-         <p>
-            <svg width="1.041em" height="0.416em" aria-hidden="true">
-               <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
-            </svg>
-            <a href="{{@website.url}}" class="readmore">
-               {{ translate 'error.button' }}</a>
-         </p>
-      </div>
-   </article>
+   </div>
 </main>
 {{> footer}}

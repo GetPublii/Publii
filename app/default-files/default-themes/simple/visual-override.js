@@ -36,23 +36,6 @@ var generateOverride = function (params) {
         }`;
     }   
 
-    if (params.heroOverlay === 'color') {
-        if (params.heroOverlayColor) {
-            output += `
-            .hero__image--overlay::after { 
-                  background: ${params.heroOverlayColor};
-           }`;
-        }
-    }
-
-    if (params.heroOverlay === 'gradient') {
-        if (params.heroOverlayGradientDirection !== 'bottom' || params.heroOverlayGradient) {
-            output += `
-           .hero__image--overlay::after {              
-                  background: linear-gradient(to ${params.heroOverlayGradientDirection}, transparent 0%, ${params.heroOverlayGradient} 100%);
-           }`;
-        }
-    }
     
     if(params.galleryZoom !== true) {
         output += `   

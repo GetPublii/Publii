@@ -1,10 +1,15 @@
 # Changelog
 
+## [3.0.0.0] - 2024-07-07
+### Added
+- Added support for italic fonts 
+- Redesigned the theme
+
 ## [2.9.0.0] - 2024-06-30
 ### Added
 - Added support for Pages
 - Added new typography options: now you can adjust letter spacing or line height for both body and heading elements.
-- Added a new baseline optin to defines a core vertical rhythm unit for consistent spacing across the website
+- Added a new baseline option to defines a core vertical rhythm unit for consistent spacing across the website
 
 ### Improved
 - Minor CSS enhancements
