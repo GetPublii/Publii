@@ -689,7 +689,7 @@
         "cookieAdvancedDescription": "Ta sekcja zawiera opcje wyświetlania wyskakującego okienka z zaawansowanymi ustawieniami plików cookie, w którym użytkownik może zarządzać zgodami dla określonej grupy plików cookie.",
         "createXMLSitemap": "Stwórz XML mapy strony",
         "currentTheme": "Aktualny motyw:",
-        "currentThemeHasOverrides": "Aktualizujesz aktualnie używany motyw. Wygląda na to, że masz niestandardowe nadpisywania, które mogą wymagać aktualizacji. Kliknij 'OK', aby kontynuować lub anuluj, aby wrócić i sprawdzić swoje nadpisywania motywu przed aktualizacją.",
+        "currentThemeHasOverrides": "Wygląda na to, że nadpisujesz pliki motywu, a Twoje modyfikacje mogą nie być w pełni zgodne z jego nową wersją. Aktualizacja motywu wymaga przejrzenia i scalenia zawartości tych plików. Kliknij 'OK', aby kontynuować aktualizację lub 'Anuluj', aby najpierw przejrzeć swoje modyfikacje.",
         "customElementsInWYSIWYGEditor": "Niestandardowe elementy dostępne w edytorze WYSIWYG",
         "customElementsInWYSIWYGEditorInfo": "Jeśli edytor WYSIWYG automatycznie usuwa niektóre tagi z Twojego kodu HTML, możesz dodać je tutaj jako niestandardowe elementy.<br> Na przykład: <strong>v-select,v-dropdown</strong>",
         "customFeedTitle": "Własny tytuł kanału",
