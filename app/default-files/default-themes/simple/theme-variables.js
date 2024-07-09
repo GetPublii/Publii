@@ -433,6 +433,14 @@ var generateThemeVariables = function (params) {
     addFontFace(fontHeadingsName, fontHeadingsWeight, fontHeadingsItalicWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
   }
 
+  if (params.fontMenu === 'system-ui') {
+    params.fontMenu = fontParams['system-ui'].family;
+  }
+
+  if (params.fontLogo === 'system-ui') {
+    params.fontLogo = fontParams['system-ui'].family;
+  }
+
    // Fluid base font-size
    const minScreen = 20; // rem
    const maxScreen = 90; // rem
