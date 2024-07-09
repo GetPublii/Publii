@@ -1,12 +1,17 @@
 {
     "name": "Simple",
-    "version": "2.9.0.0",
+    "version": "3.0.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
             "desc": "",
             "name": "Main menu",
             "maxLevels": -1
+        },
+        "footerMenu": {
+            "desc": "",
+            "name": "Footer menu",
+            "maxLevels": 1
         }
     },
     "renderer": {
@@ -39,6 +44,9 @@
         "customComments": true,
         "embedConsents": true,
         "pages": true
+    },
+    "pageTemplates": {
+        "empty": "Empty page"
     },
     "config": [
         {
@@ -85,10 +93,29 @@
             "name": "pageWidth",
             "label": "Page width",
             "group": "Layout",
-            "note": "Adjust the width for both posts and pages. Set to 100% for full-screen width.",
-            "value": "42rem",
+            "note": "Defines the overall width of the page. This should always be greater than or equal to the Entry width to ensure proper layout. Set to 100% for full-screen width.",
+            "value": "66rem",
             "type": "text"
         },
+        {
+            "name": "entryWidth",
+            "label": "Entry width",
+            "group": "Layout",
+            "note": "Defines the width of content for posts and pages. Ensure that this value is smaller than or equal to the Page width for proper content display. Set to 100% for full-screen width.",
+            "value": "42rem",
+            "type": "text"
+        }, 
+        {
+            "name": "borderRadius",
+            "label": "Corner Roundness",
+            "group": "Layout",
+            "note": "Adjust the roundness of corners for elements like images, buttons or dropdown menus. Increasing this value (in pixels) will make the corners more rounded.",
+            "value": "3",
+            "type": "range",
+            "min": 0,
+            "max": 100,
+            "step": 1
+        },     
         {
             "name": "baseline",
             "label": "Baseline",
@@ -100,14 +127,14 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "Front page",
+            "label": "Homepage",
             "group": "Layout",
             "note": "<span style=\"color: red\">This option will be removed in the next theme update. You can now set your homepage natively within the Site Settings!</span>",
             "size": "small"
         },
         {
             "name": "frontSource",
-            "label": "Front page displays",
+            "label": "Homepage displays",
             "group": "Layout",
             "value": "default",
             "type": "radio",
@@ -155,30 +182,39 @@
             "type": "separator",
             "label": "Hero section",
             "group": "Layout",
-            "size": "small"
+            "size": "big"
+        },
+        {
+            "name": "alignHero",
+            "label": "Content alignment",
+            "group": "Layout",
+            "value": "left",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Center",
+                    "value": "center"
+                }
+            ]
+        },
+ 
+        {
+            "name": "textHero",
+            "label": "Text",
+            "group": "Layout",
+            "value": "<h1>Discover My Blogging Journey: Adventures, Travels, and Hobbies!</h1> <p>Join me as I share captivating stories, travel experiences, and dive into the joys of my favorite hobbies.</p><p><a href=\"#\" class=\"btn\">Read more</a></p>",
+            "type": "wysiwyg"
         },
         {
             "name": "heightHero",
-            "label": "Height",
+            "label": "Image height",
             "group": "Layout",
-            "note": "This option allows you to modify the height of the hero section. Use of VH units recommended; for full-screen set to 100vh",
-            "value": "80vh",
+            "value": "50vh",
             "type": "text"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "size": "small thin"
-        },
-        {
-            "name": "displayHeroImage",
-            "group": "Layout",
-            "label": "Image assignment",
-            "note": "Display the hero image on all pages including front page, tags, authors, search, 404, also on the post pages when a featured image is unavailable; otherwise, it will be displayed on the front page only. ",
-            "value": false,
-            "type": "checkbox"
         },
         {
             "name": "uploadHero",
@@ -203,203 +239,7 @@
             "placeholder": "Add text caption to the hero image",
             "value": "",
             "type": "text"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "size": "small thin"
-        },
-        {
-            "name": "textHero",
-            "label": "Text",
-            "group": "Layout",
-            "value": "<h1>Welcome to my blog :)</h1><p>Create a unique and beautiful blog quickly and easily.</p>",
-            "type": "wysiwyg"
-        },
-        {
-            "name": "siteOwner",
-            "group": "Layout",
-            "label": "Show site owner",
-            "note": "Display the avatar and the name of the website owner (Main author)",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Layout",
-            "note": "The appearance settings for the hero section can be found under the <a href=\"#\" data-internal-link=\"Colors#hero\">Colors</a> tab.",
-            "size": "thin"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Tags Page",
-            "note": "The settings below apply to the Tags page, which displays a comprehensive list of all published tags. For options specific to a single tag page, refer to the <a href=\"#\" data-internal-link=\"Tag options\">Tag options</a> tab.",
-            "group": "Layout",
-            "size": "big"
-        },
-        {
-            "name": "tagsTagCount",
-            "group": "Layout",
-            "label": "Show tag count",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagsPostCount",
-            "group": "Layout",
-            "label": "Show post count",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagsDescription",
-            "group": "Layout",
-            "label": "Show tags description",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Post list",
-            "note": "The Post list section offers a range of options for managing the post list displayed on the front page, tag and author pages. In this area, you can easily enable or disable elements such as avatar, date or other elements.",
-            "size": ""
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Front page",
-            "group": "Post list",
-            "note": "The following options apply to the posts displayed on the front page.",
-            "size": "small"
-        },
-        {
-            "name": "frontFeaturedImage",
-            "group": "Post list",
-            "label": "Show featured image",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "frontAuthor",
-            "group": "Post list",
-            "label": "Show author name",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "frontAvatar",
-            "group": "Post list",
-            "label": "Show author avatar",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "frontDate",
-            "group": "Post list",
-            "label": "Show date",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "frontReadMore",
-            "group": "Post list",
-            "label": "Show 'Read more' button",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Tag Page",
-            "group": "Post list",
-            "note": "The following options apply to the posts displayed on a single tag page.",
-            "size": "big"
-        },
-        {
-            "name": "tagFeaturedImage",
-            "group": "Post list",
-            "label": "Show featured image",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagAuthor",
-            "group": "Post list",
-            "label": "Show author name",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagAvatar",
-            "group": "Post list",
-            "label": "Show author avatar",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagDate",
-            "group": "Post list",
-            "label": "Show date",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "tagReadMore",
-            "group": "Post list",
-            "label": "Show 'Read more' button",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Author page",
-            "group": "Post list",
-            "note": "The following options apply to the posts displayed on an author page.",
-            "size": "big"
-        },
-        {
-            "name": "authorFeaturedImage",
-            "group": "Post list",
-            "label": "Show featured image",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "authorAuthor",
-            "group": "Post list",
-            "label": "Show author name",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "authorAvatar",
-            "group": "Post list",
-            "label": "Show author avatar",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "authorDate",
-            "group": "Post list",
-            "label": "Show date",
-            "value": true,
-            "type": "checkbox"
-        },
-        {
-            "name": "authorReadMore",
-            "group": "Post list",
-            "label": "Show 'Read more' button",
-            "value": true,
-            "type": "checkbox"
-        },
+        },   
         {
             "name": "separator",
             "type": "separator",
@@ -413,8 +253,119 @@
             "group": "Layout",
             "note": "Specify number of related posts to show. Zero '0' means no posts.",
             "value": "3",
-            "type": "text"
+            "type": "number"
         },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Post list",
+            "note": "This section lets you choose what shows up in your feed on the homepage, tags, and author pages. You can pick and choose which details to show, like author avatars, post dates, and other things.",
+            "size": ""
+        },    
+
+        {
+            "name": "alignFeed",
+            "label": "Content alignment",
+            "group": "Post list",
+            "value": "center",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Center",
+                    "value": "center"
+                }
+            ]
+        },          
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Post list",
+            "size": "small thin "
+        },
+        {
+            "name": "feedFeaturedImage",
+            "group": "Post list",
+            "label": "Show Featured Image",
+            "value": false,
+            "type": "checkbox"
+        },
+        {
+            "name": "feedFeaturedImageSize",
+            "label": "Image size",
+            "group": "Post list",
+            "note": "Adjust the size of the featured image in REM value.",
+            "value": "8",
+            "type": "range",
+            "min": 1,
+            "max": 50,
+            "step": 1,
+            "dependencies": [
+                {
+                    "field": "feedFeaturedImage",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "name": "feedAvatar",
+            "group": "Post list",
+            "label": "Show author avatar",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "feedAuthor",
+            "group": "Post list",
+            "label": "Show author name",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "feedDate",
+            "group": "Post list",
+            "label": "Show date",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
+            "name": "feedDateType",
+            "group": "Post list",
+            "label": "",
+            "value": "published",
+            "type": "radio",
+            "options": [
+                {
+                    "label": "Published date",
+                    "value": "published"
+                },
+                {
+                    "label": "Modified date",
+                    "value": "modified"
+                }
+            ],
+            "dependencies": [
+                {
+                    "field": "feedDate",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "name": "feedtReadMore",
+            "group": "Post list",
+            "label": "Show 'Read more' button",
+            "value": true,
+            "type": "checkbox"
+        },
+  
+        
         {
             "name": "navbarHeight",
             "group": "Navbar",
@@ -517,187 +468,20 @@
             ]
         },
         {
-            "name": "separator",
-            "type": "separator",
-            "label": "Light",
-            "group": "Colors",
-            "size": "small"
-        },
-        {
             "name": "primaryColor",
-            "label": "Primary color",
+            "label": "Primary color (Light mode)",
             "group": "Colors",
             "value": "#D73A42",
             "type": "colorpicker"
         },
         {
-            "name": "headingColor",
-            "label": "Headings color",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "textColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "Dark",
-            "group": "Colors",
-            "size": "small"
-        },
-        {
             "name": "primaryDarkColor",
-            "label": "Primary color",
+            "label": "Primary color (Dark mode)",
             "group": "Colors",
             "value": "#FFC074",
             "type": "colorpicker"
         },
-        {
-            "name": "headingDarkColor",
-            "label": "Headings color",
-            "group": "Colors",
-            "value": "#EEEDED",
-            "type": "colorpicker"
-        },
-        {
-            "name": "textDarkColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "#BFBFBF",
-            "type": "colorpicker"
-        },
-        {
-            "anchor": "hero",
-            "name": "separator",
-            "type": "separator",
-            "label": "Hero Section",
-            "group": "Colors",
-            "size": "big"
-        },
-        {
-            "name": "heroBackground",
-            "label": "Background",
-            "group": "Colors",
-            "value": "#17181E",
-            "type": "colorpicker"
-        },
-        {
-            "name": "heroOverlay",
-            "label": "Overlay",
-            "group": "Colors",
-            "note": "The overlay works with the image and only when it has been fully loaded.",
-            "value": "gradient",
-            "type": "select",
-            "options": [
-                {
-                    "label": "Solid color",
-                    "value": "color"
-                },
-                {
-                    "label": "Gradient",
-                    "value": "gradient"
-                }
-            ]
-        },
-        {
-            "name": "heroOverlayColor",
-            "label": "",
-            "group": "Colors",
-            "value": "rgba(0, 0, 0, 0.64)",
-            "type": "colorpicker",
-            "dependencies": [
-                {
-                    "field": "heroOverlay",
-                    "value": "color"
-                }
-            ]
-        },
-        {
-            "name": "heroOverlayGradient",
-            "label": "",
-            "group": "Colors",
-            "value": "rgba(0, 0, 0, 0.64)",
-            "type": "colorpicker",
-            "dependencies": [
-                {
-                    "field": "heroOverlay",
-                    "value": "gradient"
-                }
-            ]
-        },
-        {
-            "name": "heroOverlayGradientDirection",
-            "label": "",
-            "group": "Colors",
-            "note": "Gradient direction",
-            "value": "bottom",
-            "type": "select",
-            "options": [
-                {
-                    "label": "Top",
-                    "value": "Top"
-                },
-                {
-                    "label": "Right",
-                    "value": "right"
-                },
-                {
-                    "label": "Bottom",
-                    "value": "bottom"
-                },
-                {
-                    "label": "Left",
-                    "value": "left"
-                }
-            ],
-            "dependencies": [
-                {
-                    "field": "heroOverlay",
-                    "value": "gradient"
-                }
-            ]
-        },
-        {
-            "name": "heroHeadingColor",
-            "label": "Heading (H1) color",
-            "group": "Colors",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-        {
-            "name": "heroTextColor",
-            "label": "Text color",
-            "group": "Colors",
-            "value": "rgba(255,255,255,0.75)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "heroLink",
-            "label": "Link color",
-            "group": "Colors",
-            "value": "#FFFFFF",
-            "type": "colorpicker"
-        },
-        {
-            "name": "heroLinkHover",
-            "label": "Link hover color",
-            "group": "Colors",
-            "value": "rgba(255,255,255,0.75)",
-            "type": "colorpicker"
-        },
-        {
-            "name": "heroBorderColor",
-            "label": "Border color",
-            "group": "Colors",
-            "value": "rgba(255,255,255,0.3)",
-            "type": "colorpicker"
-        },
+       
         {
             "name": "separator",
             "type": "separator",
@@ -1036,6 +820,14 @@
             ]
         },
         {
+            "name": "disableFontBodyItalic",
+            "label": "Disable italic style",
+            "group": "Fonts",
+            "note": "This option allows you to disable the loading of the dedicated italic version for the body font. The italic font is automatically loaded when selecting a body font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading the dedicated italic version by enabling this option.",            
+            "type": "checkbox",
+            "value": false
+        },
+        {
             "name": "fontHeadings",
             "label": "Headings font (H1-H6)",
             "group": "Fonts",
@@ -1365,6 +1157,14 @@
             ]
         },
         {
+            "name": "disableFontHeadingsItalic",
+            "label": "Disable italic style",
+            "group": "Fonts",
+            "note": "This option allows you to disable loading of the dedicated italic version for the headings font. The italic font is automatically loaded when selecting a headings font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading of the dedicated italic version by enabling this option.",            
+            "type": "checkbox",
+            "value": false
+        },
+        {
             "name": "fontMenu",
             "label": "Menu font",
             "group": "Fonts",
@@ -1479,7 +1279,7 @@
             "name": "fontBoldWeight",
             "label": "Bold font weight",
             "group": "Fonts",
-            "value": "700",
+            "value": "600",
             "type": "range",
             "min": 100,
             "max": 900,
@@ -1496,7 +1296,7 @@
             "name": "fontHeadignsWeight",
             "label": "H1-H6 font weight",
             "group": "Fonts",
-            "value": "700",
+            "value": "500",
             "type": "range",
             "min": 100,
             "max": 900,
@@ -1570,6 +1370,15 @@
                 }
             ]
         },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Share Buttons",    
+            "note": "This section allows you to choose your preferred share buttons for various platforms. If you wish to add more, you can install the <a href='https://marketplace.getpublii.com/plugins/social-sharing/' target='_blank'>Social Sharing plugin</a> available on the Publii Marketplace.",
+            "size": "small"
+        },
         {
             "name": "shareFacebook",
             "group": "Share Buttons",
@@ -1631,6 +1440,15 @@
             "label": "WhatsApp",
             "value": false,
             "type": "checkbox"
+        },
+
+        {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Footer",
+            "note": "This section allows you to add follow buttons for various social media platforms. If you want to expand the available options, you can install the <a href='https://marketplace.getpublii.com/plugins/follow-buttons/' target='_blank'>Follow Buttons plugin</a> available on the Publii Marketplace.",
+            "size": "small"
         },
         {
             "name": "socialButtons",
@@ -1771,8 +1589,8 @@
             "name": "galleryItemGap",
             "label": "Item spacing",
             "group": "Gallery",
-            "note": "Use of REM units recommended but you can also use others (px, vw,)",
-            "value": "0.28333rem",
+            "note": "You can use the --baseline variable and multiply it, but you can also use other values like px or rem.",
+            "value": "calc(var(--baseline) * 1.5)",
             "type": "text"
         },
         {
@@ -2237,6 +2055,7 @@
             "label": "Display date",
             "value": 0,
             "type": "select",
+            "postTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2253,6 +2072,7 @@
             "label": "Display author",
             "value": 0,
             "type": "select",
+            "postTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2269,6 +2089,7 @@
             "label": "Display last updated date",
             "value": 0,
             "type": "select",
+            "postTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2285,6 +2106,24 @@
             "label": "Display share buttons",
             "value": 0,
             "type": "select",
+            "postTemplates": "!empty",
+            "options": [
+                {
+                    "label": "Enabled",
+                    "value": 1
+                },
+                {
+                    "label": "Disabled",
+                    "value": 0
+                }
+            ]
+        },
+        {
+            "name": "displayAuthorBio",
+            "label": "Display author bio",
+            "value": 0,
+            "type": "select",
+            "postTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2301,6 +2140,7 @@
             "label": "Display comments",
             "value": 0,
             "type": "select",
+            "postTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2505,147 +2345,155 @@
         "partialsPath": "partials",
         "responsiveImages": {
             "contentImages": {
-                "sizes": "100vw",
+                "sizes": "(max-width: 1920px) 100vw, 1920px",
                 "dimensions": {
-                    "xs": {
-                        "width": 300,
+                     "xs": {
+                        "width": 640,
                         "height": "auto"
                     },
                     "sm": {
-                        "width": 480,
-                        "height": "auto"
-                    },
-                    "md": {
                         "width": 768,
                         "height": "auto"
                     },
-                    "lg": {
+                    "md": {
                         "width": 1024,
                         "height": "auto"
                     },
+                    "lg": {
+                        "width": 1366,
+                        "height": "auto"
+                    },
                     "xl": {
-                        "width": 1360,
+                        "width": 1600,
                         "height": "auto"
                     },
                     "2xl": {
-                        "width": 1600,
+                        "width": 1920,
                         "height": "auto"
                     }
                 }
             },
             "featuredImages": {
-                "sizes": "(max-width: 1600px) 100vw, 1600px",
+               "sizes": {
+                    "hero": "88vw",
+                    "feed": "(min-width: 600px) calc(4.38vw + 143px), 87.86vw"
+                },
                 "dimensions": {
                     "xs": {
-                        "width": 300,
-                        "height": "auto"
+                        "width": 640,
+                        "height": "auto",
+                        "group": "hero,feed"
                     },
                     "sm": {
-                        "width": 480,
-                        "height": "auto"
+                        "width": 768,
+                        "height": "auto",
+                        "group": "hero,feed"
                     },
                     "md": {
-                        "width": 768,
-                        "height": "auto"
+                        "width": 1024,
+                        "height": "auto",
+                        "group": "hero,feed"
                     },
                     "lg": {
-                        "width": 1024,
-                        "height": "auto"
+                        "width": 1366,
+                        "height": "auto",
+                        "group": "hero"
                     },
                     "xl": {
-                        "width": 1360,
-                        "height": "auto"
+                        "width": 1600,
+                        "height": "auto",
+                        "group": "hero"
                     },
                     "2xl": {
-                        "width": 1600,
-                        "height": "auto"
+                        "width": 1920,
+                        "height": "auto",
+                        "group": "hero"
                     }
                 }
             },
             "tagImages": {
-                "sizes": "100vw",
+                "sizes": "88vw",
                 "dimensions": {
                     "xs": {
-                        "width": 300,
+                        "width": 640,
                         "height": "auto"
                     },
                     "sm": {
-                        "width": 480,
-                        "height": "auto"
-                    },
-                    "md": {
                         "width": 768,
                         "height": "auto"
                     },
-                    "lg": {
+                    "md": {
                         "width": 1024,
                         "height": "auto"
                     },
+                    "lg": {
+                        "width": 1366,
+                        "height": "auto"
+                    },
                     "xl": {
-                        "width": 1360,
+                        "width": 1600,
                         "height": "auto"
                     },
                     "2xl": {
-                        "width": 1600,
+                        "width": 1920,
                         "height": "auto"
                     }
                 }
             },
             "authorImages": {
-                "sizes": "100vw",
+                "sizes": "88vw",
                 "dimensions": {
                     "xs": {
-                        "width": 300,
+                        "width": 640,
                         "height": "auto"
                     },
                     "sm": {
-                        "width": 480,
-                        "height": "auto"
-                    },
-                    "md": {
                         "width": 768,
                         "height": "auto"
                     },
-                    "lg": {
+                    "md": {
                         "width": 1024,
                         "height": "auto"
                     },
+                    "lg": {
+                        "width": 1366,
+                        "height": "auto"
+                    },
                     "xl": {
-                        "width": 1360,
+                        "width": 1600,
                         "height": "auto"
                     },
                     "2xl": {
-                        "width": 1600,
+                        "width": 1920,
                         "height": "auto"
                     }
                 }
             },
             "optionImages": {
-                "sizes": "100vw",
+                "sizes": "88vw",
                 "dimensions": {
                     "xs": {
-                        "width": 300,
-                        "height": 255,
-                        "crop": true
-                    },
-                    "sm": {
-                        "width": 480,
+                        "width": 640,
                         "height": "auto"
                     },
-                    "md": {
+                    "sm": {
                         "width": 768,
                         "height": "auto"
                     },
-                    "lg": {
+                    "md": {
                         "width": 1024,
                         "height": "auto"
                     },
+                    "lg": {
+                        "width": 1366,
+                        "height": "auto"
+                    },
                     "xl": {
-                        "width": 1360,
+                        "width": 1600,
                         "height": "auto"
                     },
                     "2xl": {
-                        "width": 1600,
+                        "width": 1920,
                         "height": "auto"
                     }
                 }

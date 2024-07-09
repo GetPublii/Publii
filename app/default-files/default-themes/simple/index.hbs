@@ -1,118 +1,114 @@
 {{> head}}
-{{> top}}
+{{> navbar}}
 {{#checkIf @config.custom.frontSource '==' "post" }}
    {{> frontpage-post}}
 {{else}}
    <main>
-      <div class="hero">
-         {{#if @config.custom.uploadHero}}
-            <figure class="hero__image hero__image--overlay">
-               <img
-                  src="{{@config.custom.uploadHero}}"
-                  {{#if @config.site.responsiveImages}}
-                     {{responsiveImageAttributes @config.custom.uploadHero}}
-                  {{/if}}
-                  {{ lazyload "eager" }}
-                  {{imageDimensions @config.custom.uploadHero}}
-                  alt="{{@config.custom.uploadHeroAlt}}">
-
-               {{#if @config.custom.uploadHeroCaption}}
-                  <figcaption>
-                     {{@config.custom.uploadHeroCaption}}
-                  </figcaption>
-               {{/if}}
-            </figure>
-         {{/if}}
+      <div class="hero {{#checkIf @config.custom.uploadHero '&&' @renderer.isFirstPage}}{{else}}hero--noimage{{/checkIf}}">
          {{#if @config.custom.textHero}}
-            <header class="hero__content">
+            <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
                <div class="wrapper">
                   {{{@config.custom.textHero}}}
-                  {{#if @config.custom.siteOwner}}
-                     {{#siteOwner}}
-                        <div class="post__meta post__meta--author">
-                           {{#if avatar}}
-                              <img 
-                                 src="{{avatarImage.url}}" 
-                                 {{ lazyload "eager" }}
-                                 height="{{avatarImage.height}}"
-                                 width="{{avatarImage.width}}"
-                                 class="post__author-thumb" 
-                                 alt="{{avatarImage.alt}}">
-                           {{/if}}
-                           <a href="{{url}}" class="feed__author">{{name}}</a>
-                        </div>
-                     {{/siteOwner}}
-                  {{/if}}
                </div>
             </header>
          {{/if}}
-      </div>
-      <div class="feed">
-         {{@config.custom.fontName}}
-         {{#each posts}}
-            <article class="feed__item">
-               <header class="wrapper">
-                  {{#checkIfAny @config.custom.frontAvatar @config.custom.frontAuthor @config.custom.frontDate}}
-                     <div class="feed__meta">
-                        {{#author}}
-                           {{#if @config.custom.frontAvatar}}
-                              {{#if avatar}}
-                                 <img
-                                    src="{{avatarImage.url}}" 
-                                    {{ lazyload "lazy" }}
-                                    height="{{avatarImage.height}}"
-                                    width="{{avatarImage.width}}"      
-                                    class="post__author-thumb"
-                                    alt="{{avatarImage.alt}}">
-                              {{/if}}
-                           {{/if}}
-                           {{#if @config.custom.frontAuthor}}
-                              <a href="{{url}}" class="feed__author">{{name}}</a>
-                           {{/if}}
-                        {{/author}}
-                        {{#if @config.custom.frontDate}}
-                           <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
-                              {{#checkIf @config.custom.formatDate '!=' 'custom'}}
-                                 {{date createdAt @config.custom.formatDate}}
-                              {{else}}
-                                 {{date createdAt @config.custom.formatDateCustom}}
-                              {{/checkIf}}
-                           </time>
+         {{#if @renderer.isFirstPage}}
+            {{#if @config.custom.uploadHero}}
+               <figure class="hero__image">
+                  <div class="hero__image-wrapper">
+                     <img
+                        src="{{@config.custom.uploadHero}}"
+                        {{#if @config.site.responsiveImages}}
+                           {{responsiveImageAttributes @config.custom.uploadHero}}
                         {{/if}}
+                        {{ lazyload "eager" }}
+                        {{imageDimensions @config.custom.uploadHero}}
+                        alt="{{@config.custom.uploadHeroAlt}}">
                      </div>
-                  {{/checkIfAny}}
-                  <h2>
-                     <a href="{{url}}">
-                        {{title}}
-                     </a>
-                  </h2>
-               </header>
-               {{#if @config.custom.frontFeaturedImage}}
+
+                  {{#if @config.custom.uploadHeroCaption}}
+                     <figcaption>
+                        {{@config.custom.uploadHeroCaption}}
+                     </figcaption>
+                  {{/if}}
+               </figure>
+            {{/if}}
+         {{/if}}
+      </div>
+      <div class="wrapper feed">
+         {{#each posts}}
+            <article class="feed__item {{#checkIf @config.custom.alignFeed '==' "center" }}feed__item--centered{{/checkIf}}">
+               {{#if @config.custom.feedFeaturedImage}}
                   {{#featuredImage}}
                      {{#if url}}
-                        <div class="feed__image">
-                           <a href="{{../url}}">
-                              <img
-                                 src="{{url}}"
-                                 {{#if @config.site.responsiveImages}}
-                                    {{responsiveImageAttributes 'featuredImage' srcset sizes}}
-                                 {{/if}}
-                                 {{ lazyload "lazy" }}
-                                 height="{{height}}"
-                                 width="{{width}}"
-                                 alt="{{alt}}">
-                           </a>
-                        </div>
+                        <figure class="feed__image">
+                           <img
+                              src="{{url}}"
+                              {{#if @config.site.responsiveImages}}
+                                 {{responsiveImageAttributes 'featuredImage' srcset.feed sizes.feed}}
+                              {{/if}}
+                              {{ lazyload "lazy" }}
+                              height="{{height}}"
+                              width="{{width}}"
+                              alt="{{alt}}">
+                        </figure>
                      {{/if}}
                   {{/featuredImage}}
                {{/if}}
-               <div class="wrapper">
+               <div class="feed__content">
+                  <header>
+                     {{#checkIfAny @config.custom.feedAvatar @config.custom.feedAuthor @config.custom.feedDate}}
+                        <div class="feed__meta">
+                           {{#author}}
+                              {{#if @config.custom.feedAvatar}}
+                                 {{#if avatar}}
+                                    <img
+                                       src="{{avatarImage.url}}" 
+                                       {{ lazyload "lazy" }}
+                                       height="{{avatarImage.height}}"
+                                       width="{{avatarImage.width}}"      
+                                       class="feed__author-thumb"
+                                       alt="{{avatarImage.alt}}">
+                                 {{/if}}
+                              {{/if}}
+                              {{#if @config.custom.feedAuthor}}
+                                 <a href="{{url}}" class="feed__author">{{name}}</a>
+                              {{/if}}
+                           {{/author}}
+                           {{#if @config.custom.feedDate}}
+                              {{#checkIf @config.custom.feedDateType '==' "published" }}
+                                 <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
+                                    {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                       {{date createdAt @config.custom.formatDate}}
+                                    {{else}}
+                                       {{date createdAt @config.custom.formatDateCustom}}
+                                    {{/checkIf}}
+                                 </time>
+                              {{/checkIf}}
+                              {{#checkIf @config.custom.feedDateType '==' "modified" }}
+                                 <time datetime="{{date modifiedAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">
+                                    {{#checkIf @config.custom.formatDate '!=' 'custom'}}
+                                       {{date modifiedAt @config.custom.formatDate}}
+                                    {{else}}
+                                       {{date modifiedAt @config.custom.formatDateCustom}}
+                                    {{/checkIf}}
+                                 </time>
+                              {{/checkIf}}
+                           {{/if}}
+                        </div>
+                     {{/checkIfAny}}
+                     <h2 class="feed__title">
+                        <a href="{{url}}">
+                           {{title}}
+                        </a>
+                     </h2>
+                  </header>               
                   {{#if hasCustomExcerpt}}
                      {{{ excerpt }}}
                   {{else}}
                      <p>{{{ excerpt }}}</p>
                   {{/if}}
-                  {{#if @config.custom.frontReadMore}}
+                  {{#if @config.custom.feedtReadMore}}
                      <a href="{{url}}" class="readmore feed__readmore">
                         {{ translate 'post.readMore' }}</a>
                   {{/if}}

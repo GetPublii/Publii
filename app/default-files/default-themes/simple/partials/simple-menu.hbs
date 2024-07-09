@@ -1,0 +1,20 @@
+<ul>
+   {{#each items}}
+      <li{{menuItemClasses}}>
+         {{#if link}}
+            <a href="{{menuUrl}}" class="al" {{#if title}} title="{{title}}" {{/if}}{{#if target}} target="{{target}}"{{/if}}{{#if rel}} rel="{{rel}}"{{/if}}>
+               {{label}}
+            </a>
+            {{else}}
+            <span{{#if title}} title="{{title}}"{{/if}}>
+               {{label}}
+            </span>
+         {{/if}}
+         {{#if items}}
+            <ul>
+               {{> simple-menu}}
+            </ul>
+         {{/if}}
+      </li>
+   {{/each}}
+</ul>
