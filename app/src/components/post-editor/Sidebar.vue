@@ -844,15 +844,17 @@ export default {
             this.$bus.$emit('date-popup-display', this.$parent.postData.creationDate.timestamp);
         },
         displayField (field) {
-            if (!field.postTemplates) {
+            let templateField = this.itemType === 'page' ? 'pageTemplates' : 'postTemplates';
+
+            if (!field[templateField]) {
                 return true;
             }
 
-            if (field.postTemplates.indexOf('!') === 0) {
-                return !(field.postTemplates.replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
+            if (field[templateField].indexOf('!') === 0) {
+                return !(field[templateField].replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
             }
 
-            return field.postTemplates.split(',').indexOf(this.$parent.postData.template) > -1;
+            return field[templateField].split(',').indexOf(this.$parent.postData.template) > -1;
         },
         fieldPlaceholder (field) {
             if (field.placeholder || field.placeholder === '') {
