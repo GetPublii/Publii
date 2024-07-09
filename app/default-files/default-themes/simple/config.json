@@ -2055,7 +2055,7 @@
             "label": "Display date",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2072,7 +2072,7 @@
             "label": "Display author",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2089,7 +2089,7 @@
             "label": "Display last updated date",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2106,7 +2106,7 @@
             "label": "Display share buttons",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2123,7 +2123,7 @@
             "label": "Display author bio",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2140,7 +2140,7 @@
             "label": "Display comments",
             "value": 0,
             "type": "select",
-            "postTemplates": "!empty",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
