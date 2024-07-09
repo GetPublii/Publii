@@ -127,14 +127,14 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "Front page",
+            "label": "Homepage",
             "group": "Layout",
             "note": "<span style=\"color: red\">This option will be removed in the next theme update. You can now set your homepage natively within the Site Settings!</span>",
             "size": "small"
         },
         {
             "name": "frontSource",
-            "label": "Front page displays",
+            "label": "Homepage displays",
             "group": "Layout",
             "value": "default",
             "type": "radio",
@@ -261,7 +261,7 @@
             "type": "separator",
             "label": "",
             "group": "Post list",
-            "note": "This section lets you choose what shows up in your feed on the front page, tags, and author pages. You can pick and choose which details to show, like author avatars, post dates, and other things.",
+            "note": "This section lets you choose what shows up in your feed on the homepage, tags, and author pages. You can pick and choose which details to show, like author avatars, post dates, and other things.",
             "size": ""
         },    
 
