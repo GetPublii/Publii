@@ -4,7 +4,8 @@
     "tagTemplates": {},
     "authorTemplates": {},
     "defaultTemplates": {
-        "post": ""
+        "post": "",
+        "page": ""
     },
     "menus": {},
     "renderer": {

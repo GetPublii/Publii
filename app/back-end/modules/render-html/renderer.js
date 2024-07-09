@@ -994,7 +994,11 @@ class Renderer {
         let inputFile = 'page.hbs';
 
         if (pageTemplate === '*') {
-            pageTemplate = this.themeConfig.defaultTemplates.page;
+            if (this.themeConfig.defaultTemplates.page) {
+                pageTemplate = this.themeConfig.defaultTemplates.page;
+            } else {
+                pageTemplate = '';
+            }
         }
 
         // Load templates

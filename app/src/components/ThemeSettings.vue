@@ -620,7 +620,8 @@ export default {
         return {
             buttonsLocked: false,
             defaultTemplates: {
-                post: ''
+                post: '',
+                page: ''
             },
             basic: {
                 postsPerPage: 4,
@@ -841,7 +842,8 @@ export default {
         },
         loadDefaultTemplates () {
             this.defaultTemplates = {
-                post: this.$store.state.currentSite.themeSettings.defaultTemplates.post
+                post: this.$store.state.currentSite.themeSettings.defaultTemplates.post,
+                page: this.$store.state.currentSite.themeSettings.defaultTemplates.page
             };
         },
         checkDependencies (dependencies) {
