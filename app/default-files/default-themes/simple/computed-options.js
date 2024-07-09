@@ -74,10 +74,12 @@ module.exports = function (themeConfig) {
     return [
         {
             name: 'fontBodyItalic',
+            type: 'checkbox',
             value: !disableFontBodyItalic && (fontParams[fontBody]?.hasItalic || false)
         },
         {
             name: 'fontHeadingsItalic',
+            type: 'checkbox',
             value: !disableFontHeadingsItalic && (fontParams[fontHeadings]?.hasItalic || false)
         }
     ];
