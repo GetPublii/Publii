@@ -5,7 +5,7 @@
  *
  * {{#is 'tag,post'}}
  *
- * Available phrases: index, tag, post, author, 404, search, pagination, index-pagination, tag-pagination, author-pagination
+ * Available phrases: index, tag, post, page, author, 404, search, pagination, index-pagination, tag-pagination, author-pagination
  *
  * @returns {callback}
  */

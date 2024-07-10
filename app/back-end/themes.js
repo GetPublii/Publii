@@ -262,6 +262,34 @@ class Themes {
     }
 
     /*
+     * Load available page templates
+     */
+    loadPageTemplates() {
+        let pageTemplates = [];
+        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        siteData = JSON.parse(siteData);
+
+        if(siteData.theme) {
+            let themeDir = path.join(this.sitePath, siteData.theme);
+            let themeConfigPath = path.join(this.sitePath, 'input', 'config', 'theme.config.json');
+            let themeData = Themes.loadThemeConfig(themeConfigPath, themeDir);
+
+            if(themeData.pageTemplates) {
+                let templateFiles = Object.keys(themeData.pageTemplates);
+
+                for(let i = 0; i < templateFiles.length; i++) {
+                    let fileName = templateFiles[i];
+                    pageTemplates.push(
+                        [fileName, themeData.pageTemplates[fileName]]
+                    );
+                }
+            }
+        }
+
+        return pageTemplates;
+    }
+
+    /*
      * Load available tag templates
      */
     loadTagTemplates() {
@@ -332,13 +360,14 @@ class Themes {
             config: newConfig.config,
             customConfig: newConfig.customConfig,
             postConfig: newConfig.postConfig,
+            pageConfig: newConfig.pageConfig,
             tagConfig: newConfig.tagConfig,
             authorConfig: newConfig.authorConfig,
             defaultTemplates: newConfig.defaultTemplates
         };
 
         // Check all options for the media fields
-        let groups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
+        let groups = ['config', 'customConfig', 'postConfig', 'pageConfig', 'tagConfig', 'authorConfig'];
 
         for(let i = 0; i < groups.length; i++) {
             let options = themeDefaultConfig[groups[i]];
@@ -418,7 +447,7 @@ class Themes {
                 return;
             }
 
-            let optionGroups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
+            let optionGroups = ['config', 'customConfig', 'postConfig', 'pageConfig', 'tagConfig', 'authorConfig'];
 
             for(let k = 0; k < optionGroups.length; k++) {
                 let group = optionGroups[k];

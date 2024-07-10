@@ -70,6 +70,7 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-site-switched', (data) => {
+                console.log('app-site-switched', data);
                 if (data.status !== false) {
                     this.loadSite(siteName, data);
                     this.siteIsLoaded = true;

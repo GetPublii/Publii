@@ -35,6 +35,10 @@ class URLHelper {
 
         if(urlsConfig.tagsPrefix) {
             url = domain + '/' + urlsConfig.tagsPrefix + '/' + URLHelper.createSlug(tagName) + '/';
+
+            if (urlsConfig.postsPrefix && urlsConfig.tagsPrefixAfterPostsPrefix) {
+                url = domain + '/' + urlsConfig.postsPrefix + '/' + urlsConfig.tagsPrefix + '/' + URLHelper.createSlug(tagName) + '/';
+            }
         }
 
         if(addIndexHtml) {
@@ -78,10 +82,18 @@ class URLHelper {
 
         if(pageType === 'author') {
             optionalPrefix = urlsConfig.authorsPrefix + '/';
+
+            if (urlsConfig.postsPrefix && urlsConfig.authorsPrefixAfterPostsPrefix) {
+                optionalPrefix = urlsConfig.postsPrefix + '/' + urlsConfig.authorsPrefix + '/';
+            }
         }
 
         if(pageType === 'tag' && urlsConfig.tagsPrefix !== '') {
             optionalPrefix = urlsConfig.tagsPrefix + '/';
+
+            if (urlsConfig.postsPrefix && urlsConfig.tagsPrefixAfterPostsPrefix) {
+                optionalPrefix = urlsConfig.postsPrefix + '/' + urlsConfig.tagsPrefix + '/';
+            }
         }
 
         let url = domain + '/' + optionalPrefix + pagePrefix + pageSuffix;

@@ -1,8 +1,21 @@
 {{#checkIf @config.custom.fontBody '!==' "system-ui"}}
-   {{#checkIf @config.custom.fontBody '!==' @config.custom.fontHeadings}}
-      <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontBody}}/{{@config.custom.fontBody}}.woff2" as="font" type="font/woff2" crossorigin>
-   {{/checkIf}}
+  <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontBody}}/{{@config.custom.fontBody}}.woff2" as="font" type="font/woff2" crossorigin>
+  {{#if @config.custom.fontBodyItalic}}
+    <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontBody}}/{{@config.custom.fontBody}}-italic.woff2" as="font" type="font/woff2" crossorigin>
+  {{/if}}
 {{/checkIf}}
+
 {{#checkIf @config.custom.fontHeadings '!==' "system-ui"}}
-   <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontHeadings}}/{{@config.custom.fontHeadings}}.woff2" as="font" type="font/woff2" crossorigin>
+  {{#checkIf @config.custom.fontHeadings '!==' @config.custom.fontBody}}
+    <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontHeadings}}/{{@config.custom.fontHeadings}}.woff2" as="font" type="font/woff2" crossorigin>
+    {{#if @config.custom.fontHeadingsItalic}}
+      <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontHeadings}}/{{@config.custom.fontHeadings}}-italic.woff2" as="font" type="font/woff2" crossorigin>
+    {{/if}}
+  {{else}}
+    {{#unless @config.custom.fontBodyItalic}}
+      {{#if @config.custom.fontHeadingsItalic}}
+        <link rel="preload" href="{{@website.assetsUrl}}/dynamic/fonts/{{@config.custom.fontHeadings}}/{{@config.custom.fontHeadings}}-italic.woff2" as="font" type="font/woff2" crossorigin>
+      {{/if}}
+    {{/unless}}
+  {{/checkIf}}
 {{/checkIf}}

@@ -285,7 +285,6 @@ export default {
             } 
 
             mainProcessAPI.send('app-image-upload', uploadData);
-            console.log('DATA', uploadData);
 
             mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
                 this.isEmpty = false;

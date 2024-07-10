@@ -121,11 +121,6 @@
       "sign": false,
       "icon": "build/installation/volume.icns",
       "title": "Install Publii"
-    },
-    "publish": {
-      "provider": "generic",
-      "url": "https://dev-zen.com/publii-publish-test/",
-      "channel": "stable"
     }
   },
   "deb": {

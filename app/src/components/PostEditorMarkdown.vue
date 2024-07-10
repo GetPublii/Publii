@@ -4,7 +4,8 @@
         ref="post-editor"
         :data-post-id="postID">
         <topbar-appbar />
-        <post-editor-top-bar />
+        <post-editor-top-bar
+            :itemType="itemType" />
 
         <div class="post-editor-wrapper">
             <div :class="{
@@ -47,13 +48,18 @@
                 <template v-else>{{ $t('editor.hideHelp') }}</template>
             </p-button>
 
-            <sidebar :isVisible="sidebarVisible" />
-            <author-popup />
-            <date-popup />
+            <sidebar 
+                :isVisible="sidebarVisible"
+                :itemType="itemType" />
+            <author-popup 
+                :itemType="itemType" />
+            <date-popup
+                :itemType="itemType" />
             <link-popup
                 ref="linkPopup"
                 :markdown="true" />
-            <help-panel-markdown :isOpen="helpPanelOpen" />
+            <help-panel-markdown 
+                :isOpen="helpPanelOpen" />
         </div>
     </div>
 </template>
@@ -68,7 +74,7 @@ import HelpPanelMarkdown from './post-editor/HelpPanelMarkdown';
 import LinkPopup from './post-editor/LinkPopup';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
-import PostHelper from './post-editor/PostHelper';
+import ItemHelper from './post-editor/ItemHelper';
 import Utils from './../helpers/utils';
 import InlineAttachment from './post-editor/CodeMirror/inline-attachment.js';
 import InlineAttachmentC4 from './post-editor/CodeMirror/codemirror-4.inline-attachment.js';
@@ -142,11 +148,14 @@ export default {
                     caption: '',
                     credits: ''
                 },
-                postViewOptions: {}
+                viewOptions: {}
             }
         };
     },
     computed: {
+        itemType () {
+            return this.$route.path.indexOf('/pages/editor/markdown/') > -1 ? 'page' : 'post';
+        },
         isEdit () {
             return !!this.postID;
         },
@@ -158,6 +167,14 @@ export default {
         }
     },
     mounted () {
+        if (this.itemType === 'page') {
+            delete this.postData.tags;
+            delete this.postData.mainTag;
+            delete this.postData.isExcludedOnHomepage;
+            delete this.postData.isHidden;
+            delete this.postData.isFeatured;
+        }
+
         window.onbeforeunload = e => {
             if (this.possibleDataLoss) {
                 e.returnValue = false;
@@ -216,15 +233,23 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            mainProcessAPI.send('app-post-load', {
+            let requestType = 'app-post-load';
+            let responseType = 'app-post-loaded';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-load';
+                responseType = 'app-page-loaded';
+            }
+
+            mainProcessAPI.send(requestType, {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if(data !== false && this.postID !== 0) {
-                    let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
+                    let loadedPostData = ItemHelper.loadItemData(data, this.$store, this.$moment, this.itemType);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     this.$refs['post-title'].innerText = this.postData.title;
                 }
@@ -244,13 +269,13 @@ export default {
         async savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('editor.cantSavePostWithEmptyTitle')
+                    message: this.itemType === 'page' ? this.$t('editor.cantSavePageWithEmptyTitle') : this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
             }
 
-            let postData = await PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            let postData = await ItemHelper.prepareItemData(newPostStatus, this.postID, this.$store, this.postData, this.itemType);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
@@ -258,21 +283,30 @@ export default {
                 this.$bus.$emit('rendering-popup-display', {
                     itemID: this.postID,
                     postData: postData,
-                    postOnly: true
+                    postOnly: true,
+                    itemType: this.itemType
                 });
             }
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            mainProcessAPI.send('app-post-save', postData);
+            let requestType = 'app-post-save';
+            let responseType = 'app-post-saved';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-save';
+                responseType = 'app-page-saved';
+            }
+
+            mainProcessAPI.send(requestType, postData);
 
             // Post save
-            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
 
-                if (data.posts) {
+                if (data.posts || data.pages) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
                     alert(this.$t('editor.errorOccurred'));
@@ -280,16 +314,18 @@ export default {
             });
         },
         savedPost (newStatus, updatedData, closeEditor = false) {
-            this.$store.commit('refreshAfterPostUpdate', updatedData);
+            if (this.itemType === 'post') {
+                this.$store.commit('refreshAfterPostUpdate', updatedData);
+            } else {
+                this.$store.commit('refreshAfterPageUpdate', updatedData);
+            }
 
             if (closeEditor) {
                 this.closeEditor();
                 return;
-            } else {
-                // this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
             }
 
-            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/markdown/' + this.postID);
+            this.$router.push('/site/' + this.$route.params.name + '/' + this.itemType + 's/editor/markdown/' + this.postID);
             let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
@@ -298,7 +334,11 @@ export default {
                 if (newStatus === 'draft') {
                     message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = this.$t('editor.newPostCreated');
+                    if (this.itemType === 'page') {
+                        message = this.$t('editor.newPageCreated');
+                    } else {
+                        message = this.$t('editor.newPostCreated');
+                    }
                 }
             }
 

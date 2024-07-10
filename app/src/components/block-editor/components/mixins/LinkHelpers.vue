@@ -33,6 +33,13 @@ export default {
 
       return this.$parent.currentSiteData.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
     },
+    pages () {
+      if (!this.$parent.currentSiteData || !this.$parent.currentSiteData.pages.length) {
+        return [0];
+      }
+
+      return this.$parent.currentSiteData.pages.filter(page => page.status.indexOf('published') > -1).map(page => page.id);
+    },
     filesList () {
       if (!this.$parent.currentSiteData || !this.$parent.currentSiteData.files.length) {
         return [''];
@@ -78,6 +85,13 @@ export default {
       }
 
       return this.$parent.currentSiteData.posts.filter(post => post.id === value).map(post => post.title)[0];
+    },
+    customPageLabels (value) {
+      if (!this.$parent.currentSiteData || !this.$parent.currentSiteData.pages.length) {
+        return '';
+      }
+
+      return this.$parent.currentSiteData.pages.filter(page => page.id === value).map(page => page.title)[0];
     }
   }
 }

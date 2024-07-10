@@ -18,7 +18,7 @@ export default {
     methods: {
         init () {
             if (!this.editorInstance) {
-                this.editorInstance = new EditorBridge(this.$parent.postID);
+                this.editorInstance = new EditorBridge(this.$parent.postID, this.$parent.itemType);
             } else {
                 this.editorInstance.reloadEditor();
             }

@@ -1,0 +1,13 @@
+{{#each subpages}}
+   {{#getPage @this}}
+      <li>
+         <a href="{{url}}">{{title}}</a>
+         {{#if subpages}}
+            <ul>
+               {{> subpages-list}}
+            </ul>
+         {{/if}}
+      </li>
+   {{/getPage}}
+{{/each}}
+

@@ -38,7 +38,7 @@ function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
                 secondParam = 'authorImages';
             } else if (firstParam.indexOf('/media/tags/') > -1) {
                 secondParam = 'tagImages';
-            } else if (firstParam.indexOf('/media/posts/') > -1) {
+            } else if (firstParam.indexOf('/media/posts/') > -1 || firstParam.indexOf('/media/pages/') > -1) {
                 secondParam = 'contentImages';
             } else if (firstParam.indexOf('/media/website/') > -1) {
                 secondParam = 'optionImages';

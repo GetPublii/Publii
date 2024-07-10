@@ -167,6 +167,7 @@ class RendererContextPostPreview extends RendererContext {
                     p.id != @postID AND
                     p.status LIKE '%published%' AND
                     p.status NOT LIKE '%trashed%' AND
+                    p.status NOT LIKE '%is-page%' AND
                     p.status NOT LIKE '%hidden%'
                     ${tagsCondition}
                 GROUP BY
@@ -189,6 +190,7 @@ class RendererContextPostPreview extends RendererContext {
                     id != @postID AND
                     status LIKE '%published%' AND
                     status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%is-page%' AND
                     status NOT LIKE '%hidden%'
                 ORDER BY
                     ${temporaryPostsOrdering}
@@ -267,6 +269,7 @@ class RendererContextPostPreview extends RendererContext {
                 p.id != @postID AND
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%' AND
                 p.status NOT LIKE '%hidden%'
                 ${conditions}
             GROUP BY

@@ -88,6 +88,10 @@ class PreviewEvents {
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }
 
+                    if (typeof errorDesc === 'object') {
+                        errorDesc = errorDesc.translation;
+                    }
+
                     event.sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
@@ -170,7 +174,7 @@ class PreviewEvents {
 
         url = path.join(basePath, 'index.html');
 
-        if (mode === 'tag' || mode === 'post' || mode === 'author') {
+        if (mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author') {
             url = path.join(basePath, 'preview.html');
         }
 

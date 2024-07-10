@@ -1,7 +1,8 @@
 <template>
     <div class="post-editor post-editor-wysiwyg" ref="post-editor">
         <topbar-appbar />
-        <post-editor-top-bar />
+        <post-editor-top-bar 
+            :itemType="itemType" />
 
         <div class="post-editor-wrapper">
             <div :class="{
@@ -15,13 +16,14 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
-                        :data-translation="$t('post.addPostTitle')"
+                        :data-translation="itemType === 'post' ? $t('post.addPostTitle') : $t('page.addPageTitle')"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
                         @input="updateTitle" />
 
-                    <editor ref="tinymceEditor" />
+                    <editor 
+                        ref="tinymceEditor" />
 
                     <input
                         name="image"
@@ -31,7 +33,8 @@
                 </div>
             </div>
 
-            <writers-panel :isVisible="writersPanelOpen" />
+            <writers-panel 
+                :isVisible="writersPanelOpen" />
 
             <p-button
                 id="post-stats-button"
@@ -43,20 +46,25 @@
                 <template v-else>{{ $t('editor.hideStats') }}</template>
             </p-button>
 
-            <sidebar :isVisible="sidebarVisible" />
-            <author-popup />
-            <date-popup />
-            <source-code-editor ref="source-code-editor" />
+            <sidebar 
+                :isVisible="sidebarVisible"
+                :itemType="itemType" />
+            <author-popup 
+                :itemType="itemType" />
+            <date-popup 
+                :itemType="itemType" />
+            <source-code-editor 
+                ref="source-code-editor" />
             <link-popup />
             <link-toolbar />
             <gallery-popup />
-            <inline-editor ref="inline-editor" />
+            <inline-editor 
+                ref="inline-editor" />
         </div>
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import PostEditorSidebar from './post-editor/Sidebar';
 import InlineEditor from './post-editor/InlineEditor';
 import PostEditorSourceCode from './post-editor/SourceCodeEditor';
@@ -69,7 +77,7 @@ import GalleryPopup from './post-editor/GalleryPopup';
 import Editor from './post-editor/Editor';
 import TopBarAppBar from './TopBarAppBar';
 import PostEditorTopBar from './post-editor/TopBar';
-import PostHelper from './post-editor/PostHelper';
+import ItemHelper from './post-editor/ItemHelper';
 import Utils from './../helpers/utils';
 import PostEditorsCommon from './mixins/PostEditorsCommon';
 
@@ -133,11 +141,14 @@ export default {
                     caption: '',
                     credits: ''
                 },
-                postViewOptions: {}
+                viewOptions: {}
             }
         };
     },
     computed: {
+        itemType () {
+            return this.$route.path.indexOf('/pages/editor/tinymce/') > -1 ? 'page' : 'post';
+        },
         isEdit () {
             return !!this.postID;
         },
@@ -158,6 +169,14 @@ export default {
         }
     },
     mounted () {
+        if (this.itemType === 'page') {
+            delete this.postData.tags;
+            delete this.postData.mainTag;
+            delete this.postData.isExcludedOnHomepage;
+            delete this.postData.isHidden;
+            delete this.postData.isFeatured;
+        }
+
         window.onbeforeunload = e => {
             if (this.possibleDataLoss) {
                 e.returnValue = false;
@@ -213,15 +232,23 @@ export default {
         },
         loadPostData () {
             // Send request for a post to the back-end
-            mainProcessAPI.send('app-post-load', {
+            let requestType = 'app-post-load';
+            let responseType = 'app-post-loaded';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-load';
+                responseType = 'app-page-loaded';
+            }
+
+            mainProcessAPI.send(requestType, {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.postID
             });
 
             // Load post data
-            mainProcessAPI.receiveOnce('app-post-loaded', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if (data !== false && this.postID !== 0) {
-                    let loadedPostData = PostHelper.loadPostData(data, this.$store, this.$moment);
+                    let loadedPostData = ItemHelper.loadItemData(data, this.$store, this.$moment, this.itemType);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     this.$refs['post-title'].innerText = this.postData.title;
                     $('#post-editor').val(this.postData.text);
@@ -243,14 +270,14 @@ export default {
         async savePost (newPostStatus, preview = false, closeEditor = false) {
             if (this.postData.title.trim() === '') {
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('editor.cantSavePostWithEmptyTitle')
+                    message: this.itemType === 'page' ? this.$t('editor.cantSavePageWithEmptyTitle') : this.$t('editor.cantSavePostWithEmptyTitle')
                 });
 
                 return;
             }
 
             tinymce.triggerSave();
-            let postData = await PostHelper.preparePostData(newPostStatus, this.postID, this.$store, this.postData);
+            let postData = await ItemHelper.prepareItemData(newPostStatus, this.postID, this.$store, this.postData, this.itemType);
 
             if(!preview) {
                 this.savingPost(newPostStatus, postData, closeEditor);
@@ -258,21 +285,30 @@ export default {
                 this.$bus.$emit('rendering-popup-display', {
                     itemID: this.postID,
                     postData: postData,
-                    postOnly: true
+                    postOnly: true,
+                    itemType: this.itemType
                 });
             }
         },
         savingPost (newStatus, postData, closeEditor = false) {
             // Send form data to the back-end
-            mainProcessAPI.send('app-post-save', postData);
+            let requestType = 'app-post-save';
+            let responseType = 'app-post-saved';
+
+            if (this.itemType === 'page') {
+                requestType = 'app-page-save';
+                responseType = 'app-page-saved';
+            }
+
+            mainProcessAPI.send(requestType, postData);
 
             // Post save
-            mainProcessAPI.receiveOnce('app-post-saved', (data) => {
+            mainProcessAPI.receiveOnce(responseType, (data) => {
                 if (this.postID === 0) {
                     this.postID = data.postID;
                 }
 
-                if (data.posts) {
+                if (data.posts || data.pages) {
                     this.savedPost(newStatus, data, closeEditor);
                 } else {
                     alert(this.$t('editor.errorOccurred'));
@@ -280,16 +316,22 @@ export default {
             });
         },
         savedPost (newStatus, updatedData, closeEditor = false) {
-            this.$store.commit('refreshAfterPostUpdate', updatedData);
+            if (this.itemType === 'post') {
+                this.$store.commit('refreshAfterPostUpdate', updatedData);
+            } else {
+                this.postID = updatedData.pageID;
+                this.$bus.$emit('page-data-updated', updatedData.pageID);
+                this.$store.commit('refreshAfterPageUpdate', updatedData);
+            }
 
             if (closeEditor) {
                 this.closeEditor();
                 return;
             } else {
-                this.$refs['tinymceEditor'].editorInstance.updatePostID(this.postID);
+                this.$refs['tinymceEditor'].editorInstance.updateItemID(this.postID);
             }
 
-            this.$router.push('/site/' + this.$route.params.name + '/posts/editor/tinymce/' + this.postID);
+            this.$router.push('/site/' + this.$route.params.name + '/' + this.itemType + 's/editor/tinymce/' + this.postID);
             let message = this.$t('editor.changesSaved');
 
             if (this.newPost) {
@@ -298,7 +340,11 @@ export default {
                 if (newStatus === 'draft') {
                     message = this.$t('editor.newDraftCreated');
                 } else {
-                    message = this.$t('editor.newPostCreated');
+                    if (this.itemType === 'page') {
+                        message = this.$t('editor.newPageCreated');
+                    } else {
+                        message = this.$t('editor.newPostCreated');
+                    }
                 }
             }
 

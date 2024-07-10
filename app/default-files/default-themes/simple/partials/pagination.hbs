@@ -4,41 +4,41 @@
          {{#if @pagination.nextPage}}
             {{#checkIf @website.postsOrdering '==' "desc"}}
                <div class="pagination__item">
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
-                  </svg> 
-                  <a href="{{@pagination.nextPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.prev' }} 
+                  <a href="{{@pagination.nextPageUrl}}" class="btn btn--icon">
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+                     </svg> 
+                     <span>{{ translate 'partials.pagination.prev' }}</span>
                   </a>
                </div>
             {{else}}
                <div class="pagination__item">
-                  <a href="{{@pagination.nextPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.next' }}  
+                  <a href="{{@pagination.nextPageUrl}}" class="btn btn--icon">
+                     <span>{{ translate 'partials.pagination.next' }}</span> 
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
+                     </svg> 
                   </a>  
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
-                  </svg>
                </div>
             {{/checkIf}}
          {{/if}}
          {{#if @pagination.previousPage}}
             {{#checkIf @website.postsOrdering '==' "desc"}}
                <div class="pagination__item">
-                  <a href="{{@pagination.previousPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.next' }} 
+                  <a href="{{@pagination.previousPageUrl}}" class="btn btn--icon">
+                     <span>{{ translate 'partials.pagination.next' }}</span> 
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
+                     </svg>
                   </a> 
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
-                  </svg>
                </div>
             {{else}}
                <div class="pagination__item">
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
-                  </svg>  
-                  <a href="{{@pagination.previousPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.prev' }} 
+                  <a href="{{@pagination.previousPageUrl}}" class="btn btn--icon">
+                        <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+                     </svg>
+                     <span>{{ translate 'partials.pagination.prev' }}</span>
                   </a>
                </div>
             {{/checkIf}}
@@ -47,20 +47,20 @@
          {{#if @pagination.previousPage}}
             {{#checkIf @website.postsOrdering '==' "desc"}}
                <div class="pagination__item">
-                  <a href="{{@pagination.previousPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.next' }} 
+                  <a href="{{@pagination.previousPageUrl}}" class="btn btn--icon">
+                     <span>{{ translate 'partials.pagination.next' }}</span> 
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
+                     </svg>
                   </a> 
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
-                  </svg>
                </div>
             {{else}}
                <div class="pagination__item">
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
-                  </svg> 
-                  <a href="{{@pagination.previousPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.prev' }} 
+                  <a href="{{@pagination.previousPageUrl}}" class="btn btn--icon">
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+                     </svg> 
+                     <span>{{ translate 'partials.pagination.prev' }}</span>
                   </a>
                </div>
             {{/checkIf}}
@@ -68,21 +68,21 @@
          {{#if @pagination.nextPage}}
             {{#checkIf @website.postsOrdering '==' "desc"}}
                <div class="pagination__item">
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
-                  </svg> 
-                  <a href="{{@pagination.nextPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.prev' }} 
+                  <a href="{{@pagination.nextPageUrl}}" class="btn btn--icon">
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-prev"/>
+                     </svg>  
+                     <span>{{ translate 'partials.pagination.prev' }}</span>
                   </a>
                </div>
             {{else}}
                <div class="pagination__item">
-                  <a href="{{@pagination.nextPageUrl}}" class="readmore">
-                     {{ translate 'partials.pagination.next' }} 
+                  <a href="{{@pagination.nextPageUrl}}" class="btn btn--icon">
+                     <span>{{ translate 'partials.pagination.next' }}</span> 
+                     <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
+                     </svg>
                   </a> 
-                  <svg width="1.041em" height="0.416em" aria-hidden="true">
-                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#arrow-next"/>
-                  </svg>
                </div>
             {{/checkIf}}
          {{/if}}

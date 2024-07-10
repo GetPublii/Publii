@@ -9,6 +9,7 @@ import siteNames from './getters/site-names';
 import siteDisplayNames from './getters/site-display-names';
 import siteTags from './getters/site-tags';
 import siteAuthors from './getters/site-authors';
+import sitePages from './getters/site-pages';
 import sitePosts from './getters/site-posts';
 import sitePlugins from './getters/site-plugins';
 import appVersion from './getters/app-version';
@@ -32,6 +33,7 @@ export default new Vuex.Store({
         siteDisplayNames,
         siteTags,
         siteAuthors,
+        sitePages,
         sitePosts,
         sitePlugins,
         appVersion,

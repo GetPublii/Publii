@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const Model = require('./model.js');
 const Authors = require('./authors.js');
+const Pages = require('./pages.js');
 const Posts = require('./posts.js');
 const slug = require('./helpers/slug');
 const ImageHelper = require('./helpers/image.helper.js');
@@ -23,6 +24,7 @@ class Author extends Model {
         this.id = parseInt(authorData.id, 10);
         this.authorsData = new Authors(appInstance, authorData);
         this.postsData = new Posts(appInstance, authorData);
+        this.pagesData = new Pages(appInstance, authorData);
         this.storeMode = storeMode;
 
         if (authorData.additionalData) {
@@ -133,6 +135,7 @@ class Author extends Model {
             message: 'author-added',
             authorID: this.id,
             postsAuthors: this.postsData.loadAuthorsXRef(),
+            pagesAuthors: this.pagesData.loadAuthorsXRef(),
             authors: this.authorsData.load()
         };
     }

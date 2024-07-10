@@ -1,6 +1,5 @@
 <template>
     <div class="post-editor-topbar">
-
         <label v-if="sourceCodeEditorVisible">
             {{ $t('editor.sourceCode') }}
         </label>
@@ -10,8 +9,13 @@
             id="post-back-to-posts-button"
             type="clean-invert icon"
             icon="arrow-left"
-            @click.native="cancelPost">
-            {{ $t('ui.backToPosts') }}
+            @click.native="cancelItem">
+            <template v-if="itemType === 'post'">
+                {{ $t('ui.backToPosts') }}
+            </template>
+            <template v-else-if="itemType === 'page'">
+                {{ $t('ui.backToPages') }}
+            </template>
         </p-button>
 
         <p-button
@@ -67,10 +71,13 @@
 </template>
 
 <script>
-import PostHelper from './PostHelper';
+import ItemHelper from './ItemHelper';
 
 export default {
     name: 'post-editor-top-bar',
+    props: [
+        'itemType'
+    ],
     computed: {
         dropdownItems () {
             return [
@@ -165,28 +172,34 @@ export default {
                 this.$refs['dropdown-button'].hideDropdown();
             }
         },
-        cancelPost () {
-            if(!this.$parent.possibleDataLoss) {
+        cancelItem () {
+            if (!this.$parent.possibleDataLoss) {
                 this.$parent.closeEditor();
                 return;
             }
 
             this.$bus.$emit('confirm-display', {
-                message: this.$t('ui.cancelPostWarningMsg'),
+                message: this.$t('ui.cancelWarningMsg'),
                 isDanger: true,
-                okClick: this.cleanUpPost
+                okClick: this.cleanUpItem
             });
         },
-        cleanUpPost () {
+        cleanUpItem () {
             // Get the text data
             let preparedText = this.$parent.postData.text;
             // Remove directory path from images src attribute
-            let mediaPath = PostHelper.getMediaPath(this.$store, this.$parent.postID);
+            let mediaPath = ItemHelper.getMediaPath(this.$store, this.$parent.postID, this.itemType);
             preparedText = preparedText.replace(/file:(\/){1,}/gmi, 'file:///');
             preparedText = preparedText.split(mediaPath).join('#DOMAIN_NAME#');
             preparedText = preparedText.replace(/file:(\/){1,}\#DOMAIN_NAME\#/gmi, '#DOMAIN_NAME#');
             // Send an event which will remove unused images from the post editor
-            mainProcessAPI.send('app-post-cancel', {
+            let eventToSend = 'app-post-cancel';
+
+            if (this.itemType === 'page') {
+                eventToSend = 'app-page-cancel';
+            }
+
+            mainProcessAPI.send(eventToSend, {
                 'site': this.$store.state.currentSite.config.name,
                 'id': this.$parent.postID,
                 'text': preparedText,
@@ -195,7 +208,7 @@ export default {
                     alt: this.$parent.postData.featuredImage.alt,
                     caption: this.$parent.postData.featuredImage.caption,
                     credits: this.$parent.postData.featuredImage.credits
-                },
+                }
             });
 
             this.$parent.closeEditor();

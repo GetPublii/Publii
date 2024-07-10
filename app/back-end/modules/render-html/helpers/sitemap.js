@@ -44,7 +44,7 @@ class Sitemap {
      * Creates sitemap.xml file
      */
     async create () {
-        this.getPostData();
+        this.getData();
 
         await this.getFilesList().then(() => {
             this.renderXML();
@@ -55,7 +55,7 @@ class Sitemap {
     /**
      * Get post data
      */
-    getPostData () {
+    getData () {
         let momentOriginalLocale = moment.locale();
         moment.locale('en');
 
@@ -213,23 +213,71 @@ class Sitemap {
      * Retrieves list of files to parse
      */
     async getFilesList () {
-        let files = fs.readdirSync(this.baseDirectory);
+        let files;
         let internals = this.getInternalsList();
 
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            files = fs.readdirSync(path.join(this.baseDirectory, this.siteConfig.advanced.urls.postsPrefix));
+
+            for (let file of files) {
+                // Skip hidden files and internal directories
+                if (file.indexOf('.') === 0 || internals.indexOf(file) > -1) {
+                    continue;
+                }
+    
+                // Detect author pages
+                if (file === this.siteConfig.advanced.urls.authorsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                    await this.getAuthorsFilesList();
+                    continue;
+                }
+    
+                // Detect homepage pagination
+                if (file === this.siteConfig.advanced.urls.pageName) {
+                    if (!this.siteConfig.advanced.homepageNoIndexPagination && !this.siteConfig.advanced.homepageNoPagination) {
+                        await this.getHomepagePaginationFilesList();
+                    }
+    
+                    continue;
+                }
+    
+                // Detect tag pages - when tags prefix is empty
+                if (file.indexOf('.') === -1 && this.siteConfig.advanced.urls.tagsPrefix === '' && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                    await this.getTagsFilesList(file);
+                    continue;
+                }
+    
+                // Detect tag pages - when tags prefix is not empty
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '' && file === this.siteConfig.advanced.urls.tagsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                    await this.getTagsFilesList(file, this.siteConfig.advanced.urls.tagsPrefix);
+                    continue;
+                }
+    
+                // Detect post/pages files
+                await this.getPostsAndPagesFilesList(file, true);
+            }
+        }
+
+        files = fs.readdirSync(this.baseDirectory);
+        
         for (let file of files) {
             // Skip hidden files and internal directories
             if (file.indexOf('.') === 0 || internals.indexOf(file) > -1) {
                 continue;
             }
 
+            // Skip posts prefix directory
+            if (file === this.siteConfig.advanced.urls.postsPrefix) {  
+                continue;
+            }
+
             // Detect author pages
-            if (file === this.siteConfig.advanced.urls.authorsPrefix) {
+            if (file === this.siteConfig.advanced.urls.authorsPrefix && !this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
                 await this.getAuthorsFilesList();
                 continue;
             }
 
             // Detect homepage pagination
-            if (file === this.siteConfig.advanced.urls.pageName) {
+            if (file === this.siteConfig.advanced.urls.pageName && !this.siteConfig.advanced.urls.postsPrefix) {
                 if (!this.siteConfig.advanced.homepageNoIndexPagination && !this.siteConfig.advanced.homepageNoPagination) {
                     await this.getHomepagePaginationFilesList();
                 }
@@ -238,26 +286,26 @@ class Sitemap {
             }
 
             // Detect tag pages - when tags prefix is empty
-            if (file.indexOf('.') === -1 && this.siteConfig.advanced.urls.tagsPrefix === '') {
+            if (file.indexOf('.') === -1 && this.siteConfig.advanced.urls.tagsPrefix === '' && !this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
                 await this.getTagsFilesList(file);
                 continue;
             }
 
             // Detect tag pages - when tags prefix is not empty
-            if (this.siteConfig.advanced.urls.tagsPrefix !== '' && file === this.siteConfig.advanced.urls.tagsPrefix) {
+            if (this.siteConfig.advanced.urls.tagsPrefix !== '' && file === this.siteConfig.advanced.urls.tagsPrefix && !this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
                 await this.getTagsFilesList(file, this.siteConfig.advanced.urls.tagsPrefix);
                 continue;
             }
 
-            // Detect post files
+            // Detect post/pages files with clean URLs disabled
             if (!this.siteConfig.advanced.urls.cleanUrls && file.indexOf('.html') > 0) {
-                await this.getPostsFilesList(file);
+                await this.getPostsAndPagesFilesList(file, false, true);
                 continue;
             }
 
-            // Detect post files
+            // Detect post/pages files
             if (this.siteConfig.advanced.urls.cleanUrls) {
-                await this.getPostsFilesList(file, true);
+                await this.getPostsAndPagesFilesList(file, true, true);
             }
         }
     }
@@ -327,7 +375,14 @@ class Sitemap {
             return;
         }
 
-        let files = fs.readdirSync(path.join(this.baseDirectory, this.siteConfig.advanced.urls.authorsPrefix));
+        let authorsPathToCheck = path.join(this.baseDirectory, this.siteConfig.advanced.urls.authorsPrefix);
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix;
+
+        if (usePostsPrefix) {
+            authorsPathToCheck = path.join(this.baseDirectory, this.siteConfig.advanced.urls.postsPrefix, this.siteConfig.advanced.urls.authorsPrefix);
+        }
+
+        let files = fs.readdirSync(authorsPathToCheck);
 
         for (let file of files) {
             // Skip files
@@ -335,18 +390,21 @@ class Sitemap {
                 continue;
             }
 
-            let authorFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.authorsPrefix, file, 'index.html'), 'utf8');
+            let authorFileContent = await readFile(path.join(authorsPathToCheck, file, 'index.html'), 'utf8');
             
             if (authorFileContent.indexOf('name="robots" content="noindex') === -1) {
-                this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
+                if (usePostsPrefix) {
+                    this.fileList.push(this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
+                } else {
+                    this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/index.html');
+                }
 
                 if (this.siteConfig.advanced.authorNoIndexPagination || this.siteConfig.advanced.authorNoPagination) {
                     continue;
                 }
 
                 let paginationPath = path.join(
-                    this.baseDirectory,
-                    this.siteConfig.advanced.urls.authorsPrefix,
+                    authorsPathToCheck,
                     file,
                     this.siteConfig.advanced.urls.pageName
                 );
@@ -362,7 +420,12 @@ class Sitemap {
 
                         // Add all pages of pagination
                         let pageName = this.siteConfig.advanced.urls.pageName;
-                        this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
+                       
+                        if (usePostsPrefix) {
+                            this.fileList.push(this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
+                        } else {
+                            this.fileList.push(this.siteConfig.advanced.urls.authorsPrefix + '/' + file + '/' + pageName + '/' + authorFile + '/index.html');
+                        }
                     }
                 }
             }
@@ -377,13 +440,22 @@ class Sitemap {
      */
     async getTagsFilesList (tagName, prefix = '') {
         const readFile = util.promisify(fs.readFile);
+        let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
+        let tagsPrefix = this.siteConfig.advanced.urls.tagsPrefix;
+        let usePostsPrefix = this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix;
 
         if (!this.shouldIndexTags()) {
             return Promise.resolve();
         }
 
         if (prefix === '') {
-            let tagFileContent = await readFile(path.join(this.baseDirectory, tagName, 'index.html'), 'utf8');
+            let tagFileContent;
+            
+            if (usePostsPrefix) {
+                tagFileContent = await readFile(path.join(this.baseDirectory, postsPrefix, tagName, 'index.html'), 'utf8');
+            } else {
+                tagFileContent = await readFile(path.join(this.baseDirectory, tagName, 'index.html'), 'utf8');
+            }
 
             // Detect if noindex does not exist in the post file
             if (tagFileContent.indexOf('name="robots" content="noindex') === -1) {
@@ -396,6 +468,10 @@ class Sitemap {
 
                 let paginationPath = path.join(this.baseDirectory, tagName, this.siteConfig.advanced.urls.pageName);
 
+                if (usePostsPrefix) {
+                    paginationPath = path.join(this.baseDirectory, postsPrefix, tagName, this.siteConfig.advanced.urls.pageName);
+                }
+
                 if (fs.existsSync(paginationPath)) {
                     let files = fs.readdirSync(paginationPath);
 
@@ -407,7 +483,12 @@ class Sitemap {
 
                         // Add all pages of pagination
                         let pageName = this.siteConfig.advanced.urls.pageName;
-                        this.fileList.push(tagName + '/' + pageName + '/' + file + '/index.html');
+
+                        if (usePostsPrefix) {
+                            this.fileList.push(postsPrefix + '/' + tagName + '/' + pageName + '/' + file + '/index.html');
+                        } else {
+                            this.fileList.push(tagName + '/' + pageName + '/' + file + '/index.html');
+                        }
                     }
                 }
             }
@@ -415,7 +496,13 @@ class Sitemap {
             return Promise.resolve();
         }
 
-        let files = fs.readdirSync(path.join(this.baseDirectory, this.siteConfig.advanced.urls.tagsPrefix));
+        let tagsPath = path.join(this.baseDirectory, tagsPrefix);
+
+        if (usePostsPrefix) {
+            tagsPath = path.join(this.baseDirectory, postsPrefix, tagsPrefix);
+        }
+
+        let files = fs.readdirSync(tagsPath);
 
         for (let file of files) {
             // Skip files
@@ -423,19 +510,22 @@ class Sitemap {
                 continue;
             }
 
-            let tagFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.tagsPrefix, file, 'index.html'), 'utf8');
+            let tagFileContent = await readFile(path.join(tagsPath, file, 'index.html'), 'utf8');
 
             // Detect if noindex does not exist in the post file
             if (tagFileContent.indexOf('name="robots" content="noindex') === -1) {
-                this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/index.html');
+                if (usePostsPrefix) {
+                    this.fileList.push(postsPrefix + '/' + tagsPrefix + '/' + file + '/index.html');
+                } else {
+                    this.fileList.push(tagsPrefix + '/' + file + '/index.html');
+                }
 
                 if (this.siteConfig.advanced.tagNoIndexPagination || this.siteConfig.advanced.tagNoPagination) {
                     continue;
                 }
 
                 let paginationPath = path.join(
-                    this.baseDirectory,
-                    this.siteConfig.advanced.urls.tagsPrefix,
+                    tagsPath,
                     file,
                     this.siteConfig.advanced.urls.pageName
                 );
@@ -451,7 +541,12 @@ class Sitemap {
 
                         // Add all pages of pagination
                         let pageName = this.siteConfig.advanced.urls.pageName;
-                        this.fileList.push(this.siteConfig.advanced.urls.tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
+
+                        if (usePostsPrefix) {
+                            this.fileList.push(postsPrefix + '/' + tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
+                        } else {
+                            this.fileList.push(tagsPrefix + '/' + file + '/' + pageName + '/' + tagFile + '/index.html');
+                        }
                     }
                 }
             }
@@ -466,7 +561,17 @@ class Sitemap {
             return;
         }
 
-        let files = fs.readdirSync(path.join(this.baseDirectory, this.siteConfig.advanced.urls.pageName));
+        let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
+        let files; 
+        let filesPath;
+        
+        if (postsPrefix) {
+            filesPath = path.join(this.baseDirectory, postsPrefix, this.siteConfig.advanced.urls.pageName);
+            files = fs.readdirSync(filesPath);
+        } else {
+            filesPath = path.join(this.baseDirectory, this.siteConfig.advanced.urls.pageName);
+            files = fs.readdirSync(filesPath);
+        }
 
         for (let file of files) {
             // Skip files
@@ -475,11 +580,16 @@ class Sitemap {
             }
 
             const readFile = util.promisify(fs.readFile);
-            let homeFileContent = await readFile(path.join(this.baseDirectory, this.siteConfig.advanced.urls.pageName, file, 'index.html'), 'utf8');
+            let homeFileContent = await readFile(path.join(filesPath, file, 'index.html'), 'utf8');
 
             if (homeFileContent.indexOf('name="robots" content="noindex') === -1) {
                 let pageName = this.siteConfig.advanced.urls.pageName;
-                this.fileList.push(pageName + '/' + file + '/index.html');
+
+                if (postsPrefix) {
+                    this.fileList.push(postsPrefix + '/' + pageName + '/' + file + '/index.html');
+                } else {
+                    this.fileList.push(pageName + '/' + file + '/index.html');
+                }
             }
         }
     }
@@ -490,8 +600,12 @@ class Sitemap {
      * @param file
      * @param cleanUrlsEnabled
      */
-    async getPostsFilesList (file, cleanUrlsEnabled = false) {
+    async getPostsAndPagesFilesList (file, cleanUrlsEnabled = false, skipPostsPrefix = false) {
         const readFile = util.promisify(fs.readFile);
+
+        if (!skipPostsPrefix && this.siteConfig.advanced.urls.postsPrefix) {
+            file = path.join(this.siteConfig.advanced.urls.postsPrefix, file);
+        }
 
         if (!cleanUrlsEnabled) {
             // Read post file
@@ -539,7 +653,46 @@ class Sitemap {
             }
         }
 
+        // Look for subpages
+        let baseDir = path.join(this.baseDirectory, file);
+
+        if (fs.lstatSync(baseDir).isDirectory()) {
+            let subpages = fs.readdirSync(baseDir);
+            this.scanSubpages(subpages, file);
+        }
+
         return Promise.resolve()
+    }
+
+    // recusive function to scan subpages
+    scanSubpages (subpages, currentPath) {
+        for (let subpage of subpages) {
+            if (subpage.indexOf('.') > -1) {
+                continue;
+            }
+
+            let filePath = path.join(this.baseDirectory, currentPath, subpage, 'index.html');
+
+            if (fs.existsSync(filePath)) {
+                let postFileContent = fs.readFileSync(filePath, 'utf8');
+
+                if (postFileContent.indexOf('name="robots" content="noindex') === -1) {
+                    this.fileList.push(currentPath + '/' + subpage + '/');
+                }
+            }
+
+            let pathToScan = path.join(this.baseDirectory, currentPath, subpage);
+            
+            if (!fs.lstatSync(pathToScan).isDirectory()) {
+                continue;
+            }
+
+            let subpagesList = fs.readdirSync(pathToScan);
+
+            if (subpagesList.length) {
+                this.scanSubpages(subpagesList, path.join(currentPath, subpage));
+            }
+        }
     }
 
     /**

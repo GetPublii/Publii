@@ -574,6 +574,7 @@ export default {
 
                     this.$store.commit('setAuthors', data.authors);
                     this.$store.commit('setPostAuthors', data.postsAuthors);
+                    this.$store.commit('setPageAuthors', data.pagesAuthors);
                     this.$bus.$emit('authors-list-updated');
                     return;
                 }

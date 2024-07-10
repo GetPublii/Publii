@@ -62,7 +62,7 @@ export default {
                 this.runRenderingPreview(config, 'author');
             } else if (config && config.postOnly) {
                 this.isPostPreview = true;
-                this.runRenderingPreview(config, 'post');
+                this.runRenderingPreview(config, config.itemType);
             } else {
                 this.runRenderingPreview();
             }
@@ -96,6 +96,11 @@ export default {
                 renderConfig.itemID = itemConfig.itemID;
                 renderConfig.postData = itemConfig.postData;
                 renderConfig.source = 'post-editor';
+            } else if (mode === 'page' && itemConfig) {
+                renderConfig.mode = 'page';
+                renderConfig.itemID = itemConfig.itemID;
+                renderConfig.postData = itemConfig.postData;
+                renderConfig.source = 'post-editor';
             } else if (mode === 'home') {
                 renderConfig.mode = 'home';
             } else if (mode === 'tag') {
@@ -113,7 +118,7 @@ export default {
             mainProcessAPI.receiveOnce('app-preview-rendered', (data) => {
                 console.log('RECEIVE', data);
                 if (data.status === true) {
-                    if (mode === 'post' || mode === 'home' || mode === 'tag' || mode === 'author') {
+                    if (mode === 'post' || mode === 'page' || mode === 'home' || mode === 'tag' || mode === 'author') {
                         setTimeout(() => {
                             this.isVisible = false;
                         }, 500);

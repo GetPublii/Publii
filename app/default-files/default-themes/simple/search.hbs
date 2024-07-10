@@ -1,27 +1,9 @@
 {{> head}}
-{{> top}}
+{{> navbar}}
 <main class="page page--search">
-   <article class="post search-page">
-      <div class="hero">
-         {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-            <figure class="hero__image hero__image--overlay">
-                <img
-                   src="{{@config.custom.uploadHero}}"
-                   {{#if @config.site.responsiveImages}}
-                      {{responsiveImageAttributes @config.custom.uploadHero}}
-                   {{/if}}
-                   {{ lazyload "eager" }}
-                   {{imageDimensions @config.custom.uploadHero}}
-                   alt="{{@config.custom.uploadHeroAlt}}">
-
-                {{#if @config.custom.uploadHeroCaption}}
-                   <figcaption>
-                      {{@config.custom.uploadHeroCaption}}
-                   </figcaption>
-                {{/if}}
-            </figure>
-         {{/checkIfAll}}
-         <header class="hero__content">
+   <div class="content search-page">
+      <div class="hero {{#checkIfNone featuredImage.url}}hero--noimage{{/checkIfNone}}">
+         <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
             <div class="wrapper">
                <h1>
                   {{ translate 'search.title' }}
@@ -29,9 +11,9 @@
             </div>
          </header>
       </div>
-      <div class="wrapper post__entry">
+      <div class="entry-wrapper content__entry">
          {{{@customSearchContent}}}  
       </div>
-   </article>
+   </div>
 </main>
 {{> footer}}

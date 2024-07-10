@@ -121,9 +121,6 @@ export default {
         },
 
         addLink () {
-            let sel = this.win.getSelection();
-            let selectedText = sel.getRangeAt(0);
-
             this.$bus.$emit('init-link-popup', {
                 postID: this.postID,
                 selection: tinymce.activeEditor.selection.getContent()

@@ -30,8 +30,11 @@ class Posts extends Model {
                 ON
                 pad.post_id = p.id
             WHERE
-                pad.key = '_core' OR
-                pad.key IS NULL
+                p.status NOT LIKE '%is-page%'
+                AND (
+                    pad.key = '_core' OR
+                    pad.key IS NULL
+                )
             ORDER BY 
                 id DESC`;
 
@@ -69,6 +72,8 @@ class Posts extends Model {
                 authors AS a 
             ON
                 p.authors = a.id 
+            WHERE
+                p.status NOT LIKE '%is-page%'
             ORDER BY 
                 p.id DESC`;
 

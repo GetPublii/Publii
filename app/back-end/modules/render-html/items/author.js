@@ -87,6 +87,14 @@ class AuthorItem {
                                 this.renderer.siteConfig.advanced.urls.authorsPrefix + '/' +
                                 slug(this.authorData.username) + '/' +
                                 addIndexHtml;
+
+        if (this.renderer.siteConfig.advanced.urls.postsPrefix && this.renderer.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+            this.authorData.url =   this.renderer.siteConfig.domain + '/' +
+                                    this.renderer.siteConfig.advanced.urls.postsPrefix + '/' +
+                                    this.renderer.siteConfig.advanced.urls.authorsPrefix + '/' +
+                                    slug(this.authorData.username) + '/' +
+                                    addIndexHtml;
+        }
     }
 
     /**

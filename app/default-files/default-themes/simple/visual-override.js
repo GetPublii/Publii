@@ -5,14 +5,6 @@
 var generateOverride = function (params) {
     let output = '';
 
-    if (params.minFontSize !== '1.1' || params.maxFontSize !== '1.2') {
-        output += `  
-        html {
-            font-size: ${params.minFontSize}rem;
-            font-size: clamp(${params.minFontSize}rem, ${params.minFontSize}rem + (${params.maxFontSize} - ${params.minFontSize}) * ((100vw - 20rem) / 100), ${params.maxFontSize}rem);
-        }`;
-    }
-
     if (params.primaryColor !== '#D73A42') {
         output += `
       
@@ -44,23 +36,6 @@ var generateOverride = function (params) {
         }`;
     }   
 
-    if (params.heroOverlay === 'color') {
-        if (params.heroOverlayColor) {
-            output += `
-            .hero__image--overlay::after { 
-                  background: ${params.heroOverlayColor};
-           }`;
-        }
-    }
-
-    if (params.heroOverlay === 'gradient') {
-        if (params.heroOverlayGradientDirection !== 'bottom' || params.heroOverlayGradient) {
-            output += `
-           .hero__image--overlay::after {              
-                  background: linear-gradient(to ${params.heroOverlayGradientDirection}, transparent 0%, ${params.heroOverlayGradient} 100%);
-           }`;
-        }
-    }
     
     if(params.galleryZoom !== true) {
         output += `   

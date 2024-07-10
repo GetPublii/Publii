@@ -1,7 +1,10 @@
 <template>
-    <div :class="{ 'options-sidebar-container': true, 'post-editor-sidebar': true, 'is-visible': isVisible }" >
+    <div :class="{ 
+        'options-sidebar-container': true, 
+        'post-editor-sidebar': true, 
+        'is-visible': isVisible 
+    }">
         <div class="options-sidebar">
-
             <div class="options-sidebar-item">
                 <div
                     :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'status' }"
@@ -26,9 +29,10 @@
                             v-if="isEdit"
                             class="post-info">
                             <dl>
-                                <dt>{{ $t('post.postState') }}</dt>
+                                <dt v-if="itemType === 'post'">{{ $t('post.postState') }}</dt>
+                                <dt v-if="itemType === 'page'">{{ $t('page.pageState') }}</dt>
                                 <dd id="post-status">
-                                    {{ $parent.postData.status }}
+                                    {{ filteredStatus }}
                                 </dd>
                             </dl>
 
@@ -60,6 +64,20 @@
                                     {{ $parent.postData.modificationDate.text }}
                                 </dd>
                             </dl>
+
+                            <dl 
+                                v-if="itemType === 'page' && pagesStructureLoaded"
+                                class="page-parent-page-wrapper">
+                                <dt>{{ $t('page.parentPage') }}</dt>
+                                <dd id="page-parent-page">
+                                    <dropdown
+                                        key="page-parent-dropdown"
+                                        id="page-parent-page-dropdown"
+                                        :value="parentPage"
+                                        :onChange="changeParentPage"
+                                        :items="flatPagesList"></dropdown>
+                                </dd>
+                            </dl>
                         </div>
 
                         <div
@@ -67,7 +85,8 @@
                             class="post-info post-info--nogrid">
 
                             <dl>
-                                <dt>{{ $t('post.postAuthor') }}</dt>
+                                <dt v-if="itemType === 'post'">{{ $t('post.postAuthor') }}</dt>
+                                <dt v-if="itemType === 'page'">{{ $t('page.pageAuthor') }}</dt>
                                 <dd>
                                     <dropdown
                                         id="post-author-id"
@@ -84,7 +103,12 @@
                                         @click.prevent="changeDate">
 
                                         <template v-if="!$parent.postData.creationDate.text">
-                                            {{ $t('post.setCustomPostDate') }}
+                                            <template v-if="itemType === 'post'">
+                                                {{ $t('post.setCustomPostDate') }}
+                                            </template>
+                                            <template v-if="itemType === 'page'">
+                                                {{ $t('page.setCustomPageDate') }}
+                                            </template>
                                         </template>
 
                                         <template v-if="$parent.postData.creationDate.text">
@@ -104,9 +128,23 @@
                                     </a>
                                 </dd>
                             </dl>
+
+                            <dl v-if="itemType === 'page' && pagesStructureLoaded">
+                                <dt>{{ $t('page.parentPage') }}</dt>
+                                <dd id="page-parent-page">
+                                    <dropdown
+                                        key="page-parent-dropdown"
+                                        id="page-parent-page-dropdown"
+                                        :value="parentPage"
+                                        :onChange="changeParentPage"
+                                        :items="flatPagesList"></dropdown>
+                                </dd>
+                            </dl>
                         </div>
 
-                        <div class="post-action">
+                        <div 
+                            v-if="itemType === 'post'"
+                            class="post-action">
                             <label id="post-featured-wrapper">
                                 <switcher
                                     v-model="$parent.postData.isFeatured" />
@@ -209,9 +247,14 @@
                     </div>
                 </div>
 
-                <div class="options-sidebar-item">
+                <div 
+                    v-if="itemType === 'post'"
+                    class="options-sidebar-item">
                     <div
-                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'tags' }"
+                        :class="{ 
+                            'options-sidebar-header': true, 
+                            'is-open': openedItem === 'tags' 
+                        }"
                         @click="openItem('tags')">
                         <icon
                             class="options-sidebar-icon"
@@ -284,7 +327,8 @@
                             <span
                                 v-if="$parent.postData.slug.length > 250"
                                 class="options-sidebar-label-warning">
-                                {{ $t('post.postSlugTooLong') }}
+                                <template v-if="itemType === 'post'">{{ $t('post.postSlugTooLong') }}</template>
+                                <template v-if="itemType === 'page'">{{ $t('page.pageSlugTooLong') }}</template>
                             </span>
                         </span>
                     </div>
@@ -296,7 +340,9 @@
                             class="post-editor-settings-content"
                             ref="seo-content">
                             <div class="post-seo">
-                                <label>{{ $t('post.postSlug') }}:
+                                <label>
+                                    <template v-if="itemType === 'post'">{{ $t('post.postSlug') }}:</template>
+                                    <template v-if="itemType === 'page'">{{ $t('page.pageSlug') }}:</template>
                                     <div class="options-sidebar-item-slug">
                                         <input
                                             type="text"
@@ -386,46 +432,63 @@
                         ref="other-content">
                         <div class="post-other" id="post-view-settings">
                             <label id="post-template-wrapper">
-                                {{ $t('post.postTemplate') }}:
+                                <template v-if="itemType === 'post'">
+                                    {{ $t('post.postTemplate') }}:
+                                </template>
+                                <template v-if="itemType === 'page'">
+                                    {{ $t('page.pageTemplate') }}:
+                                </template>
 
                                 <dropdown
-                                    :items="postTemplates"
-                                    :disabled="!hasPostTemplates"
+                                    :items="itemType === 'post' ? postTemplates : pageTemplates"
+                                    :disabled="!hasTemplates"
                                     v-model="$parent.postData.template"
                                     id="post-template">
                                     <option
-                                        v-if="hasPostTemplates"
+                                        v-if="hasTemplates"
                                         value="*"
                                         :selected="$parent.postData.template === '*'"
                                         slot="first-choice">
                                         {{ $t('settings.useGlobalConfiguration') }}
                                     </option>
                                     <option
-                                        v-if="hasPostTemplates"
+                                        v-if="hasTemplates"
                                         value=""
                                         :selected="$parent.postData.template === ''"
                                         slot="first-choice">
                                         {{ $t('theme.defaultTemplate') }}
                                     </option>
                                     <option
-                                        v-if="!hasPostTemplates"
+                                        v-if="!hasTemplates"
                                         value=""
                                         slot="first-choice">
                                         {{ $t('ui.notAvailableInYourTheme') }}
                                     </option>
                                 </dropdown>
 
-                                <small
-                                    v-if="$parent.postData.template === '*'"
-                                    slot="note">
-                                    {{ $t('post.currentDefaultTemplate') }}:
-                                    <strong>
-                                        {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
-                                    </strong>
-                                </small>
+                                <template v-if="itemType === 'post'">
+                                    <small
+                                        v-if="$parent.postData.template === '*'"
+                                        slot="note">
+                                        {{ $t('post.currentDefaultTemplate') }}:
+                                        <strong>
+                                            {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                        </strong>
+                                    </small>
+                                </template>
+                                <template v-else-if="itemType === 'page'">
+                                    <small
+                                        v-if="$parent.postData.template === '*'"
+                                        slot="note">
+                                        {{ $t('page.currentDefaultTemplate') }}:
+                                        <strong>
+                                            {{ $store.state.currentSite.themeSettings.pageTemplates[$store.state.currentSite.themeSettings.defaultTemplates.page] }}
+                                        </strong>
+                                    </small>
+                                </template>
                             </label>
 
-                            <template v-for="(field, index) of postViewThemeSettings">
+                            <template v-for="(field, index) of viewThemeSettings">
                                 <separator
                                     v-if="displayField(field) && field.type === 'separator'"
                                     :label="field.label"
@@ -441,7 +504,7 @@
                                         v-if="!field.type || field.type === 'select'"
                                         :id="field.name + '-select'"
                                         class="post-view-settings"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :items="generateItems(field.options)">
                                         <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
                                     </dropdown>
@@ -452,26 +515,26 @@
                                         class="post-view-settings"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :placeholder="fieldPlaceholder(field)"
-                                        v-model="$parent.postData.postViewOptions[field.name]" />
+                                        v-model="$parent.postData.viewOptions[field.name]" />
 
                                     <text-area
                                         v-if="field.type === 'textarea'"
                                         class="post-view-settings"
                                         :placeholder="fieldPlaceholder(field)"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="$parent.postData.postViewOptions[field.name]" />
+                                        v-model="$parent.postData.viewOptions[field.name]" />
 
                                     <color-picker
                                         v-if="field.type === 'colorpicker'"
                                         class="post-view-settings"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
                                     <image-upload
                                         v-if="field.type === 'image'"
                                         slot="field"
-                                        v-model="$parent.postData.postViewOptions[field.name]"
+                                        v-model="$parent.postData.viewOptions[field.name]"
                                         :item-id="$parent.postID"
                                         imageType="contentImages" />
 
@@ -491,9 +554,15 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'post-editor-sidebar',
     props: {
+        'itemType': {
+            default: 'post',
+            type: String
+        },
         'isVisible': {
             default: false,
             type: Boolean
@@ -502,7 +571,12 @@ export default {
     data () {
         return {
             openedItem: 'status',
-            tagIsRestricted: false
+            tagIsRestricted: false,
+            initialParentPage: null,
+            parentPage: 0,
+            pagesStructureLoaded: false,
+            pagesHierarchy: [],
+            flatStructure: []
         };
     },
     computed: {
@@ -557,13 +631,37 @@ export default {
 
             return '';
         },
-        postTemplates () {
-            return this.$store.state.currentSite.themeSettings.postTemplates;
+        defaultPageTemplate () {
+            let defaultTemplate = this.$store.state.currentSite.themeSettings.defaultTemplates.page;
+
+            if (Object.keys(this.pageTemplates).indexOf(defaultTemplate) > -1) {
+                return defaultTemplate;
+            }
+
+            return '';
         },
-        hasPostTemplates () {
+        postTemplates () {
+            return this.$store.state.currentSite.themeSettings.postTemplates || [];
+        },
+        pageTemplates () {
+            return this.$store.state.currentSite.themeSettings.pageTemplates || [];
+        },
+        hasTemplates () {
+            if (this.itemType === 'page') {
+                if (!this.pageTemplates) {
+                    return false;
+                }
+
+                return !!Object.keys(this.pageTemplates).length;
+            }
+
             return !!Object.keys(this.postTemplates).length;
         },
-        postViewThemeSettings () {
+        viewThemeSettings () {
+            if (this.itemType === 'page') {
+                return this.$store.state.currentSite.themeSettings.pageConfig;
+            }
+
             return this.$store.state.currentSite.themeSettings.postConfig;
         },
         tagsForDropdown () {
@@ -574,6 +672,30 @@ export default {
                 value: this.getTagIdByName(tag),
                 label: tag
             })));
+        },
+        flatPagesList () {
+            let pages = this.$store.getters.sitePages('');
+            let flatPages = this.flatStructure.map(pageItem => {
+                let pageData = pages.find(page => page.id === pageItem.id);
+                return {
+                    value: pageItem.id,
+                    label: pageData ? '—'.repeat(pageItem.depth) + ' ' + pageData.title : '??'
+                };
+            });
+
+            let noParentLabel = this.$t('page.noParentPage');
+            return [{
+                value: 0, 
+                label: noParentLabel, 
+            }].concat(flatPages);
+        },
+        filteredStatus () {
+            let originalStatus = this.$parent.postData.status;
+            originalStatus = originalStatus.split(',');
+            originalStatus = originalStatus.map(status => status.trim());
+            originalStatus = originalStatus.filter(status => status !== 'is-page');
+            
+            return originalStatus.join(', ');
         }
     },
     mounted () {
@@ -583,13 +705,35 @@ export default {
 
         if (!this.isEdit) {
             this.$parent.postData.template = this.defaultPostTemplate;
-        } else if (!!this.$parent.postData.mainTag) {
+        } else if (!!this.$parent.postData.mainTag && this.itemType === 'post') {
             let foundedTag = this.$store.state.currentSite.tags.filter(tag => tag.id === this.$parent.postData.mainTag);
 
             if (!foundedTag.length) {
                 this.$parent.postData.mainTag = '';
             }
         }
+
+        if (this.itemType === 'page') {
+            mainProcessAPI.send('app-pages-hierarchy-load', this.$store.state.currentSite.config.name);
+
+            mainProcessAPI.receiveOnce('app-pages-hierarchy-loaded', (data) => {
+                if (!data) {
+                    this.pagesHierarchy = this.$store.getters.sitePages('')
+                                                                .filter(item => item.title !== null)
+                                                                .map(item => ({id: item.id, subpages: []}));
+                    this.hierarchySave();
+                    this.flatStructure = this.flattenPages(0, this.pagesHierarchy, 0);
+                    this.pagesStructureLoaded = true;
+                    return;
+                }
+
+                this.pagesHierarchy = JSON.parse(JSON.stringify(data));
+                this.flatStructure = this.flattenPages(0, this.pagesHierarchy, 0);
+                this.pagesStructureLoaded = true;
+            });
+        }
+
+        this.$bus.$on('page-data-updated', this.prepareStructureBeforeSave);
     },
     methods: {
         openItem (itemName) {
@@ -700,15 +844,17 @@ export default {
             this.$bus.$emit('date-popup-display', this.$parent.postData.creationDate.timestamp);
         },
         displayField (field) {
-            if (!field.postTemplates) {
+            let templateField = this.itemType === 'page' ? 'pageTemplates' : 'postTemplates';
+
+            if (!field[templateField]) {
                 return true;
             }
 
-            if (field.postTemplates.indexOf('!') === 0) {
-                return !(field.postTemplates.replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
+            if (field[templateField].indexOf('!') === 0) {
+                return !(field[templateField].replace('!', '').split(',').indexOf(this.$parent.postData.template) > -1);
             }
 
-            return field.postTemplates.split(',').indexOf(this.$parent.postData.template) > -1;
+            return field[templateField].split(',').indexOf(this.$parent.postData.template) > -1;
         },
         fieldPlaceholder (field) {
             if (field.placeholder || field.placeholder === '') {
@@ -723,10 +869,110 @@ export default {
         },
         updateSlug () {
             this.$bus.$emit('update-post-slug', true);
+        },
+        hierarchySave () {
+            mainProcessAPI.send('app-pages-hierarchy-save', {
+                siteName: this.$store.state.currentSite.config.name,
+                hierarchy: this.pagesHierarchy
+            });
+        },
+        flattenPages(parentID = 0, pages, depth = 0) {
+            let result = [];
+            
+            pages.forEach(page => {
+                if (this.$parent.postID && parseInt(page.id, 10) === parseInt(this.$parent.postID, 10)) {
+                    this.parentPage = parseInt(parentID, 10);
+
+                    if (this.initialParentPage === null) {
+                        this.initialParentPage = this.parentPage;
+                    }
+
+                    return result;
+                }
+
+                result.push({ id: parseInt(page.id, 10), depth });
+
+                if (page.subpages && page.subpages.length > 0) {
+                    result = result.concat(this.flattenPages(page.id, page.subpages, depth + 1));
+                }
+            });
+
+            return result;
+        },
+        findAndRemoveItem(pages, selectedItem) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === selectedItem) {
+                    return pages.splice(i, 1)[0];
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findAndRemoveItem(pages[i].subpages, selectedItem);
+                    
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        },
+        findItemAndParent(pages, id) {
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].id === id) {
+                    return { 
+                        item: pages[i], 
+                        parent: pages 
+                    };
+                } else if (pages[i].subpages.length > 0) {
+                    let result = this.findItemAndParent(pages[i].subpages, id);
+                    
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        },
+        prepareStructureBeforeSave (pageID) {
+            pageID = parseInt(pageID, 10);
+
+            if (this.initialParentPage === this.parentPage) {
+                return;
+            }
+
+            if (this.initialParentPage === null && this.parentPage === 0) {
+                this.pagesHierarchy.push({ id: pageID, subpages: [] });
+                this.hierarchySave();
+                return;
+            }
+
+            if (this.initialParentPage === null && this.parentPage > 0) {
+                let target = this.findItemAndParent(this.pagesHierarchy, this.parentPage);
+                let { item: targetItem, parent: targetParent } = target;
+                targetItem.subpages.push({ id: pageID, subpages: [] });
+                this.hierarchySave();
+                return;
+            }
+
+            if (this.initialParentPage !== null && this.parentPage === 0) {
+                let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, pageID);
+                this.pagesHierarchy.push(selectedItem);
+                this.hierarchySave();
+                return 0;
+            }
+
+            let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, pageID);
+            let target = this.findItemAndParent(this.pagesHierarchy, this.parentPage);
+            let { item: targetItem, parent: targetParent } = target;
+            targetItem.subpages.push(selectedItem);
+            this.hierarchySave();
+        },
+        changeParentPage (newParentPage) {
+            Vue.set(this, 'parentPage', parseInt(newParentPage, 10));
         }
     },
     beforeDestroy () {
         this.$bus.$off('post-editor-featured-image-loaded');
+        this.$bus.$off('page-data-updated');
         this.$bus.$off('author-changed');
     }
 };
@@ -787,6 +1033,10 @@ export default {
 
             dl {
                 margin: 0 0 3rem 0;
+
+                &.page-parent-page-wrapper {
+                    grid-column: span 2;
+                }
             }
 
             dt {

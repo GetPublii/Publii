@@ -1,36 +1,28 @@
-// Sticky menu
-var new_scroll_position = 0;
-var last_scroll_position;
-var header = document.getElementById("js-header");
-var stickyMenu = document.getElementById("js-navbar-menu");
+// Sticky header position on page scrolling up
+const header = document.querySelector('.js-header');
+const stickyClass = 'sticky';
+let lastScrollTop = 0;
+let isWaiting = false;
 
-window.addEventListener('scroll', function (e) {
-	last_scroll_position = window.scrollY;
+window.addEventListener('scroll', () => {
+    if (!isWaiting) {
+        window.requestAnimationFrame(() => {
+            let currentScroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
 
-	// Scrolling down
-	if (new_scroll_position < last_scroll_position && last_scroll_position > 40) {
-		header.classList.remove("is-visible");
-		header.classList.add("is-hidden");
+            if (currentScroll > lastScrollTop) {
+                header.classList.remove(stickyClass);
+            } else if (currentScroll < lastScrollTop && currentScroll > 0) {
+                header.classList.add(stickyClass);
+            } else if (currentScroll <= 0) {
+                header.classList.remove(stickyClass);
+            }
 
-		// Scrolling up
-	} else if (new_scroll_position > last_scroll_position) {
-		header.classList.remove("is-hidden");
-		header.classList.add("is-visible");
-		if (stickyMenu) {
-			stickyMenu.classList.add("is-sticky");
-		}
-	}
-
-	if (last_scroll_position < 1) {
-		header.classList.remove("is-visible");
-
-		if (stickyMenu) {
-			stickyMenu.classList.remove("is-sticky");
-		}
-	}
-
-	new_scroll_position = last_scroll_position;
-});
+            lastScrollTop = currentScroll;
+            isWaiting = false;
+        });
+        isWaiting = true;
+    }
+}, false);
 
 // Dropdown menu
 (function (menuConfig) {
@@ -72,12 +64,12 @@ window.addEventListener('scroll', function (e) {
 
     var config = {};
 
-    Object.keys(defaultConfig).forEach(function(key) {
+    Object.keys(defaultConfig).forEach(function (key) {
         config[key] = defaultConfig[key];
     });
 
     if (typeof menuConfig === 'object') {
-        Object.keys(menuConfig).forEach(function(key) {
+        Object.keys(menuConfig).forEach(function (key) {
             config[key] = menuConfig[key];
         });
     }
@@ -85,7 +77,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Menu initializer
      */
-    function init () {
+    function init() {
         if (!document.querySelectorAll(config.wrapperSelector).length) {
             return;
         }
@@ -108,7 +100,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Function responsible for the submenu positions
      */
-    function initSubmenuPositions () {
+    function initSubmenuPositions() {
         var submenuParents = document.querySelectorAll(config.wrapperSelector + ' .' + config.parentItemClass);
 
         for (var i = 0; i < submenuParents.length; i++) {
@@ -185,7 +177,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Function used to init mobile menu - overlay mode
      */
-    function initMobileMenuOverlay () {
+    function initMobileMenuOverlay() {
         var menuWrapper = document.createElement('div');
         menuWrapper.classList.add(config.mobileMenuOverlayClass);
         menuWrapper.classList.add(config.hiddenElementClass);
@@ -223,13 +215,13 @@ window.addEventListener('scroll', function (e) {
                     relatedContainer.classList.remove(config.relatedContainerForOverlayMenuClass);
                 }
             }
-        });   
+        });
     }
 
     /**
      * Function used to init mobile menu - sidebar mode
      */
-    function initMobileMenuSidebar () {
+    function initMobileMenuSidebar() {
         // Create menu structure
         var menuWrapper = document.createElement('div');
         menuWrapper.classList.add(config.mobileMenuSidebarClass);
@@ -288,7 +280,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Set aria-hidden="false" for submenus
      */
-    function setAriaForSubmenus (menuWrapper) {
+    function setAriaForSubmenus(menuWrapper) {
         var submenus = menuWrapper.querySelectorAll(config.submenuSelector);
 
         for (var i = 0; i < submenus.length; i++) {
@@ -299,7 +291,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Wrap all submenus into div wrappers
      */
-    function wrapSubmenusIntoContainer (menuWrapper) {
+    function wrapSubmenusIntoContainer(menuWrapper) {
         var submenus = menuWrapper.querySelectorAll(config.submenuSelector);
 
         for (var i = 0; i < submenus.length; i++) {
@@ -313,7 +305,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Initialize submenu toggle events
      */
-    function initToggleSubmenu (menuWrapper) {
+    function initToggleSubmenu(menuWrapper) {
         // Init parent menu item events
         var parents = menuWrapper.querySelectorAll('.' + config.parentItemClass);
 
@@ -325,9 +317,9 @@ window.addEventListener('scroll', function (e) {
                 var content = submenu.firstElementChild;
 
                 if (submenu.classList.contains(config.openedMenuClass)) {
-                    var height = content.clientHeight;   
+                    var height = content.clientHeight;
                     submenu.style.height = height + 'px';
-                    
+
                     setTimeout(function () {
                         submenu.style.height = '0px';
                     }, 0);
@@ -340,10 +332,10 @@ window.addEventListener('scroll', function (e) {
                     content.setAttribute('aria-hidden', true);
                     content.parentNode.firstElementChild.setAttribute('aria-expanded', false);
                 } else {
-                    var height = content.clientHeight;   
+                    var height = content.clientHeight;
                     submenu.classList.add(config.openedMenuClass);
                     submenu.style.height = '0px';
-                    
+
                     setTimeout(function () {
                         submenu.style.height = height + 'px';
                     }, 0);
@@ -385,7 +377,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Set aria-* attributes according to the current activity state
      */
-    function initAriaAttributes () {
+    function initAriaAttributes() {
         var allAriaElements = document.querySelectorAll(config.wrapperSelector + ' ' + '*[aria-hidden]');
 
         for (var i = 0; i < allAriaElements.length; i++) {
@@ -407,7 +399,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Close menu on click link
      */
-    function initClosingMenuOnClickLink () {
+    function initClosingMenuOnClickLink() {
         var links = document.querySelectorAll(config.menuSelector + ' a');
 
         for (var i = 0; i < links.length; i++) {
@@ -424,7 +416,7 @@ window.addEventListener('scroll', function (e) {
     /**
      * Close menu
      */
-    function closeMenu (clickedLink, forceClose) {
+    function closeMenu(clickedLink, forceClose) {
         if (forceClose === false) {
             if (clickedLink.parentNode.classList.contains(config.parentItemClass)) {
                 return;
@@ -461,44 +453,40 @@ window.addEventListener('scroll', function (e) {
     init();
 })(window.publiiThemeMenuConfig);
 
-// Load comments
-var comments = document.getElementById("js-comments");  
-   if (comments) {
-      comments.addEventListener("click", function() {   
-          comments.classList.toggle("is-hidden");      
-             var container = document.getElementById("js-comments__inner");   
-             container.classList.toggle("is-visible");  
-      });
- }
-
 // Load search input area
-var searchButton = document.querySelector(".js-search-btn");
-    searchOverlay = document.querySelector(".js-search-overlay");
-    searchClose = document.querySelector(".js-search-close");
-    searchInput = document.querySelector("[type='search']");
+const searchButton = document.querySelector('.js-search-btn');
+const searchOverlay = document.querySelector('.js-search-overlay');
+const searchInput = document.querySelector('input[type="search"]');
 
-if (searchButton) {
-    searchButton.addEventListener("click", function () {        
-        searchOverlay.classList.add("expanded");
-        if (searchInput) {
-            setTimeout(function() { 
-                searchInput.focus(); 
-            }, 60);     
-		}   
+if (searchButton && searchOverlay && searchInput) {
+    searchButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        searchOverlay.classList.toggle('expanded');
+
+        if (searchOverlay.classList.contains('expanded')) {
+            setTimeout(() => {
+                searchInput.focus();
+            }, 60);
+        }
     });
-    
-    searchClose.addEventListener("click", function () {
+
+    searchOverlay.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    document.body.addEventListener('click', () => {
         searchOverlay.classList.remove('expanded');
     });
 }
 
+
 // Share buttons pop-up
 (function () {
     // share popup
-    let shareButton = document.querySelector('.js-post__share-button');
-    let sharePopup = document.querySelector('.js-post__share-popup');
+    const shareButton = document.querySelector('.js-content__share-button');
+    const sharePopup = document.querySelector('.js-content__share-popup');
 
-    if (shareButton) {
+    if (shareButton && sharePopup) {
         sharePopup.addEventListener('click', function (e) {
             e.stopPropagation();
         });
@@ -515,98 +503,117 @@ if (searchButton) {
     }
 
     // link selector and pop-up window size
-    var Config = {
+    const Config = {
         Link: ".js-share",
         Width: 500,
         Height: 500
     };
-    // add handler links
-    var slink = document.querySelectorAll(Config.Link);
-    for (var a = 0; a < slink.length; a++) {
-        slink[a].onclick = PopupHandler;
-    }
+
+    // add handler to links
+    const shareLinks = document.querySelectorAll(Config.Link);
+    shareLinks.forEach(link => {
+        link.addEventListener('click', PopupHandler);
+    });
+
     // create popup
     function PopupHandler(e) {
-        e = (e ? e : window.event);
-        var t = (e.target ? e.target : e.srcElement);
+        e.preventDefault();
+
+        const target = e.target.closest(Config.Link);
+        if (!target) return;
+
         // hide share popup
         if (sharePopup) {
             sharePopup.classList.remove('is-visible');
         }
+
         // popup position
-        var px = Math.floor(((screen.availWidth || 1024) - Config.Width) / 2),
-            py = Math.floor(((screen.availHeight || 700) - Config.Height) / 2);
+        const px = Math.floor((window.innerWidth - Config.Width) / 2);
+        const py = Math.floor((window.innerHeight - Config.Height) / 2);
+
         // open popup
-        var link_href = t.href ? t.href : t.parentNode.href;
-        var popup = window.open(link_href, "social",
-            "width=" + Config.Width + ",height=" + Config.Height +
-            ",left=" + px + ",top=" + py +
-            ",location=0,menubar=0,toolbar=0,status=0,scrollbars=1,resizable=1");
+        const linkHref = target.href;
+        const popup = window.open(linkHref, "social", `
+            width=${Config.Width},
+            height=${Config.Height},
+            left=${px},
+            top=${py},
+            location=0,
+            menubar=0,
+            toolbar=0,
+            status=0,
+            scrollbars=1,
+            resizable=1
+        `);
+
         if (popup) {
             popup.focus();
-            if (e.preventDefault) e.preventDefault();
-            e.returnValue = false;
         }
-
-        return !!popup;
     }
 })();
 
-// Back to top 
-var backToTopButton = document.getElementById("backToTop");
-if (backToTopButton) {
-   window.onscroll = function() {backToTopScrollFunction()};
+// Back to top
+document.addEventListener('DOMContentLoaded', () => {
+    const backToTopButton = document.getElementById('backToTop');
 
-   function backToTopScrollFunction() {
-   if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
-      backToTopButton.classList.add("is-visible");
-   } else {
-      backToTopButton.classList.remove("is-visible");
-     }
-   }
+    if (backToTopButton) {
+        const backToTopScrollFunction = () => {
+            if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+                backToTopButton.classList.add('is-visible');
+            } else {
+                backToTopButton.classList.remove('is-visible');
+            }
+        };
 
-   function backToTopFunction() {
-     document.body.scrollTop = 0;
-     document.documentElement.scrollTop = 0;
-   };
-}
+        const backToTopFunction = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+
+        window.addEventListener('scroll', backToTopScrollFunction);
+        backToTopButton.addEventListener('click', backToTopFunction);
+    }
+});
+
 
 // Responsive embeds script
 (function () {
-	let wrappers = document.querySelectorAll('.post__video, .post__iframe');
+    let wrappers = document.querySelectorAll('.post__video, .post__iframe');
 
-	for (let i = 0; i < wrappers.length; i++) {
-		let embed = wrappers[i].querySelector('iframe, embed, video, object');
+    for (let i = 0; i < wrappers.length; i++) {
+        let embed = wrappers[i].querySelector('iframe, embed, video, object');
 
-		if (!embed) {
-			continue;
-		}
+        if (!embed) {
+            continue;
+        }
 
         if (embed.getAttribute('data-responsive') === 'false') {
             continue;
         }
 
-		let w = embed.getAttribute('width');
-		let h = embed.getAttribute('height');
-		let ratio = false;
+        let w = embed.getAttribute('width');
+        let h = embed.getAttribute('height');
+        let ratio = false;
 
-		if (!w || !h) {
-			continue;
-		}
-		
-		if (w.indexOf('%') > -1 && h.indexOf('%') > -1) { // percentage mode
-			w = parseFloat(w.replace('%', ''));
-			h = parseFloat(h.replace('%', ''));
-			ratio = h / w;
-		} else if (w.indexOf('%') === -1 && h.indexOf('%') === -1) { // pixels mode
-			w = parseInt(w, 10);
-			h = parseInt(h, 10);
-			ratio = h / w;
-		}
+        if (!w || !h) {
+            continue;
+        }
 
-		if (ratio !== false) {
-			let ratioValue = (ratio * 100) + '%';
-			wrappers[i].setAttribute('style', '--embed-aspect-ratio:' + ratioValue);
-		}
-	}
+        if (w.indexOf('%') > -1 && h.indexOf('%') > -1) { // percentage mode
+            w = parseFloat(w.replace('%', ''));
+            h = parseFloat(h.replace('%', ''));
+            ratio = h / w;
+        } else if (w.indexOf('%') === -1 && h.indexOf('%') === -1) { // pixels mode
+            w = parseInt(w, 10);
+            h = parseInt(h, 10);
+            ratio = h / w;
+        }
+
+        if (ratio !== false) {
+            let ratioValue = (ratio * 100) + '%';
+            wrappers[i].setAttribute('style', '--embed-aspect-ratio:' + ratioValue);
+        }
+    }
 })();

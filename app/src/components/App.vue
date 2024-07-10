@@ -4,8 +4,8 @@
         :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }"
         :style="$root.overridedCssVariables">
         <message />
-        <topbar-notification v-if="!splashScreenDisplayed && !postEditorDisplayed && $route.path !== '/site/!/posts'" />
-        <topbar v-if="!splashScreenDisplayed && !postEditorDisplayed" />
+        <topbar-notification v-if="!splashScreenDisplayed && !itemEditorDisplayed && $route.path !== '/site/!/posts'" />
+        <topbar v-if="!splashScreenDisplayed && !itemEditorDisplayed" />
         <section :class="$route.path.replace(/^\//mi, '').replace(/\/$/mi, '').replace(/\//gmi, '-')">
             <router-view />
         </section>
@@ -59,8 +59,8 @@ export default {
 
             return false;
         },
-        postEditorDisplayed () {
-            if(this.$route.path.indexOf('/posts/editor/') > -1) {
+        itemEditorDisplayed () {
+            if (this.$route.path.indexOf('/posts/editor/') > -1 || this.$route.path.indexOf('/pages/editor/') > -1) {
                 return true;
             }
 
