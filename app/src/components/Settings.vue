@@ -2123,7 +2123,7 @@
                     defaultValue="full-site-preview" />
 
                 <p-button
-                    @click.native="this.checkBeforeSave(false)"
+                    @click.native="checkBeforeSave(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
