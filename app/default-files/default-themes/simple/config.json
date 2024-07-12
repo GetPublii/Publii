@@ -1262,12 +1262,12 @@
             "name": "letterSpacing",
             "label": "Letter spacing",
             "group": "Fonts",
-            "note": "Adjusts the spacing between characters for body text elements, excluding headings, in pixels.",
+            "note": "Adjusts the spacing between characters for body text elements, excluding headings, in EM.",
             "value": "0",
             "type": "range",
-            "min": -6,
-            "max": 6,
-            "step": 1
+            "min": -1,
+            "max": 1,
+            "step": 0.01
         },
         {
             "name": "separator",
@@ -1315,6 +1315,27 @@
             "step": 1
         },
         {
+            "name": "fontHeadingsStyle",
+            "label": "H1-H6 font style",
+            "group": "Fonts",
+            "value": "normal",
+            "type": "select",
+            "options": [
+                {
+                    "label": "Normal",
+                    "value": "normal"
+                },
+                {
+                    "label": "Italic",
+                    "value": "italic"
+                },
+                {
+                    "label": "Oblique",
+                    "value": "oblique"
+                }
+            ]
+        },
+        {
             "name": "fontHeadingsLineHeight",
             "label": "H1-H6 line height",
             "group": "Fonts",
@@ -1329,12 +1350,12 @@
             "name": "fontHeadingsletterSpacing",
             "label": "H1-H6 letter spacing",
             "group": "Fonts",
-            "note": "Adjusts the spacing between characters for heading elements (h1, h2, h3, etc.) in pixels.",
+            "note": "Adjusts the spacing between characters for heading elements (h1, h2, h3, etc.) in EM.",
             "value": "0",
             "type": "range",
-            "min": -6,
-            "max": 6,
-            "step": 1
+            "min": -1,
+            "max": 1,
+            "step": 0.01
         },
         {
             "name": "fontHeadingsTransform",
@@ -1361,28 +1382,6 @@
                 }
             ]
         },
-        {
-            "name": "fontHeadingsStyle",
-            "label": "H1-H6 font style",
-            "group": "Fonts",
-            "value": "normal",
-            "type": "select",
-            "options": [
-                {
-                    "label": "Normal",
-                    "value": "normal"
-                },
-                {
-                    "label": "Italic",
-                    "value": "italic"
-                },
-                {
-                    "label": "Oblique",
-                    "value": "oblique"
-                }
-            ]
-        },
-
         {
             "name": "separator",
             "type": "separator",

@@ -398,12 +398,12 @@ var generateThemeVariables = function (params) {
   let output = '';
   let loadedFonts = new Set();
 
-  const addFontFace = (name, weight, italicWeight, hasItalic) => {
+  const addFontFace = (key, name, weight, italicWeight, hasItalic) => {
     if (!loadedFonts.has(name)) {
       output += `             
         @font-face {
           font-family: '${name}';
-          src: url('../dynamic/fonts/${name.toLowerCase()}/${name.toLowerCase()}.woff2') format('woff2');
+          src: url('../dynamic/fonts/${key}/${key}.woff2') format('woff2');
           font-weight: ${weight};
           font-display: swap;
           font-style: normal;
@@ -415,7 +415,7 @@ var generateThemeVariables = function (params) {
       output += `             
         @font-face {
           font-family: '${name}';
-          src: url('../dynamic/fonts/${name.toLowerCase()}/${name.toLowerCase()}-italic.woff2') format('woff2');
+          src: url('../dynamic/fonts/${key}/${key}-italic.woff2') format('woff2');
           font-weight: ${italicWeight};
           font-display: swap;
           font-style: italic;
@@ -426,11 +426,11 @@ var generateThemeVariables = function (params) {
   };
 
   if (params.fontBody !== 'system-ui') {
-    addFontFace(fontBodyName, fontBodyWeight, fontBodyItalicWeight, params.fontBodyItalic && fontBodyHasItalic);
+    addFontFace(params.fontBody, fontBodyName, fontBodyWeight, fontBodyItalicWeight, params.fontBodyItalic && fontBodyHasItalic);
   }
 
   if (params.fontHeadings !== 'system-ui') {
-    addFontFace(fontHeadingsName, fontHeadingsWeight, fontHeadingsItalicWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
+    addFontFace(params.fontHeadings, fontHeadingsName, fontHeadingsWeight, fontHeadingsItalicWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
   }
 
   if (params.fontMenu === 'system-ui') {
@@ -468,11 +468,11 @@ var generateThemeVariables = function (params) {
       --font-weight-normal: ${params.fontBodyWeight}; 
       --font-weight-bold:   ${params.fontBoldWeight}; 
       --line-height:        ${params.lineHeight};
-      --letter-spacing:     ${params.letterSpacing}px;  
+      --letter-spacing:     ${params.letterSpacing}em;  
       --headings-weight:    ${params.fontHeadignsWeight};
       --headings-transform: ${params.fontHeadingsTransform};
       --headings-style:     ${params.fontHeadingsStyle};
-      --headings-letter-spacing: ${params.fontHeadingsletterSpacing}px;
+      --headings-letter-spacing: ${params.fontHeadingsletterSpacing}em;
       --headings-line-height: ${params.fontHeadingsLineHeight};
       --hero-height:        ${params.heightHero};
       --feed-image-size:    ${params.feedFeaturedImageSize}rem;
