@@ -825,7 +825,13 @@
             "group": "Fonts",
             "note": "This option allows you to disable the loading of the dedicated italic version for the body font. The italic font is automatically loaded when selecting a body font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading the dedicated italic version by enabling this option.",            
             "type": "checkbox",
-            "value": false
+            "value": false,
+            "dependencies": [
+                {
+                    "field": "fontBody",
+                    "value": "adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,brygada1918,cabin,exo,faustina,figtree,glory,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,raleway,redhatdisplay,redhatmono,rokkitt,rubik,sourcecodepro,urbanist,worksans,yrsa"
+                }
+            ]
         },
         {
             "name": "fontHeadings",
@@ -1162,7 +1168,13 @@
             "group": "Fonts",
             "note": "This option allows you to disable loading of the dedicated italic version for the headings font. The italic font is automatically loaded when selecting a headings font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading of the dedicated italic version by enabling this option.",            
             "type": "checkbox",
-            "value": false
+            "value": false,
+            "dependencies": [
+                {
+                    "field": "fontHeadings",
+                    "value": "adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,brygada1918,cabin,exo,faustina,figtree,glory,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,raleway,redhatdisplay,redhatmono,rokkitt,rubik,sourcecodepro,urbanist,worksans,yrsa"
+                }
+            ]
         },
         {
             "name": "fontMenu",
@@ -2136,11 +2148,10 @@
             ]
         },
         {
-            "name": "displayComments",
-            "label": "Display comments",
+            "name": "displayChildPages",
+            "label": "Display child pages",
             "value": 0,
             "type": "select",
-            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
@@ -2153,10 +2164,11 @@
             ]
         },
         {
-            "name": "displayChildPages",
-            "label": "Display child pages",
+            "name": "displayComments",
+            "label": "Display comments",
             "value": 0,
             "type": "select",
+            "pageTemplates": "!empty",
             "options": [
                 {
                     "label": "Enabled",
