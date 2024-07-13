@@ -386,19 +386,17 @@ var generateThemeVariables = function (params) {
   let fontBodyName = fontParams[params.fontBody]?.name;
   let fontBodyFamily = fontParams[params.fontBody]?.family;
   let fontBodyWeight = fontParams[params.fontBody]?.weight;
-  let fontBodyItalicWeight = fontParams[params.fontBody]?.italicWeight;
   let fontBodyHasItalic = fontParams[params.fontBody]?.hasItalic;
-
+  
   let fontHeadingsName = fontParams[params.fontHeadings]?.name;
   let fontHeadingsFamily = fontParams[params.fontHeadings]?.family;
   let fontHeadingsWeight = fontParams[params.fontHeadings]?.weight;
-  let fontHeadingsItalicWeight = fontParams[params.fontHeadings]?.italicWeight;
   let fontHeadingsHasItalic = fontParams[params.fontHeadings]?.hasItalic;
-
+  
   let output = '';
   let loadedFonts = new Set();
-
-  const addFontFace = (key, name, weight, italicWeight, hasItalic) => {
+  
+  const addFontFace = (key, name, weight, hasItalic) => {
     if (!loadedFonts.has(name)) {
       output += `             
         @font-face {
@@ -416,7 +414,7 @@ var generateThemeVariables = function (params) {
         @font-face {
           font-family: '${name}';
           src: url('../dynamic/fonts/${key}/${key}-italic.woff2') format('woff2');
-          font-weight: ${italicWeight};
+          font-weight: ${weight}; 
           font-display: swap;
           font-style: italic;
         }
@@ -424,19 +422,19 @@ var generateThemeVariables = function (params) {
       loadedFonts.add(`${name}-italic`);
     }
   };
-
+  
   if (params.fontBody !== 'system-ui') {
-    addFontFace(params.fontBody, fontBodyName, fontBodyWeight, fontBodyItalicWeight, params.fontBodyItalic && fontBodyHasItalic);
+    addFontFace(params.fontBody, fontBodyName, fontBodyWeight, params.fontBodyItalic && fontBodyHasItalic);
   }
-
+  
   if (params.fontHeadings !== 'system-ui') {
-    addFontFace(params.fontHeadings, fontHeadingsName, fontHeadingsWeight, fontHeadingsItalicWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
+    addFontFace(params.fontHeadings, fontHeadingsName, fontHeadingsWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
   }
-
+  
   if (params.fontMenu === 'system-ui') {
     params.fontMenu = fontParams['system-ui'].family;
   }
-
+  
   if (params.fontLogo === 'system-ui') {
     params.fontLogo = fontParams['system-ui'].family;
   }
