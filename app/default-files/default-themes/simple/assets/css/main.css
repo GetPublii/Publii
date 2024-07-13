@@ -1762,7 +1762,7 @@ textarea {
 .banner {
   text-align: center;
 }
-.banner--after-post {
+.banner--after-post, .banner--after-page {
   margin-top: calc(var(--baseline) * 9 + 1vw);
 }
 

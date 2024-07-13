@@ -1,8 +1,8 @@
 {{> head}}
 {{> navbar}}
-<main>
+<main class="post">
    {{#post}}
-      <article class="content post">
+      <article class="content">
          <div class="hero {{#checkIfNone featuredImage.url}}hero--noimage{{/checkIfNone}}">
             <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
                <div class="wrapper">
