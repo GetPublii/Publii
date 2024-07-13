@@ -46,7 +46,7 @@
         "pages": true
     },
     "pageTemplates": {
-        "empty": "Empty page"
+        "empty": "Empty container"
     },
     "config": [
         {
