@@ -1150,6 +1150,7 @@ export default {
     .heading {
         .search,
         ::v-deep .buttons {
+            filter: grayscale(1);
             opacity: .5;
             pointer-events: none;
         }
@@ -1305,6 +1306,7 @@ export default {
     }
 
     .filter-inactive {
+        filter: grayscale(1);
         opacity: 0.5;
         pointer-events: none;
     }
