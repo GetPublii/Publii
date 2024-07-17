@@ -1036,6 +1036,7 @@ export default {
 
                 &.page-parent-page-wrapper {
                     grid-column: span 2;
+                    margin-bottom: 0;
                 }
             }
 
