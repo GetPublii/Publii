@@ -106,6 +106,14 @@ class PageItem {
             subpages: this.subpages
         };
 
+        if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === this.page.id) {
+            this.pageData.url = this.siteConfig.domain + '/';
+
+            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+                this.pageData.url += 'index.html';
+            }
+        }
+
         if (this.pageData.template === '*') {
             this.pageData.template = this.themeConfig.defaultTemplates.page;
         }
