@@ -1,6 +1,6 @@
-<main>
+<main class="post">
    {{#getPost @config.custom.frontPost}}
-       <article class="content post">
+       <article class="content">
          <div class="hero {{#checkIfNone featuredImage.url}}hero--noimage{{/checkIfNone}}">
             <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
                <div class="wrapper">
@@ -38,16 +38,18 @@
 
             {{#featuredImage}}
                {{#if url}}
-                  <figure class="hero__image">                      
-                     <img
-                        src="{{url}}"
-                        {{#if @config.site.responsiveImages}}                           
-                            {{responsiveImageAttributes 'featuredImage' srcset.hero sizes.hero}}
-                        {{/if}}
-                        {{ lazyload "eager" }}
-                        height="{{height}}"
-                        width="{{width}}"
-                        alt="{{alt}}">
+                  <figure class="hero__image">  
+                     <div class="hero__image-wrapper">                    
+                        <img
+                           src="{{url}}"
+                           {{#if @config.site.responsiveImages}}                           
+                              {{responsiveImageAttributes 'featuredImage' srcset.hero sizes.hero}}
+                           {{/if}}
+                           {{ lazyload "eager" }}
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                        </div>
                       
                      {{#checkIfAny caption credits}}
                         <figcaption>
@@ -64,7 +66,7 @@
             {{{text}}}            
          </div>
 
-         {{#checkIfAny postViewConfig.displayLastUpdatedDate postViewConfig.displayTags postViewConfig.displayShareButtons}}
+         {{#checkIfAny postViewConfig.displayLastUpdatedDate postViewConfig.displayTags postViewConfig.displayShareButtons postViewConfig.displayAuthorBio}}
             <footer class="content__footer">
                <div class="entry-wrapper">
                   {{#if postViewConfig.displayLastUpdatedDate}}
@@ -84,7 +86,7 @@
                      <div class="content__actions">
                         {{#if postViewConfig.displayTags}}
                            {{#if tags}}
-                              <ul class="post__tag">
+                              <ul class="content__tag">
                                  {{#each tags}}
                                     <li>
                                        <a href="{{url}}">{{name}}</a>
@@ -117,7 +119,7 @@
                   {{/checkIfAny}}
 
                   {{#if postViewConfig.displayAuthorBio}}
-                     <div class="post__bio bio">
+                     <div class="content__bio bio">
                         {{#author}}
                            {{#if avatar}}                          
                               <img 

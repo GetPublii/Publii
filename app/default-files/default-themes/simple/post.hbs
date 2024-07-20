@@ -88,7 +88,7 @@
                      <div class="content__actions">
                         {{#if @config.post.displayTags}}
                            {{#if tags}}
-                              <ul class="post__tag">
+                              <ul class="content__tag">
                                  {{#each tags}}
                                     <li>
                                        <a href="{{url}}">{{name}}</a>
@@ -121,7 +121,7 @@
                   {{/checkIfAny}}
 
                   {{#if @config.post.displayAuthorBio}}
-                     <div class="post__bio bio">
+                     <div class="content__bio bio">
                         {{#author}}
                            {{#if avatar}}                          
                               <img 
@@ -149,15 +149,15 @@
 
                {{#if @config.post.displayPostNavigation}}
                   {{#checkIfAny ../previousPost ../nextPost}}
-                     <nav class="post__nav">
+                     <nav class="content__nav">
                         <div class="wrapper">
-                           <div class="post__nav-inner">
+                           <div class="content__nav-inner">
                               {{#../previousPost}}
-                                 <div class="post__nav-prev">
-                                    <a href="{{url}}" class="post__nav-link" rel="prev">
+                                 <div class="content__nav-prev">
+                                    <a href="{{url}}" class="content__nav-link" rel="prev">
                                        {{#featuredImage}}
                                           {{#if url}} 
-                                             <figure class="post__nav-image">
+                                             <figure class="content__nav-image">
                                                 <img 
                                                    {{#if @config.site.responsiveImages}}
                                                       src="{{urlXs}}"
@@ -180,15 +180,15 @@
                                  </div>
                               {{/../previousPost}}
                               {{#../nextPost}}
-                                 <div class="post__nav-next">
-                                    <a href="{{url}}" class="post__nav-link" rel="next">
+                                 <div class="content__nav-next">
+                                    <a href="{{url}}" class="content__nav-link" rel="next">
                                        <div>
                                           <span>{{ translate 'post.nextPost' }}</span>
                                           {{title}}
                                        </div>
                                        {{#featuredImage}}
                                           {{#if url}} 
-                                             <figure class="post__nav-image">
+                                             <figure class="content__nav-image">
                                                 <img 
                                                    {{#if @config.site.responsiveImages}}
                                                       src="{{urlXs}}"
@@ -225,7 +225,7 @@
 
       {{#if @config.post.displayRelatedPosts}}
          {{#if ../relatedPosts}}
-            <div class="post__related related">
+            <div class="content__related related">
                <div class="wrapper">
                   <h2 class="h4 related__title">
                      {{ translate 'post.relatedPosts' }}
