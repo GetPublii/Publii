@@ -353,8 +353,11 @@ class Author extends Model {
         // Clean unused avatar images
         let themesHelper = new Themes(this.application, { site: this.site });
         let themeConfigPath = path.join(this.application.sitesDir, this.site, 'input', 'config', 'theme.config.json');
-        let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
-        themesHelper.checkAndCleanImages(themeConfigString);
+
+        if (fs.fileExists(themeConfigPath)) {
+            let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+            themesHelper.checkAndCleanImages(themeConfigString);
+        }
     }
 
     /*
