@@ -1190,7 +1190,7 @@ textarea {
 .hero__content--centered {
   text-align: center;
 }
-.hero__content--centered .post__meta {
+.hero__content--centered .content__meta {
   justify-content: center;
 }
 .hero__cta {

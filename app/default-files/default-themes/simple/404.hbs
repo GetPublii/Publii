@@ -3,7 +3,7 @@
 <main class="page page--error">
   <div class="content">
       <div class="hero">
-         <header class="hero__content">
+         <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
             <div class="wrapper">
                <h1>{{ translate 'error.404' }}</h1>
 
