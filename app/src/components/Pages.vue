@@ -56,13 +56,6 @@
                    'is-hierarchy': true,
                    'is-hierarchy-active': !!hierarchyMode
                 }">
-
-                <span 
-                    v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls"
-                    class="edit-page-hierarchy-warning">
-                    {{ $t('page.cleanUrlsDisabled') }}
-                </span>
-
                 <a
                     href="#"
                     class="edit-page-hierarchy"
@@ -899,6 +892,15 @@ export default {
             this.subpageSelectedChildren = [];
             this.hierarchyMode = !this.hierarchyMode;  
 
+            if (this.hierarchyMode && !this.$store.state.currentSite.config.advanced.urls.cleanUrls) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: this.$t('page.cleanUrlsDisabled'),
+                    okClick: this.goToSettings,
+                    okLabel: this.$t('ui.enablePrettyURLs')
+                });
+            }
+
             if (this.hierarchyMode) {
                 this.filterValue = '';
                 this.selectedItems = [];
@@ -907,6 +909,10 @@ export default {
                 this.setFilter('');
                 this.saveOrdering(this.orderBy, this.order);
             }
+        },
+        goToSettings () {
+            let siteName = this.$route.params.name;
+            this.$router.push('/site/' + siteName + '/settings/');
         },
         selectItem (id) {
             this.subpageSelected = id;
