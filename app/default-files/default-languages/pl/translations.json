@@ -449,7 +449,7 @@
         "all": "Wszystkie",
         "closeHierarchy": "Zakończ edycję",
         "changePageDate": "Zmień datę publikacji",
-        "cleanUrlsDisabled": "Ładne adresy URL są wyłączone, więc hierarchia podstron nie będzie działać. Włącz ładne adresy URL aby korzystać z hierarchii.",
+        "cleanUrlsDisabled": "Włącz opcję 'Ładne adresy URL' w ustawieniach strony, aby odblokować funkcję edycji hierarchii. Umożliwi to łatwe zarządzanie relacjami między stronami nadrzędnymi i podrzędnymi.",
         "editHierarchy": "Edytuj hierarchię",
         "configureThemeBeforeGeneratingPreview": "Musisz skonfigurować motyw dla tej witryny przed wygenerowaniem podglądu tej strony.",
         "currentDefaultTemplate": "Aktualnie domyślny szablon",

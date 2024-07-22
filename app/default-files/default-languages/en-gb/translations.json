@@ -449,7 +449,7 @@
         "all": "All",
         "closeHierarchy": "Close edit",
         "changePageDate": "Change page date",
-        "cleanUrlsDisabled": "Pretty URLs are disabled so hierarchy won't work. Please enable Pretty URLs to use pages hierarchy.",
+        "cleanUrlsDisabled": "Activate 'Pretty URLs' in the Site settings to unlock the Edit hierarchy option. This will allow you to easily manage the parent-child relationships between your pages.",
         "editHierarchy": "Edit hierarchy",
         "configureThemeBeforeGeneratingPreview": "A theme must be selected and configured for this website before a preview of this page may be generated.",
         "currentDefaultTemplate": "Current default template",
