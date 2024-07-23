@@ -1078,10 +1078,17 @@ export default {
             this.hierarchySave();
         },
         checkPagesSupport () {
+            let sessionStorageName = this.$store.state.currentSite.config.name.replace(/[^a-z\-0-9]/gmi, '');
+
+            if (window.sessionStorage.getItem('pages-info-displayed-for-site-' + sessionStorageName)) {
+                return;
+            }
+
             if (
                 !this.$store.state.currentSite.themeSettings.supportedFeatures ||
                 !this.$store.state.currentSite.themeSettings.supportedFeatures.pages
             ) {
+                window.sessionStorage.setItem('pages-info-displayed-for-site-' + sessionStorageName, true);
                 this.$bus.$emit('confirm-display', {
                     hasInput: false,
                     message: this.$t('ui.pagesSupportNotEnabledMessage'),
