@@ -1420,7 +1420,7 @@
         "ok": "OK",
         "otherOptions": "Inne opcje",
         "pages": "Strony",
-        "pagesSupportNotEnabledMessage": "Twój obecny motyw nie obsługuje stron. Proszę wybierz motyw z wbudowaną obsługą stron lub zmodyfikuj obecnie używany motyw, aby dodać tę funkcjonalność. Szczegółowe informacje na temat implementacji obsługi stron w motywie znajdziesz po kliknięciu przycisku 'Więcej informacji'",
+        "pagesSupportNotEnabledMessage": "Twój obecny motyw nie obsługuje stron. Proszę wybierz motyw z wbudowaną obsługą stron lub zmodyfikuj obecnie używany. Szczegółowe informacje na temat implementacji obsługi stron w motywie znajdziesz po kliknięciu przycisku 'Więcej informacji'",
         "pageTitle": "Tytuł Strony",
         "pleaseFillAllRequiredFields": "Proszę wypełnić wszystkie wymagane pola",
         "posts": "Wpisy",
