@@ -1096,7 +1096,7 @@ export default {
                     okClick: () => false,
                     cancelClick: this.checkWhatsChanged,
                     okLabel: this.$t('ui.ok'),
-                    cancelLabel: this.$t('ui.whatsChanged'),
+                    cancelLabel: this.$t('ui.learnMore'),
                     cancelNotClosePopup: true
                 });
             }
