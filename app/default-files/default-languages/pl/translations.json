@@ -1398,6 +1398,7 @@
         "indexNofollowNoArchive": "index, nofollow, noarchive",
         "iUnderstand": "OK, rozumiem",
         "lastModified": "Ostatnia modyfikacja",
+        "learnMore": "Więcej informacji",
         "leaveBlankToUseDefaultPageTitle": "Pozostaw puste aby zastosować domyślny tytuł strony",
         "linkTarget": "Otwórz w ",
         "loading": "Ładowanie...",
@@ -1419,7 +1420,7 @@
         "ok": "OK",
         "otherOptions": "Inne opcje",
         "pages": "Strony",
-        "pagesSupportNotEnabledMessage": "Strony nie są obecnie obsługiwane w Twoim motywie. Aby użyć tej funkcji, wybierz motyw, który obsługuje strony lub zmodyfikuj obecnie używany motyw.",
+        "pagesSupportNotEnabledMessage": "Twój obecny motyw nie obsługuje stron. Proszę wybierz motyw z wbudowaną obsługą stron lub zmodyfikuj obecnie używany. Szczegółowe informacje na temat implementacji obsługi stron w motywie znajdziesz po kliknięciu przycisku 'Więcej informacji'",
         "pageTitle": "Tytuł Strony",
         "pleaseFillAllRequiredFields": "Proszę wypełnić wszystkie wymagane pola",
         "posts": "Wpisy",
@@ -1457,7 +1458,6 @@
         "unhide": "Odkryj",
         "updateSlug": "Zaktualizuj slug",
         "uploadInProgress": "Trwa przesyłanie...",
-        "whatsChanged": "Co się zmieniło?",
         "whatsNew": "Co się zmieniło?"
     }
 }

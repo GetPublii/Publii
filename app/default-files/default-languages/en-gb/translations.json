@@ -1399,6 +1399,7 @@
         "indexNofollowNoArchive": "index, nofollow, noarchive",
         "iUnderstand": "OK, I understand",
         "lastModified": "Last modified",
+        "learnMore": "Learn More",
         "leaveBlankToUseDefaultPageTitle": "Leave blank to use a default page title",
         "linkTarget": "Link target",
         "loading": "Loading...",
@@ -1420,7 +1421,7 @@
         "ok": "OK",
         "otherOptions": "Other options",
         "pages": "Pages",
-        "pagesSupportNotEnabledMessage": "Your current theme does not support pages. Please select a theme that supports pages or modify your current theme.",
+        "pagesSupportNotEnabledMessage": "Your current theme does not support pages. Please choose a theme with built-in page support or update your existing theme to include this functionality. Detailed information on implementing page support in your theme can be found by clicking the 'Learn More' button below.",
         "pageTitle": "Page Title",
         "pleaseFillAllRequiredFields": "Please fill all required fields",
         "posts": "Posts",
@@ -1458,7 +1459,6 @@
         "unhide": "Unhide",
         "updateSlug": "Update slug",
         "uploadInProgress": "Upload in progress...",
-        "whatsChanged": "What's changed?",
         "whatsNew": "What's new?"
     }
 }
