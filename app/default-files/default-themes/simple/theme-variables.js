@@ -382,20 +382,20 @@ var generateThemeVariables = function (params) {
       hasItalic: true
     }
   };
-  
+
   let fontBodyName = fontParams[params.fontBody]?.name;
   let fontBodyFamily = fontParams[params.fontBody]?.family;
   let fontBodyWeight = fontParams[params.fontBody]?.weight;
   let fontBodyHasItalic = fontParams[params.fontBody]?.hasItalic;
-  
+
   let fontHeadingsName = fontParams[params.fontHeadings]?.name;
   let fontHeadingsFamily = fontParams[params.fontHeadings]?.family;
   let fontHeadingsWeight = fontParams[params.fontHeadings]?.weight;
   let fontHeadingsHasItalic = fontParams[params.fontHeadings]?.hasItalic;
-  
+
   let output = '';
   let loadedFonts = new Set();
-  
+
   const addFontFace = (key, name, weight, hasItalic) => {
     if (!loadedFonts.has(name)) {
       output += `             
@@ -422,32 +422,32 @@ var generateThemeVariables = function (params) {
       loadedFonts.add(`${name}-italic`);
     }
   };
-  
+
   if (params.fontBody !== 'system-ui') {
     addFontFace(params.fontBody, fontBodyName, fontBodyWeight, params.fontBodyItalic && fontBodyHasItalic);
   }
-  
+
   if (params.fontHeadings !== 'system-ui') {
     addFontFace(params.fontHeadings, fontHeadingsName, fontHeadingsWeight, params.fontHeadingsItalic && fontHeadingsHasItalic);
   }
-  
+
   if (params.fontMenu === 'system-ui') {
     params.fontMenu = fontParams['system-ui'].family;
   }
-  
+
   if (params.fontLogo === 'system-ui') {
     params.fontLogo = fontParams['system-ui'].family;
   }
 
-   // Fluid base font-size
-   const minScreen = 20; // rem
-   const maxScreen = 90; // rem
-   const screenRange = maxScreen - minScreen;
-   const minFontSize = params.minFontSize;
-   const maxFontSize = params.maxFontSize;
-   const fontSizeRange = maxFontSize - minFontSize;
-   const fontSizeValue = `clamp(${minFontSize}rem, ${minFontSize}rem + (${fontSizeRange} * ((100vw - ${minScreen}rem) / ${screenRange})), ${maxFontSize}rem)`;
-   
+  // Fluid base font-size
+  const minScreen = 20; // rem
+  const maxScreen = 90; // rem
+  const screenRange = maxScreen - minScreen;
+  const minFontSize = params.minFontSize;
+  const maxFontSize = params.maxFontSize;
+  const fontSizeRange = maxFontSize - minFontSize;
+  const fontSizeValue = `clamp(${minFontSize}rem, ${minFontSize}rem + (${fontSizeRange} * ((100vw - ${minScreen}rem) / ${screenRange})), ${maxFontSize}rem)`;
+
 
   output += `    
     :root {

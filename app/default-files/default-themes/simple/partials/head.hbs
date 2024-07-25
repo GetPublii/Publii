@@ -28,13 +28,11 @@
         {{/if}}
         {{> fonts}}
         <link rel="stylesheet" href="{{css "style.css" }}">
-		{{#is "post"}}
-           {{#post}}
-              {{#if hasGallery}}
-                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
-              {{/if}}
-           {{/post}}
-        {{/is}}	
+		{{#is "post, page"}}
+            {{#checkIfAny post.hasGallery page.hasGallery}}
+                <link rel="stylesheet" href="{{css "photoswipe.css" }}">
+            {{/checkIfAny}}
+        {{/is}}
         {{#checkIf @config.custom.frontSource '==' "post" }}
            {{#checkIf @config.custom.frontGallery '==' true}}
               {{#is "index"}}
@@ -43,26 +41,24 @@
            {{/checkIf}}
         {{/checkIf}}
         {{jsonLD}}
-		{{#is "post"}}
-           {{#post}}
-              {{#if hasGallery}}
-		            <style>				
-		               {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
-				          .pswp--svg .pswp__button,
-				          .pswp--svg .pswp__button--arrow--left:before,
-				          .pswp--svg .pswp__button--arrow--right:before {
-					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
-			              }
-		              {{else}}
-			              .pswp--svg .pswp__button,
-				          .pswp--svg .pswp__button--arrow--left:before,
-				          .pswp--svg .pswp__button--arrow--right:before {
-					          background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
-			              }		
-		              {{/checkIf}}
-		            </style>		        
-              {{/if}}
-           {{/post}}
+		{{#is "post, page"}}
+            {{#checkIfAny post.hasGallery page.hasGallery}}
+                <style>				
+                    {{#checkIf @config.custom.galleryLightboxStyle '==' "pswp--dark" }}
+                        .pswp--svg .pswp__button,
+                        .pswp--svg .pswp__button--arrow--left:before,
+                        .pswp--svg .pswp__button--arrow--right:before {
+                            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-light.svg);
+                        }
+                    {{else}}
+                        .pswp--svg .pswp__button,
+                        .pswp--svg .pswp__button--arrow--left:before,
+                        .pswp--svg .pswp__button--arrow--right:before {
+                            background-image: url({{@website.assetsUrl}}/svg/gallery-icons-dark.svg);
+                        }		
+                    {{/checkIf}}
+                </style>		        
+            {{/checkIfAny}}
         {{/is}}
         
         {{#checkIf @config.custom.frontSource '==' "post"}}
