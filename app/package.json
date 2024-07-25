@@ -42,7 +42,7 @@
     "codemirror-revisedsearch": "1.0.12",
     "count-files": "2.6.2",
     "delete-empty": "3.0.0",
-    "dompurify": "3.0.4",
+    "dompurify": "3.1.6",
     "easymde": "2.18.0",
     "electron-devtools-installer": "3.2.0",
     "fast-memoize": "2.5.2",
