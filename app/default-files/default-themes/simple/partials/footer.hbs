@@ -97,11 +97,9 @@ footer--glued{{/checkIf}}{{/if}}">
     </script>
 {{/if}}
 
-{{#is "post, page"}}
-    {{#checkIfAny post.hasGallery page.hasGallery}}
-          {{> photoswipe}}
-      {{/checkIfAny}}
-{{/is}}
+{{#checkIfAny post.hasGallery page.hasGallery}}
+    {{> photoswipe}}
+{{/checkIfAny}}
 
 {{#checkIf @config.custom.frontSource '==' "post"}}
    {{#checkIf @config.custom.frontGallery '==' true}}

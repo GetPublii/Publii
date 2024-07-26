@@ -2163,6 +2163,11 @@ textarea {
 .pswp--dark .pswp__bg {
   background: black;
 }
+.pswp--dark .pswp__button,
+.pswp--dark .pswp__button--arrow--left:before,
+.pswp--dark .pswp__button--arrow--right:before {
+  background-image: url(../svg/gallery-icons-light.svg);
+}
 .pswp--light .pswp__bg {
   background: var(--white);
 }
@@ -2171,6 +2176,11 @@ textarea {
 }
 .pswp--light .pswp__caption__center {
   color: var(--text-color);
+}
+.pswp--light .pswp__button,
+.pswp--light .pswp__button--arrow--left:before,
+.pswp--light .pswp__button--arrow--right:before {
+  background-image: url(../svg/gallery-icons-dark.svg);
 }
 .pswp .pswp__button {
   -webkit-box-shadow: none;
