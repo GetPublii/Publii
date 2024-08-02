@@ -1137,11 +1137,6 @@ textarea {
   pointer-events: none;
 }
 
-.site-container {
-  background: var(--page-bg);
-  max-width: 100%;
-}
-
 .wrapper {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
