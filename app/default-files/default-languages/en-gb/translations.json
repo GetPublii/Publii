@@ -1076,6 +1076,7 @@
         "connectToServerCantStoreFilesErrorMsg": "Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server",
         "connectToServerErrorMsg": "Error! The application was unable to connect to your server.",
         "connectToServerSuccessMsg": "Success! The application was able to connect to your server.",
+        "deploymentMethodFilesPubliiMsg": "Selected deployment method uses <strong>files.publii.json</strong> file for sync. Consider access protection for this file in your server configuration if required - <a href=\"https://getpublii.com/docs/recommended-server-settings.html#sync-file\" target=\"_blank\">read more</a>",
         "deploymentMethodFtpMsg": "FTP protocol uses an unencrypted transmission, which means any data sent over it, including your username and password, could be read by anyone who may intercept your transmission. We strongly recommend using FTPS or SFTP protocols if possible.",
         "deploymentMethodGitMsg": "For detailed information about how to configure a website using Git, check Publii's online <a href=\"https://getpublii.com/docs/host-static-website-git-repository.html\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>.",
         "deploymentMethodGithubPagesMsg": "For detailed information about how to configure a website using Github Pages, check Publii's online <a href=\"https://getpublii.com/docs/host-static-website-github-pages.html\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a>.",

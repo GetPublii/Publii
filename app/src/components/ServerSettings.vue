@@ -162,9 +162,9 @@
                 <div class="msg msg-icon msg-info">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
-                        <span v-if="deploymentMethodSelected === 'ftp'">
-                            {{ $t('sync.deploymentMethodFtpMsg') }}
-                        </span>
+                        <span v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'" v-pure-html="$t('sync.deploymentMethodFilesPubliiMsg')"></span>
+                        
+                        <br v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'">
 
                         <span
                             v-if="deploymentMethodSelected === 'netlify'"
@@ -196,9 +196,7 @@
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
                         </span>
 
-                        <template v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
-                            <br>
-                        </template>
+                        <br>
 
                         <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
                     </p>
@@ -311,6 +309,11 @@
                     <template slot="second-label">
                         {{ $t('sync.useFtps') }}
                     </template>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.deploymentMethodFtpMsg') }}
+                    </small>
                 </field>
 
                 <field
