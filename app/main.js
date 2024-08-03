@@ -250,8 +250,6 @@ electronApp.on('ready', function () {
 
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
-    } else {
-        
     }
 
     // Remove application menu on Linux
