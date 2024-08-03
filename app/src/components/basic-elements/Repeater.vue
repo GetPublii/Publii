@@ -20,6 +20,7 @@
             ghostClass="is-ghost"
             handle=".move"
             class="publii-repeater"
+            @change="listUpdated"
             v-model="content">
             <div 
                 v-for="(row, index) of content"
@@ -81,6 +82,8 @@
                             <text-area
                                 v-if="itemConfig[subindex].type === 'wysiwyg'"
                                 v-model="content[index][itemConfig[subindex].name]"
+                                :key="'wysiwyg-' + index + '-' + subindex"
+                                :ref="'wysiwyg-' + index + '-' + subindex"
                                 :wysiwyg="true"
                                 :miniEditorMode="true"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></text-area>
@@ -209,7 +212,6 @@
 <script>
 import Draggable from 'vuedraggable';
 import vSelect from 'vue-multiselect/dist/vue-multiselect.min.js';
-import Vue from 'vue';
 
 export default {
     name: 'repeater',
@@ -338,13 +340,16 @@ export default {
         addItem () {
             let structureCopy = JSON.parse(JSON.stringify(this.itemStructure));
             this.content.push(structureCopy);
+            this.refreshWysiwygs();
         },
         duplicateItem (index) {
             let itemCopy = JSON.parse(JSON.stringify(this.content[index]));
             this.content.splice(index + 1, 0, itemCopy);
+            this.refreshWysiwygs();
         },
         removeItem (index) {
             this.content.splice(index, 1);
+            this.refreshWysiwygs();
         },
         translation (key) {
             if (key === 'add') {
@@ -424,6 +429,24 @@ export default {
         closeFileDropdown (refID) {
             if (this.$refs[refID] && this.$refs[refID][0]) {
                 this.$refs[refID][0].isOpen = false;
+            }
+        },
+        listUpdated () {
+            this.refreshWysiwygs();
+        },
+        refreshWysiwygs() {
+            if (this.$refs) {
+                return Object.keys(this.$refs)
+                    .filter(refName => refName.startsWith('wysiwyg-'))
+                    .forEach(refName => {
+                        let index = refName.split('-')[1];
+                        let subindex = refName.split('-')[2];
+                        let newContent = this.content[index][this.itemConfig[subindex].name];
+                        this.$refs[refName][0].removeEditor();
+                        this.$refs[refName][0].$forceUpdate();
+                        this.$refs[refName][0].setContent(newContent);
+                        this.$refs[refName][0].initWysiwyg();
+                    });
             }
         }
     }

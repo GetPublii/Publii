@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import Utils from './../../helpers/utils';
+import Vue from 'vue';
+
 export default {
     name: 'text-area',
     props: {
@@ -213,8 +216,19 @@ export default {
                         htmlElement.setAttribute('data-theme', await self.$root.getCurrentAppTheme());
                         htmlElement.setAttribute('style', self.$root.overridedCssVariables);
                     });
+
+                    editor.on('input', Utils.debouncedFunction(() => {
+                        self.content = editor.getContent();
+                    }, 1000));
                 }
             });
+        },
+        removeEditor () {
+            let editorToRemove = tinymce.get(this.editorID);
+
+            if (editorToRemove) {
+                editorToRemove.remove();
+            }
         },
         generateID () {
             return 't-' + Math.ceil(Math.random() * 10000000).toString();
@@ -300,11 +314,20 @@ export default {
                 'css/editor-options.css?v=0711',
                 customEditorCSS
             ].join(',');
+        },
+        setContent (newContent) {
+            Vue.set(this, 'content', newContent);
+            this.$emit('input', this.content);
         }
     },
     beforeDestroy () {
         if (this.wysiwyg) {
-            tinymce.remove();
+            let editorToRemove = tinymce.get(this.editorID);
+
+            if (editorToRemove) {
+                editorToRemove.remove();
+            }
+            
             this.$bus.$off('theme-settings-before-save');
             this.$bus.$off('plugin-settings-before-save');
             this.$bus.$off('view-settings-before-save');
