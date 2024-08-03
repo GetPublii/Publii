@@ -23,8 +23,8 @@ const ManualDeployment = require('./manual.js');
  * (S)FTP(S),
  * S3 server,
  * Git
- * Github Pages (deprecated),
- * Gitlab Pages (deprecated),
+ * Github Pages,
+ * Gitlab Pages,
  * Netlify,
  * Google Cloud,
  * Manually
