@@ -69,8 +69,8 @@
                     class="loading-state">
                     <icon
                         name="gallery"
-                        customHeight="66"
-                        customWidth="125" />
+                        customHeight="62"
+                        customWidth="75" />
 
                     <progress-bar
                         color="blue"

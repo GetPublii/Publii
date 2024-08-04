@@ -16,8 +16,8 @@
             <div class="upload-overlay">
                 <icon
                     name="blank-image"
-                    customWidth="80"
-                    customHeight="66" />
+                    customWidth="75"
+                    customHeight="62" />
 
                <div> {{ labelText }}</div>
                 <input
