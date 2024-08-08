@@ -97,6 +97,7 @@ class Import {
         this.parser.importTagsData();
         this.parser.getImageURLs();
         this.parser.importPostsData();
+        this.parser.importPagesData();
         this.parser.importImages();
     }
 }

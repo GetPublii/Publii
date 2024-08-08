@@ -9,6 +9,7 @@ const slug = require('./../../helpers/slug');
 const Author = require('./../../author.js');
 const Tag = require('./../../tag.js');
 const Post = require('./../../post.js');
+const Page = require('./../../page.js');
 const Utils = require('./../../helpers/utils.js');
 
 /**
@@ -31,13 +32,15 @@ class WxrParser {
         this.temp = {
             authors: [],
             posts: [],
+            pages: [],
             tags: [],
             images: [],
             mapping: {
                 authors: [],
                 tags: [],
                 images: [],
-                posts: []
+                posts: [],
+                pages: []
             },
             imagesQueue: {}
         };
@@ -145,11 +148,11 @@ class WxrParser {
             items = items.filter(item => item['wp:post_type'] === filterType);
         }
 
-        if(items && items.length) {
+        if(items && (items.length || items.length === 0)) {
             return items.length;
         }
 
-        if(items) {
+        if(typeof items === 'object') {
             return 1;
         }
 
@@ -375,7 +378,7 @@ class WxrParser {
     importPostsData() {
         let posts = this.parsedContent.rss.channel['item'];
         let newPost;
-        posts = posts ? posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1) : false;
+        posts = posts ? posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1 && item['wp:post_type'] !== 'page') : false;
 
         if(!posts) {
             return;
@@ -487,6 +490,117 @@ class WxrParser {
             });
 
             console.log('-> Imported post (' + (i+1) + ' / ' + posts.length + '): ' + postTitle);
+        }
+    }
+
+    /**
+     * Import pages data
+     */
+    importPagesData() {
+        if (this.postTypes.indexOf('page') === -1) {
+            console.log('(!) Pages import is disabled');
+            return;
+        }
+
+        let pages = this.parsedContent.rss.channel['item'];
+        let newPage;
+        pages = pages ? pages.filter(item => item['wp:post_type'] === 'page') : false;
+
+        if(!pages) {
+            console.log('(!) No pages to import');
+            return;
+        }
+
+        let untitledPagesCount = 1;
+
+        console.log('(X) pages:', pages);
+
+        for(let i = 0; i < pages.length; i++) {
+            if (!pages[i].title) {
+                console.log('(!) Empty page title detected - fallback to "Untitled #X" title');
+                pages[i].title = 'Untitled #' + untitledPagesCount++;
+            }
+
+            // For each page item insert post object
+            let pageImages = this.getPostImages(pages[i]['content:encoded']);
+            let pageSlug = slug(pages[i].title);
+            let pageAuthor = this.temp.authors[slug(pages[i]['dc:creator'])];
+            let pageText = this.preparePostText(pages[i]['content:encoded'], pageImages);
+            let pageStatus = pages[i]['wp:status'] === 'draft' ? 'draft,is-page' : 'published,is-page'
+            let pageTitle = (pages[i].title).toString();
+
+            if(!this.importAuthors) {
+                pageAuthor = '1';
+            }
+
+            newPage = new Page(this.appInstance, {
+                id: 0,
+                site: this.siteName,
+                title: pageTitle,
+                slug: pageSlug,
+                author: pageAuthor,
+                status: pageStatus,
+                text: pageText,
+                creationDate: moment(pages[i]['wp:post_date']).format('x'),
+                modificationDate: moment().format('x'),
+                template: '',
+                additionalData: '',
+                pageViewSettings: ''
+            }, false);
+
+            let newPageResult = newPage.save();
+            let newPageID = newPageResult.postID;
+
+            this.temp.pages[pageSlug] = newPageID;
+            this.temp.mapping.pages[pages[i]['wp:post_id']] = newPageID;
+
+            // Create queue for download images
+            if(pageImages.length) {
+                this.temp.imagesQueue[newPageID] = pageImages;
+            }
+
+            let featuredImage = this.getFeaturedPostImage(pages[i]);
+            let fileName = false;
+
+            if(featuredImage) {
+                fileName = path.parse(featuredImage).base;
+
+                if(!this.temp.imagesQueue[newPageID]) {
+                    this.temp.imagesQueue[newPageID] = [];
+                }
+
+                this.temp.imagesQueue[newPageID].push(featuredImage);
+            }
+
+            if(fileName) {
+                let featuredPageImageSqlQuery = newPage.db.prepare(`INSERT INTO posts_images VALUES(NULL, @newPageID, @fileName, '', '', @config)`);
+                featuredPageImageSqlQuery.run({
+                    newPageID: newPageID,
+                    fileName: fileName,
+                    config: '{"alt":"","caption":"","credits":""}'
+                });
+
+                let featuredPageID = newPage.db.prepare('SELECT last_insert_rowid() AS id').get().id;
+                let featuredPageIdUpdate = newPage.db.prepare(`UPDATE posts SET featured_image_id = @featuredPostID WHERE id = @newPageID`);
+
+                featuredPageIdUpdate.run({
+                    featuredPageID,
+                    newPageID
+                });
+            }
+
+            process.send({
+                type: 'progress',
+                message: {
+                    translation: 'core.wpImport.pagesProgressInfo',
+                    translationVars: {
+                        progress: (i + 1),
+                        total: pages.length
+                    }
+                }
+            });
+
+            console.log('-> Imported page (' + (i+1) + ' / ' + pages.length + '): ' + pageTitle);
         }
     }
 
