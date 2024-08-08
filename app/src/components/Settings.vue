@@ -2478,7 +2478,6 @@ export default {
         checkBeforeSave (showPreview, renderingType, renderFiles) {
             if (
                 this.$store.state.currentSite.config.theme && (
-                    this.theme === 'use-' + this.$store.state.currentSite.config.theme ||
                     this.theme === 'install-use-' + this.$store.state.currentSite.config.theme
                 ) && 
                 this.$store.state.currentSite.themeHasOverrides
