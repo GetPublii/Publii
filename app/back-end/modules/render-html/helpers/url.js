@@ -80,6 +80,12 @@ class URLHelper {
 
         let optionalPrefix = '';
 
+        if (pageType === 'home') {
+            if (urlsConfig.postsPrefix) {
+                optionalPrefix = urlsConfig.postsPrefix + '/';
+            }
+        }
+
         if(pageType === 'author') {
             optionalPrefix = urlsConfig.authorsPrefix + '/';
 

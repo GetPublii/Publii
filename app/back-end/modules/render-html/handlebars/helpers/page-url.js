@@ -15,6 +15,10 @@ function pageURLHelper(rendererInstance, Handlebars) {
             path.push(context);
         }
 
+        if (context === '' && rendererInstance.siteConfig.advanced.urls.postsPrefix) {
+            path.push(rendererInstance.siteConfig.advanced.urls.postsPrefix);
+        }
+
         // Skip page/X for URLs in page = 1
         if (number > 1) {
             path.push(rendererInstance.siteConfig.advanced.urls.pageName);
