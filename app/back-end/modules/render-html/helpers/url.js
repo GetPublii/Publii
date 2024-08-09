@@ -52,13 +52,13 @@ class URLHelper {
      * Creates pagination link for a given URL type
      *
      * @param domain
-     * @param urlsConfig
+     * @param config
      * @param pageNumber
      * @param pageType
      * @param pageSlug
      * @returns {*}
      */
-    static createPaginationPermalink(domain, urlsConfig, pageNumber, pageType, pageSlug, addIndexHtml = false) {
+    static createPaginationPermalink(domain, config, pageNumber, pageType, pageSlug, addIndexHtml = false) {
         // When there is no link - skip the operations
         if(pageNumber === false) {
             return false;
@@ -75,30 +75,34 @@ class URLHelper {
         let pageSuffix = '';
 
         if(pageNumber > 1) {
-            pageSuffix = urlsConfig.pageName + '/' + pageNumber + '/';
+            pageSuffix = config.urls.pageName + '/' + pageNumber + '/';
         }
 
         let optionalPrefix = '';
 
         if (pageType === 'home') {
-            if (urlsConfig.postsPrefix) {
-                optionalPrefix = urlsConfig.postsPrefix + '/';
+            if (config.urls.postsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/';
+            } 
+            
+            if (config.urls.postsPrefix && !config.usePageAsFrontpage && pageNumber === 1) {
+                optionalPrefix = '/xxx/';
             }
         }
 
         if(pageType === 'author') {
-            optionalPrefix = urlsConfig.authorsPrefix + '/';
+            optionalPrefix = config.urls.authorsPrefix + '/';
 
-            if (urlsConfig.postsPrefix && urlsConfig.authorsPrefixAfterPostsPrefix) {
-                optionalPrefix = urlsConfig.postsPrefix + '/' + urlsConfig.authorsPrefix + '/';
+            if (config.urls.postsPrefix && config.urls.authorsPrefixAfterPostsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/' + config.urls.authorsPrefix + '/';
             }
         }
 
-        if(pageType === 'tag' && urlsConfig.tagsPrefix !== '') {
-            optionalPrefix = urlsConfig.tagsPrefix + '/';
+        if(pageType === 'tag' && config.urls.tagsPrefix !== '') {
+            optionalPrefix = config.urls.tagsPrefix + '/';
 
-            if (urlsConfig.postsPrefix && urlsConfig.tagsPrefixAfterPostsPrefix) {
-                optionalPrefix = urlsConfig.postsPrefix + '/' + urlsConfig.tagsPrefix + '/';
+            if (config.urls.postsPrefix && config.urls.tagsPrefixAfterPostsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/' + config.urls.tagsPrefix + '/';
             }
         }
 

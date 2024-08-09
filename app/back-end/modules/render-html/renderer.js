@@ -164,7 +164,7 @@ class Renderer {
                 } else if (this.itemType === 'page') {
                     await this.renderPagePreview();
                 }
-            } else if (this.homepageOnlyMode) {
+            } else if (this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) {
                 await this.renderHomepagePreview();
             } else if (this.tagOnlyMode) {
                 await this.renderTagPreview();
@@ -233,32 +233,36 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
-        this.sendProgress(11, 'Generating frontpage');
-        this.generateFrontpage();
-        this.sendProgress(20, 'Generating posts');
-        this.generatePosts();
-        this.sendProgress(50, 'Generating pages');
-        this.generatePages();
+        if (this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) {
+            this.sendProgress(11, 'Generating frontpage');
+            this.generateFrontpage();
+            this.sendProgress(20, 'Generating posts');
+            this.generatePosts();
+            this.sendProgress(50, 'Generating pages');
+            this.generatePages();
 
-        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
-            this.sendProgress(60, 'Generating tag pages');
-            this.generateTags();
-            this.generateTagsList();
-        }
+            if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+                this.sendProgress(60, 'Generating tag pages');
+                this.generateTags();
+                this.generateTagsList();
+            }
 
-        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
-            this.sendProgress(70, 'Generating author pages');
-            this.generateAuthors();
-        }
+            if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+                this.sendProgress(70, 'Generating author pages');
+                this.generateAuthors();
+            }
 
-        this.sendProgress(75, 'Generating other pages');
+            this.sendProgress(75, 'Generating other pages');
 
-        if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
-            this.generate404s();
-        }
+            if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
+                this.generate404s();
+            }
 
-        if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
-            this.generateSearch();
+            if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
+                this.generateSearch();
+            }
+        } else {
+            this.generatePages();
         }
         
         if (!this.siteConfig.deployment.relativeUrls) {
@@ -751,7 +755,7 @@ class Renderer {
                 output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
             }
 
-            if (this.siteConfig.advanced.urls.postsPrefix === '') {
+            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
                 this.templateHelper.saveOutputFile('index.html', output);
             } else {
                 this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
@@ -786,8 +790,8 @@ class Renderer {
                     postsPerPage: postsPerPage,
                     nextPage: nextPage,
                     previousPage: previousPage,
-                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'home', false, addIndexHtml),
-                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'home', false, addIndexHtml)
+                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'home', false, addIndexHtml),
+                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'home', false, addIndexHtml)
                 };
 
                 let additionalContexts = [];
@@ -810,7 +814,7 @@ class Renderer {
                 }
 
                 if (offset === 0) {
-                    if (this.siteConfig.advanced.urls.postsPrefix === '') {
+                    if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
                         this.templateHelper.saveOutputFile('index.html', output);
                     } else {
                         this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
@@ -1103,20 +1107,40 @@ class Renderer {
         let inputFile = 'page.hbs';
 
         // Get pages
-        let pageData = this.db.prepare(`
-            SELECT
-                id,
-                slug,
-                template
-            FROM
-                posts
-            WHERE
-                status LIKE '%published%' AND
-                status LIKE '%is-page%' AND
-                status NOT LIKE '%trashed%'
-            ORDER BY
-                id ASC
-        `).all();
+        let pageData;
+        
+        if (this.homepageOnlyMode && this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage) {
+            pageData = this.db.prepare(`
+                SELECT
+                    id,
+                    slug,
+                    template
+                FROM
+                    posts
+                WHERE
+                    status LIKE '%published%' AND
+                    status LIKE '%is-page%' AND
+                    status NOT LIKE '%trashed%' AND
+                    id = ${parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)}
+                ORDER BY
+                    id ASC
+            `).all();
+        } else {
+            pageData = this.db.prepare(`
+                SELECT
+                    id,
+                    slug,
+                    template
+                FROM
+                    posts
+                WHERE
+                    status LIKE '%published%' AND
+                    status LIKE '%is-page%' AND
+                    status NOT LIKE '%trashed%'
+                ORDER BY
+                    id ASC
+            `).all();
+        }
 
         if (pageData && pageData.length) { 
             pageIDs = pageData.map(row => row.id);
@@ -1393,8 +1417,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'tag', tagSlug, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'tag', tagSlug, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'tag', tagSlug, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'tag', tagSlug, addIndexHtml)
                     };
 
                     let additionalContexts = [];
@@ -1623,8 +1647,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'author', authorUsername, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'author', authorUsername, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'author', authorUsername, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'author', authorUsername, addIndexHtml)
                     };
 
                     let additionalContexts = [];

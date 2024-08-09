@@ -52,12 +52,14 @@ describe('URL helper', function() {
 
     describe('#URLHelper.createPaginationPermalink', function() {
         let urlsConfig = {
-            cleanUrls: false,
-            tagsPrefix: '',
-            authorsPrefix: 'authors',
-            pageName: 'page',
-            errorPage: '404.html',
-            searchPage: 'search.html'
+            urls: {
+                cleanUrls: false,
+                tagsPrefix: '',
+                authorsPrefix: 'authors',
+                pageName: 'page',
+                errorPage: '404.html',
+                searchPage: 'search.html'
+            }
         };
 
         it('should create a proper URL for different types of pages', function () {
