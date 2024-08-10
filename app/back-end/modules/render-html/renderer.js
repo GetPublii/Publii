@@ -233,7 +233,7 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
-        if (this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) {
+        if ((this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) || !this.homepageOnlyMode) {
             this.sendProgress(11, 'Generating frontpage');
             this.generateFrontpage();
             this.sendProgress(20, 'Generating posts');
