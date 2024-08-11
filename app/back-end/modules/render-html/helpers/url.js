@@ -86,7 +86,7 @@ class URLHelper {
             } 
             
             if (config.urls.postsPrefix && !config.usePageAsFrontpage && pageNumber === 1) {
-                optionalPrefix = '/xxx/';
+                optionalPrefix = '';
             }
         }
 
