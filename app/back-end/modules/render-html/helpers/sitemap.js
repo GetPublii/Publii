@@ -502,12 +502,14 @@ class Sitemap {
             tagsPath = path.join(this.baseDirectory, postsPrefix, tagsPrefix);
         }
 
-        let tagsFileContent = await readFile(path.join(tagsPath, 'index.html'), 'utf8');
+        if (fs.fileExists(path.join(tagsPath, 'index.html'))) {
+            let tagsFileContent = await readFile(path.join(tagsPath, 'index.html'), 'utf8');
 
-        if (usePostsPrefix && tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
-            this.fileList.push(postsPrefix + '/' + tagsPrefix + '/index.html');
-        } else if (tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
-            this.fileList.push(tagsPrefix + '/index.html');
+            if (usePostsPrefix && tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
+                this.fileList.push(postsPrefix + '/' + tagsPrefix + '/index.html');
+            } else if (tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
+                this.fileList.push(tagsPrefix + '/index.html');
+            }
         }
 
         let files = fs.readdirSync(tagsPath);
