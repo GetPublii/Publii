@@ -502,6 +502,14 @@ class Sitemap {
             tagsPath = path.join(this.baseDirectory, postsPrefix, tagsPrefix);
         }
 
+        let tagsFileContent = await readFile(path.join(tagsPath, 'index.html'), 'utf8');
+
+        if (usePostsPrefix && tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
+            this.fileList.push(postsPrefix + '/' + tagsPrefix + '/index.html');
+        } else if (tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
+            this.fileList.push(tagsPrefix + '/index.html');
+        }
+
         let files = fs.readdirSync(tagsPath);
 
         for (let file of files) {
@@ -564,13 +572,25 @@ class Sitemap {
         let postsPrefix = this.siteConfig.advanced.urls.postsPrefix;
         let files; 
         let filesPath;
+        let homeIndexPath;
+        const readFile = util.promisify(fs.readFile);
         
         if (postsPrefix) {
             filesPath = path.join(this.baseDirectory, postsPrefix, this.siteConfig.advanced.urls.pageName);
             files = fs.readdirSync(filesPath);
+            homeIndexPath = path.join(this.baseDirectory, postsPrefix);
         } else {
             filesPath = path.join(this.baseDirectory, this.siteConfig.advanced.urls.pageName);
             files = fs.readdirSync(filesPath);
+            homeIndexPath = this.baseDirectory;
+        }
+
+        if (postsPrefix) {
+            let homeIndexFileContent = await readFile(path.join(homeIndexPath, 'index.html'), 'utf8');
+
+            if (homeIndexFileContent.indexOf('name="robots" content="noindex') === -1) {
+                this.fileList.push(postsPrefix + '/index.html');
+            }
         }
 
         for (let file of files) {
@@ -579,7 +599,6 @@ class Sitemap {
                 continue;
             }
 
-            const readFile = util.promisify(fs.readFile);
             let homeFileContent = await readFile(path.join(filesPath, file, 'index.html'), 'utf8');
 
             if (homeFileContent.indexOf('name="robots" content="noindex') === -1) {
