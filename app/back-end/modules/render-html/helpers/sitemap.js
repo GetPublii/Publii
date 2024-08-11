@@ -585,7 +585,7 @@ class Sitemap {
             homeIndexPath = this.baseDirectory;
         }
 
-        if (postsPrefix) {
+        if (postsPrefix && this.siteConfig.advanced.usePageAsFrontpage) {
             let homeIndexFileContent = await readFile(path.join(homeIndexPath, 'index.html'), 'utf8');
 
             if (homeIndexFileContent.indexOf('name="robots" content="noindex') === -1) {
