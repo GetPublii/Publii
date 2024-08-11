@@ -877,6 +877,7 @@
         "postModificationDate": "Post modification date",
         "postPageTitleVariables": "The following variables can be used: %posttitle, %sitename, %authorname.",
         "postsListing": "Posts Listing",
+        "postsIndex": "Posts Index",
         "postsOrderBy": "Posts order by:",
         "postsOrdering": "Posts ordering:",
         "postPrefixInfo": "The prefix entered here will be added before the post slug in the URL. For example, https://example.com/POSTS_PREFIX/post-slug. This option is necessary if you set a <a href=\"#\" data-internal-link=\"SEO\">page as the homepage</a> and need post pagination. In this case, post pagination will be available at https://example.com/POSTS_PREFIX/page/X. Additionally, tags will be rendered under https://example.com/POSTS_PREFIX/TAG_PREFIX/tag-slug.",

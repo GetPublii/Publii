@@ -223,8 +223,13 @@
                             </small>
                         </field>
 
+                        <separator
+                            v-if="advanced.usePageAsFrontpage && advanced.urls.postsPrefix"
+                            type="medium"
+                            :label="$t('settings.postsIndex')" />
+
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-title"
                             :label="$t('settings.pageTitle')">
                             <text-input
@@ -237,7 +242,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -250,7 +255,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-robots-index"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -262,7 +267,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="homepage-no-index-pagination"
                             :label="$t('settings.disableHomepagePaginationIndexing')">
                             <switcher
@@ -277,6 +282,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage)"
                             id="homepage-no-pagination"
                             :label="$t('settings.disableHomepagePagination')">
                             <switcher
