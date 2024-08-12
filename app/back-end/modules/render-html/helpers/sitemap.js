@@ -502,7 +502,7 @@ class Sitemap {
             tagsPath = path.join(this.baseDirectory, postsPrefix, tagsPrefix);
         }
 
-        if (fs.fileExists(path.join(tagsPath, 'index.html'))) {
+        if (UtilsHelper.fileExists(path.join(tagsPath, 'index.html'))) {
             let tagsFileContent = await readFile(path.join(tagsPath, 'index.html'), 'utf8');
 
             if (usePostsPrefix && tagsFileContent.indexOf('name="robots" content="noindex') === -1) {
