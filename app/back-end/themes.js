@@ -262,6 +262,34 @@ class Themes {
     }
 
     /*
+     * Load available page templates
+     */
+    loadPageTemplates() {
+        let pageTemplates = [];
+        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        siteData = JSON.parse(siteData);
+
+        if(siteData.theme) {
+            let themeDir = path.join(this.sitePath, siteData.theme);
+            let themeConfigPath = path.join(this.sitePath, 'input', 'config', 'theme.config.json');
+            let themeData = Themes.loadThemeConfig(themeConfigPath, themeDir);
+
+            if(themeData.pageTemplates) {
+                let templateFiles = Object.keys(themeData.pageTemplates);
+
+                for(let i = 0; i < templateFiles.length; i++) {
+                    let fileName = templateFiles[i];
+                    pageTemplates.push(
+                        [fileName, themeData.pageTemplates[fileName]]
+                    );
+                }
+            }
+        }
+
+        return pageTemplates;
+    }
+
+    /*
      * Load available tag templates
      */
     loadTagTemplates() {
@@ -332,13 +360,14 @@ class Themes {
             config: newConfig.config,
             customConfig: newConfig.customConfig,
             postConfig: newConfig.postConfig,
+            pageConfig: newConfig.pageConfig,
             tagConfig: newConfig.tagConfig,
             authorConfig: newConfig.authorConfig,
             defaultTemplates: newConfig.defaultTemplates
         };
 
         // Check all options for the media fields
-        let groups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
+        let groups = ['config', 'customConfig', 'postConfig', 'pageConfig', 'tagConfig', 'authorConfig'];
 
         for(let i = 0; i < groups.length; i++) {
             let options = themeDefaultConfig[groups[i]];
@@ -418,7 +447,7 @@ class Themes {
                 return;
             }
 
-            let optionGroups = ['config', 'customConfig', 'postConfig', 'tagConfig', 'authorConfig'];
+            let optionGroups = ['config', 'customConfig', 'postConfig', 'pageConfig', 'tagConfig', 'authorConfig'];
 
             for(let k = 0; k < optionGroups.length; k++) {
                 let group = optionGroups[k];
@@ -483,6 +512,8 @@ class Themes {
             ogFallbackImage = siteData.advanced.openGraphImage;
         }
 
+        // Parse json before slashes normalization
+        let configObject = JSON.parse(configString);
         // Make sure that all slashes are in the same direction
         configString = normalizePath(configString);
 
@@ -505,9 +536,10 @@ class Themes {
                 continue;
             }
 
-            // Remove files which does not exist in the post text
+            // Remove files which does not exist in the config string and as avatars/OG fallback image
             if(
                 configString.indexOf('/' + imagePath) === -1 &&
+                configString.indexOf('"' + imagePath + '"') === -1 &&
                 authorAvatars.indexOf(imagePath) === -1 &&
                 imagePath !== ogFallbackImage
             ) {
@@ -519,6 +551,58 @@ class Themes {
 
                 // Remove responsive images
                 this.removeResponsiveImages(fullPath);
+            }
+        }
+
+        // clean up unnecessary default images
+        let assetsToCheck = [
+            {
+                dir: 'posts', 
+                configType: 'postConfig'
+            },
+            {
+                dir: 'tags', 
+                configType: 'tagConfig'
+            },
+            {
+                dir: 'authors', 
+                configType: 'authorConfig'
+            }
+        ];
+
+        for (let i = 0; i < assetsToCheck.length; i++) {
+            let dirToCheck = assetsToCheck[i].dir;
+            let configToCheck = assetsToCheck[i].configType;
+            let viewImagesDir = path.join(this.siteInputPath, 'media', dirToCheck, 'defaults');
+
+            if(!UtilsHelper.dirExists(viewImagesDir)) {
+                return;
+            }
+
+            let viewImages = fs.readdirSync(viewImagesDir);
+            let configImages = Object.values(configObject[configToCheck]);
+
+            // Iterate through images
+            for (let i in viewImages) {
+                let imagePath = viewImages[i];
+                let fullPath = path.join(viewImagesDir, imagePath);
+
+                // Skip dirs and symlinks
+                if (imagePath === '.' || imagePath === '..' || imagePath === 'responsive' || imagePath === 'gallery') {
+                    continue;
+                }
+
+                // Remove files which does not exist in the post text
+                if (configImages.indexOf(imagePath) === -1) {
+                    try {
+                        fs.unlinkSync(fullPath);
+                    } catch(e) {
+                        console.error(e);
+                    }
+
+                    // Remove responsive images
+                    this.removeResponsiveImages(fullPath);
+                }
             }
         }
     }

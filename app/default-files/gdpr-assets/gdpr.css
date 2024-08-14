@@ -155,16 +155,19 @@
 .pcb__title {
   color: var(--pcb-headings-color);
   font-size: 1.05em;
+  font-variation-settings: "wght" var(--pcb-font-weight-bold);
   font-weight: var(--pcb-font-weight-bold);
   margin-bottom: 0.75em;
 }
 .pcb__txt {
   font-size: 0.85em;
+  font-variation-settings: "wght" var(--pcb-font-weight-normal);
   font-weight: var(--pcb-font-weight-normal);
   line-height: 1.5;
 }
 .pcb__txt a {
   color: var(--pcb-btn-link);
+  font-variation-settings: "wght" var(--pcb-font-weight-normal);
   font-weight: var(--pcb-font-weight-normal);
   -webkit-transition: var(--pcb-link-transition);
   transition: var(--pcb-link-transition);
@@ -178,18 +181,13 @@
   color: var(--pcb-btn-link-hover);
 }
 .pcb__buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-top: 0.5em;
 }
 @media all and (min-width: 30em) and (max-width: 37.4375em) {
   .pcb__buttons {
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    justify-content: space-between;
   }
 }
 @media all and (min-width: 37.5em) {
@@ -206,11 +204,10 @@
   cursor: pointer;
   display: inline-block;
   color: var(--pcb-btn-primary-text);
+  font-variation-settings: "wght" var(--pcb-font-weight-bold);
   font-weight: var(--pcb-font-weight-bold);
   font-size: 0.825em;
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 100%;
-          flex: 1 1 100%;
+  flex: 1 1 100%;
   height: initial;
   padding: 1em 1.5em;
   text-align: center;
@@ -225,9 +222,7 @@
 }
 @media all and (min-width: 37.5em) {
   .pcb__btn {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 10 auto;
-            flex: 0 10 auto;
+    flex: 0 10 auto;
   }
 }
 .pcb__btn:active, .pcb__btn:hover, .pcb__btn:focus {
@@ -530,6 +525,7 @@
   position: relative;
 }
 .pcb__group__title {
+  font-variation-settings: "wght" var(--pcb-font-weight-bold);
   font-weight: var(--pcb-font-weight-bold);
   font-size: 0.941em;
   color: var(--pcb-headings-color);
@@ -574,6 +570,7 @@
 }
 .pcb__group__txt {
   font-size: 0.85em;
+  font-variation-settings: "wght" var(--pcb-font-weight-normal);
   font-weight: var(--pcb-font-weight-normal);
   line-height: 1.5;
   margin-top: -0.5em;
@@ -595,8 +592,6 @@
   bottom: 1.25em;
   color: var(--pcb-badge-color);
   cursor: pointer;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   font-size: initial;
   height: initial;

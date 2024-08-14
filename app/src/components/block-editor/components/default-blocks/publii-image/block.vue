@@ -52,8 +52,8 @@
           <icon
             v-if="!imageUploadInProgress"
             name="blank-image"
-            height="66"
-            width="80" />
+            height="62"
+            width="75" />
           <span v-if="!imageUploadInProgress">
             {{ $t('editor.dropToUploadYourPhotoOr') }}
           </span>

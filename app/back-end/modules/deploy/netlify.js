@@ -40,8 +40,8 @@ class Netlify {
         localDir = this.deployment.inputDir;
 
         client = new NetlifyAPI({
-            accessToken: token,
-            siteID: siteID,
+            accessToken: (token).toString().trim(),
+            siteID: (siteID).toString().trim(),
             inputDir: localDir
         }, {
             onStart: this.onStart.bind(this),
@@ -161,8 +161,8 @@ class Netlify {
         }
 
         client = new NetlifyAPI({
-            accessToken: token,
-            siteID: siteID,
+            accessToken: (token).toString().trim(),
+            siteID: (siteID).toString().trim(),
             inputDir: ''
         });
 

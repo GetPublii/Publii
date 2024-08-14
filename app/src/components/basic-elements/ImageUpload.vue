@@ -16,8 +16,8 @@
             <div class="upload-overlay">
                 <icon
                     name="blank-image"
-                    customWidth="80"
-                    customHeight="66" />
+                    customWidth="75"
+                    customHeight="62" />
 
                <div> {{ labelText }}</div>
                 <input
@@ -203,6 +203,12 @@ export default {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/plugins/' + this.pluginDir + '/';
             } else if (this.itemId === 0) {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/temp/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'contentImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/defaults/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'authorImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/authors/defaults/';
+            } else if (this.itemId === 'defaults' && this.imageType === 'tagImages') {
+                return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/defaults/';
             } else if (this.itemId) {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/posts/' + this.itemId + '/';
             }
@@ -258,7 +264,10 @@ export default {
                 imageType: 'optionImages'
             };
 
-            if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
+            if (this.itemId && this.itemId === 'defaults') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = this.imageType;
+            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'tagImages';
             } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
@@ -267,13 +276,15 @@ export default {
             } else if (this.imageType === 'pluginImages') {
                 uploadData.imageType = 'pluginImages';
                 uploadData.pluginDir = this.pluginDir;
+            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
+                uploadData.id = this.itemId;
+                uploadData.imageType = 'contentImages';
             } else if ((this.itemId || this.itemId === 0)) {
                 uploadData.id = this.itemId;
                 uploadData.imageType = 'featuredImages';
             } 
 
             mainProcessAPI.send('app-image-upload', uploadData);
-            console.log('DATA', uploadData);
 
             mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
                 this.isEmpty = false;
@@ -340,11 +351,25 @@ export default {
 
         &.is-empty {
             box-shadow: inset 0 0 0 5px var(--bg-primary);
-        }
+            container-type: inline-size;
 
-        &.is-empty {
             .upload-overlay {
                 display: block;
+            }
+
+            @container (max-width: 200px) {
+                .upload-overlay svg {
+                    display: none;
+                }
+            }
+
+            @container (max-width: 160px) {
+                .upload-overlay div {
+                    display: none;
+                }
+                .upload-image-input {
+                    margin-top: 0 !important;
+                }
             }
         }
 

@@ -1,6 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+const Page = require('./items/page');
 const Post = require('./items/post');
 const Author = require('./items/author');
 const Tag = require('./items/tag');
+const ContentHelper = require('./helpers/content.js');
 const FeaturedImage = require('./items/featured-image');
 const ViewSettingsHelper = require('./helpers/view-settings.js');
 const RendererHelpers = require('./helpers/helpers.js');
@@ -31,11 +35,17 @@ class RendererCache {
         // We need author posts count before storing tags
         this.getAuthorPostCounts();
         this.getAuthors();
-        // Set post-related items
+        // Set post/page-related items
         this.getFeaturedPostImages();
+        this.getFeaturedPageImages();
         this.getPostTags();
-        // At the end we get posts as it uses other cached items
-        this.getPosts();
+        // Get pages structure
+        this.getPagesStructure();
+        // At the end we get posts and pages as it uses other cached items
+        let posts = this.getPosts();
+        let pages = this.getPages();
+        // Now we can set internal links
+        this.setInternalLinks(posts, pages);
     }
 
     /**
@@ -76,7 +86,10 @@ class RendererCache {
         let tagViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.tagConfig));
         
         tags = tags.map(tag => {
-            let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag);
+            let tagViewConfig = this.getViewSettings(tagViewConfigObject, tag, {
+                type: 'tag',
+                id: tag.id
+            });
             let newTag = new Tag(tag, this.renderer, mainTagIDs);
             newTag.setTagViewConfig(tagViewConfig);
             return newTag;
@@ -158,7 +171,7 @@ class RendererCache {
                         caption: additionalData.featuredImageCaption,
                         credits: additionalData.featuredImageCredits
                     })
-                }, this.renderer, 'authorImages');
+                }, this.renderer, 'authorImages', 'author');
             }
         }
         console.timeEnd('FEATURED AUTHOR IMAGES - STORE');
@@ -186,7 +199,10 @@ class RendererCache {
         let authorViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.authorConfig));
         
         authors = authors.map(author => {
-            let authorViewConfig = this.getViewSettings(authorViewConfigObject, author);
+            let authorViewConfig = this.getViewSettings(authorViewConfigObject, author, {
+                type: 'author',
+                id: author.id
+            });
             let newAuthor = new Author(author, this.renderer);
             newAuthor.setAuthorViewConfig(authorViewConfig);
             return newAuthor;
@@ -220,7 +236,8 @@ class RendererCache {
             WHERE
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%hidden%' AND
-                p.status NOT LIKE '%trashed%'
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%'
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id
@@ -235,7 +252,7 @@ class RendererCache {
     }
 
     /**
-     * Retrieves featured images data
+     * Retrieves featured images data for posts
      */
     getFeaturedPostImages() {
         console.time('FEATURED POST IMAGES - QUERY');
@@ -251,14 +268,49 @@ class RendererCache {
                 posts_images as pi
                 ON
                 p.featured_image_id = pi.id
+            WHERE
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%'
             ORDER BY
                 pi.id DESC
         `).all();
         console.timeEnd('FEATURED POST IMAGES - QUERY');
 
         console.time('FEATURED POST IMAGES - STORE');
-        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages'));
+        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages', 'post'));
         console.timeEnd('FEATURED POST IMAGES - STORE');
+    }
+
+    /**
+     * Retrieves featured images data for pages
+     */
+    getFeaturedPageImages() {
+        console.time('FEATURED PAGE IMAGES - QUERY');
+        let featuredImages = this.db.prepare(`
+            SELECT
+                pi.id AS id,
+                pi.post_id AS item_id,
+                pi.url AS url,
+                pi.additional_data AS additional_data
+            FROM
+                posts as p
+            LEFT JOIN
+                posts_images as pi
+                ON
+                p.featured_image_id = pi.id
+            WHERE
+                p.status LIKE '%published%' AND
+                p.status NOT LIKE '%trashed%' AND
+                p.status LIKE '%is-page%'
+            ORDER BY
+                pi.id DESC
+        `).all();
+        console.timeEnd('FEATURED PAGE IMAGES - QUERY');
+
+        console.time('FEATURED PAGE IMAGES - STORE');
+        featuredImages.map(image => new FeaturedImage(image, this.renderer, 'featuredImages', 'page'));
+        console.timeEnd('FEATURED PAGE IMAGES - STORE');
     }
 
     /**
@@ -295,7 +347,7 @@ class RendererCache {
                         caption: additionalData.featuredImageCaption,
                         credits: additionalData.featuredImageCredits
                     })
-                }, this.renderer, 'tagImages');
+                }, this.renderer, 'tagImages', 'tag');
             }
         }
         console.timeEnd('FEATURED TAG IMAGES - STORE');
@@ -335,6 +387,54 @@ class RendererCache {
     }
 
     /**
+     * Prepare two hierarchies
+     */
+    getPagesStructure () {
+        // Pages structure
+        let pagesConfigPath = path.join(this.renderer.inputDir, 'config', 'pages.config.json');
+
+        if (fs.existsSync(pagesConfigPath)) {
+            let pagesStructure = JSON.parse(fs.readFileSync(pagesConfigPath));
+            let pagesStructureForHierarchy = JSON.parse(JSON.stringify(pagesStructure));
+            let flatPagesStructure = {};
+            let pagesStack = [...pagesStructure];
+            let hierarchyStructure = {};
+
+            while (pagesStack.length > 0) {
+                let page = pagesStack.pop();
+                
+                if (!flatPagesStructure[page.id]) {
+                    flatPagesStructure[page.id] = [];
+                }
+
+                page.subpages.forEach(subpage => {
+                    flatPagesStructure[page.id].push(subpage.id);
+                    pagesStack.push(subpage);
+                });
+            }
+
+            let hierarchyTraverse = (node, path = []) => {
+                node.subpages.forEach(subpage => hierarchyTraverse(subpage, [node.id, ...path]));
+                hierarchyStructure[node.id] = path.reverse();
+            };
+
+            pagesStructureForHierarchy.forEach(page => hierarchyTraverse(page));
+
+            // Flat hierarchy structure of parents when clean URLs are disabled
+            if (!this.renderer.siteConfig.advanced.urls.cleanUrls) {
+                let IDs = Object.keys(hierarchyStructure);
+
+                for (let i = 0; i < IDs.length; i++) {
+                    hierarchyStructure[IDs[i]] = [];
+                }
+            }
+
+            this.renderer.cachedItems.pagesStructure = flatPagesStructure;
+            this.renderer.cachedItems.pagesStructureHierarchy = hierarchyStructure;
+        }
+    }
+
+    /**
      * Retrieves posts data
      */
     getPosts() {
@@ -346,7 +446,8 @@ class RendererCache {
                 posts
             WHERE
                 status NOT LIKE '%trashed%' AND
-                status NOT LIKE '%draft%'
+                status NOT LIKE '%draft%' AND
+                status NOT LIKE '%is-page%'
             ORDER BY
                 id ASC;
         `).all();
@@ -362,10 +463,41 @@ class RendererCache {
             return newPost;
         });
 
-        posts.map(post => {
-            post.setInternalLinks();
-        });
         console.timeEnd('POSTS - STORE');
+        return posts;
+    }
+
+    /**
+     * Retrieves pages data
+     */
+    getPages() {
+        console.time('PAGES - QUERY');
+        let pages = this.db.prepare(`
+            SELECT
+                *
+            FROM
+                posts
+            WHERE
+                status LIKE '%is-page%' AND
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%draft%'
+            ORDER BY
+                id ASC;
+        `).all();
+        console.timeEnd('PAGES - QUERY');
+
+        console.time('PAGES - STORE');
+        let pageViewConfigObject = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
+        
+        pages = pages.map(page => {
+            let pageViewConfig = this.getPageViewSettings(pageViewConfigObject, page.id);
+            let newPage = new Page(page, this.renderer);
+            newPage.setPageViewConfig(pageViewConfig);
+            return newPage;
+        });
+
+        console.timeEnd('PAGES - STORE');
+        return pages;
     }
 
     /**
@@ -397,7 +529,45 @@ class RendererCache {
             postViewSettings = JSON.parse(postViewData.value);
         }
 
-        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig, {
+            type: 'post',
+            id: postID
+        }, this.renderer);
+    }
+
+    /**
+     * Retrieve page view settings
+     *
+     * @param defaultPageViewConfig
+     * @param pageID
+     *
+     * @returns {object}
+     */
+    getPageViewSettings(defaultPageViewConfig, pageID) {
+        let pageViewData = false;
+        let pageViewSettings = {};
+
+        pageViewData = this.db.prepare(`
+            SELECT
+                value
+            FROM
+                posts_additional_data
+            WHERE
+                post_id = @id
+                AND
+                key = 'pageViewSettings'
+        `).get({
+            id: pageID
+        });
+
+        if (pageViewData && pageViewData.value) {
+            pageViewSettings = JSON.parse(pageViewData.value);
+        }
+
+        return ViewSettingsHelper.override(pageViewSettings, defaultPageViewConfig, {
+            type: 'page',
+            id: pageID
+        }, this.renderer);
     }
 
     /**
@@ -408,7 +578,7 @@ class RendererCache {
      *
      * @returns {object}
      */
-    getViewSettings(defaultViewConfig, itemData) {
+    getViewSettings(defaultViewConfig, itemData, itemConfig) {
         let viewSettings = {};
 
         if (itemData && itemData.additional_data) {
@@ -423,7 +593,51 @@ class RendererCache {
             }
         }
 
-        return ViewSettingsHelper.override(viewSettings, defaultViewConfig);
+        return ViewSettingsHelper.override(viewSettings, defaultViewConfig, itemConfig, this.renderer);
+    }
+
+    /**
+     * Set internal links for tags and authors
+     */
+    setInternalLinks (posts, pages) {
+        posts.map(post => {
+            post.setInternalLinks();
+        });
+
+        pages.map(page => {
+            page.setInternalLinks();
+        });
+
+        let authorIDs = Object.keys(this.renderer.cachedItems.authors);
+        let tagIDs = Object.keys(this.renderer.cachedItems.tags);
+
+        for (let i = 0; i < authorIDs.length; i++) {
+            let authorID = authorIDs[i];
+
+            if (typeof this.renderer.cachedItems.authors[authorID].description === 'string') {
+                let description =  this.renderer.cachedItems.authors[authorID].description;
+                this.renderer.cachedItems.authors[authorID].description = ContentHelper.setInternalLinks(description, this.renderer);
+            }
+
+            if (typeof this.renderer.cachedItems.authors[authorID].authorViewConfig === 'object') {
+                let viewConfig = this.renderer.cachedItems.authors[authorID].authorViewConfig;
+                this.renderer.cachedItems.authors[authorID].authorViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+            }
+        }
+
+        for (let i = 0; i < tagIDs.length; i++) {
+            let tagID = tagIDs[i];
+
+            if (typeof this.renderer.cachedItems.tags[tagID].description === 'string') {
+                let description =  this.renderer.cachedItems.tags[tagID].description;
+                this.renderer.cachedItems.tags[tagID].description = ContentHelper.setInternalLinks(description, this.renderer);
+            }
+
+            if (typeof this.renderer.cachedItems.tags[tagID].tagViewConfig === 'object') {
+                let viewConfig = this.renderer.cachedItems.tags[tagID].tagViewConfig;
+                this.renderer.cachedItems.tags[tagID].tagViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+            }
+        }
     }
 }
 

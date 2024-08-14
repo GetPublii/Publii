@@ -38,10 +38,13 @@ export default {
     currentSite: {
         config: {},
         posts: [],
+        pages: [],
         tags: [],
         postsTags: [],
         postsAuthors: [],
         postTemplates: [],
+        pagesAuthors: [],
+        pageTemplates: [],
         themes: [],
         images: [],
         menuStructure: [],
@@ -51,6 +54,10 @@ export default {
     // ordering temporary data
     ordering: {
         posts: {
+            orderBy: 'id',
+            order: 'DESC'
+        },
+        pages: {
             orderBy: 'id',
             order: 'DESC'
         },

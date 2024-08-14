@@ -35,6 +35,10 @@ class URLHelper {
 
         if(urlsConfig.tagsPrefix) {
             url = domain + '/' + urlsConfig.tagsPrefix + '/' + URLHelper.createSlug(tagName) + '/';
+
+            if (urlsConfig.postsPrefix && urlsConfig.tagsPrefixAfterPostsPrefix) {
+                url = domain + '/' + urlsConfig.postsPrefix + '/' + urlsConfig.tagsPrefix + '/' + URLHelper.createSlug(tagName) + '/';
+            }
         }
 
         if(addIndexHtml) {
@@ -48,13 +52,13 @@ class URLHelper {
      * Creates pagination link for a given URL type
      *
      * @param domain
-     * @param urlsConfig
+     * @param config
      * @param pageNumber
      * @param pageType
      * @param pageSlug
      * @returns {*}
      */
-    static createPaginationPermalink(domain, urlsConfig, pageNumber, pageType, pageSlug, addIndexHtml = false) {
+    static createPaginationPermalink(domain, config, pageNumber, pageType, pageSlug, addIndexHtml = false) {
         // When there is no link - skip the operations
         if(pageNumber === false) {
             return false;
@@ -71,17 +75,35 @@ class URLHelper {
         let pageSuffix = '';
 
         if(pageNumber > 1) {
-            pageSuffix = urlsConfig.pageName + '/' + pageNumber + '/';
+            pageSuffix = config.urls.pageName + '/' + pageNumber + '/';
         }
 
         let optionalPrefix = '';
 
-        if(pageType === 'author') {
-            optionalPrefix = urlsConfig.authorsPrefix + '/';
+        if (pageType === 'home') {
+            if (config.urls.postsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/';
+            } 
+            
+            if (config.urls.postsPrefix && !config.usePageAsFrontpage && pageNumber === 1) {
+                optionalPrefix = '';
+            }
         }
 
-        if(pageType === 'tag' && urlsConfig.tagsPrefix !== '') {
-            optionalPrefix = urlsConfig.tagsPrefix + '/';
+        if(pageType === 'author') {
+            optionalPrefix = config.urls.authorsPrefix + '/';
+
+            if (config.urls.postsPrefix && config.urls.authorsPrefixAfterPostsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/' + config.urls.authorsPrefix + '/';
+            }
+        }
+
+        if(pageType === 'tag' && config.urls.tagsPrefix !== '') {
+            optionalPrefix = config.urls.tagsPrefix + '/';
+
+            if (config.urls.postsPrefix && config.urls.tagsPrefixAfterPostsPrefix) {
+                optionalPrefix = config.urls.postsPrefix + '/' + config.urls.tagsPrefix + '/';
+            }
         }
 
         let url = domain + '/' + optionalPrefix + pagePrefix + pageSuffix;
@@ -176,15 +198,35 @@ class URLHelper {
     static prepareSettingsImages(domain, settings) {
         let groups = Object.keys(settings);
 
-        for(let i = 0; i < groups.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             let options = Object.keys(settings[groups[i]]);
 
-            for(let j = 0; j < options.length; j++) {
-                if(typeof settings[groups[i]][options[j]] !== "string") {
+            for (let j = 0; j < options.length; j++) {
+                if (Array.isArray(settings[groups[i]][options[j]])) {
+                    let items = settings[groups[i]][options[j]];
+
+                    for (let k = 0; k < items.length; k++) {
+                        let item = items[k];
+                        
+                        if (typeof item === 'object') {
+                            let keys = Object.keys(item);
+
+                            for (let l = 0; l < keys.length; l++) {
+                                let key = keys[l];
+
+                                if (typeof item[key] === 'string' && item[key].indexOf('media/website') > -1) {
+                                    item[key] = URLHelper.fixProtocols(normalizePath(domain + '/' + item[key]));
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (typeof settings[groups[i]][options[j]] !== "string") {
                     continue;
                 }
 
-                if(settings[groups[i]][options[j]].indexOf('media/website') > -1) {
+                if (settings[groups[i]][options[j]].indexOf('media/website') > -1) {
                     settings[groups[i]][options[j]] = URLHelper.fixProtocols(normalizePath(domain + '/' + settings[groups[i]][options[j]]));
                 }
             }

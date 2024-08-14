@@ -43,7 +43,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
         }
 
         // Get tag values according to the current context - listing or single post page
-        if(contextData.data.context.indexOf('post') === -1) {
+        if(contextData.data.context.indexOf('post') === -1 && contextData.data.context.indexOf('page') === -1) {
             // Data for the index/tag listing page
             image = contextData.data.website.logo;
             title = siteName;
@@ -65,15 +65,21 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
                 }
             }
         } else {
-            // Data for the single post page
-            image = contextData.data.root.post.featuredImage.url;
+            // Data for the single post or page
+            let itemData = contextData.data.root.post;
+
+            if (!itemData) {
+                itemData = contextData.data.root.page;
+            }
+
+            image = itemData.featuredImage.url;
             openGraphType = 'article';
 
             if(!image) {
                 image = contextData.data.website.logo;
             }
 
-            title = contextData.data.root.post.title;
+            title = itemData.title;
 
             if (rendererInstance.siteConfig.advanced.usePageTitleInsteadItemName) {
                 title = contextData.data.root.title;
@@ -82,7 +88,7 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             description = contextData.data.root.metaDescriptionRaw;
 
             if(description === '') {
-                description = contextData.data.root.post.excerpt;
+                description = itemData.excerpt;
             }
         }
 

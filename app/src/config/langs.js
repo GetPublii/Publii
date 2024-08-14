@@ -248,8 +248,12 @@ module.exports = [
         code: 'mk'
     },
     {
-        name: 'Nynorsk',
+        name: 'Norwegian (Nynorsk)',
         code: 'nn'
+    },
+    {
+        name: 'Norwegian (Bokmål)',
+        code: 'nb'
     },
     {
         name: 'Polish',

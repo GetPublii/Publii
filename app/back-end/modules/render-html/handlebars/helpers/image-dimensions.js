@@ -12,6 +12,10 @@ const normalizePath = require('normalize-path');
  */
 function imageDimensionsHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('imageDimensions', function (url) {
+        if (!url) {
+            return '';
+        }
+
         url = normalizePath(url);
         let basicUrl = normalizePath(rendererInstance.siteConfig.domain);
         let basicDir = normalizePath(rendererInstance.inputDir);

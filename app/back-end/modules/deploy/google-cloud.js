@@ -125,8 +125,6 @@ class GoogleCloud {
             }
         });
 
-        self.deployment.replaceSyncInfoFiles();
-
         this.connection.upload(fileToUpload, {
             destination: fileDestination
         }, function(err) {

@@ -20,6 +20,7 @@
             ghostClass="is-ghost"
             handle=".move"
             class="publii-repeater"
+            @change="listUpdated"
             v-model="content">
             <div 
                 v-for="(row, index) of content"
@@ -81,6 +82,8 @@
                             <text-area
                                 v-if="itemConfig[subindex].type === 'wysiwyg'"
                                 v-model="content[index][itemConfig[subindex].name]"
+                                :key="'wysiwyg-' + index + '-' + subindex"
+                                :ref="'wysiwyg-' + index + '-' + subindex"
                                 :wysiwyg="true"
                                 :miniEditorMode="true"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></text-area>
@@ -113,6 +116,12 @@
                                 :multiple="itemConfig[subindex].multiple"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></posts-dropdown>
 
+                            <pages-dropdown
+                                v-if="itemConfig[subindex].type === 'pages-dropdown'"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :multiple="itemConfig[subindex].multiple"
+                                :customCssClasses="itemConfig[subindex].customCssClasses"></pages-dropdown>
+
                             <tags-dropdown
                                 v-if="itemConfig[subindex].type === 'tags-dropdown'"
                                 v-model="content[index][itemConfig[subindex].name]"
@@ -125,6 +134,35 @@
                                 :multiple="itemConfig[subindex].multiple"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></authors-dropdown>
 
+                            <template v-if="pluginDir">
+                                <image-upload
+                                    v-if="itemConfig[subindex].type === 'upload'"
+                                    slot="field"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :imageType="imageType"
+                                    :pluginDir="pluginDir"
+                                    :addMediaFolderPath="false" />
+                            </template>
+                            <template v-else>
+                                <image-upload
+                                    v-if="itemConfig[subindex].type === 'upload'"
+                                    slot="field"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :imageType="imageType"
+                                    :addMediaFolderPath="true" />   
+                            </template>
+
+                            <vue-select
+                                v-if="itemConfig[subindex].type === 'file-dropdown'"
+                                slot="field"
+                                :ref="'file-dropdown-' + index"
+                                :options="filesList"
+                                v-model="content[index][itemConfig[subindex].name]"
+                                :close-on-select="true"
+                                :show-labels="false"
+                                :placeholder="$t('file.selectFileFromFileManager')"
+                                @select="closeFileDropdown('file-dropdown-' + index)"></vue-select>
+                            
                             <small
                                 v-if="itemConfig[subindex].note && (!hideLabels || (hideLabels && index === 0))"
                                 slot="note"
@@ -173,6 +211,7 @@
 
 <script>
 import Draggable from 'vuedraggable';
+import vSelect from 'vue-multiselect/dist/vue-multiselect.min.js';
 
 export default {
     name: 'repeater',
@@ -212,10 +251,19 @@ export default {
         customCssClasses: {
             default: '',
             type: String
+        },
+        imageType: {
+            default: 'optionImages',
+            type: String
+        },
+        pluginDir: {
+            default: '',
+            type: String
         }
     },
     components: {
-        'draggable': Draggable
+        'draggable': Draggable,
+        'vue-select': vSelect
     },
     computed: {
         cssClasses () {
@@ -243,15 +291,39 @@ export default {
         },
         itemConfig () {
             return this.structure;
+        },
+        hasFileManagerField () {
+            return this.itemConfig.filter(item => item.type === 'file-dropdown').length > 0;
         }
     },
     data () {
         return {
-            content: this.value
+            content: this.value,
+            filesList: ['']
         };
     },
     mounted () {
         this.content = this.value;
+
+        if (this.hasFileManagerField) {
+            mainProcessAPI.send('app-file-manager-list', {
+                siteName: this.$store.state.currentSite.config.name,
+                dirPath: 'root-files'
+            });
+
+            mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                this.filesList = data.map(file => file.name);
+
+                mainProcessAPI.send('app-file-manager-list', {
+                    siteName: this.$store.state.currentSite.config.name,
+                    dirPath: 'media/files'
+                }); 
+
+                mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+                });
+            });
+        }
     },
     watch: {
         value (newValue, oldValue) {
@@ -268,13 +340,16 @@ export default {
         addItem () {
             let structureCopy = JSON.parse(JSON.stringify(this.itemStructure));
             this.content.push(structureCopy);
+            this.refreshWysiwygs();
         },
         duplicateItem (index) {
             let itemCopy = JSON.parse(JSON.stringify(this.content[index]));
             this.content.splice(index + 1, 0, itemCopy);
+            this.refreshWysiwygs();
         },
         removeItem (index) {
             this.content.splice(index, 1);
+            this.refreshWysiwygs();
         },
         translation (key) {
             if (key === 'add') {
@@ -314,7 +389,7 @@ export default {
                 let dependencyValue = itemConfig.dependencies[i].value;
                 let valueToCompare;
 
-                if (dependencyType === 'pluginOption') {
+                if (dependencyType === 'externalOption') {
                     valueToCompare = this.settings[dependencyName];
                 } else {
                     valueToCompare = this.content[index][dependencyName];
@@ -350,6 +425,29 @@ export default {
             }
 
             return true;
+        },
+        closeFileDropdown (refID) {
+            if (this.$refs[refID] && this.$refs[refID][0]) {
+                this.$refs[refID][0].isOpen = false;
+            }
+        },
+        listUpdated () {
+            this.refreshWysiwygs();
+        },
+        refreshWysiwygs() {
+            if (this.$refs) {
+                return Object.keys(this.$refs)
+                    .filter(refName => refName.startsWith('wysiwyg-'))
+                    .forEach(refName => {
+                        let index = refName.split('-')[1];
+                        let subindex = refName.split('-')[2];
+                        let newContent = this.content[index][this.itemConfig[subindex].name];
+                        this.$refs[refName][0].removeEditor();
+                        this.$refs[refName][0].$forceUpdate();
+                        this.$refs[refName][0].setContent(newContent);
+                        this.$refs[refName][0].initWysiwyg();
+                    });
+            }
         }
     }
 }

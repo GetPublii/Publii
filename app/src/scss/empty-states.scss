@@ -11,6 +11,7 @@
     user-select: none;
     width: 100%;
 
+    &.page,
     &.post {
         display: grid;
         grid-template-columns: repeat(3, fit-content(400px));

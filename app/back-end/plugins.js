@@ -232,6 +232,8 @@ class Plugins {
             return false;
         }
 
+        this.checkAndCleanImages(siteName, pluginName, newConfig);
+
         return true;
     }
 
@@ -289,6 +291,28 @@ class Plugins {
         }
 
         return output;
+    }
+
+    checkAndCleanImages (siteName, pluginName, newConfig) {
+        let configString = JSON.stringify(newConfig);
+        let pluginImagesPath = path.join(this.sitesDir, siteName, 'input', 'media', 'plugins', pluginName);
+        let imagesInConfig = [];
+        let imageRegex = /"([^"]+\.(svg|png|jpg|jpeg|gif|webp))"/gi;
+        let match = null;
+
+        while (match = imageRegex.exec(configString)) {
+            imagesInConfig.push(match[1]);
+        }
+
+        let files = fs.readdirSync(pluginImagesPath);
+        
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            
+            if (file.match(/\.(svg|png|jpg|jpeg|gif|webp)$/i) && imagesInConfig.indexOf(file) === -1) {
+                fs.removeSync(path.join(pluginImagesPath, file));
+            }
+        }
     }
 }
 

@@ -205,72 +205,72 @@
                                 v-if="selectedPostsNeedsStatus('published')"
                                 @click="bulkPublish">
                                 <icon
-                                size="xs"
-                                name="draft-post"
-                                primaryColor="color-8" />
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-8" />
                                 {{ $t('post.publish') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('draft')"
                                 @click="bulkUnpublish">
                                 <icon
-                                size="xs"
-                                name="draft-post"
-                                primaryColor="color-7" />
+                                    size="xs"
+                                    name="draft-post"
+                                    primaryColor="color-7" />
                                 {{ $t('post.markAsDraft') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('featured')"
                                 @click="bulkFeatured">
                                 <icon
-                                size="xs"
-                                name="featured-post"
-                                primaryColor="color-helper-6" />
+                                    size="xs"
+                                    name="featured-post"
+                                    primaryColor="color-helper-6" />
                                 {{ $t('post.markAsFeatured') }}
                             </li>
                             <li
                                 v-if="selectedPostsHaveStatus('featured')"
                                 @click="bulkUnfeatured">
                                 <icon
-                                size="xs"
-                                name="featured-post"
-                                primaryColor="color-8" />
+                                    size="xs"
+                                    name="featured-post"
+                                    primaryColor="color-8" />
                                 {{ $t('post.markAsUnfeatured') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('excluded_homepage')"
                                 @click="bulkExclude">
                                 <icon
-                                size="xs"
-                                name="excluded-post"
-                                primaryColor="color-3" />
+                                    size="xs"
+                                    name="excluded-post"
+                                    primaryColor="color-3" />
                                 {{ $t('post.excludeFromHomepage') }}
                             </li>
                             <li
                                 v-if="selectedPostsHaveStatus('excluded_homepage')"
                                 @click="bulkInclude">
                                 <icon
-                                size="xs"
-                                name="excluded-post"
-                                primaryColor="color-8" />
+                                    size="xs"
+                                    name="excluded-post"
+                                    primaryColor="color-8" />
                                 {{ $t('post.includeInHomepage') }}
                             </li>
                             <li
                                 v-if="selectedPostsNeedsStatus('hidden')"
                                 @click="bulkHide">
                                 <icon
-                                size="xs"
-                                name="hidden-post"
-                                primaryColor="color-7" />
+                                    size="xs"
+                                    name="hidden-post"
+                                    primaryColor="color-7" />
                                 {{ $t('ui.hide') }}
                             </li>
                             <li
                                 v-if="selectedPostsHaveStatus('hidden')"
                                 @click="bulkUnhide">
                                 <icon
-                                size="xs"
-                                name="hidden-post"
-                                primaryColor="color-8" />
+                                    size="xs"
+                                    name="hidden-post"
+                                    primaryColor="color-8" />
                                 {{ $t('ui.unhide') }}
                             </li>
                         </ul>
@@ -330,7 +330,7 @@
                     <div
                         v-if="showPostSlugs"
                         class="post-slug">
-                        {{ $t('post.url') }}: /{{ item.slug }}
+                        {{ $t('post.url') }}: /{{ item.slug }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
                     </div>
 
                     <div

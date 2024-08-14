@@ -511,6 +511,7 @@ class ContentHelper {
      */
     static setInternalLinks(text, renderer) {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'page');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tags');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
@@ -563,6 +564,10 @@ class ContentHelper {
             let url = '#INTERNAL_LINK#/tags/1';
             let link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
 
+            if (renderer.siteConfig.advanced.urls.postsPrefix && renderer.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
+            }
+
             if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
                 link = link + 'index.html';
             }
@@ -586,11 +591,11 @@ class ContentHelper {
         let ids = urls.map(url => url.replace('#INTERNAL_LINK#/' + type + '/', ''));
         let links = {};
 
-        for(let id of ids) {
+        for (let id of ids) {
             let baseUrl = '#INTERNAL_LINK#/' + type + '/' + id;
             let pluralName = type + 's';
 
-            if(renderer.cachedItems[pluralName][id]) {
+            if (renderer.cachedItems[pluralName][id]) {
                 links[baseUrl] = renderer.cachedItems[pluralName][id].url;
             } else {
                 console.log('(i) Non-existing link: ' + pluralName + ' (' + id + ')');

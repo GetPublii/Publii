@@ -12,7 +12,6 @@ const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
-const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 const fs = require('fs');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
@@ -251,17 +250,6 @@ electronApp.on('ready', function () {
 
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
-    } else {
-        const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-        
-        installExtension(VUEJS_DEVTOOLS, {
-            loadExtensionOptions: {
-                allowFileAccess: true
-            }, 
-            forceDownload: forceDownload
-        })
-            .then((name) => console.log(`Added Extension:  ${name}`))
-            .catch((err) => console.log('An error occurred: ', err));
     }
 
     // Remove application menu on Linux

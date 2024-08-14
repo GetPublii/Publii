@@ -16,7 +16,9 @@ const ViewSettingsHelper = require('./helpers/view-settings.js');
 const Themes = require('../../themes.js');
 const TemplateHelper = require('./helpers/template.js');
 const RendererContext = require('./renderer-context.js');
+const RendererContextPage = require('./contexts/page.js');
 const RendererContextPost = require('./contexts/post.js');
+const RendererContextPagePreview = require('./contexts/page-preview.js');
 const RendererContextPostPreview = require('./contexts/post-preview.js');
 const RendererContextTag = require('./contexts/tag.js');
 const RendererContextTags = require('./contexts/tags.js');
@@ -59,12 +61,14 @@ class Renderer {
             user: false,
             theme: false
         };
+        this.viewConfigStructure = {};
         this.contentStructure = {};
         this.commonData = {
             tags: [],
             mainTags: [],
             authors: [],
             menus: [],
+            pages: [],
             featuredPosts: {
                 homepage: [],
                 tag: [],
@@ -73,6 +77,8 @@ class Renderer {
             hiddenPosts: []
         };
         this.cachedItems = {
+            pages: {},
+            pagesStructure: {},
             postTags: {},
             posts: {},
             tags: {},
@@ -82,6 +88,7 @@ class Renderer {
             authorsPostCounts: {},
             featuredImages: {
                 authors: {},
+                pages: {},
                 posts: {},
                 tags: {}
             }
@@ -99,7 +106,8 @@ class Renderer {
     async render(previewMode = false, previewLocation = '', mode = 'full') {
         this.previewMode = previewMode;
         this.previewLocation = previewLocation;
-        this.singlePageMode = mode === 'post';
+        this.singlePageMode = mode === 'post' || mode === 'page';
+        this.itemType = mode;
         this.homepageOnlyMode = mode === 'home';
         this.tagOnlyMode = mode === 'tag';
         this.authorOnlyMode = mode === 'author';
@@ -151,8 +159,12 @@ class Renderer {
     async renderSite() {
         try {
             if (this.singlePageMode) {
-                await this.renderPostPreview();
-            } else if (this.homepageOnlyMode) {
+                if (this.itemType === 'post') {
+                    await this.renderPostPreview();
+                } else if (this.itemType === 'page') {
+                    await this.renderPagePreview();
+                }
+            } else if (this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) {
                 await this.renderHomepagePreview();
             } else if (this.tagOnlyMode) {
                 await this.renderTagPreview();
@@ -161,10 +173,10 @@ class Renderer {
             } else {
                 await this.renderFullPreview();
             }
-        } catch (err) {
+        } catch (e) {
             this.errorLog.push({
                 message: 'An error occurred during rendering process:',
-                desc: err.message
+                desc: e.message + "\n\n" + e.stack
             });
         }
 
@@ -221,30 +233,36 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
-        this.sendProgress(11, 'Generating frontpage');
-        this.generateFrontpage();
-        this.sendProgress(20, 'Generating posts');
-        this.generatePosts();
+        if ((this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) || !this.homepageOnlyMode) {
+            this.sendProgress(11, 'Generating frontpage');
+            this.generateFrontpage();
+            this.sendProgress(20, 'Generating posts');
+            this.generatePosts();
+            this.sendProgress(50, 'Generating pages');
+            this.generatePages();
 
-        if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
-            this.sendProgress(60, 'Generating tag pages');
-            this.generateTags();
-            this.generateTagsList();
-        }
+            if (RendererHelpers.getRendererOptionValue('createTagPages', this.themeConfig)) {
+                this.sendProgress(60, 'Generating tag pages');
+                this.generateTags();
+                this.generateTagsList();
+            }
 
-        if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
-            this.sendProgress(70, 'Generating author pages');
-            this.generateAuthors();
-        }
+            if (RendererHelpers.getRendererOptionValue('createAuthorPages', this.themeConfig)) {
+                this.sendProgress(70, 'Generating author pages');
+                this.generateAuthors();
+            }
 
-        this.sendProgress(75, 'Generating other pages');
+            this.sendProgress(75, 'Generating other pages');
 
-        if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
-            this.generate404s();
-        }
+            if (RendererHelpers.getRendererOptionValue('create404page', this.themeConfig)) {
+                this.generate404s();
+            }
 
-        if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
-            this.generateSearch();
+            if (RendererHelpers.getRendererOptionValue('createSearchPage', this.themeConfig)) {
+                this.generateSearch();
+            }
+        } else {
+            this.generatePages();
         }
         
         if (!this.siteConfig.deployment.relativeUrls) {
@@ -279,6 +297,8 @@ class Renderer {
 
         if (type === 'post') {
             this.generatePost();
+        } else if (type === 'page') {
+            this.generatePage();
         } else if (type === 'frontpage') {
             this.generateFrontpage();
         } else if (type === 'tag') {
@@ -298,7 +318,21 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID]);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID], []);
+        FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
+
+        this.triggerEvent('afterRender');
+    }
+
+    /**
+     * Renders page preview
+     */
+    async renderPagePreview () {
+        this.preparePreview('page');
+
+        await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, [this.itemID], []);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -311,9 +345,10 @@ class Renderer {
         this.preparePreview('frontpage');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -326,6 +361,7 @@ class Renderer {
         this.preparePreview('tag');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         let postIDsToRender = [];
 
         for (let i = 0; i < postIDs.length; i++) {
@@ -339,7 +375,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -352,6 +388,7 @@ class Renderer {
         this.preparePreview('author');
 
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
         let postIDsToRender = [];
 
         for (let i = 0; i < postIDs.length; i++) {
@@ -365,7 +402,7 @@ class Renderer {
 
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDsToRender, pageIDs);
         FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
 
         this.triggerEvent('afterRender');
@@ -597,35 +634,25 @@ class Renderer {
         let themeConfigPath = path.join(this.inputDir, 'config', 'theme.config.json');
         let tempThemeConfig = Themes.loadThemeConfig(themeConfigPath, this.themeDir);
         this.themeConfig = JSON.parse(JSON.stringify(tempThemeConfig));
-        this.themeConfig.config = {};
-        this.themeConfig.customConfig = {};
-        this.themeConfig.postConfig = {};
-        this.themeConfig.tagConfig = {};
-        this.themeConfig.authorConfig = {};
-
-        for (let i = 0; i < tempThemeConfig.config.length; i++) {
-            let key = tempThemeConfig.config[i].name;
-            this.themeConfig.config[key] = tempThemeConfig.config[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.customConfig.length; i++) {
-            let key = tempThemeConfig.customConfig[i].name;
-            this.themeConfig.customConfig[key] = tempThemeConfig.customConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.postConfig.length; i++) {
-            let key = tempThemeConfig.postConfig[i].name;
-            this.themeConfig.postConfig[key] = tempThemeConfig.postConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.tagConfig.length; i++) {
-            let key = tempThemeConfig.tagConfig[i].name;
-            this.themeConfig.tagConfig[key] = tempThemeConfig.tagConfig[i].value;
-        }
-
-        for (let i = 0; i < tempThemeConfig.authorConfig.length; i++) {
-            let key = tempThemeConfig.authorConfig[i].name;
-            this.themeConfig.authorConfig[key] = tempThemeConfig.authorConfig[i].value;
+        
+        let configNames = [
+            'config',
+            'customConfig',
+            'postConfig',
+            'pageConfig',
+            'tagConfig',
+            'authorConfig'
+        ];
+        
+        for (let configName of configNames) {
+            this.themeConfig[configName] = {};
+            this.viewConfigStructure[configName] = {};
+        
+            for (let i = 0; i < tempThemeConfig[configName].length; i++) {
+                let key = tempThemeConfig[configName][i].name;
+                this.themeConfig[configName][key] = tempThemeConfig[configName][i].value;
+                this.viewConfigStructure[configName][key] = { type: tempThemeConfig[configName][i].type };
+            }
         }
     }
 
@@ -666,7 +693,7 @@ class Renderer {
             } catch (e) {
                 this.errorLog.push({
                     message: 'An error (1001) occurred during parsing ' + allPartials[i] + '.hbs partial file.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -684,6 +711,13 @@ class Renderer {
         let compiledTemplate = this.compileTemplate(inputFile);
 
         if (!compiledTemplate) {
+            console.timeEnd('HOME');
+            return false;
+        }
+
+        // Don't render homepage and it's pagination if we use page as frontpage and posts prefix is empty
+        if (this.siteConfig.advanced.usePageAsFrontpage && !this.siteConfig.advanced.urls.postsPrefix) {
+            console.timeEnd('HOME');
             return false;
         }
 
@@ -712,7 +746,7 @@ class Renderer {
             } catch (e) {
                 this.errorLog.push({
                     message: 'An error (1002) occurred during parsing ' + inputFile + ' file.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
                 return;
             }
@@ -721,7 +755,11 @@ class Renderer {
                 output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
             }
 
-            this.templateHelper.saveOutputFile('index.html', output);
+            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+                this.templateHelper.saveOutputFile('index.html', output);
+            } else {
+                this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+            }
         } else {
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
@@ -752,8 +790,8 @@ class Renderer {
                     postsPerPage: postsPerPage,
                     nextPage: nextPage,
                     previousPage: previousPage,
-                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'home', false, addIndexHtml),
-                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'home', false, addIndexHtml)
+                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'home', false, addIndexHtml),
+                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'home', false, addIndexHtml)
                 };
 
                 let additionalContexts = [];
@@ -776,7 +814,11 @@ class Renderer {
                 }
 
                 if (offset === 0) {
-                    this.templateHelper.saveOutputFile('index.html', output);
+                    if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+                        this.templateHelper.saveOutputFile('index.html', output);
+                    } else {
+                        this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+                    }
                 } else {
                     // We increase the current page number as we need to start URLs from page/2
                     this.templateHelper.saveOutputHomePaginationFile(currentPage, output);
@@ -806,6 +848,7 @@ class Renderer {
                 posts
             WHERE
                 status LIKE '%published%' AND
+                status NOT LIKE '%is-page%' AND
                 status NOT LIKE '%trashed%'
             ORDER BY
                 id ASC
@@ -934,7 +977,7 @@ class Renderer {
         }
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
-        let postConfig = this.overridePostViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, true);
+        let postConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.postConfig)), postID, 'post', true);
         this.globalContext = this.createGlobalContext('post', [], false, postSlug, postConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
@@ -946,34 +989,227 @@ class Renderer {
     }
 
     /*
+     * Create page preview
+     */
+    generatePage() {
+        let pageID = this.itemID;
+        let pageSlug = 'preview';
+        let pageTemplate = this.postData.template;
+        let inputFile = 'page.hbs';
+
+        if (pageTemplate === '*') {
+            if (this.themeConfig.defaultTemplates.page) {
+                pageTemplate = this.themeConfig.defaultTemplates.page;
+            } else {
+                pageTemplate = '';
+            }
+        }
+
+        // Load templates
+        let compiledTemplates = {};
+        compiledTemplates['DEFAULT'] = this.compileTemplate(inputFile);
+
+        if(!compiledTemplates['DEFAULT']) {
+            return false;
+        }
+
+        if(typeof pageTemplate === "string" && pageTemplate !== '') {
+            pageTemplate = [pageTemplate];
+        }
+
+        for (let i = 0; i < pageTemplate.length; i++) {
+            let fileSlug = pageTemplate[i];
+
+            // When we meet default template - skip the compilation process
+            if (fileSlug === '') {
+                continue;
+            }
+
+            compiledTemplates[fileSlug] = this.compileTemplate('page-' + fileSlug + '.hbs');
+
+            if (!compiledTemplates[fileSlug]) {
+                return false;
+            }
+        }
+
+        // Render page site
+        let contextGenerator = new RendererContextPagePreview(this);
+        let context = contextGenerator.getContext(pageID);
+        let fileSlug = 'DEFAULT';
+        fileSlug = pageTemplate === '' ? 'DEFAULT' : pageTemplate;
+
+        this.menuContext = ['page', pageSlug];
+
+        if(!compiledTemplates[fileSlug]) {
+            fileSlug = 'DEFAULT';
+        }
+
+        inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+        let pageConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.pageConfig)), pageID, 'page', true);
+        this.globalContext = this.createGlobalContext('page', [], false, pageSlug, pageConfig, context);
+        let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+        if (this.plugins.hasModifiers('htmlOutput')) {
+            output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+        }
+
+        this.templateHelper.saveOutputFile(pageSlug + '.html', output);
+    }
+
+    /*
      * Override post view settings with the settings of the posts
      */
-    overridePostViewSettings(defaultPostViewConfig, postID, postPreview = false) {
-        let postViewData = false;
-        let postViewSettings = {};
+    overrideItemViewSettings(defaultViewConfig, itemID, itemType, itemPreview = false) {
+        let itemViewData = false;
+        let itemViewSettings = {};
 
-        if(postPreview) {
-            postViewSettings = this.postData.postViewSettings;
+        if (itemPreview) {
+            itemViewSettings = this.postData[itemType === 'post' ? 'postViewSettings' : 'pageViewSettings'];
         } else {
-            postViewData = this.db.prepare(`
+            itemViewData = this.db.prepare(`
                 SELECT
                     value
                 FROM
                     posts_additional_data
                 WHERE
-                    post_id = @postID
+                    post_id = @itemID
                     AND
-                    key = 'postViewSettings'
+                    key = @itemType
             `).get({
-                postID: postID
+                itemID: itemID,
+                itemType: itemType + 'ViewSettings'
             });
 
-            if (postViewData && postViewData.length) {
-                postViewSettings = JSON.parse(postViewData.value);
+            if (itemViewData && itemViewData.length) {
+                itemViewSettings = JSON.parse(itemViewData.value);
             }
         }
 
-        return ViewSettingsHelper.override(postViewSettings, defaultPostViewConfig);
+        return ViewSettingsHelper.override(itemViewSettings, defaultViewConfig, {
+            type: itemType,
+            id: itemID
+        }, this);
+    }
+
+    /*
+     * Create page sites
+     */
+    generatePages() {
+        if (!this.themeConfig.supportedFeatures || !this.themeConfig.supportedFeatures.pages) {
+            console.log('[i] Pages are not supported by the theme');
+            return;
+        }
+
+        console.time('PAGES');
+        let pageIDs = [];
+        let pageSlugs = [];
+        let pageTemplates = [];
+        let inputFile = 'page.hbs';
+
+        // Get pages
+        let pageData;
+        
+        if (this.homepageOnlyMode && this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage) {
+            pageData = this.db.prepare(`
+                SELECT
+                    id,
+                    slug,
+                    template
+                FROM
+                    posts
+                WHERE
+                    status LIKE '%published%' AND
+                    status LIKE '%is-page%' AND
+                    status NOT LIKE '%trashed%' AND
+                    id = ${parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)}
+                ORDER BY
+                    id ASC
+            `).all();
+        } else {
+            pageData = this.db.prepare(`
+                SELECT
+                    id,
+                    slug,
+                    template
+                FROM
+                    posts
+                WHERE
+                    status LIKE '%published%' AND
+                    status LIKE '%is-page%' AND
+                    status NOT LIKE '%trashed%'
+                ORDER BY
+                    id ASC
+            `).all();
+        }
+
+        if (pageData && pageData.length) { 
+            pageIDs = pageData.map(row => row.id);
+            pageSlugs = pageData.map(row => row.slug);
+            pageTemplates = pageData.map(row => {
+                if (row.template === '*') {
+                    return this.themeConfig.defaultTemplates.page
+                }
+
+                return row.template;
+            });
+        } else {
+            pageIDs = [];
+            pageSlugs = [];
+            pageTemplates = [];
+        }
+
+        // Load templates
+        let compiledTemplates = {};
+        compiledTemplates['DEFAULT'] = this.compileTemplate(inputFile);
+
+        if (!compiledTemplates['DEFAULT']) {
+            return false;
+        }
+
+        for (let i = 0; i < pageTemplates.length; i++) {
+            let fileSlug = pageTemplates[i];
+
+            // When we meet default template - skip the compilation process
+            if (fileSlug === '' || !this.themeConfig.pageTemplates[fileSlug]) {
+                continue;
+            }
+
+            compiledTemplates[fileSlug] = this.compileTemplate('page-' + fileSlug + '.hbs');
+
+            if (!compiledTemplates[fileSlug]) {
+                return false;
+            }
+        }
+
+        // Create global context
+        let progressIncrease = 40 / pageIDs.length;
+
+        // Render page sites
+        for (let i = 0; i < pageIDs.length; i++) {
+            let contextGenerator = new RendererContextPage(this);
+            let context = contextGenerator.getContext(pageIDs[i]);
+            let fileSlug = 'DEFAULT';
+            fileSlug = pageTemplates[i] === '' ? 'DEFAULT' : pageTemplates[i];
+
+            this.menuContext = ['page', pageSlugs[i]];    
+            
+            if (!compiledTemplates[fileSlug]) {
+                fileSlug = 'DEFAULT';
+            }
+
+            inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
+            let pageViewConfig = this.cachedItems.pages[pageIDs[i]].pageViewConfig;
+            this.globalContext = this.createGlobalContext('page', [], false, pageSlugs[i], pageViewConfig, context);
+            let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
+
+            if (this.plugins.hasModifiers('htmlOutput')) {
+                output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+            }
+
+            this.templateHelper.saveOutputPageFile(pageIDs[i], pageSlugs[i], output, this);
+            this.sendProgress(Math.ceil(20 + (progressIncrease * i)), 'Generating pages (' + (i + 1) + '/' + pageIDs.length + ')');
+        }
+        console.timeEnd('PAGES');
     }
 
     /*
@@ -1168,6 +1404,10 @@ class Renderer {
                         tagsContextInUrl = this.siteConfig.advanced.urls.tagsPrefix + '/' + tagSlug;
                     }
 
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        tagsContextInUrl = this.siteConfig.advanced.urls.postsPrefix + '/' + tagsContextInUrl;
+                    }
+
                     let pagination = {
                         context: tagsContextInUrl,
                         pages: Array.from({length: totalPages}, (v, k) => k + 1),
@@ -1177,8 +1417,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'tag', tagSlug, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'tag', tagSlug, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'tag', tagSlug, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'tag', tagSlug, addIndexHtml)
                     };
 
                     let additionalContexts = [];
@@ -1239,9 +1479,15 @@ class Renderer {
         // Create directory for authors
         let authorsDirPath = path.join(this.outputDir, this.siteConfig.advanced.urls.authorsPrefix);
 
-        if (!UtilsHelper.dirExists(authorsDirPath)) {
-            fs.mkdirSync(authorsDirPath);
+        if (this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix && this.siteConfig.advanced.urls.postsPrefix) {
+            authorsDirPath = path.join(
+                this.outputDir, 
+                this.siteConfig.advanced.urls.postsPrefix, 
+                this.siteConfig.advanced.urls.authorsPrefix
+            );
         }
+
+        fs.ensureDirSync(authorsDirPath);
 
         // Get authors
         let authorsIDs = [];
@@ -1388,6 +1634,10 @@ class Renderer {
                     let previousPage = (currentPage > 1) ? currentPage - 1 : false;
                     let authorsContextInUrl = this.siteConfig.advanced.urls.authorsPrefix + '/' + authorUsername;
 
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                        authorsContextInUrl = this.siteConfig.advanced.urls.postsPrefix + '/' + authorsContextInUrl;
+                    }
+
                     let pagination = {
                         context: authorsContextInUrl,
                         pages: Array.from({length: totalPages}, (v, k) => k + 1),
@@ -1397,8 +1647,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, nextPage, 'author', authorUsername, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced.urls, previousPage, 'author', authorUsername, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'author', authorUsername, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'author', authorUsername, addIndexHtml)
                     };
 
                     let additionalContexts = [];
@@ -1561,13 +1811,14 @@ class Renderer {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
                 let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
                 let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
                 let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
-                return generateOverride(customConfig, postConfig, commonConfig);
+                return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS theme variables.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -1616,13 +1867,14 @@ class Renderer {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
                 let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
+                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
                 let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
                 let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
-                return generateOverride(customConfig, postConfig, commonConfig);
+                return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
                     message: 'An error (1003) occurred during preparing CSS overrides.',
-                    desc: e.message
+                    desc: e.message + "\n\n" + e.stack
                 });
             }
         }
@@ -1713,13 +1965,14 @@ class Renderer {
     async copyFiles() {
         console.time("FILES");
         let postIDs = Object.keys(this.cachedItems.posts);
+        let pageIDs = Object.keys(this.cachedItems.pages);
+
         FilesHelper.copyRootFiles(this.inputDir, this.outputDir);
         await FilesHelper.copyAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
         FilesHelper.copyDynamicAssetsFiles(this.themeDir, this.outputDir, this.themeConfig);
-        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs);
+        await FilesHelper.copyMediaFiles(this.inputDir, this.outputDir, postIDs, pageIDs);
         await FilesHelper.copyPluginFiles(this.inputDir, this.outputDir, this.pluginsDir);
         await FilesHelper.removeEmptyDirectories(this.outputDir);
-
         console.timeEnd("FILES");
     }
 
@@ -1727,6 +1980,8 @@ class Renderer {
         console.time("CONTENT DATA");
         let globalContextGenerator = new RendererContext(this);
         this.cachedItems = {
+            pages: {},
+            pagesStructure: {},
             postTags: {},
             posts: {},
             tags: {},
@@ -1736,6 +1991,7 @@ class Renderer {
             authorsPostCounts: {},
             featuredImages: {
                 authors: {},
+                pages: {},
                 posts: {},
                 tags: {}
             }
@@ -1757,6 +2013,7 @@ class Renderer {
             tags: globalContextGenerator.getAllTags(),
             mainTags: globalContextGenerator.getAllMainTags(),
             authors: globalContextGenerator.getAuthors(),
+            pages: globalContextGenerator.getPages(),
             menus: menus,
             unassignedMenus: unassignedMenus,
             featuredPosts: {
@@ -1796,7 +2053,7 @@ class Renderer {
         } catch(e) {
             this.errorLog.push({
                 message: 'An error (1001) occurred during parsing ' + inputFile + ' file.',
-                desc: e.message
+                desc: e.message + "\n\n" + e.stack
             });
 
             return false;
@@ -1815,7 +2072,7 @@ class Renderer {
         } catch(e) {
             this.errorLog.push({
                 message: 'An error (1002) occurred during parsing ' + inputFile + ' file.',
-                desc: e.message
+                desc: e.message + "\n\n" + e.stack
             });
 
             return '';

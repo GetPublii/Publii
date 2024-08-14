@@ -65,6 +65,21 @@ class DeployEvents {
             event.sender.send('app-deploy-aborted', true);
         });
 
+        ipcMain.on('app-deploy-continue', function() {
+            if (self.deploymentProcess) {
+                try {
+                    self.deploymentProcess.send({
+                        type: 'continue-sync'
+                    });
+
+                    self.deploymentProcess = false;
+                } catch(e) {
+                    console.log(e);
+                    self.deploymentProcess = false;
+                }
+            }
+        });
+
         ipcMain.on('app-deploy-test', async (event, data) => {
             try {
                 await this.testConnection(data.deploymentConfig, data.siteName, data.uuid);
@@ -162,7 +177,7 @@ class DeployEvents {
         });
 
         this.deploymentProcess.on('message', function(data) {
-            if(data.type === 'web-contents') {
+            if (data.type === 'web-contents') {
                 if(data.value) {
                     self.app.mainWindow.webContents.send(data.message, data.value);
                 } else {

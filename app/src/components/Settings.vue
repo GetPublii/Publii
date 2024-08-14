@@ -5,7 +5,7 @@
         <div class="site-settings">
             <p-header :title="$t('settings.siteSettings')">
                 <p-button
-                    @click.prevent.native="save(false)"
+                    @click.prevent.native="checkBeforeSave(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -121,12 +121,13 @@
             </fields-group>
             
             <fields-group :title="$t('settings.advancedOptions')">
-            <div
-                v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
-                class="msg msg-icon msg-alert msg-bm">
-                <icon name="warning" customWidth="28" customHeight="28" />
-                <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
-            </div>
+                <div
+                    v-if="this.$store.state.currentSite.config.advanced && this.$store.state.currentSite.config.advanced.gdpr && this.$store.state.currentSite.config.advanced.gdpr.enabled && !this.$store.state.currentSite.config.advanced.gdpr.settingsVersion"
+                    class="msg msg-icon msg-alert msg-bm">
+                    <icon name="warning" customWidth="28" customHeight="28" />
+                    <p v-pure-html="$t('settings.youMustReviewGdprSettings')"></p>
+                </div>
+
                 <tabs
                     ref="advanced-tabs"
                     id="advanced-basic-settings-tabs"
@@ -192,7 +193,43 @@
                             :label="$t('settings.frontpage')" />
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            id="homepage-as-page"
+                            :label="$t('settings.usePageAsFrontpage')">
+                            <switcher
+                                slot="field"
+                                id="homepage-as-page"
+                                v-model="advanced.usePageAsFrontpage"
+                                :disabled="!currentThemeSupportsPages" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.usePageAsFrontpageNotice')">
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.usePageAsFrontpage"
+                            id="page-as-frontpage"
+                            :label="$t('settings.pageAsFrontpage')">
+                            <pages-dropdown
+                                v-model="advanced.pageAsFrontpage"
+                                :multiple="false"
+                                slot="field"></pages-dropdown>
+                            <small
+                                v-if="errors.indexOf('page-as-frontpage') > -1"
+                                class="note is-warning"
+                                slot="note">
+                                {{ $t('settings.youMustSelectFrontpage') }}
+                            </small>
+                        </field>
+
+                        <separator
+                            v-if="advanced.usePageAsFrontpage && advanced.urls.postsPrefix"
+                            type="medium"
+                            :label="$t('settings.postsIndex')" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-title"
                             :label="$t('settings.pageTitle')">
                             <text-input
@@ -205,7 +242,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -218,7 +255,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="meta-robots-index"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -230,7 +267,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage"
+                            v-if="!advanced.noIndexThisPage && (advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage))"
                             id="homepage-no-index-pagination"
                             :label="$t('settings.disableHomepagePaginationIndexing')">
                             <switcher
@@ -245,6 +282,7 @@
                         </field>
 
                         <field
+                            v-if="advanced.urls.postsPrefix || (!advanced.urls.postsPrefix && !advanced.usePageAsFrontpage)"
                             id="homepage-no-pagination"
                             :label="$t('settings.disableHomepagePagination')">
                             <switcher
@@ -314,6 +352,61 @@
                         </field>
 
                         <separator
+                            type="medium"
+                            :label="$t('page.pages')" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="page-meta-title"
+                            :withCharCounter="true"
+                            :label="$t('settings.pageTitle')">
+                            <text-input
+                                id="page-meta-title"
+                                slot="field"
+                                v-model="advanced.pageMetaTitle"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="70" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.pageTitleVariables') }}
+                            </small>
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage"
+                            id="page-meta-description"
+                            :label="$t('settings.metaDescription')">
+                            <text-area
+                                id="page-meta-description"
+                                v-model="advanced.pageMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.pageTitleVariables') }}
+                            </small>
+                        </field>
+
+                        <field
+                            id="page-use-text-without-custom-excerpt"
+                            :label="$t('settings.hideCustomExcerptsOnPagePages')">
+                            <switcher
+                                slot="field"
+                                id="page-use-text-without-custom-excerpt"
+                                v-model="advanced.pageUseTextWithoutCustomExcerpt" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.hideCustomExcerptsOnPagePagesInfo') }}
+                            </small>
+                        </field>
+
+                        <separator
                             v-if="advanced.urls.tagsPrefix !== '' && !advanced.noIndexThisPage"
                             type="medium"
                             :label="$t('settings.tagsListPage')" />
@@ -326,7 +419,7 @@
                         </div>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="tags-list-meta-title"
                             :withCharCounter="true"
                             :label="$t('settings.pageTitle')">
@@ -345,7 +438,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="tags-list-meta-description"
                             :label="$t('settings.metaDescription')">
                             <text-area
@@ -363,7 +456,7 @@
                         </field>
 
                         <field
-                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== ''"
+                            v-if="!advanced.noIndexThisPage && advanced.urls.tagsPrefix !== '' && currentThemeSupportsTagsList"
                             id="meta-robots-tags-list"
                             :label="$t('settings.metaRobots')">
                             <dropdown
@@ -734,6 +827,24 @@
                         </field>
 
                         <field
+                            v-if="advanced.urls.cleanUrls"
+                            id="url-posts-prefix"
+                            :label="$t('settings.postsPrefix')">
+                            <text-input
+                                id="url-posts-prefix"
+                                :class="{ 'is-invalid': errors.indexOf('posts-prefix') > -1 }"
+                                @click.native="clearErrors('posts-prefix')"
+                                v-model="advanced.urls.postsPrefix"
+                                :spellcheck="false"
+                                slot="field" />
+                            <small
+                                slot="note"
+                                class="note"
+                                v-pure-html="$t('settings.postPrefixInfo')">
+                            </small>
+                        </field>
+
+                        <field
                             id="url-tags-prefix"
                             :label="$t('settings.tagPrefix')">
                             <text-input
@@ -746,7 +857,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsTagPages"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportTagPages') }}
                             </small>
@@ -754,8 +865,17 @@
                                 v-else
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.tagPrefixInfo')">
+                                v-pure-html="advanced.urls.postsPrefix && advanced.urls.tagsPrefixAfterPostsPrefix ? $t('settings.tagPrefixInfoExtended') : $t('settings.tagPrefixInfo')">
                             </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.urls.postsPrefix"
+                            id="tags-prefix-after-posts-prefix"
+                            :label="$t('settings.tagsPrefixAfterPostsPrefix')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.urls.tagsPrefixAfterPostsPrefix" />
                         </field>
 
                         <field
@@ -771,7 +891,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsAuthorPages"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportAuthorPages') }}
                             </small>
@@ -779,8 +899,17 @@
                                 v-else
                                 slot="note"
                                 class="note"
-                                v-pure-html="$t('settings.authorPrefixInfo')">
+                                v-pure-html="advanced.urls.postsPrefix && advanced.urls.authorsPrefixAfterPostsPrefix ? $t('settings.authorPrefixInfoExtended') : $t('settings.authorPrefixInfo')">
                             </small>
+                        </field>
+
+                        <field
+                            v-if="advanced.urls.postsPrefix"
+                            id="authors-prefix-after-posts-prefix"
+                            :label="$t('settings.authorsPrefixAfterPostsPrefix')">
+                            <switcher
+                                slot="field"
+                                v-model="advanced.urls.authorsPrefixAfterPostsPrefix" />
                         </field>
 
                         <field
@@ -814,7 +943,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsErrorPage"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportErrorPages') }}
                             </small>
@@ -834,7 +963,7 @@
                                 slot="field" />
                             <small
                                 v-if="!currentThemeSupportsSearchPage"
-                                class="note"
+                                class="note is-warning"
                                 slot="note">
                                 {{ $t('settings.themeDoesNotSupportSearchPages') }}
                             </small>
@@ -2000,7 +2129,7 @@
                     defaultValue="full-site-preview" />
 
                 <p-button
-                    @click.native="save(false)"
+                    @click.native="checkBeforeSave(false)"
                     slot="buttons"
                     type="secondary"
                     :disabled="buttonsLocked">
@@ -2053,6 +2182,9 @@ export default {
         },
         currentThemeSupportsEmbedConsents () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.embedConsents;
+        },
+        currentThemeSupportsPages () {
+            return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.pages;
         },
         currentThemeSupportsTagsList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures && this.$store.state.currentSite.themeSettings.supportedFeatures.tagsList;
@@ -2326,6 +2458,15 @@ export default {
         this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
     },
+    watch: {
+        'advanced.urls.cleanUrls': function (newValue, oldValue) {
+            if (newValue === false && oldValue === true) {
+                this.advanced.urls.postsPrefix = '';
+                this.advanced.urls.tagsPrefixAfterPostsPrefix = false;
+                this.advanced.urls.authorsPrefixAfterPostsPrefix = false;
+            }
+        }
+    },
     async mounted () {
         setTimeout(() => {
             this.$refs['logo-creator'].changeIcon(this.logo.icon);
@@ -2340,11 +2481,31 @@ export default {
         }
     },
     methods: {
+        checkBeforeSave (showPreview, renderingType, renderFiles) {
+            if (
+                this.$store.state.currentSite.config.theme && (
+                    this.theme === 'install-use-' + this.$store.state.currentSite.config.theme
+                ) && 
+                this.$store.state.currentSite.themeHasOverrides
+            ) {
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    message: this.$t('settings.currentThemeHasOverrides'),
+                    okClick: () => {
+                        this.save(showPreview, renderingType, renderFiles);
+                    },
+                    okLabel: this.$t('ui.ok'),
+                    cancelLabel: this.$t('ui.cancel')
+                });
+            } else {
+                this.save(showPreview, renderingType, renderFiles);
+            }
+        },
         saveAndPreview (renderingType = false) {
-            this.save(true, renderingType, false);
+            this.checkBeforeSave(true, renderingType, false);
         },
         saveAndRender (renderingType = false) {
-            this.save(true, renderingType, true);
+            this.checkBeforeSave(true, renderingType, true);
         },
         save (showPreview = false, renderingType = false, renderFiles = false) {
             this.buttonsLocked = true;
@@ -2614,6 +2775,19 @@ export default {
 
                 this.errors.push('authors-prefix');
                 this.$refs['advanced-tabs'].toggle('URLs');
+
+                return false;
+            }
+
+            if (this.advanced.usePageAsFrontpage && !this.advanced.pageAsFrontpage) {
+                this.$bus.$emit('message-display', {
+                    message: this.$t('settings.frontpagePageCannotBeEmpty'),
+                    type: 'warning',
+                    lifeTime: 3
+                });
+
+                this.errors.push('page-as-frontpage');
+                this.$refs['advanced-tabs'].toggle('SEO');
 
                 return false;
             }

@@ -275,19 +275,25 @@ export default {
     },
     methods: {
         elementExists () {
-            if(this.type !== 'post' && this.type !== 'tag' && this.type !== 'author') {
+            if(this.type !== 'post' && this.type !== 'page' && this.type !== 'tag' && this.type !== 'author') {
                 return true;
             }
 
             let validItems = [];
 
-            if(this.type === 'post') {
+            if (this.type === 'post') {
                 validItems = this.$store.state.currentSite.posts.filter(
                     post => post.id == this.link && post.status.indexOf('trashed') === -1
                 );
             }
 
-            if(this.type === 'tag') {
+            if (this.type === 'page') {
+                validItems = this.$store.state.currentSite.pages.filter(
+                    page => page.id == this.link && page.status.indexOf('trashed') === -1
+                );
+            }
+
+            if (this.type === 'tag') {
                 validItems = this.$store.state.currentSite.tags.filter(
                     tag => tag.id == this.link && tag.additionalData.indexOf('"isHidden":true') === -1
                 );
@@ -303,7 +309,7 @@ export default {
                 }
             }
 
-            if(this.type === 'author') {
+            if (this.type === 'author') {
                 validItems = this.$store.state.currentSite.authors.filter(
                     author => author.username === this.link
                 );
@@ -324,15 +330,21 @@ export default {
             return validItems.length > 0;
         },
         elementIsDraft () {
-            if(this.type !== 'post') {
+            if (this.type !== 'post' && this.type !== 'page') {
                 return false;
             }
 
             let draftItems = [];
 
-            if(this.type === 'post') {
+            if (this.type === 'post') {
                 draftItems = this.$store.state.currentSite.posts.filter(
                     post => post.id == this.link && post.status.indexOf('draft') > -1
+                );
+            }
+
+            if (this.type === 'page') {
+                draftItems = this.$store.state.currentSite.pages.filter(
+                    page => page.id == this.link && page.status.indexOf('draft') > -1
                 );
             }
 

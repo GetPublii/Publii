@@ -157,8 +157,6 @@ class SFTP {
             }
         });
 
-        self.deployment.replaceSyncInfoFiles();
-
         this.connection.put(
             normalizePath(path.join(self.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(self.deployment.outputDir, 'files.publii.json')),

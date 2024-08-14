@@ -429,8 +429,6 @@ class GitlabPages {
 
     updateFilesListFile () {
         this.setUploadProgress(98);
-        this.deployment.replaceSyncInfoFiles();
-
         let localFilesListPath = path.join(this.deployment.inputDir, 'files.publii.json');
         let localFilesContent = fs.readFileSync(localFilesListPath);
         let actionType = 'create';

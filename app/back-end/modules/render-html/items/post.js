@@ -44,6 +44,11 @@ class PostItem {
 
     prepareData() {
         let postURL = this.siteConfig.domain + '/' + this.post.slug + '.html';
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            postURL = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.post.slug + '.html';
+        }
+
         let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer, this.metaData.editor);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
         preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
@@ -64,6 +69,10 @@ class PostItem {
 
         if (this.siteConfig.advanced.urls.cleanUrls) {
             postURL = this.siteConfig.domain + '/' + this.post.slug + '/';
+
+            if (this.siteConfig.advanced.urls.postsPrefix) {
+                postURL = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.post.slug + '/';
+            }
 
             if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
                 postURL += 'index.html';

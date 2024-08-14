@@ -341,6 +341,13 @@
                                         :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
                                     </color-picker>
 
+                                    <image-upload
+                                        v-if="field.type === 'image'"
+                                        class="author-view-settings"
+                                        v-model="authorData.additionalData.viewConfig[field.name]"
+                                        :item-id="authorData.id"
+                                        imageType="authorImages" />
+
                                     <small
                                         v-if="field.note"
                                         class="note">
@@ -567,6 +574,7 @@ export default {
 
                     this.$store.commit('setAuthors', data.authors);
                     this.$store.commit('setPostAuthors', data.postsAuthors);
+                    this.$store.commit('setPageAuthors', data.pagesAuthors);
                     this.$bus.$emit('authors-list-updated');
                     return;
                 }

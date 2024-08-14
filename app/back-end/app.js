@@ -14,6 +14,7 @@ const url = require('url');
 const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow } = require('electron');
 // Collection classes
 const Posts = require('./posts.js');
+const Pages = require('./pages.js');
 const Tags = require('./tags.js');
 const Authors = require('./authors.js');
 const Themes = require('./themes.js');
@@ -224,9 +225,11 @@ class App {
         this.db = new DBUtils(new Database(dbPath));
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
+        let pages = new Pages(this, {site});
         let authors = new Authors(this, {site});
         let themes = new Themes(this, {site});
         let themeDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true));
+        let themeOverridesDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true) + '-override');
         let themeConfig = Themes.loadThemeConfig(themeConfigPath, themeDir);
         let menuStructure = fs.readFileSync(menuConfigPath, 'utf8');
         let parsedMenuStructure = {};
@@ -240,14 +243,18 @@ class App {
         return {
             status: true,
             posts: posts.load(),
+            pages: pages.load(),
             tags: tags.load(),
             authors: authors.load(),
             postsTags: posts.loadTagsXRef(),
             postsAuthors: posts.loadAuthorsXRef(),
+            pagesAuthors: pages.loadAuthorsXRef(),
             postTemplates: themes.loadPostTemplates(),
+            pageTemplates: themes.loadPageTemplates(),
             tagTemplates: themes.loadTagTemplates(),
             authorTemplates: themes.loadAuthorTemplates(),
             themes: themes.load(),
+            themeHasOverrides: Utils.dirExists(themeOverridesDir),
             themeSettings: themeConfig,
             menuStructure: parsedMenuStructure,
             siteDir: siteDir

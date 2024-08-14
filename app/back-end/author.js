@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const Model = require('./model.js');
 const Authors = require('./authors.js');
+const Pages = require('./pages.js');
 const Posts = require('./posts.js');
 const slug = require('./helpers/slug');
 const ImageHelper = require('./helpers/image.helper.js');
@@ -23,6 +24,7 @@ class Author extends Model {
         this.id = parseInt(authorData.id, 10);
         this.authorsData = new Authors(appInstance, authorData);
         this.postsData = new Posts(appInstance, authorData);
+        this.pagesData = new Pages(appInstance, authorData);
         this.storeMode = storeMode;
 
         if (authorData.additionalData) {
@@ -133,6 +135,7 @@ class Author extends Model {
             message: 'author-added',
             authorID: this.id,
             postsAuthors: this.postsData.loadAuthorsXRef(),
+            pagesAuthors: this.pagesData.loadAuthorsXRef(),
             authors: this.authorsData.load()
         };
     }
@@ -292,7 +295,7 @@ class Author extends Model {
             featuredImage = path.parse(this.additionalData.featuredImage).base;
         }
 
-        // If post is cancelled - get the previous featured image
+        // If author is cancelled - get the previous featured image
         if (cancelEvent && this.id !== 0) {
             let featuredImageSqlQuery = `SELECT additional_data FROM authors WHERE id = @id`;
 
@@ -313,6 +316,12 @@ class Author extends Model {
             authorDir = 'temp';
         }
 
+        let imagesInAuthorViewSettings = [];
+        
+        if (this.additionalData && this.additionalData.viewConfig) {
+            imagesInAuthorViewSettings = Object.values(this.additionalData.viewConfig).filter(item => item.type === "image").map(item => item.value);
+        }
+
         // Iterate through images
         for (let i in images) {
             let imagePath = images[i];
@@ -323,7 +332,14 @@ class Author extends Model {
                 continue;
             }
 
-            if ((cancelEvent && authorDir === 'temp') || featuredImage !== imagePath) {
+            // Remove files which does not exist as featured image and authorViewSettings
+            if(
+                (cancelEvent && authorDir === 'temp') ||
+                (
+                    imagesInAuthorViewSettings.indexOf(imagePath) === -1 &&
+                    featuredImage !== imagePath
+                )
+            ) {
                 try {
                     fs.unlinkSync(fullPath);
                 } catch(e) {
@@ -337,8 +353,11 @@ class Author extends Model {
         // Clean unused avatar images
         let themesHelper = new Themes(this.application, { site: this.site });
         let themeConfigPath = path.join(this.application.sitesDir, this.site, 'input', 'config', 'theme.config.json');
-        let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
-        themesHelper.checkAndCleanImages(themeConfigString);
+
+        if (fs.fileExists(themeConfigPath)) {
+            let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+            themesHelper.checkAndCleanImages(themeConfigString);
+        }
     }
 
     /*

@@ -33,6 +33,21 @@
                 </field>
 
                 <field
+                    v-if="type === 'page'"
+                    :label="$t('page.pageName')">
+                    <v-select
+                        slot="field"
+                        ref="pageItemsSelect"
+                        :options="pageItems"
+                        v-model="page"
+                        :custom-label="customPageLabels"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('pageItemsSelect')"
+                        :placeholder="$t('page.selectPage')"></v-select>
+                </field>
+
+                <field
                     v-if="type === 'tag'"
                     :label="$t('tag.tagName')">
                     <v-select
@@ -181,6 +196,7 @@ export default {
             easymdeInstance: null,
             type: 'external',
             post: null,
+            page: null,
             tag: null,
             author: null,
             file: null,
@@ -199,7 +215,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'external', 'post', 'tag', 'tags', 'author', 'frontpage', 'file' ];
+            return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1).map(tag => tag.id);
@@ -220,6 +236,9 @@ export default {
         postPages () {
             return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
         },
+        pageItems () {
+            return this.$store.state.currentSite.pages.filter(page => page.status.indexOf('published') > -1).map(page => page.id);
+        },
         targetList () {
             return [ '-', '_blank' ];
         }
@@ -238,6 +257,7 @@ export default {
         customTypeLabels (value) {
             switch (value) {
                 case 'post': return this.$t('post.postLink');
+                case 'page': return this.$t('page.pageLink');
                 case 'tag': return this.$t('tag.tagLink');
                 case 'tags': return this.$t('tag.tagsListLink');
                 case 'author': return this.$t('author.authorLink');
@@ -255,6 +275,9 @@ export default {
         customPostLabels (value) {
             return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
         },
+        customPageLabels (value) {
+            return this.$store.state.currentSite.pages.filter(page => page.id === value).map(page => page.title)[0];
+        },
         customTargetLabels (value) {
             if (value === '-') {
                 return this.$t('ui.sameWindow');
@@ -270,6 +293,7 @@ export default {
         cleanPopup () {
             this.type = 'external';
             this.post = null;
+            this.page = null;
             this.tag = null;
             this.author = null;
             this.file = null;
@@ -352,6 +376,10 @@ export default {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
                     this.type = 'post';
                     this.post = parseInt(id, 10);
+                } else if (urlContent[1].indexOf('/page/') !== -1) {
+                    let id = urlContent[1].replace('#INTERNAL_LINK#/page/', '');
+                    this.type = 'page';
+                    this.page = parseInt(id, 10);
                 } else if (urlContent[1].indexOf('/tag/') !== -1) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
                     this.type = 'tag';

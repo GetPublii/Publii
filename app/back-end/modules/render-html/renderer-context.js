@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const slug = require('./../../helpers/slug');
+const ContentHelper = require('./helpers/content');
 const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
 const Plugins = require('./../../plugins.js');
@@ -55,6 +56,7 @@ class RendererContext {
         // Retrieve necessary data
         let tagsData = this.getTagsMenuData();
         let postsData = this.getPostsMenuData();
+        let pagesData = this.getPagesMenuData();
 
         // Menu config
         let menuConfigPath = path.join(this.inputDir, 'config', 'menu.config.json');
@@ -76,7 +78,7 @@ class RendererContext {
             }
 
             if (positions[0] === '') {
-                menuData[i].items = this.prepareMenuItems(menuData[i].items, tagsData, postsData);
+                menuData[i].items = this.prepareMenuItems(menuData[i].items, tagsData, postsData, pagesData);
                 menus.unassigned[slug(menuData[i].name)] = menuData[i];
             } else {
                 for (let j = 0; j < positions.length; j++) {
@@ -102,7 +104,7 @@ class RendererContext {
                     }
 
                     let positionMenuData = JSON.parse(JSON.stringify(menuData[i]));
-                    positionMenuData.items = this.prepareMenuItems(positionMenuData.items, tagsData, postsData, 2, maxLevel + 1);
+                    positionMenuData.items = this.prepareMenuItems(positionMenuData.items, tagsData, postsData, pagesData, 2, maxLevel + 1);
                     menus.assigned[position] = positionMenuData;
                 }
             }
@@ -119,7 +121,7 @@ class RendererContext {
         return menus;
     }
 
-    prepareMenuItems(items, tagsData, postsData, level = 2, maxLevel = false) {
+    prepareMenuItems(items, tagsData, postsData, pagesData, level = 2, maxLevel = false) {
         // When max level is exceed - return items
         if (maxLevel && maxLevel !== -1 && maxLevel < level) {
             return [];
@@ -127,6 +129,7 @@ class RendererContext {
 
         for (let i = 0; i < items.length; i++) {
             items[i].level = level;
+            items[i].linkID = items[i].link;
 
             if (items[i].type === 'post') {
                 let foundedPost = postsData.filter(post => post.id == items[i].link);
@@ -138,10 +141,20 @@ class RendererContext {
                 }
             }
 
+            if (items[i].type === 'page') {
+                let foundedPage = pagesData.filter(page => page.id == items[i].link);
+
+                if (foundedPage.length && foundedPage[0].status.indexOf('trashed') === -1) {
+                    items[i].link = foundedPage[0].slug;
+                } else {
+                    items[i] = false;
+                }
+            }
+
             if (items[i].type === 'tag') {
                 let foundedTag = tagsData.filter(tag => tag.id == items[i].link);
 
-                if(foundedTag.length) {
+                if (foundedTag.length) {
                     items[i].link = foundedTag[0].slug;
                 } else {
                     items[i] = false;
@@ -153,7 +166,7 @@ class RendererContext {
             }
 
             if (items[i] && !items[i].isHidden && items[i].items.length > 0) {
-                items[i].items = this.prepareMenuItems(items[i].items, tagsData, postsData, level + 1, maxLevel);
+                items[i].items = this.prepareMenuItems(items[i].items, tagsData, postsData, pagesData, level + 1, maxLevel);
             }
         }
 
@@ -177,7 +190,7 @@ class RendererContext {
         return tags;
     }
 
-    getPostsMenuData() {
+    getPostsMenuData () {
         // Retrieve all tags
         let posts = this.db.prepare(`
             SELECT
@@ -186,11 +199,31 @@ class RendererContext {
                 p.status AS status
             FROM
                 posts AS p
+            WHERE
+                p.status NOT LIKE '%is-page%'
             ORDER BY
                 id ASC
         `).all();
 
         return posts;
+    }
+
+    getPagesMenuData () {
+        // Retrieve all tags
+        let pages = this.db.prepare(`
+            SELECT
+                p.id AS id,
+                p.slug AS slug,
+                p.status AS status
+            FROM
+                posts AS p
+            WHERE
+                p.status LIKE '%is-page%'
+            ORDER BY
+                id ASC
+        `).all();
+
+        return pages;
     }
 
     getAllTags() {
@@ -324,7 +357,7 @@ class RendererContext {
             config: URLHelper.prepareSettingsImages(this.siteConfig.domain, {
                 basic: JSON.parse(JSON.stringify(this.themeConfig.config)),
                 site: JSON.parse(JSON.stringify(this.siteConfig.advanced)),
-                custom: JSON.parse(JSON.stringify(this.themeConfig.customConfig))
+                custom: JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(this.themeConfig.customConfig), this.renderer))
             }),
             website: {
                 url: fullURL,
@@ -367,7 +400,11 @@ class RendererContext {
         };
 
         if (context === 'post' && itemConfig) {
-            this.context.config.post = itemConfig;
+            this.context.config.post = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
+        }
+
+        if (context === 'page' && itemConfig) {
+            this.context.config.page = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
         }
 
         this.renderer.globalContext = this.context;
@@ -462,14 +499,26 @@ class RendererContext {
                     posts
                 WHERE
                     status LIKE '%published%' AND
-                    status NOT LIKE '%trashed%'
+                    status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%is-page%'
                 ORDER BY
                     ${postsOrdering}
+        `).all();
+        let pages = this.db.prepare(`
+                SELECT
+                    id
+                FROM
+                    posts
+                WHERE
+                    status LIKE '%published%' AND
+                    status NOT LIKE '%trashed%' AND
+                    status LIKE '%is-page%'
         `).all();
         let tags = this.db.prepare(`SELECT id FROM tags`).all();
         let authors = this.db.prepare(`SELECT id FROM authors`).all();
 
         posts = posts.map(post => JSON.parse(JSON.stringify(this.renderer.cachedItems.posts[post.id])));
+        pages = pages.map(page => JSON.parse(JSON.stringify(this.renderer.cachedItems.pages[page.id])));
         tags = tags.map(tag => JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[tag.id])));
         authors = authors.map(author => JSON.parse(JSON.stringify(this.renderer.cachedItems.authors[author.id])));
 
@@ -481,10 +530,13 @@ class RendererContext {
             authors[i].posts = this.getContentStructureAuthorPosts(authors[i].id);
         }
 
+        let pagesStructure = this.renderer.cachedItems.pagesStructure;
         let finalContentStructure = {
-            posts: posts,
-            tags: tags,
-            authors: authors
+            pages,
+            pagesStructure,
+            posts,
+            tags,
+            authors
         };
 
         if (this.renderer.plugins.hasModifiers('contentStructure')) {
@@ -549,6 +601,7 @@ class RendererContext {
                     status LIKE '%published%' AND
                     status NOT LIKE '%hidden%' AND
                     status NOT LIKE '%trashed%' AND
+                    status NOT LIKE '%is-page%' AND
                     authors LIKE @authorID
                 ORDER BY
                     ${postsOrdering}
@@ -591,6 +644,7 @@ class RendererContext {
                 status LIKE '%published%' AND
                 status LIKE '%featured%' AND
                 status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%is-page%' AND
                 status NOT LIKE '%hidden%'
             ORDER BY
                 ${this.featuredPostsOrdering}
@@ -609,6 +663,7 @@ class RendererContext {
             WHERE
                 status LIKE '%published%' AND
                 status LIKE '%hidden%' AND
+                status NOT LIKE '%is-page%' AND
                 status NOT LIKE '%trashed%'
             ORDER BY
                 ${this.hiddenPostsOrdering}
@@ -617,42 +672,103 @@ class RendererContext {
         return results;
     }
 
+    getPages() {
+        let results = this.db.prepare(`
+            SELECT
+                id
+            FROM
+                posts
+            WHERE
+                status LIKE '%is-page%' AND
+                status NOT LIKE '%trashed%'
+        `).all();
+
+        return results;
+    }
+
     getPageUrl (context, paginationData, itemSlug) {
         let pagePart = this.siteConfig.advanced.urls.pageName;
+        let blogBaseUrl = this.siteConfig.domain;
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            blogBaseUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix;
+        }
 
         if (context === 'index' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
-                return this.siteConfig.domain + '/';
+                return blogBaseUrl + '/';
             } else {
-                return this.siteConfig.domain + '/' + pagePart +  '/' + paginationData.currentPage + '/';
+                if (this.siteConfig.advanced.urls.postsPrefix) {
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + pagePart +  '/' + paginationData.currentPage + '/';
+                }
+
+                return blogBaseUrl + '/' + pagePart +  '/' + paginationData.currentPage + '/';
             }
         } else if (context === 'tags') {
-            if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
-                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            if (this.siteConfig.advanced.urls.tagsPrefix !== '') {    
+                if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/'; 
+                }
+
+                return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
             } else {
-                return this.siteConfig.domain + '/';
+                return blogBaseUrl + '/';
             }
         } else if (context === 'author') {
             if (!paginationData || paginationData.currentPage === 1) {
+                if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/';
+                }
+                
                 return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/';
             } else {
+                if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.authorsPrefixAfterPostsPrefix) {
+                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                }
+
                 return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.authorsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
             }
         } else if (context === 'tag') {
             if (!paginationData || paginationData.currentPage === 1) {
-                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {                   
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
+                if (this.siteConfig.advanced.urls.tagsPrefix !== '') {  
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
+                    }
+
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/';
                 } else {
-                    return this.siteConfig.domain + '/' + itemSlug + '/';
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';    
+                    }
+
+                    return blogBaseUrl + '/' + itemSlug + '/';
                 }
             } else {
                 if (this.siteConfig.advanced.urls.tagsPrefix !== '') {
-                    return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';    
+                    }
+
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
                 } else {
-                    return this.siteConfig.domain + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
+                    if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                        return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';    
+                    }
+
+                    return blogBaseUrl + '/' + itemSlug + '/' + pagePart + '/' + paginationData.currentPage + '/';
                 }
             }
         } else if (context === 'post') {
+            if (!this.siteConfig.advanced.urls.cleanUrls) { 
+                if (this.siteConfig.advanced.urls.postsPrefix) {
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '.html';
+                }
+
+                return blogBaseUrl + '/' + itemSlug + '.html';
+            } else {
+                return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
+            }
+        } else if (context === 'page') {
             if (!this.siteConfig.advanced.urls.cleanUrls) { 
                 return this.siteConfig.domain + '/' + itemSlug + '.html';
             } else {           
@@ -686,7 +802,11 @@ class RendererContext {
     }
 
     getTagsUrl () {
-        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {            
+        if (this.siteConfig.advanced.urls.tagsPrefix !== '') {       
+            if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
+                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            }
+            
             return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
         } else {
             return this.siteConfig.domain + '/';

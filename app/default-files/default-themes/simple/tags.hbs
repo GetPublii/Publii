@@ -1,35 +1,14 @@
 {{> head}}
-{{> top}}
+{{> navbar}}
 <main class="page page--tags">
-   <div class="hero">
-      {{#checkIfAll @config.custom.uploadHero @config.custom.displayHeroImage}}
-         <figure class="hero__image hero__image--overlay">
-            <img
-               src="{{@config.custom.uploadHero}}"
-               {{#if @config.site.responsiveImages}}
-               {{responsiveImageAttributes @config.custom.uploadHero}}
-               {{/if}}
-               {{ lazyload "eager" }}
-               {{imageDimensions @config.custom.uploadHero}}
-               alt="{{@config.custom.uploadHeroAlt}}">
-
-            {{#if @config.custom.uploadHeroCaption}}
-               <figcaption>
-                  {{@config.custom.uploadHeroCaption}}
-               </figcaption>
-            {{/if}}
-         </figure>
-      {{/checkIfAll}}
-      <header class="hero__content">
+   <div class="hero {{#checkIfNone featuredImage.url}}hero--noimage{{/checkIfNone}}">
+      <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
          <div class="wrapper">
             <h1>
                {{ translate 'tags.tagsPageTitle' }} 
-               {{#if @config.custom.tagsTagCount}}
-                  <sup>({{tagsNumber}})</sup>
-               {{/if}}
             </h1>
-            <p>
-               {{ translate 'tags.description' }}
+            <p class="page__desc">
+               {{ translate "tags.description" tagsNumber }}
             </p>
          </div>
       </header>
@@ -37,20 +16,34 @@
    <div class="wrapper">
       <ul class="feed feed--grid">
          {{#each tags}}
-            <li>
-               <h2 class="h4">
-                  <a href="{{url}}">
-                     {{name}}
-                  </a>
-                  {{#if @config.custom.tagsPostCount}}
-                     <sup>({{postsNumber}})</sup>
+            <li class="feed__item">
+               {{#featuredImage}}
+                  {{#if url}}
+                     <figure class="feed__image">
+                        <img
+                           {{#if @config.site.responsiveImages}}
+                              src="{{urlXs}}"
+                           {{else}}
+                              src="{{url}}"
+                           {{/if}}
+                           {{ lazyload "lazy" }}
+                           height="{{height}}"
+                           width="{{width}}"
+                           alt="{{alt}}">
+                     </figure>
                   {{/if}}
-               </h2>
-               {{#checkIfAll @config.custom.tagsDescription description}}
-                  <div class="feed--grid-tag-desc">
-                     {{{description}}}
-                  </div>
-               {{/checkIfAll}}
+               {{/featuredImage}}
+
+               <div class="feed__content">
+                  <h2 class="h3">
+                     <a href="{{url}}">
+                        {{name}}
+                     </a>
+                  </h2>
+                  <p>
+                     {{ translate "tags.featuringPosts" postsNumber }}
+                  </p>
+               </div>
             </li>
          {{/each}}
       </ul>

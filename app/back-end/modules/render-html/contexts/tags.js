@@ -14,6 +14,14 @@ class RendererContextTags extends RendererContext {
         this.authors = this.renderer.commonData.authors;
         this.featuredPosts = this.renderer.commonData.featuredPosts.tag;
         this.hiddenPosts = this.renderer.commonData.hiddenPosts;
+        this.pages = this.renderer.commonData.pages;
+
+        // mark tags as main tags
+        let mainTagsIds = this.mainTags.map(tag => tag.id);
+        this.tags = this.tags.map(tag => {
+            tag.isMainTag = mainTagsIds.includes(tag.id);
+            return tag;
+        });
     }
 
     prepareData() {
@@ -28,6 +36,8 @@ class RendererContextTags extends RendererContext {
         this.featuredPosts = this.featuredPosts.map(post => this.renderer.cachedItems.posts[post.id]);
         this.hiddenPosts = this.hiddenPosts || [];
         this.hiddenPosts = this.hiddenPosts.map(post => this.renderer.cachedItems.posts[post.id]);
+        this.pages = this.pages || [];
+        this.pages = this.pages.map(page => this.renderer.cachedItems.pages[page.id]);
 
         // Prepare meta data
         this.metaTitle = this.siteConfig.advanced.tagsMetaTitle.replace(/%sitename/g, siteName);
@@ -56,6 +66,7 @@ class RendererContextTags extends RendererContext {
             title: this.metaTitle !== '' ? this.metaTitle : this.title,
             featuredPosts: this.featuredPosts,
             hiddenPosts: this.hiddenPosts,
+            pages: this.pages,
             tags: this.tags,
             tagsNumber: this.tags.length,
             mainTags: this.mainTags,

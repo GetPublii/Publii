@@ -1,0 +1,65 @@
+{{> head}}
+{{> navbar}}
+<main class="page">
+   {{#page}}
+      <div class="content">
+         <div class="hero">
+            <div class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
+               <div class="wrapper">
+                  <h1>{{title}}</h1>
+                </div>
+            </div>
+
+            {{#featuredImage}}
+               {{#if url}}
+                  <figure class="hero__image">                      
+                     <img
+                        src="{{url}}"
+                        {{#if @config.site.responsiveImages}}                           
+                            {{responsiveImageAttributes 'featuredImage' srcset.hero sizes.hero}}
+                        {{/if}}
+                        {{ lazyload "eager" }}
+                        height="{{height}}"
+                        width="{{width}}"
+                        alt="{{alt}}">
+                      
+                     {{#checkIfAny caption credits}}
+                        <figcaption>
+                           {{caption}}
+                           {{credits}}
+                        </figcaption>                      
+                     {{/checkIfAny}}                      
+                  </figure>
+               {{/if}}
+            {{/featuredImage}}     
+         </div>
+
+         <div class="wrapper content__entry content__entry--nospace">           
+            {{{text}}}            
+         </div>
+
+         {{#if @config.page.displayChildPages}}
+            {{#if subpages}}
+               <div class="subpages">
+                  <div class="wrapper">
+                     <h2 class="h6 subpages__title">{{ translate 'page.childPages' }}</h2>
+                     <ul class="subpages__list">
+                        {{> subpages-list}}
+                     </ul>
+                  </div>
+               </div>
+            {{/if}}
+         {{/if}}
+      </div>
+
+      {{#if @customHTML.afterPage}}
+         <div class="banner banner--after-content">
+            <div class="wrapper">
+               {{{@customHTML.afterPage}}}
+            </div>
+         </div>
+      {{/if}}
+
+   {{/page}}
+</main>
+{{> footer}}

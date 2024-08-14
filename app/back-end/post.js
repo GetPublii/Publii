@@ -631,6 +631,12 @@ class Post extends Model {
             postDir = 'temp';
         }
 
+        let imagesInPostViewSettings = [];
+        
+        if (this.postViewSettings) {
+            imagesInPostViewSettings = Object.values(this.postViewSettings).filter(item => item.type === "image").map(item => item.value);
+        }
+        
         // Iterate through images
         for (let i in images) {
             let imagePath = images[i];
@@ -641,10 +647,14 @@ class Post extends Model {
                 continue;
             }
 
-            // Remove files which does not exist in the post text
+            // Remove files which does not exist in the post text, as featured image and postViewSettings
             if(
                 (cancelEvent && postDir === 'temp') ||
-                (this.text.indexOf(imagePath) === -1 && featuredImage !== imagePath)
+                (
+                    this.text.indexOf(imagePath) === -1 && 
+                    imagesInPostViewSettings.indexOf(imagePath) === -1 &&
+                    featuredImage !== imagePath
+                )
             ) {
                 try {
                     fs.unlinkSync(fullPath);

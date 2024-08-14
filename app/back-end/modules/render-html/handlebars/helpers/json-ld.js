@@ -20,7 +20,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
         jsonLDObject['@context'] = 'http://schema.org';
 
         // Detect if the page is not a post page
-        if(context.data.context.indexOf('post') === -1) {
+        if (context.data.context.indexOf('post') === -1 && context.data.context.indexOf('page') === -1) {
             jsonLDObject['@type'] = 'Organization';
             jsonLDObject['name'] = context.data.website.name;
 
@@ -65,24 +65,27 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                     jsonLDObject['sameAs'].push(context.data.config.custom.socialYoutube);
                 }
             }
-        } else { // JSON-LD for posts
+        } else { // JSON-LD for posts/pages
+            let itemData = context.data.root.post;
+
+            if (!itemData) {
+                itemData = context.data.root.page;
+            }
+
             jsonLDObject['@type'] = 'Article';
             jsonLDObject['mainEntityOfPage'] = {
                 "@type": "WebPage",
-                "@id": context.data.root.post.url,
+                "@id": itemData.url,
             };
-            jsonLDObject['headline'] = context.data.root.post.title;
-            jsonLDObject['datePublished'] = moment(context.data.root.post.createdAt).format('YYYY-MM-DDTHH:mm');
-            jsonLDObject['dateModified'] = moment(context.data.root.post.modifiedAt).format('YYYY-MM-DDTHH:mm');
+            jsonLDObject['headline'] = itemData.title;
+            jsonLDObject['datePublished'] = moment(itemData.createdAt).format('YYYY-MM-DDTHH:mm');
+            jsonLDObject['dateModified'] = moment(itemData.modifiedAt).format('YYYY-MM-DDTHH:mm');
 
-            if(
-                context.data.root.post.featuredImage.url ||
-                context.data.website.logo
-            ) {
+            if (itemData.featuredImage.url || context.data.website.logo) {
                 let imageUrl = '';
 
-                if(context.data.root.post.featuredImage && context.data.root.post.featuredImage.url) {
-                    imageUrl = context.data.root.post.featuredImage.url;
+                if (itemData.featuredImage && itemData.featuredImage.url) {
+                    imageUrl = itemData.featuredImage.url;
                 } else {
                     imageUrl = context.data.website.logo;
                 }
@@ -123,15 +126,19 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             if (context.data.root.metaDescriptionRaw) {
                 jsonLDObject['description'] = context.data.root.metaDescriptionRaw.replace(/"/g, "'");
             } else {
-                jsonLDObject['description'] = context.data.root.post.excerpt;
+                jsonLDObject['description'] = itemData.excerpt;
             }
 
-            if (context.data.root.post.author && context.data.root.post.author.name) {
-                let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + context.data.root.post.author.username + '/';
+            if (itemData.author && itemData.author.name) {
+                let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+
+                if (context.data.config.site.urls.postsPrefix && context.data.config.site.urls.authorsPrefixAfterPostsPrefix) {
+                    authorUrl = context.data.website.baseUrl + context.data.config.site.urls.postsPrefix + '/' + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+                }
                 
                 jsonLDObject['author'] = {
                     "@type": "Person",
-                    "name": context.data.root.post.author.name,
+                    "name": itemData.author.name,
                     "url": authorUrl
                 };
             }

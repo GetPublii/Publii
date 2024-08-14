@@ -94,37 +94,23 @@
                 <div
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
-                    class="server-settings-grid-item  deprecated">
+                    class="server-settings-grid-item">
                     <icon
                       customWidth="71"
                       customHeight="42"
                       name="githubpages"
                       iconset="svg-map-server"/>
-                    <span class="deprecated-info">
-                        <icon 
-                            name="warning" 
-                            customWidth="16" 
-                            customHeight="16" />
-                        <span>{{ $t('sync.deprecated') }}</span>
-                    </span>
                 </div>
 
                 <div
                     @click="deploymentMethodSelected = 'gitlab-pages'"
                     :title="$t('sync.gitlabPages')"
-                    class="server-settings-grid-item deprecated">
+                    class="server-settings-grid-item">
                     <icon
                       customWidth="108"
                       customHeight="40"
                       name="gitlab"
                       iconset="svg-map-server"/>
-                    <span class="deprecated-info">
-                        <icon 
-                            name="warning" 
-                            customWidth="16" 
-                            customHeight="16" />
-                        <span>{{ $t('sync.deprecated') }}</span>
-                    </span>
                 </div>
 
                 <div
@@ -173,29 +159,12 @@
             <fields-group 
                 v-if="deploymentMethodSelected !== ''" 
                 :title="$t('sync.settings')">
-                <div 
-                    v-if="deploymentMethodSelected === 'github-pages' || deploymentMethodSelected === 'gitlab-pages'"
-                    class="msg msg-icon msg-alert">
-                    <icon name="warning" customWidth="28" customHeight="28" />
-                    <p>
-                        <span
-                            v-if="deploymentMethodSelected === 'github-pages'"
-                            v-pure-html="$t('sync.deploymentMethodGithubPagesDeprecated')">
-                        </span>
-
-                        <span
-                            v-if="deploymentMethodSelected === 'gitlab-pages'"
-                            v-pure-html="$t('sync.deploymentMethodGitlabPagesDeprecated')">
-                        </span>
-                    </p>
-                </div>
-                
                 <div class="msg msg-icon msg-info">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
-                        <span v-if="deploymentMethodSelected === 'ftp'">
-                            {{ $t('sync.deploymentMethodFtpMsg') }}
-                        </span>
+                        <span v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'" v-pure-html="$t('sync.deploymentMethodFilesPubliiMsg')"></span>
+                        
+                        <br v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'">
 
                         <span
                             v-if="deploymentMethodSelected === 'netlify'"
@@ -227,9 +196,7 @@
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
                         </span>
 
-                        <template v-if="['ftp', 'netlify', 'github-pages', 'gitlab-pages', 's3', 'google-cloud'].indexOf(deploymentMethodSelected) > -1">
-                            <br>
-                        </template>
+                        <br>
 
                         <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
                     </p>
@@ -342,6 +309,11 @@
                     <template slot="second-label">
                         {{ $t('sync.useFtps') }}
                     </template>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.deploymentMethodFtpMsg') }}
+                    </small>
                 </field>
 
                 <field
@@ -1834,34 +1806,6 @@ export default {
                     font-size: 1.9rem;
                     font-weight: var(--font-weight-semibold);
                     margin-left: 1rem;
-                }
-            }
-
-            &:hover.deprecated {
-                border-color: var(--warning);
-                color: var(--warning);
-                fill: var(--warning);
-            }
-
-            .deprecated {
-                
-                &-info {
-                    align-items: center;
-                    background: var(--warning);
-                    border-radius: 0 0 var(--border-radius) var(--border-radius);
-                    bottom: 0;
-                    color: var(--white);
-                    display: flex;
-                    font-size: 14px;
-                    justify-content: center;
-                    left: 0;
-                    padding: 3px 8px;
-                    position: absolute;
-                    width: 100%;
-                    .icon {
-                        fill: var(--white);
-                        margin-right: 5px;
-                    }
                 }
             }
         }

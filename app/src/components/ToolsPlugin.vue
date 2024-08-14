@@ -191,6 +191,14 @@
                                             :anchor="field.anchor"
                                             slot="field"
                                             :customCssClasses="field.customCssClasses"></posts-dropdown>
+                                        
+                                        <pages-dropdown
+                                            v-if="field.type === 'pages-dropdown'"
+                                            v-model="settingsValues[field.name]"
+                                            :multiple="field.multiple"
+                                            :anchor="field.anchor"
+                                            slot="field"
+                                            :customCssClasses="field.customCssClasses"></pages-dropdown>
 
                                         <tags-dropdown
                                             v-if="field.type === 'tags-dropdown'"
@@ -234,7 +242,8 @@
                                             :hideLabels="field.hideLabels"
                                             :anchor="field.anchor"
                                             :settings="settingsValues"
-                                            :customCssClasses="field.customCssClasses" />
+                                            :customCssClasses="field.customCssClasses"
+                                            imageType="pluginImages" />
 
                                         <small
                                             v-if="field.note && field.type !== 'separator'"
@@ -367,6 +376,14 @@
                                     slot="field"
                                     :customCssClasses="field.customCssClasses"></posts-dropdown>
 
+                                <pages-dropdown
+                                    v-if="field.type === 'pages-dropdown'"
+                                    v-model="settingsValues[field.name]"
+                                    :multiple="field.multiple"
+                                    :anchor="field.anchor"
+                                    slot="field"
+                                    :customCssClasses="field.customCssClasses"></pages-dropdown>
+
                                 <tags-dropdown
                                     v-if="field.type === 'tags-dropdown'"
                                     v-model="settingsValues[field.name]"
@@ -410,7 +427,9 @@
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
                                     :settings="settingsValues"
-                                    :customCssClasses="field.customCssClasses" />
+                                    :customCssClasses="field.customCssClasses"
+                                    imageType="pluginImages"
+                                    :pluginDir="$route.params.pluginname" />
 
                                 <small
                                     v-if="field.note && field.type !== 'separator'"

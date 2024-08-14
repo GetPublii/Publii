@@ -539,6 +539,7 @@ class Site {
      * Adds (if missing):
      * - input/root-files directory
      * - input/media/files directory
+     * - input/media/pages directory
      * - input/media/tags directory
      * - input/media/authors directory
      * - input/config/plugins directory

@@ -1,9 +1,11 @@
 {
     "postTemplates": {},
+    "pageTemplates": {},
     "tagTemplates": {},
     "authorTemplates": {},
     "defaultTemplates": {
-        "post": ""
+        "post": "",
+        "page": ""
     },
     "menus": {},
     "renderer": {
@@ -64,6 +66,7 @@
     ],
     "customConfig": [],
     "postConfig": [],
+    "pageConfig": [],
     "tagConfig": [],
     "authorConfig": [],
     "files": {

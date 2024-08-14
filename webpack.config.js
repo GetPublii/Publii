@@ -85,6 +85,9 @@ module.exports = {
     hints: false
   },
   devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
+  externals: {
+    'sharp': 'commonjs sharp'
+  }
 };
 
 if (process.env.NODE_ENV === 'production') {

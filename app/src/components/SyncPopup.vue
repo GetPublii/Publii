@@ -416,6 +416,7 @@ export default {
         });
 
         mainProcessAPI.receive('app-uploading-progress', this.uploadingProgressUpdate);
+        mainProcessAPI.receive('no-remote-files', this.askForContinueSync);
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
@@ -480,7 +481,20 @@ export default {
                 this.uploadingProgressIsStopped = false;
             }
         },
-        cancelSync: function() {
+        askForContinueSync () {
+            this.$bus.$emit('confirm-display', {
+                hasInput: false,
+                message: this.$t('settings.continueSyncNoRemoteFiles'),
+                okClick: this.continueSync,
+                okLabel: this.$t('settings.continueSync'),
+                cancelLabel: this.$t('ui.cancel'),
+                cancelClick: this.cancelSync
+            });
+        },
+        continueSync () {
+            mainProcessAPI.send('app-deploy-continue');
+        },
+        cancelSync () {
             if (this.renderingInProgress) {
                 mainProcessAPI.send('app-deploy-render-abort', {
                     'site': this.$store.state.currentSite.config.name

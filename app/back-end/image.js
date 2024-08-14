@@ -23,6 +23,8 @@ class Image extends Model {
 
         if (imageData.id === 'website') {
             this.id = 'website';
+        } else if (imageData.id === 'defaults') {
+            this.id = 'defaults';
         }
 
         // App instance
@@ -95,9 +97,18 @@ class Image extends Model {
         let galleryDirPath = '';
         let responsiveDirPath = '';
 
-        if (this.imageType === 'pluginImages') {
+        if (this.id === 'defaults' && this.imageType === 'contentImages') {
+            dirPath = path.join(this.siteDir, 'input', 'media', 'posts', 'defaults'); 
+            responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'posts', 'defaults', 'responsive');
+        } else if (this.id === 'defaults' && this.imageType === 'tagImages') {
+            dirPath = path.join(this.siteDir, 'input', 'media', 'tags', 'defaults'); 
+            responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'tags', 'defaults', 'responsive');
+        } else if (this.id === 'defaults' && this.imageType === 'authorImages') {
+            dirPath = path.join(this.siteDir, 'input', 'media', 'authors', 'defaults'); 
+            responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'authors', 'defaults', 'responsive');
+        } else if (this.imageType === 'pluginImages') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'plugins', this.pluginDir); 
-        } else if (this.id === 'website') {
+        } else if (this.id === 'website' || this.imageType === 'optionImages') {
             dirPath = path.join(this.siteDir, 'input', 'media', 'website');
             responsiveDirPath = path.join(this.siteDir, 'input', 'media', 'website', 'responsive');
         } else if (this.imageType === 'tagImages' && this.id) {

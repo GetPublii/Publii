@@ -45,6 +45,9 @@ const AstCurrentSiteConfig = {
         metaRobotsIndex: 'index, follow',
         postMetaTitle: '%posttitle - %sitename ',
         postMetaDescription: '',
+        pageMetaTitle: '%pagetitle - %sitename ',
+        pageMetaDescription: '',
+        pageUseTextWithoutCustomExcerpt: false,
         postUseTextWithoutCustomExcerpt: false,
         tagMetaTitle: 'Tag: %tagname - %sitename',
         tagMetaDescription: '',
@@ -73,6 +76,8 @@ const AstCurrentSiteConfig = {
         featuredPostsListingOrder: 'DESC',
         hiddenPostsListingOrderBy: 'created_at',
         hiddenPostsListingOrder: 'DESC',
+        usePageAsFrontpage: false,
+        pageAsFrontpage: 0,
         feed: {
             title: 'displayName',
             titleValue: '',
@@ -88,8 +93,11 @@ const AstCurrentSiteConfig = {
         urls: {
             cleanUrls: false,
             addIndex: false,
+            postsPrefix: '',
             tagsPrefix: 'tags',
+            tagsPrefixAfterPostsPrefix: false,
             authorsPrefix: 'authors',
+            authorsPrefixAfterPostsPrefix: false,
             pageName: 'page',
             errorPage: '404.html',
             searchPage: 'search.html'
