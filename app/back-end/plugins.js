@@ -296,6 +296,11 @@ class Plugins {
     checkAndCleanImages (siteName, pluginName, newConfig) {
         let configString = JSON.stringify(newConfig);
         let pluginImagesPath = path.join(this.sitesDir, siteName, 'input', 'media', 'plugins', pluginName);
+        
+        if (!fs.existsSync(pluginImagesPath)) {
+            return;
+        }
+        
         let imagesInConfig = [];
         let imageRegex = /"([^"]+\.(svg|png|jpg|jpeg|gif|webp))"/gi;
         let match = null;
@@ -303,7 +308,7 @@ class Plugins {
         while (match = imageRegex.exec(configString)) {
             imagesInConfig.push(match[1]);
         }
-
+ 
         let files = fs.readdirSync(pluginImagesPath);
         
         for (let i = 0; i < files.length; i++) {
