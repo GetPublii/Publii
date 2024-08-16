@@ -594,9 +594,11 @@ class App {
             windowParams.y = 0;
         }
 
-        if(!(/^win/).test(process.platform)) {
+        if((/^darwin/).test(process.platform)) {
             windowParams.titleBarStyle = 'hidden';
-        } else {
+        }
+
+        if((/^win/).test(process.platform)) {
             windowParams.frame = false;
         }
 
