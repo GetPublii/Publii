@@ -28,6 +28,11 @@ class ImageHelper {
         let result = this.db.prepare('SELECT featured_image_id FROM posts WHERE id = @id').get({
             id: this.postID
         });
+
+        if (!result) {
+            return;
+        }
+
         let featuredImageId = parseInt(result.featured_image_id, 10);
 
         // Check if user removed image or image was empty
