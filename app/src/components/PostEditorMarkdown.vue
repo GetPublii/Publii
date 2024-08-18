@@ -18,7 +18,7 @@
                         ref="post-title"
                         class="post-editor-form-title"
                         contenteditable="true"
-                        :data-translation="$t('post.addPostTitle')"
+                        :data-translation="itemType === 'post' ? $t('post.addPostTitle') : $t('page.addPageTitle')"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
                         @paste.prevent="pasteTitle"
                         @keydown="detectEnterInTitle"
@@ -317,6 +317,8 @@ export default {
             if (this.itemType === 'post') {
                 this.$store.commit('refreshAfterPostUpdate', updatedData);
             } else {
+                this.postID = updatedData.pageID;
+                this.$bus.$emit('page-data-updated', updatedData.pageID);
                 this.$store.commit('refreshAfterPageUpdate', updatedData);
             }
 

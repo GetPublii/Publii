@@ -8,7 +8,7 @@
       @paste.prevent="pasteTitle"
       @keydown="detectEnterInTitle"
       @input="updateTitle"
-      :data-translation="$t('post.addPostTitle')"></div>
+      :data-translation="itemType === 'post' ? $t('post.addPostTitle') : $t('page.addPageTitle')"></div>
 
     <block-editor
         ref="block-editor" />
@@ -34,6 +34,9 @@ import BlockEditor from './components/BlockEditor.vue';
 
 export default {
   name: 'publii-block-editor',
+  props: [
+    'itemType'
+  ],
   components: {
     BlockEditor
   },
