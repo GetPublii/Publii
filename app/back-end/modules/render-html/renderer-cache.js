@@ -407,14 +407,14 @@ class RendererCache {
                     flatPagesStructure[page.id] = [];
                 }
 
-                page.subpages.forEach(subpage => {
+                page.subpages.filter(subpage => !!subpage).forEach(subpage => {
                     flatPagesStructure[page.id].push(subpage.id);
                     pagesStack.push(subpage);
                 });
             }
 
             let hierarchyTraverse = (node, path = []) => {
-                node.subpages.forEach(subpage => hierarchyTraverse(subpage, [node.id, ...path]));
+                node.subpages.filter(subpage => !!subpage).forEach(subpage => hierarchyTraverse(subpage, [node.id, ...path]));
                 hierarchyStructure[node.id] = path.reverse();
             };
 

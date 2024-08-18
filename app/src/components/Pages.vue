@@ -990,7 +990,7 @@ export default {
                 return;
             }
 
-            subpages.forEach((page) => {
+            subpages.filter(subpage => !!subpage).forEach((page) => {
                 let currentSubpage = {
                     id: page.id,
                     depth: depth,
