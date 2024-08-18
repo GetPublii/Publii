@@ -568,6 +568,8 @@ export default {
     },
     async mounted () {
         this.appTheme = await this.$root.getCurrentAppTheme();
+        this.orderBy = this.$store.state.ordering.pages.orderBy;
+        this.order = this.$store.state.ordering.pages.order;
         this.$bus.$on('site-loaded', this.whenSiteLoaded);
 
         this.$bus.$on('pages-filter-value-changed', (newValue) => {
@@ -619,6 +621,7 @@ export default {
             }
 
             this.pagesHierarchy = JSON.parse(JSON.stringify(data));
+            this.checkHierarchyIntegrity();
         });
 
         this.checkPagesSupport();
@@ -1103,6 +1106,35 @@ export default {
         },
         checkWhatsChanged () {
             mainProcessAPI.shellOpenExternal('https://getpublii.com/dev/how-to-add-pages-support-to-your-theme/');
+        },
+        checkHierarchyIntegrity () {
+            let flatStructure = this.hierarchyFlatten();
+            let itemsMap = new Map(this.items.map(item => [item.id, item]));
+            let usedItems = [];
+
+            flatStructure.forEach(flatItem => {
+                let item = itemsMap.get(flatItem.id);
+
+                if (!item) {
+                    return;
+                }
+
+                usedItems.push(flatItem.id);
+            });
+
+            // find items that are not in hierarchy
+            this.items.forEach(item => {
+                if (usedItems.indexOf(item.id) === -1) {
+                    this.pagesHierarchy.push({ 
+                        id: item.id, 
+                        subpages: []
+                    });
+
+                    console.log('Add missing item to hierarchy', item.id);
+                }
+            });
+
+            this.hierarchySave();
         }
     },
     beforeDestroy () {

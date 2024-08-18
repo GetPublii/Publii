@@ -10,7 +10,8 @@
                 'sidebar-open': sidebarVisible
             }">
                 <div>
-                    <publii-block-editor />
+                    <publii-block-editor 
+                        :itemType="itemType" />
                 </div>
             </div>
 
@@ -300,6 +301,8 @@ export default {
             if (this.itemType === 'post') {
                 this.$store.commit('refreshAfterPostUpdate', updatedData);
             } else {
+                this.postID = updatedData.pageID;
+                this.$bus.$emit('page-data-updated', updatedData.pageID);
                 this.$store.commit('refreshAfterPageUpdate', updatedData);
             }
 

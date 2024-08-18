@@ -16,6 +16,7 @@ const AstAppConfig = {
     showPostSlugs: false,
     showPostTags: true,
     postsOrdering: 'id DESC',
+    pagesOrdering: ' DESC',
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
     appTheme: 'system',

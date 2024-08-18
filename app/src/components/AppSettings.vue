@@ -243,6 +243,16 @@
                 </field>
 
                 <field
+                    id="pages-ordering"
+                    :label="$t('settings.defaultPagesOrdering')">
+                    <dropdown
+                        slot="field"
+                        id="pages-ordering"
+                        :items="orderingPageItems"
+                        v-model="pagesOrdering"></dropdown>
+                </field>
+
+                <field
                     id="tags-ordering"
                     :label="$t('settings.defaultTagsOrdering')">
                     <dropdown
@@ -405,6 +415,7 @@ export default {
             showPostSlugs: false,
             showPostTags: true,
             postsOrdering: 'id DESC',
+            pagesOrdering: ' DESC',
             tagsOrdering: 'id DESC',
             authorsOrdering: 'id DESC',
             originalSitesLocation: '',
@@ -457,6 +468,21 @@ export default {
         },
         orderingPostItems () {
             return {
+                'id DESC': this.$t('settings.ordering.idDESC'),
+                'id ASC': this.$t('settings.ordering.idASC'),
+                'title DESC': this.$t('settings.ordering.titleDESC'),
+                'title ASC': this.$t('settings.ordering.titleASC'),
+                'created DESC': this.$t('settings.ordering.createdDESC'),
+                'created ASC': this.$t('settings.ordering.createdASC'),
+                'modified DESC': this.$t('settings.ordering.modifiedDESC'),
+                'modified ASC': this.$t('settings.ordering.modifiedASC'),
+                'author DESC': this.$t('settings.ordering.authorDESC'),
+                'author ASC': this.$t('settings.ordering.authorASC')
+            };
+        },
+        orderingPageItems () {
+            return {
+                ' DESC': this.$t('settings.ordering.hierarchical'),
                 'id DESC': this.$t('settings.ordering.idDESC'),
                 'id ASC': this.$t('settings.ordering.idASC'),
                 'title DESC': this.$t('settings.ordering.titleDESC'),
@@ -542,6 +568,7 @@ export default {
         this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
         this.showPostTags = this.$store.state.app.config.showPostTags;
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
+        this.pagesOrdering = this.$store.state.app.config.pagesOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
@@ -610,6 +637,7 @@ export default {
                 showPostTags: this.showPostTags,
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
+                pagesOrdering: this.pagesOrdering,
                 tagsOrdering: this.tagsOrdering,
                 authorsOrdering: this.authorsOrdering,
                 enableAdvancedPreview: this.enableAdvancedPreview,
