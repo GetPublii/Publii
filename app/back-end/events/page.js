@@ -94,8 +94,18 @@ class PageEvents {
         // Save pages hierarchy
         ipcMain.on('app-pages-hierarchy-save', (event, pagesData) => {
             let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
+            pagesData.hierarchy = this.removeNullDataFromHierarchy(pagesData.hierarchy);
             fs.writeFileSync(pagesFile, JSON.stringify(pagesData.hierarchy, null, 4), { encoding: 'utf8' });
         });
+    }
+
+    removeNullDataFromHierarchy (data) {
+        return data
+            .filter(item => item !== null)
+            .map(item => ({
+                ...item,
+                subpages: item.subpages ? this.removeNullDataFromHierarchy(item.subpages) : []
+            }));
     }
 }
 
