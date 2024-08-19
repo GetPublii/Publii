@@ -261,10 +261,8 @@ class ItemHelper {
         mediaPath = mediaPath.replace(/\\/g, '/');
         mediaPath += '/input/media/';
         
-        if (itemType === 'post') {
+        if (itemType === 'post' || itemType === 'page') {
             mediaPath += 'posts/';
-        } else if (itemType === 'page') {
-            mediaPath += 'pages/';
         }
 
         mediaPath += itemID === 0 ? 'temp' : itemID;

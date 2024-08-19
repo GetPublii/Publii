@@ -16,14 +16,8 @@ class EditorBridge {
 
     updateItemID (newItemID) {
         this.itemID = newItemID;
-
-        if (this.itemType === 'post') {
-            let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
-            this.tinymceEditor.setContent(contentToUpdate);
-        } else {
-            let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/pages\/temp/gmi, 'media/pages/' + this.itemID + '/');
-            this.tinymceEditor.setContent(contentToUpdate);
-        }
+        let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
+        this.tinymceEditor.setContent(contentToUpdate);
     }
 
     init() {
