@@ -354,7 +354,7 @@ class Author extends Model {
         let themesHelper = new Themes(this.application, { site: this.site });
         let themeConfigPath = path.join(this.application.sitesDir, this.site, 'input', 'config', 'theme.config.json');
 
-        if (fs.fileExists(themeConfigPath)) {
+        if (fs.existsSync(themeConfigPath)) {
             let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
             themesHelper.checkAndCleanImages(themeConfigString);
         }
