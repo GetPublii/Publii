@@ -301,28 +301,30 @@ class Deployment {
         // Detect files to remove
         let filesToRemove = [];
 
-        for (let remoteFile of remoteFiles) {
-            let fileFounded = false;
+        if (remoteFiles) {
+            for (let remoteFile of remoteFiles) {
+                let fileFounded = false;
 
-            for (let localFile of localFiles) {
-                if (localFile.path === remoteFile.path) {
-                    fileFounded = true;
-                    break;
-                }
-            }
-
-            if (!fileFounded) {
-                if (
-                    (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
-                    remoteFile.type === 'directory'
-                ) {
-                    continue;
+                for (let localFile of localFiles) {
+                    if (localFile.path === remoteFile.path) {
+                        fileFounded = true;
+                        break;
+                    }
                 }
 
-                filesToRemove.push({
-                    path: remoteFile.path,
-                    type: remoteFile.type
-                });
+                if (!fileFounded) {
+                    if (
+                        (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
+                        remoteFile.type === 'directory'
+                    ) {
+                        continue;
+                    }
+
+                    filesToRemove.push({
+                        path: remoteFile.path,
+                        type: remoteFile.type
+                    });
+                }
             }
         }
 
@@ -332,13 +334,15 @@ class Deployment {
         for (let localFile of localFiles) {
             let fileShouldBeUploaded = true;
 
-            for (let remoteFile of remoteFiles) {
-                if(
-                    localFile.path === remoteFile.path &&
-                    localFile.md5 === remoteFile.md5
-                ) {
-                    fileShouldBeUploaded = false;
-                    break;
+            if (remoteFiles) {
+                for (let remoteFile of remoteFiles) {
+                    if(
+                        localFile.path === remoteFile.path &&
+                        localFile.md5 === remoteFile.md5
+                    ) {
+                        fileShouldBeUploaded = false;
+                        break;
+                    }
                 }
             }
 
