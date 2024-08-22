@@ -2369,7 +2369,9 @@ export default {
             return sitemapLink;
         },
         postPages () {
-            return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
+            let posts = this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
+            let pages = this.$store.state.currentSite.pages.filter(page => page.status.indexOf('published') > -1).map(page => page.id)
+            return posts.concat(pages);
         },
         dropdownItems () {
             return [
@@ -2884,7 +2886,8 @@ export default {
             }
         },
         customPostLabels (value) {
-            return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
+            let postsAndPages = this.$store.state.currentSite.posts.concat(this.$store.state.currentSite.pages);
+            return postsAndPages.filter(item => item.id === value).map(item => item.title)[0];
         },
         closeDropdown (refID) {
             this.$refs[refID].isOpen = false;

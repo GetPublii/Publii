@@ -173,6 +173,10 @@ class Gdpr {
         let result = renderer.cachedItems.posts[configuration.privacyPolicyPostId];
 
         if (!result) {
+            result = renderer.cachedItems.pages[configuration.privacyPolicyPostId];
+        }
+
+        if (!result) {
             return '#not-found';
         }
 
