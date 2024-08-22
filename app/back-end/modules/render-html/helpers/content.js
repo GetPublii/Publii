@@ -555,6 +555,11 @@ class ContentHelper {
         if (type === 'frontpage') {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
+
+            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+                link = link + '/index.html';
+            }
+
             text = text.split(url).join(link);
 
             return text;
@@ -567,6 +572,10 @@ class ContentHelper {
 
             if (renderer.siteConfig.advanced.usePageAsFrontpage && renderer.siteConfig.advanced.urls.postsPrefix) {
                 link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/';
+            }
+
+            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+                link = link + 'index.html';
             }
 
             text = text.split(url).join(link);
