@@ -95,7 +95,7 @@ class PreviewEvents {
                     event.sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
-                            desc: stripTags(errorDesc)
+                            desc: stripTags((errorDesc).toString())
                         }]
                     });
                 }

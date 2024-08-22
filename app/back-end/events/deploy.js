@@ -139,7 +139,7 @@ class DeployEvents {
                     event.sender.send('app-deploy-render-error', {
                         message: [{
                             message: errorTitle,
-                            desc: stripTags(errorDesc)
+                            desc: stripTags((errorDesc).toString())
                         }]
                     });
                 }
