@@ -215,7 +215,7 @@ export default {
     },
     computed: {
         linkTypes () {
-            return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'file' ];
+            return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'blogpage', 'file' ];
         },
         tagPages () {
             return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1).map(tag => tag.id);
@@ -262,6 +262,7 @@ export default {
                 case 'tags': return this.$t('tag.tagsListLink');
                 case 'author': return this.$t('author.authorLink');
                 case 'frontpage': return this.$t('ui.frontpageLink');
+                case 'blogpage': return this.$t('ui.blogIndexLink');
                 case 'external': return this.$t('ui.customLink');
                 case 'file': return this.$t('file.fileFromFileManager');
             }
@@ -392,6 +393,8 @@ export default {
                     this.author = parseInt(id, 10);
                 } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
                     this.type = 'frontpage';
+                } else if (urlContent[1].indexOf('/blogpage/') !== -1) {
+                    this.type = 'blogpage';
                 } else if (urlContent[1].indexOf('/file/') !== -1) {
                     this.type = 'file';
                     this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
@@ -414,11 +417,13 @@ export default {
             if (this.type !== 'external') {
                 if (this.type === 'tags') {
                     response.url = '#INTERNAL_LINK#/tags/1';
-                } else if (this.type !== 'frontpage') {
-                    response.url = '#INTERNAL_LINK#/' + this.type + '/' + this[this.type];
-                } else {
+                } else if (this.type === 'frontpage') {
                     response.url = '#INTERNAL_LINK#/frontpage/1';
-                }
+                } else if (this.type === 'blogpage') {
+                    response.url = '#INTERNAL_LINK#/blogpage/1';
+                } else {
+                    response.url = '#INTERNAL_LINK#/' + this.type + '/' + this[this.type];
+                } 
             } else {
                 response.url = this.external;
             }

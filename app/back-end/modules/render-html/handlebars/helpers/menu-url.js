@@ -129,6 +129,23 @@ function menuURLHelper(rendererInstance, Handlebars) {
             }
         }
 
+        // Link to the blogpage - just the page domain name or page with posts prefix
+        if (this.type === 'blogpage') {
+            output = baseUrl + '/';
+
+            if (rendererInstance.siteConfig.advanced.usePageAsFrontpage && rendererInstance.siteConfig.advanced.urls.postsPrefix) {
+                output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/';
+            }
+
+            // In the preview mode we have to load URLs with
+            // index.html as filesystem on OS doesn't behave
+            // as the server environment and not redirect to
+            // a proper URL
+            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                output += 'index.html';
+            }
+        }
+
         // Link to the tags list - just the page domain name with tags prefix
         if (this.type === 'tags') {
             output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/';

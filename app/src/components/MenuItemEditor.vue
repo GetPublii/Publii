@@ -227,6 +227,7 @@ export default {
                 'tags',
                 'author',
                 'frontpage',
+                'blogpage',
                 'internal',
                 'external',
                 'separator'
@@ -293,6 +294,7 @@ export default {
                 case 'tags': return this.$t('tag.tagsListLink');
                 case 'author': return this.$t('author.authorLink');
                 case 'frontpage': return this.$t('ui.frontpageLink');
+                case 'blogpage': return this.$t('ui.blogIndexLink');
                 case 'internal': return this.$t('menu.internalLink');
                 case 'external': return this.$t('menu.externalLink');
                 case 'separator': return this.$t('menu.textSeparator');
@@ -463,6 +465,7 @@ export default {
                 case 'tags':      return 'empty';
                 case 'author':    return this.authorPage;
                 case 'frontpage': return 'empty';
+                case 'blogpage':  return 'empty';
                 case 'internal':  return this.internalLink;
                 case 'external':  return this.externalLink;
                 case 'separator': return '';

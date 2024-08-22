@@ -516,6 +516,7 @@ class ContentHelper {
         text = ContentHelper.prepareInternalLinks(text, renderer, 'tags');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'blogpage');
         text = ContentHelper.prepareInternalLinks(text, renderer, 'file');
 
         return text;
@@ -554,6 +555,20 @@ class ContentHelper {
         if (type === 'frontpage') {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
+            text = text.split(url).join(link);
+
+            return text;
+        }
+
+        // Get proper URLs for blog page
+        if (type === 'blogpage') {
+            let url = '#INTERNAL_LINK#/blogpage/1';
+            let link = renderer.siteConfig.domain;
+
+            if (renderer.siteConfig.advanced.usePageAsFrontpage && renderer.siteConfig.advanced.urls.postsPrefix) {
+                link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/';
+            }
+
             text = text.split(url).join(link);
 
             return text;
