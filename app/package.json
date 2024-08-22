@@ -82,7 +82,7 @@
     "vuex": "3.1.1"
   },
   "devDependencies": {
-    "electron": "31.3.1",
+    "electron": "31.4.0",
     "node-abi": "3.65.0"
   }
 }
