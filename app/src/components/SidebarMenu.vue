@@ -10,11 +10,6 @@
                     size="s"
                     :name="item.icon" />
                 {{ item.label }}
-                <icon
-                    v-if="item.icon === 'server' && $store && $store.state.currentSite && $store.state.currentSite.config && ($store.state.currentSite.config.deployment.protocol === 'github-pages' || $store.state.currentSite.config.deployment.protocol === 'gitlab-pages')"
-                    size="m"
-                    name="warning"
-                    class="old-git-warning" />
             </router-link>
         </li>
     </ul>
