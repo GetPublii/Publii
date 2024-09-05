@@ -210,8 +210,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
 
     const i18n = new VueI18n({
         locale: initialData.currentLanguage.name,
+        fallbackLocale: 'en',
         messages: {
-            [initialData.currentLanguage.name]: initialData.currentLanguage.translations
+            [initialData.currentLanguage.name]: initialData.currentLanguage.translations,
+            'en': initialData.defaultLanguage.translations
         }
     });
 
