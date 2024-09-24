@@ -808,6 +808,7 @@
         "hideCustomExcerptsOnPostPagesInfo": "Jeśli ta opcja jest włączona strony wpisów nie będą pokazywać tekstu umieszczonego nad elementem \"Czytaj więcej\" w edytorze wpisu.",
         "hideCustomExcerptsOnPagePages": "Ukryj własne zajawki na stronach",
         "hideCustomExcerptsOnPagePagesInfo": "Jeśli ta opcja jest włączona strony nie będą pokazywać tekstu umieszczonego nad elementem \"Czytaj więcej\" w edytorze strony.",
+        "homepage": "Strona główna",
         "homepageNoIndexPagination": "Jeśli ta opcja jest włączona, pliki paginacji strony głównej zostaną wykluczone z mapy witryny i otrzymają <strong>noindex, follow</strong> metatag robotów.",
         "homepagePagination": "Paginacja strony głównej",
         "howToPrepareYourThemeForGDPRInfo": "Włączenie tej opcji spowoduje wyświetlenie banera plików cookie w Twojej witrynie. Aby uzyskać więcej informacji na temat prawidłowej konfiguracji banera zapoznaj się z następującym artykułem <a href=\"https://getpublii.com/docs/gdpr-cookie-banner-configuration.html\" target=\"_blank\" rel=\"noopener noreferrer\">GDPR Cookie Banner Configuration</a> ",

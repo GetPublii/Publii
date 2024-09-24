@@ -61,6 +61,15 @@ class RendererContextHome extends RendererContext {
         this.metaTitle = this.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteName);
         this.metaDescription = this.siteConfig.advanced.metaDescription.replace(/%sitename/g, siteName);
 
+        if (
+            !this.siteConfig.advanced.usePageAsFrontpage && 
+            this.siteConfig.advanced.urls.postsPrefix &&
+            this.renderer.menuContext.indexOf('frontpage') > -1
+        ) {
+            this.metaTitle = this.siteConfig.advanced.homepageMetaTitle.replace(/%sitename/g, siteName);
+            this.metaDescription = this.siteConfig.advanced.homepageMetaDescription.replace(/%sitename/g, siteName);
+        }
+
         this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
         this.mainTags = this.renderer.commonData.mainTags.filter(maintag => maintag.additionalData.isHidden !== true);
         this.menus = this.renderer.commonData.menus;

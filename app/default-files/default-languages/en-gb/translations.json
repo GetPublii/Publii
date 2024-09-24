@@ -808,6 +808,7 @@
         "hideCustomExcerptsOnPostPagesInfo": "When enabled, your post pages won't display text which is placed above the \"Read more\" element in the post editor.",
         "hideCustomExcerptsOnPagePages": "Hide custom excerpts on pages",
         "hideCustomExcerptsOnPagePagesInfo": "When enabled, your pages won't display text which is placed above the \"Read more\" element in the editor.",
+        "homepage": "Homepage",
         "homepageNoIndexPagination": "When enabled, your homepage pagination files will be excluded from the sitemap and will have the <strong>noindex, follow</strong> robots metatags added.",
         "homepagePagination": "Homepage pagination",
         "howToPrepareYourThemeForGDPRInfo": "Enabling this option will display a cookie banner on your website. Please read the <a href=\"https://getpublii.com/docs/gdpr-cookie-banner-configuration.html\" target=\"_blank\" rel=\"noopener noreferrer\">GDPR Cookie Banner Configuration</a> article for more information on how to configure the banner correctly. ",

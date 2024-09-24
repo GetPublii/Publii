@@ -42,8 +42,23 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             siteName = rendererInstance.siteConfig.advanced.metaTitle.replace(/%sitename/g, siteNameValue);
         }
 
-        // Get tag values according to the current context - listing or single post page
+        if (
+            !rendererInstance.siteConfig.advanced.usePageAsFrontpage && 
+            rendererInstance.siteConfig.advanced.urls.postsPrefix !== '' &&
+            contextData.data.context.indexOf('index') > -1 && 
+            rendererInstance.siteConfig.advanced.homepageMetaTitle
+        ) {
+            let siteNameValue = rendererInstance.siteConfig.name;
+
+            if (rendererInstance.siteConfig.displayName) {
+                siteNameValue = rendererInstance.siteConfig.displayName;
+            }
+
+            siteName = rendererInstance.siteConfig.advanced.homepageMetaTitle.replace(/%sitename/g, siteNameValue);
+        } 
+        
         if(contextData.data.context.indexOf('post') === -1 && contextData.data.context.indexOf('page') === -1) {
+            // Get tag values according to the current context - listing or single post page
             // Data for the index/tag listing page
             image = contextData.data.website.logo;
             title = siteName;
