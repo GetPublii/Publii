@@ -224,7 +224,50 @@
                         </field>
 
                         <separator
-                            v-if="advanced.usePageAsFrontpage && advanced.urls.postsPrefix"
+                            v-if="!advanced.noIndexThisPage && !advanced.usePageAsFrontpage && advanced.urls.postsPrefix"
+                            type="medium"
+                            :label="$t('settings.homepage')" />
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.postsPrefix && !advanced.usePageAsFrontpage"
+                            id="meta-title"
+                            :label="$t('settings.pageTitle')">
+                            <text-input
+                                id="meta-title"
+                                v-model="advanced.homepageMetaTitle"
+                                slot="field"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :charCounter="true"
+                                :preferredCount="70" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.postsPrefix && !advanced.usePageAsFrontpage"
+                            id="meta-description"
+                            :label="$t('settings.metaDescription')">
+                            <text-area
+                                id="meta-description"
+                                v-model="advanced.homepageMetaDescription"
+                                slot="field"
+                                :charCounter="true"
+                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                :preferredCount="160" />
+                        </field>
+
+                        <field
+                            v-if="!advanced.noIndexThisPage && advanced.urls.postsPrefix && !advanced.usePageAsFrontpage"
+                            id="meta-robots-index"
+                            :label="$t('settings.metaRobots')">
+                            <dropdown
+                                id="meta-robots-index"
+                                slot="field"
+                                :items="seoOptions"
+                                v-model="advanced.homepageMetaRobotsIndex">
+                            </dropdown>
+                        </field>
+
+                        <separator
+                            v-if="!advanced.noIndexThisPage && advanced.urls.postsPrefix"
                             type="medium"
                             :label="$t('settings.postsIndex')" />
 

@@ -694,7 +694,7 @@ class RendererContext {
             blogBaseUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix;
         }
 
-        if (context === 'index' || context === '404' || context === 'search') {
+        if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
                 return blogBaseUrl + '/';
             } else {
