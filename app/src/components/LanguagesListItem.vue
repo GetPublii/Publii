@@ -200,10 +200,12 @@ export default {
     }
 
     &-delete {
+        align-items: center;
         background: var(--bg-primary);
         border-radius: 50%;
         height: 3rem;
-        display: inline-block;
+        display: inline-flex;
+        justify-content: center;
         position: absolute;
         right: 1.4rem;
         text-align: center;
@@ -213,7 +215,6 @@ export default {
              fill: var(--icon-secondary-color);
              transform: scale(.9);
              transition: var(--transition);
-             vertical-align: middle;
         }
 
         &:hover {

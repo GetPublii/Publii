@@ -549,12 +549,14 @@ li {
 
         .menu-item-remove,
         .menu-item-duplicate {
+            align-items: center;
             background: var(--bg-primary);
             position: relative;
             border-radius: 50%;
             cursor: pointer;
-            display: inline-block;
+            display: inline-flex;
             height: 3rem;
+            justify-content: center;
             padding: 0;
             position: absolute;
             right: 1.5rem;
@@ -583,7 +585,6 @@ li {
                 pointer-events: none;
                 transform: scale(.9);
                 transition: var(--transition);
-                vertical-align: middle;
                 width: 1.6rem;
             }
         }
