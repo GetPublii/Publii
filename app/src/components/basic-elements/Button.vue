@@ -105,11 +105,11 @@ export default {
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-family: var(--font-base);
     font-weight: var(--font-weight-semibold);  
-    height: 4.6rem;
-    line-height: 4.5rem;
+    height: 4.4rem;
+    line-height: 4.3rem;
     padding: 0 1.3rem;
     position: relative;
     transition: var(--transition);
@@ -260,7 +260,7 @@ export default {
         box-shadow: none;
         color: var(--link-primary-color);
         font: {
-           size: 1.4rem;
+           size: 1.3rem;
            weight: 400;
         }
 
@@ -279,7 +279,7 @@ export default {
         box-shadow: none;
         color: var(--link-primary-color-hover);
         font: {
-            size: 1.4rem;
+            size: 1.3rem;
             weight: 400;
         }
 
@@ -303,7 +303,7 @@ export default {
         background: var(--button-tertiary-bg);
         border-radius: 0 0 3px 3px;
         display: block;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         height: 5.6rem;
         line-height: 5.6rem;
         padding: 0 2rem;
@@ -346,7 +346,7 @@ export default {
     }
 
     &-medium {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: var(--font-weight-semibold);
         height: 5.6rem;
         line-height: 5.5rem;
@@ -354,7 +354,7 @@ export default {
     }
 
     &-small {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: var(--font-weight-normal);
         height: 3.8rem;
         line-height: 3.8rem;

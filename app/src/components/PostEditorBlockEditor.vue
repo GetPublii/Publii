@@ -403,8 +403,8 @@ export default {
     align-items: center;
     bottom: .4rem;
     display: flex;
-    height: 4.6rem;
-    line-height: 4.5rem;
+    height: 4.4rem;
+    line-height: 4.3rem;
     position: absolute;
     right: 1.8rem;
     z-index: 99991;
