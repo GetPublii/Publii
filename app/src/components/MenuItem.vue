@@ -500,6 +500,7 @@ li {
     &.is-draft {
         .menu-item-label {
             color: var(--gray-4);
+            font-size: 1.4rem;
             font-style: italic;
 
             svg {
@@ -542,6 +543,7 @@ li {
 
         .menu-item-label {
             color: var(--text-primary-color);
+            font-size: 1.4rem;
             margin-right: 2rem;
         }
 
@@ -608,7 +610,7 @@ li {
         .menu-item-unselect {
             color: var(--link-primary-color);
             display: inline-block;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             padding: .25rem .5rem;
 
             &:active,
@@ -620,7 +622,7 @@ li {
 
         .menu-item-insert-actions {
             color: var(--text-light-color);
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             padding: 1rem .5rem;
         }
 

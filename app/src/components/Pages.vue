@@ -1228,7 +1228,7 @@ export default {
     }
 
     .col.titles {
-        padding-left: calc(2rem + (2.4rem * var(--item-depth)));
+        padding-left: calc(1.8rem + (2.4rem * var(--item-depth)));
         position: relative;
     }
 

@@ -828,7 +828,7 @@ export default {
             background: var(--highlighted);
             border-radius: .2em;
             color: var(--text-primary-color);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 3rem;
             padding: 1rem 2rem;
             text-align: left;

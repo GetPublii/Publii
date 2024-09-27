@@ -200,7 +200,7 @@ export default {
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
              border-radius: 6px;
              color: var(--text-primary-color);
-             font-size: 1.5rem;
+             font-size: 1.4rem;
              display: flex;
              justify-content: center;
              line-height: 1.4;

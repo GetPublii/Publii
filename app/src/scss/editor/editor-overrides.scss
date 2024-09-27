@@ -433,7 +433,7 @@ body {
                         flex: 0 1 100%;
 
                         font: {
-                            size: 1.5rem;
+                            size: 1.4rem;
                             family: var(--font-base);
                             weight: 500;
                         }
@@ -515,13 +515,13 @@ body {
         .tox-label,
         .tox-toolbar-label {
             color: var(--label-color);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: var(--font-weight-semibold);
             line-height: 2.6;
         }
 
         .tox-checkbox__label {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
         .tox-selectfield select,

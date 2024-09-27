@@ -212,7 +212,7 @@ export default {
             color: var(--button-secondary-color);
             cursor: pointer;
             font-weight: var(--font-weight-semibold);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             padding: .6rem;
             text-align: center;
             width: 12rem;

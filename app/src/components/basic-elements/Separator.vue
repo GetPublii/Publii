@@ -115,7 +115,7 @@ export default {
         & > label {
             color: var(--headings-color);
             display: block;
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 600;
             padding: 3.5rem 0 0;
 

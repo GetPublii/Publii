@@ -1114,6 +1114,7 @@ export default {
 
             .post-action {
                label {
+                  font-size: 1.4rem;
                   font-weight: var(--font-weight-normal);
                   line-height: 1.8;
                }

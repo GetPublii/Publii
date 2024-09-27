@@ -232,7 +232,7 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .tabs > .content {
@@ -248,7 +248,7 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .tabs > .content {

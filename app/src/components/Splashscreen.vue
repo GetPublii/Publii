@@ -101,7 +101,7 @@ export default {
 
 .version {
     color: var(--gray-4);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 400;
 }
 
