@@ -1000,7 +1000,7 @@ export default {
         &:before {
             background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
             content: "";
-            height: 10rem;
+            height: 8rem;
             position: fixed;
             top: var(--topbar-height);
             right: 0;
@@ -1156,7 +1156,7 @@ export default {
             transition: max-height .25s ease-out;
 
             &-content {
-                padding: 0 0 3.6rem;
+                padding: 0 0 1rem;
 
                 .image-uploader {
                     margin-top: 0;
