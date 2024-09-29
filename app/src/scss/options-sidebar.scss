@@ -150,7 +150,7 @@
         width: 100%;
 
         &:hover {
-            color: var(--button-secondary-color);
+            color: var(--link-primary-color);
 
             .options-sidebar {             
                 &-icon {
@@ -165,7 +165,7 @@
 
             .options-sidebar {
                 &-label {
-                    color: var(--button-secondary-color);
+                    color: var(--link-primary-color);
                     left: -3.6rem;
                 }
 
