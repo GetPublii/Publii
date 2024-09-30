@@ -33,6 +33,7 @@
     }
 
     &-info {
+        background-color: rgba(var(--color-primary-rgb), .065);
         border-color: var(--color-primary);
 
         svg {
@@ -41,6 +42,7 @@
     }
 
     &-alert {
+        background-color: rgba(var(--warning-rgb), .065);
         border-color: var(--warning);
 
         svg {
