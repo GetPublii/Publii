@@ -91,12 +91,14 @@
                         :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
-                <collection-cell>
-                    <a
-                        :href="item.url"
-                        @click.prevent.stop="showFileInFolder(item.url)">
-                        {{ item.name }}
-                    </a>
+                <collection-cell type="titles">
+                    <h2 class="title">
+                        <a
+                            :href="item.url"
+                            @click.prevent.stop="showFileInFolder(item.url)">
+                            {{ item.name }}
+                        </a>
+                    </h2>
                 </collection-cell>
 
                 <collection-cell>
