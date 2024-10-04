@@ -556,7 +556,7 @@ h1 {
     .field {
         .switcher {
             float: left;
-            top: -4px;
+            top: -3px;
         }
     }
 }
