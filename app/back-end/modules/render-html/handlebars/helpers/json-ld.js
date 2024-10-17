@@ -78,8 +78,8 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                 "@id": itemData.url,
             };
             jsonLDObject['headline'] = itemData.title;
-            jsonLDObject['datePublished'] = moment(itemData.createdAt).format('YYYY-MM-DDTHH:mm');
-            jsonLDObject['dateModified'] = moment(itemData.modifiedAt).format('YYYY-MM-DDTHH:mm');
+            jsonLDObject['datePublished'] = moment(itemData.createdAt).format('YYYY-MM-DDTHH:mmZ');
+            jsonLDObject['dateModified'] = moment(itemData.modifiedAt).format('YYYY-MM-DDTHH:mmZ');
 
             if (itemData.featuredImage.url || context.data.website.logo) {
                 let imageUrl = '';
