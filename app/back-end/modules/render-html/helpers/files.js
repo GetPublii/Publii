@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const list = require('ls-all');
 const path = require('path');
-const deleteEmpty = require('./deleteEmpty.js');
+const { deleteEmpty } = require('./deleteEmpty.js');
 const UtilsHelper = require('./../../../helpers/utils');
 const normalizePath = require('normalize-path');
 const DiffCopy = require('./diffCopy.js');
