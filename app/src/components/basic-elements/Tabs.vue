@@ -10,9 +10,18 @@
                 <li
                     v-for="(item, index) in items"
                     :key="'tab-item-' + index"
-                    :class="{ 'active': item === activeItem}"
-                    @click="toggle(item)">
-                    {{ item }}
+                    :class="{ 
+                        'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
+                        'active-parent': item === activeParentItem,
+                        'subtab': Array.isArray(item)
+                    }"
+                    @click="toggle(item, index)">
+                    <template v-if="Array.isArray(item)">
+                        {{ item[0] }}
+                    </template>
+                    <template v-else>
+                        {{ item }}
+                    </template>
                 </li>
             </ul>
         </div>
@@ -21,7 +30,10 @@
             <div
                 v-for="(item, index) in items"
                 :key="'tab-item-content-' + index"
-                :class="{ 'tab': true, 'active': item === activeItem}">
+                :class="{ 
+                    'tab': true, 
+                    'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
+                }">
                 <slot :name="'tab-' + index"></slot>
             </div>
         </div>
@@ -52,6 +64,7 @@ export default {
     data () {
         return {
             activeItem: false,
+            activeParentItem: false,
             activeIndex: 0
         }
     },
@@ -80,21 +93,22 @@ export default {
                 }
             }
         },
-        toggle (newActiveItem, scrollTo = false) {
-            this.activeItem = newActiveItem;
-            this.activeIndex = this.items.indexOf(newActiveItem);
+        toggle (newActiveItem, newIndex) {
+            if (Array.isArray(newActiveItem)) {
+                this.activeItem = newActiveItem[0];
+                this.activeParentItem = newActiveItem[1];
+            } else {
+                this.activeItem = newActiveItem;
+                this.activeParentItem = false;
+            }
+
+            this.activeIndex = newIndex;
 
             if (this.id) {
                 window.sessionStorage.setItem(this.id, newActiveItem);
             }
 
             this.onToggle();
-
-            setTimeout(() => {
-                if (scrollTo !== false) {
-                    document.querySelector('#' + scrollTo).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-                }
-            }, 0);
         }
     }
 }
@@ -186,6 +200,10 @@ export default {
                     transition: all .125s ease-out;
                 }
 
+                &.subtab {
+                    margin-left: 2rem;
+                }
+
                 &:hover {
                     color: var(--tab-color-hover);
                 }
@@ -216,7 +234,6 @@ export default {
 
             .separator:first-child {
                 padding-top: 0 !important;
-                
             }
         }
     }

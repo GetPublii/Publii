@@ -105,7 +105,7 @@
                     id="custom-settings-tabs"
                     :items="customSettingsTabs">
                     <div
-                        v-for="(groupName, index) of customSettingsTabs"
+                        v-for="(groupName, index) of customSettingsTabsNames"
                         :slot="'tab-' + index"
                         :key="'tab-' + index">
                         <div v-if="groupName !== $t('theme.postOptions') && groupName !== $t('theme.translations')">
@@ -645,8 +645,15 @@ export default {
             let tabs = [];
 
             this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
-                if (tabs.indexOf(item.group) === -1) {
+                if (tabs.indexOf(item.group) === -1 && !item.parentgroup) {
                     tabs.push(item.group);
+                }
+            });
+
+            this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
+                if (item.parentgroup) {
+                    let parentGroupIndex = tabs.indexOf(item.parentgroup);
+                    tabs.splice(parentGroupIndex + 1, 0, [item.group, item.parentgroup]);
                 }
             });
 
@@ -657,6 +664,11 @@ export default {
             tabs.push(this.$t('theme.translations'));
 
             return tabs;
+        },
+        customSettingsTabsNames () {
+            return this.customSettingsTabs.map(tab => {
+                return Array.isArray(tab) ? tab[0] : tab;
+            });
         },
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');
