@@ -198,15 +198,15 @@ class WxrParser {
         this.autop = autop;
         this.postTypes = postTypes;
 
+        if(authors === 'wp-authors') {
+            this.importAuthors = true;
+        }
+
         console.log('(i) CONFIG:');
         console.log('- Import authors: ' + this.importAuthors);
         console.log('- Used taxonomy: ' + this.usedTaxonomy);
         console.log('- Use autop: '+ this.autop + "\n\n");
         console.log('- Post types: '+ this.postTypes.toString() + "\n\n");
-
-        if(authors === 'wp-authors') {
-            this.importAuthors = true;
-        }
     }
 
     /**
