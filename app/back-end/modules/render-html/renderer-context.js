@@ -696,7 +696,7 @@ class RendererContext {
 
         if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
-                if (this.siteConfig.advanced.usePageAsHomepage || context === 'blogindex') {
+                if (this.siteConfig.advanced.usePageAsFrontpage || context === 'blogindex') {
                     return blogBaseUrl + '/';
                 }
 
