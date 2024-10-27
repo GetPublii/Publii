@@ -34,7 +34,8 @@ class RendererContextFeed extends RendererContext {
                 ${featuredPostsCondition}
                 status NOT LIKE '%hidden%' AND
                 status NOT LIKE '%is-page%' AND
-                status NOT LIKE '%trashed%'
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%excluded_homepage%'
             ORDER BY
                 created_at DESC
             LIMIT
