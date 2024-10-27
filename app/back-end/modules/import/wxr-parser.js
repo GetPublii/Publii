@@ -720,7 +720,7 @@ class WxrParser {
         let image = nextImg.imgUrl;
         let imageFileName = url.parse(image);
 
-        if(imageFileName && imageFileName.pathname) {
+        if(imageFileName && imageFileName.pathname && imageFileName.protocol) {
             imageFileName = path.basename(imageFileName.pathname);
 
             download.image({
