@@ -273,6 +273,14 @@
                                     primaryColor="color-8" />
                                 {{ $t('ui.unhide') }}
                             </li>
+                            <li
+                                @click="bulkConvertToPage">
+                                <icon
+                                    size="xs"
+                                    name="convert-to-page"
+                                    primaryColor="color-8" />
+                                {{ $t('post.convertToPage') }}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -759,6 +767,9 @@ export default {
         },
         bulkRestore () {
             this.changeStateForSelected('trashed', true);
+        },
+        bulkConvertToPage () {
+            // TODO
         },
         changeStateForSelected (status, inverse = false) {
             let itemsToChange = this.getSelectedItems();

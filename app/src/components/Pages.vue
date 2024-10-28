@@ -217,6 +217,14 @@
                                     primaryColor="color-7" />
                                 {{ $t('page.markAsDraft') }}
                             </li>
+                            <li
+                                @click="bulkConvertToPost">
+                                <icon
+                                    size="xs"
+                                    name="convert-to-post"
+                                    primaryColor="color-8" />
+                                {{ $t('page.convertToPost') }}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -717,6 +725,9 @@ export default {
                 isDanger: true,
                 okClick: this.deleteSelected
             });
+        },
+        bulkConvertToPost () {
+            // TODO
         },
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
