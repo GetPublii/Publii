@@ -651,7 +651,10 @@ export default {
             });
 
             this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
-                if (item.parentgroup) {
+                if (
+                    item.parentgroup && 
+                    !tabs.some((el) => Array.isArray(el) && el.length === 2 && el[0] === item.group && el[1] === item.parentgroup)
+                ) {
                     let parentGroupIndex = tabs.indexOf(item.parentgroup);
                     tabs.splice(parentGroupIndex + 1, 0, [item.group, item.parentgroup]);
                 }
