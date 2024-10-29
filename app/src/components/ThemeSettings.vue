@@ -666,7 +666,28 @@ export default {
             tabs.push(this.$t('theme.tagOptions'));
             tabs.push(this.$t('theme.translations'));
 
-            return tabs;
+            // We need to reverse subgroups order
+            let finalTabsList = [];
+            let group = [];
+
+            tabs.forEach(item => {
+                if (Array.isArray(item)) {
+                    group.push(item);
+                } else {
+                    if (group.length > 0) {
+                        finalTabsList.push(...group.reverse());
+                        group = [];
+                    }
+
+                    finalTabsList.push(item);
+                }
+            });
+
+            if (group.length > 0) {
+                finalTabsList.push(...group.reverse());
+            }
+
+            return finalTabsList;
         },
         customSettingsTabsNames () {
             return this.customSettingsTabs.map(tab => {
