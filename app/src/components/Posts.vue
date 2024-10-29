@@ -278,7 +278,7 @@
                                 <icon
                                     size="xs"
                                     name="convert-to-page"
-                                    primaryColor="color-8" />
+                                    primaryColor="color-7" />
                                 {{ $t('post.convertToPage') }}
                             </li>
                         </ul>
