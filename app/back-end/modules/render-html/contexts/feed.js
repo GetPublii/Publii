@@ -135,8 +135,11 @@ class RendererContextFeed extends RendererContext {
                 pt.tag_id = t.id
             WHERE
                 pt.post_id = @postID
-                AND
-                json_extract(t.additional_data, '$.isHidden') = false
+                AND (
+        			(json_valid(t.additional_data) AND json_extract(t.additional_data, '$.isHidden') = false)
+        			OR t.additional_data IS NULL
+        			OR t.additional_data = ''
+    			)
             ORDER BY
                 name DESC
         `).all({
