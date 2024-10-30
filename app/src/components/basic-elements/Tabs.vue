@@ -13,7 +13,8 @@
                     :class="{ 
                         'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
                         'active-parent': item === activeParentItem,
-                        'subtab': Array.isArray(item)
+                        'subtab': Array.isArray(item),
+                        'first': Array.isArray(item) && items.findIndex(i => Array.isArray(i)) === index
                     }"
                     @click="toggle(item, index)">
                     <template v-if="Array.isArray(item)">
@@ -201,7 +202,34 @@ export default {
                 }
 
                 &.subtab {
-                    margin-left: 2rem;
+                    padding: 0.6rem .6rem 0.6rem 3rem;
+
+                    &::before {
+                        border-radius: 0 0 0 2px;
+                        content: '';
+                        display: block;
+                        width: 8px;
+                        height: 100%;
+                        border-left: 1px solid var(--input-border-dark);
+                        border-bottom: 1px solid var(--input-border-dark);
+                        position: absolute;
+                        left: 1.2rem;
+                        top: 0;
+                        transform: translate(0, -46%);
+                    }
+
+                    &.first {
+                        margin-top: 0.6rem;
+                        &::before {
+                            height: 60%;
+                            top: 30%;
+                        }
+                    }
+
+                    &.active {
+                        background: none !important;
+                        font-weight: var(--font-weight-semibold);
+                    }
                 }
 
                 &:hover {
@@ -210,6 +238,10 @@ export default {
 
                 &:last-child {
                     border-bottom: none;
+                }
+
+                &.active-parent {
+                    background: var(--tab-parent-active-bg);
                 }
             }
         }
