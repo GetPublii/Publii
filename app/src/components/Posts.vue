@@ -769,7 +769,30 @@ export default {
             this.changeStateForSelected('trashed', true);
         },
         bulkConvertToPage () {
-            // TODO
+            let itemsToChange = this.getSelectedItems();
+
+            this.$store.commit('changePostsToPages', {
+                postIDs: itemsToChange
+            });
+
+            mainProcessAPI.send('app-post-status-change', {
+                "site": this.$store.state.currentSite.config.name,
+                "ids": itemsToChange,
+                "status": 'is-page',
+                "inverse": false
+            });
+
+            mainProcessAPI.send('app-pages-hierarchy-update', itemsToChange);
+
+            mainProcessAPI.receiveOnce('app-post-status-changed', () => {
+                this.selectedItems = [];
+            });
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('post.postStatusChangeSuccessMessage'),
+                type: 'success',
+                lifeTime: 3
+            });
         },
         changeStateForSelected (status, inverse = false) {
             let itemsToChange = this.getSelectedItems();

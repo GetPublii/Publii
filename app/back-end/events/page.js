@@ -100,6 +100,23 @@ class PageEvents {
             pagesData.hierarchy = this.removeDuplicatedDataFromHierarchy(pagesData.hierarchy);
             fs.writeFileSync(pagesFile, JSON.stringify(pagesData.hierarchy, null, 4), { encoding: 'utf8' });
         });
+
+        // Update pages hierarchy during post conversion
+        ipcMain.on('app-pages-hierarchy-update', (event, postIDs) => {
+            let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
+            let pagesHierarchy = JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' }));
+
+            for (let i = 0; i < postIDs.length; i++) {
+                pagesHierarchy.push({
+                    id: postIDs[i],
+                    subpages: []
+                });
+            }
+            
+            pagesHierarchy = this.removeNullDataFromHierarchy(pagesHierarchy);
+            pagesHierarchy = this.removeDuplicatedDataFromHierarchy(pagesHierarchy);
+            fs.writeFileSync(pagesFile, JSON.stringify(updatedHierarchy, null, 4), { encoding: 'utf8' });
+        });
     }
 
     removeNullDataFromHierarchy (data) {

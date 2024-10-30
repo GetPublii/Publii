@@ -245,6 +245,43 @@ export default {
     removePages (state, pageIDs) {
         state.currentSite.pages = state.currentSite.pages.filter(page => pageIDs.indexOf(page.id) === -1);
     },
+    changePostsToPages (state, config) {
+        // Move posts with the given IDs to pages
+        state.currentSite.pages = state.currentSite.pages.concat(state.currentSite.posts.filter(post => config.postIDs.indexOf(post.id) !== -1));
+        // remove posts with the given IDs 
+        state.currentSite.posts = state.currentSite.posts.filter(post => config.postIDs.indexOf(post.id) === -1);
+        // add status is-page to the pages with given IDs
+        state.currentSite.pages = state.currentSite.pages.map(function(page) {
+            if(config.postIDs.indexOf(page.id) !== -1) {
+                let currentStatus = page.status.split(',');
+
+                if(currentStatus.indexOf('is-page') === -1) {
+                    currentStatus.push('is-page');
+                }
+
+                page.status = currentStatus.filter(status => ['excluded_homepage', 'featured', 'hidden'].indexOf(status) === -1).join(',');
+                page.template = '*';
+            }
+
+            return page;
+        });
+    },
+    changePagesToPosts (state, config) {
+        // Move pages with the given IDs to pages
+        state.currentSite.posts = state.currentSite.posts.concat(state.currentSite.pages.filter(page => config.pageIDs.indexOf(page.id) !== -1));
+        // remove pages with the given IDs 
+        state.currentSite.pages = state.currentSite.pages.filter(page => config.pageIDs.indexOf(page.id) === -1);
+        // remove status is-page from the pages with given IDs
+        state.currentSite.posts = state.currentSite.posts.map(function(post) {
+            if(config.pageIDs.indexOf(post.id) !== -1) {
+                let currentStatus = post.status.split(',');
+                post.status = currentStatus.filter(status => status !== 'is-page').join(',');
+                post.template = '*';
+            }
+
+            return post;
+        });
+    },
     changePostsStatus (state, config) {
         state.currentSite.posts = state.currentSite.posts.map(function(post) {
             if(config.postIDs.indexOf(post.id) !== -1) {

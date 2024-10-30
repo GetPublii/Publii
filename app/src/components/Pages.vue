@@ -727,7 +727,30 @@ export default {
             });
         },
         bulkConvertToPost () {
-            // TODO
+            let itemsToChange = this.getSelectedItems();
+
+            this.$store.commit('changePagesToPosts', {
+                pageIDs: itemsToChange
+            });
+
+            mainProcessAPI.send('app-page-status-change', {
+                "site": this.$store.state.currentSite.config.name,
+                "ids": itemsToChange,
+                "status": 'is-page',
+                "inverse": true
+            });
+
+            this.updateHierarchyForConvertedPages(itemsToChange);
+            
+            mainProcessAPI.receiveOnce('app-page-status-changed', () => {
+                this.selectedItems = [];
+            });
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('page.pageStatusChangeSuccessMessage'),
+                type: 'success',
+                lifeTime: 3
+            });
         },
         deleteSelected () {
             let itemsToRemove = this.getSelectedItems();
@@ -1055,11 +1078,7 @@ export default {
             let childrenToAdd = childrenIDsUnique.filter(childID => !trashedPages.includes(childID));
 
             trashedPages.forEach(trashedPage => {
-                let item = this.findAndRemoveItem(this.pagesHierarchy, trashedPage);
-
-                if (item) {
-                    this.hierarchySave();
-                }
+                this.findAndRemoveItem(this.pagesHierarchy, trashedPage);
             });
 
             childrenToAdd.forEach(childID => {
@@ -1145,6 +1164,29 @@ export default {
                 }
             });
 
+            this.hierarchySave();
+        },
+        updateHierarchyForConvertedPages (convertedPages) {
+            let childrenIDs = convertedPages.map(convertedPage => this.findAllChildrenIdsInItems(convertedPage));
+            let childrenIDsFlat = childrenIDs.flat();
+            let childrenIDsUnique = [...new Set(childrenIDsFlat)];
+            let childrenToAdd = childrenIDsUnique.filter(childID => !convertedPages.includes(childID));
+
+            convertedPages.forEach(convertedPage => {
+                let item = this.findAndRemoveItem(this.pagesHierarchy, convertedPage);
+
+                if (item) {
+                    this.hierarchySave();
+                }
+            });
+
+            childrenToAdd.forEach(childID => {
+                this.pagesHierarchy.push({ 
+                    id: childID, 
+                    subpages: []
+                });
+            });
+        
             this.hierarchySave();
         }
     },
