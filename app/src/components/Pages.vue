@@ -221,8 +221,8 @@
                                 @click="bulkConvertToPost">
                                 <icon
                                     size="xs"
-                                    name="convert-to-post"
-                                    primaryColor="color-8" />
+                                    name="convert-to-page"
+                                    primaryColor="color-7" />
                                 {{ $t('page.convertToPost') }}
                             </li>
                         </ul>

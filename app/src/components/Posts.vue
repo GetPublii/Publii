@@ -269,7 +269,7 @@
                                 @click="bulkUnhide">
                                 <icon
                                     size="xs"
-                                    name="hidden-post"
+                                    name="unhidden-post"
                                     primaryColor="color-8" />
                                 {{ $t('ui.unhide') }}
                             </li>
