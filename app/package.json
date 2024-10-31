@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.46.1",
+  "version": "0.46.2",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -81,7 +81,7 @@
     "vuex": "3.1.1"
   },
   "devDependencies": {
-    "electron": "31.7.2",
+    "electron": "31.7.3",
     "node-abi": "3.65.0"
   }
 }
