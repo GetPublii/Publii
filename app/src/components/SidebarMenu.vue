@@ -7,7 +7,8 @@
             @click="setActiveMenuItem(item.icon)">
             <router-link :to="item.url">
                 <icon
-                    size="s"
+                    customWidth="18"
+                    customHeight="18"
                     :name="item.icon" />
                 {{ item.label }}
             </router-link>

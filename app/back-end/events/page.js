@@ -85,7 +85,9 @@ class PageEvents {
             let pagesFile = path.join(this.app.sitesDir, siteName, 'input', 'config', 'pages.config.json');
 
             if (fs.existsSync(pagesFile)) {
-                event.sender.send('app-pages-hierarchy-loaded', JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' })));
+                let pagesHierarchy = JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' }));
+                pagesHierarchy = this.removeDuplicatedDataFromHierarchy(pagesHierarchy);
+                event.sender.send('app-pages-hierarchy-loaded', pagesHierarchy);
             } else {
                 event.sender.send('app-pages-hierarchy-loaded', null);
             }
@@ -95,7 +97,25 @@ class PageEvents {
         ipcMain.on('app-pages-hierarchy-save', (event, pagesData) => {
             let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
             pagesData.hierarchy = this.removeNullDataFromHierarchy(pagesData.hierarchy);
+            pagesData.hierarchy = this.removeDuplicatedDataFromHierarchy(pagesData.hierarchy);
             fs.writeFileSync(pagesFile, JSON.stringify(pagesData.hierarchy, null, 4), { encoding: 'utf8' });
+        });
+
+        // Update pages hierarchy during post conversion
+        ipcMain.on('app-pages-hierarchy-update', (event, postIDs) => {
+            let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
+            let pagesHierarchy = JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' }));
+
+            for (let i = 0; i < postIDs.length; i++) {
+                pagesHierarchy.push({
+                    id: postIDs[i],
+                    subpages: []
+                });
+            }
+            
+            pagesHierarchy = this.removeNullDataFromHierarchy(pagesHierarchy);
+            pagesHierarchy = this.removeDuplicatedDataFromHierarchy(pagesHierarchy);
+            fs.writeFileSync(pagesFile, JSON.stringify(updatedHierarchy, null, 4), { encoding: 'utf8' });
         });
     }
 
@@ -106,6 +126,19 @@ class PageEvents {
                 ...item,
                 subpages: item.subpages ? this.removeNullDataFromHierarchy(item.subpages) : []
             }));
+    }
+
+    removeDuplicatedDataFromHierarchy (data) {
+        let existingIds = new Set();
+
+        return data.filter(item => {
+            if (existingIds.has(item.id)) {
+                return false;
+            }
+
+            existingIds.add(item.id);
+            return true;
+        });      
     }
 }
 

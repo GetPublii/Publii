@@ -230,11 +230,13 @@ export default {
         }
 
         &-btn {
+            align-items: center;
             background: var(--bg-primary);
             position: relative;
             border-radius: 50%;
-            display: inline-block;
+            display: inline-flex;
             height: 3rem;
+            justify-content: center;
             margin: 0 2px;
             opacity: 0;
             position: relative;
@@ -261,7 +263,6 @@ export default {
                 pointer-events: none;
                 transform: scale(.9);
                 transition: var(--transition);
-                vertical-align: middle;
                 width: 1.6rem;
             }
 

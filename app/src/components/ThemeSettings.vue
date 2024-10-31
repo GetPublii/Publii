@@ -105,7 +105,7 @@
                     id="custom-settings-tabs"
                     :items="customSettingsTabs">
                     <div
-                        v-for="(groupName, index) of customSettingsTabs"
+                        v-for="(groupName, index) of customSettingsTabsNames"
                         :slot="'tab-' + index"
                         :key="'tab-' + index">
                         <div v-if="groupName !== $t('theme.postOptions') && groupName !== $t('theme.translations')">
@@ -645,8 +645,18 @@ export default {
             let tabs = [];
 
             this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
-                if (tabs.indexOf(item.group) === -1) {
+                if (tabs.indexOf(item.group) === -1 && !item.parentgroup) {
                     tabs.push(item.group);
+                }
+            });
+
+            this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
+                if (
+                    item.parentgroup && 
+                    !tabs.some((el) => Array.isArray(el) && el.length === 2 && el[0] === item.group && el[1] === item.parentgroup)
+                ) {
+                    let parentGroupIndex = tabs.indexOf(item.parentgroup);
+                    tabs.splice(parentGroupIndex + 1, 0, [item.group, item.parentgroup]);
                 }
             });
 
@@ -656,7 +666,33 @@ export default {
             tabs.push(this.$t('theme.tagOptions'));
             tabs.push(this.$t('theme.translations'));
 
-            return tabs;
+            // We need to reverse subgroups order
+            let finalTabsList = [];
+            let group = [];
+
+            tabs.forEach(item => {
+                if (Array.isArray(item)) {
+                    group.push(item);
+                } else {
+                    if (group.length > 0) {
+                        finalTabsList.push(...group.reverse());
+                        group = [];
+                    }
+
+                    finalTabsList.push(item);
+                }
+            });
+
+            if (group.length > 0) {
+                finalTabsList.push(...group.reverse());
+            }
+
+            return finalTabsList;
+        },
+        customSettingsTabsNames () {
+            return this.customSettingsTabs.map(tab => {
+                return Array.isArray(tab) ? tab[0] : tab;
+            });
         },
         postViewThemeSettings () {
             return this.$store.state.currentSite.themeSettings.postConfig.filter(field => field.type !== 'separator');

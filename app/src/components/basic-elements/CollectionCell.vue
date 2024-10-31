@@ -68,7 +68,7 @@ export default {
     display: grid;
     font-weight: var(--font-weight-normal);
     justify-content: left;
-    padding: 1.5rem 2rem;
+    padding: 1.4rem 1.8rem;
     text-align: left;
 
     &:first-child {
@@ -147,10 +147,6 @@ export default {
         .modify-date {
             display: block;
             width: 100%;
-        }
-
-        .publish-date {
-            font-size: 1.4rem;
         }
 
         .modify-date {

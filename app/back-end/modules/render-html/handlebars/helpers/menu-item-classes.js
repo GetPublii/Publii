@@ -39,7 +39,9 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
         if (hasActiveChild(this.items, context)) {
             output.push(activeParentClass);
         } else if (
+            (this.type === 'blogpage' && context[0] === 'blogpage') ||
             (this.type === 'frontpage' && context[0] === 'frontpage') ||
+            (this.type === 'frontpage' && context[0] === 'page' && context[2] && context[2] === 'page-' + rendererInstance.siteConfig.advanced.pageAsFrontpage) ||
             (this.type === 'tags' && context[0] === 'tags') ||
             (this.type === context[0] && this.link === context[1])
         ) {

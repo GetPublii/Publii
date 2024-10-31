@@ -992,7 +992,7 @@ class Renderer {
             let fileSlug = 'DEFAULT';
             fileSlug = postTemplates[i] === '' ? 'DEFAULT' : postTemplates[i];
 
-            this.menuContext = ['post', postSlugs[i]];    
+            this.menuContext = ['post', postSlugs[i], 'post-' + postIDs[i]];    
             
             if (!compiledTemplates[fileSlug]) {
                 fileSlug = 'DEFAULT';
@@ -1280,7 +1280,7 @@ class Renderer {
             let fileSlug = 'DEFAULT';
             fileSlug = pageTemplates[i] === '' ? 'DEFAULT' : pageTemplates[i];
 
-            this.menuContext = ['page', pageSlugs[i]];    
+            this.menuContext = ['page', pageSlugs[i], 'page-' + pageIDs[i]];    
             
             if (!compiledTemplates[fileSlug]) {
                 fileSlug = 'DEFAULT';

@@ -104,7 +104,7 @@ export default {
         border-radius: 30px;
         box-shadow: none;
         font-size: $app-font-base;
-        height: 4.6rem;
+        height: 4.4rem;
         opacity: 0;
         padding: 0 5rem 0 6rem;
         pointer-events: none;

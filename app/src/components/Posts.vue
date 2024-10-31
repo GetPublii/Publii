@@ -269,9 +269,17 @@
                                 @click="bulkUnhide">
                                 <icon
                                     size="xs"
-                                    name="hidden-post"
+                                    name="unhidden-post"
                                     primaryColor="color-8" />
                                 {{ $t('ui.unhide') }}
+                            </li>
+                            <li
+                                @click="bulkConvertToPage">
+                                <icon
+                                    size="xs"
+                                    name="convert-to-page"
+                                    primaryColor="color-7" />
+                                {{ $t('post.convertToPage') }}
                             </li>
                         </ul>
                     </div>
@@ -759,6 +767,32 @@ export default {
         },
         bulkRestore () {
             this.changeStateForSelected('trashed', true);
+        },
+        bulkConvertToPage () {
+            let itemsToChange = this.getSelectedItems();
+
+            this.$store.commit('changePostsToPages', {
+                postIDs: itemsToChange
+            });
+
+            mainProcessAPI.send('app-post-status-change', {
+                "site": this.$store.state.currentSite.config.name,
+                "ids": itemsToChange,
+                "status": 'is-page',
+                "inverse": false
+            });
+
+            mainProcessAPI.send('app-pages-hierarchy-update', itemsToChange);
+
+            mainProcessAPI.receiveOnce('app-post-status-changed', () => {
+                this.selectedItems = [];
+            });
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('post.postStatusChangeSuccessMessage'),
+                type: 'success',
+                lifeTime: 3
+            });
         },
         changeStateForSelected (status, inverse = false) {
             let itemsToChange = this.getSelectedItems();

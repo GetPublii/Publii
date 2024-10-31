@@ -20,6 +20,7 @@ export default {
 
 .item {
     display: contents;
+    font-size: 1.3rem;
 
 
     .add-form {

@@ -651,7 +651,7 @@ export default {
                     color: var(--button-secondary-color);
                     cursor: pointer;
                     display: inline-block;
-                    font-size: 1.5rem;
+                    font-size: 1.4rem;
                     font-weight: var(--font-weight-semibold);
                     left: 50%;
                     padding: .75rem 1.5rem;

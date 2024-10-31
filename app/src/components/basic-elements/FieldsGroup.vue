@@ -39,7 +39,7 @@ fieldset {
 
     & > legend {
         color: var(--headings-color);
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: 600;
         position: absolute;
         top: 3rem;

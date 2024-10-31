@@ -106,18 +106,20 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell>
-                    <a
-                        href="#"
-                        @click.prevent.stop="editAuthor(item)">
-                        {{ item.name }}
+                <collection-cell type="titles">
+                    <h2 class="title">
+                        <a
+                            href="#"
+                            @click.prevent.stop="editAuthor(item)">
+                            {{ item.name }}
 
-                        <em
-                            v-if="item.id === 1"
-                            class="is-main-author">
-                            ({{ $t('author.mainAuthor') }})
-                        </em>
-                    </a>
+                            <em
+                                v-if="item.id === 1"
+                                class="is-main-author">
+                                ({{ $t('author.mainAuthor') }})
+                            </em>
+                        </a>
+                    </h2>
                 </collection-cell>
 
                 <collection-cell

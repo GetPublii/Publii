@@ -113,19 +113,21 @@
                         :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
-                <collection-cell>
-                    <a
-                        href="#"
-                        @click.prevent.stop="editTag(item)">
-                        {{ item.name }}
+                <collection-cell type="titles">
+                    <h2 class="title">
+                        <a
+                            href="#"
+                            @click.prevent.stop="editTag(item)">
+                            {{ item.name }}
 
-                        <icon
-                            v-if="item.isHidden"
-                            size="xs"
-                            name="hidden-post"
-                            primaryColor="color-7"
-                            :title="$t('tag.thisTagIsHidden')" />
-                    </a>
+                            <icon
+                                v-if="item.isHidden"
+                                size="xs"
+                                name="hidden-post"
+                                primaryColor="color-7"
+                                :title="$t('tag.thisTagIsHidden')" />
+                        </a>
+                    </h2>
                 </collection-cell>
 
                 <collection-cell

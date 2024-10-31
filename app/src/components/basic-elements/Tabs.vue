@@ -10,9 +10,19 @@
                 <li
                     v-for="(item, index) in items"
                     :key="'tab-item-' + index"
-                    :class="{ 'active': item === activeItem}"
-                    @click="toggle(item)">
-                    {{ item }}
+                    :class="{ 
+                        'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
+                        'active-parent': item === activeParentItem,
+                        'subtab': Array.isArray(item),
+                        'first': Array.isArray(item) && items.findIndex(i => Array.isArray(i)) === index
+                    }"
+                    @click="toggle(item, index)">
+                    <template v-if="Array.isArray(item)">
+                        {{ item[0] }}
+                    </template>
+                    <template v-else>
+                        {{ item }}
+                    </template>
                 </li>
             </ul>
         </div>
@@ -21,7 +31,10 @@
             <div
                 v-for="(item, index) in items"
                 :key="'tab-item-content-' + index"
-                :class="{ 'tab': true, 'active': item === activeItem}">
+                :class="{ 
+                    'tab': true, 
+                    'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
+                }">
                 <slot :name="'tab-' + index"></slot>
             </div>
         </div>
@@ -52,6 +65,7 @@ export default {
     data () {
         return {
             activeItem: false,
+            activeParentItem: false,
             activeIndex: 0
         }
     },
@@ -80,21 +94,22 @@ export default {
                 }
             }
         },
-        toggle (newActiveItem, scrollTo = false) {
-            this.activeItem = newActiveItem;
-            this.activeIndex = this.items.indexOf(newActiveItem);
+        toggle (newActiveItem, newIndex) {
+            if (Array.isArray(newActiveItem)) {
+                this.activeItem = newActiveItem[0];
+                this.activeParentItem = newActiveItem[1];
+            } else {
+                this.activeItem = newActiveItem;
+                this.activeParentItem = false;
+            }
+
+            this.activeIndex = newIndex;
 
             if (this.id) {
                 window.sessionStorage.setItem(this.id, newActiveItem);
             }
 
             this.onToggle();
-
-            setTimeout(() => {
-                if (scrollTo !== false) {
-                    document.querySelector('#' + scrollTo).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-                }
-            }, 0);
         }
     }
 }
@@ -186,12 +201,47 @@ export default {
                     transition: all .125s ease-out;
                 }
 
+                &.subtab {
+                    padding: 0.6rem .6rem 0.6rem 3rem;
+
+                    &::before {
+                        border-radius: 0 0 0 2px;
+                        content: '';
+                        display: block;
+                        width: 8px;
+                        height: 100%;
+                        border-left: 1px solid var(--input-border-dark);
+                        border-bottom: 1px solid var(--input-border-dark);
+                        position: absolute;
+                        left: 1.2rem;
+                        top: 0;
+                        transform: translate(0, -46%);
+                    }
+
+                    &.first {
+                        margin-top: 0.6rem;
+                        &::before {
+                            height: 60%;
+                            top: 30%;
+                        }
+                    }
+
+                    &.active {
+                        background: none !important;
+                        font-weight: var(--font-weight-semibold);
+                    }
+                }
+
                 &:hover {
                     color: var(--tab-color-hover);
                 }
 
                 &:last-child {
                     border-bottom: none;
+                }
+
+                &.active-parent {
+                    background: var(--tab-parent-active-bg);
                 }
             }
         }
@@ -216,7 +266,6 @@ export default {
 
             .separator:first-child {
                 padding-top: 0 !important;
-                
             }
         }
     }
@@ -232,7 +281,7 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .tabs > .content {
@@ -248,7 +297,7 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 
     .tabs > .content {

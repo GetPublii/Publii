@@ -365,7 +365,7 @@ class RendererContext {
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
                 tagsUrl: this.getTagsUrl(),
-                pageUrl: this.getPageUrl(context, paginationData, itemSlug),
+                pageUrl: this.getPageUrl(context, paginationData, itemSlug, itemContext),
                 name: siteNameValue,
                 logo: logoUrl,
                 logoSize: logoSize,
@@ -686,7 +686,7 @@ class RendererContext {
         return results;
     }
 
-    getPageUrl (context, paginationData, itemSlug) {
+    getPageUrl (context, paginationData, itemSlug, itemContext) {
         let pagePart = this.siteConfig.advanced.urls.pageName;
         let blogBaseUrl = this.siteConfig.domain;
 
@@ -696,7 +696,11 @@ class RendererContext {
 
         if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
-                return blogBaseUrl + '/';
+                if (this.siteConfig.advanced.usePageAsFrontpage || context === 'blogindex') {
+                    return blogBaseUrl + '/';
+                }
+
+                return this.siteConfig.domain + '/';
             } else {
                 if (this.siteConfig.advanced.urls.postsPrefix) {
                     return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + pagePart +  '/' + paginationData.currentPage + '/';
@@ -769,6 +773,10 @@ class RendererContext {
                 return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
             }
         } else if (context === 'page') {
+            if (this.siteConfig.advanced.usePageAsFrontpage && itemContext.page && this.siteConfig.advanced.pageAsFrontpage === itemContext.page.id) {
+                return this.siteConfig.domain + '/';    
+            }
+
             if (!this.siteConfig.advanced.urls.cleanUrls) { 
                 return this.siteConfig.domain + '/' + itemSlug + '.html';
             } else {           

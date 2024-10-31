@@ -64,6 +64,7 @@ import 'prismjs/components/prism-csharp.min.js';
 import 'prismjs/components/prism-css.min.js';
 import 'prismjs/components/prism-dart.min.js';
 import 'prismjs/components/prism-docker.min.js';
+import 'prismjs/components/prism-elixir.min.js';
 import 'prismjs/components/prism-elm.min.js';
 import 'prismjs/components/prism-gdscript.min.js';
 import 'prismjs/components/prism-git.min.js';

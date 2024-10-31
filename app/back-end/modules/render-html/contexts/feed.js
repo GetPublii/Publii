@@ -34,7 +34,8 @@ class RendererContextFeed extends RendererContext {
                 ${featuredPostsCondition}
                 status NOT LIKE '%hidden%' AND
                 status NOT LIKE '%is-page%' AND
-                status NOT LIKE '%trashed%'
+                status NOT LIKE '%trashed%' AND
+                status NOT LIKE '%excluded_homepage%'
             ORDER BY
                 created_at DESC
             LIMIT
@@ -134,6 +135,11 @@ class RendererContextFeed extends RendererContext {
                 pt.tag_id = t.id
             WHERE
                 pt.post_id = @postID
+                AND (
+        			(json_valid(t.additional_data) AND json_extract(t.additional_data, '$.isHidden') = false)
+        			OR t.additional_data IS NULL
+        			OR t.additional_data = ''
+    			)
             ORDER BY
                 name DESC
         `).all({

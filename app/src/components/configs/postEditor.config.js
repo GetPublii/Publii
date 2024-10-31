@@ -47,6 +47,7 @@ export default {
         { text: 'CSS', value: 'css' },
         { text: 'Dart', value: 'dart' },
         { text: 'Docker', value: 'docker' },
+        { text: 'Elixir', value: 'elixir' },
         { text: 'Elm', value: 'elm' },
         { text: 'GDScript', value: 'gdscript' },
         { text: 'Git', value: 'git' },

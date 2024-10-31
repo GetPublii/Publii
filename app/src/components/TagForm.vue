@@ -699,7 +699,7 @@ export default {
     transition: max-height .25s ease-out;
 
     &-content {
-        padding: 0 0 3.6rem;
+        padding: 0 0 1rem;
 
         .image-uploader {
             margin-top: 0;
