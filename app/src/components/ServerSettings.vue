@@ -196,8 +196,6 @@
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
                         </span>
 
-                        <br>
-
                         <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
                     </p>
                 </div>

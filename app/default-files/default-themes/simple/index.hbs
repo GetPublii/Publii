@@ -62,19 +62,32 @@
                            {{#author}}
                               {{#if @config.custom.feedAvatar}}
                                  {{#if avatar}}
-                                    <img
-                                       src="{{avatarImage.url}}" 
-                                       {{ lazyload "lazy" }}
-                                       height="{{avatarImage.height}}"
-                                       width="{{avatarImage.width}}"      
-                                       class="feed__author-thumb"
-                                       alt="{{avatarImage.alt}}">
+                                    {{#if @config.custom.feedAuthor}}
+                                       <img
+                                          src="{{avatarImage.url}}" 
+                                          {{ lazyload "lazy" }}
+                                          height="{{avatarImage.height}}"
+                                          width="{{avatarImage.width}}"      
+                                          class="feed__author-thumb"
+                                          alt="">
+                                    {{else}}
+                                       <a href="{{url}}" class="feed__author-link">
+                                          <img
+                                             src="{{avatarImage.url}}" 
+                                             {{ lazyload "lazy" }}
+                                             height="{{avatarImage.height}}"
+                                             width="{{avatarImage.width}}"      
+                                             class="feed__author-thumb"
+                                             alt="{{avatarImage.alt}}">
+                                       </a>
+                                    {{/if}}
                                  {{/if}}
                               {{/if}}
                               {{#if @config.custom.feedAuthor}}
                                  <a href="{{url}}" class="feed__author">{{name}}</a>
                               {{/if}}
                            {{/author}}
+
                            {{#if @config.custom.feedDate}}
                               {{#checkIf @config.custom.feedDateType '==' "published" }}
                                  <time datetime="{{date createdAt 'YYYY-MM-DDTHH:mm'}}" class="feed__date">

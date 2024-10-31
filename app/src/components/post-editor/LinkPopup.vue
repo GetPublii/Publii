@@ -556,13 +556,13 @@ h1 {
     .field {
         .switcher {
             float: left;
-            top: -4px;
+            top: -3px;
         }
     }
 }
 
 .message {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     padding: 0;
 }
 

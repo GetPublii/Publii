@@ -371,6 +371,7 @@ class Page extends Model {
     changeStatus(status, inverse = false) {
         let selectQuery = this.db.prepare(`SELECT status FROM posts WHERE id = @id`).all({ id: this.id });
         let currentStatus = selectQuery[0].status.split(',');
+        let resetTemplateIfNeeded = status === 'is-page' ? ', template = \'*\'' : '';
 
         if (!inverse) {
             if(currentStatus.indexOf(status) === -1) {
@@ -388,6 +389,7 @@ class Page extends Model {
                                         posts
                                     SET
                                         status = @status
+                                        ${resetTemplateIfNeeded}
                                     WHERE
                                         id = @id`);
         updateQuery.run({

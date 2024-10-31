@@ -358,17 +358,9 @@ class App {
                 this.currentLanguageMomentLocale = languageConfig.momentLocale;
                 this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
             }
-            
-            if (
-                !this.currentLanguageTranslations ||
-                !languageConfig ||
-                (!this.currentWysiwygTranslation && this.currentLanguageName !== 'en-gb')
-            ) {
-                this.loadDefaultLanguage(languagesLoader, true);
-            }
-        } else {
-            this.loadDefaultLanguage(languagesLoader, false);
         }
+
+        this.loadDefaultLanguage(languagesLoader, false);
     }
 
     // Load plugins
@@ -380,15 +372,15 @@ class App {
 
     // Load default language
     loadDefaultLanguage (languagesLoader, errorOccurred = false) {
-        this.currentLanguageName = 'en-gb';
-        this.currentLanguageType = 'default';
-        this.currentLanguageTranslations = languagesLoader.loadTranslations('en-gb', 'default');
+        this.defaultLanguageName = 'en-gb';
+        this.defaultLanguageType = 'default';
+        this.defaultLanguageTranslations = languagesLoader.loadTranslations('en-gb', 'default');
         let languageConfig = languagesLoader.loadLanguageConfig('en-gb', 'default');
-        this.currentLanguageMomentLocale = languageConfig.momentLocale;
-        this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en-gb', 'default');
+        this.defaultLanguageMomentLocale = languageConfig.momentLocale;
+        this.defaultWysiwygTranslation = languagesLoader.loadWysiwygTranslation('en-gb', 'default');
 
         if (errorOccurred) {
-            this.languageLoadingError = true;
+            this.defaultLanguageLoadingError = true;
         }
     }
 
@@ -663,6 +655,13 @@ class App {
                     translations: self.currentLanguageTranslations,
                     wysiwygTranslation: self.currentWysiwygTranslation,
                     momentLocale: self.currentLanguageMomentLocale,
+                    languageLoadingError: self.languageLoadingError
+                },
+                defaultLanguage: {
+                    name: self.defaultLanguageName,
+                    translations: self.defaultLanguageTranslations,
+                    wysiwygTranslation: self.defaultWysiwygTranslation,
+                    momentLocale: self.defaultLanguageMomentLocale,
                     languageLoadingError: self.languageLoadingError
                 },
                 languages: self.languages,

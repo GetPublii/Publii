@@ -66,12 +66,14 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell>
-                    <a
-                        href="#"
-                        @click.prevent.stop="toggleMenu(index)">
-                        {{ item.name }}
-                    </a>
+                <collection-cell type="titles">
+                    <h2 class="title">
+                        <a
+                            href="#"
+                            @click.prevent.stop="toggleMenu(index)">
+                            {{ item.name }}
+                        </a>
+                    </h2>
                 </collection-cell>
 
                 <collection-cell

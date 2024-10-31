@@ -414,6 +414,7 @@ class Post extends Model {
     changeStatus(status, inverse = false) {
         let selectQuery = this.db.prepare(`SELECT status FROM posts WHERE id = @id`).all({ id: this.id });
         let currentStatus = selectQuery[0].status.split(',');
+        let resetTemplateIfNeeded = status === 'is-page' ? ', template = \'*\'' : '';
 
         if(!inverse) {
             if(currentStatus.indexOf(status) === -1) {
@@ -425,12 +426,13 @@ class Post extends Model {
             }
         }
 
-        currentStatus = currentStatus.filter(status => status.trim() !== '');
-
+        currentStatus = currentStatus.filter(status => ['excluded_homepage', 'featured', 'hidden'].indexOf(status) === -1 && status.trim() !== '');
+        
         let updateQuery = this.db.prepare(`UPDATE
                                         posts
                                     SET
                                         status = @status
+                                        ${resetTemplateIfNeeded}
                                     WHERE
                                         id = @id`);
         updateQuery.run({

@@ -75,14 +75,16 @@ class Author extends Model {
         if (!this.isAuthorNameUnique()) {
             return {
                 status: false,
-                message: 'author-duplicate-name'
+                message: 'author-duplicate-name',
+                authors: this.authorsData.load()
             };
         }
 
         if (!this.isAuthorUsernameUnique()) {
             return {
                 status: false,
-                message: 'author-duplicate-username'
+                message: 'author-duplicate-username',
+                authors: this.authorsData.load()
             };
         }
 

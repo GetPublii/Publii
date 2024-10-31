@@ -156,7 +156,7 @@ export default {
         box-shadow: var(--box-shadow-medium);
         border-radius: var(--border-radius);
         cursor: default;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         list-style-type: none;
         padding: 2rem 0;
         position: absolute;

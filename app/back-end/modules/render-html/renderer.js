@@ -705,19 +705,20 @@ class Renderer {
      * Generate the main view of the theme
      */
     generateFrontpage() {
-        console.time('HOME');
         // Load template
         let inputFile = 'index.hbs';
-        let compiledTemplate = this.compileTemplate(inputFile);
+        let homeCompiledTemplate = this.compileTemplate(inputFile);
+        let postsCompiledTemplate;
+        let compiledTemplate;
 
-        if (!compiledTemplate) {
-            console.timeEnd('HOME');
-            return false;
+        if (this.themeConfig.supportedFeatures && this.themeConfig.supportedFeatures.postsPage) {
+            postsCompiledTemplate = this.compileTemplate('posts.hbs');
+        } else {
+            postsCompiledTemplate = this.compileTemplate('index.hbs');
         }
 
         // Don't render homepage and it's pagination if we use page as frontpage and posts prefix is empty
         if (this.siteConfig.advanced.usePageAsFrontpage && !this.siteConfig.advanced.urls.postsPrefix) {
-            console.timeEnd('HOME');
             return false;
         }
 
@@ -732,43 +733,16 @@ class Renderer {
             postsPerPage = 5;
         }
 
-        if (totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.homepageNoPagination) {
-            let context = contextGenerator.getContext(0, postsPerPage);
-            let output = '';
-            this.menuContext = ['frontpage'];
-
-            try {
-                this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
-
-                output = compiledTemplate(context, {
-                    data: this.globalContext
-                });
-            } catch (e) {
-                this.errorLog.push({
-                    message: 'An error (1002) occurred during parsing ' + inputFile + ' file.',
-                    desc: e.message + "\n\n" + e.stack
-                });
-                return;
-            }
-
-            if (this.plugins.hasModifiers('htmlOutput')) {
-                output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
-            }
-
-            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
-                this.templateHelper.saveOutputFile('index.html', output);
-            } else {
-                this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
-            }
-        } else {
+        let hasBlogPagination = !(totalNumberOfPosts <= postsPerPage || postsPerPage <= 0 || this.siteConfig.advanced.homepageNoPagination);
+        
+        // When we have blog pagination
+        if (hasBlogPagination) {
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
             // If user set postsPerPage field to -1 - set it for calculations to 999
             postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
 
             for (let offset = 0; offset < totalNumberOfPosts; offset += postsPerPage) {
-                let context = contextGenerator.getContext(offset, postsPerPage);
-
                 // Add pagination data to the global context
                 let currentPage = 1;
                 let totalPages = 0;
@@ -800,32 +774,147 @@ class Renderer {
                     additionalContexts = ['pagination', 'index-pagination'];
                 }
 
-                this.menuContext = ['frontpage'];
-                this.globalContext = this.createGlobalContext('index', additionalContexts, {
-                    pagination,
-                    isFirstPage: currentPage === 1,
-                    isLastPage: currentPage === totalPages,
-                    currentPage
-                }, false, false, context);
-                let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
-
-                if (this.plugins.hasModifiers('htmlOutput')) {
-                    output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
-                }
-
+                // detect frontpage/blog index
                 if (offset === 0) {
-                    if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+                    if (this.siteConfig.advanced.urls.postsPrefix === '' && !this.siteConfig.advanced.usePageAsFrontpage) {
+                        compiledTemplate = homeCompiledTemplate;
+                        this.menuContext = ['frontpage'];
+                        let context = contextGenerator.getContext(offset, postsPerPage);
+                        this.globalContext = this.createGlobalContext('index', additionalContexts, {
+                            pagination,
+                            isFirstPage: currentPage === 1,
+                            isLastPage: currentPage === totalPages,
+                            currentPage
+                        }, false, false, context);
+
+                        let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+                        if (this.plugins.hasModifiers('htmlOutput')) {
+                            output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                        }
+                        
                         this.templateHelper.saveOutputFile('index.html', output);
-                    } else {
+                    } else if (this.siteConfig.advanced.urls.postsPrefix !== '') {
+                        compiledTemplate = postsCompiledTemplate;
+                        this.menuContext = ['blogpage'];
+                        let context = contextGenerator.getContext(offset, postsPerPage);
+                        this.globalContext = this.createGlobalContext('blogindex', additionalContexts, {
+                            pagination,
+                            isFirstPage: currentPage === 1,
+                            isLastPage: currentPage === totalPages,
+                            currentPage
+                        }, false, false, context);
+
+                        let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+                        if (this.plugins.hasModifiers('htmlOutput')) {
+                            output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                        }
+                        
                         this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+
+                        if (!this.siteConfig.advanced.usePageAsFrontpage) {
+                            compiledTemplate = homeCompiledTemplate;
+
+                            this.menuContext = ['frontpage'];
+                            let context = contextGenerator.getContext(offset, postsPerPage);
+                            this.globalContext = this.createGlobalContext('index', additionalContexts, {
+                                pagination,
+                                isFirstPage: currentPage === 1,
+                                isLastPage: currentPage === totalPages,
+                                currentPage
+                            }, false, false, context);
+
+                            let output = this.renderTemplate(compiledTemplate, context, this.globalContext, inputFile);
+
+                            if (this.plugins.hasModifiers('htmlOutput')) {
+                                output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                            }
+                            
+                            this.templateHelper.saveOutputFile('index.html', output);
+                        }
                     }
                 } else {
+                    this.menuContext = ['frontpage'];
+
+                    if (this.siteConfig.advanced.urls.postsPrefix !== '') {
+                        this.menuContext = ['blogpage'];
+                    }
+                    let context = contextGenerator.getContext(offset, postsPerPage);
+                    this.globalContext = this.createGlobalContext('blogindex', additionalContexts, {
+                        pagination,
+                        isFirstPage: currentPage === 1,
+                        isLastPage: currentPage === totalPages,
+                        currentPage
+                    }, false, false, context);
+                    
+                    let output = this.renderTemplate(postsCompiledTemplate, context, this.globalContext, inputFile);
+
+                    if (this.plugins.hasModifiers('htmlOutput')) {
+                        output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                    }
+
                     // We increase the current page number as we need to start URLs from page/2
                     this.templateHelper.saveOutputHomePaginationFile(currentPage, output);
                 }
             }
         }
-        console.timeEnd('HOME');
+        console.timeEnd('BLOG PAGINATION');
+
+        // When there is no blog pagination
+        if (!hasBlogPagination) {
+            console.time('HOMEPAGE');
+            
+            let output = '';
+
+            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+                this.menuContext = ['frontpage'];
+                let context = contextGenerator.getContext(0, postsPerPage);
+                this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
+
+                output = homeCompiledTemplate(context, {
+                    data: this.globalContext
+                });
+    
+                if (this.plugins.hasModifiers('htmlOutput')) {
+                    output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                }
+    
+                this.templateHelper.saveOutputFile('index.html', output);
+            } else if (this.siteConfig.advanced.urls.postsPrefix !== '') {
+                this.menuContext = ['blogpage'];
+                let context = contextGenerator.getContext(0, postsPerPage);
+                this.globalContext = this.createGlobalContext('blogindex', [], false, false, false, context);
+
+                output = postsCompiledTemplate(context, {
+                    data: this.globalContext
+                });
+    
+                if (this.plugins.hasModifiers('htmlOutput')) {
+                    output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                }
+    
+                this.templateHelper.saveOutputFile(path.join(this.siteConfig.advanced.urls.postsPrefix, 'index.html'), output);
+
+                if (!this.siteConfig.advanced.usePageAsFrontpage) {
+                    this.menuContext = ['frontpage'];
+                    let context = contextGenerator.getContext(0, postsPerPage);
+                    this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
+
+                    output = homeCompiledTemplate(context, {
+                        data: this.globalContext
+                    });
+        
+                    if (this.plugins.hasModifiers('htmlOutput')) {
+                        output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
+                    }
+        
+                    this.templateHelper.saveOutputFile('index.html', output);
+                }
+            }
+
+            console.timeEnd('HOMEPAGE');
+        }
     }
 
     /*
@@ -903,7 +992,7 @@ class Renderer {
             let fileSlug = 'DEFAULT';
             fileSlug = postTemplates[i] === '' ? 'DEFAULT' : postTemplates[i];
 
-            this.menuContext = ['post', postSlugs[i]];    
+            this.menuContext = ['post', postSlugs[i], 'post-' + postIDs[i]];    
             
             if (!compiledTemplates[fileSlug]) {
                 fileSlug = 'DEFAULT';
@@ -1191,7 +1280,7 @@ class Renderer {
             let fileSlug = 'DEFAULT';
             fileSlug = pageTemplates[i] === '' ? 'DEFAULT' : pageTemplates[i];
 
-            this.menuContext = ['page', pageSlugs[i]];    
+            this.menuContext = ['page', pageSlugs[i], 'page-' + pageIDs[i]];    
             
             if (!compiledTemplates[fileSlug]) {
                 fileSlug = 'DEFAULT';

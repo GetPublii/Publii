@@ -1,8 +1,8 @@
 {
 	"name": "English - default",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"author": "Publii Team",
-	"publiiSupport": "0.46.1",
+	"publiiSupport": "0.46.2",
     "momentLocale": "en",
     "wysiwygTranslation": false
 }

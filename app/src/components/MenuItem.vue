@@ -500,6 +500,7 @@ li {
     &.is-draft {
         .menu-item-label {
             color: var(--gray-4);
+            font-size: 1.4rem;
             font-style: italic;
 
             svg {
@@ -542,17 +543,20 @@ li {
 
         .menu-item-label {
             color: var(--text-primary-color);
+            font-size: 1.4rem;
             margin-right: 2rem;
         }
 
         .menu-item-remove,
         .menu-item-duplicate {
+            align-items: center;
             background: var(--bg-primary);
             position: relative;
             border-radius: 50%;
             cursor: pointer;
-            display: inline-block;
+            display: inline-flex;
             height: 3rem;
+            justify-content: center;
             padding: 0;
             position: absolute;
             right: 1.5rem;
@@ -581,7 +585,6 @@ li {
                 pointer-events: none;
                 transform: scale(.9);
                 transition: var(--transition);
-                vertical-align: middle;
                 width: 1.6rem;
             }
         }
@@ -608,7 +611,7 @@ li {
         .menu-item-unselect {
             color: var(--link-primary-color);
             display: inline-block;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             padding: .25rem .5rem;
 
             &:active,
@@ -620,7 +623,7 @@ li {
 
         .menu-item-insert-actions {
             color: var(--text-light-color);
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             padding: 1rem .5rem;
         }
 

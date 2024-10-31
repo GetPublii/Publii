@@ -198,15 +198,15 @@ class WxrParser {
         this.autop = autop;
         this.postTypes = postTypes;
 
+        if(authors === 'wp-authors') {
+            this.importAuthors = true;
+        }
+
         console.log('(i) CONFIG:');
         console.log('- Import authors: ' + this.importAuthors);
         console.log('- Used taxonomy: ' + this.usedTaxonomy);
         console.log('- Use autop: '+ this.autop + "\n\n");
         console.log('- Post types: '+ this.postTypes.toString() + "\n\n");
-
-        if(authors === 'wp-authors') {
-            this.importAuthors = true;
-        }
     }
 
     /**
@@ -720,7 +720,7 @@ class WxrParser {
         let image = nextImg.imgUrl;
         let imageFileName = url.parse(image);
 
-        if(imageFileName && imageFileName.pathname) {
+        if(imageFileName && imageFileName.pathname && imageFileName.protocol) {
             imageFileName = path.basename(imageFileName.pathname);
 
             download.image({

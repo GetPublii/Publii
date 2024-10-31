@@ -194,7 +194,7 @@ export default {
     }
 
     &-info {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         color: var(--text-light-color);
         margin: -1.5rem 0 4rem;
     }

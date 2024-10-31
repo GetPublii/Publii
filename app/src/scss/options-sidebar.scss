@@ -15,7 +15,7 @@
         color: var(--label-color);
         cursor: default;
         display: block;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: var(--font-weight-semibold);
         line-height: 2.6;
         margin-bottom: 1.2rem;
@@ -103,6 +103,7 @@
     }
 
     &-item {
+        margin-top: 5px;
 
         &:first-of-type {
             .options-sidebar-header {
@@ -133,15 +134,16 @@
 
     &-header {
         align-items: center;
-        border-top: 1px solid var(--input-border-color);
+        background-color: var(--input-bg-light);
+        border-radius: var(--border-radius);
         color: var(--link-primary-color-hover);
         cursor: pointer;
         display: flex;
-        font-size: 1.5rem;
-        height: 6rem;
+        font-size: 1.4rem;
+        height: 5rem;
         margin-left: 0;
         margin-top: -1px;
-        padding: 0;
+        padding: 0 1.6rem;
         position: relative;
         transition: var(--transition);
         user-select: none;
@@ -149,15 +151,12 @@
 
         &:hover {
             color: var(--link-primary-color);
-
-            .options-sidebar {             
-                &-icon {
-                    fill: var(--color-primary);
-                }
-            }
         }
 
         &.is-open {
+            background-color: transparent;
+            padding: 0;
+
             .options-sidebar {
                 &-label {
                     color: var(--link-primary-color);
@@ -189,7 +188,6 @@
     }
 
     &-icon {
-        fill: var(--icon-secondary-color);
         left: 0;
         height: 2.4rem;
         margin-right: 1.6rem;
@@ -237,11 +235,10 @@
     }
 
     &-buttons {
-        border-top: 1px solid var(--input-border-color);
         display: flex;
         flex-wrap: wrap;
         gap: 0.625rem;
-        padding: 3rem 0 0 0;
+        padding: 2rem 0 0 0;
 
         & > .button{
             flex-grow: 1;

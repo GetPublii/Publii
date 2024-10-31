@@ -49,6 +49,11 @@ address {
   color: var(--white);
 }
 
+:focus-visible {
+  outline: 2px solid var(--color) !important;
+  outline-offset: 2px;
+}
+
 html {
   font-size: var(--font-size);
   -webkit-font-smoothing: antialiased;
@@ -1728,6 +1733,9 @@ textarea {
   bottom: 0;
   width: 100%;
 }
+.post__toc {
+  margin-top: calc(var(--baseline) * 6 + 0.5vw);
+}
 .post__toc h3 {
   border-bottom: 1px solid var(--dark);
   font-size: 1rem;
@@ -1931,7 +1939,6 @@ textarea {
   margin: 0 0 1rem;
 }
 
-/* Pagination ------------------------ */
 .pagination {
   display: flex;
   gap: calc(var(--baseline) * 2);

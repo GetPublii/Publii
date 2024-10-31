@@ -51,30 +51,42 @@ function menuURLHelper(rendererInstance, Handlebars) {
             let parentItems = rendererInstance.cachedItems.pagesStructureHierarchy[this.linkID];
             let pageSlug = this.link;
 
-            if (rendererInstance.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
-                let slugs = [];
+            if (rendererInstance.siteConfig.advanced.usePageAsFrontpage && rendererInstance.siteConfig.advanced.pageAsFrontpage === this.linkID) {
+                output = baseUrl + '/';
 
-                for (let i = 0; i < parentItems.length; i++) {
-                    if (rendererInstance.cachedItems.pages[parentItems[i]]) {
-                        slugs.push(rendererInstance.cachedItems.pages[parentItems[i]].slug);
-                    }
-                }
-
-                slugs.push(this.link);
-                pageSlug = slugs.join('/');
-            }
-
-            if (rendererInstance.siteConfig.advanced.urls.cleanUrls) {
-                output = baseUrl + '/' + pageSlug + '/';
                 // In the preview mode we have to load URLs with
                 // index.html as filesystem on OS doesn't behave
                 // as the server environment and not redirect to
                 // a proper URL
                 if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
                     output += 'index.html';
-                }
+                }   
             } else {
-                output = baseUrl + '/' + pageSlug + '.html';
+                if (rendererInstance.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
+                    let slugs = [];
+
+                    for (let i = 0; i < parentItems.length; i++) {
+                        if (rendererInstance.cachedItems.pages[parentItems[i]]) {
+                            slugs.push(rendererInstance.cachedItems.pages[parentItems[i]].slug);
+                        }
+                    }
+
+                    slugs.push(this.link);
+                    pageSlug = slugs.join('/');
+                }
+
+                if (rendererInstance.siteConfig.advanced.urls.cleanUrls) {
+                    output = baseUrl + '/' + pageSlug + '/';
+                    // In the preview mode we have to load URLs with
+                    // index.html as filesystem on OS doesn't behave
+                    // as the server environment and not redirect to
+                    // a proper URL
+                    if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                        output += 'index.html';
+                    }
+                } else {
+                    output = baseUrl + '/' + pageSlug + '.html';
+                }
             }
         }
 

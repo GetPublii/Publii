@@ -203,10 +203,10 @@ export default {
     color: var(--white);
     cursor: pointer;
     display: inline-flex;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: var(--font-weight-semibold);
-    height: 4.6rem;
-    line-height: 4.5rem;
+    height: 4.4rem;
+    line-height: 4.3rem;
     padding: 0;
     position: relative;
     text-align: left;
@@ -218,7 +218,7 @@ export default {
     &-trigger {
         border-radius: var(--border-radius);
         display: block;
-        height: 4.6rem;
+        height: 4.4rem;
         left: 0;
         padding-left: 1.3rem;
         padding-right: 6rem;

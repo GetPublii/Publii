@@ -82,6 +82,7 @@ export default {
         'css',
         'dart',
         'docker',
+        'elixir',
         'elm',
         'gdscript',
         'git',

@@ -114,7 +114,7 @@ export default {
 }
 
 .message {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     padding: 0 0 4rem 0;
 }
 

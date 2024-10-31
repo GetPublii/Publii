@@ -64,6 +64,7 @@ import 'prismjs/components/prism-csharp.min.js';
 import 'prismjs/components/prism-css.min.js';
 import 'prismjs/components/prism-dart.min.js';
 import 'prismjs/components/prism-docker.min.js';
+import 'prismjs/components/prism-elixir.min.js';
 import 'prismjs/components/prism-elm.min.js';
 import 'prismjs/components/prism-gdscript.min.js';
 import 'prismjs/components/prism-git.min.js';
@@ -210,8 +211,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
 
     const i18n = new VueI18n({
         locale: initialData.currentLanguage.name,
+        fallbackLocale: 'en',
         messages: {
-            [initialData.currentLanguage.name]: initialData.currentLanguage.translations
+            [initialData.currentLanguage.name]: initialData.currentLanguage.translations,
+            'en': initialData.defaultLanguage.translations
         }
     });
 

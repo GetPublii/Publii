@@ -111,10 +111,10 @@ export default {
     border-radius: 20px;
     cursor: pointer;
     display: inline-block;
-    height: 20px;
+    height: 18px;
     margin-right: .5rem;
     position: relative;
-    top: 4px;
+    top: 3px;
     transition: all .28s ease;
     width: 32px;
     z-index: 1;
@@ -128,8 +128,8 @@ export default {
         left: 2px;
         top: 2px;
         display: block;
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
         background: var(--input-bg-lightest);
         content: '';
@@ -145,7 +145,7 @@ export default {
         background: var(--input-border-focus);
 
         &:after {
-            left: 14px;
+            left: 16px;
             background: var(--input-bg-lightest);
         }
     }

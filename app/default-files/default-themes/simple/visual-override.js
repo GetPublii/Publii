@@ -22,6 +22,7 @@ var generateOverride = function (params) {
     if (params.submenu === 'custom') {
         output += `
         .navbar .navbar__submenu {
+              white-space: wrap;
                width: ${params.submenuWidth}px;     
         }
         .navbar .has-submenu .has-submenu:active > .navbar__submenu,

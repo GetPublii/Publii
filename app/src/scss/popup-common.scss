@@ -19,7 +19,7 @@
        width: 100%;    
         
        h1 {
-          font-size: 2.2rem;
+          font-size: 1.9rem;
           margin-bottom: 1.5rem;
        }
     }
@@ -39,6 +39,10 @@
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     user-select: none;
+
+    .buttons .button {
+        font-size: 1.4rem;
+    }
 }
 
 .message {
@@ -56,7 +60,7 @@
 
 h1,
 h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: var(--font-weight-semibold);
     margin: 0 0 7rem 0;
     text-align: center;
