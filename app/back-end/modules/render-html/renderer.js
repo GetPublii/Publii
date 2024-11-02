@@ -764,8 +764,8 @@ class Renderer {
                     postsPerPage: postsPerPage,
                     nextPage: nextPage,
                     previousPage: previousPage,
-                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'home', false, addIndexHtml),
-                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'home', false, addIndexHtml)
+                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'home', false, addIndexHtml),
+                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'home', false, addIndexHtml)
                 };
 
                 let additionalContexts = [];
@@ -1506,8 +1506,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'tag', tagSlug, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'tag', tagSlug, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'tag', tagSlug, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'tag', tagSlug, addIndexHtml)
                     };
 
                     let additionalContexts = [];
@@ -1736,8 +1736,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'author', authorUsername, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'author', authorUsername, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'author', authorUsername, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'author', authorUsername, addIndexHtml)
                     };
 
                     let additionalContexts = [];
