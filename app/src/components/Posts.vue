@@ -231,7 +231,8 @@
                                 @click="bulkUnfeatured">
                                 <icon
                                     size="xs"
-                                    name="unfeatured-post" />
+                                    name="unfeatured-post" 
+                                    strokeColor="color-helper-6" />
                                 {{ $t('post.markAsUnfeatured') }}
                             </li>
                             <li
@@ -248,7 +249,8 @@
                                 @click="bulkInclude">
                                 <icon
                                     size="xs"
-                                    name="included-post" />
+                                    name="included-post" 
+                                    strokeColor="color-3" />
                                 {{ $t('post.includeInHomepage') }}
                             </li>
                             <li
