@@ -93,7 +93,7 @@
 
                     <p-button
                         v-if="selectedTagsAreHidden"
-                        icon="hidden-post"
+                        icon="unhidden-post"
                         type="small light icon"
                         :onClick="bulkUnhide">
                         {{ $t('ui.unhide') }}
@@ -124,7 +124,7 @@
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
-                                primaryColor="color-7"
+                                strokeColor="color-7"
                                 :title="$t('tag.thisTagIsHidden')" />
                         </a>
                     </h2>

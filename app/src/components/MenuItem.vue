@@ -23,7 +23,7 @@
                     name="draft-post"
                     size="xs"
                     class="draft-icon"
-                    primary-color="color-7"
+                    strokeColor="color-7"
                     :title="$t('post.thisPostIsADraft')" />
 
                 <icon
@@ -31,7 +31,7 @@
                     size="xs"
                     name="hidden-post"
                     class="hidden-icon"
-                    primaryColor="color-7"
+                    strokeColor="color-7"
                     :title="$t('menu.menuItemIsHidden')" />
             </span>
 
