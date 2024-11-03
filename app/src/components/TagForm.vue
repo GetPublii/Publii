@@ -68,15 +68,15 @@
                                 id="is-hidden"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
-                            <span :title="$t('tag.tagWillNotAppearInGeneratedTagLists')">
-                                {{ $t('tag.hideTag') }}
-                            </span>
                             <icon
                                     :title="$t('post.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
-                                    primaryColor="color-6" />
+                                    strokeColor="color-6" />
+                            <span :title="$t('tag.tagWillNotAppearInGeneratedTagLists')">
+                                {{ $t('tag.hideTag') }}
+                            </span>
                         </label>
                     </div>
                 </div>
@@ -711,14 +711,15 @@ export default {
     }
 
     &-hidden {
+        font-size: 1.4rem !important;
         font-weight: var(--font-weight-normal) !important;
         line-height: 1.8 !important;
         margin-top: 3rem;
 
         svg {
-            margin: 0 .5rem;
+            margin: 0 .5rem 0 0;
             position: relative;
-            top: .1rem;
+            top: .2rem;
         }
     }
 }
