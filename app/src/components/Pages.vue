@@ -204,8 +204,7 @@
                                 @click="bulkPublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-8" />
+                                    name="publish-post" />
                                 {{ $t('page.publish') }}
                             </li>
                             <li
@@ -213,16 +212,14 @@
                                 @click="bulkUnpublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-7" />
+                                    name="draft-post" />
                                 {{ $t('page.markAsDraft') }}
                             </li>
                             <li
                                 @click="bulkConvertToPost">
                                 <icon
                                     size="xs"
-                                    name="convert-to-page"
-                                    primaryColor="color-7" />
+                                    name="convert-to-page" />
                                 {{ $t('page.convertToPost') }}
                             </li>
                         </ul>
