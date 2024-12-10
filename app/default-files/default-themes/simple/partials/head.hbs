@@ -28,16 +28,6 @@
         {{/if}}
         {{> fonts}}
         <link rel="stylesheet" href="{{css "style.css" }}">
-        {{#checkIfAny post.hasGallery page.hasGallery}}
-            <link rel="stylesheet" href="{{css "photoswipe.css" }}">
-        {{/checkIfAny}}
-        {{#checkIf @config.custom.frontSource '==' "post" }}
-           {{#checkIf @config.custom.frontGallery '==' true}}
-              {{#is "index"}}
-                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
-              {{/is}}
-           {{/checkIf}}
-        {{/checkIf}}
         {{jsonLD}}
         <noscript>
             <style>
