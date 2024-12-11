@@ -173,7 +173,7 @@ class DeployEvents {
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
             siteConfig: deploymentConfig,
-            useFtpAlt: this.app.appConfig.experimentalFeatureAppAutoBeautifySourceCode
+            useFtpAlt: this.app.appConfig.experimentalFeatureAppFtpAlt
         });
 
         this.deploymentProcess.on('message', function(data) {

@@ -73,7 +73,7 @@ class Deployment {
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
             default:   
-                if (this.useAltFtp) {             
+                if (this.useAltFtp) {  
                     connection = new FTPAlt();    
                 } else {
                     connection = new FTP();
@@ -101,7 +101,7 @@ class Deployment {
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
             default:                
-                if (this.useAltFtp) {             
+                if (this.useAltFtp) {     
                     this.client = new FTPAlt(this); 
                 } else {
                     this.client = new FTP(this);
