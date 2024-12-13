@@ -124,7 +124,7 @@
                     <div
                         v-if="showAuthorSlugs"
                         class="author-slug">
-                        {{ $t('author.url') }}: /{{ item.slug }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
+                        {{ $t('author.url') }}: /{{ item.username }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
                     </div>
                 </collection-cell>
 
@@ -412,6 +412,12 @@ export default {
             border-top-color: transparent;
             border-bottom: solid 5px var(--icon-secondary-color);
         }
+    }
+
+    .author-slug {
+        color: var(--gray-4);
+        font-size: 11px;
+        margin-top: .2rem;
     }
 }
 </style>

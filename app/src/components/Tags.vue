@@ -476,6 +476,12 @@ export default {
             border-bottom: solid 5px var(--icon-secondary-color);
         }
     }
+
+    .tag-slug {
+        color: var(--gray-4);
+        font-size: 11px;
+        margin-top: .2rem;
+    }
 }
 
 .col > a > .icon {
