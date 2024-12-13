@@ -128,6 +128,12 @@
                                 :title="$t('tag.thisTagIsHidden')" />
                         </a>
                     </h2>
+
+                    <div
+                        v-if="showTagSlugs"
+                        class="tag-slug">
+                        {{ $t('tag.url') }}: /{{ item.slug }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -249,6 +255,9 @@ export default {
 
             let hiddenTags = selectedTags.filter(item => item.isHidden);
             return !!hiddenTags.length;
+        },
+        showTagSlugs () {
+            return this.$store.state.app.config.showPostSlugs;
         }
     },
     beforeMount () {

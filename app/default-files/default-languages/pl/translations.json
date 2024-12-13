@@ -31,6 +31,7 @@
         "themeDoesNotSupportFeaturedImagesForAuthors": "Twój motyw nie wspiera wyróżnionych obrazków dla autorów.",
         "whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer": "Korzystając z opcji Gravatara, pamiętaj, że odwiedzający twoją witrynę potrzebują wysyłać żądanie do serwera firmy trzeciej, aby załadować obraz awatara.",
         "toUseThisOptionEnableIndexingAuthorPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron autorów.",
+        "url": "URL",
         "useGravatarMessage": "Użyj <a href=\"https://gravatar.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Gravatara </a> aby dodać avatar do autora.",
         "useGravatarServiceMessage": "Aby skorzystać z usługi Gravatar podaj adres e-mail autora.",
         "website": "Strona internetowa"
@@ -1251,7 +1252,8 @@
         "tagStatusChangeSuccessMessage": "Status wybranych tagów został zmieniony",
         "tagWillNotAppearInGeneratedTagLists": "Tag nie pojawi się na żadnej z wygenerowanych list tagów takich jak strona wpisu lub taga.",
         "thisTagIsHidden": "Ten tag jest ukryty",
-        "toUseThisOptionEnableIndexingTagPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron tagów."
+        "toUseThisOptionEnableIndexingTagPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron tagów.",
+        "url": "URL"
     },
     "theme": {
         "addThemeSuccessMessage": "Motyw został dodany.",

@@ -31,6 +31,7 @@
         "themeDoesNotSupportFeaturedImagesForAuthors": "Your theme does not support featured images for authors",
         "whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer": "When you use the Gravatar service, please note, that your site visitors need to query a third-party server to load your avatar image.",
         "toUseThisOptionEnableIndexingAuthorPages": "To use this option, first enable indexing of author pages in SEO settings.",
+        "url": "URL",
         "useGravatarMessage": "Use <a href=\"https://gravatar.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Gravatar </a> to provide your author avatar",
         "useGravatarServiceMessage": "In order to use Gravatar service first provide the author's e-mail.",
         "website": "Website"
@@ -922,7 +923,7 @@
         "showModificationDateAsColumn": "Show modification date as column",
         "showOnlyFeaturedPosts": "Show only featured posts",
         "showPostTagsOnTheListing": "Show post tags on the listing",
-        "showPostSlugsOnTheListing": "Show slugs on the post/page listings",
+        "showPostSlugsOnTheListing": "Show slugs across all listing views",
         "showPrivacyPolicyLink": "Show privacy policy link",
         "sitemap": "Sitemap",
         "sitemapLinkInfo": "You can find the XML sitemap here: <a href=\"{sitemapLink}\" class=\"sitemap-external-link\" target=\"_blank\" rel=\"noopener noreferrer\">sitemap.xml</a>",
@@ -1252,7 +1253,8 @@
         "tagStatusChangeSuccessMessage": "Status of the selected tags has been changed",
         "tagWillNotAppearInGeneratedTagLists": "Tag will not appear in any generated tag list such as post or tag/s pages.",
         "thisTagIsHidden": "This tag is hidden",
-        "toUseThisOptionEnableIndexingTagPages": "To use this option, first enable indexing of tag pages in SEO settings."
+        "toUseThisOptionEnableIndexingTagPages": "To use this option, first enable indexing of tag pages in SEO settings.",
+        "url": "URL"
     },
     "theme": {
         "addThemeSuccessMessage": "Theme has been successfully added.",
