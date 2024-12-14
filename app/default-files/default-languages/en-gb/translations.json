@@ -975,7 +975,7 @@
         "usePageAsFrontpage": "Set page as homepage",
         "usePageAsFrontpageNotice": "When enabled, the selected page will become your website's homepage, accessible at your main web address (the root URL). Note that leaving the <a href=\"#\" data-internal-link=\"URLs\">Posts prefix</a> empty will disable posts pagination.",
         "usePrettyURLs": "Use pretty URLs",
-        "usePrettyURLsInfo": "When enabled, your post URLs won't contain the .html suffix e.g. it will change URLs from <strong>https://example.com/post.html</strong> to <strong>https://example.com/post/</strong>. For pages hierarchy wont't be visible in the URL if this option is disabled",
+        "usePrettyURLsInfo": "When enabled, your post URLs won't contain the .html suffix e.g. it will change URLs from <strong>https://example.com/post.html</strong> to <strong>https://example.com/post/</strong>. For pages hierarchy won't be visible in the URL if this option is disabled",
         "useSiteGlobalSettings": "Use global site settings",
         "useTitlesAndTags": "Use titles and tags",
         "useWideScrollbars": "Use wider scrollbars",
