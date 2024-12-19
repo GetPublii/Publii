@@ -549,7 +549,7 @@ class WxrParser {
             }, false);
 
             let newPageResult = newPage.save();
-            let newPageID = newPageResult.postID;
+            let newPageID = newPageResult.pageID;
 
             this.temp.pages[pageSlug] = newPageID;
             this.temp.mapping.pages[pages[i]['wp:post_id']] = newPageID;
@@ -581,7 +581,7 @@ class WxrParser {
                 });
 
                 let featuredPageID = newPage.db.prepare('SELECT last_insert_rowid() AS id').get().id;
-                let featuredPageIdUpdate = newPage.db.prepare(`UPDATE posts SET featured_image_id = @featuredPostID WHERE id = @newPageID`);
+                let featuredPageIdUpdate = newPage.db.prepare(`UPDATE posts SET featured_image_id = @featuredPageID WHERE id = @newPageID`);
 
                 featuredPageIdUpdate.run({
                     featuredPageID,
