@@ -338,7 +338,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             async toggleTheme () {
                 this.skipThemeChangeEvents = true;
                 let currentTheme = this.$store.state.app.theme;
-                let iframes = document.querySelectorAll('iframe[id$="_ifr"]');
+                let iframes = document.querySelectorAll('iframe[id$="_ifr"], iframe#plugin-settings-root');
                 let theme;
 
                 if (currentTheme === 'dark') {
