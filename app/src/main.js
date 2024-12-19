@@ -274,7 +274,8 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 galleryPopupUpdated: (callback) => this.$bus.$on('gallery-popup-updated', callback),
                 getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
                 translate: (phraseKey) => this.$t(phraseKey),
-                overridedCssVariables: () => this.overridedCssVariables
+                overridedCssVariables: () => this.overridedCssVariables,
+                showMessage: (messageConfig) => this.showMessage(messageConfig)
             };
 
             // Find issues with loading languages
@@ -443,6 +444,13 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             },
             pluginsApiGetCurrentTheme () {
                 return this.$store.state.currentSite.config.theme;
+            },
+            showMessage (message) {
+                this.$bus.$emit('message-display', {
+                    message: message.text || '',
+                    type: message.type || 'warning',
+                    lifeTime: message.lifeTime || 3
+                });
             }
         },
         beforeDestroy () {
