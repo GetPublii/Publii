@@ -536,7 +536,7 @@ class ContentHelper {
         let regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/[0-9]{1,}', 'gmi');
 
         if (type === 'file' || type === 'author') {
-            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?\"', 'gmi');
+            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?[\"\']{1,1}', 'gmi');
         }
 
         let urls = [...new Set(text.match(regexp))];
