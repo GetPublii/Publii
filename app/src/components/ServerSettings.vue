@@ -74,8 +74,8 @@
                     :title="$t('sync.s3CompatibleStorage')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="48"
-                      customHeight="48"
+                      customWidth="128"
+                      customHeight="40"
                       name="s3storage"
                       iconset="svg-map-server"/>
                 </div>
@@ -118,8 +118,8 @@
                     :title="$t('sync.netlify')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="112"
-                      customHeight="46"
+                      customWidth="126"
+                      customHeight="52"
                       name="netlify"
                       iconset="svg-map-server"/>
                 </div>
@@ -129,8 +129,8 @@
                     :title="$t('sync.googleCloud')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="167"
-                      customHeight="40"
+                      customWidth="162"
+                      customHeight="29"
                       name="googlecloud"
                       iconset="svg-map-server"/>
                 </div>
@@ -140,8 +140,8 @@
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="80"
-                      customHeight="50"
+                      customWidth="128"
+                      customHeight="40"
                       name="zip"
                       iconset="svg-map-server"/>
                 </div>
@@ -151,7 +151,14 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     class="server-settings-grid-item deployment-others">
-                    <span>{{ $t('ui.more') }}...</span>
+
+                    <icon
+                        customWidth="50"
+                        customHeight="46"
+                        properties="not-clickable"
+                        name="add" />
+
+                    <h3>{{ $t('ui.more') }}...</h3>
                 </a>
 
             </div>
@@ -1780,6 +1787,7 @@ export default {
             box-shadow: var(--box-shadow-small);
             color: var(--link-primary-color-hover);
             display: flex;
+            flex-direction: column;
             fill: var(--icon-primary-color);
             justify-content: center;
             min-height: calc(8rem + 8vh);
@@ -1792,7 +1800,6 @@ export default {
                 box-shadow: var(--box-shadow-medium);
                 color: var(--color-primary);
                 cursor: pointer;
-                fill: var(--color-primary);  
             }
 
             & > svg {
@@ -1801,9 +1808,26 @@ export default {
 
             &.deployment-others {
                 h3 {
-                    font-size: 1.9rem;
+                    color: var(--text-primary-color);
+                    font-size: $app-font-base;
                     font-weight: var(--font-weight-semibold);
-                    margin-left: 1rem;
+                    margin-bottom: 0;
+                    transition: inherit;
+                }
+
+                svg {
+                    fill: var(--icon-primary-color);
+                    transition: inherit;
+                }
+
+                &:hover {
+                    svg {
+                        fill: var(--color-primary);
+                    }
+
+                    h3 {
+                        color: var(--color-primary);
+                    }
                 }
             }
         }
