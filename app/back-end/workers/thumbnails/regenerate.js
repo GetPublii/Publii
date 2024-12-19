@@ -66,6 +66,7 @@ function regenerateImages(mediaPath, catalog) {
  */
 function regenerateImage (images, fullPath, catalog) {
     if (!images.length) {
+        context.totalProgress++;
         return;
     }
 
