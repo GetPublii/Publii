@@ -88,10 +88,11 @@
                     :title="$t('sync.git')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="177"
-                      customHeight="38"
+                      customWidth="84"
+                      customHeight="48"
                       name="git"
                       iconset="svg-map-server"/>
+                      <span>Git<sup>TM</sup> Repository</span>
                 </div>
                 
                 <div
