@@ -52,10 +52,11 @@
                     :title="$t('sync.ftp')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="69"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="ftp"
                       iconset="svg-map-server"/>
+                      <span>FTP Protocol</span>
                 </div>
 
                 <div
@@ -63,10 +64,11 @@
                     :title="$t('sync.sftp')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="69"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="sftp"
                       iconset="svg-map-server"/>
+                      <span>FTPS Protocol</span>
                 </div>
 
                 <div
@@ -74,10 +76,11 @@
                     :title="$t('sync.s3CompatibleStorage')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="128"
-                      customHeight="40"
+                      customWidth="48"
+                      customHeight="48"
                       name="s3storage"
                       iconset="svg-map-server"/>
+                      <span>S3 Storage</span>
                 </div>
 
                 <div
@@ -96,10 +99,11 @@
                     :title="$t('sync.github')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="71"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="githubpages"
                       iconset="svg-map-server"/>
+                      <span>GitHub</span>
                 </div>
 
                 <div
@@ -107,10 +111,11 @@
                     :title="$t('sync.gitlabPages')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="108"
-                      customHeight="40"
+                      customWidth="48"
+                      customHeight="48"
                       name="gitlab"
                       iconset="svg-map-server"/>
+                      <span>GitLab</span>
                 </div>
 
                 <div
@@ -118,10 +123,11 @@
                     :title="$t('sync.netlify')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="126"
-                      customHeight="52"
+                      customWidth="54"
+                      customHeight="48"
                       name="netlify"
                       iconset="svg-map-server"/>
+                      <span>Netlify</span>
                 </div>
 
                 <div
@@ -129,10 +135,11 @@
                     :title="$t('sync.googleCloud')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="162"
-                      customHeight="29"
+                      customWidth="48"
+                      customHeight="48"
                       name="googlecloud"
                       iconset="svg-map-server"/>
+                      <span>Google Cloud</span>
                 </div>
 
                 <div
@@ -140,10 +147,11 @@
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="128"
-                      customHeight="40"
+                      customWidth="48"
+                      customHeight="48"
                       name="zip"
                       iconset="svg-map-server"/>
+                      <span>Manual Deployment</span>
                 </div>
 
                 <a
@@ -1785,10 +1793,11 @@ export default {
             border: 1px solid transparent;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow-small);
-            color: var(--link-primary-color-hover);
+            color: var(--text-primary-color);
             display: flex;
             flex-direction: column;
             fill: var(--icon-primary-color);
+            font-weight: var(--font-weight-semibold);
             justify-content: center;
             min-height: calc(8rem + 8vh);
             position: relative;
@@ -1803,6 +1812,7 @@ export default {
             }
 
             & > svg {
+                margin: 0 auto 1rem;
                 transition: inherit;
             }
 
