@@ -586,7 +586,8 @@ class Site {
         // Move files - if exists to new root-files directory
         let filesToMove = {
             'robots.txt': path.join(siteBasePath, 'config', 'robots.txt'),
-            '.htaccess':  path.join(siteBasePath, 'config', '.htaccess'),
+            '.htaccess': path.join(siteBasePath, 'config', '.htaccess'),
+            '.htpasswd': path.join(siteBasePath, 'config', '.htpasswd'),
             '_redirects': path.join(siteBasePath, 'config', '_redirects')
         };
 

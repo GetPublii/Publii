@@ -210,7 +210,7 @@ class NetlifyAPI {
     }
 
     fileIsNotExcluded (file) {
-        return file.indexOf('.') !== 0 || file === '.htaccess' || file === '_redirects';
+        return file.indexOf('.') !== 0 || file === '.htaccess' || file === '.htpasswd' || file === '_redirects';
     }
 
     getFilePath (dir, file, includeInputDir = false) {
