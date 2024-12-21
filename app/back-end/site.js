@@ -20,6 +20,7 @@ class Site {
     constructor(appInstance, config, maintenanceMode = false) {
         this.application = appInstance;
         this.name = config.name;
+        this.description = config.description;
         this.uuid = config.uuid;
         this.displayName = config.displayName;
         // In maintenance mode we need only the website name
@@ -104,6 +105,7 @@ class Site {
         let siteConfig = {
             'uuid': 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000),
             'name': this.name,
+            'description': '',
             'displayName': this.displayName,
             'author': this.author,
             'logo': this.logo,

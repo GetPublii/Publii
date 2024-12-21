@@ -16,7 +16,13 @@
         </span>
 
         <strong class="single-site-name" :title="displayName">
-            {{ displayName }}
+            <span>
+                {{ displayName }}
+            </span>
+
+            <small v-if="description">
+                {{ description }}
+            </small>
         </strong>
 
         <div 
@@ -57,6 +63,9 @@ export default {
         'duplicateInProgress'
     ],
     computed: {
+        description: function() {
+            return this.$store.state.sites[this.site].description;
+        },
         displayName: function() {
             return this.$store.state.sites[this.site].displayName;
         },
@@ -342,6 +351,18 @@ export default {
         transition: var(--transition);
         white-space: nowrap;
         max-width: 82%;
+
+        span {
+            display: block;
+            line-height: 1.4;
+        }
+
+        small {
+            display: block;
+            line-height: 1.4;
+            opacity: .5;
+            white-space: normal;
+        }
     }
 }
 </style>

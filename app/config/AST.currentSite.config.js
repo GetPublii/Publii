@@ -2,6 +2,7 @@ const AstCurrentSiteConfig = {
     uuid: '',
     name: '',
     displayName: '',
+    description: '',
     synced: false,
     logo: {
         color: '',
