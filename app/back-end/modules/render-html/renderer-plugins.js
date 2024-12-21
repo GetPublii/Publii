@@ -236,11 +236,11 @@ class RendererPlugins {
             filePath = path.join(pluginDir, fileName);
             
             if (!fs.existsSync(pluginsDir)) {
-                fs.mkdirSync(pluginsDir);
+                fs.mkdirSync(pluginsDir, { recursive: true });
             }
 
             if (!fs.existsSync(pluginDir)) {
-                fs.mkdirSync(pluginDir);
+                fs.mkdirSync(pluginDir, { recursive: true });
             }
         }
 

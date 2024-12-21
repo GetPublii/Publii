@@ -442,7 +442,7 @@ class Renderer {
                 fs.rmSync(path.join(this.outputDir, file), { recursive: true });
             }
         } else {
-            fs.mkdirSync(this.outputDir);
+            fs.mkdirSync(this.outputDir, { recursive: true });
 
             if (this.previewMode === false && this.siteConfig.deployment.protocol === 'git') {
                 let gitClient = new Git(false);

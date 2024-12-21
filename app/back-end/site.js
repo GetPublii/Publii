@@ -559,23 +559,23 @@ class Site {
         let pluginsConfigPath = path.join(siteBasePath, 'config', 'site.plugins.json');
 
         if(!UtilsHelper.dirExists(rootFilesPath)) {
-            fs.mkdirSync(rootFilesPath);
+            fs.mkdirSync(rootFilesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(mediaFilesPath)) {
-            fs.mkdirSync(mediaFilesPath);
+            fs.mkdirSync(mediaFilesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(tagImagesPath)) {
-            fs.mkdirSync(tagImagesPath);
+            fs.mkdirSync(tagImagesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(authorImagesPath)) {
-            fs.mkdirSync(authorImagesPath);
+            fs.mkdirSync(authorImagesPath, { recursive: true});
         }
 
         if(!UtilsHelper.dirExists(pluginsPath)) {
-            fs.mkdirSync(pluginsPath);
+            fs.mkdirSync(pluginsPath, { recursive: true });
         }
 
         // Create site.plugins.json if not exists
