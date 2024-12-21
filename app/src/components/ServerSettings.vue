@@ -1852,4 +1852,20 @@ export default {
         margin-bottom: 3rem;
     }
 }
+
+/*
+ * Responsive improvements
+ */
+
+ @media (max-height: 900px) {
+    .server-settings-grid-item > svg {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 1400px) {
+    .server-settings-grid-item > svg {
+        transform: scale(0.9);
+    }
+}
 </style>

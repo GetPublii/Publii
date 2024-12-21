@@ -308,14 +308,31 @@ export default {
  * Responsive improvements
  */
 
+ @media (max-height: 900px) {
+    .tools {
+        &-list {
+            &-item {
+                svg {
+                    transform: scale(0.9);
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: 1400px) {
     .tools {
         &-list {
             li {
                 flex-basis: calc(50% - 2rem);
             }
-            &-item a {
-                padding: 3rem 1rem 3.5rem;
+            &-item {
+                a {
+                    padding: 3rem 1rem 3.5rem;
+                }
+                svg {
+                    transform: scale(0.9);
+                }
             }
         }
     }
