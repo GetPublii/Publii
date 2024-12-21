@@ -56,7 +56,7 @@
                       customHeight="48"
                       name="ftp"
                       iconset="svg-map-server"/>
-                      <span>FTP Protocol</span>
+                      <span>{{ $t('sync.ftp') }}</span>
                 </div>
 
                 <div
@@ -68,7 +68,7 @@
                       customHeight="48"
                       name="sftp"
                       iconset="svg-map-server"/>
-                      <span>FTPS Protocol</span>
+                      <span>{{ $t('sync.sftp') }}</span>
                 </div>
 
                 <div
@@ -80,7 +80,7 @@
                       customHeight="48"
                       name="s3storage"
                       iconset="svg-map-server"/>
-                      <span>S3 Storage</span>
+                      <span>{{ $t('sync.s3CompatibleStorage') }}</span>
                 </div>
 
                 <div
@@ -92,7 +92,7 @@
                       customHeight="48"
                       name="git"
                       iconset="svg-map-server"/>
-                      <span>Git<sup>TM</sup> Repository</span>
+                      <span>{{ $t('sync.git') }}</span>
                 </div>
                 
                 <div
@@ -104,7 +104,7 @@
                       customHeight="48"
                       name="githubpages"
                       iconset="svg-map-server"/>
-                      <span>GitHub</span>
+                      <span>{{ $t('sync.githubPages') }}</span>
                 </div>
 
                 <div
@@ -116,7 +116,7 @@
                       customHeight="48"
                       name="gitlab"
                       iconset="svg-map-server"/>
-                      <span>GitLab</span>
+                      <span>{{ $t('sync.gitlabPages') }}</span>
                 </div>
 
                 <div
@@ -128,7 +128,7 @@
                       customHeight="48"
                       name="netlify"
                       iconset="svg-map-server"/>
-                      <span>Netlify</span>
+                      <span>{{ $t('sync.netlify') }}</span>
                 </div>
 
                 <div
@@ -140,7 +140,7 @@
                       customHeight="48"
                       name="googlecloud"
                       iconset="svg-map-server"/>
-                      <span>Google Cloud</span>
+                      <span>{{ $t('sync.googleCloud') }}</span>
                 </div>
 
                 <div
@@ -152,7 +152,7 @@
                       customHeight="48"
                       name="zip"
                       iconset="svg-map-server"/>
-                      <span>Manual Deployment</span>
+                      <span>{{ $t('sync.manualDeployment') }}</span>
                 </div>
 
                 <a
