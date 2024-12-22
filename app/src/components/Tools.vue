@@ -312,7 +312,8 @@ export default {
     .tools {
         &-list {
             &-item {
-                svg {
+                svg,
+                img {
                     transform: scale(0.9);
                 }
             }
@@ -330,7 +331,8 @@ export default {
                 a {
                     padding: 3rem 1rem 3.5rem;
                 }
-                svg {
+                svg, 
+                img {
                     transform: scale(0.9);
                 }
             }
