@@ -358,9 +358,9 @@ export default {
         }
 
         small {
+            color: var(--gray-4);
             display: block;
             line-height: 1.4;
-            opacity: .5;
             white-space: normal;
         }
     }
