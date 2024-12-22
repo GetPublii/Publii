@@ -1019,7 +1019,7 @@
             "yesPleaseOverride": "Yes, override"
         },
         "selectedBackupFile": "Selected backup file: ",
-        "siteDescription": "Site description:",
+        "siteDescription": "Site description (internal)",
         "siteLoadingErrorMsg": "An error occurred during loading of the selected website. Please check the website files and try again.",
         "siteName": "Site name:",
         "siteSettingsSaveSuccessMsg": "Site settings have been successfully saved.",

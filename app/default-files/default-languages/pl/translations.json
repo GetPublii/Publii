@@ -1018,7 +1018,7 @@
             "yesPleaseOverride": "Tak, nadpisz"
         },
         "selectedBackupFile": "Wybrano plik kopii zapasowej: ",
-        "siteDescription": "Opis strony:",
+        "siteDescription": "Opis strony (wewnętrzny):",
         "siteLoadingErrorMsg": "Wystąpił błąd podczas ładowania wybranej witryny. Sprawdź pliki witryny i spróbuj ponownie.",
         "siteName": "Nazwa strony:",
         "siteSettingsSaveSuccessMsg": "Ustawienia witryny zostały pomyślnie zapisane.",

@@ -49,7 +49,7 @@
                 <field
                     id="description"
                     :label="$t('site.siteDescription')">
-                    <text-input
+                    <text-area
                         slot="field"
                         ref="description"
                         id="description"
