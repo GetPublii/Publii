@@ -206,8 +206,7 @@
                                 @click="bulkPublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-8" />
+                                    name="publish-post" />
                                 {{ $t('post.publish') }}
                             </li>
                             <li
@@ -215,8 +214,7 @@
                                 @click="bulkUnpublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-7" />
+                                    name="draft-post" />
                                 {{ $t('post.markAsDraft') }}
                             </li>
                             <li
@@ -225,7 +223,7 @@
                                 <icon
                                     size="xs"
                                     name="featured-post"
-                                    primaryColor="color-helper-6" />
+                                    strokeColor="color-helper-6" />
                                 {{ $t('post.markAsFeatured') }}
                             </li>
                             <li
@@ -233,8 +231,8 @@
                                 @click="bulkUnfeatured">
                                 <icon
                                     size="xs"
-                                    name="featured-post"
-                                    primaryColor="color-8" />
+                                    name="unfeatured-post" 
+                                    strokeColor="color-helper-6" />
                                 {{ $t('post.markAsUnfeatured') }}
                             </li>
                             <li
@@ -243,7 +241,7 @@
                                 <icon
                                     size="xs"
                                     name="excluded-post"
-                                    primaryColor="color-3" />
+                                    strokeColor="color-3" />
                                 {{ $t('post.excludeFromHomepage') }}
                             </li>
                             <li
@@ -251,8 +249,8 @@
                                 @click="bulkInclude">
                                 <icon
                                     size="xs"
-                                    name="excluded-post"
-                                    primaryColor="color-8" />
+                                    name="included-post" 
+                                    strokeColor="color-3" />
                                 {{ $t('post.includeInHomepage') }}
                             </li>
                             <li
@@ -260,8 +258,7 @@
                                 @click="bulkHide">
                                 <icon
                                     size="xs"
-                                    name="hidden-post"
-                                    primaryColor="color-7" />
+                                    name="hidden-post" />
                                 {{ $t('ui.hide') }}
                             </li>
                             <li
@@ -269,16 +266,14 @@
                                 @click="bulkUnhide">
                                 <icon
                                     size="xs"
-                                    name="unhidden-post"
-                                    primaryColor="color-8" />
+                                    name="unhidden-post" />
                                 {{ $t('ui.unhide') }}
                             </li>
                             <li
                                 @click="bulkConvertToPage">
                                 <icon
                                     size="xs"
-                                    name="convert-to-page"
-                                    primaryColor="color-7" />
+                                    name="convert-to-page"/>
                                 {{ $t('post.convertToPage') }}
                             </li>
                         </ul>
@@ -312,25 +307,25 @@
                                 v-if="item.isFeatured"
                                 size="xs"
                                 name="featured-post"
-                                primaryColor="color-helper-6"
+                                strokeColor="color-helper-6"
                                 :title="$t('post.thisPostIsFeatured')" />
                             <icon
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
-                                primaryColor="color-7"
+                                strokeColor="color-7"
                                 :title="$t('post.thisPostIsHidden')" />
                             <icon
                                 v-if="item.isExcludedOnHomepage"
                                 name="excluded-post"
                                 size="xs"
-                                primaryColor="color-3"
+                                strokeColor="color-3"
                                 :title="$t('post.thisPostIsExcludedFromHomepage')" />
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
-                                primaryColor="color-7"
+                                strokeColor="color-7"
                                 :title="$t('post.thisPostIsADraft')" />
                         </a>
                     </h2>

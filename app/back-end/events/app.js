@@ -181,7 +181,7 @@ class AppEvents {
                 if (extension === '.zip') {
                     let zipPath = path.join(themesLoader.themesPath, '__TEMP__');
                     let zip = new AdmZip(config.sourcePath);
-                    fs.mkdirSync(zipPath);
+                    fs.mkdirSync(zipPath, { recursive: true });
                     zip.extractAllTo(zipPath, true);
 
                     let dirs = fs.readdirSync(zipPath).filter(function(file) {
@@ -261,7 +261,7 @@ class AppEvents {
                 if (extension === '.zip') {
                     let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
                     let zip = new AdmZip(config.sourcePath);
-                    fs.mkdirSync(zipPath);
+                    fs.mkdirSync(zipPath, { recursive: true });
                     zip.extractAllTo(zipPath, true);
 
                     let dirs = fs.readdirSync(zipPath).filter(function(file) {
@@ -341,7 +341,7 @@ class AppEvents {
             if (extension === '.zip' || extension === '') {
                 if (extension === '.zip') {
                     let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
-                    fs.mkdirSync(zipPath);
+                    fs.mkdirSync(zipPath, { recursive: true });
                     let zip = new AdmZip(config.sourcePath);
                     zip.extractAllTo(zipPath, true);
 

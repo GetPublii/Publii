@@ -47,6 +47,18 @@
                 </field>
 
                 <field
+                    id="description"
+                    :label="$t('site.siteDescription')">
+                    <text-area
+                        slot="field"
+                        ref="description"
+                        id="description"
+                        key="description"
+                        :spellcheck="false"
+                        v-model="description" />
+                </field>
+
+                <field
                     id="language"
                     :label="$t('langs.language')">
                     <dropdown
@@ -2209,6 +2221,7 @@ export default {
             language: '',
             customLanguage: '',
             spellchecking: false,
+            description: '',
             name: '',
             uuid: '',
             theme: '',
@@ -2495,6 +2508,7 @@ export default {
         }
 
         this.name = this.$store.state.currentSite.config.displayName;
+        this.description = this.$store.state.currentSite.config.description;
 
         if (this.$store.state.currentSite.config.uuid) {
             this.uuid = this.$store.state.currentSite.config.uuid;
@@ -2569,6 +2583,7 @@ export default {
 
             let newSettings = {};
             newSettings.name = this.name;
+            newSettings.description = this.description;
 
             if (this.uuid) {
                 newSettings.uuid = this.uuid;

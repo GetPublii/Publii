@@ -96,17 +96,6 @@ footer--glued{{/checkIf}}{{/if}}">
     </script>
 {{/if}}
 
-{{#checkIfAny post.hasGallery page.hasGallery}}
-    {{> photoswipe}}
-{{/checkIfAny}}
-
-{{#checkIf @config.custom.frontSource '==' "post"}}
-   {{#checkIf @config.custom.frontGallery '==' true}}
-      {{#is "index"}}
-          {{> photoswipe}}
-      {{/is}}
-   {{/checkIf}}
-{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg-map.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>

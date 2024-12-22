@@ -120,6 +120,12 @@
                             </em>
                         </a>
                     </h2>
+
+                    <div
+                        v-if="showAuthorSlugs"
+                        class="author-slug">
+                        {{ $t('author.url') }}: /{{ item.username }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -189,6 +195,9 @@ export default {
         },
         emptySearchResults: function() {
             return this.filterValue !== '' && !this.items.length;
+        },
+        showAuthorSlugs () {
+            return this.$store.state.app.config.showPostSlugs;
         }
     },
     beforeMount () {
@@ -403,6 +412,12 @@ export default {
             border-top-color: transparent;
             border-bottom: solid 5px var(--icon-secondary-color);
         }
+    }
+
+    .author-slug {
+        color: var(--gray-4);
+        font-size: 11px;
+        margin-top: .2rem;
     }
 }
 </style>

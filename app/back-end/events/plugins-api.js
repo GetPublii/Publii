@@ -63,7 +63,7 @@ class PluginsApiEvents {
             let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
            
             if (!fs.existsSync(path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName))) {
-                fs.mkdirSync(path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName));
+                fs.mkdirSync(path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName), { recursive: true });
             }
 
             try {
@@ -82,7 +82,7 @@ class PluginsApiEvents {
             let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
 
             if (!fs.existsSync(dirPath)) {
-                fs.mkdirSync(dirPath);
+                fs.mkdirSync(dirPath, { recursive: true });
             }
 
             try {

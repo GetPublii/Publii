@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.10.0.0] - 2024-12-10
+### Removed
+- Removed built-in gallery to support external gallery plugins
+
 ## [3.0.0.0] - 2024-07-07
 ### Added
 - Added support for italic fonts 

@@ -243,7 +243,8 @@
                                             :anchor="field.anchor"
                                             :settings="settingsValues"
                                             :customCssClasses="field.customCssClasses"
-                                            imageType="pluginImages" />
+                                            imageType="pluginImages"
+                                            :pluginDir="$route.params.pluginname" />
 
                                         <small
                                             v-if="field.note && field.type !== 'separator'"

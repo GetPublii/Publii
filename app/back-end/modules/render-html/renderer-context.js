@@ -690,10 +690,6 @@ class RendererContext {
         let pagePart = this.siteConfig.advanced.urls.pageName;
         let blogBaseUrl = this.siteConfig.domain;
 
-        if (this.siteConfig.advanced.urls.postsPrefix) {
-            blogBaseUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix;
-        }
-
         if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
                 if (this.siteConfig.advanced.usePageAsFrontpage || context === 'blogindex') {

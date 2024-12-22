@@ -320,6 +320,7 @@ class Sitemap {
             'assets',
             'media',
             '.htaccess',
+            '.htpasswd',
             '_redirects',
             'robots.txt',
             'feed.xml',

@@ -51,80 +51,89 @@ describe('URL helper', function() {
     });
 
     describe('#URLHelper.createPaginationPermalink', function() {
-        let urlsConfig = {
-            urls: {
-                cleanUrls: false,
-                tagsPrefix: '',
-                authorsPrefix: 'authors',
-                pageName: 'page',
-                errorPage: '404.html',
-                searchPage: 'search.html'
+        let themeConfig = {
+            supportedFeatures: {
+                postsPage: false
+            }
+        };
+
+        let siteConfig = {
+            domain: 'http://example.com',
+            advanced: {
+                urls: {
+                    cleanUrls: false,
+                    tagsPrefix: '',
+                    authorsPrefix: 'authors',
+                    pageName: 'page',
+                    errorPage: '404.html',
+                    searchPage: 'search.html'
+                }
             }
         };
 
         it('should create a proper URL for different types of pages', function () {
             assert.equal(
                 'http://example.com/lorem-ipsum/page/2/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, '', 'lorem-ipsum')
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, '', 'lorem-ipsum')
             );
 
             assert.equal(
                 'http://example.com/page/2/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, '', false)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, '', false)
             );
 
             assert.equal(
                 'http://example.com/authors/lorem-ipsum/page/2/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, 'author', 'lorem-ipsum')
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, 'author', 'lorem-ipsum')
             );
         });
 
         it('should create a proper URL for the first page', function () {
             assert.equal(
                 'http://example.com/lorem-ipsum/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, '', 'lorem-ipsum')
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, '', 'lorem-ipsum')
             );
 
             assert.equal(
                 'http://example.com/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, '', false)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, '', false)
             );
 
             assert.equal(
                 'http://example.com/authors/lorem-ipsum/',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, 'author', 'lorem-ipsum')
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, 'author', 'lorem-ipsum')
             );
         });
 
         it('should create a proper URL with index.html when it is required', function () {
             assert.equal(
                 'http://example.com/lorem-ipsum/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, '', 'lorem-ipsum', true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, '', 'lorem-ipsum', true)
             );
 
             assert.equal(
                 'http://example.com/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, '', false, true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, '', false, true)
             );
 
             assert.equal(
                 'http://example.com/authors/lorem-ipsum/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 1, 'author', 'lorem-ipsum', true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 1, 'author', 'lorem-ipsum', true)
             );
 
             assert.equal(
                 'http://example.com/lorem-ipsum/page/2/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, '', 'lorem-ipsum', true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, '', 'lorem-ipsum', true)
             );
 
             assert.equal(
                 'http://example.com/page/2/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, '', false, true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, '', false, true)
             );
 
             assert.equal(
                 'http://example.com/authors/lorem-ipsum/page/2/index.html',
-                URLHelper.createPaginationPermalink('http://example.com', urlsConfig, 2, 'author', 'lorem-ipsum', true)
+                URLHelper.createPaginationPermalink(siteConfig, themeConfig, 2, 'author', 'lorem-ipsum', true)
             );
         });
     });

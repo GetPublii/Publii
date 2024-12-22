@@ -20,6 +20,7 @@ class Site {
     constructor(appInstance, config, maintenanceMode = false) {
         this.application = appInstance;
         this.name = config.name;
+        this.description = config.description;
         this.uuid = config.uuid;
         this.displayName = config.displayName;
         // In maintenance mode we need only the website name
@@ -104,6 +105,7 @@ class Site {
         let siteConfig = {
             'uuid': 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000),
             'name': this.name,
+            'description': '',
             'displayName': this.displayName,
             'author': this.author,
             'logo': this.logo,
@@ -559,23 +561,23 @@ class Site {
         let pluginsConfigPath = path.join(siteBasePath, 'config', 'site.plugins.json');
 
         if(!UtilsHelper.dirExists(rootFilesPath)) {
-            fs.mkdirSync(rootFilesPath);
+            fs.mkdirSync(rootFilesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(mediaFilesPath)) {
-            fs.mkdirSync(mediaFilesPath);
+            fs.mkdirSync(mediaFilesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(tagImagesPath)) {
-            fs.mkdirSync(tagImagesPath);
+            fs.mkdirSync(tagImagesPath, { recursive: true });
         }
 
         if(!UtilsHelper.dirExists(authorImagesPath)) {
-            fs.mkdirSync(authorImagesPath);
+            fs.mkdirSync(authorImagesPath, { recursive: true});
         }
 
         if(!UtilsHelper.dirExists(pluginsPath)) {
-            fs.mkdirSync(pluginsPath);
+            fs.mkdirSync(pluginsPath, { recursive: true });
         }
 
         // Create site.plugins.json if not exists
@@ -586,7 +588,8 @@ class Site {
         // Move files - if exists to new root-files directory
         let filesToMove = {
             'robots.txt': path.join(siteBasePath, 'config', 'robots.txt'),
-            '.htaccess':  path.join(siteBasePath, 'config', '.htaccess'),
+            '.htaccess': path.join(siteBasePath, 'config', '.htaccess'),
+            '.htpasswd': path.join(siteBasePath, 'config', '.htpasswd'),
             '_redirects': path.join(siteBasePath, 'config', '_redirects')
         };
 

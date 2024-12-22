@@ -93,7 +93,7 @@
 
                     <p-button
                         v-if="selectedTagsAreHidden"
-                        icon="hidden-post"
+                        icon="unhidden-post"
                         type="small light icon"
                         :onClick="bulkUnhide">
                         {{ $t('ui.unhide') }}
@@ -124,10 +124,16 @@
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
-                                primaryColor="color-7"
+                                strokeColor="color-7"
                                 :title="$t('tag.thisTagIsHidden')" />
                         </a>
                     </h2>
+
+                    <div
+                        v-if="showTagSlugs"
+                        class="tag-slug">
+                        {{ $t('tag.url') }}: /{{ item.slug }}<template v-if="!$store.state.currentSite.config.advanced.urls.cleanUrls">.html</template>
+                    </div>
                 </collection-cell>
 
                 <collection-cell
@@ -249,6 +255,9 @@ export default {
 
             let hiddenTags = selectedTags.filter(item => item.isHidden);
             return !!hiddenTags.length;
+        },
+        showTagSlugs () {
+            return this.$store.state.app.config.showPostSlugs;
         }
     },
     beforeMount () {
@@ -466,6 +475,12 @@ export default {
             border-top-color: transparent;
             border-bottom: solid 5px var(--icon-secondary-color);
         }
+    }
+
+    .tag-slug {
+        color: var(--gray-4);
+        font-size: 11px;
+        margin-top: .2rem;
     }
 }
 

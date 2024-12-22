@@ -51,14 +51,17 @@ class URLHelper {
     /**
      * Creates pagination link for a given URL type
      *
-     * @param domain
-     * @param config
+     * @param siteConfig
+     * @param themeConfig
      * @param pageNumber
      * @param pageType
      * @param pageSlug
      * @returns {*}
      */
-    static createPaginationPermalink(domain, config, pageNumber, pageType, pageSlug, addIndexHtml = false) {
+    static createPaginationPermalink(siteConfig, themeConfig, pageNumber, pageType, pageSlug, addIndexHtml = false) {
+        let domain = siteConfig.domain;
+        let config = siteConfig.advanced;
+        
         // When there is no link - skip the operations
         if(pageNumber === false) {
             return false;
@@ -85,7 +88,7 @@ class URLHelper {
                 optionalPrefix = config.urls.postsPrefix + '/';
             } 
             
-            if (config.urls.postsPrefix && !config.usePageAsFrontpage && pageNumber === 1) {
+            if (config.urls.postsPrefix && !config.usePageAsFrontpage && !themeConfig.supportedFeatures.postsPage && pageNumber === 1) {
                 optionalPrefix = '';
             }
         }

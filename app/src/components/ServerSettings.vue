@@ -52,10 +52,11 @@
                     :title="$t('sync.ftp')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="69"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="ftp"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.ftp') }}</span>
                 </div>
 
                 <div
@@ -63,10 +64,11 @@
                     :title="$t('sync.sftp')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="69"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="sftp"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.sftp') }}</span>
                 </div>
 
                 <div
@@ -78,6 +80,7 @@
                       customHeight="48"
                       name="s3storage"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.s3CompatibleStorage') }}</span>
                 </div>
 
                 <div
@@ -85,10 +88,11 @@
                     :title="$t('sync.git')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="177"
-                      customHeight="38"
+                      customWidth="84"
+                      customHeight="48"
                       name="git"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.git') }}</span>
                 </div>
                 
                 <div
@@ -96,10 +100,11 @@
                     :title="$t('sync.github')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="71"
-                      customHeight="42"
+                      customWidth="48"
+                      customHeight="48"
                       name="githubpages"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.githubPages') }}</span>
                 </div>
 
                 <div
@@ -107,10 +112,11 @@
                     :title="$t('sync.gitlabPages')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="108"
-                      customHeight="40"
+                      customWidth="48"
+                      customHeight="48"
                       name="gitlab"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.gitlabPages') }}</span>
                 </div>
 
                 <div
@@ -118,10 +124,11 @@
                     :title="$t('sync.netlify')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="112"
-                      customHeight="46"
+                      customWidth="54"
+                      customHeight="48"
                       name="netlify"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.netlify') }}</span>
                 </div>
 
                 <div
@@ -129,10 +136,11 @@
                     :title="$t('sync.googleCloud')"
                     class="server-settings-grid-item">
                     <icon
-                      customWidth="167"
-                      customHeight="40"
+                      customWidth="48"
+                      customHeight="48"
                       name="googlecloud"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.googleCloud') }}</span>
                 </div>
 
                 <div
@@ -140,10 +148,11 @@
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
                    <icon
-                      customWidth="80"
-                      customHeight="50"
+                      customWidth="48"
+                      customHeight="48"
                       name="zip"
                       iconset="svg-map-server"/>
+                      <span>{{ $t('sync.manualDeployment') }}</span>
                 </div>
 
                 <a
@@ -151,7 +160,14 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     class="server-settings-grid-item deployment-others">
-                    <span>{{ $t('ui.more') }}...</span>
+
+                    <icon
+                        customWidth="50"
+                        customHeight="46"
+                        properties="not-clickable"
+                        name="add" />
+
+                    <h3>{{ $t('ui.more') }}...</h3>
                 </a>
 
             </div>
@@ -1778,9 +1794,11 @@ export default {
             border: 1px solid transparent;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow-small);
-            color: var(--link-primary-color-hover);
+            color: var(--text-primary-color);
             display: flex;
+            flex-direction: column;
             fill: var(--icon-primary-color);
+            font-weight: var(--font-weight-semibold);
             justify-content: center;
             min-height: calc(8rem + 8vh);
             position: relative;
@@ -1792,18 +1810,35 @@ export default {
                 box-shadow: var(--box-shadow-medium);
                 color: var(--color-primary);
                 cursor: pointer;
-                fill: var(--color-primary);  
             }
 
             & > svg {
+                margin: 0 auto 1rem;
                 transition: inherit;
             }
 
             &.deployment-others {
                 h3 {
-                    font-size: 1.9rem;
+                    color: var(--text-primary-color);
+                    font-size: $app-font-base;
                     font-weight: var(--font-weight-semibold);
-                    margin-left: 1rem;
+                    margin-bottom: 0;
+                    transition: inherit;
+                }
+
+                svg {
+                    fill: var(--icon-primary-color);
+                    transition: inherit;
+                }
+
+                &:hover {
+                    svg {
+                        fill: var(--color-primary);
+                    }
+
+                    h3 {
+                        color: var(--color-primary);
+                    }
                 }
             }
         }
@@ -1815,6 +1850,22 @@ export default {
 
     .msg {
         margin-bottom: 3rem;
+    }
+}
+
+/*
+ * Responsive improvements
+ */
+
+ @media (max-height: 900px) {
+    .server-settings-grid-item > svg {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 1400px) {
+    .server-settings-grid-item > svg {
+        transform: scale(0.9);
     }
 }
 </style>

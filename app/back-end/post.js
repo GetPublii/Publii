@@ -426,7 +426,11 @@ class Post extends Model {
             }
         }
 
-        currentStatus = currentStatus.filter(status => ['excluded_homepage', 'featured', 'hidden'].indexOf(status) === -1 && status.trim() !== '');
+        if (status === 'is-page') {
+            currentStatus = currentStatus.filter(status => ['excluded_homepage', 'featured', 'hidden'].indexOf(status) === -1 && status.trim() !== '');
+        } else {
+            currentStatus = currentStatus.filter(status => status.trim() !== '');
+        }
         
         let updateQuery = this.db.prepare(`UPDATE
                                         posts

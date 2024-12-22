@@ -342,18 +342,20 @@ class TemplateHelper {
         let overridedFilesAndDirs = false;
 
         if(Utils.dirExists(partialsPath)) {
-            filesAndDirs = fs.readdirSync(partialsPath);
+            filesAndDirs = this.getHbsFilesRecursively(partialsPath);
+            filesAndDirs = filesAndDirs.map(file => file.replace(partialsPath + '/', ''));
         }
 
         if(Utils.dirExists(overridedPartialsPath)) {
-            overridedFilesAndDirs = fs.readdirSync(overridedPartialsPath);
+            overridedFilesAndDirs = this.getHbsFilesRecursively(overridedPartialsPath);
+            overridedFilesAndDirs = overridedFilesAndDirs.map(file => file.replace(overridedPartialsPath + '/', ''));
         }
 
-        if(!filesAndDirs && !overridedFilesAndDirs) {
+        if (!filesAndDirs.length && !overridedFilesAndDirs.length) {
             return userPartials;
         }
 
-        for(let i = 0; i < filesAndDirs.length; i++) {
+        for (let i = 0; i < filesAndDirs.length; i++) {
             if (filesAndDirs[i].substr(-4) !== '.hbs') {
                 continue;
             }
@@ -368,7 +370,7 @@ class TemplateHelper {
             }
         }
 
-        for(let i = 0; i < overridedFilesAndDirs.length; i++) {
+        for (let i = 0; i < overridedFilesAndDirs.length; i++) {
             if (overridedFilesAndDirs[i].substr(-4) !== '.hbs') {
                 continue;
             }
@@ -384,6 +386,26 @@ class TemplateHelper {
         }
 
         return userPartials;
+    }
+
+    getHbsFilesRecursively (dir) {
+        let results = [];
+        let list = fs.readdirSync(dir);
+      
+        list.forEach(file => {
+            let filePath = path.join(dir, file);
+            let stat = fs.statSync(filePath);
+        
+            if (stat.isDirectory()) {
+                results = results.concat(this.getHbsFilesRecursively(filePath));
+            } else {
+                if (path.extname(file) === '.hbs') {
+                    results.push(filePath);
+                }
+            }
+        });
+
+        return results;
     }
 }
 

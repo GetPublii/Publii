@@ -204,8 +204,7 @@
                                 @click="bulkPublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-8" />
+                                    name="publish-post" />
                                 {{ $t('page.publish') }}
                             </li>
                             <li
@@ -213,16 +212,14 @@
                                 @click="bulkUnpublish">
                                 <icon
                                     size="xs"
-                                    name="draft-post"
-                                    primaryColor="color-7" />
+                                    name="draft-post" />
                                 {{ $t('page.markAsDraft') }}
                             </li>
                             <li
                                 @click="bulkConvertToPost">
                                 <icon
                                     size="xs"
-                                    name="convert-to-page"
-                                    primaryColor="color-7" />
+                                    name="convert-to-page" />
                                 {{ $t('page.convertToPost') }}
                             </li>
                         </ul>
@@ -488,7 +485,7 @@ export default {
 
             // restore items that are not in hierarchy
             items.forEach(item => {
-                if (usedItems.indexOf(item.id) === -1) {
+                if (item && usedItems.indexOf(item.id) === -1) {
                     item.depth = 0;
                     item.parentIds = [];
 
@@ -502,7 +499,7 @@ export default {
                 }
             });
 
-            return results;
+            return results.filter(item => !!item);
         },
         hasPages () {
             return this.$store.state.currentSite.pages && !!this.$store.state.currentSite.pages.length;
