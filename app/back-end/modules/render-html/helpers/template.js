@@ -343,12 +343,12 @@ class TemplateHelper {
 
         if(Utils.dirExists(partialsPath)) {
             filesAndDirs = this.getHbsFilesRecursively(partialsPath);
-            filesAndDirs = filesAndDirs.map(file => file.replace(partialsPath + '/', ''));
+            filesAndDirs = filesAndDirs.map(file => file.replace(partialsPath + '/', '').replace(partialsPath + '\\', ''));
         }
 
         if(Utils.dirExists(overridedPartialsPath)) {
             overridedFilesAndDirs = this.getHbsFilesRecursively(overridedPartialsPath);
-            overridedFilesAndDirs = overridedFilesAndDirs.map(file => file.replace(overridedPartialsPath + '/', ''));
+            overridedFilesAndDirs = overridedFilesAndDirs.map(file => file.replace(overridedPartialsPath + '/', '').replace(overridedPartialsPath + '\\', ''));
         }
 
         if (!filesAndDirs.length && !overridedFilesAndDirs.length) {
