@@ -238,6 +238,10 @@ export default {
                     customHeadCode: document.getElementById('custom-head-code').value,
                     customBodyCode: document.getElementById('custom-body-code').value,
                     customFooterCode: document.getElementById('custom-footer-code').value,
+                    customCommentsCode: document.getElementById('custom-comments-code').value,
+                    customSearchInput: document.getElementById('custom-search-input').value,
+                    customSearchContent: document.getElementById('custom-search-content').value,
+                    customSocialSharing: document.getElementById('custom-social-sharing').value,
                     customHTML: {}
                 }
             };
@@ -247,7 +251,11 @@ export default {
                 let excludedIDs = [
                     'custom-head-code',
                     'custom-body-code',
-                    'custom-footer-code'
+                    'custom-footer-code',
+                    'custom-comments-code',
+                    'custom-search-input',
+                    'custom-search-content',
+                    'custom-social-sharing'
                 ];
 
                 if(!id || excludedIDs.indexOf(id) > -1) {
