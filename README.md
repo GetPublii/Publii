@@ -26,7 +26,7 @@ the click of a button. Publii supports multiple upload options, including standa
 servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
 
 
-![Publii Open Source Static CMS](https://getpublii.com/assets/svg/publii-cms.svg)
+![Publii Open Source Static CMS](https://getpublii.com/assets/images/publii-cms.webp)
 
 ## Download
 
