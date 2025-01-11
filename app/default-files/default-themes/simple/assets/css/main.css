@@ -122,7 +122,6 @@ hr,
 pre,
 table {
   margin-top: calc(var(--baseline) * 6 + 0.5vw);
-  margin-bottom: calc(var(--baseline) * 6 + 0.5vw);
 }
 
 h1,
