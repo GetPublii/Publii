@@ -847,8 +847,9 @@ class Renderer {
                         isLastPage: currentPage === totalPages,
                         currentPage
                     }, false, false, context);
-                    
-                    let output = this.renderTemplate(postsCompiledTemplate, context, this.globalContext, inputFile);
+
+                    let templateToUse = this.siteConfig.advanced.urls.postsPrefix !== '' ? postsCompiledTemplate : homeCompiledTemplate;
+                    let output = this.renderTemplate(templateToUse, context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
                         output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
