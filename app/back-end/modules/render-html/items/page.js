@@ -47,7 +47,6 @@ class PageItem {
         let pageURL = this.siteConfig.domain + '/' + this.page.slug + '.html';
         let preparedText = ContentHelper.prepareContent(this.page.id, this.page.text, this.siteConfig.domain, this.themeConfig, this.renderer, this.metaData.editor);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
-        preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
         let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
 
@@ -147,7 +146,9 @@ class PageItem {
 
     setInternalLinks() {
         let pageText = this.renderer.cachedItems.pages[this.pageID].text;
+        let pageExcerpt = this.renderer.cachedItems.pages[this.pageID].excerpt;
         this.renderer.cachedItems.pages[this.pageID].text = ContentHelper.setInternalLinks(pageText, this.renderer);
+        this.renderer.cachedItems.pages[this.pageID].excerpt = ContentHelper.setInternalLinks(pageExcerpt, this.renderer);
     }
 
     setPageViewConfig(config) {
