@@ -866,7 +866,6 @@
             "titleDESC": "By title (descending)"
         },
         "pageAsFrontpage": "Select page",
-        "pageName": "Page name",
         "pageTitle": "Page Title",
         "pageTitleVariables": "The following variables can be used: %pagetitle, %sitename, %authorname",
         "paginationPhrase": "Pagination phrase:",
@@ -983,6 +982,7 @@
         "versionParameterInfo": "Adds a version parameter in CSS/JS URLs to skip browser cache. This option can cause more files than usual to be synced during deployment.",
         "vimeoNoTrack": "Enable 'Do Not Track' mode for Vimeo videos",
         "webpLossless": "Enable lossless compression for responsive WebP images",
+        "websiteName": "Website name",
         "websiteSpeed": "Website Speed",
         "whatsApp": "WhatsApp",
         "youMustReviewGdprSettings": "Make sure to check and review your Privacy Settings, especially the Cookie Banner settings due to some significant changes in Publii v.0.40. <a href=\"https://getpublii.com/blog/release-040.html#cookie-banner\" target=\"_blank\">Read more...</a>",
