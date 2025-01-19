@@ -51,7 +51,6 @@ class PostItem {
 
         let preparedText = ContentHelper.prepareContent(this.post.id, this.post.text, this.siteConfig.domain, this.themeConfig, this.renderer, this.metaData.editor);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
-        preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
         let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
 
@@ -167,7 +166,9 @@ class PostItem {
 
     setInternalLinks() {
         let postText = this.renderer.cachedItems.posts[this.postID].text;
+        let postExcerpt = this.renderer.cachedItems.posts[this.postID].excerpt;
         this.renderer.cachedItems.posts[this.postID].text = ContentHelper.setInternalLinks(postText, this.renderer);
+        this.renderer.cachedItems.posts[this.postID].excerpt = ContentHelper.setInternalLinks(postExcerpt, this.renderer);
     }
 
     setPostViewConfig(config) {
