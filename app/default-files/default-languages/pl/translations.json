@@ -866,7 +866,6 @@
             "titleDESC": "Po tytule (malejąco)"
         },
         "pageAsFrontpage": "Wybierz podstronę",
-        "pageName": "Nazwa strony",
         "pageTitle": "Tytuł Strony",
         "pageTitleVariables": "Następujące zmienne mogą zostać użyte: %pagetitle, %sitename, %authorname",
         "paginationPhrase": "Fraza paginacji:",
@@ -982,6 +981,7 @@
         "versionParameter": "Parametr wersji",
         "versionParameterInfo": "Dodaj parametr wersji w adresach URL plików CSS/JS, aby pominąć pamięć podręczną przeglądarki. Ta opcja może spowodować, że podczas wdrażania konieczne będzie zsynchronizowanie większej liczby plików niż zwykle.",
         "vimeoNoTrack": "Włącz tryb 'Bez śledzenia' dla video z Vimeo",
+        "websiteName": "Nazwa witryny",
         "websiteSpeed": "Szybkość witryny",
         "webpLossless": "Włącz bezstratną kompresję dla grafik w formacie WebP",
         "whatsApp": "WhatsApp",
