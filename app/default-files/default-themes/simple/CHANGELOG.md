@@ -1,6 +1,14 @@
 # Changelog
 
-## [3.10.0.0] - 2024-12-10
+## [3.1.1.0] - 2025-01-21
+### Improved
+- Some UI improvements
+### Fixed
+- Resolved issue with horizontal scrollbar on Windows OS,
+### Removed
+- Removed unnecessary gallery CSS rule 
+
+## [3.1.0.0] - 2024-12-10
 ### Removed
 - Removed built-in gallery to support external gallery plugins
 
