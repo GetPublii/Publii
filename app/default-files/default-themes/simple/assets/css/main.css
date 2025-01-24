@@ -244,6 +244,12 @@ table {
   text-align: left;
   width: 100%;
 }
+@media all and (max-width: 37.4375em) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
 table th {
   font-variation-settings: "wght" var(--font-weight-bold);
   padding: calc(var(--baseline) * 2.5) calc(var(--baseline) * 4);
@@ -1345,6 +1351,9 @@ textarea {
   padding: 0;
 }
 
+.content {
+  overflow: hidden;
+}
 .content__meta {
   margin-top: calc(var(--baseline) * 4 + 0.25vw);
   margin-bottom: 0;

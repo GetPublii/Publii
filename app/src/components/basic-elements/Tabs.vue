@@ -13,8 +13,7 @@
                     :class="{ 
                         'active': Array.isArray(item) ? item[0] === activeItem : item === activeItem,
                         'active-parent': item === activeParentItem,
-                        'subtab': Array.isArray(item),
-                        'first': Array.isArray(item) && items.findIndex(i => Array.isArray(i)) === index
+                        'subtab': Array.isArray(item)
                     }"
                     @click="toggle(item, index)">
                     <template v-if="Array.isArray(item)">
@@ -218,17 +217,19 @@ export default {
                         transform: translate(0, -46%);
                     }
 
-                    &.first {
-                        margin-top: 0.6rem;
-                        &::before {
-                            height: 60%;
-                            top: 30%;
-                        }
-                    }
-
                     &.active {
                         background: none !important;
                         font-weight: var(--font-weight-semibold);
+                    }
+                }
+
+                // Add selector for the first `.subtab` in the group
+                & + .subtab:not(.subtab + .subtab) {
+                    margin-top: 0.6rem;
+
+                    &::before {
+                        height: 60%;
+                        top: 23%;
                     }
                 }
 
@@ -243,6 +244,7 @@ export default {
                 &.active-parent {
                     background: var(--tab-parent-active-bg);
                 }
+                
             }
         }
     }
