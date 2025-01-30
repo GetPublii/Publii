@@ -780,6 +780,7 @@ class Renderer {
                         compiledTemplate = homeCompiledTemplate;
                         this.menuContext = ['frontpage'];
                         let context = contextGenerator.getContext(offset, postsPerPage);
+                        additionalContexts.push('homepage');
                         this.globalContext = this.createGlobalContext('index', additionalContexts, {
                             pagination,
                             isFirstPage: currentPage === 1,
@@ -818,6 +819,7 @@ class Renderer {
 
                             this.menuContext = ['frontpage'];
                             let context = contextGenerator.getContext(offset, postsPerPage);
+                            additionalContexts.push('homepage');
                             this.globalContext = this.createGlobalContext('index', additionalContexts, {
                                 pagination,
                                 isFirstPage: currentPage === 1,
@@ -871,7 +873,7 @@ class Renderer {
             if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
                 this.menuContext = ['frontpage'];
                 let context = contextGenerator.getContext(0, postsPerPage);
-                this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
+                this.globalContext = this.createGlobalContext('index', ['homepage'], false, false, false, context);
 
                 output = homeCompiledTemplate(context, {
                     data: this.globalContext
@@ -1136,7 +1138,13 @@ class Renderer {
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
         let pageConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.pageConfig)), pageID, 'page', true);
-        this.globalContext = this.createGlobalContext('page', [], false, pageSlug, pageConfig, context);
+        let additionalContexts = [];
+
+        if (this.siteConfig.advanced.usePageAsFrontpage && parseInt(pageID, 10) === parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)) {
+            additionalContexts = ['homepage'];
+        }
+
+        this.globalContext = this.createGlobalContext('page', additionalContexts, false, pageSlug, pageConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1289,7 +1297,13 @@ class Renderer {
 
             inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
             let pageViewConfig = this.cachedItems.pages[pageIDs[i]].pageViewConfig;
-            this.globalContext = this.createGlobalContext('page', [], false, pageSlugs[i], pageViewConfig, context);
+            let additionalContexts = [];
+
+            if (this.siteConfig.advanced.usePageAsFrontpage && parseInt(pageIDs[i], 10) === parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)) {
+                additionalContexts = ['homepage'];
+            }
+
+            this.globalContext = this.createGlobalContext('page', additionalContexts, false, pageSlugs[i], pageViewConfig, context);
             let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
             if (this.plugins.hasModifiers('htmlOutput')) {
