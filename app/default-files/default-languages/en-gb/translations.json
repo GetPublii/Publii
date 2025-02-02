@@ -183,7 +183,7 @@
         "code": "Code",
         "conversions": {
             "toCode": "Code",
-            "toHeader": "Header",
+            "toHeader": "Heading",
             "toHTML": "HTML",
             "toList": "List",
             "toParagraph": "Paragraph",
@@ -206,7 +206,7 @@
         "enterUrlOrEmbedCode": "Enter URL or embed code...",
         "errorOccurred": "An error occurred - please try again.",
         "gallery": "Gallery",
-        "header": "Header",
+        "header": "Heading",
         "heading1": "Heading 1",
         "heading2": "Heading 2",
         "heading3": "Heading 3",
