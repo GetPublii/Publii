@@ -766,7 +766,11 @@ class RendererContext {
 
                 return blogBaseUrl + '/' + itemSlug + '.html';
             } else {
-                return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
+                if (this.siteConfig.advanced.urls.postsPrefix) {
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
+                }
+
+                return blogBaseUrl + '/' + itemSlug + '/';
             }
         } else if (context === 'page') {
             if (this.siteConfig.advanced.usePageAsFrontpage && itemContext.page && this.siteConfig.advanced.pageAsFrontpage === itemContext.page.id) {
