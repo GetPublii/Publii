@@ -47,6 +47,8 @@ export default {
                 }
 
                 return this.allowedPostStatus.indexOf(post.status) > -1;
+            }).sort((a, b) => {
+                return a.title.localeCompare(b.title);
             }).map(post => post.id));
         },
         placeholder () {

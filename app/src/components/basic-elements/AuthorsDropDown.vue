@@ -40,7 +40,9 @@ export default {
     },
     computed: {
         authors () {
-            return [''].concat(this.$store.state.currentSite.authors.map(author => author.id));
+            return [''].concat(this.$store.state.currentSite.authors.sort((a, b) => {
+                return a.username.localeCompare(b.username);
+            }).map(author => author.id));
         },
         placeholder () {
             return this.$t('author.selectAuthor');
