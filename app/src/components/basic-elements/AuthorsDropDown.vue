@@ -8,7 +8,7 @@
         :close-on-select="true"
         :show-labels="false"
         @select="closeDropdown()"
-        :multiple="mutliple"
+        :multiple="multiple"
         :id="anchor"
         :class="customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
         :placeholder="placeholder"></v-select>
