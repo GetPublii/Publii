@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.2.0] - 2025-02-08
+### Improved
+- Enhanced post image styling (margins) and add blog index body class
+### Removed
+- Removed unnecessary onclick attribute from back to top button in footer
+
 ## [3.1.1.0] - 2025-01-21
 ### Improved
 - Some UI improvements

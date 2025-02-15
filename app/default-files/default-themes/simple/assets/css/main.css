@@ -1660,8 +1660,9 @@ textarea {
   overflow: hidden;
 }
 
-.post__image {
+.post__image:not(.post__image--wide):not(.post__image--full) {
   display: inline-block;
+  margin-bottom: calc(var(--baseline) * 2 + 0.25vw);
 }
 .post__image a,
 .post__image img {
@@ -1673,13 +1674,11 @@ textarea {
 }
 .post__image--left {
   float: left;
-  margin-bottom: 0;
   margin-right: 2rem;
   max-width: 50%;
 }
 .post__image--right {
   float: right;
-  margin-bottom: 0;
   margin-left: 2rem;
   max-width: 50%;
 }
