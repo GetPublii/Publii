@@ -1,5 +1,5 @@
 const path = require('path');
-const sizeOf = require('image-size');
+const sizeOf = require('./../../../helpers/rotation-aware-sizeof');
 const URLHelper = require('./../helpers/url');
 const ContentHelper = require('./../helpers/content');
 const UtilsHelper = require('./../../../helpers/utils');

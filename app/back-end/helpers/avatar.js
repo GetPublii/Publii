@@ -1,4 +1,4 @@
-const sizeOf = require('image-size');
+const sizeOf = require('./rotation-aware-sizeof.js');
 
 class AvatarHelper {
     /*
