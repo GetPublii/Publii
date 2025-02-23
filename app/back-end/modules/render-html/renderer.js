@@ -737,6 +737,7 @@ class Renderer {
         
         // When we have blog pagination
         if (hasBlogPagination) {
+            console.time('BLOG PAGINATION');
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
             // If user set postsPerPage field to -1 - set it for calculations to 999
@@ -861,8 +862,9 @@ class Renderer {
                     this.templateHelper.saveOutputHomePaginationFile(currentPage, output);
                 }
             }
+            
+            console.timeEnd('BLOG PAGINATION');
         }
-        console.timeEnd('BLOG PAGINATION');
 
         // When there is no blog pagination
         if (!hasBlogPagination) {
