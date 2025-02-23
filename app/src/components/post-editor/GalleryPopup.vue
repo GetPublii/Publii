@@ -303,12 +303,18 @@ export default {
                     description = `<figcaption>${img.caption}</figcaption>`;
                 }
 
-                let link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${img.alt}" /></a>`;
+                let imgAlt = img.alt;
+
+                if (imgAlt) {
+                    imgAlt = imgAlt.replace(/\"/gmi, '\'');
+                }
+
+                let link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${imgAlt}" /></a>`;
 
                 if(img.thumbnailWidth === '') {
-                    link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${img.alt}" /></a>`;
+                    link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${imgAlt}" /></a>`;
                 } else {
-                    link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${img.alt}" height="${img.thumbnailHeight}" width="${img.thumbnailWidth}" /></a>`;
+                    link = `<a href="${img.fullImagePath}" data-size="${img.dimensions}"><img src="${img.thumbnailPath}" alt="${imgAlt}" height="${img.thumbnailHeight}" width="${img.thumbnailWidth}" /></a>`;
                 }
 
                 let item = `<figure class="gallery__item">${link}${description}</figure>`;
