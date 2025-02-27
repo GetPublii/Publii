@@ -23,7 +23,7 @@ class Backup {
 
         if(!Utils.dirExists(backupsPath)) {
             if(Utils.dirExists(backupsDir)) {
-                fs.mkdirSync(backupsPath);
+                fs.mkdirSync(backupsPath, { recursive: true });
             } else {
                 return false;
             }
@@ -40,7 +40,7 @@ class Backup {
 
             let stats = fs.statSync(path.join(backupsPath, file));
             let size = Backup.convertToMegabytes(stats.size);
-            let createdAt = stats.atime;
+            let createdAt = stats.birthtime || stats.mtime;
 
             files.push({
                 id: index,
@@ -80,7 +80,7 @@ class Backup {
 
         if(!Utils.dirExists(backupsPath)) {
             if(Utils.dirExists(backupsDir)) {
-                fs.mkdirSync(backupsPath);
+                fs.mkdirSync(backupsPath, { recursive: true });
             } else {
                 return {
                     type: 'app-backup-create-error',
@@ -238,7 +238,7 @@ class Backup {
         }
 
         if(!Utils.dirExists(tempDir)) {
-            fs.mkdirSync(tempDir);
+            fs.mkdirSync(tempDir, { recursive: true });
 
             if(!Utils.dirExists(tempDir)) {
                 return {

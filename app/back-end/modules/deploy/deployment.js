@@ -73,7 +73,7 @@ class Deployment {
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
             default:   
-                if (this.useAltFtp) {             
+                if (this.useAltFtp) {  
                     connection = new FTPAlt();    
                 } else {
                     connection = new FTP();
@@ -101,7 +101,7 @@ class Deployment {
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
             default:                
-                if (this.useAltFtp) {             
+                if (this.useAltFtp) {     
                     this.client = new FTPAlt(this); 
                 } else {
                     this.client = new FTP(this);
@@ -145,7 +145,7 @@ class Deployment {
                 continue;
             }
 
-            if (filePath === '.htaccess' || filePath === '_redirects') {
+            if (filePath === '.htaccess' || filePath === '.htpasswd' || filePath === '_redirects') {
                 let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify'];
 
                 if (excludedProtocols.indexOf(this.siteConfig.deployment.protocol) === -1) {
@@ -554,7 +554,7 @@ class Deployment {
                 filelist.push(normalizePath(path.join(dir.replace(self.inputDir, ''), file)));
                 filelist = self.readDirRecursiveSync(path.join(dir, file), filelist);
             } else {
-                if(file.indexOf('.') !== 0 || file === '.htaccess' || file === '_redirects') {
+                if(file.indexOf('.') !== 0 || file === '.htaccess' || file === '.htpasswd' || file === '_redirects') {
                     filelist.push(normalizePath(path.join(dir.replace(self.inputDir, ''), file)));
                 }
             }

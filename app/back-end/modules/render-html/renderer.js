@@ -442,7 +442,7 @@ class Renderer {
                 fs.rmSync(path.join(this.outputDir, file), { recursive: true });
             }
         } else {
-            fs.mkdirSync(this.outputDir);
+            fs.mkdirSync(this.outputDir, { recursive: true });
 
             if (this.previewMode === false && this.siteConfig.deployment.protocol === 'git') {
                 let gitClient = new Git(false);
@@ -737,6 +737,7 @@ class Renderer {
         
         // When we have blog pagination
         if (hasBlogPagination) {
+            console.time('BLOG PAGINATION');
             let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
 
             // If user set postsPerPage field to -1 - set it for calculations to 999
@@ -764,8 +765,8 @@ class Renderer {
                     postsPerPage: postsPerPage,
                     nextPage: nextPage,
                     previousPage: previousPage,
-                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'home', false, addIndexHtml),
-                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'home', false, addIndexHtml)
+                    nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'home', false, addIndexHtml),
+                    previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'home', false, addIndexHtml)
                 };
 
                 let additionalContexts = [];
@@ -780,6 +781,7 @@ class Renderer {
                         compiledTemplate = homeCompiledTemplate;
                         this.menuContext = ['frontpage'];
                         let context = contextGenerator.getContext(offset, postsPerPage);
+                        additionalContexts.push('homepage');
                         this.globalContext = this.createGlobalContext('index', additionalContexts, {
                             pagination,
                             isFirstPage: currentPage === 1,
@@ -818,6 +820,7 @@ class Renderer {
 
                             this.menuContext = ['frontpage'];
                             let context = contextGenerator.getContext(offset, postsPerPage);
+                            additionalContexts.push('homepage');
                             this.globalContext = this.createGlobalContext('index', additionalContexts, {
                                 pagination,
                                 isFirstPage: currentPage === 1,
@@ -847,8 +850,9 @@ class Renderer {
                         isLastPage: currentPage === totalPages,
                         currentPage
                     }, false, false, context);
-                    
-                    let output = this.renderTemplate(postsCompiledTemplate, context, this.globalContext, inputFile);
+
+                    let templateToUse = this.siteConfig.advanced.urls.postsPrefix !== '' ? postsCompiledTemplate : homeCompiledTemplate;
+                    let output = this.renderTemplate(templateToUse, context, this.globalContext, inputFile);
 
                     if (this.plugins.hasModifiers('htmlOutput')) {
                         output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
@@ -858,8 +862,9 @@ class Renderer {
                     this.templateHelper.saveOutputHomePaginationFile(currentPage, output);
                 }
             }
+            
+            console.timeEnd('BLOG PAGINATION');
         }
-        console.timeEnd('BLOG PAGINATION');
 
         // When there is no blog pagination
         if (!hasBlogPagination) {
@@ -870,7 +875,7 @@ class Renderer {
             if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
                 this.menuContext = ['frontpage'];
                 let context = contextGenerator.getContext(0, postsPerPage);
-                this.globalContext = this.createGlobalContext('index', [], false, false, false, context);
+                this.globalContext = this.createGlobalContext('index', ['homepage'], false, false, false, context);
 
                 output = homeCompiledTemplate(context, {
                     data: this.globalContext
@@ -1135,7 +1140,13 @@ class Renderer {
 
         inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
         let pageConfig = this.overrideItemViewSettings(JSON.parse(JSON.stringify(this.themeConfig.pageConfig)), pageID, 'page', true);
-        this.globalContext = this.createGlobalContext('page', [], false, pageSlug, pageConfig, context);
+        let additionalContexts = [];
+
+        if (this.siteConfig.advanced.usePageAsFrontpage && parseInt(pageID, 10) === parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)) {
+            additionalContexts = ['homepage'];
+        }
+
+        this.globalContext = this.createGlobalContext('page', additionalContexts, false, pageSlug, pageConfig, context);
         let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
         if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1288,7 +1299,13 @@ class Renderer {
 
             inputFile = inputFile.replace('.hbs', '') + (fileSlug === 'DEFAULT' ? '' : '-' + fileSlug) + '.hbs';
             let pageViewConfig = this.cachedItems.pages[pageIDs[i]].pageViewConfig;
-            this.globalContext = this.createGlobalContext('page', [], false, pageSlugs[i], pageViewConfig, context);
+            let additionalContexts = [];
+
+            if (this.siteConfig.advanced.usePageAsFrontpage && parseInt(pageIDs[i], 10) === parseInt(this.siteConfig.advanced.pageAsFrontpage, 10)) {
+                additionalContexts = ['homepage'];
+            }
+
+            this.globalContext = this.createGlobalContext('page', additionalContexts, false, pageSlugs[i], pageViewConfig, context);
             let output = this.renderTemplate(compiledTemplates[fileSlug], context, this.globalContext, inputFile);
 
             if (this.plugins.hasModifiers('htmlOutput')) {
@@ -1506,8 +1523,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'tag', tagSlug, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'tag', tagSlug, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'tag', tagSlug, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'tag', tagSlug, addIndexHtml)
                     };
 
                     let additionalContexts = [];
@@ -1736,8 +1753,8 @@ class Renderer {
                         postsPerPage: postsPerPage,
                         nextPage: nextPage,
                         previousPage: previousPage,
-                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, nextPage, 'author', authorUsername, addIndexHtml),
-                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig.domain, this.siteConfig.advanced, previousPage, 'author', authorUsername, addIndexHtml)
+                        nextPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, nextPage, 'author', authorUsername, addIndexHtml),
+                        previousPageUrl: URLHelper.createPaginationPermalink(this.siteConfig, this.themeConfig, previousPage, 'author', authorUsername, addIndexHtml)
                     };
 
                     let additionalContexts = [];

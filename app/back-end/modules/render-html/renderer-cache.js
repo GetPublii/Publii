@@ -606,6 +606,7 @@ class RendererCache {
 
         pages.map(page => {
             page.setInternalLinks();
+            page.setHierarchyLinks();
         });
 
         let authorIDs = Object.keys(this.renderer.cachedItems.authors);

@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "3.0.1.0",
+    "version": "3.1.2.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -127,59 +127,6 @@
         {
             "name": "separator",
             "type": "separator",
-            "label": "Homepage",
-            "group": "Layout",
-            "note": "<span style=\"color: red\">This option will be removed in the next theme update. You can now set your homepage natively within the Site Settings!</span>",
-            "size": "small"
-        },
-        {
-            "name": "frontSource",
-            "label": "Homepage displays",
-            "group": "Layout",
-            "value": "default",
-            "type": "radio",
-            "options": [
-                {
-                    "label": "Latest posts",
-                    "value": "default"
-                },
-                {
-                    "label": "Selected post",
-                    "value": "post"
-                }
-            ]
-        },
-        {
-            "name": "frontPost",
-            "label": "Select a post",
-            "group": "Layout",
-            "note": "This option allows you to modify the height of the hero section. Use of VH units is recommended; set to 100vh for full-screen height.",
-            "value": "",
-            "type": "posts-dropdown",
-            "dependencies": [
-                {
-                    "field": "frontSource",
-                    "value": "post"
-                }
-            ]
-        },
-        {
-            "name": "frontGallery",
-            "group": "Layout",
-            "label": "",
-            "note": "Enable if you want to display a post with image gallery",
-            "value": false,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "frontSource",
-                    "value": "post"
-                }
-            ]
-        },
-        {
-            "name": "separator",
-            "type": "separator",
             "label": "Hero section",
             "group": "Layout",
             "size": "big"
@@ -262,7 +209,7 @@
             "label": "",
             "group": "Post list",
             "note": "This section lets you choose what shows up in your feed on the homepage, tags, and author pages. You can pick and choose which details to show, like author avatars, post dates, and other things.",
-            "size": ""
+            "size": "no-line"
         },    
 
         {
@@ -1388,7 +1335,7 @@
             "label": "",
             "group": "Share Buttons",    
             "note": "This section allows you to choose your preferred share buttons for various platforms. If you wish to add more, you can install the <a href='https://marketplace.getpublii.com/plugins/social-sharing/' target='_blank'>Social Sharing plugin</a> available on the Publii Marketplace.",
-            "size": "small"
+            "size": "no-line"
         },
         {
             "name": "shareFacebook",
@@ -1459,7 +1406,7 @@
             "label": "",
             "group": "Footer",
             "note": "This section allows you to add follow buttons for various social media platforms. If you want to expand the available options, you can install the <a href='https://marketplace.getpublii.com/plugins/follow-buttons/' target='_blank'>Follow Buttons plugin</a> available on the Publii Marketplace.",
-            "size": "small"
+            "size": "no-line"
         },
         {
             "name": "socialButtons",
@@ -1597,182 +1544,20 @@
             "type": "checkbox"
         },
         {
+            "name": "separator",
+            "type": "separator",
+            "label": "",
+            "group": "Gallery",
+            "note": "To use the gallery functionality, you need to install the appropriate plugin. Please check the available gallery plugins in the <a rel=\"noopener noreferrer\" href=\"https://marketplace.getpublii.com/plugins/\" target=\"_blank\">Publii Marketplace</a>.",
+            "size": "no-line"
+        },
+        {
             "name": "galleryItemGap",
-            "label": "Item spacing",
+            "label": "Gallery item spacing",
             "group": "Gallery",
             "note": "You can use the --baseline variable and multiply it, but you can also use other values like px or rem.",
             "value": "calc(var(--baseline) * 1.5)",
             "type": "text"
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Gallery",
-            "size": "small thin"
-        },
-        {
-            "name": "galleryLightboxStyle",
-            "label": "Lightbox style",
-            "group": "Gallery",
-            "note": "Set the lightbox slideshow style by choosing dark or light overlay",
-            "value": "pswp--dark",
-            "type": "select",
-            "options": [
-                {
-                    "label": "Dark",
-                    "value": "pswp--dark"
-                },
-                {
-                    "label": "Light",
-                    "value": "pswp--light"
-                }
-            ]
-        },
-        {
-            "name": "galleryLightboxOpacity",
-            "label": "",
-            "group": "Gallery",
-            "note": "Adjust the lightbox overlay transparency",
-            "value": "0.7",
-            "type": "range",
-            "min": 0,
-            "max": 1,
-            "step": 0.01
-        },
-        {
-            "name": "separator",
-            "type": "separator",
-            "label": "",
-            "group": "Gallery",
-            "size": "small thin"
-        },
-        {
-            "name": "galleryAdvanced",
-            "label": "Advanced lightbox settings",
-            "group": "Gallery",
-            "value": false,
-            "type": "checkbox"
-        },
-        {
-            "name": "galleryCounter",
-            "label": "Current slide / total number",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryZoom",
-            "label": "Zoom in/out button",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryFullscreen",
-            "label": "Toggle fullscreen button",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryShare",
-            "label": "Share button",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryClose",
-            "label": "Close button",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryArrows",
-            "label": "Next / Previous arrows",
-            "group": "Gallery",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryPreloader",
-            "label": "Preloader",
-            "group": "Gallery",
-            "note": "Loading indicator is displayed with 1s delay, so if the photo loads faster it will be invisible.",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryCloseOnScroll",
-            "label": "Close gallery on page scroll",
-            "group": "Gallery",
-            "note": "Option works just for devices without hardware touch support.",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
-        },
-        {
-            "name": "galleryArrowKeys",
-            "label": "Keyboard navigation",
-            "group": "Gallery",
-            "note": "Keyboard left or right arrow key navigation.",
-            "value": true,
-            "type": "checkbox",
-            "dependencies": [
-                {
-                    "field": "galleryAdvanced",
-                    "value": "true"
-                }
-            ]
         },
         {
             "name": "backToTopButton",

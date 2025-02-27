@@ -128,21 +128,21 @@ class Image extends Model {
 
         // If dir not exists - create it
         if (!Utils.dirExists(dirPath)) {
-            fs.mkdirSync(dirPath);
+            fs.mkdirSync(dirPath, { recursive: true });
 
             if (responsiveDirPath !== '') {
-                fs.mkdirSync(responsiveDirPath);
+                fs.mkdirSync(responsiveDirPath, { recursive: true });
             }
         }
 
         // If gallery directory not exist - create it
         if (galleryDirPath !== '' && !Utils.dirExists(galleryDirPath)) {
-            fs.mkdirSync(galleryDirPath);
+            fs.mkdirSync(galleryDirPath, { recursive: true });
         }
 
         // If responsive directory not exist - create it
         if (responsiveDirPath !== '' && !Utils.dirExists(responsiveDirPath)) {
-            fs.mkdirSync(responsiveDirPath);
+            fs.mkdirSync(responsiveDirPath, { recursive: true });
         }
 
         newPath = this.generateFileName(fileName, 1, dirPath, galleryDirPath);

@@ -19,8 +19,8 @@
                             <icon
                                 :name="item.icon"
                                 iconset="svg-map-tools"
-                                customWidth="54"
-                                customHeight="58" />
+                                customWidth="48"
+                                customHeight="48" />
                             {{ item.name }}
                         </router-link>
                     </template>
@@ -237,7 +237,7 @@ export default {
 
             img {
                display: block;
-               height: 52px;
+               height: 48px;
                margin: 0 auto 1.4rem;
                width: auto;
                max-width: 60%;
@@ -308,14 +308,33 @@ export default {
  * Responsive improvements
  */
 
+ @media (max-height: 900px) {
+    .tools {
+        &-list {
+            &-item {
+                svg,
+                img {
+                    transform: scale(0.9);
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: 1400px) {
     .tools {
         &-list {
             li {
                 flex-basis: calc(50% - 2rem);
             }
-            &-item a {
-                padding: 3rem 1rem 3.5rem;
+            &-item {
+                a {
+                    padding: 3rem 1rem 3.5rem;
+                }
+                svg, 
+                img {
+                    transform: scale(0.9);
+                }
             }
         }
     }

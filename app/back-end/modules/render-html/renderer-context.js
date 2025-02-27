@@ -690,10 +690,6 @@ class RendererContext {
         let pagePart = this.siteConfig.advanced.urls.pageName;
         let blogBaseUrl = this.siteConfig.domain;
 
-        if (this.siteConfig.advanced.urls.postsPrefix) {
-            blogBaseUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix;
-        }
-
         if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
                 if (this.siteConfig.advanced.usePageAsFrontpage || context === 'blogindex') {
@@ -770,7 +766,11 @@ class RendererContext {
 
                 return blogBaseUrl + '/' + itemSlug + '.html';
             } else {
-                return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
+                if (this.siteConfig.advanced.urls.postsPrefix) {
+                    return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + itemSlug + '/';
+                }
+
+                return blogBaseUrl + '/' + itemSlug + '/';
             }
         } else if (context === 'page') {
             if (this.siteConfig.advanced.usePageAsFrontpage && itemContext.page && this.siteConfig.advanced.pageAsFrontpage === itemContext.page.id) {

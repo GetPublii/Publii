@@ -25,6 +25,12 @@
                         slot="field" />
                 </field>
 
+                <small
+                    v-if="!stats"
+                    class="note">
+                    {{ $t('tools.wpImport.importNote') }}
+                </small>
+
                 <div
                     v-if="checkingFile"
                     class="import-check-results">
@@ -36,12 +42,6 @@
                     class="import-check-results is-error">
                     {{ errorMessage }}
                 </div>
-
-                <small
-                    v-if="!stats"
-                    class="note">
-                    {{ $t('tools.wpImport.importNote') }}
-                </small>
 
                 <wp-import-stats
                     v-if="stats"
@@ -345,6 +345,17 @@ export default {
         margin-top: 0;
     }
 
+    .note {
+        clear: both;
+        color: var(--text-light-color);
+        display: block;
+        font-size: 1.35rem;
+        font-style: italic;
+        line-height: 1.4;
+        padding: .5rem 0 1rem 0;
+        user-select: text;
+    }
+
     #import-data {
         margin-top: 2rem;
         width: auto;
@@ -359,11 +370,10 @@ export default {
 
     .import-check-results {
         clear: both;
-        padding: 2rem 0 0 0;
+        padding: 1rem 0 0 0;
 
         &.is-error {
             color: var(--warning);
-            text-align: center;
         }
     }
 

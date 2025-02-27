@@ -27,7 +27,7 @@ export default {
             default: '',
             type: String
         },
-        'secondaryColor': {
+        'strokeColor': {  // Changed from primaryStroke to strokeColor
             default: '',
             type: String
         },
@@ -82,8 +82,8 @@ export default {
                 style.push(`fill: ${SassColors[this.primaryColor]}`);
             }
 
-            if(this.secondaryColor !== '' && SassColors[this.secondaryColor]) {
-                style.push(`color: ${SassColors[this.secondaryColor]}`);
+            if(this.strokeColor !== '' && SassColors[this.strokeColor]) {
+                style.push(`color: ${SassColors[this.strokeColor]}`);
             }
 
             if(this.customWidth !== '') {

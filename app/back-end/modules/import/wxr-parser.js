@@ -714,7 +714,7 @@ class WxrParser {
         let dirPath = path.join(destinationPath, (nextImg.postID).toString());
 
         if(!Utils.dirExists(dirPath)) {
-            fs.mkdirSync(dirPath);
+            fs.mkdirSync(dirPath, { recursive: true });
         }
 
         let image = nextImg.imgUrl;

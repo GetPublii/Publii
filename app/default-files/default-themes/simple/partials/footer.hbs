@@ -68,7 +68,7 @@ footer--glued{{/checkIf}}{{/if}}">
         {{/if}}
         
         {{#if @config.custom.backToTopButton}}
-            <button onclick="backToTopFunction()" id="backToTop" class="footer__bttop" aria-label="{{ translate 'partials.footer.backToTop' }}" title="{{ translate 'partials.footer.backToTop' }}">
+            <button id="backToTop" class="footer__bttop" aria-label="{{ translate 'partials.footer.backToTop' }}" title="{{ translate 'partials.footer.backToTop' }}">
                 <svg width="20" height="20">
                     <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#toparrow"/>
                 </svg>
@@ -96,17 +96,6 @@ footer--glued{{/checkIf}}{{/if}}">
     </script>
 {{/if}}
 
-{{#checkIfAny post.hasGallery page.hasGallery}}
-    {{> photoswipe}}
-{{/checkIfAny}}
-
-{{#checkIf @config.custom.frontSource '==' "post"}}
-   {{#checkIf @config.custom.frontGallery '==' true}}
-      {{#is "index"}}
-          {{> photoswipe}}
-      {{/is}}
-   {{/checkIf}}
-{{/checkIf}}
 {{#if @renderer.previewMode}}
 <script defer src="{{js "svg-map.js"}}"></script>
 <script defer src="{{js "svg-fix.js"}}"></script>

@@ -536,7 +536,7 @@ class ContentHelper {
         let regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/[0-9]{1,}', 'gmi');
 
         if (type === 'file' || type === 'author') {
-            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?\"', 'gmi');
+            regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/.*?[\"\']{1,1}', 'gmi');
         }
 
         let urls = [...new Set(text.match(regexp))];
@@ -621,7 +621,6 @@ class ContentHelper {
                     if (renderer.cachedItems.authors[authorID].username === authorSlug) {
                         let link = renderer.cachedItems.authors[authorID].url;
                         text = text.split(url).join(link);
-                        return text;
                     }
                 }
             }

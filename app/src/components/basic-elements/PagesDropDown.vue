@@ -38,7 +38,9 @@ export default {
     },
     computed: {
         pages () {
-            return [''].concat(this.$store.state.currentSite.pages.map(page => page.id));
+            return [''].concat(this.$store.state.currentSite.pages.sort((a, b) => {
+                return a.title.localeCompare(b.title);
+            }).map(page => page.id));
         },
         placeholder () {
             return this.$t('page.selectPage');

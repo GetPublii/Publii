@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.46.2",
+  "version": "0.46.4",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -18,12 +18,13 @@
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
     "start": "electron app/main.js --enable-logging",
     "test": "mocha app/back-end/**/*.spec.js --reporter dot",
-    "prepare-editor": "npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
+    "prepare-editor": "npm run prepare-editor-css && npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
     "remove-vendor-dist-dir": "rm -rf app/dist/vendor",
     "prepare-editor-css": "./node_modules/.bin/sass app/src/scss/editor/editor.scss app/dist/css/editor.css && ./node_modules/.bin/sass app/src/scss/editor/editor-options.scss app/dist/css/editor-options.css",
+    "prepare-editor-css:win": "\"node_modules/.bin/sass\" app/src/scss/editor/editor.scss app/dist/css/editor.css && \"node_modules/.bin/sass\" app/src/scss/editor/editor-options.scss app/dist/css/editor-options.css",
     "prepare-vendor-dist-dir": "if [ ! -d \"app/dist/vendor\" ]; then mkdir app/dist/vendor; fi && npm run prepare-editor-css",
     "copy-vendor-files": "cp -r app/src/helpers/vendor/tinymce app/dist/vendor/tinymce && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
-    "prepare-editor:win": "npm run remove-vendor-dist-dir-win && npm run prepare-vendor-dist-dir-win && npm run copy-vendor-files-win",
+    "prepare-editor:win": "npm run prepare-editor-css:win && npm run remove-vendor-dist-dir-win && npm run prepare-vendor-dist-dir-win && npm run copy-vendor-files-win",
     "remove-vendor-dist-dir-win": "if exist app\\dist\\vendor rmdir /s /q app\\dist\\vendor",
     "prepare-vendor-dist-dir-win": "md app\\dist\\vendor 2>nul || echo Directory already exists && npm run prepare-editor-css",
     "copy-vendor-files-win": "xcopy /s /i /q app\\src\\helpers\\vendor\\tinymce app\\dist\\vendor\\tinymce && xcopy /s /i /q app\\src\\helpers\\vendor\\jquery app\\dist\\vendor\\jquery",
@@ -42,8 +43,8 @@
   "devDependencies": {
     "cross-env": "7.0.3",
     "css-loader": "6.8.1",
-    "electron": "31.7.3",
-    "electron-builder": "24.13.3",
+    "electron": "31.7.7",
+    "electron-builder": "25.1.8",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
     "mocha": "10.2.0",
@@ -59,9 +60,9 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "31.7.3",
+    "electronVersion": "31.7.6",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018-2024 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2025 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",

@@ -244,6 +244,12 @@ table {
   text-align: left;
   width: 100%;
 }
+@media all and (max-width: 37.4375em) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
 table th {
   font-variation-settings: "wght" var(--font-weight-bold);
   padding: calc(var(--baseline) * 2.5) calc(var(--baseline) * 4);
@@ -685,6 +691,9 @@ textarea {
   font-family: var(--heading-font);
   padding: 0;
   width: 90%;
+}
+.search__input:focus-visible {
+  outline: none !important;
 }
 .search__overlay {
   background-color: var(--page-bg);
@@ -1342,6 +1351,9 @@ textarea {
   padding: 0;
 }
 
+.content {
+  overflow: hidden;
+}
 .content__meta {
   margin-top: calc(var(--baseline) * 4 + 0.25vw);
   margin-bottom: 0;
@@ -1648,8 +1660,9 @@ textarea {
   overflow: hidden;
 }
 
-.post__image {
+.post__image:not(.post__image--wide):not(.post__image--full) {
   display: inline-block;
+  margin-bottom: calc(var(--baseline) * 2 + 0.25vw);
 }
 .post__image a,
 .post__image img {
@@ -1661,13 +1674,11 @@ textarea {
 }
 .post__image--left {
   float: left;
-  margin-bottom: 0;
   margin-right: 2rem;
   max-width: 50%;
 }
 .post__image--right {
   float: right;
-  margin-bottom: 0;
   margin-left: 2rem;
   max-width: 50%;
 }
@@ -1861,10 +1872,10 @@ textarea {
 }
 
 .msg {
-  border: 1px solid var(--light);
-  border-left-width: 2px;
+  background-color: var(--lighter);
+  border-left: 3px solid var(--light);
   font-size: 0.9374999997rem;
-  padding: calc(var(--baseline) * 6);
+  padding: calc(var(--baseline) * 4) calc(var(--baseline) * 6);
   position: relative;
 }
 .msg--highlight {
@@ -2160,33 +2171,4 @@ textarea {
   opacity: 1;
   -webkit-transform: translate(-50%, 0);
           transform: translate(-50%, 0);
-}
-
-.pswp--dark .pswp__bg {
-  background: black;
-}
-.pswp--dark .pswp__button,
-.pswp--dark .pswp__button--arrow--left:before,
-.pswp--dark .pswp__button--arrow--right:before {
-  background-image: url(../svg/gallery-icons-light.svg);
-}
-.pswp--light .pswp__bg {
-  background: var(--white);
-}
-.pswp--light .pswp__counter {
-  color: var(--text-color);
-}
-.pswp--light .pswp__caption__center {
-  color: var(--text-color);
-}
-.pswp--light .pswp__button,
-.pswp--light .pswp__button--arrow--left:before,
-.pswp--light .pswp__button--arrow--right:before {
-  background-image: url(../svg/gallery-icons-dark.svg);
-}
-.pswp .pswp__button {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  -webkit-transform: none;
-          transform: none;
 }

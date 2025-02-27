@@ -144,7 +144,7 @@ class App {
 
             // Detect missing themes
             if (!fs.existsSync(path.join(userThemesPath, file))) {
-                fs.mkdirSync(path.join(userThemesPath, file));
+                fs.mkdirSync(path.join(userThemesPath, file), { recursive: true });
 
                 try {
                     fs.copySync(

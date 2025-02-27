@@ -18,5 +18,5 @@ export default {
     'color-helper-3': '#A57C3A',
     'color-helper-4': '#D48CDA',
     'color-helper-5': '#FFF8E1',
-    'color-helper-6': '#ffc400',
+    'color-helper-6': '#F2B900',
 };

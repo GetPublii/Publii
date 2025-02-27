@@ -86,7 +86,7 @@ class AppFilesHelper {
         }
 
         try {
-            fs.mkdirSync(path.join(newLocation, site));
+            fs.mkdirSync(path.join(newLocation, site), { recursive: true });
 
             fs.copySync(
                 path.join(oldLocation, site),

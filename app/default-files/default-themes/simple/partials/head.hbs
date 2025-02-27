@@ -28,16 +28,6 @@
         {{/if}}
         {{> fonts}}
         <link rel="stylesheet" href="{{css "style.css" }}">
-        {{#checkIfAny post.hasGallery page.hasGallery}}
-            <link rel="stylesheet" href="{{css "photoswipe.css" }}">
-        {{/checkIfAny}}
-        {{#checkIf @config.custom.frontSource '==' "post" }}
-           {{#checkIf @config.custom.frontGallery '==' true}}
-              {{#is "index"}}
-                 <link rel="stylesheet" href="{{css "photoswipe.css" }}">
-              {{/is}}
-           {{/checkIf}}
-        {{/checkIf}}
         {{jsonLD}}
         <noscript>
             <style>
@@ -48,5 +38,5 @@
         </noscript>	
         {{{@headCustomCode}}}
     </head>
-    <body class="{{#is "index"}}home-template{{/is}}{{#is "index-pagination"}} pagination-template{{/is}}{{#is "tag"}}tag-template{{/is}}{{#is "tag-pagination"}} pagination-template{{/is}}{{#is "tags"}}tags-template{{/is}}{{#is "page"}}page-template{{/is}}{{#is "post"}}post-template{{/is}}{{#is "author"}}author-template{{/is}}{{#is "author-pagination"}} pagination-template{{/is}}{{#is "404"}}error-template{{/is}}{{#is "search"}}search-template{{/is}}">
+    <body class="{{#is "index"}}home-template{{/is}}{{#is "index-pagination"}} pagination-template{{/is}}{{#is "blogindex"}}blogindex-template{{/is}}{{#is "tag"}}tag-template{{/is}}{{#is "tag-pagination"}} pagination-template{{/is}}{{#is "tags"}}tags-template{{/is}}{{#is "page"}}page-template{{/is}}{{#is "post"}}post-template{{/is}}{{#is "author"}}author-template{{/is}}{{#is "author-pagination"}} pagination-template{{/is}}{{#is "404"}}error-template{{/is}}{{#is "search"}}search-template{{/is}}">
         {{{@bodyCustomCode}}}

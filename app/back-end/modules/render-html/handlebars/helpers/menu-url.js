@@ -11,6 +11,7 @@ const slug = require('./../../../../helpers/slug');
  * - page
  * - tag
  * - frontpage
+ * - blogpage
  * - tags
  * - external
  * - internal
@@ -145,7 +146,7 @@ function menuURLHelper(rendererInstance, Handlebars) {
         if (this.type === 'blogpage') {
             output = baseUrl + '/';
 
-            if (rendererInstance.siteConfig.advanced.usePageAsFrontpage && rendererInstance.siteConfig.advanced.urls.postsPrefix) {
+            if (rendererInstance.siteConfig.advanced.urls.postsPrefix) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/';
             }
 

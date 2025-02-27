@@ -148,48 +148,45 @@
                             <label id="post-featured-wrapper">
                                 <switcher
                                     v-model="$parent.postData.isFeatured" />
-                                <span>
-                                    {{ $t('post.markAsFeatured') }}
-                                </span>
-
                                 <icon
                                     :title="$t('post.markAsFeatured')"
                                     class="switcher-item-icon-helper"
                                     name="featured-post"
                                     size="xs"
-                                    primaryColor="color-helper-1" />
+                                    strokeColor="color-helper-6" />
+                                <span>
+                                    {{ $t('post.markAsFeatured') }}
+                                </span>
                             </label>
 
                             <label id="post-hidden-wrapper">
                                 <switcher
                                     :title="$t('post.postWillNotAppearOnListMsg')"
                                     v-model="$parent.postData.isHidden" />
-                                <span :title="$t('post.postWillNotAppearOnListMsg')">
-                                    {{ $t('post.hidePost') }}
-                                </span>
-
                                 <icon
                                     :title="$t('post.hidePost')"
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
-                                    primaryColor="color-6" />
+                                    strokeColor="color-6" />
+                                <span :title="$t('post.postWillNotAppearOnListMsg')">
+                                    {{ $t('post.hidePost') }}
+                                </span>
                             </label>
 
                             <label id="post-excluded-homepage-wrapper">
                                 <switcher
                                     :title="$t('post.postWillNotAppearOnHomepageListMsg')"
                                     v-model="$parent.postData.isExcludedOnHomepage" />
-                                <span :title="$t('post.postWillNotAppearOnHomepageListMsg')">
-                                    {{ $t('post.excludeFromHomepage') }}
-                                </span>
-
                                 <icon
                                     :title="$t('post.excludeFromHomepage')"
                                     class="switcher-item-icon-helper"
                                     name="excluded-post"
                                     size="xs"
-                                    primaryColor="color-3"/>
+                                    strokeColor="color-3"/>
+                                <span :title="$t('post.postWillNotAppearOnHomepageListMsg')">
+                                    {{ $t('post.excludeFromHomepage') }}
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -1170,9 +1167,9 @@ export default {
         }
 
         .switcher-item-icon-helper {
-            margin: 0 .5rem;
+            margin: 0 .5rem 0 0;
             position: relative;
-            top: .1rem;
+            top: .2rem;
         }
     }
 }

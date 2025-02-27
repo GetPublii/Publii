@@ -31,6 +31,7 @@
         "themeDoesNotSupportFeaturedImagesForAuthors": "Twój motyw nie wspiera wyróżnionych obrazków dla autorów.",
         "whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer": "Korzystając z opcji Gravatara, pamiętaj, że odwiedzający twoją witrynę potrzebują wysyłać żądanie do serwera firmy trzeciej, aby załadować obraz awatara.",
         "toUseThisOptionEnableIndexingAuthorPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron autorów.",
+        "url": "URL",
         "useGravatarMessage": "Użyj <a href=\"https://gravatar.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Gravatara </a> aby dodać avatar do autora.",
         "useGravatarServiceMessage": "Aby skorzystać z usługi Gravatar podaj adres e-mail autora.",
         "website": "Strona internetowa"
@@ -615,7 +616,7 @@
         "aboutPublii": "O Publii",
         "currentPubliiVersion": "Wersja",
         "accept": "Akceptuj",
-        "copyright": "Prawa autorskie 2024 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. Wszelkie prawa zastrzeżone.<br>Publii jest zaprojektowane i utrzymywane przez główny zespół i powstało dzięki projektowi Open Source <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> i innemu ",
+        "copyright": "Prawa autorskie 2025 <a href=\"https://tidycustoms.net\" target=\"_blank\" rel=\"noopener noreferrer\">TidyCustoms</a>. Wszelkie prawa zastrzeżone.<br>Publii jest zaprojektowane i utrzymywane przez główny zespół i powstało dzięki projektowi Open Source <a href=\"https://electronjs.org\" target=\"_blank\" rel=\"noopener noreferrer\">Electron</a> i innemu ",
         "creditsIntro": "Publii korzysta z następującego oprogramowania Open Source stron trzecich:",
         "dataCollectionInfo": "<strong>Nie zbieramy żadnych </strong>danych osobowych podczas korzystania z aplikacji Publii; również nie przechowujemy, nie śledzimy, nie pozwalamy osobom trzecim na zbieranie danych osobowych o Tobie. ",
         "homepage": "Strona domowa",
@@ -865,7 +866,6 @@
             "titleDESC": "Po tytule (malejąco)"
         },
         "pageAsFrontpage": "Wybierz podstronę",
-        "pageName": "Nazwa strony",
         "pageTitle": "Tytuł Strony",
         "pageTitleVariables": "Następujące zmienne mogą zostać użyte: %pagetitle, %sitename, %authorname",
         "paginationPhrase": "Fraza paginacji:",
@@ -981,6 +981,7 @@
         "versionParameter": "Parametr wersji",
         "versionParameterInfo": "Dodaj parametr wersji w adresach URL plików CSS/JS, aby pominąć pamięć podręczną przeglądarki. Ta opcja może spowodować, że podczas wdrażania konieczne będzie zsynchronizowanie większej liczby plików niż zwykle.",
         "vimeoNoTrack": "Włącz tryb 'Bez śledzenia' dla video z Vimeo",
+        "websiteName": "Nazwa witryny",
         "websiteSpeed": "Szybkość witryny",
         "webpLossless": "Włącz bezstratną kompresję dla grafik w formacie WebP",
         "whatsApp": "WhatsApp",
@@ -1017,6 +1018,7 @@
             "yesPleaseOverride": "Tak, nadpisz"
         },
         "selectedBackupFile": "Wybrano plik kopii zapasowej: ",
+        "siteDescription": "Opis strony (wewnętrzny):",
         "siteLoadingErrorMsg": "Wystąpił błąd podczas ładowania wybranej witryny. Sprawdź pliki witryny i spróbuj ponownie.",
         "siteName": "Nazwa strony:",
         "siteSettingsSaveSuccessMsg": "Ustawienia witryny zostały pomyślnie zapisane.",
@@ -1111,7 +1113,7 @@
         "getWebsiteFiles": "Pobierz pliki strony",
         "git": "Git",
         "github": "GitHub",
-        "githubPages": "GitHub Pages",
+        "githubPages": "Strony GitHub",
         "githubSyncedPart1": "Zmiany na Github Pages mogą być widoczne po kilku minutach od wysłania, ",
         "githubSyncedPart2": "zatem należy odczekać chwilę przed weryfikacją zmian.",
         "gitlabPages": "Strony Gitlab",
@@ -1251,7 +1253,8 @@
         "tagStatusChangeSuccessMessage": "Status wybranych tagów został zmieniony",
         "tagWillNotAppearInGeneratedTagLists": "Tag nie pojawi się na żadnej z wygenerowanych list tagów takich jak strona wpisu lub taga.",
         "thisTagIsHidden": "Ten tag jest ukryty",
-        "toUseThisOptionEnableIndexingTagPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron tagów."
+        "toUseThisOptionEnableIndexingTagPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron tagów.",
+        "url": "URL"
     },
     "theme": {
         "addThemeSuccessMessage": "Motyw został dodany.",
