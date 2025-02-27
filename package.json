@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.46.3",
+  "version": "4",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -62,7 +62,7 @@
     "appId": "com.tidycustoms.publii",
     "electronVersion": "31.7.6",
     "productName": "Publii",
-    "copyright": "Copyright (C) 2018-2024 TidyCustoms. All rights reserved.",
+    "copyright": "Copyright (C) 2018-2025 TidyCustoms. All rights reserved.",
     "asar": true,
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",
