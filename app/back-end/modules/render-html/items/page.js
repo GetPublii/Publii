@@ -44,10 +44,8 @@ class PageItem {
     }
 
     prepareData() {
-        let pageURL = this.siteConfig.domain + '/' + this.page.slug + '.html';
         let preparedText = ContentHelper.prepareContent(this.page.id, this.page.text, this.siteConfig.domain, this.themeConfig, this.renderer, this.metaData.editor);
         let preparedExcerpt = ContentHelper.prepareExcerpt(this.themeConfig.config.excerptLength, preparedText);
-        preparedExcerpt = ContentHelper.setInternalLinks(preparedExcerpt, this.renderer);
         let hasCustomExcerpt = false;
         let readmoreMatches = preparedText.match(/\<hr\s+id=["']{1}read-more["']{1}[\s\S]*?\/?\>/gmi);
 
@@ -63,36 +61,11 @@ class PageItem {
             }
         }
 
-        if (this.siteConfig.advanced.urls.cleanUrls) {
-            let parentItems = this.renderer.cachedItems.pagesStructureHierarchy[this.page.id];
-            let pageSlug = this.page.slug;
-
-            if (this.renderer.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
-                let slugs = [];
-
-                for (let i = 0; i < parentItems.length; i++) {
-                    if (this.renderer.cachedItems.pages[parentItems[i]]) {
-                        slugs.push(this.renderer.cachedItems.pages[parentItems[i]].slug);
-                    }
-                }
-
-                slugs.push(this.page.slug);
-                pageSlug = slugs.join('/');
-            }
-
-            pageURL = this.siteConfig.domain + '/' + pageSlug + '/';
-
-            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
-                pageURL += 'index.html';
-            }
-        }
-
         this.pageData = {
             id: this.page.id,
             title: this.page.title,
             author: this.renderer.cachedItems.authors[this.page.authors],
             slug: this.page.slug,
-            url: pageURL,
             text: preparedText,
             excerpt: preparedExcerpt,
             createdAt: this.page.created_at,
@@ -105,14 +78,6 @@ class PageItem {
             metaDescription: this.metaDescription,
             subpages: this.subpages
         };
-
-        if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === this.page.id) {
-            this.pageData.url = this.siteConfig.domain + '/';
-
-            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
-                this.pageData.url += 'index.html';
-            }
-        }
 
         if (this.pageData.template === '*') {
             this.pageData.template = this.themeConfig.defaultTemplates.page;
@@ -147,7 +112,47 @@ class PageItem {
 
     setInternalLinks() {
         let pageText = this.renderer.cachedItems.pages[this.pageID].text;
+        let pageExcerpt = this.renderer.cachedItems.pages[this.pageID].excerpt;
         this.renderer.cachedItems.pages[this.pageID].text = ContentHelper.setInternalLinks(pageText, this.renderer);
+        this.renderer.cachedItems.pages[this.pageID].excerpt = ContentHelper.setInternalLinks(pageExcerpt, this.renderer);
+    }
+
+    setHierarchyLinks() {
+        let pageURL = this.siteConfig.domain + '/' + this.page.slug + '.html';
+
+        if (this.siteConfig.advanced.urls.cleanUrls) {
+            let parentItems = this.renderer.cachedItems.pagesStructureHierarchy[this.page.id];
+            let pageSlug = this.page.slug;
+
+            if (this.renderer.siteConfig.advanced.urls.cleanUrls && parentItems && parentItems.length) {
+                let slugs = [];
+
+                for (let i = 0; i < parentItems.length; i++) {
+                    if (this.renderer.cachedItems.pages[parentItems[i]]) {
+                        slugs.push(this.renderer.cachedItems.pages[parentItems[i]].slug);
+                    }
+                }
+
+                slugs.push(this.page.slug);
+                pageSlug = slugs.join('/');
+            }
+
+            pageURL = this.siteConfig.domain + '/' + pageSlug + '/';
+
+            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+                pageURL += 'index.html';
+            }
+        }
+
+        if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === this.page.id) {
+            pageURL = this.siteConfig.domain + '/';
+
+            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+                pageURL += 'index.html';
+            }
+        }
+
+        this.renderer.cachedItems.pages[this.pageID].url = pageURL;
     }
 
     setPageViewConfig(config) {

@@ -621,7 +621,6 @@ class ContentHelper {
                     if (renderer.cachedItems.authors[authorID].username === authorSlug) {
                         let link = renderer.cachedItems.authors[authorID].url;
                         text = text.split(url).join(link);
-                        return text;
                     }
                 }
             }

@@ -38,7 +38,9 @@ export default {
     },
     computed: {
         tagPages () {
-            return [''].concat(this.$store.state.currentSite.tags.map(tag => tag.id));
+            return [''].concat(this.$store.state.currentSite.tags.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            }).map(tag => tag.id));
         },
         placeholder () {
             return this.$t('tag.selectTag');

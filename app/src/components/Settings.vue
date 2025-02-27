@@ -1902,7 +1902,10 @@
                                 id="feed-title"
                                 key="feed-title"
                                 v-model="advanced.feed.title"
-                                :items="{ 'displayName': $t('settings.pageName'), 'customTitle': $t('settings.customFeedTitle') }"></dropdown>
+                                :items="{ 
+                                    'displayName': $t('settings.websiteName'), 
+                                    'customTitle': $t('settings.customFeedTitle') 
+                                }"></dropdown>
                         </field>
 
                         <field

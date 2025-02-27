@@ -200,7 +200,7 @@
         </draggable>
 
         <p-button
-            v-if="maxCount === -1 || maxCount < content.length"
+            v-if="maxCount === -1 || content.length < maxCount"
             :onClick="addItem"
             type="secondary icon"
             icon="add-site-mono">

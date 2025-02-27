@@ -747,7 +747,7 @@ class Sitemap {
             }
 
             this.outputXML += '<url>' + "\n";
-            this.outputXML += '<loc>' + domain + url.replace(/index\.html$/, '') + '</loc>' + "\n";
+            this.outputXML += '<loc>' + (domain + url.replace(/index\.html$/, '')).replace(/\\/gmi, '/') + '</loc>' + "\n";
 
             if (lastMod) {
                 this.outputXML += '<lastmod>' + lastMod + '</lastmod>' + "\n";
@@ -760,7 +760,7 @@ class Sitemap {
                     }
 
                     this.outputXML += '<image:image>' + "\n";
-                    this.outputXML += '<image:loc>' + images[i].url + '</image:loc>' + "\n";
+                    this.outputXML += '<image:loc>' + (images[i].url).replace(/\\/gmi, '/') + '</image:loc>' + "\n";
                     this.outputXML += '<image:title><![CDATA[' + images[i].alt + ']]></image:title>' + "\n";
                     this.outputXML += '</image:image>' + "\n";
                 }

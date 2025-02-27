@@ -110,6 +110,11 @@ class ItemHelper {
 
         if (itemType === 'post') {
             preparedData.tags = itemData.tags;
+
+            if (preparedData.tags && preparedData.tags.length) {
+                preparedData.tags = [...new Set(preparedData.tags)];
+            }
+            
             preparedData.additionalData.mainTag = itemData.mainTag;
             preparedData.postViewSettings = itemViewSettings;
         } else if (itemType === 'page') {

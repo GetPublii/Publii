@@ -218,7 +218,9 @@ export default {
             return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'blogpage', 'file' ];
         },
         tagPages () {
-            return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1).map(tag => tag.id);
+            return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1).sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            }).map(tag => tag.id);
         },
         authorPages () {
             return this.$store.state.currentSite.authors.map(author => author.username).sort((a, b) => {
@@ -234,10 +236,14 @@ export default {
             });
         },
         postPages () {
-            return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).map(post => post.id);
+            return this.$store.state.currentSite.posts.filter(post => post.status.indexOf('published') > -1).sort((a, b) => {
+                return a.title.localeCompare(b.title);
+            }).map(post => post.id);
         },
         pageItems () {
-            return this.$store.state.currentSite.pages.filter(page => page.status.indexOf('published') > -1).map(page => page.id);
+            return this.$store.state.currentSite.pages.filter(page => page.status.indexOf('published') > -1).sort((a, b) => {
+                return a.title.localeCompare(b.title);
+            }).map(page => page.id);
         },
         targetList () {
             return [ '-', '_blank' ];

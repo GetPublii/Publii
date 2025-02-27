@@ -102,22 +102,30 @@ export default {
     }
 
     .clear {
+        border-radius: 50%;
         color: var(--warning);
         cursor: pointer;
         font-size: 2.4rem;
         font-weight: 300;
-        height: 2rem;
-        line-height: 1.9rem;
+        height: 3rem; 
+        line-height: 1.1;
         position: absolute;
         right: 1.5rem;
         text-align: center;
-        top: 1.4rem;
-        transition: all .3s ease-out;
-        width: 2rem;
+        transition: var(--transition);           
+        top: 50%;
+        transform: translateY(-50%); 
+        width: 3rem;
 
+        &:active,
+        &:focus,
         &:hover {
             color: var(--icon-tertiary-color);
         }
+        
+        &:hover {
+            background: var(--input-border-color);
+        }   
     }
 
     svg {

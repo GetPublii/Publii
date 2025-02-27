@@ -40,7 +40,7 @@ class Backup {
 
             let stats = fs.statSync(path.join(backupsPath, file));
             let size = Backup.convertToMegabytes(stats.size);
-            let createdAt = stats.atime;
+            let createdAt = stats.birthtime || stats.mtime;
 
             files.push({
                 id: index,

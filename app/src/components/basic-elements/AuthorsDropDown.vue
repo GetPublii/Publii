@@ -8,7 +8,7 @@
         :close-on-select="true"
         :show-labels="false"
         @select="closeDropdown()"
-        :multiple="mutliple"
+        :multiple="multiple"
         :id="anchor"
         :class="customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
         :placeholder="placeholder"></v-select>
@@ -40,7 +40,9 @@ export default {
     },
     computed: {
         authors () {
-            return [''].concat(this.$store.state.currentSite.authors.map(author => author.id));
+            return [''].concat(this.$store.state.currentSite.authors.sort((a, b) => {
+                return a.username.localeCompare(b.username);
+            }).map(author => author.id));
         },
         placeholder () {
             return this.$t('author.selectAuthor');
