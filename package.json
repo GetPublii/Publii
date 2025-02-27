@@ -44,7 +44,7 @@
     "cross-env": "7.0.3",
     "css-loader": "6.8.1",
     "electron": "31.7.7",
-    "electron-builder": "25.1.8",
+    "electron-builder": "24.13.3",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
     "mocha": "10.2.0",
@@ -60,7 +60,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "31.7.6",
+    "electronVersion": "31.7.7",
     "productName": "Publii",
     "copyright": "Copyright (C) 2018-2025 TidyCustoms. All rights reserved.",
     "asar": true,
