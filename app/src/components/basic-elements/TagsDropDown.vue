@@ -38,7 +38,7 @@ export default {
     },
     computed: {
         tagPages () {
-            return [''].concat(this.$store.state.currentSite.tags.sort((a, b) => {
+            return [''].concat(this.$store.state.currentSite.tags.slice().sort((a, b) => {
                 return a.name.localeCompare(b.name);
             }).map(tag => tag.id));
         },

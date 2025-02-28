@@ -40,7 +40,7 @@ export default {
     },
     computed: {
         authors () {
-            return [''].concat(this.$store.state.currentSite.authors.sort((a, b) => {
+            return [''].concat(this.$store.state.currentSite.authors.slice().sort((a, b) => {
                 return a.username.localeCompare(b.username);
             }).map(author => author.id));
         },
