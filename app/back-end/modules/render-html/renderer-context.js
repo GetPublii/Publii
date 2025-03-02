@@ -8,7 +8,7 @@ const normalizePath = require('normalize-path');
 const Plugins = require('./../../plugins.js');
 const RendererCache = require('./renderer-cache');
 const RendererHelpers = require('./helpers/helpers.js');
-const sizeOf = require('image-size');
+const sizeOf = require('../../helpers/rotation-aware-sizeof.js');
 const UtilsHelper = require('./../../helpers/utils');
 
 /*

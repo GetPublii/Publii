@@ -1,5 +1,5 @@
 const stripTags = require('striptags');
-const sizeOf = require('image-size');
+const sizeOf = require('../../../../helpers/rotation-aware-sizeof.js');
 const path = require('path');
 const normalizePath = require('normalize-path');
 
