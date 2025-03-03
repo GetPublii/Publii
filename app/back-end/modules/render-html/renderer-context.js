@@ -693,6 +693,10 @@ class RendererContext {
         if (context === 'index' || context === 'blogindex' || context === '404' || context === 'search') {
             if (!paginationData || paginationData.currentPage === 1) {
                 if (this.siteConfig.advanced.usePageAsFrontpage || context === 'blogindex') {
+                    if (this.siteConfig.advanced.urls.postsPrefix) {
+                        return blogBaseUrl + '/' + this.siteConfig.advanced.urls.postsPrefix + '/';
+                    }
+
                     return blogBaseUrl + '/';
                 }
 
