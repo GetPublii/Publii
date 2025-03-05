@@ -87,6 +87,7 @@
             "imageDownloadError": "An error occurred during downloading of the image: {image}",
             "imagesProgressInfo": "Downloading images ({progress} / {total})",
             "postsProgressInfo": "Importing posts ({progress} / {total})",
+            "pagesProgressInfo": "Importing pages ({progress} / {total})",
             "tagsProgressInfo": "Importing tags ({progress} / {total})"
         }
     },
