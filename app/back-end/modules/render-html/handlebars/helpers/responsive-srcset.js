@@ -29,8 +29,8 @@ function returnSrcSetAttribute (url, type, group) {
         return output;
     }
 
-    // skip GIF and SVG images
-    if (url.slice(-4) === '.gif' || url.slice(-4) === '.svg') {
+    // skip GIF, SVG, WEBP images
+    if (url.slice(-4) === '.gif' || url.slice(-4) === '.svg' || url.slice(-5) === '.webp') {
         return output;
     }
 
