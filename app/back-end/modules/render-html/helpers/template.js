@@ -385,6 +385,8 @@ class TemplateHelper {
             }
         }
 
+        // Fix for Windows
+        userPartials = userPartials.map(partial => partial.replace(/\\/gmi, '/'));
         return userPartials;
     }
 
