@@ -313,7 +313,17 @@ class S3 {
             await this.removeFile();
         } catch (err) {
             console.error(`[${new Date().toUTCString()}] Error deleting ${input}`, err);
-            this.onError(err, true);
+
+            if (err.name !== 'NoSuchKey') {
+                this.onError(err, true);
+                return;
+            }
+
+            this.deployment.currentOperationNumber++;
+            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
+            this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+            this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
+            await this.removeFile();
         }
     }
 
