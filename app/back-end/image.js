@@ -10,7 +10,7 @@ const normalizePath = require('normalize-path');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
-const Jimp = require('./vendor/jimp.custom.js');
+const Jimp = require('jimp');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 let sharp = require('sharp');
