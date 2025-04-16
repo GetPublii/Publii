@@ -939,6 +939,7 @@ export default {
             if (this.initialParentPage === null && this.parentPage === 0) {
                 this.pagesHierarchy.push({ id: pageID, subpages: [] });
                 this.hierarchySave();
+                this.initialParentPage = this.parentPage;
                 return;
             }
 
@@ -947,6 +948,7 @@ export default {
                 let { item: targetItem, parent: targetParent } = target;
                 targetItem.subpages.push({ id: pageID, subpages: [] });
                 this.hierarchySave();
+                this.initialParentPage = this.parentPage;
                 return;
             }
 
@@ -954,6 +956,7 @@ export default {
                 let selectedItem = this.findAndRemoveItem(this.pagesHierarchy, pageID);
                 this.pagesHierarchy.push(selectedItem);
                 this.hierarchySave();
+                this.initialParentPage = this.parentPage;
                 return 0;
             }
 
@@ -962,6 +965,7 @@ export default {
             let { item: targetItem, parent: targetParent } = target;
             targetItem.subpages.push(selectedItem);
             this.hierarchySave();
+            this.initialParentPage = this.parentPage;
         },
         changeParentPage (newParentPage) {
             Vue.set(this, 'parentPage', parseInt(newParentPage, 10));
