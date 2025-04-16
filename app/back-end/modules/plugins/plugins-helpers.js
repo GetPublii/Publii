@@ -45,10 +45,10 @@ class PluginsHelpers {
         }
 
         if (pluginConfig.assets && pluginConfig.assets.front) {
-            pluginConfig.assets.front = pluginConfig.assets.front.map(fileName => fileName.replace(/[^a-zA-Z0-9\-\_\.\*\@\+]/gmi, ''));
+            pluginConfig.assets.front = pluginConfig.assets.front.map(fileName => fileName.split('/'));
             return pluginConfig.assets.front.map(fileName => ({
-                input: path.join(pluginsDir, pluginName, 'front-assets', fileName),
-                output: fileName
+                input: path.join(pluginsDir, pluginName, 'front-assets', ...fileName),
+                output: fileName.join('/')
             }));
         }
 
