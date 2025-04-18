@@ -887,7 +887,7 @@
         "postsOrdering": "Sortowanie wpisów:",
         "postPrefixInfo": "Wprowadzony tutaj prefix zostanie dodany przed slugiem wpisu w URL. Na przykład: https://example.com/PREFIKS_POSTA/post-slug. Ta opcja jest konieczna, jeśli ustawisz <a href=\"#\" data-internal-link=\"SEO\">podstronę jako stronę główną</a> i potrzebujesz stronicowania wpisów. W tym przypadku, stronicowanie wpisów będzie dostępne pod adresem https://example.com/PREFIKS_POSTA/page/X. Dodatkowo, tagi będą renderowane pod adresem https://example.com/PREFIKS_POSTA/PREFIKS_TAGA/tag-slug.",
         "postsPrefix": "Prefiks postów",
-        "postTile": "Tytuł wpisu",
+        "postTitle": "Tytuł wpisu",
         "previewLocation": "Lokalizacja podglądów",
         "previewLocationChangedConfirmMsg": "Miejsce przechowywania podglądu zostało zmienione. Pamiętaj, że istniejące pliki w tym folderze zostaną usunięte po utworzeniu podglądu Twojej witryny.",
         "privacyPolicyLinkLabel": "Etykieta linka polityki prywatności",
