@@ -115,7 +115,8 @@
                                             :anchor="field.anchor"
                                             :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                             :cols="field.cols"
-                                            :customCssClasses="field.customCssClasses"></text-area>
+                                            :customCssClasses="field.customCssClasses"
+                                            :disabled="field.disabled"></text-area>
 
                                         <text-area
                                             v-if="field.type === 'wysiwyg'"
@@ -228,6 +229,7 @@
                                             :spellcheck="$store.state.currentSite.config.spellchecking && field.spellcheck"
                                             v-model="settingsValues[field.name]"
                                             :anchor="field.anchor"
+                                            :disabled="field.disabled"
                                             :placeholder="field.placeholder"
                                             :customCssClasses="field.customCssClasses"></text-input>
 
