@@ -814,15 +814,21 @@ class RendererContext {
     }
 
     getTagsUrl () {
+        let tagsUrl = this.siteConfig.domain + '/';
+
         if (this.siteConfig.advanced.urls.tagsPrefix !== '') {       
             if (this.siteConfig.advanced.urls.postsPrefix && this.siteConfig.advanced.urls.tagsPrefixAfterPostsPrefix) {
-                return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+                tagsUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
+            } else {
+                tagsUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
             }
-            
-            return this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.tagsPrefix + '/';
-        } else {
-            return this.siteConfig.domain + '/';
         }
+
+        if (this.previewMode) {
+            tagsUrl += 'index.html';
+        }
+
+        return tagsUrl;
     }
 
     getPluginsConfig (rendererInstance) {
