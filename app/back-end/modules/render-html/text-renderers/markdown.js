@@ -28,7 +28,7 @@ class MarkdownToHtml {
                 title = '';
             }
         
-            return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions} />${title}</figure>`;
+            return `<figure class="post__image"><img src="${href}" alt="${text}"${dimensions}>${title}</figure>`;
         };
 
         // Solve issues with rendering <figure> elements inside paragraphs
