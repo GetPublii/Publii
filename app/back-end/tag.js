@@ -22,6 +22,10 @@ class Tag extends Model {
             this.additionalData = tagData.additionalData;
         }
 
+        if (tagData.imageConfigFields) {
+            this.imageConfigFields = tagData.imageConfigFields;
+        }
+
         if(tagData.name || tagData.name === '') {
             this.name = (tagData.name).toString();
             this.slug = tagData.slug;
@@ -68,11 +72,11 @@ class Tag extends Model {
         }
 
         if(this.id !== 0) {
+            this.checkAndCleanImages();
             return this.updateTag();
         }
 
         this.checkAndCleanImages();
-
         return this.addTag();
     }
 
@@ -270,19 +274,26 @@ class Tag extends Model {
      */
     cleanImages(images, imagesDir, cancelEvent) {
         let tagDir = this.id;
-        let featuredImage = path.parse(this.additionalData.featuredImage).base;
+        let featuredImage = '';
+        let viewConfig = {};
+        
+        if (this.additionalData && this.additionalData.featuredImage) {
+            featuredImage = path.parse(this.additionalData.featuredImage).base;
+        }
 
-        // If post is cancelled - get the previous featured image
+        if (this.additionalData && this.additionalData.viewConfig) {
+            viewConfig = this.additionalData.viewConfig;
+        }
+
+        // If tag is cancelled - get the previous featured image and option images data
         if (cancelEvent && this.id !== 0) {
-            let featuredImageSqlQuery = `SELECT additional_data FROM tags WHERE id = @id`;
+            let additionalDataQuery = `SELECT additional_data FROM tags WHERE id = @id`;
+            let additionalDataResult = this.db.prepare(additionalDataQuery).all({ id: this.id });
 
-            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
-                id: this.id 
-            });
-
-            if (featuredImageResult) {
+            if (additionalDataResult) {
                 try {
-                    featuredImageResult = JSON.parse(featuredImageResult[0].additional_data).featuredImage;
+                    featuredImage = JSON.parse(additionalDataResult[0].additional_data).featuredImage;
+                    viewConfig = JSON.parse(additionalDataResult[0].additional_data).viewConfig;
                 } catch (e) {
                     console.log('(!) An issue occurred during parsing tag additional data', this.id);
                 }
@@ -293,11 +304,13 @@ class Tag extends Model {
             tagDir = 'temp';
         }
 
-        let imagesInTagViewSettings = [];
+        let imagesInViewSettings = [];
         
-        if (this.additionalData && this.additionalData.viewConfig) {
-            imagesInTagViewSettings = Object.values(this.additionalData.viewConfig).filter(item => item.type === "image").map(item => item.value);
-        }
+        imagesInViewSettings = Object.keys(viewConfig).filter((fieldName) => {
+            return this.imageConfigFields.indexOf(fieldName) !== -1 && viewConfig[fieldName] !== '';
+        }).map((fieldName) => {
+            return viewConfig[fieldName];
+        });
 
         // Iterate through images
         for (let i in images) {
@@ -309,11 +322,11 @@ class Tag extends Model {
                 continue;
             }
 
-            // Remove files which does not exist as featured image and authorViewSettings
-            if(
+            // Remove files which does not exist as featured image and tagViewSettings
+            if (
                 (cancelEvent && tagDir === 'temp') ||
                 (
-                    imagesInTagViewSettings.indexOf(imagePath) === -1 &&
+                    imagesInViewSettings.indexOf(imagePath) === -1 &&
                     featuredImage !== imagePath
                 )
             ) {
