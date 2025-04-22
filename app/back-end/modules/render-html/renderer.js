@@ -874,7 +874,7 @@ class Renderer {
             
             let output = '';
 
-            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+            if (this.siteConfig.advanced.urls.postsPrefix === '' && !this.siteConfig.advanced.usePageAsFrontpage) {
                 this.menuContext = ['frontpage'];
                 let context = contextGenerator.getContext(0, postsPerPage);
                 this.globalContext = this.createGlobalContext('index', ['homepage'], false, false, false, context);
