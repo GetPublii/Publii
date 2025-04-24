@@ -43,6 +43,11 @@
         "shareIt": "Share It"
     },
 
+    "postPrefix": {
+        "title": "Insights and Updates",
+        "description": "Discover our latest posts, insights, and updates on what we do and what we care about."
+    },
+
     "page": {
         "childPages": "Child pages"
     },
