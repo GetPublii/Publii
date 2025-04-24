@@ -31,6 +31,10 @@ class Author extends Model {
             this.additionalData = authorData.additionalData;
         }
 
+        if (authorData.imageConfigFields) {
+            this.imageConfigFields = authorData.imageConfigFields;
+        }
+
         if(authorData.name || authorData.name === '') {
             this.name = authorData.name;
             this.username = authorData.username;
@@ -89,11 +93,11 @@ class Author extends Model {
         }
 
         if (this.id !== 0) {
+            this.checkAndCleanImages();
             return this.updateAuthor();
         }
 
         this.checkAndCleanImages();
-
         return this.addAuthor();
     }
 
@@ -291,23 +295,26 @@ class Author extends Model {
      */
     cleanImages(images, imagesDir, cancelEvent) {
         let authorDir = this.id;
-        let featuredImage = false;
-
+        let featuredImage = '';
+        let viewConfig = {};
+        
         if (this.additionalData && this.additionalData.featuredImage) {
             featuredImage = path.parse(this.additionalData.featuredImage).base;
         }
 
+        if (this.additionalData && this.additionalData.viewConfig) {
+            viewConfig = this.additionalData.viewConfig;
+        }
+
         // If author is cancelled - get the previous featured image
         if (cancelEvent && this.id !== 0) {
-            let featuredImageSqlQuery = `SELECT additional_data FROM authors WHERE id = @id`;
+            let additionalDataQuery = `SELECT additional_data FROM authors WHERE id = @id`;
+            let additionalDataResult = this.db.prepare(additionalDataQuery).all({ id: this.id });
 
-            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
-                id: this.id 
-            });
-
-            if (featuredImageResult && featuredImageResult[0]) {
+            if (additionalDataResult) {
                 try {
-                    featuredImage = JSON.parse(featuredImageResult[0].additional_data).featuredImage;
+                    featuredImage = JSON.parse(additionalDataResult[0].additional_data).featuredImage;
+                    viewConfig = JSON.parse(additionalDataResult[0].additional_data).viewConfig;
                 } catch (e) {
                     console.log('(!) An issue occurred during parsing author additional data', this.id);
                 }
@@ -318,11 +325,13 @@ class Author extends Model {
             authorDir = 'temp';
         }
 
-        let imagesInAuthorViewSettings = [];
+        let imagesInViewSettings = [];
         
-        if (this.additionalData && this.additionalData.viewConfig) {
-            imagesInAuthorViewSettings = Object.values(this.additionalData.viewConfig).filter(item => item.type === "image").map(item => item.value);
-        }
+        imagesInViewSettings = Object.keys(viewConfig).filter((fieldName) => {
+            return this.imageConfigFields.indexOf(fieldName) !== -1 && viewConfig[fieldName] !== '';
+        }).map((fieldName) => {
+            return viewConfig[fieldName];
+        });
 
         // Iterate through images
         for (let i in images) {
@@ -335,10 +344,10 @@ class Author extends Model {
             }
 
             // Remove files which does not exist as featured image and authorViewSettings
-            if(
+            if (
                 (cancelEvent && authorDir === 'temp') ||
                 (
-                    imagesInAuthorViewSettings.indexOf(imagePath) === -1 &&
+                    imagesInViewSettings.indexOf(imagePath) === -1 &&
                     featuredImage !== imagePath
                 )
             ) {

@@ -233,6 +233,9 @@ class Renderer {
      * Creates website content
      */
     async generateWWW() {
+        // We must generate CSS before any HTML files to receive correct checksum if version param is used to solve issues with browser cache
+        this.generateCSS();
+        
         if ((this.homepageOnlyMode && !this.siteConfig.advanced.usePageAsFrontpage) || !this.homepageOnlyMode) {
             this.sendProgress(11, 'Generating frontpage');
             this.generateFrontpage();
@@ -269,7 +272,6 @@ class Renderer {
             this.generateFeeds();
         }
 
-        this.generateCSS();
         this.sendProgress(80, 'Copying files');
         await this.copyFiles();
 
@@ -872,7 +874,7 @@ class Renderer {
             
             let output = '';
 
-            if (this.siteConfig.advanced.urls.postsPrefix === '' || !this.siteConfig.advanced.usePageAsFrontpage) {
+            if (this.siteConfig.advanced.urls.postsPrefix === '' && !this.siteConfig.advanced.usePageAsFrontpage) {
                 this.menuContext = ['frontpage'];
                 let context = contextGenerator.getContext(0, postsPerPage);
                 this.globalContext = this.createGlobalContext('index', ['homepage'], false, false, false, context);

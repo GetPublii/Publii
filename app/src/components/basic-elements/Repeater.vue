@@ -176,7 +176,11 @@
                 <div class="publii-repeater-item-ui">
                     <a
                         href="#"
-                        class="publii-repeater-item-ui-btn duplicate"
+                        :class="{ 
+                            'publii-repeater-item-ui-btn': true,
+                            'duplicate': true,
+                            'is-disabled': maxCount !== -1 && content.length >= maxCount
+                        }"
                         :title="translation('duplicate')"
                         tabindex="-1"
                         @click.stop.prevent="duplicateItem(index)">
@@ -516,6 +520,11 @@ export default {
                            fill: var(--warning);
                         }
                     }
+                }
+
+                &.is-disabled {
+                    opacity: 0.25;
+                    pointer-events: none;
                 }
             } 
         }

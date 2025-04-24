@@ -537,7 +537,8 @@ export default {
                         metaDescription: this.authorData.metaDescription,
                         template: this.authorData.template
                     }),
-                    additionalData: JSON.stringify(this.authorData.additionalData)
+                    additionalData: JSON.stringify(this.authorData.additionalData),
+                    imageConfigFields: this.authorViewThemeSettings.filter(field => field.type === 'image').map(field => field.name)
                 };
 
                 this.saveData(authorData, showPreview);
@@ -555,11 +556,13 @@ export default {
                     if(authorData.id === 0) {
                         let newlyAddedAuthor = JSON.parse(JSON.stringify(data.authors.filter(author => author.id === data.authorID)[0]));
                         this.$bus.$emit('show-author-item-editor', newlyAddedAuthor);
-                        this.close();
+                        this.$bus.$emit('hide-author-item-editor');
+                        this.dataSet = false;
                         this.showMessage(data.message);
                     } else {
                         if (!showPreview) {
-                            this.close();
+                            this.$bus.$emit('hide-author-item-editor');
+                            this.dataSet = false;
                         }
 
                         this.showMessage('success');
@@ -589,9 +592,7 @@ export default {
             mainProcessAPI.send('app-author-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.authorData.id,
-                additionalData: {
-                    featuredImage: this.authorData.additionalData.featuredImage
-                }
+                imageConfigFields: this.authorViewThemeSettings.filter(field => field.type === 'image').map(field => field.name)
             });
         },
         showMessage(message) {

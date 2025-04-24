@@ -305,13 +305,22 @@ class S3 {
     
         try {
             await this.connection.send(new DeleteObjectCommand(params));
-            console.log(`[${new Date().toUTCString()}] DEL ${input}`);
             this.deployment.currentOperationNumber++;
             console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
             this.deployment.progressOfDeleting += this.deployment.progressPerFile;
             this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
             await this.removeFile();
         } catch (err) {
+            // Handle case when specific file no longer exists in the bucket - don't block sync
+            if (err.name === 'NoSuchKey') {
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] DEL ${input} - NoSuchKey`);
+                this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+                this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
+                await this.removeFile();
+                return;
+            }
+
             console.error(`[${new Date().toUTCString()}] Error deleting ${input}`, err);
             this.onError(err, true);
         }

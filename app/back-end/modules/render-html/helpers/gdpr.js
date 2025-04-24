@@ -31,7 +31,7 @@ class Gdpr {
                             type="checkbox" 
                             data-group-name=""
                             id="pcb-group-${i}" 
-                            checked />
+                            checked>
                         <label for="pcb-group-${i}">${configuration.groups[i].name}</label>
                     </div>
                 </li>`;

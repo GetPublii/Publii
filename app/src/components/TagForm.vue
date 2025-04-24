@@ -494,7 +494,7 @@ export default {
             setTimeout(() => {
                 let tagData = Object.assign({}, this.tagData);
                 tagData.site = this.$store.state.currentSite.config.name;
-
+                tagData.imageConfigFields = this.tagViewThemeSettings.filter(field => field.type === 'image').map(field => field.name);
                 this.saveData(tagData, showPreview);
             }, 500);
         },
@@ -543,7 +543,8 @@ export default {
                         });
                     } else {
                         if (!showPreview) {
-                            this.close();
+                            this.$bus.$emit('hide-tag-item-editor');
+                            this.dataSet = false;
                         }
 
                         this.showMessage('success');
@@ -571,9 +572,7 @@ export default {
             mainProcessAPI.send('app-tag-cancel', {
                 site: this.$store.state.currentSite.config.name,
                 id: this.tagData.id,
-                additionalData: {
-                    featuredImage: this.tagData.additionalData.featuredImage
-                }
+                imageConfigFields: this.tagViewThemeSettings.filter(field => field.type === 'image').map(field => field.name)
             });
         },
         showMessage(message) {

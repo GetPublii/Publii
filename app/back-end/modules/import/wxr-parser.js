@@ -581,7 +581,7 @@ class WxrParser {
                 });
 
                 let featuredPageID = newPage.db.prepare('SELECT last_insert_rowid() AS id').get().id;
-                let featuredPageIdUpdate = newPage.db.prepare(`UPDATE posts SET featured_image_id = @featuredPostID WHERE id = @newPageID`);
+                let featuredPageIdUpdate = newPage.db.prepare(`UPDATE posts SET featured_image_id = @featuredPageID WHERE id = @newPageID`);
 
                 featuredPageIdUpdate.run({
                     featuredPageID,
@@ -819,7 +819,7 @@ class WxrParser {
         text = text.replace(/\[\/caption\]/g, '');
 
         // Replace <!-- more --> with Publii separator
-        text = text.replace(/<!--more-->/g, '<hr id="read-more" />');
+        text = text.replace(/<!--more-->/g, '<hr id="read-more">');
 
         if(this.autop) {
             console.log('(i) Used automatic paragraphs for the post content');

@@ -86,6 +86,7 @@
             "authorsProgressInfo": "Importing authors ({progress} / {total})",
             "imageDownloadError": "An error occurred during downloading of the image: {image}",
             "imagesProgressInfo": "Downloading images ({progress} / {total})",
+            "pagesProgressInfo": "Importing pages ({progress} / {total})",
             "postsProgressInfo": "Importing posts ({progress} / {total})",
             "tagsProgressInfo": "Importing tags ({progress} / {total})"
         }
@@ -887,7 +888,7 @@
         "postsOrdering": "Posts ordering:",
         "postPrefixInfo": "The prefix entered here will be added before the post slug in the URL. For example, https://example.com/POSTS_PREFIX/post-slug. This option is necessary if you set a <a href=\"#\" data-internal-link=\"SEO\">page as the homepage</a> and need post pagination. In this case, post pagination will be available at https://example.com/POSTS_PREFIX/page/X. Additionally, tags will be rendered under https://example.com/POSTS_PREFIX/TAG_PREFIX/tag-slug.",
         "postsPrefix": "Posts prefix",
-        "postTile": "Post title",
+        "postTitle": "Post title",
         "previewLocation": "Preview location",
         "previewLocationChangedConfirmMsg": "The preview storage location has been changed. Note that existing files in this folder will be deleted when a preview of your website is created.",
         "privacyPolicyLinkLabel": "Privacy policy link label",
