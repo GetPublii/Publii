@@ -600,13 +600,16 @@ class RendererCache {
      * Set internal links for tags and authors
      */
     setInternalLinks (posts, pages) {
+        pages.map(page => {
+            page.setHierarchyLinks();
+        });
+        
         posts.map(post => {
             post.setInternalLinks();
         });
 
         pages.map(page => {
             page.setInternalLinks();
-            page.setHierarchyLinks();
         });
 
         let authorIDs = Object.keys(this.renderer.cachedItems.authors);

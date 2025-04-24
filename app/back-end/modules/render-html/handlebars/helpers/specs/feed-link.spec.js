@@ -17,7 +17,7 @@ describe('Handlebars - feedLink helper', function() {
         };
 
         it('should return proper URL to feed.xml and feed.json files', function() {
-            assert.equal('<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" />' + "\n" + '<link rel="alternate" type="application/json" href="https://example.com/feed.json" />' + "\n", feedLink.call(rendererInstance).string);
+            assert.equal('<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml">' + "\n" + '<link rel="alternate" type="application/json" href="https://example.com/feed.json">' + "\n", feedLink.call(rendererInstance).string);
         });
     });
 
@@ -35,7 +35,7 @@ describe('Handlebars - feedLink helper', function() {
         };
 
         it('should return proper URL to feed.xml file', function() {
-            assert.equal('<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" />' + "\n", feedLink.call(rendererInstance).string);
+            assert.equal('<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml">' + "\n", feedLink.call(rendererInstance).string);
         });
     });
 
@@ -53,7 +53,7 @@ describe('Handlebars - feedLink helper', function() {
         };
 
         it('should return proper URL to feed.json file', function() {
-            assert.equal('<link rel="alternate" type="application/json" href="https://example.com/feed.json" />' + "\n", feedLink.call(rendererInstance).string);
+            assert.equal('<link rel="alternate" type="application/json" href="https://example.com/feed.json">' + "\n", feedLink.call(rendererInstance).string);
         });
     });
 

@@ -114,10 +114,10 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
 
         // Generate Open Graph tags
         if (openGraphEnabled) {
-            output += '<meta property="og:title" content="' + title.replace(/"/g, "'") + '" />';
+            output += '<meta property="og:title" content="' + title.replace(/"/g, "'") + '">';
 
             if (image) {
-                output += '<meta property="og:image" content="' + image + '"/>';
+                output += '<meta property="og:image" content="' + image + '">';
             }
 
             let ogImageDimensions = false;
@@ -139,17 +139,17 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
             }
 
             if (ogImageDimensions) {
-                output += '<meta property="og:image:width" content="' + ogImageDimensions.width + '" />';
-                output += '<meta property="og:image:height" content="' + ogImageDimensions.height + '" />'
+                output += '<meta property="og:image:width" content="' + ogImageDimensions.width + '">';
+                output += '<meta property="og:image:height" content="' + ogImageDimensions.height + '">'
             }
 
-            output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '" />';
-            output += '<meta property="og:description" content="' + stripTags(description).replace(/"/g, "'") + '" />';
-            output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '" />';
-            output += '<meta property="og:type" content="' + openGraphType + '" />';
+            output += '<meta property="og:site_name" content="' + siteName.replace(/"/g, "'") + '">';
+            output += '<meta property="og:description" content="' + stripTags(description).replace(/"/g, "'") + '">';
+            output += '<meta property="og:url" content="' + contextData.data.website.pageUrl + '">';
+            output += '<meta property="og:type" content="' + openGraphType + '">';
 
             if (rendererInstance.siteConfig.advanced.openGraphAppId !== '') {
-                output += '<meta property="fb:app_id" content="' + rendererInstance.siteConfig.advanced.openGraphAppId + '" />';
+                output += '<meta property="fb:app_id" content="' + rendererInstance.siteConfig.advanced.openGraphAppId + '">';
             }
         }
 
@@ -159,13 +159,13 @@ function socialMetaTagsHelper(rendererInstance, Handlebars) {
                 twitterUsername = '@' + twitterUsername;
             }
 
-            output += '<meta name="twitter:card" content="' + twitterCardsType + '" />';
-            output += '<meta name="twitter:site" content="' + twitterUsername + '" />';
-            output += '<meta name="twitter:title" content="' + title.replace(/"/g, "'") + '" />';
-            output += '<meta name="twitter:description" content="' + stripTags(description).replace(/"/g, "'") + '" />';
+            output += '<meta name="twitter:card" content="' + twitterCardsType + '">';
+            output += '<meta name="twitter:site" content="' + twitterUsername + '">';
+            output += '<meta name="twitter:title" content="' + title.replace(/"/g, "'") + '">';
+            output += '<meta name="twitter:description" content="' + stripTags(description).replace(/"/g, "'") + '">';
 
             if(image) {
-                output += '<meta name="twitter:image" content="' + image + '" />';
+                output += '<meta name="twitter:image" content="' + image + '">';
             }
         }
 

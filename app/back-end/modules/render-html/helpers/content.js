@@ -198,7 +198,7 @@ class ContentHelper {
      * @param input
      */
     static prepareMarkdown (input) {
-        input = input.replace(/\-\-\-READMORE\-\-\-/gmi, '<hr id="read-more" />');
+        input = input.replace(/\-\-\-READMORE\-\-\-/gmi, '<hr id="read-more">');
         return input;
     }
 

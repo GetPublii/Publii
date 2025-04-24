@@ -29,7 +29,7 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
                 )
             )
         ) {
-            return new Handlebars.SafeString('<meta name="robots" content="noindex, follow" />');
+            return new Handlebars.SafeString('<meta name="robots" content="noindex, follow">');
         }
 
         if (options.data.root.metaRobotsRaw === 'index, follow') {
@@ -37,7 +37,7 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
         }
 
         if (options.data.root.metaRobotsRaw !== '') {
-            return new Handlebars.SafeString('<meta name="robots" content="' + options.data.root.metaRobotsRaw + '" />');
+            return new Handlebars.SafeString('<meta name="robots" content="' + options.data.root.metaRobotsRaw + '">');
         }
 
         return '';

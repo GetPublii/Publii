@@ -193,7 +193,13 @@ class GitlabPages {
             this.projectID = projects[0].id;
 
             this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
-                let remoteListToCheck = fs.readFileSync(path.join(this.deployment.configDir, 'files-remote.json'), 'utf-8');
+                let remoteListToCheck = '';
+
+                if (typeof response === 'Buffer') {
+                    remoteListToCheck = response.toString();
+                } else {
+                    remoteListToCheck = response;
+                }
 
                 try {
                     if (remoteListToCheck.length) {
