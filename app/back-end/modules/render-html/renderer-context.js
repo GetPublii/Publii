@@ -824,7 +824,7 @@ class RendererContext {
             }
         }
 
-        if (this.previewMode) {
+        if (this.renderer.previewMode) {
             tagsUrl += 'index.html';
         }
 
