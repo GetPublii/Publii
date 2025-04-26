@@ -116,7 +116,7 @@ class PageEvents {
             
             pagesHierarchy = this.removeNullDataFromHierarchy(pagesHierarchy);
             pagesHierarchy = this.removeDuplicatedDataFromHierarchy(pagesHierarchy);
-            fs.writeFileSync(pagesFile, JSON.stringify(updatedHierarchy, null, 4), { encoding: 'utf8' });
+            fs.writeFileSync(pagesFile, JSON.stringify(pagesHierarchy, null, 4), { encoding: 'utf8' });
         });
     }
 
