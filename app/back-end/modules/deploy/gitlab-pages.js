@@ -2,8 +2,8 @@
  * Class used to upload files to the Github Pages
  */
 
-const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const { Gitlab } = require('@gitbeaker/node');
@@ -436,7 +436,7 @@ class GitlabPages {
     updateFilesListFile () {
         this.setUploadProgress(98);
         let localFilesListPath = path.join(this.deployment.inputDir, 'files.publii.json');
-        let localFilesContent = fs.readFileSync(localFilesListPath);
+        let localFilesContent = FileHelper.readFileSync(localFilesListPath);
         let actionType = 'create';
         let commit = [];
 
@@ -497,7 +497,7 @@ class GitlabPages {
     }
 
     readFile (filePath) {
-        return Buffer.from(fs.readFileSync(filePath)).toString('base64');
+        return Buffer.from(FileHelper.readFileSync(filePath)).toString('base64');
     }
 
     isBinaryFile (fullPath) {

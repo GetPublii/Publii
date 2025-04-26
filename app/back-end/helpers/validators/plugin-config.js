@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const FileHelper = require('../file.js');
 
 /**
  * Checks if plugin config file meets the requirements
@@ -7,7 +7,7 @@ const fs = require('fs-extra');
  * @returns {boolean|string}
  */
 function pluginConfigValidator(configPath) {
-    let configContent = fs.readFileSync(configPath);
+    let configContent = FileHelper.readFileSync(configPath);
     let configParsed = false;
 
     try {

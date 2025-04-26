@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const FileHelper = require('./../../../helpers/file.js');
 
 /**
  * Checks if theme config file meets the requirements
@@ -7,7 +7,7 @@ const fs = require('fs-extra');
  * @returns {boolean|string}
  */
 function themeConfigValidator(configPath) {
-    let configContent = fs.readFileSync(configPath);
+    let configContent = FileHelper.readFileSync(configPath);
     let configParsed = false;
 
     try {

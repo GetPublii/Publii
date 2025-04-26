@@ -2,6 +2,7 @@
  * Image instance
  */
 
+const FileHelper = require('./helpers/file.js');
 const fs = require('fs-extra');
 const path = require('path');
 const Model = require('./model.js');
@@ -207,7 +208,7 @@ class Image extends Model {
         let themesHelper = new Themes(this.application, { site: this.site });
         let currentTheme = themesHelper.currentTheme();
         let siteConfigPath = path.join(this.siteDir, 'input', 'config', 'site.config.json');
-        let siteConfig = JSON.parse(fs.readFileSync(siteConfigPath));
+        let siteConfig = JSON.parse(FileHelper.readFileSync(siteConfigPath));
         siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
         let imagesQuality = 60;
         let alphaQuality = 100;
@@ -547,7 +548,7 @@ class Image extends Model {
         };
 
         // Get content of the SVG image
-        let svgFileContent = fs.readFileSync(imagePath, 'utf8');
+        let svgFileContent = FileHelper.readFileSync(imagePath, 'utf8');
         // Look for the non-percentage values in the <svg> tag
         let svgWidth = svgFileContent.match(/\<svg.*width=['"]{1}(.*?)['"]{1}.*\>/mi);
         let svgHeight = svgFileContent.match(/\<svg.*height=['"]{1}(.*?)['"]{1}.*\>/mi);

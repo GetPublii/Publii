@@ -1,5 +1,6 @@
 // Necessary packages
 const fs = require('fs-extra');
+const FileHelper = require('./../../helpers/file.js');
 const listAll = require('ls-all');
 const path = require('path');
 const Handlebars = require('handlebars');
@@ -545,7 +546,7 @@ class Renderer {
         let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
         // Site config
         let configPath = path.join(this.inputDir, 'config', 'site.config.json');
-        this.siteConfig = JSON.parse(fs.readFileSync(configPath));
+        this.siteConfig = JSON.parse(FileHelper.readFileSync(configPath));
         this.siteConfig = UtilsHelper.mergeObjects(defaultSiteConfig, this.siteConfig);
 
         if(this.previewMode) {
@@ -613,7 +614,7 @@ class Renderer {
         let translations = false;
 
         try {
-            translations = JSON.parse(fs.readFileSync(path));
+            translations = JSON.parse(FileHelper.readFileSync(path));
         } catch(e) {
             return false;
         }
@@ -683,7 +684,7 @@ class Renderer {
 
             if (!template && optionalPartials.indexOf(allPartials[i]) > -1) {
                 let optionalPartialPath = path.join(__dirname, '..', '..', '..', 'default-files', 'theme-files', allPartials[i] + '.hbs');
-                template = fs.readFileSync(optionalPartialPath, 'utf8');
+                template = FileHelper.readFileSync(optionalPartialPath, 'utf8');
             }
 
             if(!template) {
@@ -1945,7 +1946,7 @@ class Renderer {
             cssPath = overridedCssPath;
         }
 
-        return fs.readFileSync(cssPath, 'utf8');
+        return FileHelper.readFileSync(cssPath, 'utf8');
     }
 
     /**
@@ -1997,7 +1998,7 @@ class Renderer {
         let customCSSPath = path.join(this.sitesDir, this.siteName, 'input', 'config', 'custom-css.css');
 
         if (UtilsHelper.fileExists(customCSSPath)) {
-            return fs.readFileSync(customCSSPath, 'utf8');
+            return FileHelper.readFileSync(customCSSPath, 'utf8');
         }
 
         return '';
@@ -2146,7 +2147,7 @@ class Renderer {
         if((inputFile === 'feed-xml.hbs' || inputFile === 'feed-json.hbs') && !template) {
             // Load default feed.hbs file if it not exists inside the theme directory
             let feedPath = path.join(__dirname, '..', '..', '..', 'default-files', 'theme-files', inputFile);
-            template = fs.readFileSync(feedPath, 'utf8');
+            template = FileHelper.readFileSync(feedPath, 'utf8');
         }
 
         if(!template) {
@@ -2251,7 +2252,7 @@ class Renderer {
      */
     relativizeUrlsInFile (file, outputDir) {
         let filePath = path.join(outputDir, file);
-        let content = fs.readFileSync(filePath, 'utf8');
+        let content = FileHelper.readFileSync(filePath, 'utf8');
         let depth = file.replace(/\\/gmi, '/').split('/').length - 2;
         let relativeDomain = './' + '../'.repeat(depth);
 
@@ -2274,7 +2275,7 @@ class Renderer {
             return;
         }
 
-        let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
+        let pluginsConfig = FileHelper.readFileSync(sitePluginsConfigPath);
 
         try {
             pluginsConfig = JSON.parse(pluginsConfig);
@@ -2320,7 +2321,7 @@ class Renderer {
 
         if (fs.existsSync(pluginPath)) {
             try {
-                pluginData = fs.readFileSync(pluginPath, 'utf8');
+                pluginData = FileHelper.readFileSync(pluginPath, 'utf8');
                 pluginData = JSON.parse(pluginData);
             } catch (e) {
                 pluginData = {};
@@ -2331,7 +2332,7 @@ class Renderer {
 
         if (fs.existsSync(pluginConfigPath)) {
             try {
-                pluginSavedConfig = fs.readFileSync(pluginConfigPath, 'utf8');
+                pluginSavedConfig = FileHelper.readFileSync(pluginConfigPath, 'utf8');
                 pluginSavedConfig = JSON.parse(pluginSavedConfig);
             } catch (e) {
                 pluginSavedConfig = {};

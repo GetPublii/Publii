@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
 const githubApi = require("github");
@@ -491,7 +492,7 @@ class GithubPages {
                                      let fileSize = fs.statSync(file.path).size;
 
                                      if(!this.isBinaryFile(file.path)) {
-                                         let fileContent = fs.readFileSync(file.path);
+                                         let fileContent = FileHelper.readFileSync(file.path);
                                          fileSize = fileContent.length;
                                          calculatedHash = crypto.createHash('sha1')
                                                                 .update("blob " + fileSize + "\0" + fileContent)
@@ -518,7 +519,7 @@ class GithubPages {
     }
 
     createBlob(filePath) {
-        let fileContent = fs.readFileSync(filePath, { encoding: 'base64' });
+        let fileContent = FileHelper.readFileSync(filePath, { encoding: 'base64' });
         console.log(`[${ new Date().toUTCString() }] CREATE BLOB: ${filePath}`);
 
         return this.apiRequest(

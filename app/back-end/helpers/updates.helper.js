@@ -1,4 +1,5 @@
 const fs = require('fs');
+const FileHelper = require('./file.js');
 const https = require('https');
 
 class UpdatesHelper {
@@ -44,7 +45,7 @@ class UpdatesHelper {
 
     readExistingData () {
         if (fs.existsSync(this.filePath)) {
-            let body = fs.readFileSync(this.filePath, 'utf8');
+            let body = FileHelper.readFileSync(this.filePath, 'utf8');
             this.handleResponse(body);
         } else {
             this.sendError();

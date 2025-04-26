@@ -1,6 +1,6 @@
 // Necessary packages
-const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const slug = require('./../../helpers/slug');
 const ContentHelper = require('./helpers/content');
 const URLHelper = require('./helpers/url');
@@ -60,7 +60,7 @@ class RendererContext {
 
         // Menu config
         let menuConfigPath = path.join(this.inputDir, 'config', 'menu.config.json');
-        let menuConfigContent = fs.readFileSync(menuConfigPath);
+        let menuConfigContent = FileHelper.readFileSync(menuConfigPath);
         let menuData = JSON.parse(menuConfigContent);
         let menus = {
             assigned: {},

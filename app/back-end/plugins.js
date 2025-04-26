@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./helpers/file.js');
 const UtilsHelper = require('./helpers/utils.js');
 const pluginConfigValidator = require('./helpers/validators/plugin-config.js');
 
@@ -39,7 +40,7 @@ class Plugins {
                 continue;
             }
 
-            let pluginData = fs.readFileSync(configPath, 'utf8');
+            let pluginData = FileHelper.readFileSync(configPath, 'utf8');
             pluginData = JSON.parse(pluginData);
 
             output.push({
@@ -103,7 +104,7 @@ class Plugins {
             return {};
         }
 
-        let pluginsConfig = fs.readFileSync(sitePluginsConfigPath);
+        let pluginsConfig = FileHelper.readFileSync(sitePluginsConfigPath);
 
         try {
             pluginsConfig = JSON.parse(pluginsConfig);
@@ -201,7 +202,7 @@ class Plugins {
 
         if (fs.existsSync(pluginPath)) {
             try {
-                let pluginData = fs.readFileSync(pluginPath, 'utf8');
+                let pluginData = FileHelper.readFileSync(pluginPath, 'utf8');
                 output.pluginData = JSON.parse(pluginData);
                 output.pluginData.path = path.join(this.appDir, 'plugins', pluginName);
             } catch (e) {
@@ -213,7 +214,7 @@ class Plugins {
 
         if (fs.existsSync(pluginConfigPath)) {
             try {
-                let pluginConfig = fs.readFileSync(pluginConfigPath, 'utf8');
+                let pluginConfig = FileHelper.readFileSync(pluginConfigPath, 'utf8');
                 output.pluginConfig = pluginConfig;
             } catch (e) {
                 output.pluginConfig = {};
@@ -246,7 +247,7 @@ class Plugins {
 
         if (fs.existsSync(pluginPath)) {
             try {
-                pluginData = fs.readFileSync(pluginPath, 'utf8');
+                pluginData = FileHelper.readFileSync(pluginPath, 'utf8');
                 pluginData = JSON.parse(pluginData);
             } catch (e) {
                 pluginData = {};
@@ -257,7 +258,7 @@ class Plugins {
 
         if (fs.existsSync(pluginConfigPath)) {
             try {
-                pluginSavedConfig = fs.readFileSync(pluginConfigPath, 'utf8');
+                pluginSavedConfig = FileHelper.readFileSync(pluginConfigPath, 'utf8');
                 pluginSavedConfig = JSON.parse(pluginConfig);
             } catch (e) {
                 pluginSavedConfig = {};
