@@ -5,6 +5,7 @@
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
+const FileHelper = require('./helpers/file.js');
 const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
 const DBUtils = require('./helpers/db.utils.js');
 const Themes = require('./themes.js');
@@ -126,7 +127,7 @@ class Site {
 
         try {
             let db = new DBUtils(new Database(dbPath));
-            db.exec(fs.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
+            db.exec(FileHelper.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
             db.close();
         } catch (error) {
             console.log('DB error', error);
@@ -460,7 +461,7 @@ class Site {
         fs.copySync(sitePath, newSitePath);
         Site.updateNameAndUUIDInSiteConfig(newSitePath, newCatalogFreeName, siteName);
         let configFilePath = path.join(newSitePath, 'input', 'config', 'site.config.json');
-        let siteConfig = fs.readFileSync(configFilePath);
+        let siteConfig = FileHelper.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
         appInstance.addSite(newCatalogFreeName, siteConfig);
 
@@ -501,7 +502,7 @@ class Site {
      */
     static updateNameAndUUIDInSiteConfig (sitePath, newSiteSlug, newSiteName) {
         let configFilePath = path.join(sitePath, 'input', 'config', 'site.config.json');
-        let siteConfig = fs.readFileSync(configFilePath);
+        let siteConfig = FileHelper.readFileSync(configFilePath);
         siteConfig = JSON.parse(siteConfig);
         siteConfig.name = newSiteSlug;
         siteConfig.uuid = 'uuid-' + (new Date().getTime()) + '-' + (Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000);
@@ -519,7 +520,7 @@ class Site {
         let cssNormal = false;
         
         if (UtilsHelper.fileExists(cssPathNormal)) {
-            cssNormal = fs.readFileSync(cssPathNormal, 'utf8');
+            cssNormal = FileHelper.readFileSync(cssPathNormal, 'utf8');
         }
 
         return {

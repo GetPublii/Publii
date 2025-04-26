@@ -1,6 +1,7 @@
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const moment = require('moment');
 const { XMLParser } = require('fast-xml-parser');
 const download = require('image-downloader');
@@ -53,7 +54,7 @@ class WxrParser {
      */
     loadFile(filePath) {
         this.filePath = filePath;
-        this.fileContent = fs.readFileSync(this.filePath, 'utf8');
+        this.fileContent = FileHelper.readFileSync(this.filePath, 'utf8');
         this.fileContent = this.fileContent.trim();
         this.parseFile();
     }

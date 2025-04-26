@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./helpers/file.js');
 const slug = require('./helpers/slug');
 const UtilsHelper = require('./helpers/utils.js');
 const themeConfigValidator = require('./modules/render-html/validators/theme-config.js');
@@ -66,7 +67,7 @@ class Themes {
                 continue;
             }
 
-            let themeData = fs.readFileSync(configPath, 'utf8');
+            let themeData = FileHelper.readFileSync(configPath, 'utf8');
             themeData = JSON.parse(themeData);
 
             output.push({
@@ -84,11 +85,11 @@ class Themes {
      * Load informations about the current theme
      */
     currentTheme(returnDir = false) {
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
 
         if(!returnDir && siteData.theme) {
-            let themeData = fs.readFileSync(path.join(this.sitePath, siteData.theme, 'config.json'));
+            let themeData = FileHelper.readFileSync(path.join(this.sitePath, siteData.theme, 'config.json'));
             themeData = JSON.parse(themeData);
 
             if(themeData.name) {
@@ -144,7 +145,7 @@ class Themes {
 
             if (UtilsHelper.fileExists(oldConfigPath)) {
                 try {
-                    let oldConfig = fs.readFileSync(oldConfigPath);
+                    let oldConfig = FileHelper.readFileSync(oldConfigPath);
                     oldConfig = JSON.parse(oldConfig);
                     basicConfig = { 
                         config: {
@@ -238,7 +239,7 @@ class Themes {
      */
     loadPostTemplates() {
         let postTemplates = [];
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
 
         if(siteData.theme) {
@@ -266,7 +267,7 @@ class Themes {
      */
     loadPageTemplates() {
         let pageTemplates = [];
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
 
         if(siteData.theme) {
@@ -294,7 +295,7 @@ class Themes {
      */
     loadTagTemplates() {
         let tagTemplates = [];
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
 
         if(siteData.theme) {
@@ -322,7 +323,7 @@ class Themes {
      */
     loadAuthorTemplates() {
         let authorTemplates = [];
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
 
         if(siteData.theme) {
@@ -425,7 +426,7 @@ class Themes {
 
         // Load default config
         let defaultConfigPath = path.join(__dirname, '..', 'default-files', 'theme-files', 'config.json');
-        let defaultThemeConfig = JSON.parse(fs.readFileSync(defaultConfigPath));
+        let defaultThemeConfig = JSON.parse(FileHelper.readFileSync(defaultConfigPath));
 
         // Load basic theme config
         let themeLocalConfig = UtilsHelper.loadThemeConfig(themeDir);
@@ -441,7 +442,7 @@ class Themes {
             let themeSavedConfig;
             
             try {
-                themeSavedConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+                themeSavedConfig = JSON.parse(FileHelper.readFileSync(themeConfigPath));
             } catch (err) {
                 console.log('(!) The saved theme config is malformed. Loading default theme config instead.');
                 return;
@@ -482,7 +483,7 @@ class Themes {
      * Remove unused images
      */
     checkAndCleanImages(configString) {
-        let siteData = fs.readFileSync(this.siteConfigPath, 'utf8');
+        let siteData = FileHelper.readFileSync(this.siteConfigPath, 'utf8');
         siteData = JSON.parse(siteData);
         let authors = new Authors(this.appInstance, {site: siteData.name});
         let authorsData = authors.load();

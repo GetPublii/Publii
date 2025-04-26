@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const { Storage } = require('@google-cloud/storage');
 const normalizePath = require('normalize-path');
 const stripTags = require('striptags');
@@ -99,7 +100,7 @@ class GoogleCloud {
         }, function(err) {
             if (!err) {
                 let downloadedFilePath = path.join(self.deployment.configDir, 'temp-files-remote.json');
-                let downloadedFile = fs.readFileSync(downloadedFilePath);
+                let downloadedFile = FileHelper.readFileSync(downloadedFilePath);
                 self.deployment.checkLocalListWithRemoteList(downloadedFile);
             } else {
                 self.deployment.compareFilesList(false);

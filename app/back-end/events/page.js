@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const FileHelper = require('../helpers/file.js');
 const ipcMain = require('electron').ipcMain;
 const Page = require('../page.js');
 
@@ -85,7 +86,7 @@ class PageEvents {
             let pagesFile = path.join(this.app.sitesDir, siteName, 'input', 'config', 'pages.config.json');
 
             if (fs.existsSync(pagesFile)) {
-                let pagesHierarchy = JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' }));
+                let pagesHierarchy = JSON.parse(FileHelper.readFileSync(pagesFile, { encoding: 'utf8' }));
                 pagesHierarchy = this.removeDuplicatedDataFromHierarchy(pagesHierarchy);
                 event.sender.send('app-pages-hierarchy-loaded', pagesHierarchy);
             } else {
@@ -104,7 +105,7 @@ class PageEvents {
         // Update pages hierarchy during post conversion
         ipcMain.on('app-pages-hierarchy-update', (event, postIDs) => {
             let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
-            let pagesHierarchy = JSON.parse(fs.readFileSync(pagesFile, { encoding: 'utf8' }));
+            let pagesHierarchy = JSON.parse(FileHelper.readFileSync(pagesFile, { encoding: 'utf8' }));
 
             for (let i = 0; i < postIDs.length; i++) {
                 pagesHierarchy.push({

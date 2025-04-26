@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
+const FileHelper = require('../helpers/file.js');
 
 /*
  * Events for the IPC communication regarding credits
@@ -18,7 +19,7 @@ class CreditsEvents {
             }
 
             if(fs.existsSync(filePath)) {
-                licenseText = fs.readFileSync(filePath, 'utf-8');
+                licenseText = FileHelper.readFileSync(filePath, 'utf-8');
             }
 
             event.sender.send('app-license-loaded', licenseText);

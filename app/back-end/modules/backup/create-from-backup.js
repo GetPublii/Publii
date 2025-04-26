@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const tar = require('tar-fs');
 const Utils = require('./../../helpers/utils.js');
 
@@ -119,7 +120,7 @@ class CreateFromBackup {
 
     getSiteName () {
         let configFilePath = path.join(this.tempDir, 'input', 'config', 'site.config.json');
-        let configContent = fs.readFileSync(configFilePath, 'utf8');
+        let configContent = FileHelper.readFileSync(configFilePath, 'utf8');
         let siteNameData = false;
 
         try {
