@@ -1,6 +1,7 @@
 const ipcMain = require('electron').ipcMain;
 const fs = require('fs');
 const path = require('path');
+const FileHelper = require('../helpers/file.js');
 
 /*
  * Events for the IPC communication regarding plugins
@@ -19,7 +20,7 @@ class PluginsApiEvents {
                 return false;  
             }
 
-            let fileContent = fs.readFileSync(filePath);
+            let fileContent = FileHelper.readFileSync(filePath);
             fileContent = fileContent.toString();
             return fileContent;
         });
@@ -34,7 +35,7 @@ class PluginsApiEvents {
                 return false;
             }
 
-            let fileContent = fs.readFileSync(filePath);
+            let fileContent = FileHelper.readFileSync(filePath);
             fileContent = fileContent.toString();
             return fileContent;
         });
@@ -50,7 +51,7 @@ class PluginsApiEvents {
                 return false;  
             }
 
-            let fileContent = fs.readFileSync(filePath);
+            let fileContent = FileHelper.readFileSync(filePath);
             fileContent = fileContent.toString();
             return fileContent;
         });

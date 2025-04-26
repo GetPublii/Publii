@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./file.js');
 const normalizePath = require('normalize-path');
 
 /*
@@ -299,7 +300,7 @@ class UtilsHelper {
         }
 
         try {
-            themeConfig = JSON.parse(fs.readFileSync(themeConfigPath));
+            themeConfig = JSON.parse(FileHelper.readFileSync(themeConfigPath));
         } catch(e) {
             console.log('The theme config.json file is corrupted');
             return {};
