@@ -549,7 +549,7 @@ class WxrParser {
             }, false);
 
             let newPageResult = newPage.save();
-            let newPageID = newPageResult.postID;
+            let newPageID = newPageResult.pageID;
 
             this.temp.pages[pageSlug] = newPageID;
             this.temp.mapping.pages[pages[i]['wp:post_id']] = newPageID;
