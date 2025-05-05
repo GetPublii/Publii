@@ -1,6 +1,6 @@
 const Handlebars = require('handlebars');
 const moment = require('moment');
-const sizeOf = require('image-size');
+const sizeOf = require('./../../../../helpers/rotation-aware-sizeof.js');
 const path = require('path');
 const URLHelper = require('../../helpers/url');
 

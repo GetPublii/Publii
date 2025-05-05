@@ -1,6 +1,6 @@
 const Image = require('./../../image.js');
 const normalizePath = require('normalize-path');
-const sizeOf = require('image-size');
+const sizeOf = require('./../../helpers/rotation-aware-sizeof.js');
 
 let result = false;
 let appInstance = false;
