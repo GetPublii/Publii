@@ -81,3 +81,15 @@
       <span>{{ translate 'partials.shareButtons.shareWithWhatsApp' }}</span>
    </a>
 {{/if}}
+
+{{#if @config.custom.shareBlueSky}}
+   <a
+      href="https://bsky.app/intent/compose?text={{encodeUrlFragment title}} {{encodeUrlFragment url}}" 
+      class="js-share bluesky"
+      rel="nofollow noopener noreferrer">
+      <svg class="icon" aria-hidden="true" focusable="false">
+         <use xlink:href="{{@website.assetsUrl}}/svg/svg-map.svg#bluesky"/>
+      </svg>
+      <span>{{ translate 'partials.shareButtons.shareWithBlueSky' }}</span>
+   </a>
+{{/if}}
