@@ -17,7 +17,8 @@
             "shareWithMix": "Mix",
             "shareWithLinkedIn": "LinkedIn",
             "shareWithBuffer": "Buffer",
-            "shareWithWhatsApp": "WhatsApp"
+            "shareWithWhatsApp": "WhatsApp",
+            "shareWithBlueSky": "BlueSky"
         },
         
         "footer": {

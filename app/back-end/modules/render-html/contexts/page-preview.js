@@ -63,7 +63,7 @@ class RendererContextPagePreview extends RendererContext {
             this.page.featuredImage = this.getPageFeaturedImages(this.page.id, true);
         }
 
-        this.metaTitle = 'It is an example value for the preview mode';
+        this.metaTitle = 'Preview: ' + this.title;
         this.metaDescription = 'It is an example value for the preview mode';
         this.metaRobots = 'It is an example value for the preview mode';
     }

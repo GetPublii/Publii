@@ -42,20 +42,21 @@
   "keywords": [],
   "devDependencies": {
     "cross-env": "7.0.3",
-    "css-loader": "6.8.1",
+    "css-loader": "^6.8.1",
     "electron": "31.7.7",
     "electron-builder": "24.13.3",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
-    "mocha": "10.2.0",
+    "mocha": "^10.8.2",
     "node-abi": "3.65.0",
     "node-loader": "2.0.0",
-    "node-sass": "9.0.0",
+    "sass": "^1.89.0",
     "sass-loader": "13.3.2",
-    "vue-loader": "15.11.1",
-    "vue-style-loader": "4.1.3",
-    "vue-template-compiler": "2.6.14",
-    "webpack": "5.89.0",
+    "style-loader": "^4.0.0",
+    "vue-loader": "^15.9.8",
+    "vue-style-loader": "^4.1.3",
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "^5.99.9",
     "webpack-cli": "5.1.4"
   },
   "build": {
@@ -141,6 +142,7 @@
     "license": "license.txt"
   },
   "dependencies": {
-    "node-gyp": "10.0.1"
+    "node-gyp": "10.0.1",
+    "vue": "^2.7.16"
   }
 }
