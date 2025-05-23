@@ -780,12 +780,8 @@ class RendererContext {
             if (this.siteConfig.advanced.usePageAsFrontpage && itemContext.page && this.siteConfig.advanced.pageAsFrontpage === itemContext.page.id) {
                 return this.siteConfig.domain + '/';    
             }
-
-            if (!this.siteConfig.advanced.urls.cleanUrls) { 
-                return this.siteConfig.domain + '/' + itemSlug + '.html';
-            } else {           
-                return this.siteConfig.domain + '/' + itemSlug + '/';
-            }
+         
+            return this.renderer.cachedItems.pages[itemContext.page.id].url;
         }
     }
 
