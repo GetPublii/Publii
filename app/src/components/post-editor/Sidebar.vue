@@ -369,7 +369,10 @@
                                         :placeholder="$t('settings.leaveBlankToUseDefaultPageTitle')"
                                         :charCounter="true"
                                         :preferredCount="70" />
-                                    <small class="note">{{ $t('settings.pageTitleVariables') }}</small>
+                                    <small class="note">
+                                        <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
+                                        <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
+                                    </small>
                                 </label>
 
                                 <label class="with-char-counter">
@@ -379,7 +382,10 @@
                                         :charCounter="true"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
                                         :preferredCount="160"></text-area>
-                                    <small class="note">{{ $t('settings.pageTitleVariables') }}</small>
+                                    <small class="note">
+                                        <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
+                                        <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
+                                    </small>
                                 </label>
 
                                 <label>
