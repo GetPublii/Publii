@@ -56,5 +56,10 @@ export default {
         region: '',
         prefix: '',
         acl: 'public-read'
+    },
+    cloudflareWorkers: {
+        accountId: '',
+        apiToken: '',
+        scriptName: ''
     }
 };
