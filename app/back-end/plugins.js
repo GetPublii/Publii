@@ -306,7 +306,9 @@ class Plugins {
         let match = null;
 
         while (match = imageRegex.exec(configString)) {
-            imagesInConfig.push(match[1]);
+            let imageToPush = match[1];
+            imageToPush = imageToPush.replace(/\\/g, '/').split('/').pop();
+            imagesInConfig.push(imageToPush);
         }
  
         let files = fs.readdirSync(pluginImagesPath);
