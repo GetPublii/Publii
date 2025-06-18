@@ -291,6 +291,7 @@ export default {
             border-radius: var(--border-radius);
             color: var(--sidebar-sync-btn-color);
             display: flex;
+            gap: .6rem;
             font-size: $app-font-base;
             font-weight: var(--font-weight-semibold);
             justify-content: center;
@@ -359,7 +360,6 @@ export default {
             &-icon {
                 display: block;
                 height: 100%;
-                margin-right: 1.2rem;
                 width: auto;
             }
         }
