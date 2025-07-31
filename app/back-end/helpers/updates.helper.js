@@ -5,9 +5,7 @@ class UpdatesHelper {
     constructor (config) {
         this.event = config.event;
         this.filePath = config.filePath;
-        this.namespace = config.namespace;
         this.url = config.url;
-        this.contentField = config.contentField;
         this.forceDownload = config.forceDownload;
     }
 
@@ -20,6 +18,7 @@ class UpdatesHelper {
     }
 
     download () {
+        console.log('Downloading updates data from ' + this.url, ' to ' + this.filePath);
         https.get(this.url, res => {
             let body = '';
 
@@ -31,14 +30,15 @@ class UpdatesHelper {
                 fs.writeFileSync(this.filePath, body, 'utf8');
                 this.handleResponse(body);
             });
-        }).on('error', () => {
-            this.sendError();
+        }).on('error', (err) => {
+            this.sendError(err);
         });
     }
 
-    sendError () {
-        this.event.sender.send('app-' + this.namespace + '-retrieved', { 
-            status: false 
+    sendError (err) {
+        this.event.sender.send('app-notifications-retrieved', { 
+            status: false,
+            error: err.message || 'An unknown error occurred while retrieving notifications.'
         });
     }
 
@@ -60,28 +60,13 @@ class UpdatesHelper {
             response = false;
         }
 
-        if (response && response[0]) {
-            response = response[0];
-        } else {
-            this.sendError();
-        }
-
-        if (response && response.timestamp && response[this.contentField]) {
-            if (response.validTo && parseInt(response.validTo, 10) < new Date().getTime()) {
-                this.sendError(); 
-                return;
-            }
-
-            this.event.sender.send('app-' + this.namespace + '-retrieved', {
+        if (response) {
+            this.event.sender.send('app-notifications-retrieved', {
                 status: true,
-                notification: {
-                    timestamp: response.timestamp,
-                    content: response[this.contentField],
-                    publiiMaxVersion: response.publiiMaxVersion
-                }
+                notifications: response 
             });
         } else {
-            this.sendError();
+            this.sendError(response);
         }
     }
 }

@@ -4,7 +4,6 @@
         :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }"
         :style="$root.overridedCssVariables">
         <message />
-        <topbar-notification v-if="!splashScreenDisplayed && !itemEditorDisplayed && $route.path !== '/site/!/posts'" />
         <topbar v-if="!splashScreenDisplayed && !itemEditorDisplayed" />
         <section :class="$route.path.replace(/^\//mi, '').replace(/\/$/mi, '').replace(/\//gmi, '-')">
             <router-view />
@@ -24,7 +23,6 @@
 import { mapGetters } from 'vuex';
 import TopBar from './TopBar';
 import TopBarAppBar from './TopBarAppBar';
-import TopBarNotification from './TopBarNotification';
 import Message from './Message';
 import RenderingPopup from './RenderingPopup';
 import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
@@ -41,7 +39,6 @@ export default {
         'message': Message,
         'topbar': TopBar,
         'topbar-appbar': TopBarAppBar,
-        'topbar-notification': TopBarNotification,
         'rendering-popup': RenderingPopup,
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
@@ -69,6 +66,11 @@ export default {
         useWideScrollbars () {
             return this.$store.state.app.config.wideScrollbars;
         }
+    },
+    created () {
+        let notificationsReadStatus = localStorage.getItem('publii-notifications-readed') || '';
+        notificationsReadStatus = notificationsReadStatus.replace(/[^a-z0-9\-_]/gmi, '');
+        this.$store.commit('setNotificationsReadStatus', notificationsReadStatus);
     },
     async mounted () {
         // Setup app

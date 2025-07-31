@@ -445,6 +445,17 @@
         "title": "Configure menu position",
         "usedBy": "Used by other menu:"
     },
+    "notifications": {
+        "checkUpdates": "Check for updates",
+        "consentStateTitle": "Do you want to allow Publii to get updates notifications?",
+        "consentStateDescription": "Publii can check for updates and notify you about them. You can disable this option at any time in the settings.",
+        "giveConsent": "Ok, I agree",
+        "goToNotificationsCenter": "Go to Notifications Center",
+        "notifications": "Notifications",
+        "noUpdatesTitle": "No updates available",
+        "noUpdatesDescription": "You are using the latest version of Publii and extensions.",
+        "rejectConsent": "No, thanks"
+    },
     "page": {
         "addNewPage": "Add new page",
         "addPageTitle": "Add page title",
@@ -840,6 +851,7 @@
         "noIndexForCommonCrawlBots": "Block Common Crawl bots",
         "noIndexForCommonCrawlBotsInfo": "When enabled, this option prevents your site content from being indexed by Common Crawl bots. Please note that it will only take effect if you do not use your own robots.txt file.",
         "noIndexWebsite": "Noindex website",
+        "notificationsCenterEnabled": "Allow notifications center to download and display notifications data",
         "notSelected": "Not selected",
         "numberOfPostsInFeed": "Number of posts in feed",
         "openDevtoolsInMainW": "Open DevTools automatically in the Main Window",

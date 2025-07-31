@@ -5,12 +5,22 @@
             href="#"
             @click.prevent="onClick">
             {{ label }}
+            <span 
+                v-if="hasBadge" 
+                class="badge">
+                {{ badgeValue }}
+            </span>
         </a>
 
         <router-link
             v-if="path && !isExternal"
             :to="path">
             {{ label }}
+            <span 
+                v-if="hasBadge" 
+                class="badge">
+                {{ badgeValue }}
+            </span>
         </router-link>
 
         <a
@@ -19,6 +29,11 @@
             target="_blank" 
             rel="noopener noreferrer">
             {{ label }}
+            <span 
+                v-if="hasBadge" 
+                class="badge">
+                {{ badgeValue }}
+            </span>
         </a>
     </li>
 </template>
@@ -27,6 +42,8 @@
 export default {
     name: 'topbar-dropdown-item',
     props: [
+        'hasBadge',
+        'badgeValue',
         'onClick',
         'label',
         'path',
@@ -59,6 +76,10 @@ li {
         &:focus,
         &:hover {
             color: var(--link-invert-color-hover);
+        }
+
+        .badge {
+               
         }
     }
 }

@@ -470,6 +470,21 @@ class AppEvents {
 
             appInstance.mainWindow.webContents.setZoomFactor(zoomLevel);
         });
+
+        /**
+         * Set notifications center state
+         */
+        ipcMain.on('app-set-notifications-center-state', function(event, state) {
+            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+
+            try {
+                appConfig = JSON.parse(appConfig);
+                appConfig.notificationsStatus = state;
+                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+            } catch (e) {
+                console.log('(!) App was unable to save the notifications center state');
+            }
+        });
     }
 }
 

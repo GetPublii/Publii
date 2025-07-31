@@ -199,8 +199,11 @@ export default {
         state.currentSite.config.theme = data.themeName;
         state.currentSite.themeSettings = data.newThemeConfig;
     },
-    setNotification (state, notificationData) {
-        state.app.notification = Object.assign({}, notificationData);
+    setNotifications (state, notificationsData) {
+        state.app.notifications = Object.assign({}, notificationsData);
+    },
+    setNotificationsCount (state, notificationsCount) {
+        state.app.notificationsCount = notificationsCount;
     },
     replaceAppThemes (state, newThemes) {
         state.themes = newThemes.slice();
@@ -550,6 +553,12 @@ export default {
     },
     setAppUIZoomLevel (state, zoomLevel) {
         state.app.config.uiZoomLevel = parseFloat(zoomLevel);
+    },
+    setAppNotificationsStatus (state, enabled) {
+        state.app.config.notificationsStatus = enabled;
+    },
+    setNotificationsReadStatus (state, status) {
+        state.app.notificationsReadStatus = status;
     }
 };
 
