@@ -194,7 +194,9 @@ const AstCurrentSiteConfig = {
             region: '',
             customRegion: '',
             prefix: '',
-            acl: 'public-read'
+            acl: 'public-read',
+            htmlCacheControl: 'no-cache, no-store',
+            otherCacheControl: 'public, max-age=2592000'
         },
         git: {
             url: '',
