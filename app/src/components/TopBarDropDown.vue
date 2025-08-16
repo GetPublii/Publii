@@ -67,7 +67,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
-import { notificationsStatus } from '../../config/AST.app.config';
 
 export default {
     name: 'topbar-dropdown',

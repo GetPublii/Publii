@@ -8,5 +8,5 @@
  */
 
 export default (state) => {
-    return state.app.config.notificationsCount;
+    return state.app.notificationsCount;
 };

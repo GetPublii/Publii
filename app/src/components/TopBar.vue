@@ -88,7 +88,6 @@ export default {
             let currentBuild = this.$store.state.app.versionInfo.build;
             
             if (parseInt(notificationsData.publii.build[currentOS], 10) > parseInt(currentBuild, 10)) {
-                console.log('New Publii version available:', notificationsData.publii.build[currentOS], 'current:', currentBuild);
                 updatesCount++;
             }
 
@@ -115,8 +114,7 @@ export default {
             for (let theme of installedThemes) {
                 if (availableThemes[theme.directory]) {
                     let result = this.compareVersions(availableThemes[theme.directory].version, theme.version);
-                    console.log('Theme version comparison:', availableThemes[theme.directory].version, theme.version, 'result:', result);
-
+                    
                     if (result === 1) {
                         updatesCount++;
                     }
@@ -130,8 +128,7 @@ export default {
             for (let plugin of installedPlugins) {    
                 if (availablePlugins[plugin.directory]) {
                     let result = this.compareVersions(availablePlugins[plugin.directory].version, plugin.version);
-                    console.log('Plugin version comparison:', availablePlugins[plugin.directory].version, plugin.version, 'result:', result);
-
+                    
                     if (result === 1) {
                         updatesCount++;
                     }
