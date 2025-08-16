@@ -3,7 +3,16 @@
         @click="toggleSubmenu"
         class="topbar-app-settings"
         :title="$t('ui.moreItems')">
-        <span class="topbar-app-settings-icon"></span>
+        <span class="topbar-app-settings-icon">
+            <template v-if="!this.submenuIsOpen">
+                <span 
+                    v-if="notificationsStatus === false"
+                    class="topbar-app-settings-icon-no-decision"></span>
+                <span 
+                    v-if="notificationsStatus === 'accepted' && notificationsCount > 0"
+                    class="topbar-app-settings-icon-updates-available"></span>
+            </template>
+        </span>
 
         <ul
             ref="submenu"
@@ -24,6 +33,12 @@
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />
+            <topbar-dropdown-item
+                :hasBadge="notificationsCount > 0 || notificationsStatus === 'rejected'"
+                :badgeValue="notificationsStatus === 'rejected' ? '!' : notificationsCount"
+                :label="$t('notifications.notifications')"
+                :title="$t('notifications.goToNotificationsCenter')"
+                path="/notifications-center" />
             <topbar-dropdown-item 
                 class="topbar-app-submenu-separator"
                 :label="$t('ui.help')"
@@ -50,6 +65,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -63,6 +79,10 @@ export default {
         };
     },
     computed: {
+        ...mapGetters([
+            'notificationsStatus', 
+            'notificationsCount'
+        ]),
         cssClasses: function() {
             return {
                 'is-hidden': !this.submenuIsOpen,

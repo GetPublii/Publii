@@ -30,6 +30,7 @@ const AppThemes = () => import('../components/AppThemes');
 const AppLanguages = () => import('../components/AppLanguages');
 const AppPlugins = () => import('../components/AppPlugins');
 const ThemeSettings = () => import('../components/ThemeSettings');
+const NotificationsCenter = () => import('../components/NotificationsCenter');
 
 // Avoid NavigationDuplicated errors
 const originalPush = Router.prototype.push;
@@ -176,6 +177,11 @@ export default new Router({
             path: '/app-languages',
             name: 'AppLanguages',
             component: AppLanguages
+        },
+        {
+            path: '/notifications-center',
+            name: 'NotificationsCenter',
+            component: NotificationsCenter
         },
         {
             path: '/site/:name/posts/editor/blockeditor/:post_id?',

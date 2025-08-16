@@ -12,6 +12,9 @@ import siteAuthors from './getters/site-authors';
 import sitePages from './getters/site-pages';
 import sitePosts from './getters/site-posts';
 import sitePlugins from './getters/site-plugins';
+import notifications from './getters/notifications';
+import notificationsCount from './getters/notifications-count';
+import notificationsStatus from './getters/notifications-status';
 import appVersion from './getters/app-version';
 import languages from './getters/languages';
 import plugins from './getters/plugins';
@@ -40,10 +43,10 @@ export default new Vuex.Store({
         themes,
         themeSelect,
         tagTemplates,
-        authorTemplates
+        authorTemplates,
+        notifications,
+        notificationsCount,
+        notificationsStatus
     },
-    mutations,
-    actions: {
-
-    }
+    mutations
 });

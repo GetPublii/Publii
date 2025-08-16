@@ -99,7 +99,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-get-plugin-config',
             'app-site-save-plugin-config',
             'app-close',
-            'app-set-ui-zoom-level'
+            'app-set-ui-zoom-level',
+            'app-set-notifications-center-state',
+            'app-get-notifications-file'
         ];
 
         if (validChannels.includes(channel)) {

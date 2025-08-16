@@ -53,6 +53,7 @@ class App {
         this.appConfigPath = path.join(this.appDir, 'config', 'app-config.json');
         this.tinymceOverridedConfigPath = path.join(this.appDir, 'config', 'tinymce.override.json');
         this.versionData = JSON.parse(fs.readFileSync(__dirname + '/builddata.json', 'utf8'));
+        this.versionData.os = os.platform() === 'darwin' ? 'mac' : os.platform() === 'linux' ? 'linux' : 'win';
         this.windowBounds = null;
         this.appConfig = null;
         this.tinymceOverridedConfig = {};
