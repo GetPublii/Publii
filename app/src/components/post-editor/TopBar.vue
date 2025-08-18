@@ -18,19 +18,19 @@
             </template>
         </p-button>
 
-        <p-button
-            v-if="!sourceCodeEditorVisible"
-            id="post-preview-button"
-            type="clean-invert"
-            :disabled="!themeConfigured"
-            :title="themeConfigured ? $t('post.configureThemeBeforeGeneratingPreview') : ''"
-            @click.native="generatePostPreview">
-            {{ $t('ui.preview') }}
-        </p-button>
-
         <div
             v-if="!sourceCodeEditorVisible"
             class="post-editor-actions">
+
+            <p-button
+                v-if="!sourceCodeEditorVisible"
+                id="post-preview-button"
+                type="secondary icon"
+                icon="quick-preview"
+                :title="themeConfigured ? $t('post.configureThemeBeforeGeneratingPreview') : ''"
+                @click.native="generatePostPreview">
+                {{ $t('ui.previewQuick') }}
+            </p-button>
 
             <btn-dropdown
                 ref="dropdown-button"
@@ -260,6 +260,10 @@ export default {
 
             &:nth-child(2) {
                 margin-left: 1rem;
+            }
+
+            &:nth-child(3) {
+                margin-left: 1rem;
                 margin-right: -1.7rem; // button padding
             }
         }
@@ -269,10 +273,6 @@ export default {
         margin-left: auto;
     }
 
-    #post-preview-button {
-        background: var(--bg-primary);
-    }
-
     #post-back-to-posts-button {
         background: var(--bg-primary);
         margin-left: -2.1rem;
@@ -280,14 +280,6 @@ export default {
         padding-left: 3.4rem;
         padding-right: .625rem;
         position: relative;
-
-        &::after {
-            border-right: 1px solid var(--gray-2);
-            content: "";
-            height: 1.4rem;
-            right: -.9375rem;
-            @include centerXY(false, true);
-        }
     }
 }
 
