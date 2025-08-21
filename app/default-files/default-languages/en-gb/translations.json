@@ -88,6 +88,7 @@
             "imagesProgressInfo": "Downloading images ({progress} / {total})",
             "pagesProgressInfo": "Importing pages ({progress} / {total})",
             "postsProgressInfo": "Importing posts ({progress} / {total})",
+            "pagesProgressInfo": "Importing pages ({progress} / {total})",
             "tagsProgressInfo": "Importing tags ({progress} / {total})"
         }
     },
