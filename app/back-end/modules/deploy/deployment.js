@@ -15,6 +15,7 @@ const GitlabPages = require('./gitlab-pages.js');
 const Netlify = require('./netlify.js');
 const GoogleCloud = require('./google-cloud.js');
 const ManualDeployment = require('./manual.js');
+const CloudflareWorkers = require('./cloudflare-workers.js');
 
 /**
  *
@@ -27,6 +28,7 @@ const ManualDeployment = require('./manual.js');
  * Gitlab Pages,
  * Netlify,
  * Google Cloud,
+ * Cloudflare Workers,
  * Manually
  *
  */
@@ -69,6 +71,7 @@ class Deployment {
             case 's3':              connection = new S3();                          break;
             case 'netlify':         connection = new Netlify();                     break;
             case 'google-cloud':    connection = new GoogleCloud();                 break;
+            case 'cloudflare-workers': connection = new CloudflareWorkers();        break;
             case 'git':             connection = new Git();                         break;
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
@@ -99,6 +102,7 @@ class Deployment {
             case 'gitlab-pages':    this.client = new GitlabPages(this);        break;
             case 'netlify':         this.client = new Netlify(this);            break;
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
+            case 'cloudflare-workers': this.client = new CloudflareWorkers(this); break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
             default:                
                 if (this.useAltFtp) {     
@@ -146,7 +150,7 @@ class Deployment {
             }
 
             if (filePath === '.htaccess' || filePath === '.htpasswd' || filePath === '_redirects') {
-                let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify'];
+                let excludedProtocols = ['s3', 'github-pages', 'google-cloud', 'netlify', 'cloudflare-workers'];
 
                 if (excludedProtocols.indexOf(this.siteConfig.deployment.protocol) === -1) {
                     fileList.push({

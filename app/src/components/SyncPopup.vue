@@ -319,6 +319,10 @@ export default {
                     return false;
                 }
 
+                if (deploymentConfig.protocol === 'cloudflare-workers' && this.checkCloudflareWorkers(deploymentConfig)) {
+                    return false;
+                }
+
                 if (deploymentConfig.protocol === 'manual' && deploymentConfig.manual.output !== '') {
                     return false;
                 }
@@ -761,6 +765,18 @@ export default {
                 deploymentConfig.google.projectId !== '' &&
                 deploymentConfig.google.key !== '' &&
                 deploymentConfig.google.bucket !== ''
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        checkCloudflareWorkers: function(deploymentConfig) {
+            if(
+                deploymentConfig.cloudflareWorkers &&
+                deploymentConfig.cloudflareWorkers.accountId !== '' &&
+                deploymentConfig.cloudflareWorkers.apiToken !== '' &&
+                deploymentConfig.cloudflareWorkers.scriptName !== ''
             ) {
                 return true;
             }
