@@ -62,11 +62,11 @@ export default {
                 this.themeIsOver = false;
             }
         },
-        uploadTheme (e) {
+        async uploadTheme (e) {
             this.themeIsOver = false;
 
             mainProcessAPI.send('app-theme-upload', {
-                sourcePath: e.dataTransfer.files[0].path
+                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
             });
 
             mainProcessAPI.receiveOnce('app-theme-uploaded', this.$parent.uploadedTheme);

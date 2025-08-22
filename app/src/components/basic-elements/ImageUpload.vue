@@ -235,7 +235,7 @@ export default {
         },
         async drop (e) {
             this.stopEvents(e);
-            let sourcePath = await mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
+            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]));
             this.uploadImage(sourcePath);
         },
         remove (e) {
@@ -251,7 +251,7 @@ export default {
                 return;
             }
 
-            let sourcePath = await mainProcessAPI.normalizePath(e.target.files[0].path);
+            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.target.files[0]));
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {

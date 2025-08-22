@@ -75,11 +75,11 @@ export default {
                 this.languageIsOver = false;
             }
         },
-        uploadLanguage (e) {
+        async uploadLanguage (e) {
             this.languageIsOver = false;
 
             mainProcessAPI.send('app-language-upload', {
-                sourcePath: e.dataTransfer.files[0].path
+                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
             });
 
             mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);

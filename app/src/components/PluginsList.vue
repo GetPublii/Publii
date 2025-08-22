@@ -63,11 +63,11 @@ export default {
                 this.pluginIsOver = false;
             }
         },
-        uploadPlugin (e) {
+        async uploadPlugin (e) {
             this.pluginIsOver = false;
 
             mainProcessAPI.send('app-plugin-upload', {
-                sourcePath: e.dataTransfer.files[0].path
+                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
             });
 
             mainProcessAPI.receiveOnce('app-plugin-uploaded', this.$parent.uploadedPlugin);

@@ -114,12 +114,12 @@ export default {
             this.isEmpty = true;
             this.onRemove();
         },
-        valueChanged (e) {
+        async valueChanged (e) {
             if(!e.target.files.length) {
                 return;
             }
 
-            let sourcePath = e.target.files[0].path;
+            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.target.files[0]));
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {
