@@ -93,11 +93,9 @@ class Author extends Model {
         }
 
         if (this.id !== 0) {
-            this.checkAndCleanImages();
             return this.updateAuthor();
         }
 
-        this.checkAndCleanImages();
         return this.addAuthor();
     }
 
@@ -136,6 +134,8 @@ class Author extends Model {
             }
         }
 
+        this.checkAndCleanImages();
+
         return {
             status: true,
             message: 'author-added',
@@ -168,6 +168,8 @@ class Author extends Model {
             additionalData: JSON.stringify(this.additionalData),
             id: this.id
         });
+
+        this.checkAndCleanImages();
 
         return {
             status: true,
