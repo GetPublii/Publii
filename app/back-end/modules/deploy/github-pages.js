@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
-const githubApi = require("github");
+const { Octokit } = require("@octokit/rest");
 const list = require('ls-all');
 const crypto = require('crypto');
 const countFiles = require('count-files');
@@ -17,24 +17,21 @@ const stripTags = require('striptags');
 class GithubPages {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
-        let server = '';
+        this.serverURL = '';
 
         if (this.deployment.siteConfig) {
-            server = this.deployment.siteConfig.deployment.github.server;
+            this.serverURL = this.deployment.siteConfig.deployment.github.server;
         } else {
-            server = this.deployment.github.server;
+            this.serverURL = this.deployment.github.server;
         }
 
         this.connection = false;
-        this.client = new githubApi({
-            version: "3.0.0",
-            protocol: "https",
-            host: server,
-            pathPrefix: "",
-            timeout: 30000,
-            headers: {
-                "user-agent": "Publii"
-            }
+        this.client = new Octokit({
+            baseUrl: `https://${this.serverURL}`,
+            request: {
+                timeout: 30000
+            },
+            userAgent: "Publii"
         });
         this.token = '';
         this.repository = '';
@@ -65,9 +62,13 @@ class GithubPages {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client.authenticate({
-            type: "token",
-            token: this.token
+        this.client = new Octokit({
+            auth: this.token,
+            baseUrl: `https://${this.serverURL}`,
+            request: {
+                timeout: 30000
+            },
+            userAgent: "Publii"
         });
 
         process.send({
@@ -200,9 +201,13 @@ class GithubPages {
             token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client.authenticate({
-            type: "token",
-            token: token
+        this.client = new Octokit({
+            auth: token,
+            baseUrl: `https://${this.serverURL}`,
+            request: {
+                timeout: 30000
+            },
+            userAgent: "Publii"
         });
 
         this.apiRequest(
@@ -211,7 +216,7 @@ class GithubPages {
                 repo: repository,
                 ref: branch
             },
-            (api) => api.gitdata.getReference,
+            (api) => api.rest.git.getRef,
             (result) => {
                 if(result.data && result.data.object) {
                     return result.data.object.sha;
@@ -317,36 +322,29 @@ class GithubPages {
         }
     }
 
-    apiRequest(requestData, method, extractor) {
-        return new Promise((resolve, reject) => {
-            method(this.client)(requestData, (err, data) => {
-                if (err) {
-                    console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN: ${method.toString()} - ${requestData.filePath}`);
-
-                    method(this.client)(requestData, (err, data) => {
-                        if (err) {
-                            console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN FAIL: ${method.toString()} - ${requestData.filePath}`);
-                            reject(err);
-                            return;
-                        }
-
-                        let result = extractor ? extractor(data) : data;
-                        resolve(result);
-                    });
-
-                    return;
-                }
-
+    async apiRequest(requestData, method, extractor) {
+        try {
+            let data = await method(this.client)(requestData);
+            let result = extractor ? extractor(data) : data;
+            return result;
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN: ${method.toString()} - ${requestData.filePath}`);
+            
+            try {
+                let data = await method(this.client)(requestData);
                 let result = extractor ? extractor(data) : data;
-                resolve(result);
-            });
-        });
+                return result;
+            } catch (retryErr) {
+                console.log(`[${ new Date().toUTCString() }] (i) TRIED AGAIN FAIL: ${method.toString()} - ${requestData.filePath}`);
+                throw retryErr;
+            }
+        }
     }
 
     getAPIRateLimit() {
         return this.apiRequest(
             {},
-            (api) => api.misc.getRateLimit,
+            (api) => api.rest.rateLimit.get,
             (result) => result.data.resources.core
         );
     }
@@ -367,7 +365,7 @@ class GithubPages {
                 repo: this.repository,
                 ref: this.branch
             },
-            (api) => api.gitdata.getReference,
+            (api) => api.rest.git.getRef,
             (result) => {
                 this.waitForTimeout = false;
 
@@ -394,9 +392,9 @@ class GithubPages {
             {
                 owner: this.user,
                 repo: this.repository,
-                sha: latestCommitSHA
+                commit_sha: latestCommitSHA
             },
-            (api) => api.gitdata.getCommit,
+            (api) => api.rest.git.getCommit,
             (result) => result.data.tree.sha
         );
     }
@@ -417,10 +415,10 @@ class GithubPages {
             {
                 owner: this.user,
                 repo: this.repository,
-                sha: treeSHA,
+                tree_sha: treeSHA,
                 recursive: 1
             },
-            (api) => api.gitdata.getTree,
+            (api) => api.rest.git.getTree,
             (result) => result.data.tree
         );
     }
@@ -529,7 +527,7 @@ class GithubPages {
                 content: fileContent,
                 filePath: filePath
             },
-            (api) => api.gitdata.createBlob,
+            (api) => api.rest.git.createBlob,
             (result) => {
                 this.uploadedBlobs[filePath] = result.data.sha;
                 console.log(`[${ new Date().toUTCString() }] CREATED BLOB: ${filePath} - ${result.data.sha}`);
@@ -658,7 +656,7 @@ class GithubPages {
                 repo: this.repository,
                 tree: tree
             },
-            (api) => api.gitdata.createTree,
+            (api) => api.rest.git.createTree,
             (result) => result.data.sha
         );
     }
@@ -687,7 +685,7 @@ class GithubPages {
                 tree: tree,
                 parents: [parentSHA]
             },
-            (api) => api.gitdata.createCommit,
+            (api) => api.rest.git.createCommit,
             (result) => result.data.sha
         );
     }
@@ -715,7 +713,7 @@ class GithubPages {
                 sha: sha,
                 ref: this.branch
             },
-            (api) => api.gitdata.updateReference
+            (api) => api.rest.git.updateRef
         );
     }
 
