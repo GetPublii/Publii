@@ -8,6 +8,7 @@ const slug = require('./helpers/slug');
 const ImageHelper = require('./helpers/image.helper.js');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
+const FileHelper = require('./helpers/file.js');
 
 /**
  * Author Model - used for operations connected with author management
@@ -368,7 +369,7 @@ class Author extends Model {
         let themeConfigPath = path.join(this.application.sitesDir, this.site, 'input', 'config', 'theme.config.json');
 
         if (fs.existsSync(themeConfigPath)) {
-            let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+            let themeConfigString = FileHelper.readFileSync(themeConfigPath, 'utf8');
             themesHelper.checkAndCleanImages(themeConfigString);
         }
     }

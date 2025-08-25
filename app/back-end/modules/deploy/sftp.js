@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const sftpClient = require('ssh2-sftp-client');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
@@ -49,7 +50,7 @@ class SFTP {
                 connectionSettings.passphrase = passphrase;
             }
 
-            connectionSettings.privateKey = fs.readFileSync(keyPath);
+            connectionSettings.privateKey = FileHelper.readFileSync(keyPath);
         }
 
         this.connection.connect(connectionSettings).then(() => {
@@ -378,7 +379,7 @@ class SFTP {
                 connectionSettings.passphrase = passphrase;
             }
 
-            connectionSettings.privateKey = fs.readFileSync(keyPath);
+            connectionSettings.privateKey = FileHelper.readFileSync(keyPath);
         }
 
         let testFilePath = normalizePath(path.join(app.sitesDir, siteName, 'input', 'publii.test'));

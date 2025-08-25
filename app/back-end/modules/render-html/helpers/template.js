@@ -1,6 +1,7 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../../helpers/file.js');
 const minifyHTML = require('html-minifier').minify;
 const Utils = require('./../../../helpers/utils.js');
 
@@ -29,7 +30,7 @@ class TemplateHelper {
 
         // Load default config file
         let defaultConfigPath = path.join(__dirname, '..', '..', '..', '..', 'default-files', 'theme-files', 'config.json');
-        let defaultConfig = JSON.parse(fs.readFileSync(defaultConfigPath, 'utf8'));
+        let defaultConfig = JSON.parse(FileHelper.readFileSync(defaultConfigPath, 'utf8'));
 
         // Return merged config
         return Utils.mergeObjects(defaultConfig, themeConfig);
@@ -51,7 +52,7 @@ class TemplateHelper {
                 return this.loadedTemplates[filePath];
             }
 
-            this.loadedTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
+            this.loadedTemplates[filePath] = FileHelper.readFileSync(filePath, 'utf8');
             return this.loadedTemplates[filePath];
         }
 
@@ -74,7 +75,7 @@ class TemplateHelper {
                 return this.loadedPartialTemplates[filePath];
             }
 
-            this.loadedPartialTemplates[filePath] = fs.readFileSync(filePath, 'utf8');
+            this.loadedPartialTemplates[filePath] = FileHelper.readFileSync(filePath, 'utf8');
             return this.loadedPartialTemplates[filePath];
         }
 

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const FileHelper = require('./../../../../helpers/file.js');
 const crypto = require('crypto');
 const path = require('path');
 const memoize = require('fast-memoize');
@@ -16,9 +17,9 @@ function getMD5(localPath, overridedLocalPath) {
     let fileContent = '';
     
     if (fs.existsSync(overridedLocalPath)) {
-        fileContent = fs.readFileSync(overridedLocalPath);
+        fileContent = FileHelper.readFileSync(overridedLocalPath);
     } else {
-        fileContent = fs.readFileSync(localPath);
+        fileContent = FileHelper.readFileSync(localPath);
     }
 
     return crypto.createHash('md5').update(fileContent).digest('hex');

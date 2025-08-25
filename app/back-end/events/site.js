@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
+const FileHelper = require('../helpers/file.js');
 const slug = require('./../helpers/slug');
 const passwordSafeStorage = require('keytar');
 const ipcMain = require('electron').ipcMain;
@@ -130,7 +131,7 @@ class SiteEvents {
             }
 
             let configFile = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
-            let oldConfig = fs.readFileSync(configFile, 'utf8');
+            let oldConfig = FileHelper.readFileSync(configFile, 'utf8');
             let themesPath = path.join(appInstance.sitesDir, siteName, 'input', 'themes');
             let newThemeConfig = {};
             oldConfig = JSON.parse(oldConfig);
@@ -340,7 +341,7 @@ class SiteEvents {
             let themeConfigPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'theme.config.json');
 
             if (fs.existsSync(themeConfigPath)) {
-                let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+                let themeConfigString = FileHelper.readFileSync(themeConfigPath, 'utf8');
                 themesHelper.checkAndCleanImages(themeConfigString);
             }
 
@@ -604,7 +605,7 @@ class SiteEvents {
         }
 
         let configPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
-        let config = fs.readFileSync(configPath, 'utf8');
+        let config = FileHelper.readFileSync(configPath, 'utf8');
         
         try {
             config = JSON.parse(config);

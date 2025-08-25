@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./helpers/file.js');
 const UtilsHelper = require('./helpers/utils.js');
 const languageConfigValidator = require('./helpers/validators/language-config.js');
 const normalizePath = require('normalize-path');
@@ -43,7 +44,7 @@ class Languages {
                 continue;
             }
 
-            let languageData = fs.readFileSync(configPath, 'utf8');
+            let languageData = FileHelper.readFileSync(configPath, 'utf8');
             languageData = JSON.parse(languageData);
 
             output.push({
@@ -78,7 +79,7 @@ class Languages {
                 continue;
             }
 
-            let languageData = fs.readFileSync(configPath, 'utf8');
+            let languageData = FileHelper.readFileSync(configPath, 'utf8');
             languageData = JSON.parse(languageData);
 
             output.push({
@@ -168,7 +169,7 @@ class Languages {
             return false;   
         }
 
-        let languageConfig = fs.readFileSync(configPath, 'utf8');
+        let languageConfig = FileHelper.readFileSync(configPath, 'utf8');
 
         try {
             languageConfig = JSON.parse(languageConfig);

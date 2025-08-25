@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 
 class RendererPlugins {
     constructor (sitePath) {
@@ -201,7 +202,7 @@ class RendererPlugins {
 
         try {
             if (filePath) {
-                fileContent = fs.readFileSync(filePath).toString();
+                fileContent = FileHelper.readFileSync(filePath).toString();
             } else {
                 return;
             }

@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('../helpers/file.js');
 const ipcMain = require('electron').ipcMain;
 
 /*
@@ -23,7 +24,7 @@ class SyncEvents {
 
     saveSyncStatus(status, siteName) {
         let configFile = path.join(this.app.sitesDir, siteName, 'input', 'config', 'site.config.json');
-        let configContent = fs.readFileSync(configFile, 'utf8');
+        let configContent = FileHelper.readFileSync(configFile, 'utf8');
         configContent = JSON.parse(configContent);
         configContent.synced = status;
 
