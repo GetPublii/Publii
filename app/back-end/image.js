@@ -4,6 +4,7 @@
 
 const FileHelper = require('./helpers/file.js');
 const fs = require('fs-extra');
+const os = require('os');
 const path = require('path');
 const Model = require('./model.js');
 const sizeOf = require('image-size');
@@ -15,6 +16,10 @@ const Jimp = require('jimp');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 let sharp = require('sharp');
+// Reduce concurrency on Linux systems to avoid crashes
+if (os.platform() === 'linux') {
+    sharp.concurrency(1);
+}
 
 class Image extends Model {
     constructor(appInstance, imageData) {
