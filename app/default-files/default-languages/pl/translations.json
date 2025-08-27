@@ -752,6 +752,7 @@
         "experimentalFeatureAppAutoBeautifySourceCodeDesc": "Ta funkcja włącza automatyczne upiększanie kodu w edytorze kodu źródłowego edytora WYSIWYG",
         "experimentalFeatureAppFtpAlt": "Używaj alternatywnej biblioteki FTP do uploadu strony",
         "experimentalFeatureAppFtpAltDesc": "Użyj tej opcji, szczególnie jeśli Twój hosting używa IPv6 do adresacji serwerów",
+        "experimentalFileManagerInSidebar": "Pokaż menadżer plików w pasku bocznym",
         "externalImages": "Zewnętrzne obrazy",
         "externalPage": "Strona zewnętrzna",
         "facebook": "Facebook",

@@ -29,8 +29,7 @@ export default {
     computed: {
         items: function() {
             let siteName = this.$route.params.name;
-
-            return [{
+            let menuItems = [{
                 icon: 'posts',
                 label: this.$t('ui.posts'),
                 url: '/site/' + siteName + '/posts/'
@@ -67,14 +66,32 @@ export default {
                 label: this.$t('ui.tools'),
                 url: '/site/' + siteName + '/tools/'
             }];
+
+            if (this.$store.state.app.config.experimentalFileManagerInSidebar) {
+                menuItems.splice(5, 0, {
+                    icon: 'folder',
+                    label: this.$t('file.fileManager'),
+                    url: '/site/' + siteName + '/tools/file-manager'
+                });
+            }
+
+            return menuItems;
         }
     },
     watch: {
         '$route': function(newValue, oldValue) {
             let pathElements = newValue.path.split('/');
 
-            if(pathElements[3] && pathElements[3] !== 'settings') {
+            
+
+            if (
+                pathElements[3] && 
+                pathElements[3] !== 'settings' && 
+                !(pathElements[3] === 'tools' && pathElements[4] === 'file-manager' && this.$store.state.app.config.experimentalFileManagerInSidebar)
+            ) {
                 this.setActiveMenuItem(pathElements[3]);
+            } else if (pathElements[3] === 'tools' && pathElements[4] === 'file-manager' && this.$store.state.app.config.experimentalFileManagerInSidebar) {
+                this.setActiveMenuItem('folder');
             } else if(pathElements[3] === 'settings' && pathElements[4]) {
                 this.setActiveMenuItem(pathElements[4]);
             } else if(pathElements[3] === 'settings' && !pathElements[4]) {

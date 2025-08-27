@@ -385,6 +385,15 @@
                         {{ $t('settings.experimentalFeatureAppFtpAltDesc') }}
                     </small>
                 </field>
+                <field
+                    id="experimental-feature-app-file-manager-in-sidebar"
+                    :label="$t('settings.experimentalFileManagerInSidebar')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-file-manager-in-sidebar"
+                        v-model="experimentalFileManagerInSidebar" />
+                </field>
             </fields-group>
 
             <p-footer>
@@ -400,6 +409,7 @@
 </template>
 
 <script>
+import { experimentalFileManagerInSidebar } from '../../config/AST.app.config.js';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import Vue from 'vue';
@@ -443,6 +453,7 @@ export default {
             editorFontFamily: 'serif',
             experimentalFeatureAppAutoBeautifySourceCode: false,
             experimentalFeatureAppFtpAlt: false,
+            experimentalFileManagerInSidebar: false,
             changeSitesLocationWithoutCopying: false,
             sitesLocationExists: false,
             backupsLocationExists: false,
@@ -588,6 +599,7 @@ export default {
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.experimentalFeatureAppFtpAlt = this.$store.state.app.config.experimentalFeatureAppFtpAlt;
+        this.experimentalFileManagerInSidebar = this.$store.state.app.config.experimentalFileManagerInSidebar;
         this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
         this.theme = this.getAppTheme();
 
@@ -658,6 +670,7 @@ export default {
                 editorFontSize: this.editorFontSize,
                 experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
                 experimentalFeatureAppFtpAlt: this.experimentalFeatureAppFtpAlt,
+                experimentalFileManagerInSidebar: this.experimentalFileManagerInSidebar,
                 changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };
 

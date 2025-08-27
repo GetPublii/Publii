@@ -774,6 +774,7 @@
         "experimentalFeatureAppAutoBeautifySourceCodeDesc": "This function enable automatic beautify for source code in the WYSIWYG editor",
         "experimentalFeatureAppFtpAlt": "Use alternative FTP library for deployment",
         "experimentalFeatureAppFtpAltDesc": "Try this, especially if your hosting uses IPv6 for server address",
+        "experimentalFileManagerInSidebar": "Show File Manager in sidebar",
         "externalImages": "External images",
         "externalPage": "External page",
         "facebook": "Facebook",
