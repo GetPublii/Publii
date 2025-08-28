@@ -883,6 +883,10 @@ class Renderer {
                 output = homeCompiledTemplate(context, {
                     data: this.globalContext
                 });
+
+                if (this.previewMode) {
+                    output = output.replace(/file:\/\/\/\//gmi, 'file:///');
+                }
     
                 if (this.plugins.hasModifiers('htmlOutput')) {
                     output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
@@ -897,6 +901,10 @@ class Renderer {
                 output = postsCompiledTemplate(context, {
                     data: this.globalContext
                 });
+
+                if (this.previewMode) {
+                    output = output.replace(/file:\/\/\/\//gmi, 'file:///');
+                }
     
                 if (this.plugins.hasModifiers('htmlOutput')) {
                     output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
@@ -912,6 +920,10 @@ class Renderer {
                     output = homeCompiledTemplate(context, {
                         data: this.globalContext
                     });
+
+                    if (this.previewMode) {
+                        output = output.replace(/file:\/\/\/\//gmi, 'file:///');
+                    }
         
                     if (this.plugins.hasModifiers('htmlOutput')) {
                         output = this.plugins.runModifiers('htmlOutput', this, output, [this.globalContext, context]); 
@@ -2185,6 +2197,10 @@ class Renderer {
             });
 
             return '';
+        }
+
+        if (this.previewMode) {
+            output = output.replace(/file:\/\/\/\//gmi, 'file:///');
         }
 
         return output;
