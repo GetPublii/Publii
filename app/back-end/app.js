@@ -286,7 +286,13 @@ class App {
         // Load the config
         let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
         let siteConfig = FileHelper.readFileSync(configFilePath);
-        siteConfig = JSON.parse(siteConfig);
+
+        try {
+            siteConfig = JSON.parse(siteConfig);
+        } catch (e) {
+            dialog.showErrorBox('Publii cannot read site config', 'There is an issue with file: ' + configFilePath + "\n\nError details: " + e.message);
+            return;
+        }
 
         if (siteConfig.name !== siteName) {
             siteConfig.name = siteName;
