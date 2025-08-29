@@ -93,7 +93,7 @@ function regenerateImage (images, fullPath, catalog) {
 
         context.totalProgress++;
 
-        if (context.totalProgress >= context.numberOfImages) {
+        if (context.totalProgress >= context.numberOfImages || !images || !images.length) {
             finishProcess();
         } else {
             regenerateImage(images, fullPath, catalog);
@@ -119,7 +119,7 @@ function regenerateImage (images, fullPath, catalog) {
                 files: results
             });
 
-            if (context.totalProgress >= context.numberOfImages) {
+            if (context.totalProgress >= context.numberOfImages || !images || !images.length) {
                 finishProcess();
                 return;
             }
@@ -133,7 +133,7 @@ function regenerateImage (images, fullPath, catalog) {
     } else {
         context.totalProgress++;
 
-        if (context.totalProgress >= context.numberOfImages) {
+        if (context.totalProgress >= context.numberOfImages || !images || !images.length) {
             finishProcess();
             return;
         } else {
