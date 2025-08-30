@@ -50,7 +50,7 @@
     "mocha": "10.2.0",
     "node-abi": "4.12.0",
     "node-loader": "2.0.0",
-    "node-sass": "9.0.0",
+    "sass": "1.44.0",
     "sass-loader": "13.3.2",
     "vue-loader": "15.11.1",
     "vue-style-loader": "4.1.3",

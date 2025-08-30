@@ -39,7 +39,7 @@ class UpdatesHelper {
     sendError (err) {
         this.event.sender.send('app-notifications-retrieved', { 
             status: false,
-            error: err.message || 'An unknown error occurred while retrieving notifications.'
+            error: err || 'An unknown error occurred while retrieving notifications.'
         });
     }
 

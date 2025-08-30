@@ -277,7 +277,7 @@ export default {
             let currentOS = this.$store.state.app.versionInfo.os;
             let currentBuild = this.$store.state.app.versionInfo.build;
             
-            if (parseInt(this.notifications.publii.build[currentOS], 10) > parseInt(currentBuild, 10)) {
+            if (this.notifications.publii && parseInt(this.notifications.publii.build[currentOS], 10) > parseInt(currentBuild, 10)) {
                 return true;
             }
 
